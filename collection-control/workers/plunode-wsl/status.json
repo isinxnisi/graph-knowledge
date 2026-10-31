@@ -43,16 +43,15 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 11,
-    "retry-wait": 4,
+    "waiting-control": 4,
     "completed": 41,
-    "waiting-control": 1,
+    "retry-wait": 1,
     "awaiting-recovery": 5
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
-      "status": "held",
-      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-      "checkedAt": "2026-10-31T08:20:10+00:00"
+      "status": "registered: issue-25-manga23-20261019",
+      "checkedAt": "2026-10-31T08:29:46+00:00"
     },
     "collection-control/issue-sources/16.json": {
       "status": "registered: issue-16-adachi-three-20261025",
@@ -194,5 +193,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-31T08:28:53.638433+00:00"
+  "checkedAt": "2026-10-31T08:33:05.187777+00:00"
 }
