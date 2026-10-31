@@ -83,11 +83,11 @@
   "requestSha256": "dca59b2b98deb2271d94ac6e75bdee637111e58cfc2c75df5e3ef3cf1005beed",
   "kind": "collect-review",
   "phase": "waiting-control",
-  "generation": 1630,
+  "generation": 1725,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-31T12:36:49+00:00",
+  "updatedAt": "2026-10-31T18:09:35+00:00",
   "result": {
     "jobId": "issue-56-dot-urushibara-two-20261028-r0001-631b90666a4f1f76",
     "collectionUnchanged": false,
@@ -113,6 +113,6 @@
   "decisionDrafts": [
     "datasets/collection-decision-drafts/issue-56-dot-urushibara-two-20261028-batch-01/f291f0d716440a96981249f4c218950d3b01247078b1d2005b21b25aa2af0e4d/issue-56-dot-urushibara-two-20261028-batch-01-normal-draft.json"
   ],
-  "message": "Execution gate: outside-window",
+  "message": "Execution gate: interval",
   "retryAt": 1793450064.8974066
 }
