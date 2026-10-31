@@ -149,12 +149,12 @@
   },
   "requestSha256": "ac202bb18150f55b7da1103ce43f2d684aa101e4d5d5107a892223bce4590039",
   "kind": "issue-prepare",
-  "phase": "waiting-control",
-  "generation": 12804,
+  "phase": "blocked",
+  "generation": 12805,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "c87051e0d15c903737d37f7c114bff0f17702ffa",
-  "updatedAt": "2026-10-31T18:01:10+00:00",
+  "updatedAt": "2026-10-31T18:12:21+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -296,6 +296,6 @@
     "generatedArtifacts": {}
   },
   "executionComplete": true,
-  "message": "Execution gate: interval",
+  "message": "Artifact escapes runtime",
   "retryAt": 1793460110.624871
 }
