@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-31T22:20:00+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-31T21:40:22.865530+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-01T00:00:00+00:00",
-    "windowEndAt": "2026-11-01T03:00:00+00:00"
+    "eligibleAt": "2026-10-31T21:40:22.865530+00:00",
+    "windowEndAt": "2026-10-31T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-51-dot-araki-rohan-20261027",
-    "startedAt": "2026-10-31T21:29:41.250794+00:00",
-    "limitAt": "2026-10-31T22:10:00+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-50-dot-endo-tista-20261027",
-    "endedAt": "2026-10-31T21:18:01.181020+00:00"
+    "requestId": "issue-51-dot-araki-rohan-20261027",
+    "endedAt": "2026-10-31T21:30:22.865532+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 9,
-    "waiting-control": 21,
-    "completed": 30,
+    "waiting-control": 20,
+    "completed": 31,
     "awaiting-recovery": 2
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-31T21:29:48.276690+00:00"
+  "checkedAt": "2026-10-31T21:31:28.548967+00:00"
 }
