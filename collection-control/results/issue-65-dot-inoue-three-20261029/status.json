@@ -70,12 +70,12 @@
   },
   "requestSha256": "02ff5a7fbc768f21d5259860ced63f7d673d73ba83fa2203c8783d7580fa0fef",
   "kind": "issue-prepare",
-  "phase": "completed",
-  "generation": 2,
+  "phase": "waiting-control",
+  "generation": 1102,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-29T00:12:40+00:00",
+  "updatedAt": "2026-10-31T15:25:26+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -203,5 +203,7 @@
       "datasets/collection-themes/approvals/issue-65-dot-inoue-three-20261029/r0001.json": "f2d3173d5dc1d1fe2c0587433b3b4cb484104ceb148b9db90fc1f9ec764a2601"
     }
   },
-  "executionComplete": true
+  "executionComplete": true,
+  "message": "Execution gate: outside-window",
+  "retryAt": 1793460209.263489
 }
