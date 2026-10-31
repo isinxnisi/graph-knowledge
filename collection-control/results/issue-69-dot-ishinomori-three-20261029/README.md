@@ -1,10 +1,10 @@
 # 収集Workerの処理結果
 
-issue-69-dot-ishinomori-three-20261029：**retry-wait**
+issue-69-dot-ishinomori-three-20261029：**waiting-control**
 
 公開apply・restore・本番配置は行わない。承認者名は本人認証の証明ではない。
 
-<urlopen error _ssl.c:990: The handshake operation timed out>
+Execution gate: outside-window
 
 ```json
 {
