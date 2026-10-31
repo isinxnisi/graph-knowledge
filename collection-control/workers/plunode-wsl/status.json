@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-31T08:37:18.788740+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-10-31T09:20:00+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-31T08:37:18.788740+00:00",
-    "windowEndAt": "2026-10-31T09:00:00+00:00"
+    "eligibleAt": "2026-10-31T18:00:00+00:00",
+    "windowEndAt": "2026-10-31T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-67-dot-mizuki-two-20261029",
+    "startedAt": "2026-10-31T08:38:02.800847+00:00",
+    "limitAt": "2026-10-31T09:10:00+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-25-manga23-20261019-repair1-batch-09",
     "endedAt": "2026-10-31T08:27:18.788742+00:00"
@@ -193,5 +197,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-31T08:33:05.187777+00:00"
+  "checkedAt": "2026-10-31T08:38:09.765004+00:00"
 }
