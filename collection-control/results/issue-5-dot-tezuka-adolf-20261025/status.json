@@ -62,12 +62,12 @@
   },
   "requestSha256": "0ed08bb8ae9c087005eea5e86a48e44646eb7fad735db377406fda4a52e4600c",
   "kind": "issue-prepare",
-  "phase": "completed",
-  "generation": 1,
+  "phase": "waiting-control",
+  "generation": 4202,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-25T07:09:05+00:00",
+  "updatedAt": "2026-10-31T10:19:44+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -183,5 +183,7 @@
       "datasets/collection-themes/approvals/issue-5-dot-tezuka-adolf-20261025/r0001.json": "3941ec7b4db4c6a1e2903c6454749af7dcb35e1ebf5fadca39406659cf1f04ab"
     }
   },
-  "executionComplete": true
+  "executionComplete": true,
+  "message": "Execution gate: outside-window",
+  "retryAt": 1793441753.8126717
 }
