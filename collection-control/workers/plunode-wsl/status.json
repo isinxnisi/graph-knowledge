@@ -108,9 +108,8 @@
       "checkedAt": "2026-10-28T06:28:19+00:00"
     },
     "collection-control/issue-sources/61.json": {
-      "status": "held",
-      "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-      "checkedAt": "2026-10-31T15:53:23+00:00"
+      "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
+      "checkedAt": "2026-10-31T15:57:06+00:00"
     },
     "collection-control/issue-sources/62.json": {
       "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
@@ -192,5 +191,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-10-31T15:55:02.421022+00:00"
+  "checkedAt": "2026-10-31T15:58:48.974669+00:00"
 }
