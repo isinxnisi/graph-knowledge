@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-31T08:48:44.281535+00:00",
-  "phase": "outside-window",
+  "nextStartAt": "2026-10-31T19:05:27.982593+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
-    "reason": "outside-window",
-    "eligibleAt": "2026-10-31T18:00:00+00:00",
+    "reason": "interval",
+    "eligibleAt": "2026-10-31T19:05:27.982593+00:00",
     "windowEndAt": "2026-10-31T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-16-adachi-three-20261025",
+    "startedAt": "2026-10-31T18:00:27.982595+00:00",
+    "limitAt": "2026-10-31T18:55:27.982593+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-67-dot-mizuki-two-20261029",
     "endedAt": "2026-10-31T08:38:44.281537+00:00"
@@ -191,5 +195,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-10-31T17:46:42.108391+00:00"
+  "checkedAt": "2026-10-31T18:00:34.989676+00:00"
 }
