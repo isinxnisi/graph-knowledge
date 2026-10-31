@@ -48,8 +48,9 @@
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
-      "status": "registered: issue-25-manga23-20261019",
-      "checkedAt": "2026-10-31T08:29:46+00:00"
+      "status": "held",
+      "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+      "checkedAt": "2026-10-31T15:46:00+00:00"
     },
     "collection-control/issue-sources/16.json": {
       "status": "registered: issue-16-adachi-three-20261025",
@@ -191,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-10-31T15:45:08.309744+00:00"
+  "checkedAt": "2026-10-31T15:48:25.242700+00:00"
 }
