@@ -1,10 +1,10 @@
 # 収集Workerの処理結果
 
-issue-48-dot-toriyama-three-20261027：**retry-wait**
+issue-48-dot-toriyama-three-20261027：**waiting-control**
 
 公開apply・restore・本番配置は行わない。承認者名は本人認証の証明ではない。
 
-<urlopen error [Errno 104] Connection reset by peer>
+Execution gate: outside-window
 
 ```json
 {
