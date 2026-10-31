@@ -43,8 +43,9 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 10,
-    "waiting-control": 28,
-    "completed": 23,
+    "waiting-control": 27,
+    "completed": 22,
+    "retry-wait": 2,
     "awaiting-recovery": 1
   },
   "issueIntake": {
@@ -189,8 +190,8 @@
     },
     "issue-25-utc-recovery-09": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-10",
-      "phase": "completed"
+      "phase": "retry-wait"
     }
   },
-  "checkedAt": "2026-10-31T13:32:38.954033+00:00"
+  "checkedAt": "2026-10-31T13:37:03.197033+00:00"
 }
