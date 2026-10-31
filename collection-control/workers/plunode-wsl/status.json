@@ -43,9 +43,9 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 8,
-    "retry-wait": 2,
-    "waiting-control": 34,
-    "completed": 18
+    "waiting-control": 35,
+    "completed": 18,
+    "retry-wait": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -85,9 +85,8 @@
       "checkedAt": "2026-10-30T06:29:21+00:00"
     },
     "collection-control/issue-sources/51.json": {
-      "status": "held",
-      "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-      "checkedAt": "2026-10-31T15:11:11+00:00"
+      "status": "registered: issue-51-dot-araki-rohan-20261027",
+      "checkedAt": "2026-10-31T15:14:56+00:00"
     },
     "collection-control/issue-sources/56.json": {
       "status": "registered: issue-56-dot-urushibara-two-20261028",
@@ -174,7 +173,7 @@
     },
     "issue-25-utc-recovery-05": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-06",
-      "phase": "retry-wait"
+      "phase": "waiting-control"
     },
     "issue-25-utc-recovery-06": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-07",
@@ -193,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-10-31T15:14:15.237700+00:00"
+  "checkedAt": "2026-10-31T15:17:42.573459+00:00"
 }
