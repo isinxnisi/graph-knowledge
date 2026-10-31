@@ -1,0 +1,189 @@
+{
+  "requestId": "issue-5-dot-tezuka-adolf-20261025",
+  "request": {
+    "schemaVersion": 1,
+    "id": "issue-5-dot-tezuka-adolf-20261025",
+    "kind": "issue-prepare",
+    "status": "approved",
+    "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "issueAdapterSha256": "9e0231ab0f444e181e6672d28759b729c108ae2d7816915789a794ba1465656e",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "approvalScope": "issue-manga-preparation-collection-review-only",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+      "decidedAt": "2026-10-25T13:07:49+09:00",
+      "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。確認は1日3回、新規投入は1日最大1バッチ、先行親子処理完了後、Wikidata構造化情報とNDL作成書誌のみ、準備と子収集合計30試行以内、取得済み成果優先。運営者がこの人物作品組を個別審査したとの記録ではない。dotは固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba と既存runtimeの共通候補から手塚治虫→アドルフに告ぐの1組を選定した。根拠不足・同定・Roleは保留し、既公開・既受入は再処理しない。正式受入・公開apply・新取得元・コード変更は含まない。"
+    },
+    "permission": {
+      "schemaVersion": 1,
+      "approvalId": "dot-tezuka-adolf-20261025",
+      "status": "approved",
+      "approvalScope": "issue-manga-preparation-collection-review-only",
+      "adapter": "manga-discovery-v2",
+      "targets": [
+        {
+          "person": "手塚治虫",
+          "work": "アドルフに告ぐ"
+        }
+      ],
+      "requestPolicy": {
+        "maxAttempts": 30,
+        "attemptsPerRequest": 2,
+        "minIntervalSeconds": 3,
+        "timeoutSeconds": 20,
+        "maxBytes": 4194304
+      },
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+        "decidedAt": "2026-10-25T13:07:49+09:00",
+        "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。確認は1日3回、新規投入は1日最大1バッチ、先行親子処理完了後、Wikidata構造化情報とNDL作成書誌のみ、準備と子収集合計30試行以内、取得済み成果優先。運営者がこの人物作品組を個別審査したとの記録ではない。dotは固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba と既存runtimeの共通候補から手塚治虫→アドルフに告ぐの1組を選定した。根拠不足・同定・Roleは保留し、既公開・既受入は再処理しない。正式受入・公開apply・新取得元・コード変更は含まない。"
+      }
+    },
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 5,
+      "approvalId": "dot-tezuka-adolf-20261025",
+      "permissionSha256": "3c4bd377fe1f940519f2e82509de1c5543da2f7267c591f0c36a085f19705ab2",
+      "issueBodySha256": "62f76734a536c8f0d1cba529b6e4f867e73e1722eef2068f8f2b3ce8d379bb8b"
+    },
+    "issueSnapshot": {
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/5",
+      "updatedAt": "2026-10-25T07:07:26Z",
+      "body": "> **試作台帳／企画管理専用**。このIssueは収集実行・個別受入・公開の承認ではありません。Workerの監視する承認キューとは無関係です。\n\n| 項目 | 内容 |\n| --- | --- |\n| テーマID | `famous-manga-creators`（既存） |\n| 知識世界 | 漫画・アニメ／美術・文学 |\n| 段階 | 一部収集・正式受入済み、公開KG未適用 |\n| 優先度 | 高（仮） |\n| 次の候補 | 残り70作品から次期20〜30作品の収集版を企画 |\n| 作業量・費用 | 次版の対象・取得条件を確定後に見積もる |\n| 実行承認 | **なし（この台帳からは起動しない）** |\n\n### 目指す探索\n漫画家から代表作品・共同制作者・別作品へ進み、原作・作画などの役割の違いと根拠を辿る。\n\n### 現在地・参照\n- [既存テーマ定義 r0003](https://github.com/isinxnisi/graph-knowledge/blob/main/datasets/collection-themes/themes/famous-manga-creators/r0003.json)\n- [正式受入済みr0003 releaseの記録](https://github.com/isinxnisi/graph-knowledge/blob/main/docs/design/MANGA_R0003_ACCEPTED_RELEASE.md)\n- これまでの32作品の収集と、残り70作品の企画を区別。未適用releaseを公開済みと数えない。\n\n### 次に判断すること\n次版r0004の対象群・根拠・通信上限・優先度。**ここでの検討・Issue更新はWorkerへ実行依頼しない。**\n\n---\n**運用境界**：収集実行は別の `codex/collection-control` ブランチの `collection-control/requests/*.json` に、明示承認を登録したときだけ開始する。\n\n---\n## 台帳の階層と収集実行の扱い（2026-10-18補足）\n\n**既存の実行版を持つ収集テーマ**。以下は同じ企画範囲から派生した別の具体候補であり、r0003の実行承認・収集済みの成果と同一視しません。\n知識世界（関心の領域）、探索の問い／プリセット、収集テーマ、実行バッチは役割が異なり、必ずしも1対1ではありません。\n\n### 具体化した収集テーマ候補（すべて未承認）\n- [#15 藤子・F・不二雄：3作品と筆名の違い](https://github.com/isinxnisi/graph-knowledge/issues/15)\n- [#16 あだち充：タッチ・H2・MIX](https://github.com/isinxnisi/graph-knowledge/issues/16)\n\nこのIssueと子Issueは**計画台帳のみ**。Workerが監視する `codex/collection-control/collection-control/requests/*.json` には書き込まず、収集・受入・公開を承認しません。\n\n\n### 次期収集候補\n- [#25 r0004候補23作品：既存経路の拡張と同作者の別作品](https://github.com/isinxnisi/graph-knowledge/issues/25)（企画段階・未承認。WorkerはIssueを監視しない）\n\n\n## 2026-10-25：限定委任による次の1バッチ（候補収集・レビューのみ）\n\n上段は過去の企画台帳として保全する。以下の許可はこの1組だけに適用し、親企画全体の許可ではない。\n\n- 対象：手塚治虫 → アドルフに告ぐ（漫画）。1作者・1作品。\n- ねらい：既存の手塚治虫のEntityと作品群に、別作品へ進む枝を追加できるかを確認する。関係成立・Role・ISBNは未確認であり、Workerが同定と根拠を確認するまでClaimにしない。\n- 選定根拠：固定catalogのM01、r0002/r0003・Issue #25対象と重複なし。#17の既公開関係・既存同定保留・catalog外組は再投入しない。火の鳥の版粒度問題は今回の対象外。\n- 既存51 Claimの受入・公開を繰り返さない。今回の定期実行で作る新規許可は本日1件まで。既存Workerの時間帯・排他・休憩に従う。\n- 正式受入・公開は含めない。追加根拠の取得元拡張や保留の推測解除はしない。\n\n<!-- plunode-collection-permission:v1 -->\n```json\n{\n  \"schemaVersion\": 1,\n  \"approvalId\": \"dot-tezuka-adolf-20261025\",\n  \"status\": \"approved\",\n  \"approvalScope\": \"issue-manga-preparation-collection-review-only\",\n  \"adapter\": \"manga-discovery-v2\",\n  \"targets\": [\n    {\n      \"person\": \"手塚治虫\",\n      \"work\": \"アドルフに告ぐ\"\n    }\n  ],\n  \"requestPolicy\": {\n    \"maxAttempts\": 30,\n    \"attemptsPerRequest\": 2,\n    \"minIntervalSeconds\": 3,\n    \"timeoutSeconds\": 20,\n    \"maxBytes\": 4194304\n  },\n  \"humanDecision\": {\n    \"actorType\": \"human\",\n    \"reviewer\": \"プロジェクト運営者（範囲を限定した委任）\",\n    \"decidedAt\": \"2026-10-25T13:07:49+09:00\",\n    \"statement\": \"2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。確認は1日3回、新規投入は1日最大1バッチ、先行親子処理完了後、Wikidata構造化情報とNDL作成書誌のみ、準備と子収集合計30試行以内、取得済み成果優先。運営者がこの人物作品組を個別審査したとの記録ではない。dotは固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba と既存runtimeの共通候補から手塚治虫→アドルフに告ぐの1組を選定した。根拠不足・同定・Roleは保留し、既公開・既受入は再処理しない。正式受入・公開apply・新取得元・コード変更は含まない。\"\n  }\n}\n```\n<!-- /plunode-collection-permission:v1 -->\n"
+    },
+    "firstRecipeRevision": 27,
+    "recipeRevisionCount": 1
+  },
+  "requestSha256": "0ed08bb8ae9c087005eea5e86a48e44646eb7fad735db377406fda4a52e4600c",
+  "kind": "issue-prepare",
+  "phase": "waiting-control",
+  "generation": 4271,
+  "attempts": 1,
+  "workerId": "plunode-wsl",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "updatedAt": "2026-10-31T14:30:43+00:00",
+  "result": {
+    "schemaVersion": 1,
+    "status": "prepared-candidates-not-accepted",
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 5,
+      "approvalId": "dot-tezuka-adolf-20261025",
+      "permissionSha256": "3c4bd377fe1f940519f2e82509de1c5543da2f7267c591f0c36a085f19705ab2",
+      "issueBodySha256": "62f76734a536c8f0d1cba529b6e4f867e73e1722eef2068f8f2b3ce8d379bb8b"
+    },
+    "counts": {
+      "approvedWorks": 1,
+      "preparedWorks": 1,
+      "preparedPeople": 1,
+      "batches": 1,
+      "holds": 0,
+      "networkAttempts": 4,
+      "reusedWorks": 0,
+      "reusedPublishedClaims": 0,
+      "reusedHeldWorks": 0
+    },
+    "holds": [],
+    "reusedReviews": [],
+    "batchRequests": [
+      {
+        "schemaVersion": 1,
+        "id": "issue-5-dot-tezuka-adolf-20261025-batch-01",
+        "kind": "collect-review",
+        "status": "approved",
+        "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+        "parentRequestId": "issue-5-dot-tezuka-adolf-20261025",
+        "applyAuthorized": {
+          "local": false,
+          "beta": false,
+          "vps": false
+        },
+        "approvalScope": "collection-candidates-and-review-only",
+        "humanDecision": {
+          "actorType": "human",
+          "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+          "decidedAt": "2026-10-25T13:07:49+09:00",
+          "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。確認は1日3回、新規投入は1日最大1バッチ、先行親子処理完了後、Wikidata構造化情報とNDL作成書誌のみ、準備と子収集合計30試行以内、取得済み成果優先。運営者がこの人物作品組を個別審査したとの記録ではない。dotは固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba と既存runtimeの共通候補から手塚治虫→アドルフに告ぐの1組を選定した。根拠不足・同定・Roleは保留し、既公開・既受入は再処理しない。正式受入・公開apply・新取得元・コード変更は含まない。"
+        },
+        "issueOrigin": {
+          "repository": "isinxnisi/graph-knowledge",
+          "issueNumber": 5,
+          "approvalId": "dot-tezuka-adolf-20261025",
+          "permissionSha256": "3c4bd377fe1f940519f2e82509de1c5543da2f7267c591f0c36a085f19705ab2",
+          "issueBodySha256": "62f76734a536c8f0d1cba529b6e4f867e73e1722eef2068f8f2b3ce8d379bb8b"
+        },
+        "target": {
+          "themeId": "issue-5-dot-tezuka-adolf-20261025",
+          "revision": 1,
+          "definitionSha256": "5ba336d044c00b9c2663f0286ec7d31f312945b03fa14ca31d5404bc11097b06",
+          "execution": {
+            "adapter": "manga-discovery-v2",
+            "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+            "inputs": [
+              {
+                "file": "datasets/manga-collection/r0027/recipe.json",
+                "sha256": "d6e0414784f5d7da93231f30ee4fa5248f4eceb38fe0c36daa1cbe521051fe3b"
+              },
+              {
+                "file": "datasets/manga-collection/r0027/anchor-review.json",
+                "sha256": "871d4c2a56c77ce812eaade479e0cfe9d57f9ed6b7e5c88075140cf6c371a0f6"
+              },
+              {
+                "file": "datasets/manga-collection/r0027/publication-review.json",
+                "sha256": "93f832aaa5a814af259f359631a395a6c02f1104d716547a6a8dd408dbe79396"
+              },
+              {
+                "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+                "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+              },
+              {
+                "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+                "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+              },
+              {
+                "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+                "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+              }
+            ],
+            "maxEntities": 2111,
+            "maxClaims": 1847
+          },
+          "targets": {
+            "people": [
+              {
+                "name": "手塚治虫",
+                "qid": "Q193300"
+              }
+            ],
+            "works": [
+              {
+                "name": "アドルフに告ぐ",
+                "qid": "Q360684",
+                "isbn13": "9784168110139"
+              }
+            ]
+          },
+          "existingApprovalSha256": "1fb613c9993e4eb3057c68f1b40a4cb9cf84ec098bd89afc8c7e84a44c426c60"
+        }
+      }
+    ],
+    "publicApply": false,
+    "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-5-dot-tezuka-adolf-20261025",
+    "generatedArtifacts": {
+      "datasets/manga-collection/r0027/recipe.json": "d6e0414784f5d7da93231f30ee4fa5248f4eceb38fe0c36daa1cbe521051fe3b",
+      "datasets/manga-collection/r0027/anchor-review.json": "871d4c2a56c77ce812eaade479e0cfe9d57f9ed6b7e5c88075140cf6c371a0f6",
+      "datasets/manga-collection/r0027/publication-review.json": "93f832aaa5a814af259f359631a395a6c02f1104d716547a6a8dd408dbe79396",
+      "datasets/collection-themes/themes/issue-5-dot-tezuka-adolf-20261025/r0001.json": "7c4a06e0dfc3acdc35f83204d828fa61dde9afbe09915056660a9db01d50ace9",
+      "datasets/collection-themes/approvals/issue-5-dot-tezuka-adolf-20261025/r0001.json": "3941ec7b4db4c6a1e2903c6454749af7dcb35e1ebf5fadca39406659cf1f04ab"
+    }
+  },
+  "executionComplete": true,
+  "message": "Execution gate: outside-window",
+  "retryAt": 1793456963.9215503
+}
