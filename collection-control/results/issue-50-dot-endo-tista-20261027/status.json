@@ -62,13 +62,13 @@
   },
   "requestSha256": "cb434c39ad43fc5b828ba608df40b56f268ab7ac3e0b177d5824ca1886c7e227",
   "kind": "issue-prepare",
-  "phase": "awaiting-recovery",
-  "generation": 9,
+  "phase": "retry-wait",
+  "generation": 2007,
   "attempts": 2,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-27T08:37:14+00:00",
-  "message": "Technical acquisition incomplete; no semantic hold or acceptance",
+  "updatedAt": "2026-10-31T09:06:38+00:00",
+  "message": "<urlopen error [Errno -3] Temporary failure in name resolution>",
   "result": {
     "schemaVersion": 1,
     "status": "technical-incomplete",
@@ -116,5 +116,5 @@
     }
   },
   "executionComplete": false,
-  "retryAt": 0
+  "retryAt": 1793437851.883681
 }
