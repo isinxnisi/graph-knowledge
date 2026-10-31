@@ -70,12 +70,12 @@
   },
   "requestSha256": "8277772eae902e72cdf68b5e7d02eb6ce10b4f37c6de085af9af6ac8a595ab10",
   "kind": "issue-prepare",
-  "phase": "retry-wait",
-  "generation": 2150,
+  "phase": "waiting-control",
+  "generation": 2151,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-31T11:40:38+00:00",
+  "updatedAt": "2026-10-31T11:45:37+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -204,6 +204,6 @@
     }
   },
   "executionComplete": true,
-  "message": "Remote end closed connection without response",
+  "message": "Execution gate: outside-window",
   "retryAt": 1793446971.4780493
 }
