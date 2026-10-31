@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-31T20:47:28.911995+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-31T19:53:10.869302+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-31T20:47:28.911995+00:00",
+    "eligibleAt": "2026-10-31T19:53:10.869302+00:00",
     "windowEndAt": "2026-10-31T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-25-utc-recovery-07",
-    "startedAt": "2026-10-31T19:42:28.911998+00:00",
-    "limitAt": "2026-10-31T20:37:28.911995+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-46-dot-aoyama-three-20261027",
-    "endedAt": "2026-10-31T19:32:15.694338+00:00"
+    "requestId": "issue-25-utc-recovery-07",
+    "endedAt": "2026-10-31T19:43:10.869304+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 9,
-    "waiting-control": 30,
-    "completed": 23
+    "waiting-control": 29,
+    "completed": 24
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -184,7 +180,7 @@
     },
     "issue-25-utc-recovery-07": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-08",
-      "phase": "waiting-control"
+      "phase": "completed"
     },
     "issue-25-utc-recovery-08": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-09",
@@ -195,5 +191,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-10-31T19:42:35.988404+00:00"
+  "checkedAt": "2026-10-31T19:43:31.301980+00:00"
 }
