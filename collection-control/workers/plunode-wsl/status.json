@@ -26,31 +26,27 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-31T07:06:29.064001+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-31T06:12:51.166930+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-31T07:06:29.064001+00:00",
+    "eligibleAt": "2026-10-31T06:12:51.166930+00:00",
     "windowEndAt": "2026-10-31T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-61-dot-gotouge-kimetsu-20261028",
-    "startedAt": "2026-10-31T06:01:29.064004+00:00",
-    "limitAt": "2026-10-31T06:56:29.064001+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1-batch-10",
-    "endedAt": "2026-10-30T19:51:46.407791+00:00"
+    "requestId": "issue-61-dot-gotouge-kimetsu-20261028",
+    "endedAt": "2026-10-31T06:02:51.166932+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 10,
-    "waiting-control": 3,
+    "waiting-control": 2,
+    "retry-wait": 1,
     "completed": 43,
-    "awaiting-recovery": 5,
-    "running": 1
+    "awaiting-recovery": 6
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -197,5 +193,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-31T06:02:11.609879+00:00"
+  "checkedAt": "2026-10-31T06:05:21.845848+00:00"
 }
