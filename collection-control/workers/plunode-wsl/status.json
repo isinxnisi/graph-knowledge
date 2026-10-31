@@ -44,7 +44,8 @@
   "requestsByPhase": {
     "blocked": 12,
     "completed": 43,
-    "awaiting-recovery": 6,
+    "awaiting-recovery": 5,
+    "retry-wait": 1,
     "waiting-control": 1
   },
   "issueIntake": {
@@ -113,8 +114,9 @@
       "checkedAt": "2026-10-28T07:00:21+00:00"
     },
     "collection-control/issue-sources/62.json": {
-      "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
-      "checkedAt": "2026-10-28T10:16:24+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+      "checkedAt": "2026-10-31T05:16:45+00:00"
     },
     "collection-control/issue-sources/64.json": {
       "status": "registered: issue-64-dot-oda-onepiece-20261029",
@@ -192,5 +194,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-31T05:14:35.748589+00:00"
+  "checkedAt": "2026-10-31T05:19:28.561234+00:00"
 }
