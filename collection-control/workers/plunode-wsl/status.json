@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-31T20:01:42.553559+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-31T19:07:23.809206+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-31T20:01:42.553559+00:00",
+    "eligibleAt": "2026-10-31T19:07:23.809206+00:00",
     "windowEndAt": "2026-10-31T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-62-dot-akutami-jujutsu-20261028-batch-01",
-    "startedAt": "2026-10-31T18:56:42.553562+00:00",
-    "limitAt": "2026-10-31T19:51:42.553559+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1-batch-08",
-    "endedAt": "2026-10-31T18:46:34.838728+00:00"
+    "requestId": "issue-62-dot-akutami-jujutsu-20261028-batch-01",
+    "endedAt": "2026-10-31T18:57:23.809208+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 9,
-    "waiting-control": 34,
-    "completed": 19
+    "waiting-control": 33,
+    "completed": 20
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -195,5 +191,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-10-31T18:56:49.514147+00:00"
+  "checkedAt": "2026-10-31T18:57:28.281729+00:00"
 }
