@@ -83,11 +83,11 @@
   "requestSha256": "a2c1fede389c9278c85264f5fa923d8971101ed8f1477ff3bcd08907e14c939e",
   "kind": "collect-review",
   "phase": "waiting-control",
-  "generation": 1078,
+  "generation": 1148,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-31T14:02:45+00:00",
+  "updatedAt": "2026-10-31T18:10:51+00:00",
   "result": {
     "jobId": "issue-65-dot-inoue-three-20261029-r0001-3cd6a6374d327ea4",
     "collectionUnchanged": false,
@@ -113,6 +113,6 @@
   "decisionDrafts": [
     "datasets/collection-decision-drafts/issue-65-dot-inoue-three-20261029-batch-01/96e87fc9f5241666aa1c367f5c63eebaa3bacc668b0e7a237ed1e90eb5328967/issue-65-dot-inoue-three-20261029-batch-01-normal-draft.json"
   ],
-  "message": "Execution gate: outside-window",
+  "message": "Execution gate: interval",
   "retryAt": 1793455264.467817
 }
