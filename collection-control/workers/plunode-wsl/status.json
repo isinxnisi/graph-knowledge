@@ -43,8 +43,9 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 10,
-    "waiting-control": 13,
-    "completed": 35,
+    "waiting-control": 12,
+    "completed": 32,
+    "retry-wait": 4,
     "awaiting-recovery": 4
   },
   "issueIntake": {
@@ -77,9 +78,8 @@
       "checkedAt": "2026-10-28T03:37:52+00:00"
     },
     "collection-control/issue-sources/49.json": {
-      "status": "held",
-      "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-      "checkedAt": "2026-10-31T10:32:14+00:00"
+      "status": "registered: issue-49-dot-hara-souten-20261027",
+      "checkedAt": "2026-10-31T10:35:53+00:00"
     },
     "collection-control/issue-sources/50.json": {
       "status": "registered: issue-50-dot-endo-tista-20261027",
@@ -193,5 +193,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-31T10:34:42.705704+00:00"
+  "checkedAt": "2026-10-31T10:40:48.170338+00:00"
 }
