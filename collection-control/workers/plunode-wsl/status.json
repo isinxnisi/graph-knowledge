@@ -26,30 +26,33 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-31T06:50:38.515650+00:00",
-  "phase": "ready",
+  "nextStartAt": "2026-10-31T08:37:18.788740+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
-    "ready": true,
-    "reason": "ready",
-    "eligibleAt": null,
+    "ready": false,
+    "reason": "interval",
+    "eligibleAt": "2026-10-31T08:37:18.788740+00:00",
     "windowEndAt": "2026-10-31T09:00:00+00:00"
   },
   "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1-batch-02",
-    "endedAt": "2026-10-31T06:40:38.515651+00:00"
+    "requestId": "issue-25-manga23-20261019-repair1-batch-09",
+    "endedAt": "2026-10-31T08:27:18.788742+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
-    "blocked": 12,
-    "completed": 44,
-    "awaiting-recovery": 6
+    "blocked": 11,
+    "retry-wait": 4,
+    "completed": 41,
+    "waiting-control": 1,
+    "awaiting-recovery": 5
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
-      "status": "registered: issue-25-manga23-20261019",
-      "checkedAt": "2026-10-30T13:28:53+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+      "checkedAt": "2026-10-31T08:20:10+00:00"
     },
     "collection-control/issue-sources/16.json": {
       "status": "registered: issue-16-adachi-three-20261025",
@@ -109,7 +112,7 @@
     },
     "collection-control/issue-sources/61.json": {
       "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
-      "checkedAt": "2026-10-31T05:25:10+00:00"
+      "checkedAt": "2026-10-31T08:21:15+00:00"
     },
     "collection-control/issue-sources/62.json": {
       "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
@@ -180,7 +183,7 @@
     },
     "issue-25-utc-recovery-07": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-08",
-      "phase": "completed"
+      "phase": "waiting-control"
     },
     "issue-25-utc-recovery-08": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-09",
@@ -191,5 +194,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-31T07:54:47.927636+00:00"
+  "checkedAt": "2026-10-31T08:28:53.638433+00:00"
 }
