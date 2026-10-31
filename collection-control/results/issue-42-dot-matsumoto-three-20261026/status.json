@@ -70,12 +70,12 @@
   },
   "requestSha256": "90859cacf56fa33c3fc06c58206d81879a7d4e3995746680dd483e94a7cdcafc",
   "kind": "issue-prepare",
-  "phase": "waiting-control",
-  "generation": 3326,
+  "phase": "blocked",
+  "generation": 3334,
   "attempts": 6,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-31T18:01:25+00:00",
+  "updatedAt": "2026-10-31T18:35:23+00:00",
   "retryAt": 1793437875.867715,
   "result": {
     "schemaVersion": 1,
@@ -122,5 +122,5 @@
     "generatedArtifacts": {}
   },
   "executionComplete": true,
-  "message": "Execution gate: interval"
+  "message": "Immutable GitHub artifact changed: collection-control/artifacts/issue-42-dot-matsumoto-three-20261026/.local/collection-issues/issue-42-dot-matsumoto-three-20261026/request-cache/requests.json"
 }
