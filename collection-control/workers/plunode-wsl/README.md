@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-31 21:07:01 JST。
+確認: 2026-10-31 21:10:14 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -107,8 +107,9 @@ Issue確認結果:
     "checkedAt": "2026-10-31T07:12:22+00:00"
   },
   "collection-control/issue-sources/68.json": {
-    "status": "registered: issue-68-dot-fujikoa-two-20261029",
-    "checkedAt": "2026-10-30T13:21:21+00:00"
+    "status": "held",
+    "reason": "The read operation timed out",
+    "checkedAt": "2026-10-31T12:08:43+00:00"
   },
   "collection-control/issue-sources/69.json": {
     "status": "registered: issue-69-dot-ishinomori-three-20261029",
