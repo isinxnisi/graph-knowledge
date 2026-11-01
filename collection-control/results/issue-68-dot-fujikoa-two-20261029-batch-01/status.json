@@ -87,12 +87,12 @@
   },
   "requestSha256": "0d49b1d02d9d3cb586378f858745030371dd0c84c2cc826f695b5e8c87e353d6",
   "kind": "collect-review",
-  "phase": "completed",
-  "generation": 4,
+  "phase": "retry-wait",
+  "generation": 1220,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-29T06:42:38+00:00",
+  "updatedAt": "2026-11-01T05:07:11+00:00",
   "result": {
     "jobId": "issue-68-dot-fujikoa-two-20261029-r0001-c20ab8c6124cf234",
     "collectionUnchanged": false,
@@ -117,5 +117,7 @@
   },
   "decisionDrafts": [
     "datasets/collection-decision-drafts/issue-68-dot-fujikoa-two-20261029-batch-01/ff56095ed7ec7380a58c075556b99d5eb927b4d2eb2f47c302cc8ac31d83796c/issue-68-dot-fujikoa-two-20261029-batch-01-normal-draft.json"
-  ]
+  ],
+  "message": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+  "retryAt": 1793509767.320817
 }
