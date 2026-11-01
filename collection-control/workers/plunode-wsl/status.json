@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-01T21:44:35.905309+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-01T20:50:17.630013+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-01T21:44:35.905309+00:00",
+    "eligibleAt": "2026-11-01T20:50:17.630013+00:00",
     "windowEndAt": "2026-11-01T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-42-matsumoto-recovery-20261026",
-    "startedAt": "2026-11-01T20:39:35.905312+00:00",
-    "limitAt": "2026-11-01T21:34:35.905309+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-57-dot-oshima-two-20261028-batch-01",
-    "endedAt": "2026-11-01T20:28:28.440928+00:00"
+    "requestId": "issue-42-matsumoto-recovery-20261026",
+    "endedAt": "2026-11-01T20:40:17.630015+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 7,
-    "waiting-control": 25,
-    "completed": 26,
+    "waiting-control": 24,
+    "completed": 27,
     "awaiting-recovery": 4
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T20:39:42.908333+00:00"
+  "checkedAt": "2026-11-01T20:41:37.209873+00:00"
 }
