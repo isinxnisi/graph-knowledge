@@ -43,10 +43,9 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 10,
-    "waiting-control": 8,
+    "waiting-control": 9,
     "completed": 37,
-    "awaiting-recovery": 6,
-    "retry-wait": 1
+    "awaiting-recovery": 6
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -150,9 +149,8 @@
       "checkedAt": "2026-11-01T05:26:20+00:00"
     },
     "collection-control/issue-sources/73.json": {
-      "status": "held",
-      "reason": "Remote end closed connection without response",
-      "checkedAt": "2026-11-01T09:09:55+00:00"
+      "status": "registered: issue-73-dot-murata-onepunch-20261030",
+      "checkedAt": "2026-11-01T09:14:29+00:00"
     }
   },
   "publicApply": false,
@@ -194,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T09:12:23.734930+00:00"
+  "checkedAt": "2026-11-01T09:16:39.017278+00:00"
 }
