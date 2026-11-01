@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-01T01:27:42.416544+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-01T00:33:24.210602+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-01T01:27:42.416544+00:00",
+    "eligibleAt": "2026-11-01T00:33:24.210602+00:00",
     "windowEndAt": "2026-11-01T03:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-56-dot-urushibara-two-20261028",
-    "startedAt": "2026-11-01T00:22:42.416546+00:00",
-    "limitAt": "2026-11-01T01:17:42.416544+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-56-dot-urushibara-two-20261028-batch-01",
-    "endedAt": "2026-11-01T00:11:18.052987+00:00"
+    "requestId": "issue-56-dot-urushibara-two-20261028",
+    "endedAt": "2026-11-01T00:23:24.210604+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 10,
-    "waiting-control": 17,
-    "completed": 33,
+    "waiting-control": 16,
+    "completed": 34,
     "awaiting-recovery": 2
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T00:22:49.453142+00:00"
+  "checkedAt": "2026-11-01T00:24:27.455503+00:00"
 }
