@@ -62,12 +62,12 @@
   },
   "requestSha256": "9b06b7f5b23b33a481ec57de63ebfb2d320add7ab1f0577fddd5ae5377cafba4",
   "kind": "issue-prepare",
-  "phase": "completed",
-  "generation": 43,
+  "phase": "retry-wait",
+  "generation": 1390,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-29T00:00:45+00:00",
+  "updatedAt": "2026-11-01T05:05:47+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -103,5 +103,7 @@
     "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-64-dot-oda-onepiece-20261029",
     "generatedArtifacts": {}
   },
-  "executionComplete": true
+  "executionComplete": true,
+  "message": "Remote end closed connection without response",
+  "retryAt": 1793509680.1389787
 }
