@@ -27,13 +27,13 @@
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
   "nextStartAt": "2026-11-01T02:44:54.897590+00:00",
-  "phase": "interval",
+  "phase": "closing-window",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
-    "reason": "interval",
-    "eligibleAt": "2026-11-01T02:44:54.897590+00:00",
-    "windowEndAt": "2026-11-01T03:00:00+00:00"
+    "reason": "closing-window",
+    "eligibleAt": "2026-11-01T06:00:00+00:00",
+    "windowEndAt": "2026-11-01T09:00:00+00:00"
   },
   "activeAttempt": null,
   "lastAttempt": {
@@ -43,9 +43,10 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 10,
-    "waiting-control": 15,
+    "waiting-control": 14,
     "completed": 33,
-    "awaiting-recovery": 4
+    "awaiting-recovery": 4,
+    "paused": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -192,5 +193,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T02:42:17.388977+00:00"
+  "checkedAt": "2026-11-01T02:49:07.695020+00:00"
 }
