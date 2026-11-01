@@ -43,10 +43,9 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 9,
-    "waiting-control": 17,
+    "waiting-control": 19,
     "completed": 30,
-    "awaiting-recovery": 4,
-    "retry-wait": 2
+    "awaiting-recovery": 4
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -110,12 +109,14 @@
       "checkedAt": "2026-10-31T16:19:09+00:00"
     },
     "collection-control/issue-sources/61.json": {
-      "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
-      "checkedAt": "2026-10-31T16:19:10+00:00"
+      "status": "held",
+      "reason": "Remote end closed connection without response",
+      "checkedAt": "2026-11-01T05:10:23+00:00"
     },
     "collection-control/issue-sources/62.json": {
-      "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
-      "checkedAt": "2026-10-31T16:19:12+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+      "checkedAt": "2026-11-01T05:10:44+00:00"
     },
     "collection-control/issue-sources/64.json": {
       "status": "registered: issue-64-dot-oda-onepiece-20261029",
@@ -193,5 +194,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T05:07:41.530592+00:00"
+  "checkedAt": "2026-11-01T05:13:19.212316+00:00"
 }
