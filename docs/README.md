@@ -1,4 +1,6 @@
-- Issue #75 継続入口：[全体レビュー・サービス導線の論点・次担当への依頼](design/THEME_FOUNDATION_NEXT.md)／[今回の修正と検証](verification/THEME_FOUNDATION_REVIEW_20261101.md)。年表同士の比較・マージと、正式な画面構成の採用は別の未決事項。
+- 本運用への統合計画（2026-11-02、採用待ち）：[完成目標・#63/#74/#75の分担・工程](design/PLUNODE_PRODUCTION_INTEGRATION.md)／[Solへ渡す実装単位と次の依頼](design/PLUNODE_PRODUCTION_HANDOFF.md)／[調査・文書検証](verification/PLUNODE_PRODUCTION_PLAN_20261102.md)。収集結果の管理者承認省略と、利用者投稿のAI審査・状態表示を分ける。今回は文書のみで、main・3276・3200・β・本番・Workerの実行環境は変更しない。
+
+- Issue #75 独立初版のレビュー：[実装の評価・旧継続順序](design/THEME_FOUNDATION_NEXT.md)／[修正と検証](verification/THEME_FOUNDATION_REVIEW_20261101.md)。次の着手順は上記統合計画を優先し、名称訂正だけを先に進める旧依頼は使わない。年表同士の比較・マージと、正式な画面構成の採用は別の未決事項。
 
 - Issue #75 独立初版：[テーマ登録・意味対応・Capsule訂正の設計](design/THEME_FOUNDATION_ISSUE75.md)／[年表の設計](design/THEME_TIMELINE_PREVIEW.md)／[テーマ・年表・関係図の表示分離・最新確認先](verification/THEME_VIEW_SEPARATION_20261101.md)／[密度と関係図への対応](verification/THEME_TIMELINE_CONTEXT_20261101.md)／[表示単位と接続](verification/THEME_TEMPORAL_PROJECTION_20261101.md)／[仮想ケース集](verification/THEME_TEMPORAL_CASES_20261101.md)／[期間グラフ](verification/THEME_PERIOD_GRAPH_20261101.md)／[期間と時期の不確かさ](verification/THEME_TEMPORAL_MEANING_20261101.md)／[年表の確認・制限](verification/THEME_TIMELINE_PREVIEW_20261101.md)／[実テーマ・検証・再開手順](verification/THEME_FOUNDATION_ISSUE75_20261101.md)。作業ブランチとlocalhost:3276のみ。main／3200／β／本番へは未統合。
 

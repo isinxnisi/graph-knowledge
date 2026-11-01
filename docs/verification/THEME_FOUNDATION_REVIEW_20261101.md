@@ -1,5 +1,7 @@
 # Issue #75：全体レビュー・根拠入力と保存契約の改善
 
+> 2026-11-02：本書は以下の実装・検証時点の記録。次の「対象名称訂正」へ進む旧推奨は、後続依頼による[本運用統合計画](../design/PLUNODE_PRODUCTION_INTEGRATION.md)・[新引継ぎ](../design/PLUNODE_PRODUCTION_HANDOFF.md)を優先する。以下の確認結果・build・保存データは変更していない。
+
 2026-11-01。レビュー元 `5faeafd2`。今回のソースはこの記録を含むcommit。`codex/issue75-theme-foundation` の独立worktree・専用DB・localhost:3276のみ。main／3200／HTTPS β／本番／既存Workerは更新していない。
 
 ## 確認先と再開
