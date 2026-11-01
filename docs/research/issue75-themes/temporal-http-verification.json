@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-11-01T07:31:33.427609+00:00",
+  "base": "http://localhost:3276",
+  "status": "passed",
+  "error": null,
+  "createdArtifacts": {
+    "themeId": "time-meaning-check-15c2aed882",
+    "capsuleIds": [
+      "f3ec3509-d023-41a4-93f3-422038599d7c"
+    ],
+    "recordIds": [
+      "point",
+      "duration",
+      "window",
+      "legacy",
+      "uncertain-ends"
+    ],
+    "sharedUrls": [
+      "http://localhost:3276/themes/shared/i0LwakRND46v9b2Td5i6gEz7CjlC7rVo"
+    ],
+    "sharesStopped": true
+  },
+  "checks": [
+    "import and reread preserve point, duration, occurrence window, legacy and crossed endpoint windows",
+    "legacy range receives no invented meaning and crossed uncertainty is accepted",
+    "search distinguishes possible occurrence from duration",
+    "search keeps legacy ranges explicitly undecided",
+    "search includes uncertain endpoint values",
+    "search includes a partial-year point without inventing a day",
+    "overlapping dates create neither Graph relations nor implicit inset membership",
+    "Graph details preserve distinct time meanings and uncertain endpoints",
+    "Capsule snapshot retains all temporal fields and creates no relations",
+    "ordinary Capsule save preserves its original temporal snapshot",
+    "initial sharing preserves the saved temporal snapshot",
+    "time meaning and boundary corrections both increment content revisions",
+    "source corrections leave saved and shared snapshots unchanged",
+    "search follows explicitly corrected temporal meaning and new boundary precision",
+    "selected refresh imports only the chosen time meaning, retaining the other saved boundary window",
+    "selected correction intake does not republish the old shared content",
+    "explicit sharing updates the same URL with the selected correction only",
+    "explicit boundary intake retains partial precision, the legacy range and relation count",
+    "taking in uncertain boundaries also leaves the prior published snapshot unchanged",
+    "the same URL publishes the explicitly accepted uncertain boundary correction",
+    "stopping the share denies public access while keeping the saved Capsule"
+  ],
+  "count": 21,
+  "cleanup": "No data deleted. The generated theme/capsule IDs identify this run for optional later cleanup."
+}

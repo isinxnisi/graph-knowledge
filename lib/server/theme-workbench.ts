@@ -1,3 +1,4 @@
+import { themeTimeLabel } from "../domain/theme-time";
 import { Pool } from "pg";
 import { createHash, randomUUID, randomBytes } from "node:crypto";
 import { z } from "zod";
@@ -220,7 +221,12 @@ export function themeDocument(snapshot: ThemeSnapshot): CapsuleDocument {
         e.description,
         ...snapshot.records
           .filter((r) => r.kind !== "relation" && r.subject === e.id)
-          .map((r) => r.assertion + (r.scope ? "\n範囲：" + r.scope : "")),
+          .map(
+            (r) =>
+              r.assertion +
+              (r.time ? "\n" + themeTimeLabel(r.time) : "") +
+              (r.scope ? "\n範囲：" + r.scope : ""),
+          ),
       ]
         .filter(Boolean)
         .join("\n\n"),
@@ -238,6 +244,7 @@ export function themeDocument(snapshot: ThemeSnapshot): CapsuleDocument {
       label: r.relation,
       note:
         r.assertion +
+        (r.time ? "\n" + themeTimeLabel(r.time) : "") +
         (r.scope ? "\n範囲：" + r.scope : "") +
         "\n" +
         { affirmed: "肯定", denied: "否定", uncertain: "推測・不確実" }[

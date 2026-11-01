@@ -5,11 +5,14 @@ import { useRouter } from "next/navigation";
 import Icon from "./Icon";
 import CapsuleStudio from "./CapsuleStudio";
 import ThemeTimeline from "./ThemeTimeline";
+import ThemeTimeFields from "./ThemeTimeFields";
+import { themeTimeLabel } from "../lib/domain/theme-time";
 import type { Selection } from "../lib/client/graph-state";
 import { CapsuleModal } from "./CapsuleSurface";
 import type { LocalCapsule } from "../lib/client/local-capsules";
 import {
   themePackageSchema,
+  themeTimeSchema,
   themeRecordSearchText,
   type ThemeDetail,
   type ThemeSummary,
@@ -88,14 +91,9 @@ function initialView(c: LocalCapsule): LocalCapsule {
   };
 }
 function timeLabel(r: ThemeRecord) {
-  const t = r.time;
-  return !t
-    ? "時期の記載なし"
-    : t.kind === "calendar"
-      ? [t.from, t.to].filter(Boolean).join(" → ") +
-        (t.label ? " · " + t.label : "")
-      : t.label + " · " + t.axis;
+  return themeTimeLabel(r.time);
 }
+
 function Evidence({ record }: { record: ThemeRecord }) {
   return (
     <>
@@ -540,11 +538,17 @@ export default function ThemeWorkbench({
             </p>
           )}
           <details className={css.updates}>
-            <summary>実テーマの入力例</summary>
+            <summary>入力例から試す</summary>
             <p className={css.caption}>
               資料を読み、主張と根拠箇所を整理した入力例です。内容を確認してから取り込みます。
             </p>
-            {["ada", "webb", "webb-timeline"].map((n) => (
+            {[
+              ["ada", "解析機関と翻訳"],
+              ["webb", "Webbと国際協力"],
+              ["webb-timeline", "Webbの展開年表"],
+              ["picasso-blue-period", "青の時代と同時期の作品"],
+              ["temporal-boundaries-example", "曖昧な期間境界（架空の操作例）"],
+            ].map(([n, title]) => (
               <button
                 key={n}
                 onClick={async () => {
@@ -554,11 +558,7 @@ export default function ThemeWorkbench({
                   setModal("import");
                 }}
               >
-                {n === "ada"
-                  ? "解析機関と翻訳"
-                  : n === "webb"
-                    ? "Webbと国際協力"
-                    : "Webbの展開年表"}
+                {title}
                 を確認
               </button>
             ))}
@@ -1275,20 +1275,31 @@ function RecordForm({
             scope: get("scope"),
             polarity: get("polarity"),
             time:
-              f.get("clearTime") === "on"
+              get("timeMode") === "none"
                 ? null
-                : get("from")
-                  ? {
+                : get("timeMode") === "keep"
+                  ? (record?.time ?? null)
+                  : themeTimeSchema.parse({
                       kind: "calendar",
                       from: get("from"),
-                      ...(get("to") ? { to: get("to") } : {}),
-                      ...(record?.time?.kind === "calendar"
-                        ? { label: record.time.label }
+                      ...(get("timeMode") !== "point" ? { to: get("to") } : {}),
+                      ...(get("timeMode") !== "unclassified-range" &&
+                      !(
+                        record?.time?.kind === "calendar" &&
+                        !record.time.meaning &&
+                        !record.time.to &&
+                        get("timeMode") === "point"
+                      )
+                        ? { meaning: get("timeMode") }
                         : {}),
-                    }
-                  : record?.time?.kind === "calendar"
-                    ? null
-                    : (record?.time ?? null),
+                      ...(get("timeMode") === "duration" && get("startLatest")
+                        ? { startLatest: get("startLatest") }
+                        : {}),
+                      ...(get("timeMode") === "duration" && get("endEarliest")
+                        ? { endEarliest: get("endEarliest") }
+                        : {}),
+                      label: get("timeLabel"),
+                    }),
             evidence,
           };
           void onSubmit(
@@ -1316,7 +1327,16 @@ function RecordForm({
                 },
           );
         } catch (error) {
-          setFormError((error as Error).message);
+          setFormError(
+            error &&
+              typeof error === "object" &&
+              "issues" in error &&
+              Array.isArray(error.issues)
+              ? error.issues
+                  .map((issue: { message: string }) => issue.message)
+                  .join(" / ")
+              : (error as Error).message,
+          );
         }
       }}
     >
@@ -1454,35 +1474,7 @@ function RecordForm({
           対象版・条件など
           <input name="scope" defaultValue={record?.scope} />
         </label>
-        <div className={css.columns}>
-          <label>
-            時点／開始（年・年月・年月日）
-            <input
-              name="from"
-              placeholder="1843"
-              pattern="[0-9]{4}(-[0-9]{2})?(-[0-9]{2})?"
-              defaultValue={
-                record?.time?.kind === "calendar" ? record.time.from : ""
-              }
-            />
-          </label>
-          <label>
-            終了（期間の場合）
-            <input
-              name="to"
-              placeholder="1844"
-              defaultValue={
-                record?.time?.kind === "calendar" ? record.time.to : ""
-              }
-            />
-          </label>
-        </div>
-        {record?.time && record.time.kind !== "calendar" && (
-          <label className={css.checkLabel}>
-            <input type="checkbox" name="clearTime" />
-            この記録の時期を未確定に戻す
-          </label>
-        )}
+        <ThemeTimeFields time={record?.time ?? null} />
         {record &&
           theme?.timeline?.placements.some((p) => p.recordId === record.id) && (
             <label className={css.checkLabel}>
@@ -1491,7 +1483,7 @@ function RecordForm({
             </label>
           )}
         <p className={css.caption}>
-          時期不明は空欄。周期・定性軸はパッケージ取込で保持できます。
+          周期・定性軸はパッケージ取込で指定できます。
         </p>
       </details>
       {record && (

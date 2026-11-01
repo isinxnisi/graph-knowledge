@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "id": "picasso-blue-period",
+  "title": "ピカソの青の時代と、同じころの絵画",
+  "description": "作品の制作時期と、美術館が明示する青の時代との関係を分けて読む。同じ年に描かれたマティスの作品も並べ、時間が重なるだけでは所属関係を作らない。",
+  "entities": [
+    { "id": "picasso", "name": "パブロ・ピカソ", "kind": "画家", "description": "" },
+    { "id": "blue-period", "name": "ピカソの青の時代", "kind": "制作上の時期区分", "description": "美術館の解説で用いられる時期区分。各作品との関係は別途根拠を確認する。" },
+    { "id": "old-guitarist", "name": "老いたギター弾き", "kind": "絵画", "description": "The Old Guitarist。シカゴ美術館所蔵。" },
+    { "id": "la-vie", "name": "生", "kind": "絵画", "description": "La Vie。クリーブランド美術館所蔵。" },
+    { "id": "matisse", "name": "アンリ・マティス", "kind": "画家", "description": "" },
+    { "id": "luxe", "name": "豪奢、静寂、逸楽", "kind": "絵画", "description": "Luxe, calme et volupté。ポンピドゥー・センターの作品台帳 AM 1982-96。" }
+  ],
+  "records": [
+    {
+      "id": "blue-period-span",
+      "kind": "relation",
+      "subject": "picasso",
+      "object": "blue-period",
+      "relation": "制作の一時期として区分される",
+      "assertion": "ピカソの青の時代は、クリーブランド美術館の解説では1901年から1904年の時期として示される。",
+      "scope": "美術館による年単位の時期区分。正確な開始日・終了日や、境界の不確かさの数値幅は資料にない。期間に入る作品の所属を自動的に決めない。",
+      "polarity": "affirmed",
+      "time": { "kind": "calendar", "meaning": "duration", "from": "1901", "to": "1904", "label": "青の時代（美術館の年単位の区分）" },
+      "evidence": [{
+        "url": "https://www.clevelandart.org/art/1945.24",
+        "title": "Cleveland Museum of Art：La Vie",
+        "locator": "Description：青の時代の年範囲を示す文",
+        "excerpt": "作品解説はピカソの青の時代を1901〜1904年と記す。",
+        "retrievedAt": "2026-11-01T07:25:10Z"
+      }]
+    },
+    {
+      "id": "guitarist-created",
+      "kind": "relation",
+      "subject": "picasso",
+      "object": "old-guitarist",
+      "relation": "描いた",
+      "assertion": "ピカソは《老いたギター弾き》を描いた。美術館の年代表記は1903年後半から1904年初め。",
+      "scope": "制作時期を絞るための幅。1903〜1904年ずっと描き続けた期間や、確定した着手日・完成日を意味しない。年後半・年初を月日へ数値化しない。",
+      "polarity": "affirmed",
+      "time": { "kind": "calendar", "meaning": "occurrence-window", "from": "1903", "to": "1904", "label": "1903年後半〜1904年初め（制作時期の幅）" },
+      "evidence": [{
+        "url": "https://archive.artic.edu/artvisit/pdfs/Sounds.pdf",
+        "title": "Art Institute of Chicago：The Sounds of Summer Visit",
+        "locator": "PDF 1頁・GALLERY 391・作品名に続く年代と作者",
+        "excerpt": "《老いたギター弾き》をピカソ作とし、制作年代を late 1903–early 1904 と表記する。",
+        "retrievedAt": "2026-11-01T07:25:10Z"
+      }]
+    },
+    {
+      "id": "guitarist-blue-period",
+      "kind": "relation",
+      "subject": "old-guitarist",
+      "object": "blue-period",
+      "relation": "この時期の作品に位置付けられる",
+      "assertion": "シカゴ美術館は《老いたギター弾き》をピカソの青の時代の代表例として説明する。",
+      "scope": "美術館が明示する作品と時期区分の関係。制作年代が重なることから推定した関係ではない。分類の発効日・終了日は設定しない。",
+      "polarity": "affirmed",
+      "time": null,
+      "evidence": [{
+        "url": "https://archive.artic.edu/artvisit/pdfs/Sounds.pdf",
+        "title": "Art Institute of Chicago：The Sounds of Summer Visit",
+        "locator": "PDF 1頁・GALLERY 391・作品解説の冒頭",
+        "excerpt": "解説はこの作品を青の時代の代表例として位置付ける。",
+        "retrievedAt": "2026-11-01T07:25:10Z"
+      }]
+    },
+    {
+      "id": "la-vie-created",
+      "kind": "relation",
+      "subject": "picasso",
+      "object": "la-vie",
+      "relation": "描いた",
+      "assertion": "ピカソは1903年に《生》を描いた。",
+      "scope": "作品台帳の年単位の制作年代。月日と制作作業の継続期間はこの記録では確定しない。",
+      "polarity": "affirmed",
+      "time": { "kind": "calendar", "meaning": "point", "from": "1903", "label": "《生》の制作年" },
+      "evidence": [{
+        "url": "https://www.clevelandart.org/art/1945.24",
+        "title": "Cleveland Museum of Art：La Vie",
+        "locator": "Details / Information for La Vie：作品名、1903、Pablo Picasso",
+        "excerpt": "作品台帳は作者をパブロ・ピカソ、制作年を1903年と記載する。",
+        "retrievedAt": "2026-11-01T07:25:10Z"
+      }]
+    },
+    {
+      "id": "la-vie-blue-period",
+      "kind": "relation",
+      "subject": "la-vie",
+      "object": "blue-period",
+      "relation": "この時期の作品に位置付けられる",
+      "assertion": "クリーブランド美術館は《生》をピカソの青の時代の作品として説明する。",
+      "scope": "所蔵館の明示的な位置付け。時期の重なりから推論した所属ではなく、分類の発効日・終了日も補わない。",
+      "polarity": "affirmed",
+      "time": null,
+      "evidence": [{
+        "url": "https://www.clevelandart.org/articles/life-la-vie",
+        "title": "Cleveland Museum of Art：A Life Before La Vie",
+        "locator": "本文冒頭：1945年の取得についての文",
+        "excerpt": "保存修復担当者の記事は《生》をピカソの青の時代の傑作と位置付ける。",
+        "retrievedAt": "2026-11-01T07:25:10Z"
+      }]
+    },
+    {
+      "id": "matisse-luxe-created",
+      "kind": "relation",
+      "subject": "matisse",
+      "object": "luxe",
+      "relation": "描いた",
+      "assertion": "マティスは1904年に《豪奢、静寂、逸楽》を描いた。",
+      "scope": "同時期の別作者の制作を比較する記録。作品台帳の季節表現は1904年秋〜冬で、月日を補わない。青の時代との関係は登録しておらず、未登録を否定の主張へ変換しない。",
+      "polarity": "affirmed",
+      "time": { "kind": "calendar", "meaning": "point", "from": "1904", "label": "1904年（作品台帳では秋〜冬）" },
+      "evidence": [{
+        "url": "https://www.centrepompidou.fr/en/ressources/oeuvre/cBAL4XK",
+        "title": "Centre Pompidou：Luxe, calme et volupté",
+        "locator": "Detailed description：Artist / Creation date / Inventory no. AM 1982-96",
+        "excerpt": "作品台帳の作者はアンリ・マティス。制作年代は1904年秋〜冬と表記される。",
+        "retrievedAt": "2026-11-01T07:25:10Z"
+      }]
+    }
+  ],
+  "timeline": {
+    "version": 1,
+    "axes": [{ "id": "calendar", "kind": "calendar", "label": "制作の時期と時代区分", "originLabel": "西暦・年単位。月日や連続制作期間を補わない" }],
+    "placements": [
+      { "recordId": "blue-period-span", "axisId": "calendar" },
+      { "recordId": "guitarist-created", "axisId": "calendar" },
+      { "recordId": "la-vie-created", "axisId": "calendar" },
+      { "recordId": "matisse-luxe-created", "axisId": "calendar" }
+    ],
+    "insets": []
+  },
+  "mappings": []
+}

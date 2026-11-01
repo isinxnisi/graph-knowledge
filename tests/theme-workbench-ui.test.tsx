@@ -213,8 +213,8 @@ it("lets a correction explicitly detach a date from its configured timeline", as
   await screen.findByText("図の版 1");
   fireEvent.click(screen.getByRole("button", { name: "記録と根拠" }));
   fireEvent.click(screen.getByRole("button", { name: "訂正" }));
-  fireEvent.change(screen.getByLabelText("時点／開始（年・年月・年月日）"), {
-    target: { value: "" },
+  fireEvent.change(screen.getByLabelText("時期の表し方"), {
+    target: { value: "none" },
   });
   fireEvent.click(screen.getByLabelText("この記録の年表配置を外して訂正する"));
   fireEvent.change(screen.getByLabelText("訂正の理由"), {
@@ -226,4 +226,59 @@ it("lets a correction explicitly detach a date from its configured timeline", as
   await waitFor(() => expect(submitted).toBeDefined());
   expect(submitted?.record.time).toBeNull();
   expect(submitted?.detachTimelinePlacement).toBe(true);
+});
+
+it("saves uncertain duration boundaries without turning them into an occurrence window", async () => {
+  let submitted: { record: { time: unknown } } | undefined;
+  vi.stubGlobal(
+    "fetch",
+    vi.fn((url: string, options?: RequestInit) => {
+      if (options?.method === "POST")
+        submitted = JSON.parse(String(options.body));
+      return Promise.resolve({
+        ok: true,
+        json: async () =>
+          url.startsWith("/api/themes/graph")
+            ? { revision: 1 }
+            : { ...base, entities, records: [record] },
+      });
+    }),
+  );
+  render(<ThemeWorkbench themeId="t" />);
+  await screen.findByText("図の版 1");
+  fireEvent.click(screen.getByRole("button", { name: "記録と根拠" }));
+  fireEvent.click(screen.getByRole("button", { name: "訂正" }));
+  fireEvent.change(screen.getByLabelText("時期の表し方"), {
+    target: { value: "duration" },
+  });
+  fireEvent.change(screen.getByLabelText("開始", { exact: true }), {
+    target: { value: "1840" },
+  });
+  fireEvent.change(screen.getByLabelText("終了", { exact: true }), {
+    target: { value: "1850" },
+  });
+  fireEvent.click(screen.getByLabelText("開始時期に幅がある"));
+  fireEvent.click(screen.getByLabelText("終了時期に幅がある"));
+  fireEvent.change(screen.getByLabelText("開始の最も遅い時期"), {
+    target: { value: "1846" },
+  });
+  fireEvent.change(screen.getByLabelText("終了の最も早い時期"), {
+    target: { value: "1844" },
+  });
+  fireEvent.change(screen.getByLabelText("訂正の理由"), {
+    target: { value: "境界の幅を原資料に合わせた" },
+  });
+  fireEvent.submit(
+    screen.getByRole("button", { name: "訂正を保存" }).closest("form")!,
+  );
+  await waitFor(() => expect(submitted).toBeDefined());
+  expect(submitted?.record.time).toEqual({
+    kind: "calendar",
+    meaning: "duration",
+    from: "1840",
+    to: "1850",
+    startLatest: "1846",
+    endEarliest: "1844",
+    label: record.time.label,
+  });
 });

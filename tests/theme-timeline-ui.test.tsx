@@ -172,6 +172,7 @@ it("does not reveal or fetch child records outside the provided snapshot", () =>
 it("shows explicit interval endpoints, cycle wrapping and undated context without invented dates", () => {
   const interval = record("years", "複数年の活動", {
     kind: "calendar",
+    meaning: "duration",
     from: "2020",
     to: "2022",
     label: "年までの期間",
@@ -188,7 +189,7 @@ it("shows explicit interval endpoints, cycle wrapping and undated context withou
   });
   const undated = record("context", "時期を定めない背景", null);
   render(<ThemeTimeline {...common} records={[interval, cyclic, undated]} />);
-  const period = screen.getByLabelText("期間 2020 → 2022");
+  const period = screen.getByLabelText(/^期間：2020 → 2022/);
   expect(within(period).getByText("2020")).toBeTruthy();
   expect(within(period).getByText("2022")).toBeTruthy();
   expect(screen.getByLabelText("期間 10 → 2 月（折り返し）")).toBeTruthy();
@@ -201,6 +202,251 @@ it("shows explicit interval endpoints, cycle wrapping and undated context withou
   ).toBeTruthy();
   expect(document.body.textContent).not.toContain("2020-01-01");
   expect(document.body.textContent).not.toContain("2022-12-31");
+});
+
+it("distinguishes duration, uncertain occurrence and unclassified legacy ranges without inferring membership", () => {
+  const duration = record("duration", "ある活動が続いた", {
+    kind: "calendar",
+    meaning: "duration",
+    from: "1985",
+    to: "1989",
+    label: "確認された活動期間",
+  });
+  const occurrence = record("occurrence", "ある発見が起きた", {
+    kind: "calendar",
+    meaning: "occurrence-window",
+    from: "1986",
+    to: "1988",
+    label: "発生時期の推定",
+  });
+  const point = record("point", "別の出来事が起きた", {
+    kind: "calendar",
+    meaning: "point",
+    from: "1987",
+    label: "記録された年",
+  });
+  const legacy = record("legacy", "意味未整理の旧記録", {
+    kind: "calendar",
+    from: "1984",
+    to: "1990",
+    label: "原本の記載",
+  });
+  const focus = vi.fn();
+  render(
+    <ThemeTimeline
+      {...common}
+      records={[duration, occurrence, point, legacy]}
+      onFocusRecord={focus}
+    />,
+  );
+  const period = screen.getByLabelText(/^期間：1985 → 1989/);
+  expect(period.getAttribute("data-meaning")).toBe("duration");
+  expect(within(period).getByText("開始")).toBeTruthy();
+  const window = screen.getByLabelText(/^発生時期の幅：1986〜1988/);
+  expect(window.getAttribute("data-meaning")).toBe("occurrence-window");
+  expect(within(window).queryByText("開始")).toBeNull();
+  expect(within(window).getByText(/この間のどこかで発生/)).toBeTruthy();
+  expect(
+    screen
+      .getByLabelText(/^時期の範囲（未区別）：1984〜1990/)
+      .getAttribute("data-meaning"),
+  ).toBe("unclassified-range");
+  const summary = screen
+    .getByText("時期を並べて見る", { exact: false })
+    .closest("summary")!;
+  expect(summary.closest("details")!.open).toBe(false);
+  fireEvent.click(summary);
+  expect(screen.getByText(/重なりから所属や因果は決まりません/)).toBeTruthy();
+  const durationTrack = screen.getByRole("img", {
+    name: /ある活動が続いた · 期間：/,
+  });
+  const occurrenceTrack = screen.getByRole("img", {
+    name: /ある発見が起きた · 発生時期の幅：/,
+  });
+  const pointTrack = screen.getByRole("img", {
+    name: /別の出来事が起きた · 1987/,
+  });
+  expect(durationTrack.parentElement!.parentElement).toBe(
+    occurrenceTrack.parentElement!.parentElement,
+  );
+  expect(pointTrack.parentElement!.parentElement).toBe(
+    durationTrack.parentElement!.parentElement,
+  );
+  expect(
+    screen
+      .getByRole("button", { name: /^ある活動が続いた/ })
+      .getAttribute("aria-expanded"),
+  ).toBe("false");
+  fireEvent.click(
+    screen.getByRole("button", { name: "記録を読む：ある発見が起きた" }),
+  );
+  expect(focus).toHaveBeenCalledWith(occurrence.id);
+  expect(
+    screen
+      .getByRole("button", { name: /^ある発見が起きた/ })
+      .getAttribute("aria-expanded"),
+  ).toBe("true");
+  expect(
+    screen
+      .getByRole("button", { name: /^ある活動が続いた/ })
+      .getAttribute("aria-expanded"),
+  ).toBe("false");
+});
+
+it("retains uncertainty at both duration boundaries, including overlapping boundary ranges", () => {
+  const uncertain = record("uncertain", "境界が不確かな実期間", {
+    kind: "calendar",
+    meaning: "duration",
+    from: "1985",
+    startLatest: "1988",
+    endEarliest: "1987",
+    to: "1989",
+    label: "架空の操作例",
+  });
+  render(
+    <ThemeTimeline
+      {...common}
+      records={[uncertain]}
+      focusedRecordId={uncertain.id}
+    />,
+  );
+  const period = screen.getByLabelText(
+    /^期間：開始 1985〜1988 · 終了 1987〜1989/,
+  );
+  expect(within(period).getByText("1985〜1988")).toBeTruthy();
+  expect(within(period).getByText("1987〜1989")).toBeTruthy();
+  expect(period.querySelector("[data-overlapping-boundaries]")).not.toBeNull();
+  expect(
+    screen.getByText(
+      /開始は 1985〜1988 のどこか。終了は 1987〜1989 のどこか。/,
+    ),
+  ).toBeTruthy();
+  expect(
+    within(period).queryByText("発生時期の幅", { exact: true }),
+  ).toBeNull();
+  expect(document.body.textContent).not.toContain("1985-01-01");
+});
+
+it("uses possible date domains for mixed precision without reversing ranges or fixing a coarse point to January", () => {
+  const mixed = record("mixed", "月から年の終端へ", {
+    kind: "calendar",
+    meaning: "duration",
+    from: "1903-12",
+    to: "1903",
+    label: "原表記",
+  });
+  const uncertain = record("mixed-uncertain", "年精度の最遅開始", {
+    kind: "calendar",
+    meaning: "duration",
+    from: "1903-12",
+    startLatest: "1903",
+    endEarliest: "1903-12",
+    to: "1904",
+    label: "架空例",
+  });
+  const year = record("year-point", "年まで分かる一点", {
+    kind: "calendar",
+    meaning: "point",
+    from: "1903",
+    label: "年まで",
+  });
+  const month = record("month-point", "月まで分かる一点", {
+    kind: "calendar",
+    meaning: "point",
+    from: "1903-12",
+    label: "月まで",
+  });
+  const day = record("day-point", "日が分かる一点", {
+    kind: "calendar",
+    meaning: "point",
+    from: "1903-12-15",
+    label: "日まで",
+  });
+  render(
+    <ThemeTimeline
+      {...common}
+      records={[mixed, uncertain, year, month, day]}
+    />,
+  );
+  fireEvent.click(
+    screen.getByText("時期を並べて見る", { exact: false }).closest("summary")!,
+  );
+  const track = (assertion: string) =>
+    screen.getByRole("img", { name: new RegExp(`^${assertion} ·`) });
+  const extent = (element: HTMLElement) => {
+    const start = parseFloat(element.style.getPropertyValue("--range-start"));
+    return {
+      start,
+      end: start + parseFloat(element.style.getPropertyValue("--range-width")),
+    };
+  };
+  const mixedRange = extent(track(mixed.assertion));
+  expect(mixedRange.end).toBeGreaterThan(mixedRange.start);
+  const yearRange = extent(track(year.assertion)),
+    monthRange = extent(track(month.assertion)),
+    dayPosition = extent(track(day.assertion));
+  expect(yearRange.start).toBeLessThan(monthRange.start);
+  expect(yearRange.end).toBeGreaterThanOrEqual(monthRange.end);
+  expect(monthRange.start).toBeLessThan(dayPosition.start);
+  expect(monthRange.end).toBeGreaterThan(dayPosition.start);
+  expect(
+    track(year.assertion).querySelector('[data-precision="年精度"]'),
+  ).not.toBeNull();
+  expect(
+    track(month.assertion).querySelector('[data-precision="月精度"]'),
+  ).not.toBeNull();
+  expect(track(day.assertion).querySelector("[data-precision]")).toBeNull();
+  for (const band of document.querySelectorAll<HTMLElement>('[role="img"] i')) {
+    if (band.style.width)
+      expect(parseFloat(band.style.width)).toBeGreaterThanOrEqual(0);
+  }
+  expect(
+    screen
+      .getByLabelText(/^期間：開始 1903-12〜1903 · 終了 1903-12〜1904/)
+      .querySelector("[data-overlapping-boundaries]"),
+  ).not.toBeNull();
+  expect(document.body.textContent).not.toContain("1903-01-01");
+  expect(document.body.textContent).not.toContain("1903-12-31");
+});
+
+it("keeps early-year and leap-month precision in layout without Date.UTC year coercion", () => {
+  const duration = record("early", "古い年の期間", {
+    kind: "calendar",
+    meaning: "duration",
+    from: "0004-02",
+    to: "0004",
+    label: "架空例",
+  });
+  const window = record("early-window", "古い年の発生幅", {
+    kind: "calendar",
+    meaning: "occurrence-window",
+    from: "0004-02",
+    to: "0004-03",
+    label: "架空例",
+  });
+  const leap = record("leap", "閏日の一点", {
+    kind: "calendar",
+    meaning: "point",
+    from: "0004-02-29",
+    label: "架空例",
+  });
+  render(<ThemeTimeline {...common} records={[duration, window, leap]} />);
+  fireEvent.click(
+    screen.getByText("時期を並べて見る", { exact: false }).closest("summary")!,
+  );
+  const durationTrack = screen.getByRole("img", { name: /^古い年の期間/ }),
+    leapTrack = screen.getByRole("img", { name: /^閏日の一点/ });
+  const from = parseFloat(
+      durationTrack.style.getPropertyValue("--range-start"),
+    ),
+    width = parseFloat(durationTrack.style.getPropertyValue("--range-width")),
+    leapPosition = parseFloat(
+      leapTrack.style.getPropertyValue("--range-start"),
+    );
+  expect(width).toBeGreaterThan(0);
+  expect(leapPosition).toBeGreaterThan(from);
+  expect(leapPosition).toBeLessThan(from + width);
+  expect(document.body.textContent).not.toContain("1904");
 });
 
 it("keeps expansion controls linked for a free-text axis name containing spaces", () => {

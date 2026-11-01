@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { CapsuleDocument } from "./capsule-document";
 import { themeTimelineIssues } from "./theme-timeline";
+import { themeTimeLabel } from "./theme-time";
 
 const id = z
   .string()
@@ -22,6 +23,29 @@ export const themeEvidenceSchema = z.strictObject({
   excerpt: z.string().trim().min(1).max(4000),
   retrievedAt: z.iso.datetime(),
 });
+function monthDays(year: number, month: number) {
+  return month === 2
+    ? year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)
+      ? 29
+      : 28
+    : [4, 6, 9, 11].includes(month)
+      ? 30
+      : 31;
+}
+// Bounds are used only to reject impossible orderings. They never replace the
+// original partial date or imply that a year/month has a known day.
+function calendarBounds(value: string): [number, number] {
+  const [year, month, day] = value.split("-").map(Number);
+  const firstMonth = month ?? 1,
+    lastMonth = month ?? 12;
+  return [
+    year * 10000 + firstMonth * 100 + (day ?? 1),
+    year * 10000 + lastMonth * 100 + (day ?? monthDays(year, lastMonth)),
+  ];
+}
+function definitelyAfter(left: string, right: string) {
+  return calendarBounds(left)[0] > calendarBounds(right)[1];
+}
 const calendarDate = z
   .string()
   .regex(/^\d{4}(-\d{2})?(-\d{2})?$/)
@@ -30,7 +54,7 @@ const calendarDate = z
     if (!y) return false;
     if (m !== undefined && (m < 1 || m > 12)) return false;
     if (d !== undefined) {
-      const days = new Date(Date.UTC(y, m, 0)).getUTCDate();
+      const days = monthDays(y, m);
       if (d < 1 || d > days) return false;
     }
     return true;
@@ -41,6 +65,9 @@ export const themeTimeSchema = z
       kind: z.literal("calendar"),
       from: calendarDate,
       to: calendarDate.optional(),
+      meaning: z.enum(["point", "duration", "occurrence-window"]).optional(),
+      startLatest: calendarDate.optional(),
+      endEarliest: calendarDate.optional(),
       label: z.string().max(300).default(""),
     }),
     z.strictObject({
@@ -63,15 +90,36 @@ export const themeTimeSchema = z
     }),
   ])
   .superRefine((t, c) => {
-    if (
-      t.kind === "calendar" &&
-      t.to &&
-      t.from.padEnd(10, "-01") > t.to.padEnd(10, "-31")
-    )
-      c.addIssue({
-        code: "custom",
-        message: "期間の終了を開始以降にしてください",
-      });
+    if (t.kind === "calendar") {
+      const issue = (path: string, message: string) =>
+        c.addIssue({ code: "custom", path: [path], message });
+      if (t.to && definitelyAfter(t.from, t.to))
+        issue("to", "時期の範囲の後端を前端以降にしてください");
+      if (t.meaning === "point" && t.to)
+        issue("to", "発生時点には範囲の後端を指定できません");
+      if (
+        (t.meaning === "duration" || t.meaning === "occurrence-window") &&
+        !t.to
+      )
+        issue("to", "期間・発生時期の幅には範囲の後端が必要です");
+      if (t.meaning !== "duration") {
+        if (t.startLatest)
+          issue("startLatest", "開始の不確かな幅は期間にだけ指定できます");
+        if (t.endEarliest)
+          issue("endEarliest", "終了の不確かな幅は期間にだけ指定できます");
+      } else {
+        if (t.startLatest && definitelyAfter(t.from, t.startLatest))
+          issue("startLatest", "開始の最遅を最早以降にしてください");
+        if (t.endEarliest && t.to && definitelyAfter(t.endEarliest, t.to))
+          issue("endEarliest", "終了の最早を最遅以前にしてください");
+        if (t.startLatest && t.to && definitelyAfter(t.startLatest, t.to))
+          issue("startLatest", "開始の最遅を終了の最遅以前にしてください");
+        if (t.endEarliest && definitelyAfter(t.from, t.endEarliest))
+          issue("endEarliest", "終了の最早を開始の最早以降にしてください");
+        // startLatest may be after endEarliest: overlapping endpoint windows
+        // mean no guaranteed common interior, not an invalid duration.
+      }
+    }
     if (
       t.kind === "cycle" &&
       (t.from < 0 ||
@@ -261,6 +309,7 @@ export function themeRecordSearchText(
     record.assertion,
     record.relation,
     record.scope,
+    themeTimeLabel(record.time),
     ...entities
       .filter((e) => e.id === record.subject || e.id === record.object)
       .map((e) => e.name),

@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "id": "temporal-boundaries-example",
+  "title": "操作例・架空：期間の境界と出来事の時期",
+  "description": "すべて架空の操作例。実在の催事や史実ではない。開始・終了それぞれの不確かさ、境界の候補幅が重なる期間、出来事が起きた時期だけの幅を比べる。資料URLはこの操作例を定義するローカルJSONで、外部の史実資料ではない。",
+  "entities": [
+    { "id": "exercise-a", "name": "架空展示A", "kind": "架空の操作対象", "description": "操作例のためだけの架空対象。実在の展示を指さない。" },
+    { "id": "exercise-b", "name": "架空展示B", "kind": "架空の操作対象", "description": "操作例のためだけの架空対象。実在の展示を指さない。" },
+    { "id": "exercise-c", "name": "架空確認C", "kind": "架空の操作対象", "description": "操作例のためだけの架空対象。実在の出来事を指さない。" }
+  ],
+  "records": [
+    {
+      "id": "separate-boundaries",
+      "kind": "episode",
+      "subject": "exercise-a",
+      "object": null,
+      "relation": "",
+      "assertion": "【操作例・架空】展示Aは1月1〜15日のいずれかに始まり、3月1〜31日のいずれかに終わったと仮定する。",
+      "scope": "すべて架空の仮定。開始候補と終了候補は別の幅。実際の開始・終了は未特定だが、その間は継続したという操作例。来場者数など他の事実を含まない。",
+      "polarity": "affirmed",
+      "time": {
+        "kind": "calendar",
+        "meaning": "duration",
+        "from": "2024-01-01",
+        "startLatest": "2024-01-15",
+        "endEarliest": "2024-03-01",
+        "to": "2024-03-31",
+        "label": "架空A：開始と終了の候補幅が離れている"
+      },
+      "evidence": [{
+        "url": "http://localhost:3276/theme-examples/temporal-boundaries-example.json",
+        "title": "操作例・架空：このローカルJSONの定義",
+        "locator": "records[id=separate-boundaries]。実資料ではない操作例。",
+        "excerpt": "架空例Aの定義。1月1〜15日の開始候補、3月1〜31日の終了候補を人為的に設定した。史実の証拠ではない。",
+        "retrievedAt": "2026-11-01T07:27:19Z"
+      }]
+    },
+    {
+      "id": "overlapping-boundaries",
+      "kind": "episode",
+      "subject": "exercise-b",
+      "object": null,
+      "relation": "",
+      "assertion": "【操作例・架空】展示Bは2月1〜20日のいずれかに始まり、2月10〜28日のいずれかに終わったと仮定する。",
+      "scope": "すべて架空の仮定。実際の終了は実際の開始以降とするが、開始候補と終了候補の幅は重なる。全候補で共通して継続していたと断言できる中央区間はない。2月10〜20日を確実な活動期間と誤読しない。",
+      "polarity": "affirmed",
+      "time": {
+        "kind": "calendar",
+        "meaning": "duration",
+        "from": "2024-02-01",
+        "startLatest": "2024-02-20",
+        "endEarliest": "2024-02-10",
+        "to": "2024-02-28",
+        "label": "架空B：開始と終了の候補幅が重なる"
+      },
+      "evidence": [{
+        "url": "http://localhost:3276/theme-examples/temporal-boundaries-example.json",
+        "title": "操作例・架空：このローカルJSONの定義",
+        "locator": "records[id=overlapping-boundaries]。実資料ではない操作例。",
+        "excerpt": "架空例Bの定義。開始は2月1〜20日、終了は2月10〜28日の候補幅。境界幅の交差を試すための人為的な設定で、史実の証拠ではない。",
+        "retrievedAt": "2026-11-01T07:27:19Z"
+      }]
+    },
+    {
+      "id": "occurrence-window",
+      "kind": "episode",
+      "subject": "exercise-c",
+      "object": null,
+      "relation": "",
+      "assertion": "【操作例・架空】確認Cは2月5〜18日の間の、まだ特定できない一時点に行われたと仮定する。",
+      "scope": "すべて架空の仮定。出来事が起きた候補範囲であり、2月5日から18日まで作業を継続した期間ではない。展示A・Bとの時間の重なりだけで関係は登録しない。",
+      "polarity": "affirmed",
+      "time": {
+        "kind": "calendar",
+        "meaning": "occurrence-window",
+        "from": "2024-02-05",
+        "to": "2024-02-18",
+        "label": "架空C：出来事が起きた時期の候補幅"
+      },
+      "evidence": [{
+        "url": "http://localhost:3276/theme-examples/temporal-boundaries-example.json",
+        "title": "操作例・架空：このローカルJSONの定義",
+        "locator": "records[id=occurrence-window]。実資料ではない操作例。",
+        "excerpt": "架空例Cの定義。2月5〜18日の未特定の一時点を人為的に設定した。継続時間ではなく、史実の証拠でもない。",
+        "retrievedAt": "2026-11-01T07:27:19Z"
+      }]
+    }
+  ],
+  "timeline": {
+    "version": 1,
+    "axes": [{ "id": "calendar", "kind": "calendar", "label": "操作例・架空の2024年", "originLabel": "史実ではない操作例。境界の候補幅と出来事の候補幅を区別する" }],
+    "placements": [
+      { "recordId": "separate-boundaries", "axisId": "calendar" },
+      { "recordId": "overlapping-boundaries", "axisId": "calendar" },
+      { "recordId": "occurrence-window", "axisId": "calendar" }
+    ],
+    "insets": []
+  },
+  "mappings": []
+}

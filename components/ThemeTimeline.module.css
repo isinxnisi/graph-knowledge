@@ -310,6 +310,257 @@
   margin: 0;
   font-size: 10px;
 }
+.calendarRange {
+  margin-bottom: 14px;
+}
+.rangeTitle {
+  display: block;
+  color: var(--color-muted);
+  font-size: 10px;
+  margin: 0 0 9px 3px;
+}
+.calendarRange .period {
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.calendarRange .period > div {
+  flex-wrap: wrap;
+  gap: 2px 10px;
+}
+.calendarRange[data-meaning="occurrence-window"] .periodBar {
+  width: 8px;
+  background: transparent;
+  border: 1px dashed var(--color-accent);
+  border-radius: 5px;
+  left: 4px;
+}
+.calendarRange[data-meaning="unclassified-range"] .periodBar {
+  background: transparent;
+  border-left: 1px dotted var(--color-muted);
+}
+.calendarRange:is(
+    [data-meaning="occurrence-window"],
+    [data-meaning="unclassified-range"]
+  )
+  .periodBar::before,
+.calendarRange:is(
+    [data-meaning="occurrence-window"],
+    [data-meaning="unclassified-range"]
+  )
+  .periodBar::after {
+  content: none;
+}
+.uncertainEnd {
+  position: absolute;
+  left: 0;
+  width: 3px;
+  height: 35%;
+  box-sizing: border-box;
+  background: var(--color-panel);
+  border-left: 3px dashed #66845c;
+}
+.uncertainEnd[data-edge="start"] {
+  top: 0;
+}
+.uncertainEnd[data-edge="end"] {
+  bottom: 0;
+}
+.periodBar[data-overlapping-boundaries] {
+  background: transparent;
+  border-left: 3px dashed #66845c;
+  width: 0;
+}
+.periodBar[data-overlapping-boundaries] .uncertainEnd {
+  display: none;
+}
+.rangeNote {
+  font-size: 10px;
+  line-height: 1.6;
+  color: var(--color-muted);
+  margin: 6px 10px 0 3px;
+}
+.pointTime {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 10px 4px;
+  font-size: 10px;
+  color: var(--color-muted);
+}
+.pointTime i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+.legendWindow {
+  width: 8px;
+  height: 18px;
+  border: 1px dashed var(--color-accent);
+  border-radius: 5px;
+}
+.legendUncertain {
+  height: 18px;
+  width: 3px;
+  border-top: 7px dotted #66845c;
+  background: linear-gradient(to bottom, transparent 7px, #66845c 7px);
+}
+.comparison {
+  margin: 10px 0 4px;
+  padding: 0 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  min-width: 0;
+}
+.comparison summary {
+  padding: 9px 0;
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--color-accent);
+}
+.comparison summary span {
+  margin-left: 8px;
+  color: var(--color-muted);
+  font-size: 9px;
+}
+.comparisonNote {
+  color: var(--color-muted);
+  font-size: 10px;
+  line-height: 1.6;
+  margin: 0 0 12px;
+}
+.comparisonRows {
+  max-height: 270px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.comparisonRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(92px, 1.25fr);
+  column-gap: 12px;
+  padding: 5px 0;
+  min-width: 0;
+}
+.comparison .comparisonRow > button {
+  display: block;
+  justify-content: flex-start;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  padding: 2px 0;
+  min-width: 0;
+  text-align: left;
+  font-size: 11px;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.timeline .comparisonRow button:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+.comparisonRow small {
+  grid-column: 1;
+  font-size: 9px;
+  color: var(--color-muted);
+}
+.comparisonTrack {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  position: relative;
+  height: 16px;
+  background: linear-gradient(var(--color-border), var(--color-border)) center /
+    100% 1px no-repeat;
+}
+.comparisonBand {
+  position: absolute;
+  left: var(--range-start);
+  width: var(--range-width);
+  top: 6px;
+  height: 4px;
+  background: #66845c;
+}
+.comparisonBand::before,
+.comparisonBand::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: 10px;
+  background: #66845c;
+  z-index: 1;
+}
+.comparisonBand::before {
+  left: 0;
+}
+.comparisonBand::after {
+  right: 0;
+}
+.comparisonRow[data-meaning="occurrence-window"] .comparisonBand {
+  top: 3px;
+  height: 10px;
+  box-sizing: border-box;
+  border: 1px dashed var(--color-accent);
+  border-radius: 7px;
+  background: var(--color-panel);
+}
+.comparisonRow[data-meaning="unclassified-range"] .comparisonBand {
+  top: 6px;
+  background: var(--color-panel);
+  border-top: 1px dotted var(--color-muted);
+}
+.comparisonRow:is(
+    [data-meaning="occurrence-window"],
+    [data-meaning="unclassified-range"]
+  )
+  .comparisonBand::before,
+.comparisonRow:is(
+    [data-meaning="occurrence-window"],
+    [data-meaning="unclassified-range"]
+  )
+  .comparisonBand::after {
+  content: none;
+}
+.comparisonPoint {
+  position: absolute;
+  left: var(--range-start);
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+.uncertainBand {
+  position: absolute;
+  top: 6px;
+  height: 4px;
+  background: var(--color-panel);
+  border-top: 3px dashed #66845c;
+  box-sizing: border-box;
+}
+.precisionBand {
+  position: absolute;
+  top: 3px;
+  height: 10px;
+  box-sizing: border-box;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--color-accent) 16%, var(--color-panel));
+}
+.comparisonDates {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0 11px 44.4%;
+  padding-left: 8px;
+  color: var(--color-muted);
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+}
 .expansion {
   display: grid;
   grid-template-rows: 0fr;
@@ -411,6 +662,13 @@
   .timeline {
     padding: 12px 10px 18px;
     border-radius: 10px;
+  }
+  .comparison .comparisonRow > button {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
   .controls {
     gap: 8px;

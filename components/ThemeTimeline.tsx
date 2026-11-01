@@ -7,6 +7,7 @@ import type {
   ThemeTimelineConfig,
 } from "../lib/domain/theme-workbench";
 import { buildTimelineGroups } from "../lib/domain/theme-timeline";
+import { calendarMeaning, themeTimeLabel } from "../lib/domain/theme-time";
 import css from "./ThemeTimeline.module.css";
 
 type Props = {
@@ -22,7 +23,44 @@ type Props = {
   graphRecordIds?: readonly string[];
 };
 type Group = ReturnType<typeof buildTimelineGroups>[number];
+type CalendarTime = Extract<
+  NonNullable<ThemeRecord["time"]>,
+  { kind: "calendar" }
+>;
 const colors = ["#376f9a", "#aa6b32", "#5b7e59", "#8b668f", "#537e84"];
+const meaningLabels = {
+  point: "時点",
+  duration: "期間",
+  "occurrence-window": "発生時期の幅",
+  "unclassified-range": "時期の範囲 · 未区別",
+};
+
+// Layout coordinates only: never replace a saved partial date with these bounds.
+// Numeric calendar coordinates avoid Date.UTC's special treatment of years 0–99.
+function calendarLayoutBounds(value: string): [number, number] {
+  const [year, month, day] = value.split("-").map(Number);
+  const firstMonth = month ?? 1,
+    lastMonth = month ?? 12;
+  const days =
+    lastMonth === 2
+      ? year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)
+        ? 29
+        : 28
+      : [4, 6, 9, 11].includes(lastMonth)
+        ? 30
+        : 31;
+  return [
+    year * 10000 + firstMonth * 100 + (day ?? 1),
+    year * 10000 + lastMonth * 100 + (day ?? days),
+  ];
+}
+
+function calendarBoundariesOverlap(time: CalendarTime) {
+  return (
+    calendarLayoutBounds(time.startLatest ?? time.from)[1] >=
+    calendarLayoutBounds(time.endEarliest ?? time.to ?? time.from)[0]
+  );
+}
 
 function timeText(record: ThemeRecord) {
   const t = record.time;
@@ -65,6 +103,72 @@ function orderedRecords(group: Group) {
 
 function Period({ record }: { record: ThemeRecord }) {
   const t = record.time;
+  if (t?.kind === "calendar") {
+    const meaning = calendarMeaning(t);
+    if (meaning === "point")
+      return (
+        <p className={css.pointTime}>
+          <i aria-hidden="true" />
+          時点
+        </p>
+      );
+    const duration = meaning === "duration";
+    return (
+      <div
+        className={css.calendarRange}
+        data-meaning={meaning}
+        aria-label={themeTimeLabel(t)}
+      >
+        <span className={css.rangeTitle}>{meaningLabels[meaning]}</span>
+        <div className={css.period}>
+          <span
+            className={css.periodBar}
+            data-overlapping-boundaries={
+              (duration &&
+                (t.startLatest ||
+                  t.endEarliest ||
+                  t.from.length < 10 ||
+                  (t.to?.length ?? 10) < 10) &&
+                calendarBoundariesOverlap(t)) ||
+              undefined
+            }
+            aria-hidden="true"
+          >
+            {duration && t.startLatest && (
+              <i className={css.uncertainEnd} data-edge="start" />
+            )}
+            {duration && t.endEarliest && (
+              <i className={css.uncertainEnd} data-edge="end" />
+            )}
+          </span>
+          <div>
+            <small>{duration ? "開始" : "下限"}</small>
+            <span>
+              {t.from}
+              {duration && t.startLatest ? `〜${t.startLatest}` : ""}
+            </span>
+          </div>
+          <div>
+            <small>{duration ? "終了" : "上限"}</small>
+            <span>
+              {duration && t.endEarliest ? `${t.endEarliest}〜` : ""}
+              {t.to}
+            </span>
+          </div>
+        </div>
+        {meaning === "occurrence-window" && (
+          <p className={css.rangeNote}>
+            この間のどこかで発生 · 続いた期間ではありません
+          </p>
+        )}
+        {meaning === "unclassified-range" && (
+          <p className={css.rangeNote}>
+            続いた期間か、発生時期の幅かは未区別です
+          </p>
+        )}
+      </div>
+    );
+  }
   if (!t || (t.kind !== "cycle" && (!t.to || t.to === t.from))) return null;
   if (t.kind === "cycle" && t.from === t.to && !t.wrap) return null;
   return (
@@ -88,6 +192,166 @@ function Period({ record }: { record: ThemeRecord }) {
         </span>
       </div>
     </div>
+  );
+}
+
+function CalendarComparison({
+  records,
+  onOpenRecord,
+}: {
+  records: ThemeRecord[];
+  onOpenRecord: (id: string) => void;
+}) {
+  const dated = records.filter(
+    (record): record is ThemeRecord & { time: CalendarTime } =>
+      record.time?.kind === "calendar",
+  );
+  if (
+    dated.filter((record) => calendarMeaning(record.time) !== "point").length <
+    2
+  )
+    return null;
+  const rawDates = [
+    ...new Set(
+      dated.flatMap(({ time }) =>
+        [time.from, time.startLatest, time.endEarliest, time.to].filter(
+          (value): value is string => !!value,
+        ),
+      ),
+    ),
+  ];
+  const dates = [...new Set(rawDates.flatMap(calendarLayoutBounds))].sort(
+    (a, b) => a - b,
+  );
+  if (dates.length < 2) return null;
+  const position = (date: number) =>
+    3 + (dates.indexOf(date) / (dates.length - 1)) * 94;
+  const firstLabel = [...rawDates].sort(
+    (a, b) => calendarLayoutBounds(a)[0] - calendarLayoutBounds(b)[0],
+  )[0];
+  const lastLabel = [...rawDates].sort(
+    (a, b) => calendarLayoutBounds(b)[1] - calendarLayoutBounds(a)[1],
+  )[0];
+  return (
+    <details className={css.comparison}>
+      <summary>
+        時期を並べて見る <span>各記録を同じ軸で比較</span>
+      </summary>
+      <p className={css.comparisonNote}>
+        境界の日付順・間隔は等間隔。年・月だけの記録は薄い幅で示します。重なりから所属や因果は決まりません。
+      </p>
+      <div className={css.comparisonRows}>
+        {dated.map((record) => {
+          const time = record.time,
+            meaning = calendarMeaning(time);
+          const fromBounds = calendarLayoutBounds(time.from),
+            toBounds = calendarLayoutBounds(time.to ?? time.from);
+          const from = position(fromBounds[0]),
+            to = position(toBounds[1]);
+          const start = position(
+              calendarLayoutBounds(time.startLatest ?? time.from)[1],
+            ),
+            end = position(
+              calendarLayoutBounds(time.endEarliest ?? time.to ?? time.from)[0],
+            );
+          const coarsePoint =
+            meaning === "point" && fromBounds[0] !== fromBounds[1];
+          const precision = time.from.length === 4 ? "年精度" : "月精度";
+          return (
+            <div
+              className={css.comparisonRow}
+              key={record.id}
+              data-meaning={meaning}
+            >
+              <button
+                type="button"
+                onClick={() => onOpenRecord(record.id)}
+                aria-label={`記録を読む：${record.assertion}`}
+                title={record.assertion}
+              >
+                {record.assertion}
+              </button>
+              <div
+                className={css.comparisonTrack}
+                role="img"
+                aria-label={`${record.assertion} · ${themeTimeLabel(time)}${coarsePoint ? ` · ${precision}の幅（日付未確定）` : ""}`}
+                style={
+                  {
+                    "--range-start": `${from}%`,
+                    "--range-width": `${Math.max(0, to - from)}%`,
+                  } as CSSProperties
+                }
+              >
+                {meaning === "point" ? (
+                  coarsePoint ? (
+                    <i
+                      className={css.precisionBand}
+                      data-precision={precision}
+                      style={{
+                        left: `${from}%`,
+                        width: `${Math.max(0, to - from)}%`,
+                      }}
+                    />
+                  ) : (
+                    <i className={css.comparisonPoint} />
+                  )
+                ) : (
+                  <>
+                    <i className={css.comparisonBand} />
+                    {meaning === "duration" && (
+                      <>
+                        {(time.startLatest ||
+                          fromBounds[0] !== fromBounds[1]) && (
+                          <i
+                            className={
+                              time.startLatest
+                                ? css.uncertainBand
+                                : css.precisionBand
+                            }
+                            data-precision={
+                              !time.startLatest ? "開始の精度幅" : undefined
+                            }
+                            style={{
+                              left: `${from}%`,
+                              width: `${Math.max(0, Math.min(to, start) - from)}%`,
+                            }}
+                          />
+                        )}
+                        {(time.endEarliest || toBounds[0] !== toBounds[1]) && (
+                          <i
+                            className={
+                              time.endEarliest
+                                ? css.uncertainBand
+                                : css.precisionBand
+                            }
+                            data-precision={
+                              !time.endEarliest ? "終了の精度幅" : undefined
+                            }
+                            style={{
+                              left: `${Math.max(from, end)}%`,
+                              width: `${Math.max(0, to - Math.max(from, end))}%`,
+                            }}
+                          />
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
+              <small>
+                {meaningLabels[meaning]}
+                {coarsePoint ? ` · ${precision}` : ""}
+                {time.startLatest || time.endEarliest ? " · 境界に幅" : ""}
+              </small>
+            </div>
+          );
+        })}
+      </div>
+      <div className={css.comparisonDates}>
+        <span>{firstLabel}</span>
+        <span>{lastLabel}</span>
+      </div>
+    </details>
   );
 }
 
@@ -175,6 +439,12 @@ export default function ThemeTimeline({
           </div>
           <span>{rows.length}件</span>
         </header>
+        {group.kind === "calendar" && (
+          <CalendarComparison
+            records={rows}
+            onOpenRecord={(id) => toggle(id, false)}
+          />
+        )}
         {lanes.length > 0 && group.kind !== "none" && (
           <div className={css.laneKey} aria-label="たどっている主語の対象">
             {lanes.map((id) => (
@@ -303,6 +573,17 @@ export default function ThemeTimeline({
                         {t?.kind === "qualitative" && (
                           <p className={css.note}>{t.coordinateMeaning}</p>
                         )}
+                        {t?.kind === "calendar" &&
+                          calendarMeaning(t) === "duration" &&
+                          (t.startLatest || t.endEarliest) && (
+                            <p className={css.note}>
+                              {t.startLatest &&
+                                `開始は ${t.from}〜${t.startLatest} のどこか。`}
+                              {t.endEarliest &&
+                                `終了は ${t.endEarliest}〜${t.to} のどこか。`}
+                              境界の幅が、続いた期間そのものを表すわけではありません。
+                            </p>
+                          )}
                         {record.polarity !== "affirmed" && (
                           <p className={css.note}>
                             {record.polarity === "denied"
@@ -371,9 +652,17 @@ export default function ThemeTimeline({
               <i className={css.legendPeriod} />
               明示された期間
             </span>
+            <span>
+              <i className={css.legendWindow} />
+              発生時期の幅
+            </span>
+            <span>
+              <i className={css.legendUncertain} />
+              不確かな期間の境界
+            </span>
           </div>
           <p className={css.help}>
-            細い線で同じ対象の記録をたどれます。存続期間や因果関係は表しません。期間は両端を持つ線で示します。
+            細い線で同じ対象の記録をたどれます。存続期間や因果関係は表しません。実期間は両端付きの実線、発生時期の幅は点線の範囲です。時間が重なるだけでは、所属や関連づけは作られません。詳しい時間軸は明示して結びつけたものだけを行内に表示します。
           </p>
         </details>
         {subjects.length > 1 && (
