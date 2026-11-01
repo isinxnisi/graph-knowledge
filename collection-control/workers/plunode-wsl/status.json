@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-01T20:59:43.145827+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-01T20:05:25.837883+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-01T20:59:43.145827+00:00",
+    "eligibleAt": "2026-11-01T20:05:25.837883+00:00",
     "windowEndAt": "2026-11-01T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-48-dot-toriyama-three-20261027-batch-01",
-    "startedAt": "2026-11-01T19:54:43.145829+00:00",
-    "limitAt": "2026-11-01T20:49:43.145827+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-70-dot-fujikof-doraemon-20261029",
-    "endedAt": "2026-11-01T19:44:30.365713+00:00"
+    "requestId": "issue-48-dot-toriyama-three-20261027-batch-01",
+    "endedAt": "2026-11-01T19:55:25.837885+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 5,
-    "waiting-control": 29,
-    "completed": 24,
+    "waiting-control": 28,
+    "completed": 25,
     "awaiting-recovery": 4
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T19:54:50.383241+00:00"
+  "checkedAt": "2026-11-01T19:55:40.643561+00:00"
 }
