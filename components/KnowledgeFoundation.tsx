@@ -141,7 +141,7 @@ export default function KnowledgeFoundation() {
 
   const records = catalog.records.filter((r) => [r.content.assertion, r.content.relation, ...catalog.entities.filter((e) => [r.content.subjectId, r.content.objectId].includes(e.id)).map((e) => e.content.name)].join(" ").normalize("NFKC").toLowerCase().includes(query.normalize("NFKC").toLowerCase()));
   return <main className={css.shell}>
-    <header className={css.header}><Link href="/themes">← テーマと年表</Link><span className={css.meta}>このPCの確認用 · 運営者の操作</span></header>
+    <header className={css.header}><Link href="/themes">← テーマと年表</Link><Link href="/themes/explore">記録を探索する →</Link><span className={css.meta}>このPCの確認用 · 運営者の操作</span></header>
     <div className={css.intro}><h1>共通の記録</h1><p>根拠とともに残し、複数のテーマから同じ記録を使えます。</p></div>
     {message && <p className={css.notice} role="status">{message}</p>}
     {error && <div className={`${css.notice} ${css.error}`} role="alert">{error}<button onClick={() => { setError(""); if (theme) void openTheme(theme.theme.id); else void load().catch((e) => setError(e.message)); }}>{theme ? "最新の差分を確認" : "表示を再読込"}</button></div>}

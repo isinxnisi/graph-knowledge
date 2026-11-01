@@ -134,6 +134,14 @@ function sampleSnapshot(snapshot: KnowledgeSnapshot, ids: Set<string>): Knowledg
 
 async function main() {
   assert(process.argv.includes("--run-isolated"), "Explicit --run-isolated is required");
+  // This historical proof stops its own Neo4j container in finally. U2 now
+  // serves that container continuously, so never run the destructive lifecycle
+  // while its publisher is active.
+  const workerPid = await readFile(path.join(root, ".local/issue75/publication-worker.pid"), "utf8").catch(() => "");
+  if (/^\d+$/.test(workerPid.trim())) {
+    const running = await readFile(`/proc/${workerPid.trim()}/cmdline`).catch(() => Buffer.alloc(0));
+    assert(!running.includes(Buffer.from("scripts/knowledge-publication-worker.ts")), "Stop the U2 preview before running the historical P0 proof");
+  }
   const url = new URL(process.env.THEME_DATABASE_URL ?? "");
   assert.equal(url.hostname, "127.0.0.1"); assert.equal(url.port, "55475"); assert.equal(url.pathname, "/plunode_theme75");
   await mkdir(out, { recursive: true, mode: 0o700 }); await chmod(out, 0o700);
