@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-01 18:04:35 JST。
+確認: 2026-11-01 18:12:23 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -123,8 +123,9 @@ Issue確認結果:
     "checkedAt": "2026-11-01T05:26:20+00:00"
   },
   "collection-control/issue-sources/73.json": {
-    "status": "registered: issue-73-dot-murata-onepunch-20261030",
-    "checkedAt": "2026-10-31T14:13:19+00:00"
+    "status": "held",
+    "reason": "Remote end closed connection without response",
+    "checkedAt": "2026-11-01T09:09:55+00:00"
   }
 }
 ```
