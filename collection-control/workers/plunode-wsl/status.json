@@ -26,28 +26,24 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-01T01:05:08.195291+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-01T00:10:28.647207+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-01T01:05:08.195291+00:00",
+    "eligibleAt": "2026-11-01T00:10:28.647207+00:00",
     "windowEndAt": "2026-11-01T03:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1-batch-04",
-    "startedAt": "2026-11-01T00:00:08.195293+00:00",
-    "limitAt": "2026-11-01T00:55:08.195291+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-46-dot-aoyama-three-20261027-batch-01",
-    "endedAt": "2026-10-31T21:41:17.454925+00:00"
+    "requestId": "issue-25-manga23-20261019-repair1-batch-04",
+    "endedAt": "2026-11-01T00:00:28.647209+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
-    "blocked": 9,
-    "waiting-control": 19,
+    "blocked": 10,
+    "waiting-control": 18,
     "completed": 32,
     "awaiting-recovery": 2
   },
@@ -196,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T00:00:15.188406+00:00"
+  "checkedAt": "2026-11-01T00:03:11.248137+00:00"
 }
