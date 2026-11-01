@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-01 14:13:19 JST。
+確認: 2026-11-01 14:18:39 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -83,14 +83,12 @@ Issue確認結果:
     "checkedAt": "2026-10-31T16:19:09+00:00"
   },
   "collection-control/issue-sources/61.json": {
-    "status": "held",
-    "reason": "Remote end closed connection without response",
-    "checkedAt": "2026-11-01T05:10:23+00:00"
+    "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
+    "checkedAt": "2026-11-01T05:15:08+00:00"
   },
   "collection-control/issue-sources/62.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-    "checkedAt": "2026-11-01T05:10:44+00:00"
+    "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
+    "checkedAt": "2026-11-01T05:15:10+00:00"
   },
   "collection-control/issue-sources/64.json": {
     "status": "registered: issue-64-dot-oda-onepiece-20261029",
