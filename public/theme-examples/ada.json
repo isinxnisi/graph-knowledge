@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "id": "ada-engine",
+  "title": "一つの翻訳から広がった解析機関の可能性",
+  "description": "原論文・英訳・独自の注釈を分けてたどる。計算機の「作曲」は実績ではなく、条件付きの構想だった。",
+  "entities": [
+    {
+      "id": "ada",
+      "name": "Ada Lovelace",
+      "kind": "人物",
+      "description": ""
+    },
+    {
+      "id": "menabrea",
+      "name": "Luigi Menabrea",
+      "kind": "人物",
+      "description": ""
+    },
+    {
+      "id": "paper",
+      "name": "解析機関の原論文",
+      "kind": "文書",
+      "description": ""
+    },
+    {
+      "id": "translation",
+      "name": "1843年の英訳",
+      "kind": "翻訳",
+      "description": ""
+    },
+    {
+      "id": "notes",
+      "name": "LovelaceのNotes",
+      "kind": "注釈",
+      "description": ""
+    },
+    {
+      "id": "engine",
+      "name": "解析機関",
+      "kind": "機械",
+      "description": ""
+    }
+  ],
+  "records": [
+    {
+      "id": "authored",
+      "kind": "relation",
+      "subject": "menabrea",
+      "object": "paper",
+      "relation": "著した",
+      "assertion": "Menabreaは解析機関についてのフランス語論文を著した。",
+      "scope": "フランス語原論文",
+      "polarity": "affirmed",
+      "time": {
+        "kind": "calendar",
+        "from": "1842"
+      },
+      "evidence": [
+        {
+          "url": "https://psychclassics.yorku.ca/Lovelace/menabrea.htm",
+          "title": "Menabrea論文・York大学公開転記",
+          "locator": "表題・書誌・Classics Editor note",
+          "excerpt": "原文はMenabreaのフランス語論文（1842）。1843年にLovelaceが英訳しNotesを追加した、と編集注にある。1889年再録を底本にした転記。",
+          "retrievedAt": "2026-11-01T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "translated",
+      "kind": "relation",
+      "subject": "ada",
+      "object": "translation",
+      "relation": "英訳した",
+      "assertion": "LovelaceはMenabreaの解析機関論文を英訳した。",
+      "scope": "英訳",
+      "polarity": "affirmed",
+      "time": {
+        "kind": "calendar",
+        "from": "1843"
+      },
+      "evidence": [
+        {
+          "url": "https://www.computerhistory.org/babbage/adalovelace",
+          "title": "Computer History Museum：Ada Lovelace",
+          "locator": "1843年の翻訳とNotesを扱う段落",
+          "excerpt": "Menabreaの論文を英訳し独自のNotesを追加したと博物館が解説。現代の二次解説として一次文献を補足。",
+          "retrievedAt": "2026-11-01T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "annotated",
+      "kind": "relation",
+      "subject": "ada",
+      "object": "notes",
+      "relation": "注釈を加えた",
+      "assertion": "Lovelaceは英訳に独自のNotesを付した。",
+      "scope": "英訳に追加した注釈",
+      "polarity": "affirmed",
+      "time": {
+        "kind": "calendar",
+        "from": "1843"
+      },
+      "evidence": [
+        {
+          "url": "https://psychclassics.yorku.ca/Lovelace/lovelace.htm",
+          "title": "Lovelace Notes・York大学公開転記",
+          "locator": "NOTES BY THE TRANSLATOR / Note A",
+          "excerpt": "訳者のNotesであると明示。Note Aは音の関係を操作として表せるとした場合の作曲可能性を論じる。実演したという記述ではない。",
+          "retrievedAt": "2026-11-01T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "about",
+      "kind": "relation",
+      "subject": "paper",
+      "object": "engine",
+      "relation": "説明する",
+      "assertion": "Menabreaの論文はBabbageの解析機関を説明している。",
+      "scope": "",
+      "polarity": "affirmed",
+      "time": null,
+      "evidence": [
+        {
+          "url": "https://psychclassics.yorku.ca/Lovelace/menabrea.htm",
+          "title": "Menabrea論文・York大学公開転記",
+          "locator": "表題・書誌・Classics Editor note",
+          "excerpt": "原文はMenabreaのフランス語論文（1842）。1843年にLovelaceが英訳しNotesを追加した、と編集注にある。1889年再録を底本にした転記。",
+          "retrievedAt": "2026-11-01T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "music",
+      "kind": "episode",
+      "subject": "ada",
+      "object": null,
+      "relation": "",
+      "assertion": "Lovelaceは音の関係を操作として表現できれば解析機関による作曲が可能かもしれないと論じた。",
+      "scope": "条件付き構想。実行実績とはしない",
+      "polarity": "affirmed",
+      "time": null,
+      "evidence": [
+        {
+          "url": "https://psychclassics.yorku.ca/Lovelace/lovelace.htm",
+          "title": "Lovelace Notes・York大学公開転記",
+          "locator": "NOTES BY THE TRANSLATOR / Note A",
+          "excerpt": "訳者のNotesであると明示。Note Aは音の関係を操作として表せるとした場合の作曲可能性を論じる。実演したという記述ではない。",
+          "retrievedAt": "2026-11-01T00:00:00Z"
+        }
+      ]
+    }
+  ],
+  "mappings": [
+    {
+      "recordId": "translated",
+      "concept": {
+        "id": "translation",
+        "label": "翻訳",
+        "definition": "ある言語の文書を別の言語へ訳す。原文の著述とは区別する。"
+      },
+      "reason": "英訳という資料の記述に対応"
+    }
+  ]
+}

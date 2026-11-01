@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "id": "webb-partnership",
+  "title": "Webbを宇宙へ運んだ国際協力",
+  "description": "打上げ、機器の提供、搭載、軌道。それぞれ違う関係を、同じ図から根拠へたどる。",
+  "entities": [
+    {
+      "id": "webb",
+      "name": "Webb宇宙望遠鏡",
+      "kind": "宇宙望遠鏡",
+      "description": ""
+    },
+    {
+      "id": "ariane",
+      "name": "Ariane 5",
+      "kind": "ロケット",
+      "description": ""
+    },
+    {
+      "id": "esa",
+      "name": "ESA",
+      "kind": "組織",
+      "description": ""
+    },
+    {
+      "id": "nirspec",
+      "name": "NIRSpec",
+      "kind": "観測装置",
+      "description": ""
+    },
+    {
+      "id": "miri",
+      "name": "MIRI",
+      "kind": "観測装置",
+      "description": ""
+    },
+    {
+      "id": "l2",
+      "name": "太陽・地球系L2",
+      "kind": "軌道点",
+      "description": ""
+    }
+  ],
+  "records": [
+    {
+      "id": "launched",
+      "kind": "relation",
+      "subject": "ariane",
+      "object": "webb",
+      "relation": "打ち上げた",
+      "assertion": "Ariane 5はWebb宇宙望遠鏡を打ち上げた。",
+      "scope": "フランス領ギアナ",
+      "polarity": "affirmed",
+      "time": {
+        "kind": "calendar",
+        "from": "2021-12-25"
+      },
+      "evidence": [
+        {
+          "url": "https://science.nasa.gov/mission/webb/launch/",
+          "title": "NASA：Webb Launch",
+          "locator": "Launch Date / Vehicle",
+          "excerpt": "確定本文は2021年12月25日、Ariane 5でフランス領ギアナから打ち上げたと記載。延期前の日付がある画像説明とは区別した。",
+          "retrievedAt": "2026-11-01T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "nirspec",
+      "kind": "relation",
+      "subject": "esa",
+      "object": "nirspec",
+      "relation": "提供した",
+      "assertion": "ESAはWebb用のNIRSpecを提供した。",
+      "scope": "提供責任。単独製造を意味しない",
+      "polarity": "affirmed",
+      "time": null,
+      "evidence": [
+        {
+          "url": "https://esawebb.org/about/webb-and-europe/international-collaboration/",
+          "title": "ESA/Webb：International Collaboration",
+          "locator": "four major European contributions の箇条書き",
+          "excerpt": "欧州の主要提供品はNIRSpecとMIRIの光学系を区別して記載する。提供責任から単独製造を推定しない。",
+          "retrievedAt": "2026-11-01T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "miri",
+      "kind": "relation",
+      "subject": "esa",
+      "object": "miri",
+      "relation": "光学系を提供した",
+      "assertion": "ESAはWebb用MIRIの光学系を提供した。",
+      "scope": "MIRIの光学系。装置全体ではない",
+      "polarity": "affirmed",
+      "time": null,
+      "evidence": [
+        {
+          "url": "https://esawebb.org/about/webb-and-europe/international-collaboration/",
+          "title": "ESA/Webb：International Collaboration",
+          "locator": "four major European contributions の箇条書き",
+          "excerpt": "欧州の主要提供品はNIRSpecとMIRIの光学系を区別して記載する。提供責任から単独製造を推定しない。",
+          "retrievedAt": "2026-11-01T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "carries",
+      "kind": "relation",
+      "subject": "webb",
+      "object": "nirspec",
+      "relation": "搭載する",
+      "assertion": "WebbはNIRSpecを搭載する。",
+      "scope": "",
+      "polarity": "affirmed",
+      "time": null,
+      "evidence": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Webb/Webb_factsheet",
+          "title": "ESA：Webb factsheet",
+          "locator": "Instruments / Journey and orbit",
+          "excerpt": "NIRSpecを含む4科学装置を搭載。太陽・地球系L2周りの軌道で運用され、地球周回と同一ではない。",
+          "retrievedAt": "2026-11-01T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "orbit",
+      "kind": "relation",
+      "subject": "webb",
+      "object": "l2",
+      "relation": "周りの軌道で運用",
+      "assertion": "Webbは太陽・地球系L2の周りの軌道で運用される。",
+      "scope": "",
+      "polarity": "affirmed",
+      "time": null,
+      "evidence": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Webb/Webb_factsheet",
+          "title": "ESA：Webb factsheet",
+          "locator": "Instruments / Journey and orbit",
+          "excerpt": "NIRSpecを含む4科学装置を搭載。太陽・地球系L2周りの軌道で運用され、地球周回と同一ではない。",
+          "retrievedAt": "2026-11-01T00:00:00Z"
+        }
+      ]
+    }
+  ],
+  "mappings": []
+}

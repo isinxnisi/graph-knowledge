@@ -21,7 +21,7 @@ import { ClaimCard } from "./ClaimDetails";
 import Icon from "./Icon";
 import css from "./CapsuleStudio.module.css";
 
-type Props = { capsule: LocalCapsule; isNew?: boolean; startEditing?: boolean; byline?: ReactNode; onEditRequest?: (view:LocalCapsule)=>void; readOnly?: boolean; destination?: string; onClose?: () => void; onSave?: (value: LocalCapsule, asCopy: boolean) => Promise<LocalCapsule>; sharing?: ReactNode; commentDraft?: { hasDraft: () => boolean; hasPending: () => boolean; clear: () => void }; locked?: boolean; capacity?: { documents: boolean; storageBytes: number; totalBytes: number } | null };
+type Props = { allowKgSearch?: boolean; allowCopySave?: boolean; onEditingChange?: (editing: boolean) => void; capsule: LocalCapsule; isNew?: boolean; startEditing?: boolean; byline?: ReactNode; onEditRequest?: (view:LocalCapsule)=>void; readOnly?: boolean; destination?: string; onClose?: () => void; onSave?: (value: LocalCapsule, asCopy: boolean) => Promise<LocalCapsule>; sharing?: ReactNode; commentDraft?: { hasDraft: () => boolean; hasPending: () => boolean; clear: () => void }; locked?: boolean; capacity?: { documents: boolean; storageBytes: number; totalBytes: number } | null };
 
 type Comparison = { key: string; state: "same" | "changed" | "missing" | "failed"; entity?: EntityDetail; claim?: ClaimDetail; revision?: string | null; neighborhood?: CapsuleNeighborhoodComparison };
 const noAction = () => {};
@@ -41,7 +41,7 @@ function sameEditingValue(left: LocalCapsule, right: LocalCapsule) {
     && keys.every(key => b.positions[key] && Math.abs(a.positions[key].x-b.positions[key].x) <= .0001 && Math.abs(a.positions[key].y-b.positions[key].y) <= .0001);
 }
 
-export default function CapsuleStudio({ capsule, isNew = false, startEditing=false, byline, onEditRequest, readOnly = false, destination, onClose, onSave, sharing, commentDraft, capacity, locked = false }: Props) {
+export default function CapsuleStudio({ allowKgSearch = true, allowCopySave = true, onEditingChange, capsule, isNew = false, startEditing=false, byline, onEditRequest, readOnly = false, destination, onClose, onSave, sharing, commentDraft, capacity, locked = false }: Props) {
   const { locale } = useUiLocale();
   const t = (ja: string, en: string) => locale === "en" ? en : ja;
   const evidenceSupports = { identity: t("対象の同定", "Identity"), name: t("名称", "Name"), description: t("説明・属性", "Description / attribute"), relation: t("この関係", "This relation") };
@@ -49,6 +49,7 @@ export default function CapsuleStudio({ capsule, isNew = false, startEditing=fal
   const [saved, setSaved] = useState<LocalCapsule | null>(isNew ? null : capsule);
   const [history, setHistory] = useState(() => capsuleHistory(capsuleClone(capsule)));
   const [editing, setEditing] = useState((isNew || startEditing) && !readOnly);
+  useEffect(() => { onEditingChange?.(editing); }, [editing, onEditingChange]);
   const [generation, setGeneration] = useState(1);
   const [selected, setSelected] = useState<string[]>([]);
   const [selection, setSelection] = useState<Selection>(null);
@@ -391,7 +392,7 @@ export default function CapsuleStudio({ capsule, isNew = false, startEditing=fal
     ...(selection && selected.length <= 1 ? [{label:t("編集", "Edit"),icon:"edit" as const,action:() => editSelected()}] : []),
     ...(node && node.origin.kind !== "local" && selected.length <= 1 ? [{label:t("KGの関係先を追加", "Add KG neighbors"),icon:"graph" as const,action:() => openNeighbors()}] : []),
     ...(selectedNodes.length === 2 ? [{label:t("2つのEntityをつなぐ", "Connect two entities"),icon:"link" as const,action:connectSelection}] : []),
-    {label:t("KGから検索して追加", "Search the KG"),icon:"search" as const,action:startSearch},
+    ...(allowKgSearch ? [{label:t("KGから検索して追加", "Search the KG"),icon:"search" as const,action:startSearch}] : []),
     {label:t("独自Entityを追加", "Add custom entity"),icon:"plus" as const,action:() => create("node")},
     {label:t("テキストを追加", "Add text"),icon:"text" as const,action:() => create("text")},
     ...(selection || selected.length ? [{label:selected.length > 1 ? t(`${selected.length}要素をCapsuleから外す`, `Remove ${selected.length} elements`) : relations.length > 1 ? t(`この線の${relations.length}件の関係を外す`, `Remove all ${relations.length} relations on this line`) : t("Capsuleから外す", "Remove from Capsule"),icon:"minus" as const,action:removeSelection,danger:true}] : []),
@@ -421,11 +422,11 @@ export default function CapsuleStudio({ capsule, isNew = false, startEditing=fal
       </div>
     </header>
     {capacity?.documents === false && <p className={css.notice} role="status">{t("保存先は更新準備中です。入力はこの画面で保持しています。", "Storage is being updated. Your input is retained here.")}</p>}
-    {(error || message) && <div className={css.notice} role={error ? "alert" : "status"}>{!error && <Icon name="check"/>}<span>{error ?? message}</span>{error && editing && onSave && <button disabled={busy} onClick={() => void save(true)}>{t("別のCapsuleとして保存", "Save as a new Capsule")}</button>}<button className={`${css.iconButton} ${css.quietButton}`} aria-label={t("通知を閉じる", "Dismiss notice")} onClick={() => { setError(null); setMessage(null); }}><Icon name="close"/></button></div>}
+    {(error || message) && <div className={css.notice} role={error ? "alert" : "status"}>{!error && <Icon name="check"/>}<span>{error ?? message}</span>{error && editing && onSave && allowCopySave && <button disabled={busy} onClick={() => void save(true)}>{t("別のCapsuleとして保存", "Save as a new Capsule")}</button>}<button className={`${css.iconButton} ${css.quietButton}`} aria-label={t("通知を閉じる", "Dismiss notice")} onClick={() => { setError(null); setMessage(null); }}><Icon name="close"/></button></div>}
     <div className={css.body} data-inspector={inspector || undefined} inert={saving}>
       <div className={css.canvasArea}>
         <div className={css.toolRail} role="toolbar" aria-label={t("Capsuleの操作", "Capsule tools")}>
-          {editing && <><button title={t("元に戻す · Ctrl/⌘ Z", "Undo · Ctrl/⌘ Z")} aria-label={t("元に戻す", "Undo")} disabled={!history.past.length || busy} onClick={() => navigateHistory()}><Icon name="undo"/></button><button title={t("やり直す · Ctrl/⌘ Shift Z", "Redo · Ctrl/⌘ Shift Z")} aria-label={t("やり直す", "Redo")} disabled={!history.future.length || busy} onClick={() => navigateHistory(true)}><Icon name="redo"/></button><span className={css.toolDivider}/><button title={t("独自Entityを追加", "Add custom entity")} aria-label={t("独自Entityを追加", "Add custom entity")} disabled={busy} onClick={() => create("node")}><Icon name="plus"/></button><button title={t("KGから検索して追加", "Search the KG")} aria-label={t("KGから検索して追加", "Search the KG")} disabled={busy} onClick={startSearch}><Icon name="search"/></button><button title={t("テキストを追加", "Add text")} aria-label={t("テキストを追加", "Add text")} disabled={busy} onClick={() => create("text")}><Icon name="text"/></button><span className={css.toolDivider}/></>}
+          {editing && <><button title={t("元に戻す · Ctrl/⌘ Z", "Undo · Ctrl/⌘ Z")} aria-label={t("元に戻す", "Undo")} disabled={!history.past.length || busy} onClick={() => navigateHistory()}><Icon name="undo"/></button><button title={t("やり直す · Ctrl/⌘ Shift Z", "Redo · Ctrl/⌘ Shift Z")} aria-label={t("やり直す", "Redo")} disabled={!history.future.length || busy} onClick={() => navigateHistory(true)}><Icon name="redo"/></button><span className={css.toolDivider}/><button title={t("独自Entityを追加", "Add custom entity")} aria-label={t("独自Entityを追加", "Add custom entity")} disabled={busy} onClick={() => create("node")}><Icon name="plus"/></button>{allowKgSearch && <button title={t("KGから検索して追加", "Search the KG")} aria-label={t("KGから検索して追加", "Search the KG")} disabled={busy} onClick={startSearch}><Icon name="search"/></button>}<button title={t("テキストを追加", "Add text")} aria-label={t("テキストを追加", "Add text")} disabled={busy} onClick={() => create("text")}><Icon name="text"/></button><span className={css.toolDivider}/></>}
           <button aria-label={t("内容一覧", "Contents")} title={t("内容一覧", "Contents")} aria-pressed={contentsOpen} onClick={() => setContentsOpen(v => !v)}><Icon name="list"/></button><button aria-label={t("詳細と根拠", "Details & evidence")} title={t("詳細と根拠", "Details & evidence")} aria-pressed={inspector} onClick={() => setInspector(v => !v)}><Icon name="panel"/></button>
         </div>
         {selection && <div className={css.selectionTools}><span>{selected.length > 1 ? t(`${selected.length}要素`, `${selected.length} elements`) : node?.title ?? (text ? t("テキスト", "Text") : t("関係", "Relation"))}</span>{editing && <button aria-label={t("選択対象の操作", "Selection actions")} title={t("選択対象の操作", "Selection actions")} onClick={event => { const rect = event.currentTarget.getBoundingClientRect(); setMenu({kind:selection.kind === "relation" ? "edge" : "node",id:selection.id,selectedKeys:selected,clientX:rect.left,clientY:rect.bottom+6,position:canvas.current?.capture()?.center ?? {x:0,y:0},source:"keyboard"}); }}><Icon name="more"/></button>}<button aria-label={t("選択の詳細", "Selection details")} onClick={() => setInspector(true)}><Icon name="panel"/></button></div>}

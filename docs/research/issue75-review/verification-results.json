@@ -1,0 +1,131 @@
+{
+  "experiment": "synthetic semantic and revision policy checks",
+  "limits": "No AI, browser, real sources, application runtime, load, latency or cost measurement. Four-option comparison is design analysis, not four implemented systems.",
+  "fixture_sha256": "44c9f4b6cf1e4813438dd32e3b04ad617af2dc20d669cfed1138fd43acb221fd",
+  "checks_passed": 12,
+  "checks": [
+    {
+      "check": "same label has separate meanings; accepted contextual synonym joins",
+      "pass": true,
+      "observed": [
+        "s3",
+        "s5"
+      ]
+    },
+    {
+      "check": "unknown relation remains lexically findable",
+      "pass": true,
+      "observed": [
+        "s2"
+      ]
+    },
+    {
+      "check": "unknown relation is not silently in exact normalized results",
+      "pass": true,
+      "observed": []
+    },
+    {
+      "check": "invitation is not participation",
+      "pass": true,
+      "observed": [
+        "s7"
+      ]
+    },
+    {
+      "check": "repair removes false positive without rewriting original evidence",
+      "pass": true,
+      "observed": {
+        "before": [
+          "s3",
+          "s4",
+          "s5"
+        ],
+        "after": [
+          "s3",
+          "s5"
+        ],
+        "original_unchanged": true
+      }
+    },
+    {
+      "check": "label edit keeps exact query identity",
+      "pass": true,
+      "observed": [
+        "s3",
+        "s5"
+      ]
+    },
+    {
+      "check": "reviewed concept merge preserves statement identities",
+      "pass": true,
+      "observed": [
+        "s3",
+        "s5"
+      ]
+    },
+    {
+      "check": "scope correction preserves shared snapshot and supplies explicit comparison",
+      "pass": true,
+      "observed": {
+        "current_scope": {
+          "edition": "復刻特装版"
+        },
+        "saved_scope": null,
+        "notice": {
+          "statement_id": "s2",
+          "saved_revision": 1,
+          "current_revision": 2,
+          "kind": "scope_correction"
+        }
+      }
+    },
+    {
+      "check": "new mapping makes the same statement available to exact search",
+      "pass": true,
+      "observed": [
+        "s2"
+      ]
+    },
+    {
+      "check": "cyclic interval crosses origin without becoming reversed date range",
+      "pass": true,
+      "observed": [
+        1,
+        2,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "check": "qualitative axis and undated note are not coerced to dates",
+      "pass": true,
+      "observed": {
+        "qualitative": {
+          "kind": "qualitative",
+          "axis": "aoi_life_stages",
+          "from": "blue_early",
+          "to": "blue_late",
+          "coordinateMeaning": "回想内の段階順。距離や年数を示さない"
+        },
+        "note_time": null
+      }
+    },
+    {
+      "check": "pinned model screen identifies preserved current subset",
+      "pass": true,
+      "observed": [
+        "s1",
+        "s3",
+        "s5",
+        "s7"
+      ]
+    }
+  ],
+  "policy_comparison": {
+    "A_predefined_catalog": "Can expose every record after upfront relation/time definitions and renderer work; four relations fit current published model. This is not an upper bound on option A.",
+    "B_uniform_assertion": "All 11 preserve text/evidence immediately; eight endpoint relations can draw once identity is checked. Exact concept query includes only reviewed assignments.",
+    "C_typed_core_fallback": "Four fit existing typed core; four relations and three episode/note records need fallback and shared discovery. Same coverage as B only after cross-regime contracts.",
+    "D_dossier_event": "All 11 can remain source-linked blocks in a theme; cross-theme exact relation results require an extracted assertion index with mapping and correction responsibilities."
+  }
+}

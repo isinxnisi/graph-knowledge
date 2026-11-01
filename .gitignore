@@ -55,3 +55,6 @@ playwright-report/
 # まとまり2の隔離DB資材・image archive・非公開診断
 /.local/publication-pipeline/
 /.local/publication-probe/
+
+# Issue75 isolated runtime, credentials, logs and verification database
+/.local/issue75/
