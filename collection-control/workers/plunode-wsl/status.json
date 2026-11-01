@@ -42,8 +42,9 @@
   },
   "controlError": null,
   "requestsByPhase": {
-    "blocked": 10,
+    "blocked": 9,
     "waiting-control": 15,
+    "retry-wait": 1,
     "completed": 33,
     "awaiting-recovery": 4
   },
@@ -192,5 +193,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T04:51:59.933432+00:00"
+  "checkedAt": "2026-11-01T04:55:14.802829+00:00"
 }
