@@ -62,12 +62,12 @@
   },
   "requestSha256": "eb477d506c841cab54e59cd71a517fa9dda4e94776f24ae107cc0beb9cc3e43f",
   "kind": "issue-prepare",
-  "phase": "completed",
-  "generation": 169,
+  "phase": "retry-wait",
+  "generation": 1666,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-28T18:12:36+00:00",
+  "updatedAt": "2026-11-01T04:57:46+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -184,5 +184,7 @@
       "datasets/collection-themes/approvals/issue-62-dot-akutami-jujutsu-20261028/r0001.json": "02074f767a5db37f293a25969916abb967bdbed82b776d456b4500ce00848943"
     }
   },
-  "executionComplete": true
+  "executionComplete": true,
+  "message": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+  "retryAt": 1793509201.711788
 }
