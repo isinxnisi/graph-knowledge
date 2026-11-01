@@ -26,26 +26,30 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-01T01:45:57.338036+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-01T02:53:39.877944+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-01T01:45:57.338036+00:00",
-    "windowEndAt": "2026-11-01T03:00:00+00:00"
+    "eligibleAt": "2026-11-01T06:00:00+00:00",
+    "windowEndAt": "2026-11-01T09:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-48-dot-toriyama-three-20261027",
+    "startedAt": "2026-11-01T01:48:39.877948+00:00",
+    "limitAt": "2026-11-01T02:43:39.877944+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-65-dot-inoue-three-20261029",
     "endedAt": "2026-11-01T01:35:57.338038+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
-    "blocked": 10,
+    "retry-wait": 3,
+    "blocked": 9,
     "waiting-control": 15,
     "completed": 31,
-    "retry-wait": 2,
     "awaiting-recovery": 4
   },
   "issueIntake": {
@@ -130,8 +134,9 @@
       "checkedAt": "2026-10-31T16:23:10+00:00"
     },
     "collection-control/issue-sources/67.json": {
-      "status": "registered: issue-67-dot-mizuki-two-20261029",
-      "checkedAt": "2026-10-31T16:23:12+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+      "checkedAt": "2026-11-01T01:47:25+00:00"
     },
     "collection-control/issue-sources/68.json": {
       "status": "registered: issue-68-dot-fujikoa-two-20261029",
@@ -146,8 +151,9 @@
       "checkedAt": "2026-10-31T16:05:23+00:00"
     },
     "collection-control/issue-sources/71.json": {
-      "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
-      "checkedAt": "2026-10-31T05:36:25+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+      "checkedAt": "2026-11-01T01:47:48+00:00"
     },
     "collection-control/issue-sources/73.json": {
       "status": "registered: issue-73-dot-murata-onepunch-20261030",
@@ -193,5 +199,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T01:45:41.536788+00:00"
+  "checkedAt": "2026-11-01T01:48:46.779436+00:00"
 }
