@@ -62,12 +62,12 @@
   },
   "requestSha256": "eb477d506c841cab54e59cd71a517fa9dda4e94776f24ae107cc0beb9cc3e43f",
   "kind": "issue-prepare",
-  "phase": "waiting-lock",
-  "generation": 1682,
+  "phase": "waiting-control",
+  "generation": 1683,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-01T06:12:00+00:00",
+  "updatedAt": "2026-11-01T06:21:48+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -185,6 +185,6 @@
     }
   },
   "executionComplete": true,
-  "message": "共通ロック使用中。次回に再確認する。",
+  "message": "Execution gate: interval",
   "retryAt": 1793509201.711788
 }
