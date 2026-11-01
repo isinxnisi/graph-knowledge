@@ -26,23 +26,28 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-01T08:54:48.465668+00:00",
-  "phase": "outside-window",
+  "nextStartAt": "2026-11-01T19:06:53.638969+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
-    "reason": "outside-window",
-    "eligibleAt": "2026-11-01T18:00:00+00:00",
+    "reason": "interval",
+    "eligibleAt": "2026-11-01T19:06:53.638969+00:00",
     "windowEndAt": "2026-11-01T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-25-manga23-20261019-repair1-batch-05",
+    "startedAt": "2026-11-01T18:01:53.638978+00:00",
+    "limitAt": "2026-11-01T18:56:53.638969+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-73-dot-murata-onepunch-20261030",
     "endedAt": "2026-11-01T08:44:48.465670+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
-    "waiting-control": 38,
+    "waiting-control": 33,
+    "waiting-lock": 5,
     "blocked": 1,
     "completed": 20,
     "retry-wait": 1,
@@ -102,8 +107,9 @@
       "checkedAt": "2026-10-31T07:53:01+00:00"
     },
     "collection-control/issue-sources/59.json": {
-      "status": "registered: issue-59-dot-kubo-two-20261028",
-      "checkedAt": "2026-11-01T15:32:17+00:00"
+      "status": "held",
+      "reason": "Remote end closed connection without response",
+      "checkedAt": "2026-11-01T17:57:48+00:00"
     },
     "collection-control/issue-sources/60.json": {
       "status": "registered: issue-60-dot-ichikawa-houseki-20261028",
@@ -193,5 +199,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T17:54:52.522188+00:00"
+  "checkedAt": "2026-11-01T18:02:01.526562+00:00"
 }
