@@ -1,0 +1,15 @@
+{
+  "before": {
+    "sha256": "7cde3323fe998a413c9a7d02a811efb6d4e40e1a10743d8f96a42218ccfd57c8",
+    "themes": 9,
+    "capsules": 8
+  },
+  "after": {
+    "sha256": "7cde3323fe998a413c9a7d02a811efb6d4e40e1a10743d8f96a42218ccfd57c8",
+    "themes": 9,
+    "capsules": 8
+  },
+  "unchanged": true,
+  "dbMigration": false,
+  "scope": "Dedicated issue75 preview only. Read-only browser operations; no existing data rewritten."
+}

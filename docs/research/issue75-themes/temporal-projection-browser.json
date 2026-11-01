@@ -1,0 +1,2498 @@
+{
+  "checkedAt": "2026-11-01T11:21:21.744Z",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "cases": 60,
+  "views": 192,
+  "rows": [
+    {
+      "id": "pair-before",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-before",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-before",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-before",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-after",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-after",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-after",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-after",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-meets",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-meets",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-meets",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-meets",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-met-by",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-met-by",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-met-by",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-met-by",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-overlaps",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-overlaps",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-overlaps",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-overlaps",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-overlapped-by",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-overlapped-by",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-overlapped-by",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-overlapped-by",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-starts",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-starts",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-starts",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-starts",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-started-by",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-started-by",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-started-by",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-started-by",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-during",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-during",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-during",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-during",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-contains",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-contains",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-contains",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-contains",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-finishes",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-finishes",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-finishes",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-finishes",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-finished-by",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-finished-by",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-finished-by",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-finished-by",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-equal",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-equal",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-equal",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "pair-equal",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-year",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-year",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-year",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-year",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-month",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-month",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-month",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-month",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-day",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-day",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-day",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-day",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-mixed",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-mixed",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 3,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-mixed",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-mixed",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-reversed-looking",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-reversed-looking",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-reversed-looking",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "precision-reversed-looking",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "same-day",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 3,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "same-day",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 3,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "same-day",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 3,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "same-day",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 3,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "same-date-independent",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 3,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "same-date-independent",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 3,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "same-date-independent",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 3,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "same-date-independent",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 3,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "leap-and-year-crossing",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "leap-and-year-crossing",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "leap-and-year-crossing",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "leap-and-year-crossing",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "first-half-defined",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "first-half-defined",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "first-half-defined",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "first-half-defined",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "window-empty",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "window-empty",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "window-empty",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "window-empty",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "window-with-event",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "window-with-event",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "window-with-event",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "window-with-event",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "window-event-at-boundary",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "window-event-at-boundary",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 3,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "window-event-at-boundary",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 3,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "window-event-at-boundary",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "windows-overlap",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "windows-overlap",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "windows-overlap",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "windows-overlap",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "window-filtered-event",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "gap",
+      "viewport": 390
+    },
+    {
+      "id": "window-filtered-event",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "gap",
+      "viewport": 390
+    },
+    {
+      "id": "window-filtered-event",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "gap",
+      "viewport": 390
+    },
+    {
+      "id": "window-filtered-event",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "gap",
+      "viewport": 390
+    },
+    {
+      "id": "duration-empty",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "duration-empty",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "duration-empty",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "duration-empty",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundary-start",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundary-start",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundary-start",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundary-start",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundary-end",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundary-end",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundary-end",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundary-end",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundaries-separate",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundaries-separate",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundaries-separate",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundaries-separate",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundaries-overlap",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundaries-overlap",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundaries-overlap",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundaries-overlap",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundaries-mixed",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundaries-mixed",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundaries-mixed",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "boundaries-mixed",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "membership-none",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "membership-none",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "membership-none",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "membership-none",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "membership-explicit",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "membership-explicit",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "membership-explicit",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "membership-explicit",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "undated",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "undated",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "undated",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "undated",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "cycle",
+      "setting": "none",
+      "documentWidth": 380,
+      "graphs": [],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 0,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "qualitative",
+      "setting": "none",
+      "documentWidth": 380,
+      "graphs": [],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 0,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "explicit-inset",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "explicit-inset",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "explicit-inset",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "explicit-inset",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "hour",
+      "setting": "none",
+      "documentWidth": 390,
+      "graphs": [],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 0,
+      "status": "gap",
+      "viewport": 390
+    },
+    {
+      "id": "minute",
+      "setting": "none",
+      "documentWidth": 390,
+      "graphs": [],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 0,
+      "status": "gap",
+      "viewport": 390
+    },
+    {
+      "id": "timezone",
+      "setting": "none",
+      "documentWidth": 390,
+      "graphs": [],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 0,
+      "status": "gap",
+      "viewport": 390
+    },
+    {
+      "id": "local-clock",
+      "setting": "none",
+      "documentWidth": 390,
+      "graphs": [],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 0,
+      "status": "gap",
+      "viewport": 390
+    },
+    {
+      "id": "first-half-undefined",
+      "setting": "none",
+      "documentWidth": 390,
+      "graphs": [],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 0,
+      "status": "gap",
+      "viewport": 390
+    },
+    {
+      "id": "first-half-label",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "gap",
+      "viewport": 390
+    },
+    {
+      "id": "first-half-label",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 1,
+      "status": "gap",
+      "viewport": 390
+    },
+    {
+      "id": "first-half-label",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "gap",
+      "viewport": 390
+    },
+    {
+      "id": "first-half-label",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "gap",
+      "viewport": 390
+    },
+    {
+      "id": "relative-stage",
+      "setting": "none",
+      "documentWidth": 390,
+      "graphs": [],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 0,
+      "status": "gap",
+      "viewport": 390
+    },
+    {
+      "id": "multiple-windows",
+      "setting": "none",
+      "documentWidth": 390,
+      "graphs": [],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 0,
+      "status": "gap",
+      "viewport": 390
+    },
+    {
+      "id": "invalid-date",
+      "setting": "none",
+      "documentWidth": 390,
+      "graphs": [],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 0,
+      "status": "rejected",
+      "viewport": 390
+    },
+    {
+      "id": "invalid-reverse",
+      "setting": "none",
+      "documentWidth": 390,
+      "graphs": [],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 0,
+      "status": "rejected",
+      "viewport": 390
+    },
+    {
+      "id": "invalid-missing-end",
+      "setting": "none",
+      "documentWidth": 390,
+      "graphs": [],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 0,
+      "status": "rejected",
+      "viewport": 390
+    },
+    {
+      "id": "invalid-start-boundary",
+      "setting": "none",
+      "documentWidth": 390,
+      "graphs": [],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 0,
+      "status": "rejected",
+      "viewport": 390
+    },
+    {
+      "id": "invalid-end-boundary",
+      "setting": "none",
+      "documentWidth": 390,
+      "graphs": [],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 0,
+      "status": "rejected",
+      "viewport": 390
+    },
+    {
+      "id": "invalid-window-boundary",
+      "setting": "none",
+      "documentWidth": 390,
+      "graphs": [],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 0,
+      "status": "rejected",
+      "viewport": 390
+    },
+    {
+      "id": "invalid-point-end",
+      "setting": "none",
+      "documentWidth": 390,
+      "graphs": [],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 0,
+      "status": "rejected",
+      "viewport": 390
+    },
+    {
+      "id": "dense-overlap",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 12,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "dense-overlap",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 12,
+      "ranges": 12,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "dense-overlap",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 12,
+      "ranges": 12,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "dense-overlap",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 12,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "display-granularity",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "display-granularity",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 3,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "display-granularity",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "display-granularity",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 1,
+      "ranges": 3,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "year-point-and-window",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "year-point-and-window",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "year-point-and-window",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "year-point-and-window",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "month-window-and-duration",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "month-window-and-duration",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "month-window-and-duration",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 2,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "month-window-and-duration",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 2,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "shared-start-anchors",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 3,
+      "ranges": 4,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "shared-start-anchors",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 4,
+      "ranges": 4,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "shared-start-anchors",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 4,
+      "ranges": 4,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "shared-start-anchors",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 3,
+      "ranges": 4,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "year-crossing-window",
+      "setting": "auto",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "year-crossing-window",
+      "setting": "year",
+      "documentWidth": 380,
+      "graphs": [
+        "year"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "year-crossing-window",
+      "setting": "month",
+      "documentWidth": 380,
+      "graphs": [
+        "month"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    },
+    {
+      "id": "year-crossing-window",
+      "setting": "day",
+      "documentWidth": 380,
+      "graphs": [
+        "day"
+      ],
+      "misconnected": 0,
+      "points": 0,
+      "ranges": 1,
+      "status": "renderable",
+      "viewport": 390
+    }
+  ],
+  "build": "1dGUbnTFnrVPcyICSFSU0",
+  "interactions": {
+    "sharedStartConnectionsAfterExpansion": true,
+    "endLabelOpenedOwnRecord": true,
+    "uncertainDurationOuterBorders": [
+      "0px",
+      "0px",
+      "0px",
+      "0px"
+    ],
+    "overlappingBoundaryStrokeCount": 1,
+    "savedCapsuleYearPoints": 3,
+    "savedCapsuleSourceLabels": [
+      "2030",
+      "2030-05",
+      "2030-05-08"
+    ],
+    "sharedYearPoints": 3,
+    "sharedDayPoints": 1,
+    "sharedDayRecords": 3,
+    "browserWarnings": [],
+    "viewportReset": true
+  }
+}

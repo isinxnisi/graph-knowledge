@@ -9,9 +9,19 @@ const rows = temporalPatterns.map((pattern) => {
   const result = examineTemporalPattern(pattern);
   if (result.accepted !== pattern.expectedAcceptance)
     throw new Error(`受理結果不一致: ${pattern.id}`);
-  const graph = calendarGraph(result.records);
-  if (graph.ranges.some((r) => r.startRow < 0 || r.endRow < r.startRow))
-    throw new Error(`座標不正: ${pattern.id}`);
+  for (const unit of ["auto", "year", "month", "day"] as const) {
+    const graph = calendarGraph(result.records, unit);
+    if (
+      graph.ranges.some(
+        (r) =>
+          r.startRow < 0 ||
+          r.endRow < r.startRow ||
+          graph.rows[r.anchorRow]?.record?.id !== r.record.id ||
+          r.endAnchorRow < r.anchorRow,
+      )
+    )
+      throw new Error(`座標・接続不正: ${pattern.id}/${unit}`);
+  }
   return {
     id: pattern.id,
     title: pattern.title,
@@ -43,6 +53,7 @@ writeFileSync("public/theme-examples/temporal-patterns.json", fixture);
 const report = {
   checkedAt: new Date().toISOString(),
   caseCount: rows.length,
+  checkedDisplayUnits: ["auto", "year", "month", "day"],
   statusCounts: Object.fromEntries(
     ["renderable", "gap", "rejected"].map((status) => [
       status,

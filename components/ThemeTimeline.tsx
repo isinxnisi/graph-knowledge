@@ -10,7 +10,10 @@ import { buildTimelineGroups } from "../lib/domain/theme-timeline";
 import { calendarMeaning, themeTimeLabel } from "../lib/domain/theme-time";
 import css from "./ThemeTimeline.module.css";
 import CalendarTimelineGraph from "./CalendarTimelineGraph";
-import { calendarLayoutBounds } from "../lib/domain/calendar-graph";
+import {
+  calendarLayoutBounds,
+  type CalendarResolution,
+} from "../lib/domain/calendar-graph";
 
 type Props = {
   selectionLabel?: string;
@@ -197,6 +200,7 @@ export default function ThemeTimeline({
   );
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
   const [trace, setTrace] = useState("");
+  const [resolution, setResolution] = useState<CalendarResolution>("auto");
   const prefix = useId();
   const subjects = [...new Set(records.map((r) => r.subject))];
   const activeTrace = subjects.includes(trace) ? trace : "";
@@ -419,20 +423,27 @@ export default function ThemeTimeline({
         <header className={css.groupHeader}>
           <div>
             <h3>{group.label}</h3>
-            <p>
-              {group.kind === "none"
-                ? "日付を補わず、背景や文脈として読む"
-                : group.kind === "qualitative" && !group.order?.length
-                  ? "順序の指定なし · 登録順で表示"
-                  : "行の間隔は経過時間を表しません"}
-              {group.originLabel ? ` · ${group.originLabel}` : ""}
-            </p>
+            {(group.kind !== "calendar" || group.originLabel) && (
+              <p>
+                {group.kind === "none"
+                  ? "日付を補わず、背景や文脈として読む"
+                  : group.kind === "qualitative" && !group.order?.length
+                    ? "順序の指定なし · 登録順で表示"
+                    : group.kind === "calendar"
+                      ? ""
+                      : "行の間隔は経過時間を表しません"}
+                {group.originLabel
+                  ? `${group.kind === "calendar" ? "" : " · "}${group.originLabel}`
+                  : ""}
+              </p>
+            )}
           </div>
           <span>{rows.length}件</span>
         </header>
         {group.kind === "calendar" ? (
           <CalendarTimelineGraph
             records={rows}
+            resolution={resolution}
             focusedRecordId={focusedRecordId}
             highlightedSubject={activeTrace}
             onFocus={(id) => toggle(id, false)}
@@ -491,9 +502,26 @@ export default function ThemeTimeline({
             </span>
           </div>
           <p className={css.help}>
-            細い線で同じ対象の記録をたどれます。存続期間や因果関係は表しません。実期間は両端付きの実線、発生時期の幅は点線の範囲です。時間が重なるだけでは、所属や関連づけは作られません。詳しい時間軸は明示して結びつけたものだけを行内に表示します。
+            線の接続先が、その点・期間の記録です。両端付きの線は続いた期間、丸い端の破線は発生候補の幅です。不確かな期間境界だけを点線にします。表示単位の内に収まる出来事は点、期間は短い両端付きの線で示します。元の日付・意味は行を開いて確認できます。時間が重なっても所属や因果は作りません。暦以外の細い対象線は、同じ主語をたどる案内です。
           </p>
         </details>
+        {records.some((r) => r.time?.kind === "calendar") && (
+          <label className={css.resolutionSelect}>
+            表示
+            <select
+              aria-label="暦の表示単位"
+              value={resolution}
+              onChange={(e) =>
+                setResolution(e.target.value as CalendarResolution)
+              }
+            >
+              <option value="auto">自動</option>
+              <option value="year">年</option>
+              <option value="month">月</option>
+              <option value="day">日</option>
+            </select>
+          </label>
+        )}
         {subjects.length > 1 && (
           <label className={css.traceSelect}>
             たどる対象

@@ -1,12 +1,18 @@
 {
-  "checkedAt": "2026-11-01T10:03:13.752Z",
-  "caseCount": 56,
+  "checkedAt": "2026-11-01T11:16:24.742Z",
+  "caseCount": 60,
+  "checkedDisplayUnits": [
+    "auto",
+    "year",
+    "month",
+    "day"
+  ],
   "statusCounts": {
-    "renderable": 38,
-    "gap": 11,
+    "renderable": 44,
+    "gap": 9,
     "rejected": 7
   },
-  "fixtureSha256": "d70d4b4e6cbf36c891f328f2bfb86e38f16787f82e926efd653611bc29e4b01f",
+  "fixtureSha256": "e5cc98d85aca0fda912796255d791434b2498bc83a6071d62a7d62d4f423e228",
   "scope": "共通schema・座標・元データの検証。見やすさの人間受入、全ケースの実ブラウザ確認、未対応機能の完成を意味しない。",
   "cases": [
     {
@@ -255,9 +261,8 @@
       "id": "window-empty",
       "title": "曖昧な発生幅の中に他の記録がない",
       "category": "曖昧な発生時期",
-      "status": "gap",
-      "expectation": "表示粒度に応じて幅ありの点へまとめ、開けば元の範囲を確認できるようにしたい。",
-      "gap": "現行の描画は常に帯です。自動の点表示・粒度設定は未実装です。",
+      "status": "renderable",
+      "expectation": "年・月表示では同じ単位内の点、日表示では4〜10日の候補幅になる。元の意味・範囲は変わらない。",
       "expectedAcceptance": true,
       "actualAcceptance": true,
       "recordCount": 1,
@@ -279,7 +284,7 @@
       "title": "出来事が候補幅の端と同日",
       "category": "曖昧な発生時期",
       "status": "renderable",
-      "expectation": "境界での一致を保持し、厳密な前後を付け足さない。",
+      "expectation": "同じ日付の点・候補幅を、それぞれの見出しへつなぐ。上下の順を時間的な前後として扱わない。",
       "expectedAcceptance": true,
       "actualAcceptance": true,
       "recordCount": 3,
@@ -302,7 +307,7 @@
       "category": "曖昧な発生時期",
       "status": "gap",
       "expectation": "表示対象が減っても元の時期情報を変更しない。全体を調べたという主張へ変えない。",
-      "gap": "現在は線の強調だけで、記録の表示除外・それに連動する点と帯の切替はありません。",
+      "gap": "記録の表示除外は未実装。点と幅の切替は表示単位で決まり、比較相手の有無では変わりません。",
       "expectedAcceptance": true,
       "actualAcceptance": true,
       "recordCount": 2,
@@ -553,18 +558,6 @@
       ]
     },
     {
-      "id": "display-granularity",
-      "title": "年を基準に月日・時刻まで開く設定",
-      "category": "仕様の不足",
-      "status": "gap",
-      "expectation": "表示の粗さと保存精度を分ける設定は未実装。現在は混在した元データをそのまま配置する。",
-      "gap": "表示の粗さと保存精度を分ける設定は未実装。現在は混在した元データをそのまま配置する。",
-      "expectedAcceptance": true,
-      "actualAcceptance": true,
-      "recordCount": 3,
-      "validationIssues": []
-    },
-    {
       "id": "invalid-date",
       "title": "存在しない日付",
       "category": "入力の拒否",
@@ -664,6 +657,61 @@
       "expectedAcceptance": true,
       "actualAcceptance": true,
       "recordCount": 12,
+      "validationIssues": []
+    },
+    {
+      "id": "display-granularity",
+      "title": "年・月・日を切り替えて読む",
+      "category": "表示単位と接続先",
+      "status": "renderable",
+      "expectation": "表示を年・月・日に変えても、保存した精度と原表現は変わらない。暦日時刻の対応とは別の機能。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 3,
+      "validationIssues": []
+    },
+    {
+      "id": "year-point-and-window",
+      "title": "1991年の出来事と、1991年のどこか",
+      "category": "表示単位と接続先",
+      "status": "renderable",
+      "expectation": "自動の年表示ではどちらも1991年の点。日表示では年内の幅を示す。各点は自分の見出しへつながる。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "month-window-and-duration",
+      "title": "同じ月内の発生幅と、続いた期間",
+      "category": "表示単位と接続先",
+      "status": "renderable",
+      "expectation": "月表示ではAは丸い点、Bは短い両端付きの期間線。日表示でそれぞれの幅へ戻り、元の意味を保つ。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "shared-start-anchors",
+      "title": "期間の開始日と複数の出来事が重なる",
+      "category": "表示単位と接続先",
+      "status": "renderable",
+      "expectation": "期間・B・Cの接続先を混同しない。どの行を開いても接続を保つ。終了側もAだけへ戻り、行順は意味にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 4,
+      "validationIssues": []
+    },
+    {
+      "id": "year-crossing-window",
+      "title": "年をまたぐ発生候補幅",
+      "category": "表示単位と接続先",
+      "status": "renderable",
+      "expectation": "年表示でも1991〜1992の幅を保つ。比較相手がないという理由だけで点にはしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
       "validationIssues": []
     }
   ]

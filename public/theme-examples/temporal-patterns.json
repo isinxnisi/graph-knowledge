@@ -1853,9 +1853,8 @@
       "id": "window-empty",
       "title": "曖昧な発生幅の中に他の記録がない",
       "category": "曖昧な発生時期",
-      "status": "gap",
-      "expectation": "表示粒度に応じて幅ありの点へまとめ、開けば元の範囲を確認できるようにしたい。",
-      "gap": "現行の描画は常に帯です。自動の点表示・粒度設定は未実装です。",
+      "status": "renderable",
+      "expectation": "年・月表示では同じ単位内の点、日表示では4〜10日の候補幅になる。元の意味・範囲は変わらない。",
       "expectedAcceptance": true,
       "actualAcceptance": true,
       "recordCount": 1,
@@ -1864,7 +1863,7 @@
         "schemaVersion": 1,
         "id": "pattern-window-empty",
         "title": "【仮想】曖昧な発生幅の中に他の記録がない",
-        "description": "すべて架空の検証データ。表示粒度に応じて幅ありの点へまとめ、開けば元の範囲を確認できるようにしたい。",
+        "description": "すべて架空の検証データ。年・月表示では同じ単位内の点、日表示では4〜10日の候補幅になる。元の意味・範囲は変わらない。",
         "entities": [
           {
             "id": "a",
@@ -1895,7 +1894,7 @@
                 "url": "http://localhost:3276/themes/patterns?case=window-empty",
                 "title": "仮想ケースの定義",
                 "locator": "window-empty / a",
-                "excerpt": "表示粒度に応じて幅ありの点へまとめ、開けば元の範囲を確認できるようにしたい。",
+                "excerpt": "年・月表示では同じ単位内の点、日表示では4〜10日の候補幅になる。元の意味・範囲は変わらない。",
                 "retrievedAt": "2026-11-01T00:00:00Z"
               }
             ]
@@ -1994,7 +1993,7 @@
       "title": "出来事が候補幅の端と同日",
       "category": "曖昧な発生時期",
       "status": "renderable",
-      "expectation": "境界での一致を保持し、厳密な前後を付け足さない。",
+      "expectation": "同じ日付の点・候補幅を、それぞれの見出しへつなぐ。上下の順を時間的な前後として扱わない。",
       "expectedAcceptance": true,
       "actualAcceptance": true,
       "recordCount": 3,
@@ -2003,7 +2002,7 @@
         "schemaVersion": 1,
         "id": "pattern-window-event-at-boundary",
         "title": "【仮想】出来事が候補幅の端と同日",
-        "description": "すべて架空の検証データ。境界での一致を保持し、厳密な前後を付け足さない。",
+        "description": "すべて架空の検証データ。同じ日付の点・候補幅を、それぞれの見出しへつなぐ。上下の順を時間的な前後として扱わない。",
         "entities": [
           {
             "id": "a",
@@ -2046,7 +2045,7 @@
                 "url": "http://localhost:3276/themes/patterns?case=window-event-at-boundary",
                 "title": "仮想ケースの定義",
                 "locator": "window-event-at-boundary / a",
-                "excerpt": "境界での一致を保持し、厳密な前後を付け足さない。",
+                "excerpt": "同じ日付の点・候補幅を、それぞれの見出しへつなぐ。上下の順を時間的な前後として扱わない。",
                 "retrievedAt": "2026-11-01T00:00:00Z"
               }
             ]
@@ -2071,7 +2070,7 @@
                 "url": "http://localhost:3276/themes/patterns?case=window-event-at-boundary",
                 "title": "仮想ケースの定義",
                 "locator": "window-event-at-boundary / b",
-                "excerpt": "境界での一致を保持し、厳密な前後を付け足さない。",
+                "excerpt": "同じ日付の点・候補幅を、それぞれの見出しへつなぐ。上下の順を時間的な前後として扱わない。",
                 "retrievedAt": "2026-11-01T00:00:00Z"
               }
             ]
@@ -2096,7 +2095,7 @@
                 "url": "http://localhost:3276/themes/patterns?case=window-event-at-boundary",
                 "title": "仮想ケースの定義",
                 "locator": "window-event-at-boundary / c",
-                "excerpt": "境界での一致を保持し、厳密な前後を付け足さない。",
+                "excerpt": "同じ日付の点・候補幅を、それぞれの見出しへつなぐ。上下の順を時間的な前後として扱わない。",
                 "retrievedAt": "2026-11-01T00:00:00Z"
               }
             ]
@@ -2197,7 +2196,7 @@
       "category": "曖昧な発生時期",
       "status": "gap",
       "expectation": "表示対象が減っても元の時期情報を変更しない。全体を調べたという主張へ変えない。",
-      "gap": "現在は線の強調だけで、記録の表示除外・それに連動する点と帯の切替はありません。",
+      "gap": "記録の表示除外は未実装。点と幅の切替は表示単位で決まり、比較相手の有無では変わりません。",
       "expectedAcceptance": true,
       "actualAcceptance": true,
       "recordCount": 2,
@@ -3762,122 +3761,6 @@
       }
     },
     {
-      "id": "display-granularity",
-      "title": "年を基準に月日・時刻まで開く設定",
-      "category": "仕様の不足",
-      "status": "gap",
-      "expectation": "表示の粗さと保存精度を分ける設定は未実装。現在は混在した元データをそのまま配置する。",
-      "gap": "表示の粗さと保存精度を分ける設定は未実装。現在は混在した元データをそのまま配置する。",
-      "expectedAcceptance": true,
-      "actualAcceptance": true,
-      "recordCount": 3,
-      "validationIssues": [],
-      "package": {
-        "schemaVersion": 1,
-        "id": "pattern-display-granularity",
-        "title": "【仮想】年を基準に月日・時刻まで開く設定",
-        "description": "すべて架空の検証データ。表示の粗さと保存精度を分ける設定は未実装。現在は混在した元データをそのまま配置する。",
-        "entities": [
-          {
-            "id": "a",
-            "name": "架空の対象A",
-            "kind": "仮想データ",
-            "description": "検証用。実在の人物・出来事ではありません。"
-          },
-          {
-            "id": "b",
-            "name": "架空の対象B",
-            "kind": "仮想データ",
-            "description": "検証用。実在の人物・出来事ではありません。"
-          },
-          {
-            "id": "c",
-            "name": "架空の対象C",
-            "kind": "仮想データ",
-            "description": "検証用。実在の人物・出来事ではありません。"
-          }
-        ],
-        "records": [
-          {
-            "id": "a",
-            "kind": "episode",
-            "subject": "a",
-            "object": null,
-            "assertion": "【仮想】架空の記録A",
-            "relation": "",
-            "scope": "検証用の仮定。史実や実資料ではない。",
-            "polarity": "affirmed",
-            "time": {
-              "kind": "calendar",
-              "meaning": "point",
-              "from": "2030",
-              "label": ""
-            },
-            "evidence": [
-              {
-                "url": "http://localhost:3276/themes/patterns?case=display-granularity",
-                "title": "仮想ケースの定義",
-                "locator": "display-granularity / a",
-                "excerpt": "表示の粗さと保存精度を分ける設定は未実装。現在は混在した元データをそのまま配置する。",
-                "retrievedAt": "2026-11-01T00:00:00Z"
-              }
-            ]
-          },
-          {
-            "id": "b",
-            "kind": "episode",
-            "subject": "b",
-            "object": null,
-            "assertion": "【仮想】架空の記録B",
-            "relation": "",
-            "scope": "検証用の仮定。史実や実資料ではない。",
-            "polarity": "affirmed",
-            "time": {
-              "kind": "calendar",
-              "meaning": "point",
-              "from": "2030-05",
-              "label": ""
-            },
-            "evidence": [
-              {
-                "url": "http://localhost:3276/themes/patterns?case=display-granularity",
-                "title": "仮想ケースの定義",
-                "locator": "display-granularity / b",
-                "excerpt": "表示の粗さと保存精度を分ける設定は未実装。現在は混在した元データをそのまま配置する。",
-                "retrievedAt": "2026-11-01T00:00:00Z"
-              }
-            ]
-          },
-          {
-            "id": "c",
-            "kind": "episode",
-            "subject": "c",
-            "object": null,
-            "assertion": "【仮想】架空の記録C",
-            "relation": "",
-            "scope": "検証用の仮定。史実や実資料ではない。",
-            "polarity": "affirmed",
-            "time": {
-              "kind": "calendar",
-              "meaning": "point",
-              "from": "2030-05-08",
-              "label": ""
-            },
-            "evidence": [
-              {
-                "url": "http://localhost:3276/themes/patterns?case=display-granularity",
-                "title": "仮想ケースの定義",
-                "locator": "display-granularity / c",
-                "excerpt": "表示の粗さと保存精度を分ける設定は未実装。現在は混在した元データをそのまま配置する。",
-                "retrievedAt": "2026-11-01T00:00:00Z"
-              }
-            ]
-          }
-        ],
-        "mappings": []
-      }
-    },
-    {
       "id": "invalid-date",
       "title": "存在しない日付",
       "category": "入力の拒否",
@@ -4668,6 +4551,494 @@
                 "title": "仮想ケースの定義",
                 "locator": "dense-overlap / p12",
                 "excerpt": "同じ端の期間を統合せず、全12記録を独立して選べる。狭い画面の年表内スクロールも確認する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "display-granularity",
+      "title": "年・月・日を切り替えて読む",
+      "category": "表示単位と接続先",
+      "status": "renderable",
+      "expectation": "表示を年・月・日に変えても、保存した精度と原表現は変わらない。暦日時刻の対応とは別の機能。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 3,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-display-granularity",
+        "title": "【仮想】年・月・日を切り替えて読む",
+        "description": "すべて架空の検証データ。表示を年・月・日に変えても、保存した精度と原表現は変わらない。暦日時刻の対応とは別の機能。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "c",
+            "name": "架空の対象C",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=display-granularity",
+                "title": "仮想ケースの定義",
+                "locator": "display-granularity / a",
+                "excerpt": "表示を年・月・日に変えても、保存した精度と原表現は変わらない。暦日時刻の対応とは別の機能。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=display-granularity",
+                "title": "仮想ケースの定義",
+                "locator": "display-granularity / b",
+                "excerpt": "表示を年・月・日に変えても、保存した精度と原表現は変わらない。暦日時刻の対応とは別の機能。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "c",
+            "kind": "episode",
+            "subject": "c",
+            "object": null,
+            "assertion": "【仮想】架空の記録C",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=display-granularity",
+                "title": "仮想ケースの定義",
+                "locator": "display-granularity / c",
+                "excerpt": "表示を年・月・日に変えても、保存した精度と原表現は変わらない。暦日時刻の対応とは別の機能。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "year-point-and-window",
+      "title": "1991年の出来事と、1991年のどこか",
+      "category": "表示単位と接続先",
+      "status": "renderable",
+      "expectation": "自動の年表示ではどちらも1991年の点。日表示では年内の幅を示す。各点は自分の見出しへつながる。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-year-point-and-window",
+        "title": "【仮想】1991年の出来事と、1991年のどこか",
+        "description": "すべて架空の検証データ。自動の年表示ではどちらも1991年の点。日表示では年内の幅を示す。各点は自分の見出しへつながる。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】1991年の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "1991",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=year-point-and-window",
+                "title": "仮想ケースの定義",
+                "locator": "year-point-and-window / a",
+                "excerpt": "自動の年表示ではどちらも1991年の点。日表示では年内の幅を示す。各点は自分の見出しへつながる。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】1991年のどこかの記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "occurrence-window",
+              "from": "1991",
+              "to": "1991",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=year-point-and-window",
+                "title": "仮想ケースの定義",
+                "locator": "year-point-and-window / b",
+                "excerpt": "自動の年表示ではどちらも1991年の点。日表示では年内の幅を示す。各点は自分の見出しへつながる。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "month-window-and-duration",
+      "title": "同じ月内の発生幅と、続いた期間",
+      "category": "表示単位と接続先",
+      "status": "renderable",
+      "expectation": "月表示ではAは丸い点、Bは短い両端付きの期間線。日表示でそれぞれの幅へ戻り、元の意味を保つ。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-month-window-and-duration",
+        "title": "【仮想】同じ月内の発生幅と、続いた期間",
+        "description": "すべて架空の検証データ。月表示ではAは丸い点、Bは短い両端付きの期間線。日表示でそれぞれの幅へ戻り、元の意味を保つ。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "occurrence-window",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=month-window-and-duration",
+                "title": "仮想ケースの定義",
+                "locator": "month-window-and-duration / a",
+                "excerpt": "月表示ではAは丸い点、Bは短い両端付きの期間線。日表示でそれぞれの幅へ戻り、元の意味を保つ。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=month-window-and-duration",
+                "title": "仮想ケースの定義",
+                "locator": "month-window-and-duration / b",
+                "excerpt": "月表示ではAは丸い点、Bは短い両端付きの期間線。日表示でそれぞれの幅へ戻り、元の意味を保つ。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "shared-start-anchors",
+      "title": "期間の開始日と複数の出来事が重なる",
+      "category": "表示単位と接続先",
+      "status": "renderable",
+      "expectation": "期間・B・Cの接続先を混同しない。どの行を開いても接続を保つ。終了側もAだけへ戻り、行順は意味にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 4,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-shared-start-anchors",
+        "title": "【仮想】期間の開始日と複数の出来事が重なる",
+        "description": "すべて架空の検証データ。期間・B・Cの接続先を混同しない。どの行を開いても接続を保つ。終了側もAだけへ戻り、行順は意味にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "c",
+            "name": "架空の対象C",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "d",
+            "name": "架空の対象D",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": "",
+              "startLatest": "2030-05-07"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=shared-start-anchors",
+                "title": "仮想ケースの定義",
+                "locator": "shared-start-anchors / a",
+                "excerpt": "期間・B・Cの接続先を混同しない。どの行を開いても接続を保つ。終了側もAだけへ戻り、行順は意味にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-04",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=shared-start-anchors",
+                "title": "仮想ケースの定義",
+                "locator": "shared-start-anchors / b",
+                "excerpt": "期間・B・Cの接続先を混同しない。どの行を開いても接続を保つ。終了側もAだけへ戻り、行順は意味にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "c",
+            "kind": "episode",
+            "subject": "c",
+            "object": null,
+            "assertion": "【仮想】架空の記録C",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-04",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=shared-start-anchors",
+                "title": "仮想ケースの定義",
+                "locator": "shared-start-anchors / c",
+                "excerpt": "期間・B・Cの接続先を混同しない。どの行を開いても接続を保つ。終了側もAだけへ戻り、行順は意味にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "d",
+            "kind": "episode",
+            "subject": "d",
+            "object": null,
+            "assertion": "【仮想】架空の記録D",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=shared-start-anchors",
+                "title": "仮想ケースの定義",
+                "locator": "shared-start-anchors / d",
+                "excerpt": "期間・B・Cの接続先を混同しない。どの行を開いても接続を保つ。終了側もAだけへ戻り、行順は意味にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "year-crossing-window",
+      "title": "年をまたぐ発生候補幅",
+      "category": "表示単位と接続先",
+      "status": "renderable",
+      "expectation": "年表示でも1991〜1992の幅を保つ。比較相手がないという理由だけで点にはしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-year-crossing-window",
+        "title": "【仮想】年をまたぐ発生候補幅",
+        "description": "すべて架空の検証データ。年表示でも1991〜1992の幅を保つ。比較相手がないという理由だけで点にはしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "occurrence-window",
+              "from": "1991-12-20",
+              "to": "1992-01-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=year-crossing-window",
+                "title": "仮想ケースの定義",
+                "locator": "year-crossing-window / a",
+                "excerpt": "年表示でも1991〜1992の幅を保つ。比較相手がないという理由だけで点にはしない。",
                 "retrievedAt": "2026-11-01T00:00:00Z"
               }
             ]

@@ -56,13 +56,18 @@ for (const pattern of temporalPatterns) {
       expect(examined.records).toEqual([]);
       return;
     }
-    const graph = calendarGraph(examined.records);
-    for (const r of graph.ranges) {
-      expect(r.startRow).toBeGreaterThanOrEqual(0);
-      expect(r.endRow).toBeGreaterThanOrEqual(r.startRow);
-      expect(r.startEndRow).toBeGreaterThanOrEqual(r.startRow);
-      expect(r.endStartRow).toBeLessThanOrEqual(r.endRow);
+    for (const unit of ["auto", "year", "month", "day"] as const) {
+      const graph = calendarGraph(examined.records, unit);
+      for (const r of graph.ranges) {
+        expect(r.startRow).toBeGreaterThanOrEqual(0);
+        expect(r.endRow).toBeGreaterThanOrEqual(r.startRow);
+        expect(r.startEndRow).toBeGreaterThanOrEqual(r.startRow);
+        expect(r.endStartRow).toBeLessThanOrEqual(r.endRow);
+        expect(graph.rows[r.anchorRow].record?.id).toBe(r.record.id);
+        expect(r.endAnchorRow).toBeGreaterThanOrEqual(r.anchorRow);
+      }
     }
+    expect(JSON.stringify(pattern)).toBe(original);
     const doc = themeDocument({
       themeId: "test",
       themeRevision: 1,

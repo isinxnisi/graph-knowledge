@@ -345,3 +345,111 @@ it("keeps expansion controls linked for a free-text axis name containing spaces"
   expect(controlled).not.toMatch(/\s/);
   expect(document.getElementById(controlled)).not.toBeNull();
 });
+
+it("switches display units without changing original dates, selected records or reading focus", () => {
+  const window = record("window", "1991年のどこかの出来事", {
+    kind: "calendar",
+    meaning: "occurrence-window",
+    from: "1991-02-01",
+    to: "1991-11-30",
+    label: "原資料の範囲",
+  });
+  const membership = vi.fn(),
+    focus = vi.fn();
+  const before = JSON.stringify(window);
+  render(
+    <ThemeTimeline
+      {...common}
+      records={[window]}
+      selectedRecordIds={[window.id]}
+      onToggleSelected={membership}
+      onFocusRecord={focus}
+    />,
+  );
+  const line = screen.getByRole("button", {
+    name: /時期の線を選ぶ：1991年のどこかの出来事/,
+  });
+  expect(line.hasAttribute("data-point")).toBe(false);
+  fireEvent.change(screen.getByRole("combobox", { name: "暦の表示単位" }), {
+    target: { value: "year" },
+  });
+  expect(line.hasAttribute("data-point")).toBe(true);
+  expect(line.getAttribute("data-meaning")).toBe("occurrence-window");
+  expect((screen.getByRole("checkbox") as HTMLInputElement).checked).toBe(true);
+  expect(document.body.textContent).toContain("1991-02-01〜1991-11-30");
+  fireEvent.change(screen.getByRole("combobox", { name: "暦の表示単位" }), {
+    target: { value: "day" },
+  });
+  expect(line.hasAttribute("data-point")).toBe(false);
+  expect(membership).not.toHaveBeenCalled();
+  expect(focus).not.toHaveBeenCalled();
+  expect(JSON.stringify(window)).toBe(before);
+});
+
+it("connects each same-date item to its own heading and keeps its endpoint links independent of expansion", () => {
+  const duration = record("duration", "活動が続いた", {
+    kind: "calendar",
+    meaning: "duration",
+    from: "2030-05-04",
+    startLatest: "2030-05-07",
+    to: "2030-05-15",
+    label: "活動A",
+  });
+  const point = record("point", "同日の出来事", {
+    kind: "calendar",
+    meaning: "point",
+    from: "2030-05-04",
+    label: "出来事B",
+  });
+  render(<ThemeTimeline {...common} records={[duration, point]} />);
+  const anchor = (id: string) =>
+    document.querySelector<HTMLElement>(
+      `[data-anchor-record="${id}"][data-anchor-kind="record"]`,
+    )!;
+  const connector = (id: string) =>
+    document.querySelector<HTMLElement>(
+      `[data-connector-id="${id}"][data-anchor-kind="record"]`,
+    )!;
+  expect(anchor(duration.id).style.gridRow).toBe(
+    connector(duration.id).style.gridRow,
+  );
+  expect(anchor(point.id).style.gridRow).toBe(
+    connector(point.id).style.gridRow,
+  );
+  expect(connector(duration.id).style.gridRow).not.toBe(
+    connector(point.id).style.gridRow,
+  );
+  fireEvent.click(screen.getByRole("button", { name: /^同日の出来事/ }));
+  expect(anchor(point.id).style.gridRow).toBe(
+    connector(point.id).style.gridRow,
+  );
+  expect(
+    screen
+      .getByRole("button", { name: /^同日の出来事/ })
+      .getAttribute("aria-expanded"),
+  ).toBe("true");
+  fireEvent.click(screen.getByRole("button", { name: /活動A.*終了側/ }));
+  expect(
+    screen
+      .getByRole("button", { name: /^活動が続いた/ })
+      .getAttribute("aria-expanded"),
+  ).toBe("true");
+});
+
+it("shows an entirely uncertain duration as one continuous uncertain stroke with no certain core", () => {
+  const duration = record("duration", "不確かな期間", {
+    kind: "calendar",
+    meaning: "duration",
+    from: "2030-05-04",
+    startLatest: "2030-05-12",
+    endEarliest: "2030-05-07",
+    to: "2030-05-15",
+    label: "",
+  });
+  render(<ThemeTimeline {...common} records={[duration]} />);
+  const segments = document.querySelectorAll(
+    '[data-segment-record="duration"]',
+  );
+  expect(segments).toHaveLength(1);
+  expect(segments[0].getAttribute("data-kind")).toBe("uncertain");
+});
