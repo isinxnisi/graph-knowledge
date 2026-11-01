@@ -42,10 +42,10 @@
   },
   "controlError": null,
   "requestsByPhase": {
-    "retry-wait": 2,
+    "waiting-control": 16,
     "blocked": 9,
-    "waiting-control": 15,
     "completed": 32,
+    "retry-wait": 1,
     "awaiting-recovery": 4
   },
   "issueIntake": {
@@ -130,9 +130,8 @@
       "checkedAt": "2026-10-31T16:23:10+00:00"
     },
     "collection-control/issue-sources/67.json": {
-      "status": "held",
-      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-      "checkedAt": "2026-11-01T01:47:25+00:00"
+      "status": "registered: issue-67-dot-mizuki-two-20261029",
+      "checkedAt": "2026-11-01T01:52:18+00:00"
     },
     "collection-control/issue-sources/68.json": {
       "status": "registered: issue-68-dot-fujikoa-two-20261029",
@@ -147,9 +146,8 @@
       "checkedAt": "2026-10-31T16:05:23+00:00"
     },
     "collection-control/issue-sources/71.json": {
-      "status": "held",
-      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-      "checkedAt": "2026-11-01T01:47:48+00:00"
+      "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
+      "checkedAt": "2026-11-01T01:52:23+00:00"
     },
     "collection-control/issue-sources/73.json": {
       "status": "registered: issue-73-dot-murata-onepunch-20261030",
@@ -195,5 +193,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T01:50:35.577023+00:00"
+  "checkedAt": "2026-11-01T01:54:02.512733+00:00"
 }
