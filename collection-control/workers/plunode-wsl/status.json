@@ -26,30 +26,27 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-01T08:49:20.399040+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-01T07:55:03.790127+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-01T18:00:00+00:00",
-    "windowEndAt": "2026-11-01T22:00:00+00:00"
+    "eligibleAt": "2026-11-01T07:55:03.790127+00:00",
+    "windowEndAt": "2026-11-01T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-68-dot-fujikoa-two-20261029",
-    "startedAt": "2026-11-01T07:44:20.399042+00:00",
-    "limitAt": "2026-11-01T08:39:20.399040+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-5-dot-tezuka-adolf-20261025-batch-01",
-    "endedAt": "2026-11-01T07:11:39.243399+00:00"
+    "requestId": "issue-68-dot-fujikoa-two-20261029",
+    "endedAt": "2026-11-01T07:45:03.790129+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 10,
-    "waiting-lock": 14,
-    "completed": 33,
-    "awaiting-recovery": 5
+    "waiting-control": 12,
+    "completed": 34,
+    "awaiting-recovery": 5,
+    "waiting-lock": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -165,7 +162,7 @@
     },
     "issue-25-utc-recovery-02": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-01",
-      "phase": "waiting-lock"
+      "phase": "waiting-control"
     },
     "issue-25-utc-recovery-03": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-04",
@@ -196,5 +193,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T07:44:27.469081+00:00"
+  "checkedAt": "2026-11-01T07:48:49.654213+00:00"
 }
