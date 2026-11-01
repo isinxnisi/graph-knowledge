@@ -1,0 +1,670 @@
+{
+  "checkedAt": "2026-11-01T10:03:13.752Z",
+  "caseCount": 56,
+  "statusCounts": {
+    "renderable": 38,
+    "gap": 11,
+    "rejected": 7
+  },
+  "fixtureSha256": "d70d4b4e6cbf36c891f328f2bfb86e38f16787f82e926efd653611bc29e4b01f",
+  "scope": "共通schema・座標・元データの検証。見やすさの人間受入、全ケースの実ブラウザ確認、未対応機能の完成を意味しない。",
+  "cases": [
+    {
+      "id": "pair-before",
+      "title": "AがBより前",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "pair-after",
+      "title": "AがBより後",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "pair-meets",
+      "title": "Aの終了とBの開始が接する",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "pair-met-by",
+      "title": "Bの終了とAの開始が接する",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "pair-overlaps",
+      "title": "Aが先に始まり途中で重なる",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "pair-overlapped-by",
+      "title": "Bが先に始まり途中で重なる",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "pair-starts",
+      "title": "同じ開始・Aが先に終了",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "pair-started-by",
+      "title": "同じ開始・Bが先に終了",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "pair-during",
+      "title": "AがBの期間内に入る",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "pair-contains",
+      "title": "BがAの期間内に入る",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "pair-finishes",
+      "title": "同じ終了・Aが後から開始",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "pair-finished-by",
+      "title": "同じ終了・Bが後から開始",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "pair-equal",
+      "title": "開始も終了も同じ",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "precision-year",
+      "title": "年だけ分かる時点",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "2030年のどこか。1月1日の出来事と断定しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": []
+    },
+    {
+      "id": "precision-month",
+      "title": "月だけ分かる時点",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "5月のどこか。月初の確定した日付を補わない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": []
+    },
+    {
+      "id": "precision-day",
+      "title": "日まで分かる時点",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "その日を点で表す。時刻までは確定しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": []
+    },
+    {
+      "id": "precision-mixed",
+      "title": "年・月・日が同じ年に混在",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "年単位の表示でも月日を失わず、年の記録を必ず月日の前と断定しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 3,
+      "validationIssues": []
+    },
+    {
+      "id": "precision-reversed-looking",
+      "title": "月から同じ年の終端へ",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "文字列だけでは逆順に見える値も、可能範囲を考慮して受け付け、線の幅を負にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": []
+    },
+    {
+      "id": "same-day",
+      "title": "同日の時点・期間・発生幅",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "同じ日付でも時間の意味を同一視しない。日内の順番は補わない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 3,
+      "validationIssues": []
+    },
+    {
+      "id": "same-date-independent",
+      "title": "同じ日の別の出来事",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "同日の3件を独立して読める。登録順を実際の発生順にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 3,
+      "validationIssues": []
+    },
+    {
+      "id": "leap-and-year-crossing",
+      "title": "閏日・年をまたぐ期間",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "閏日を受理し、年をまたぐ期間を逆転させない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "first-half-defined",
+      "title": "前期の範囲が明示されている場合",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "区切りを明示した範囲として入力する。前期という語だけから範囲を推測しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "window-empty",
+      "title": "曖昧な発生幅の中に他の記録がない",
+      "category": "曖昧な発生時期",
+      "status": "gap",
+      "expectation": "表示粒度に応じて幅ありの点へまとめ、開けば元の範囲を確認できるようにしたい。",
+      "gap": "現行の描画は常に帯です。自動の点表示・粒度設定は未実装です。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": []
+    },
+    {
+      "id": "window-with-event",
+      "title": "曖昧な発生幅の中に日付のある出来事",
+      "category": "曖昧な発生時期",
+      "status": "renderable",
+      "expectation": "AがBの前か後かは決まらないことを、範囲で読める。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "window-event-at-boundary",
+      "title": "出来事が候補幅の端と同日",
+      "category": "曖昧な発生時期",
+      "status": "renderable",
+      "expectation": "境界での一致を保持し、厳密な前後を付け足さない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 3,
+      "validationIssues": []
+    },
+    {
+      "id": "windows-overlap",
+      "title": "二つの発生候補幅が重なる",
+      "category": "曖昧な発生時期",
+      "status": "renderable",
+      "expectation": "二つの出来事の発生順は未確定。期間の継続や所属と混同しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "window-filtered-event",
+      "title": "比較相手を絞り込みで隠す",
+      "category": "曖昧な発生時期",
+      "status": "gap",
+      "expectation": "表示対象が減っても元の時期情報を変更しない。全体を調べたという主張へ変えない。",
+      "gap": "現在は線の強調だけで、記録の表示除外・それに連動する点と帯の切替はありません。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "duration-empty",
+      "title": "途中に出来事がない継続期間",
+      "category": "曖昧な期間境界",
+      "status": "renderable",
+      "expectation": "比較相手がなくても、実際に続いた期間の意味を保持する。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": []
+    },
+    {
+      "id": "boundary-start",
+      "title": "開始だけが曖昧",
+      "category": "曖昧な期間境界",
+      "status": "renderable",
+      "expectation": "開始候補4〜7日と、開始後の継続部分を分ける。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "boundary-end",
+      "title": "終了だけが曖昧",
+      "category": "曖昧な期間境界",
+      "status": "renderable",
+      "expectation": "終了候補12〜15日を、確実に継続している区間にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "boundaries-separate",
+      "title": "両端が曖昧・確かな中央部分あり",
+      "category": "曖昧な期間境界",
+      "status": "renderable",
+      "expectation": "開始候補・確かな中央部分・終了候補を読み分けられる。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "boundaries-overlap",
+      "title": "両端の候補幅が交差する",
+      "category": "曖昧な期間境界",
+      "status": "renderable",
+      "expectation": "すべての候補に共通する継続区間を描かない。実際の開始≦終了という制約は保持する。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "boundaries-mixed",
+      "title": "境界にも年・月・日が混在",
+      "category": "曖昧な期間境界",
+      "status": "renderable",
+      "expectation": "境界の精度を保ち、元の値を合成日付へ書き換えない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": []
+    },
+    {
+      "id": "membership-none",
+      "title": "同じ期間内でも所属は未登録",
+      "category": "所属と文脈",
+      "status": "renderable",
+      "expectation": "Aの線の範囲内にBがあっても、BからAへの関係を生成しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "membership-explicit",
+      "title": "根拠のある所属を別記録にする",
+      "category": "所属と文脈",
+      "status": "renderable",
+      "expectation": "時期の配置と、明示した所属関係を独立した記録として保持する。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 3,
+      "validationIssues": []
+    },
+    {
+      "id": "undated",
+      "title": "時期不明と日付のある記録",
+      "category": "所属と文脈",
+      "status": "renderable",
+      "expectation": "時期不明へ便宜的な日付を入れず、背景として読める。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "cycle",
+      "title": "10月から翌2月の周期",
+      "category": "所属と文脈",
+      "status": "renderable",
+      "expectation": "周期の折返しを暦日へ無理に変換しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": []
+    },
+    {
+      "id": "qualitative",
+      "title": "日の出・日中などの定性軸",
+      "category": "所属と文脈",
+      "status": "renderable",
+      "expectation": "日の出を6時などの固定した時刻へ変換しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "explicit-inset",
+      "title": "明示した子軸を行の中で開く",
+      "category": "所属と文脈",
+      "status": "renderable",
+      "expectation": "Aを開いたときだけ、明示した別軸Bを表示する。日付が近いから自動的に入れ子にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": []
+    },
+    {
+      "id": "hour",
+      "title": "時まで分かる出来事",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "日付と時を同じ暦軸で扱う型は未実装。時刻を削って成功扱いにはしない。",
+      "gap": "日付と時を同じ暦軸で扱う型は未実装。時刻を削って成功扱いにはしない。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.from: Invalid string: must match pattern /^\\d{4}(-\\d{2})?(-\\d{2})?$/"
+      ]
+    },
+    {
+      "id": "minute",
+      "title": "分まで分かる時刻",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "分精度とタイムゾーンを保持する暦日型が必要。",
+      "gap": "分精度とタイムゾーンを保持する暦日型が必要。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.from: Invalid string: must match pattern /^\\d{4}(-\\d{2})?(-\\d{2})?$/"
+      ]
+    },
+    {
+      "id": "timezone",
+      "title": "同じ瞬間の異なるタイムゾーン",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "元の表記とゾーンを残し、同じ瞬間として比較する仕組みが必要。",
+      "gap": "元の表記とゾーンを残し、同じ瞬間として比較する仕組みが必要。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.from: Invalid string: must match pattern /^\\d{4}(-\\d{2})?(-\\d{2})?$/",
+        "records.1.time.from: Invalid string: must match pattern /^\\d{4}(-\\d{2})?(-\\d{2})?$/"
+      ]
+    },
+    {
+      "id": "local-clock",
+      "title": "タイムゾーン不明の時刻",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "ゾーン不明をUTCなどへ勝手に換算しない表現が必要。",
+      "gap": "ゾーン不明をUTCなどへ勝手に換算しない表現が必要。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.from: Invalid string: must match pattern /^\\d{4}(-\\d{2})?(-\\d{2})?$/"
+      ]
+    },
+    {
+      "id": "first-half-undefined",
+      "title": "定義のない「前期」",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "前期を1〜6月と決め付けず、原表現と区切りの定義・根拠を扱う型が必要。",
+      "gap": "前期を1〜6月と決め付けず、原表現と区切りの定義・根拠を扱う型が必要。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.from: Invalid string: must match pattern /^\\d{4}(-\\d{2})?(-\\d{2})?$/",
+        "records.0.time.from: 実在する年月日を入力してください"
+      ]
+    },
+    {
+      "id": "first-half-label",
+      "title": "ラベルだけの「前期」",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "文字として保存できても、計算上は年全体のまま。前期の意味を扱えたとは判定しない。",
+      "gap": "文字として保存できても、計算上は年全体のまま。前期の意味を扱えたとは判定しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": []
+    },
+    {
+      "id": "relative-stage",
+      "title": "ある時代の前期・後期",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "親の時代区分を参照し、境界が未確定でも区分の意味を失わない構造は未実装。",
+      "gap": "親の時代区分を参照し、境界が未確定でも区分の意味を失わない構造は未実装。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.from: Invalid input: expected string, received object"
+      ]
+    },
+    {
+      "id": "multiple-windows",
+      "title": "複数の離れた発生候補",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "間の6〜13日を候補に加えない複数範囲の型は未実装。",
+      "gap": "間の6〜13日を候補に加えない複数範囲の型は未実装。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time: Unrecognized key: \"alternatives\""
+      ]
+    },
+    {
+      "id": "display-granularity",
+      "title": "年を基準に月日・時刻まで開く設定",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "表示の粗さと保存精度を分ける設定は未実装。現在は混在した元データをそのまま配置する。",
+      "gap": "表示の粗さと保存精度を分ける設定は未実装。現在は混在した元データをそのまま配置する。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 3,
+      "validationIssues": []
+    },
+    {
+      "id": "invalid-date",
+      "title": "存在しない日付",
+      "category": "入力の拒否",
+      "status": "rejected",
+      "expectation": "入力を拒否し、元の内容や既存テーマを変更しない。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.from: 実在する年月日を入力してください"
+      ]
+    },
+    {
+      "id": "invalid-reverse",
+      "title": "逆転した期間",
+      "category": "入力の拒否",
+      "status": "rejected",
+      "expectation": "入力を拒否し、元の内容や既存テーマを変更しない。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.to: 時期の範囲の後端を前端以降にしてください"
+      ]
+    },
+    {
+      "id": "invalid-missing-end",
+      "title": "終了のない継続期間",
+      "category": "入力の拒否",
+      "status": "rejected",
+      "expectation": "入力を拒否し、元の内容や既存テーマを変更しない。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.to: 期間・発生時期の幅には範囲の後端が必要です"
+      ]
+    },
+    {
+      "id": "invalid-start-boundary",
+      "title": "開始候補の最遅が最早より前",
+      "category": "入力の拒否",
+      "status": "rejected",
+      "expectation": "入力を拒否し、元の内容や既存テーマを変更しない。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.startLatest: 開始の最遅を最早以降にしてください"
+      ]
+    },
+    {
+      "id": "invalid-end-boundary",
+      "title": "終了候補の最早が最遅より後",
+      "category": "入力の拒否",
+      "status": "rejected",
+      "expectation": "入力を拒否し、元の内容や既存テーマを変更しない。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.endEarliest: 終了の最早を最遅以前にしてください"
+      ]
+    },
+    {
+      "id": "invalid-window-boundary",
+      "title": "発生幅に期間用の境界を指定",
+      "category": "入力の拒否",
+      "status": "rejected",
+      "expectation": "入力を拒否し、元の内容や既存テーマを変更しない。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.startLatest: 開始の不確かな幅は期間にだけ指定できます"
+      ]
+    },
+    {
+      "id": "invalid-point-end",
+      "title": "時点に継続期間の終端を指定",
+      "category": "入力の拒否",
+      "status": "rejected",
+      "expectation": "入力を拒否し、元の内容や既存テーマを変更しない。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.to: 発生時点には範囲の後端を指定できません"
+      ]
+    },
+    {
+      "id": "dense-overlap",
+      "title": "同時期の12本の期間",
+      "category": "前後と重なりの負荷",
+      "status": "renderable",
+      "expectation": "同じ端の期間を統合せず、全12記録を独立して選べる。狭い画面の年表内スクロールも確認する。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 12,
+      "validationIssues": []
+    }
+  ]
+}

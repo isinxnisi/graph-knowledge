@@ -539,6 +539,9 @@ export default function ThemeWorkbench({
           )}
           <details className={css.updates}>
             <summary>入力例から試す</summary>
+            <p>
+              <Link href="/themes/patterns">年表の仮想ケースを確認 →</Link>
+            </p>
             <p className={css.caption}>
               資料を読み、主張と根拠箇所を整理した入力例です。内容を確認してから取り込みます。
             </p>

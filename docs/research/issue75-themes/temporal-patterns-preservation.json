@@ -1,0 +1,32 @@
+{
+  "backup": ".local/issue75/patterns-before-20261101T095503Z.dump",
+  "sha256": "4bad46f3bee640eed3d1d115b0d2c89474a2608e838e5d8d92208d8a574aba46",
+  "before": {
+    "themes": {
+      "ada-engine": "ad285813f0289d4e2299437569e1879e3433ab591d361f1a57a6c942a1211e70",
+      "webb-partnership": "4908393bce96e3e6690510a2dd5651fe262a3dc9cfb5db0da8ac5baf3df2b3ad",
+      "webb-partnership2": "c836c496be9a8faecfe87cce0b54ada6682a1b002a88824ab8e76d9eb7d99c88",
+      "webb-deployment-timeline": "11a2b276fd393603fca4cfba99438d3bde28628255e8a623c3edb12b76ff8fc8",
+      "time-meaning-check-15c2aed882": "cebc74a51f00eb21d8953837d7da064b3543bb043e7e1ffd33b4d2f5e190e32a",
+      "picasso-blue-period": "59cc2c2f37274070dc151c212b0e6053114b80e84dd1d8f2283d58365e794196",
+      "temporal-boundaries-example": "2f6c09935adb33a6056151263bfc83abbc06cf156faeca586013d2be8f92f7ea"
+    },
+    "capsules": {
+      "44282431-8929-406a-870a-f56b5bad1f12": "e2987b83b15e32e7f4835f579efebdd922f487d36c37c45cf89d2f63b9836610",
+      "25c0a443-2778-4cd2-984c-8fb0376a93ce": "ab365f3d410dc058918cbb51f5eb13f489aaf5e3bb661113488301d5340f3b98",
+      "e2952adb-d233-456a-9de4-d979621b53c4": "502482b0878d1e650b0e6b511bb90d0215ab5aad283b1969a20b2454e36204ad",
+      "c3c27c18-569f-4743-a56a-bd78ad15deb6": "8e3d62e02b79c2286ae96421458028466daba04928d5f1b98739d17907a74be4",
+      "f3ec3509-d023-41a4-93f3-422038599d7c": "617f593d9974dedf41ea7112475883f58c880b8e43102d59e1810fd02451d1b3",
+      "9ad27bb1-af81-4b8f-bd43-cf47c506c75c": "81651746ee061ab4ccce2c89d53abec5a467624187c46812f83973980a3ae9b3",
+      "60d63560-1501-4096-9fc9-5c3b2edf7af6": "359d26e5c5c11397ad4909e2888eac5bbb324e878c3c243b2d7e2f05b50c08ea"
+    }
+  },
+  "existingContentUnchanged": {
+    "themes": true,
+    "capsules": true
+  },
+  "afterCounts": {
+    "themes": 9,
+    "capsules": 8
+  }
+}

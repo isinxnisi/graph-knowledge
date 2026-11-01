@@ -1,0 +1,398 @@
+{
+  "checkedAt": "2026-11-01T10:07:40.441Z",
+  "scope": "全56ケースの選択・見出し・状態・エラーの巡回。可読性の人間受入ではない。",
+  "rows": [
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=pair-before"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=pair-after"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=pair-meets"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=pair-met-by"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=pair-overlaps"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=pair-overlapped-by"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=pair-starts"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=pair-started-by"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=pair-during"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=pair-contains"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=pair-finishes"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=pair-finished-by"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=pair-equal"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 1,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=precision-year"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 1,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=precision-month"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 1,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=precision-day"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 3,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=precision-mixed"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 1,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=precision-reversed-looking"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 3,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=same-day"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 3,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=same-date-independent"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=leap-and-year-crossing"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=first-half-defined"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 1,
+      "status": "gap",
+      "url": "http://localhost:3276/themes/patterns?case=window-empty"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=window-with-event"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 3,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=window-event-at-boundary"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=windows-overlap"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "gap",
+      "url": "http://localhost:3276/themes/patterns?case=window-filtered-event"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 1,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=duration-empty"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=boundary-start"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=boundary-end"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=boundaries-separate"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=boundaries-overlap"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 1,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=boundaries-mixed"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=membership-none"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 2,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=membership-explicit"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 1,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=undated"
+    },
+    {
+      "alerts": [],
+      "graphs": 0,
+      "lines": 0,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=cycle"
+    },
+    {
+      "alerts": [],
+      "graphs": 0,
+      "lines": 0,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=qualitative"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 1,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=explicit-inset"
+    },
+    {
+      "alerts": [],
+      "graphs": 0,
+      "lines": 0,
+      "status": "gap",
+      "url": "http://localhost:3276/themes/patterns?case=hour"
+    },
+    {
+      "alerts": [],
+      "graphs": 0,
+      "lines": 0,
+      "status": "gap",
+      "url": "http://localhost:3276/themes/patterns?case=minute"
+    },
+    {
+      "alerts": [],
+      "graphs": 0,
+      "lines": 0,
+      "status": "gap",
+      "url": "http://localhost:3276/themes/patterns?case=timezone"
+    },
+    {
+      "alerts": [],
+      "graphs": 0,
+      "lines": 0,
+      "status": "gap",
+      "url": "http://localhost:3276/themes/patterns?case=local-clock"
+    },
+    {
+      "alerts": [],
+      "graphs": 0,
+      "lines": 0,
+      "status": "gap",
+      "url": "http://localhost:3276/themes/patterns?case=first-half-undefined"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 1,
+      "status": "gap",
+      "url": "http://localhost:3276/themes/patterns?case=first-half-label"
+    },
+    {
+      "alerts": [],
+      "graphs": 0,
+      "lines": 0,
+      "status": "gap",
+      "url": "http://localhost:3276/themes/patterns?case=relative-stage"
+    },
+    {
+      "alerts": [],
+      "graphs": 0,
+      "lines": 0,
+      "status": "gap",
+      "url": "http://localhost:3276/themes/patterns?case=multiple-windows"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 3,
+      "status": "gap",
+      "url": "http://localhost:3276/themes/patterns?case=display-granularity"
+    },
+    {
+      "alerts": [],
+      "graphs": 0,
+      "lines": 0,
+      "status": "rejected",
+      "url": "http://localhost:3276/themes/patterns?case=invalid-date"
+    },
+    {
+      "alerts": [],
+      "graphs": 0,
+      "lines": 0,
+      "status": "rejected",
+      "url": "http://localhost:3276/themes/patterns?case=invalid-reverse"
+    },
+    {
+      "alerts": [],
+      "graphs": 0,
+      "lines": 0,
+      "status": "rejected",
+      "url": "http://localhost:3276/themes/patterns?case=invalid-missing-end"
+    },
+    {
+      "alerts": [],
+      "graphs": 0,
+      "lines": 0,
+      "status": "rejected",
+      "url": "http://localhost:3276/themes/patterns?case=invalid-start-boundary"
+    },
+    {
+      "alerts": [],
+      "graphs": 0,
+      "lines": 0,
+      "status": "rejected",
+      "url": "http://localhost:3276/themes/patterns?case=invalid-end-boundary"
+    },
+    {
+      "alerts": [],
+      "graphs": 0,
+      "lines": 0,
+      "status": "rejected",
+      "url": "http://localhost:3276/themes/patterns?case=invalid-window-boundary"
+    },
+    {
+      "alerts": [],
+      "graphs": 0,
+      "lines": 0,
+      "status": "rejected",
+      "url": "http://localhost:3276/themes/patterns?case=invalid-point-end"
+    },
+    {
+      "alerts": [],
+      "graphs": 1,
+      "lines": 12,
+      "status": "renderable",
+      "url": "http://localhost:3276/themes/patterns?case=dense-overlap"
+    }
+  ]
+}

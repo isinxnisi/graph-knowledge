@@ -13,6 +13,7 @@ import CalendarTimelineGraph from "./CalendarTimelineGraph";
 import { calendarLayoutBounds } from "../lib/domain/calendar-graph";
 
 type Props = {
+  selectionLabel?: string;
   records: ThemeRecord[];
   entities: ThemeEntity[];
   timeline?: ThemeTimelineConfig;
@@ -178,6 +179,7 @@ function Period({ record }: { record: ThemeRecord }) {
 }
 
 export default function ThemeTimeline({
+  selectionLabel = "Capsuleに含める",
   records,
   entities,
   timeline,
@@ -298,7 +300,7 @@ export default function ThemeTimeline({
               {onToggleSelected && (
                 <input
                   type="checkbox"
-                  aria-label={`Capsuleに含める：${record.assertion}`}
+                  aria-label={`${selectionLabel}：${record.assertion}`}
                   checked={selectedRecordIds.includes(record.id)}
                   onChange={() => onToggleSelected(record.id)}
                 />

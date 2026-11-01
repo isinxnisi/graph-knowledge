@@ -1,0 +1,4680 @@
+{
+  "notice": "すべて仮想データ。仕様不足と入力拒否のケースを含む。実在の事実・史実ではない。",
+  "cases": [
+    {
+      "id": "pair-before",
+      "title": "AがBより前",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-pair-before",
+        "title": "【仮想】AがBより前",
+        "description": "すべて架空の検証データ。2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の活動A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-before",
+                "title": "仮想ケースの定義",
+                "locator": "pair-before / a",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の活動B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-12",
+              "to": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-before",
+                "title": "仮想ケースの定義",
+                "locator": "pair-before / b",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "pair-after",
+      "title": "AがBより後",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-pair-after",
+        "title": "【仮想】AがBより後",
+        "description": "すべて架空の検証データ。2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の活動A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-after",
+                "title": "仮想ケースの定義",
+                "locator": "pair-after / a",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の活動B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-01",
+              "to": "2030-05-03",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-after",
+                "title": "仮想ケースの定義",
+                "locator": "pair-after / b",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "pair-meets",
+      "title": "Aの終了とBの開始が接する",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-pair-meets",
+        "title": "【仮想】Aの終了とBの開始が接する",
+        "description": "すべて架空の検証データ。2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の活動A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-meets",
+                "title": "仮想ケースの定義",
+                "locator": "pair-meets / a",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の活動B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-10",
+              "to": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-meets",
+                "title": "仮想ケースの定義",
+                "locator": "pair-meets / b",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "pair-met-by",
+      "title": "Bの終了とAの開始が接する",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-pair-met-by",
+        "title": "【仮想】Bの終了とAの開始が接する",
+        "description": "すべて架空の検証データ。2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の活動A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-met-by",
+                "title": "仮想ケースの定義",
+                "locator": "pair-met-by / a",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の活動B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-01",
+              "to": "2030-05-04",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-met-by",
+                "title": "仮想ケースの定義",
+                "locator": "pair-met-by / b",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "pair-overlaps",
+      "title": "Aが先に始まり途中で重なる",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-pair-overlaps",
+        "title": "【仮想】Aが先に始まり途中で重なる",
+        "description": "すべて架空の検証データ。2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の活動A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-overlaps",
+                "title": "仮想ケースの定義",
+                "locator": "pair-overlaps / a",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の活動B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-07",
+              "to": "2030-05-13",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-overlaps",
+                "title": "仮想ケースの定義",
+                "locator": "pair-overlaps / b",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "pair-overlapped-by",
+      "title": "Bが先に始まり途中で重なる",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-pair-overlapped-by",
+        "title": "【仮想】Bが先に始まり途中で重なる",
+        "description": "すべて架空の検証データ。2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の活動A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-overlapped-by",
+                "title": "仮想ケースの定義",
+                "locator": "pair-overlapped-by / a",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の活動B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-01",
+              "to": "2030-05-07",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-overlapped-by",
+                "title": "仮想ケースの定義",
+                "locator": "pair-overlapped-by / b",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "pair-starts",
+      "title": "同じ開始・Aが先に終了",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-pair-starts",
+        "title": "【仮想】同じ開始・Aが先に終了",
+        "description": "すべて架空の検証データ。2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の活動A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-starts",
+                "title": "仮想ケースの定義",
+                "locator": "pair-starts / a",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の活動B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-13",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-starts",
+                "title": "仮想ケースの定義",
+                "locator": "pair-starts / b",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "pair-started-by",
+      "title": "同じ開始・Bが先に終了",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-pair-started-by",
+        "title": "【仮想】同じ開始・Bが先に終了",
+        "description": "すべて架空の検証データ。2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の活動A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-started-by",
+                "title": "仮想ケースの定義",
+                "locator": "pair-started-by / a",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の活動B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-07",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-started-by",
+                "title": "仮想ケースの定義",
+                "locator": "pair-started-by / b",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "pair-during",
+      "title": "AがBの期間内に入る",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-pair-during",
+        "title": "【仮想】AがBの期間内に入る",
+        "description": "すべて架空の検証データ。2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の活動A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-during",
+                "title": "仮想ケースの定義",
+                "locator": "pair-during / a",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の活動B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-01",
+              "to": "2030-05-13",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-during",
+                "title": "仮想ケースの定義",
+                "locator": "pair-during / b",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "pair-contains",
+      "title": "BがAの期間内に入る",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-pair-contains",
+        "title": "【仮想】BがAの期間内に入る",
+        "description": "すべて架空の検証データ。2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の活動A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-contains",
+                "title": "仮想ケースの定義",
+                "locator": "pair-contains / a",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の活動B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-06",
+              "to": "2030-05-08",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-contains",
+                "title": "仮想ケースの定義",
+                "locator": "pair-contains / b",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "pair-finishes",
+      "title": "同じ終了・Aが後から開始",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-pair-finishes",
+        "title": "【仮想】同じ終了・Aが後から開始",
+        "description": "すべて架空の検証データ。2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の活動A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-finishes",
+                "title": "仮想ケースの定義",
+                "locator": "pair-finishes / a",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の活動B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-01",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-finishes",
+                "title": "仮想ケースの定義",
+                "locator": "pair-finishes / b",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "pair-finished-by",
+      "title": "同じ終了・Bが後から開始",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-pair-finished-by",
+        "title": "【仮想】同じ終了・Bが後から開始",
+        "description": "すべて架空の検証データ。2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の活動A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-finished-by",
+                "title": "仮想ケースの定義",
+                "locator": "pair-finished-by / a",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の活動B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-07",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-finished-by",
+                "title": "仮想ケースの定義",
+                "locator": "pair-finished-by / b",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "pair-equal",
+      "title": "開始も終了も同じ",
+      "category": "期間同士の13関係",
+      "status": "renderable",
+      "expectation": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-pair-equal",
+        "title": "【仮想】開始も終了も同じ",
+        "description": "すべて架空の検証データ。2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の活動A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-equal",
+                "title": "仮想ケースの定義",
+                "locator": "pair-equal / a",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の活動B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=pair-equal",
+                "title": "仮想ケースの定義",
+                "locator": "pair-equal / b",
+                "excerpt": "2本の期間の端と重なりを読み分けられる。時間上の包含を、意味上の所属にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "precision-year",
+      "title": "年だけ分かる時点",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "2030年のどこか。1月1日の出来事と断定しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-precision-year",
+        "title": "【仮想】年だけ分かる時点",
+        "description": "すべて架空の検証データ。2030年のどこか。1月1日の出来事と断定しない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=precision-year",
+                "title": "仮想ケースの定義",
+                "locator": "precision-year / a",
+                "excerpt": "2030年のどこか。1月1日の出来事と断定しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "precision-month",
+      "title": "月だけ分かる時点",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "5月のどこか。月初の確定した日付を補わない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-precision-month",
+        "title": "【仮想】月だけ分かる時点",
+        "description": "すべて架空の検証データ。5月のどこか。月初の確定した日付を補わない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=precision-month",
+                "title": "仮想ケースの定義",
+                "locator": "precision-month / a",
+                "excerpt": "5月のどこか。月初の確定した日付を補わない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "precision-day",
+      "title": "日まで分かる時点",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "その日を点で表す。時刻までは確定しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-precision-day",
+        "title": "【仮想】日まで分かる時点",
+        "description": "すべて架空の検証データ。その日を点で表す。時刻までは確定しない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=precision-day",
+                "title": "仮想ケースの定義",
+                "locator": "precision-day / a",
+                "excerpt": "その日を点で表す。時刻までは確定しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "precision-mixed",
+      "title": "年・月・日が同じ年に混在",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "年単位の表示でも月日を失わず、年の記録を必ず月日の前と断定しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 3,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-precision-mixed",
+        "title": "【仮想】年・月・日が同じ年に混在",
+        "description": "すべて架空の検証データ。年単位の表示でも月日を失わず、年の記録を必ず月日の前と断定しない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "c",
+            "name": "架空の対象C",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】年までの記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=precision-mixed",
+                "title": "仮想ケースの定義",
+                "locator": "precision-mixed / a",
+                "excerpt": "年単位の表示でも月日を失わず、年の記録を必ず月日の前と断定しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】月までの記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=precision-mixed",
+                "title": "仮想ケースの定義",
+                "locator": "precision-mixed / b",
+                "excerpt": "年単位の表示でも月日を失わず、年の記録を必ず月日の前と断定しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "c",
+            "kind": "episode",
+            "subject": "c",
+            "object": null,
+            "assertion": "【仮想】日までの記録C",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=precision-mixed",
+                "title": "仮想ケースの定義",
+                "locator": "precision-mixed / c",
+                "excerpt": "年単位の表示でも月日を失わず、年の記録を必ず月日の前と断定しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "precision-reversed-looking",
+      "title": "月から同じ年の終端へ",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "文字列だけでは逆順に見える値も、可能範囲を考慮して受け付け、線の幅を負にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-precision-reversed-looking",
+        "title": "【仮想】月から同じ年の終端へ",
+        "description": "すべて架空の検証データ。文字列だけでは逆順に見える値も、可能範囲を考慮して受け付け、線の幅を負にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-12",
+              "to": "2030",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=precision-reversed-looking",
+                "title": "仮想ケースの定義",
+                "locator": "precision-reversed-looking / a",
+                "excerpt": "文字列だけでは逆順に見える値も、可能範囲を考慮して受け付け、線の幅を負にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "same-day",
+      "title": "同日の時点・期間・発生幅",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "同じ日付でも時間の意味を同一視しない。日内の順番は補わない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 3,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-same-day",
+        "title": "【仮想】同日の時点・期間・発生幅",
+        "description": "すべて架空の検証データ。同じ日付でも時間の意味を同一視しない。日内の順番は補わない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "c",
+            "name": "架空の対象C",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】その日の時点A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=same-day",
+                "title": "仮想ケースの定義",
+                "locator": "same-day / a",
+                "excerpt": "同じ日付でも時間の意味を同一視しない。日内の順番は補わない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】同日の活動B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-08",
+              "to": "2030-05-08",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=same-day",
+                "title": "仮想ケースの定義",
+                "locator": "same-day / b",
+                "excerpt": "同じ日付でも時間の意味を同一視しない。日内の順番は補わない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "c",
+            "kind": "episode",
+            "subject": "c",
+            "object": null,
+            "assertion": "【仮想】同日内の出来事C",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "occurrence-window",
+              "from": "2030-05-08",
+              "to": "2030-05-08",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=same-day",
+                "title": "仮想ケースの定義",
+                "locator": "same-day / c",
+                "excerpt": "同じ日付でも時間の意味を同一視しない。日内の順番は補わない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "same-date-independent",
+      "title": "同じ日の別の出来事",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "同日の3件を独立して読める。登録順を実際の発生順にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 3,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-same-date-independent",
+        "title": "【仮想】同じ日の別の出来事",
+        "description": "すべて架空の検証データ。同日の3件を独立して読める。登録順を実際の発生順にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "c",
+            "name": "架空の対象C",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=same-date-independent",
+                "title": "仮想ケースの定義",
+                "locator": "same-date-independent / a",
+                "excerpt": "同日の3件を独立して読める。登録順を実際の発生順にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=same-date-independent",
+                "title": "仮想ケースの定義",
+                "locator": "same-date-independent / b",
+                "excerpt": "同日の3件を独立して読める。登録順を実際の発生順にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "c",
+            "kind": "episode",
+            "subject": "c",
+            "object": null,
+            "assertion": "【仮想】架空の記録C",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=same-date-independent",
+                "title": "仮想ケースの定義",
+                "locator": "same-date-independent / c",
+                "excerpt": "同日の3件を独立して読める。登録順を実際の発生順にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "leap-and-year-crossing",
+      "title": "閏日・年をまたぐ期間",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "閏日を受理し、年をまたぐ期間を逆転させない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-leap-and-year-crossing",
+        "title": "【仮想】閏日・年をまたぐ期間",
+        "description": "すべて架空の検証データ。閏日を受理し、年をまたぐ期間を逆転させない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2024-02-29",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=leap-and-year-crossing",
+                "title": "仮想ケースの定義",
+                "locator": "leap-and-year-crossing / a",
+                "excerpt": "閏日を受理し、年をまたぐ期間を逆転させない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2024-12-31",
+              "to": "2025-01-01",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=leap-and-year-crossing",
+                "title": "仮想ケースの定義",
+                "locator": "leap-and-year-crossing / b",
+                "excerpt": "閏日を受理し、年をまたぐ期間を逆転させない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "first-half-defined",
+      "title": "前期の範囲が明示されている場合",
+      "category": "精度の混在",
+      "status": "renderable",
+      "expectation": "区切りを明示した範囲として入力する。前期という語だけから範囲を推測しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-first-half-defined",
+        "title": "【仮想】前期の範囲が明示されている場合",
+        "description": "すべて架空の検証データ。区切りを明示した範囲として入力する。前期という語だけから範囲を推測しない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "occurrence-window",
+              "from": "2030-04-01",
+              "to": "2030-09-30",
+              "label": "架空制度の2030年前期（4〜9月と明示）"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=first-half-defined",
+                "title": "仮想ケースの定義",
+                "locator": "first-half-defined / a",
+                "excerpt": "区切りを明示した範囲として入力する。前期という語だけから範囲を推測しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-06-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=first-half-defined",
+                "title": "仮想ケースの定義",
+                "locator": "first-half-defined / b",
+                "excerpt": "区切りを明示した範囲として入力する。前期という語だけから範囲を推測しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "window-empty",
+      "title": "曖昧な発生幅の中に他の記録がない",
+      "category": "曖昧な発生時期",
+      "status": "gap",
+      "expectation": "表示粒度に応じて幅ありの点へまとめ、開けば元の範囲を確認できるようにしたい。",
+      "gap": "現行の描画は常に帯です。自動の点表示・粒度設定は未実装です。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-window-empty",
+        "title": "【仮想】曖昧な発生幅の中に他の記録がない",
+        "description": "すべて架空の検証データ。表示粒度に応じて幅ありの点へまとめ、開けば元の範囲を確認できるようにしたい。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "occurrence-window",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=window-empty",
+                "title": "仮想ケースの定義",
+                "locator": "window-empty / a",
+                "excerpt": "表示粒度に応じて幅ありの点へまとめ、開けば元の範囲を確認できるようにしたい。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "window-with-event",
+      "title": "曖昧な発生幅の中に日付のある出来事",
+      "category": "曖昧な発生時期",
+      "status": "renderable",
+      "expectation": "AがBの前か後かは決まらないことを、範囲で読める。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-window-with-event",
+        "title": "【仮想】曖昧な発生幅の中に日付のある出来事",
+        "description": "すべて架空の検証データ。AがBの前か後かは決まらないことを、範囲で読める。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "occurrence-window",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=window-with-event",
+                "title": "仮想ケースの定義",
+                "locator": "window-with-event / a",
+                "excerpt": "AがBの前か後かは決まらないことを、範囲で読める。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-07",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=window-with-event",
+                "title": "仮想ケースの定義",
+                "locator": "window-with-event / b",
+                "excerpt": "AがBの前か後かは決まらないことを、範囲で読める。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "window-event-at-boundary",
+      "title": "出来事が候補幅の端と同日",
+      "category": "曖昧な発生時期",
+      "status": "renderable",
+      "expectation": "境界での一致を保持し、厳密な前後を付け足さない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 3,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-window-event-at-boundary",
+        "title": "【仮想】出来事が候補幅の端と同日",
+        "description": "すべて架空の検証データ。境界での一致を保持し、厳密な前後を付け足さない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "c",
+            "name": "架空の対象C",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "occurrence-window",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=window-event-at-boundary",
+                "title": "仮想ケースの定義",
+                "locator": "window-event-at-boundary / a",
+                "excerpt": "境界での一致を保持し、厳密な前後を付け足さない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-04",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=window-event-at-boundary",
+                "title": "仮想ケースの定義",
+                "locator": "window-event-at-boundary / b",
+                "excerpt": "境界での一致を保持し、厳密な前後を付け足さない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "c",
+            "kind": "episode",
+            "subject": "c",
+            "object": null,
+            "assertion": "【仮想】架空の記録C",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=window-event-at-boundary",
+                "title": "仮想ケースの定義",
+                "locator": "window-event-at-boundary / c",
+                "excerpt": "境界での一致を保持し、厳密な前後を付け足さない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "windows-overlap",
+      "title": "二つの発生候補幅が重なる",
+      "category": "曖昧な発生時期",
+      "status": "renderable",
+      "expectation": "二つの出来事の発生順は未確定。期間の継続や所属と混同しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-windows-overlap",
+        "title": "【仮想】二つの発生候補幅が重なる",
+        "description": "すべて架空の検証データ。二つの出来事の発生順は未確定。期間の継続や所属と混同しない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "occurrence-window",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=windows-overlap",
+                "title": "仮想ケースの定義",
+                "locator": "windows-overlap / a",
+                "excerpt": "二つの出来事の発生順は未確定。期間の継続や所属と混同しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "occurrence-window",
+              "from": "2030-05-07",
+              "to": "2030-05-13",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=windows-overlap",
+                "title": "仮想ケースの定義",
+                "locator": "windows-overlap / b",
+                "excerpt": "二つの出来事の発生順は未確定。期間の継続や所属と混同しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "window-filtered-event",
+      "title": "比較相手を絞り込みで隠す",
+      "category": "曖昧な発生時期",
+      "status": "gap",
+      "expectation": "表示対象が減っても元の時期情報を変更しない。全体を調べたという主張へ変えない。",
+      "gap": "現在は線の強調だけで、記録の表示除外・それに連動する点と帯の切替はありません。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-window-filtered-event",
+        "title": "【仮想】比較相手を絞り込みで隠す",
+        "description": "すべて架空の検証データ。表示対象が減っても元の時期情報を変更しない。全体を調べたという主張へ変えない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "occurrence-window",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=window-filtered-event",
+                "title": "仮想ケースの定義",
+                "locator": "window-filtered-event / a",
+                "excerpt": "表示対象が減っても元の時期情報を変更しない。全体を調べたという主張へ変えない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-07",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=window-filtered-event",
+                "title": "仮想ケースの定義",
+                "locator": "window-filtered-event / b",
+                "excerpt": "表示対象が減っても元の時期情報を変更しない。全体を調べたという主張へ変えない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "duration-empty",
+      "title": "途中に出来事がない継続期間",
+      "category": "曖昧な期間境界",
+      "status": "renderable",
+      "expectation": "比較相手がなくても、実際に続いた期間の意味を保持する。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-duration-empty",
+        "title": "【仮想】途中に出来事がない継続期間",
+        "description": "すべて架空の検証データ。比較相手がなくても、実際に続いた期間の意味を保持する。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=duration-empty",
+                "title": "仮想ケースの定義",
+                "locator": "duration-empty / a",
+                "excerpt": "比較相手がなくても、実際に続いた期間の意味を保持する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "boundary-start",
+      "title": "開始だけが曖昧",
+      "category": "曖昧な期間境界",
+      "status": "renderable",
+      "expectation": "開始候補4〜7日と、開始後の継続部分を分ける。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-boundary-start",
+        "title": "【仮想】開始だけが曖昧",
+        "description": "すべて架空の検証データ。開始候補4〜7日と、開始後の継続部分を分ける。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": "",
+              "startLatest": "2030-05-07"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=boundary-start",
+                "title": "仮想ケースの定義",
+                "locator": "boundary-start / a",
+                "excerpt": "開始候補4〜7日と、開始後の継続部分を分ける。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-06",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=boundary-start",
+                "title": "仮想ケースの定義",
+                "locator": "boundary-start / b",
+                "excerpt": "開始候補4〜7日と、開始後の継続部分を分ける。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "boundary-end",
+      "title": "終了だけが曖昧",
+      "category": "曖昧な期間境界",
+      "status": "renderable",
+      "expectation": "終了候補12〜15日を、確実に継続している区間にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-boundary-end",
+        "title": "【仮想】終了だけが曖昧",
+        "description": "すべて架空の検証データ。終了候補12〜15日を、確実に継続している区間にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": "",
+              "endEarliest": "2030-05-12"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=boundary-end",
+                "title": "仮想ケースの定義",
+                "locator": "boundary-end / a",
+                "excerpt": "終了候補12〜15日を、確実に継続している区間にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-13",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=boundary-end",
+                "title": "仮想ケースの定義",
+                "locator": "boundary-end / b",
+                "excerpt": "終了候補12〜15日を、確実に継続している区間にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "boundaries-separate",
+      "title": "両端が曖昧・確かな中央部分あり",
+      "category": "曖昧な期間境界",
+      "status": "renderable",
+      "expectation": "開始候補・確かな中央部分・終了候補を読み分けられる。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-boundaries-separate",
+        "title": "【仮想】両端が曖昧・確かな中央部分あり",
+        "description": "すべて架空の検証データ。開始候補・確かな中央部分・終了候補を読み分けられる。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": "",
+              "startLatest": "2030-05-07",
+              "endEarliest": "2030-05-12"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=boundaries-separate",
+                "title": "仮想ケースの定義",
+                "locator": "boundaries-separate / a",
+                "excerpt": "開始候補・確かな中央部分・終了候補を読み分けられる。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-09",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=boundaries-separate",
+                "title": "仮想ケースの定義",
+                "locator": "boundaries-separate / b",
+                "excerpt": "開始候補・確かな中央部分・終了候補を読み分けられる。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "boundaries-overlap",
+      "title": "両端の候補幅が交差する",
+      "category": "曖昧な期間境界",
+      "status": "renderable",
+      "expectation": "すべての候補に共通する継続区間を描かない。実際の開始≦終了という制約は保持する。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-boundaries-overlap",
+        "title": "【仮想】両端の候補幅が交差する",
+        "description": "すべて架空の検証データ。すべての候補に共通する継続区間を描かない。実際の開始≦終了という制約は保持する。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": "",
+              "startLatest": "2030-05-12",
+              "endEarliest": "2030-05-07"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=boundaries-overlap",
+                "title": "仮想ケースの定義",
+                "locator": "boundaries-overlap / a",
+                "excerpt": "すべての候補に共通する継続区間を描かない。実際の開始≦終了という制約は保持する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-09",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=boundaries-overlap",
+                "title": "仮想ケースの定義",
+                "locator": "boundaries-overlap / b",
+                "excerpt": "すべての候補に共通する継続区間を描かない。実際の開始≦終了という制約は保持する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "boundaries-mixed",
+      "title": "境界にも年・月・日が混在",
+      "category": "曖昧な期間境界",
+      "status": "renderable",
+      "expectation": "境界の精度を保ち、元の値を合成日付へ書き換えない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-boundaries-mixed",
+        "title": "【仮想】境界にも年・月・日が混在",
+        "description": "すべて架空の検証データ。境界の精度を保ち、元の値を合成日付へ書き換えない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030",
+              "to": "2032",
+              "label": "",
+              "startLatest": "2031-05",
+              "endEarliest": "2031-12-10"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=boundaries-mixed",
+                "title": "仮想ケースの定義",
+                "locator": "boundaries-mixed / a",
+                "excerpt": "境界の精度を保ち、元の値を合成日付へ書き換えない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "membership-none",
+      "title": "同じ期間内でも所属は未登録",
+      "category": "所属と文脈",
+      "status": "renderable",
+      "expectation": "Aの線の範囲内にBがあっても、BからAへの関係を生成しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-membership-none",
+        "title": "【仮想】同じ期間内でも所属は未登録",
+        "description": "すべて架空の検証データ。Aの線の範囲内にBがあっても、BからAへの関係を生成しない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の時代区分A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=membership-none",
+                "title": "仮想ケースの定義",
+                "locator": "membership-none / a",
+                "excerpt": "Aの線の範囲内にBがあっても、BからAへの関係を生成しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】同時期の別対象B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=membership-none",
+                "title": "仮想ケースの定義",
+                "locator": "membership-none / b",
+                "excerpt": "Aの線の範囲内にBがあっても、BからAへの関係を生成しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "membership-explicit",
+      "title": "根拠のある所属を別記録にする",
+      "category": "所属と文脈",
+      "status": "renderable",
+      "expectation": "時期の配置と、明示した所属関係を独立した記録として保持する。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 3,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-membership-explicit",
+        "title": "【仮想】根拠のある所属を別記録にする",
+        "description": "すべて架空の検証データ。時期の配置と、明示した所属関係を独立した記録として保持する。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の時代区分A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=membership-explicit",
+                "title": "仮想ケースの定義",
+                "locator": "membership-explicit / a",
+                "excerpt": "時期の配置と、明示した所属関係を独立した記録として保持する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】時期内の対象B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=membership-explicit",
+                "title": "仮想ケースの定義",
+                "locator": "membership-explicit / b",
+                "excerpt": "時期の配置と、明示した所属関係を独立した記録として保持する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "membership",
+            "kind": "relation",
+            "subject": "b",
+            "object": "a",
+            "assertion": "【仮想】【架空】BはAに属すると仮定する",
+            "relation": "属する（架空の仮定）",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": null,
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=membership-explicit",
+                "title": "仮想ケースの定義",
+                "locator": "membership-explicit / membership",
+                "excerpt": "時期の配置と、明示した所属関係を独立した記録として保持する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "undated",
+      "title": "時期不明と日付のある記録",
+      "category": "所属と文脈",
+      "status": "renderable",
+      "expectation": "時期不明へ便宜的な日付を入れず、背景として読める。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-undated",
+        "title": "【仮想】時期不明と日付のある記録",
+        "description": "すべて架空の検証データ。時期不明へ便宜的な日付を入れず、背景として読める。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】時期が不明な背景A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": null,
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=undated",
+                "title": "仮想ケースの定義",
+                "locator": "undated / a",
+                "excerpt": "時期不明へ便宜的な日付を入れず、背景として読める。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=undated",
+                "title": "仮想ケースの定義",
+                "locator": "undated / b",
+                "excerpt": "時期不明へ便宜的な日付を入れず、背景として読める。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "cycle",
+      "title": "10月から翌2月の周期",
+      "category": "所属と文脈",
+      "status": "renderable",
+      "expectation": "周期の折返しを暦日へ無理に変換しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-cycle",
+        "title": "【仮想】10月から翌2月の周期",
+        "description": "すべて架空の検証データ。周期の折返しを暦日へ無理に変換しない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "cycle",
+              "axis": "架空の季節",
+              "period": 12,
+              "from": 10,
+              "to": 2,
+              "wrap": true,
+              "unit": "月",
+              "label": "毎年の周期"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=cycle",
+                "title": "仮想ケースの定義",
+                "locator": "cycle / a",
+                "excerpt": "周期の折返しを暦日へ無理に変換しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "qualitative",
+      "title": "日の出・日中などの定性軸",
+      "category": "所属と文脈",
+      "status": "renderable",
+      "expectation": "日の出を6時などの固定した時刻へ変換しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-qualitative",
+        "title": "【仮想】日の出・日中などの定性軸",
+        "description": "すべて架空の検証データ。日の出を6時などの固定した時刻へ変換しない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "qualitative",
+              "axis": "架空の一日",
+              "from": "日の出",
+              "coordinateMeaning": "光の状態。固定した時刻ではない",
+              "label": "日の出"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=qualitative",
+                "title": "仮想ケースの定義",
+                "locator": "qualitative / a",
+                "excerpt": "日の出を6時などの固定した時刻へ変換しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "qualitative",
+              "axis": "架空の一日",
+              "from": "日中",
+              "coordinateMeaning": "光の状態。固定した時刻ではない",
+              "label": "日中"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=qualitative",
+                "title": "仮想ケースの定義",
+                "locator": "qualitative / b",
+                "excerpt": "日の出を6時などの固定した時刻へ変換しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "explicit-inset",
+      "title": "明示した子軸を行の中で開く",
+      "category": "所属と文脈",
+      "status": "renderable",
+      "expectation": "Aを開いたときだけ、明示した別軸Bを表示する。日付が近いから自動的に入れ子にしない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 2,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-explicit-inset",
+        "title": "【仮想】明示した子軸を行の中で開く",
+        "description": "すべて架空の検証データ。Aを開いたときだけ、明示した別軸Bを表示する。日付が近いから自動的に入れ子にしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の一日A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=explicit-inset",
+                "title": "仮想ケースの定義",
+                "locator": "explicit-inset / a",
+                "excerpt": "Aを開いたときだけ、明示した別軸Bを表示する。日付が近いから自動的に入れ子にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "qualitative",
+              "axis": "架空の一日",
+              "from": "日の出",
+              "coordinateMeaning": "固定時刻ではない一日の段階",
+              "label": "日の出の記録B"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=explicit-inset",
+                "title": "仮想ケースの定義",
+                "locator": "explicit-inset / b",
+                "excerpt": "Aを開いたときだけ、明示した別軸Bを表示する。日付が近いから自動的に入れ子にしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "timeline": {
+          "version": 1,
+          "axes": [
+            {
+              "id": "calendar",
+              "kind": "calendar",
+              "label": "架空の日付"
+            },
+            {
+              "id": "day",
+              "kind": "qualitative",
+              "label": "一日の段階",
+              "originLabel": "この仮想例は2030-05-08の一日。固定した時刻へ換算しない。",
+              "order": [
+                "日の出",
+                "日中",
+                "日没"
+              ]
+            }
+          ],
+          "placements": [
+            {
+              "recordId": "a",
+              "axisId": "calendar"
+            },
+            {
+              "recordId": "b",
+              "axisId": "day"
+            }
+          ],
+          "insets": [
+            {
+              "parentRecordId": "a",
+              "axisId": "day",
+              "label": "Aの日の流れ"
+            }
+          ]
+        },
+        "mappings": []
+      }
+    },
+    {
+      "id": "hour",
+      "title": "時まで分かる出来事",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "日付と時を同じ暦軸で扱う型は未実装。時刻を削って成功扱いにはしない。",
+      "gap": "日付と時を同じ暦軸で扱う型は未実装。時刻を削って成功扱いにはしない。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.from: Invalid string: must match pattern /^\\d{4}(-\\d{2})?(-\\d{2})?$/"
+      ],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-hour",
+        "title": "【仮想】時まで分かる出来事",
+        "description": "すべて架空の検証データ。日付と時を同じ暦軸で扱う型は未実装。時刻を削って成功扱いにはしない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08T09+09:00",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=hour",
+                "title": "仮想ケースの定義",
+                "locator": "hour / a",
+                "excerpt": "日付と時を同じ暦軸で扱う型は未実装。時刻を削って成功扱いにはしない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "minute",
+      "title": "分まで分かる時刻",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "分精度とタイムゾーンを保持する暦日型が必要。",
+      "gap": "分精度とタイムゾーンを保持する暦日型が必要。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.from: Invalid string: must match pattern /^\\d{4}(-\\d{2})?(-\\d{2})?$/"
+      ],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-minute",
+        "title": "【仮想】分まで分かる時刻",
+        "description": "すべて架空の検証データ。分精度とタイムゾーンを保持する暦日型が必要。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08T09:30+09:00",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=minute",
+                "title": "仮想ケースの定義",
+                "locator": "minute / a",
+                "excerpt": "分精度とタイムゾーンを保持する暦日型が必要。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "timezone",
+      "title": "同じ瞬間の異なるタイムゾーン",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "元の表記とゾーンを残し、同じ瞬間として比較する仕組みが必要。",
+      "gap": "元の表記とゾーンを残し、同じ瞬間として比較する仕組みが必要。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.from: Invalid string: must match pattern /^\\d{4}(-\\d{2})?(-\\d{2})?$/",
+        "records.1.time.from: Invalid string: must match pattern /^\\d{4}(-\\d{2})?(-\\d{2})?$/"
+      ],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-timezone",
+        "title": "【仮想】同じ瞬間の異なるタイムゾーン",
+        "description": "すべて架空の検証データ。元の表記とゾーンを残し、同じ瞬間として比較する仕組みが必要。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08T09:00+09:00",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=timezone",
+                "title": "仮想ケースの定義",
+                "locator": "timezone / a",
+                "excerpt": "元の表記とゾーンを残し、同じ瞬間として比較する仕組みが必要。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08T00:00Z",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=timezone",
+                "title": "仮想ケースの定義",
+                "locator": "timezone / b",
+                "excerpt": "元の表記とゾーンを残し、同じ瞬間として比較する仕組みが必要。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "local-clock",
+      "title": "タイムゾーン不明の時刻",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "ゾーン不明をUTCなどへ勝手に換算しない表現が必要。",
+      "gap": "ゾーン不明をUTCなどへ勝手に換算しない表現が必要。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.from: Invalid string: must match pattern /^\\d{4}(-\\d{2})?(-\\d{2})?$/"
+      ],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-local-clock",
+        "title": "【仮想】タイムゾーン不明の時刻",
+        "description": "すべて架空の検証データ。ゾーン不明をUTCなどへ勝手に換算しない表現が必要。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08T09:30",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=local-clock",
+                "title": "仮想ケースの定義",
+                "locator": "local-clock / a",
+                "excerpt": "ゾーン不明をUTCなどへ勝手に換算しない表現が必要。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "first-half-undefined",
+      "title": "定義のない「前期」",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "前期を1〜6月と決め付けず、原表現と区切りの定義・根拠を扱う型が必要。",
+      "gap": "前期を1〜6月と決め付けず、原表現と区切りの定義・根拠を扱う型が必要。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.from: Invalid string: must match pattern /^\\d{4}(-\\d{2})?(-\\d{2})?$/",
+        "records.0.time.from: 実在する年月日を入力してください"
+      ],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-first-half-undefined",
+        "title": "【仮想】定義のない「前期」",
+        "description": "すべて架空の検証データ。前期を1〜6月と決め付けず、原表現と区切りの定義・根拠を扱う型が必要。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030前期",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=first-half-undefined",
+                "title": "仮想ケースの定義",
+                "locator": "first-half-undefined / a",
+                "excerpt": "前期を1〜6月と決め付けず、原表現と区切りの定義・根拠を扱う型が必要。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "first-half-label",
+      "title": "ラベルだけの「前期」",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "文字として保存できても、計算上は年全体のまま。前期の意味を扱えたとは判定しない。",
+      "gap": "文字として保存できても、計算上は年全体のまま。前期の意味を扱えたとは判定しない。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 1,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-first-half-label",
+        "title": "【仮想】ラベルだけの「前期」",
+        "description": "すべて架空の検証データ。文字として保存できても、計算上は年全体のまま。前期の意味を扱えたとは判定しない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030",
+              "label": "2030年前期"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=first-half-label",
+                "title": "仮想ケースの定義",
+                "locator": "first-half-label / a",
+                "excerpt": "文字として保存できても、計算上は年全体のまま。前期の意味を扱えたとは判定しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "relative-stage",
+      "title": "ある時代の前期・後期",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "親の時代区分を参照し、境界が未確定でも区分の意味を失わない構造は未実装。",
+      "gap": "親の時代区分を参照し、境界が未確定でも区分の意味を失わない構造は未実装。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.from: Invalid input: expected string, received object"
+      ],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-relative-stage",
+        "title": "【仮想】ある時代の前期・後期",
+        "description": "すべて架空の検証データ。親の時代区分を参照し、境界が未確定でも区分の意味を失わない構造は未実装。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "from": {
+                "relativeTo": "era-a",
+                "part": "early"
+              },
+              "meaning": "point",
+              "label": "架空時代Aの前期"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=relative-stage",
+                "title": "仮想ケースの定義",
+                "locator": "relative-stage / a",
+                "excerpt": "親の時代区分を参照し、境界が未確定でも区分の意味を失わない構造は未実装。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "multiple-windows",
+      "title": "複数の離れた発生候補",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "間の6〜13日を候補に加えない複数範囲の型は未実装。",
+      "gap": "間の6〜13日を候補に加えない複数範囲の型は未実装。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time: Unrecognized key: \"alternatives\""
+      ],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-multiple-windows",
+        "title": "【仮想】複数の離れた発生候補",
+        "description": "すべて架空の検証データ。間の6〜13日を候補に加えない複数範囲の型は未実装。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "occurrence-window",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "alternatives": [
+                [
+                  "2030-05-04",
+                  "2030-05-05"
+                ],
+                [
+                  "2030-05-14",
+                  "2030-05-15"
+                ]
+              ],
+              "label": "4〜5日または14〜15日"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=multiple-windows",
+                "title": "仮想ケースの定義",
+                "locator": "multiple-windows / a",
+                "excerpt": "間の6〜13日を候補に加えない複数範囲の型は未実装。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "display-granularity",
+      "title": "年を基準に月日・時刻まで開く設定",
+      "category": "仕様の不足",
+      "status": "gap",
+      "expectation": "表示の粗さと保存精度を分ける設定は未実装。現在は混在した元データをそのまま配置する。",
+      "gap": "表示の粗さと保存精度を分ける設定は未実装。現在は混在した元データをそのまま配置する。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 3,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-display-granularity",
+        "title": "【仮想】年を基準に月日・時刻まで開く設定",
+        "description": "すべて架空の検証データ。表示の粗さと保存精度を分ける設定は未実装。現在は混在した元データをそのまま配置する。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "b",
+            "name": "架空の対象B",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "c",
+            "name": "架空の対象C",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=display-granularity",
+                "title": "仮想ケースの定義",
+                "locator": "display-granularity / a",
+                "excerpt": "表示の粗さと保存精度を分ける設定は未実装。現在は混在した元データをそのまま配置する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "episode",
+            "subject": "b",
+            "object": null,
+            "assertion": "【仮想】架空の記録B",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=display-granularity",
+                "title": "仮想ケースの定義",
+                "locator": "display-granularity / b",
+                "excerpt": "表示の粗さと保存精度を分ける設定は未実装。現在は混在した元データをそのまま配置する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "c",
+            "kind": "episode",
+            "subject": "c",
+            "object": null,
+            "assertion": "【仮想】架空の記録C",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=display-granularity",
+                "title": "仮想ケースの定義",
+                "locator": "display-granularity / c",
+                "excerpt": "表示の粗さと保存精度を分ける設定は未実装。現在は混在した元データをそのまま配置する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "invalid-date",
+      "title": "存在しない日付",
+      "category": "入力の拒否",
+      "status": "rejected",
+      "expectation": "入力を拒否し、元の内容や既存テーマを変更しない。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.from: 実在する年月日を入力してください"
+      ],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-invalid-date",
+        "title": "【仮想】存在しない日付",
+        "description": "すべて架空の検証データ。入力を拒否し、元の内容や既存テーマを変更しない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-02-30",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=invalid-date",
+                "title": "仮想ケースの定義",
+                "locator": "invalid-date / a",
+                "excerpt": "入力を拒否し、元の内容や既存テーマを変更しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "invalid-reverse",
+      "title": "逆転した期間",
+      "category": "入力の拒否",
+      "status": "rejected",
+      "expectation": "入力を拒否し、元の内容や既存テーマを変更しない。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.to: 時期の範囲の後端を前端以降にしてください"
+      ],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-invalid-reverse",
+        "title": "【仮想】逆転した期間",
+        "description": "すべて架空の検証データ。入力を拒否し、元の内容や既存テーマを変更しない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-15",
+              "to": "2030-05-04",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=invalid-reverse",
+                "title": "仮想ケースの定義",
+                "locator": "invalid-reverse / a",
+                "excerpt": "入力を拒否し、元の内容や既存テーマを変更しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "invalid-missing-end",
+      "title": "終了のない継続期間",
+      "category": "入力の拒否",
+      "status": "rejected",
+      "expectation": "入力を拒否し、元の内容や既存テーマを変更しない。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.to: 期間・発生時期の幅には範囲の後端が必要です"
+      ],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-invalid-missing-end",
+        "title": "【仮想】終了のない継続期間",
+        "description": "すべて架空の検証データ。入力を拒否し、元の内容や既存テーマを変更しない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=invalid-missing-end",
+                "title": "仮想ケースの定義",
+                "locator": "invalid-missing-end / a",
+                "excerpt": "入力を拒否し、元の内容や既存テーマを変更しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "invalid-start-boundary",
+      "title": "開始候補の最遅が最早より前",
+      "category": "入力の拒否",
+      "status": "rejected",
+      "expectation": "入力を拒否し、元の内容や既存テーマを変更しない。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.startLatest: 開始の最遅を最早以降にしてください"
+      ],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-invalid-start-boundary",
+        "title": "【仮想】開始候補の最遅が最早より前",
+        "description": "すべて架空の検証データ。入力を拒否し、元の内容や既存テーマを変更しない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": "",
+              "startLatest": "2030-05-03"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=invalid-start-boundary",
+                "title": "仮想ケースの定義",
+                "locator": "invalid-start-boundary / a",
+                "excerpt": "入力を拒否し、元の内容や既存テーマを変更しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "invalid-end-boundary",
+      "title": "終了候補の最早が最遅より後",
+      "category": "入力の拒否",
+      "status": "rejected",
+      "expectation": "入力を拒否し、元の内容や既存テーマを変更しない。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.endEarliest: 終了の最早を最遅以前にしてください"
+      ],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-invalid-end-boundary",
+        "title": "【仮想】終了候補の最早が最遅より後",
+        "description": "すべて架空の検証データ。入力を拒否し、元の内容や既存テーマを変更しない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": "",
+              "endEarliest": "2030-05-16"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=invalid-end-boundary",
+                "title": "仮想ケースの定義",
+                "locator": "invalid-end-boundary / a",
+                "excerpt": "入力を拒否し、元の内容や既存テーマを変更しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "invalid-window-boundary",
+      "title": "発生幅に期間用の境界を指定",
+      "category": "入力の拒否",
+      "status": "rejected",
+      "expectation": "入力を拒否し、元の内容や既存テーマを変更しない。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.startLatest: 開始の不確かな幅は期間にだけ指定できます"
+      ],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-invalid-window-boundary",
+        "title": "【仮想】発生幅に期間用の境界を指定",
+        "description": "すべて架空の検証データ。入力を拒否し、元の内容や既存テーマを変更しない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "occurrence-window",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": "",
+              "startLatest": "2030-05-07"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=invalid-window-boundary",
+                "title": "仮想ケースの定義",
+                "locator": "invalid-window-boundary / a",
+                "excerpt": "入力を拒否し、元の内容や既存テーマを変更しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "invalid-point-end",
+      "title": "時点に継続期間の終端を指定",
+      "category": "入力の拒否",
+      "status": "rejected",
+      "expectation": "入力を拒否し、元の内容や既存テーマを変更しない。",
+      "expectedAcceptance": false,
+      "actualAcceptance": false,
+      "recordCount": 0,
+      "validationIssues": [
+        "records.0.time.to: 発生時点には範囲の後端を指定できません"
+      ],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-invalid-point-end",
+        "title": "【仮想】時点に継続期間の終端を指定",
+        "description": "すべて架空の検証データ。入力を拒否し、元の内容や既存テーマを変更しない。",
+        "entities": [
+          {
+            "id": "a",
+            "name": "架空の対象A",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "episode",
+            "subject": "a",
+            "object": null,
+            "assertion": "【仮想】架空の記録A",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=invalid-point-end",
+                "title": "仮想ケースの定義",
+                "locator": "invalid-point-end / a",
+                "excerpt": "入力を拒否し、元の内容や既存テーマを変更しない。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    },
+    {
+      "id": "dense-overlap",
+      "title": "同時期の12本の期間",
+      "category": "前後と重なりの負荷",
+      "status": "renderable",
+      "expectation": "同じ端の期間を統合せず、全12記録を独立して選べる。狭い画面の年表内スクロールも確認する。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 12,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-dense-overlap",
+        "title": "【仮想】同時期の12本の期間",
+        "description": "すべて架空の検証データ。同じ端の期間を統合せず、全12記録を独立して選べる。狭い画面の年表内スクロールも確認する。",
+        "entities": [
+          {
+            "id": "p1",
+            "name": "架空の対象P1",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "p2",
+            "name": "架空の対象P2",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "p3",
+            "name": "架空の対象P3",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "p4",
+            "name": "架空の対象P4",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "p5",
+            "name": "架空の対象P5",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "p6",
+            "name": "架空の対象P6",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "p7",
+            "name": "架空の対象P7",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "p8",
+            "name": "架空の対象P8",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "p9",
+            "name": "架空の対象P9",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "p10",
+            "name": "架空の対象P10",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "p11",
+            "name": "架空の対象P11",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "p12",
+            "name": "架空の対象P12",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "p1",
+            "kind": "episode",
+            "subject": "p1",
+            "object": null,
+            "assertion": "【仮想】架空の並行活動1",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=dense-overlap",
+                "title": "仮想ケースの定義",
+                "locator": "dense-overlap / p1",
+                "excerpt": "同じ端の期間を統合せず、全12記録を独立して選べる。狭い画面の年表内スクロールも確認する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "p2",
+            "kind": "episode",
+            "subject": "p2",
+            "object": null,
+            "assertion": "【仮想】架空の並行活動2",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=dense-overlap",
+                "title": "仮想ケースの定義",
+                "locator": "dense-overlap / p2",
+                "excerpt": "同じ端の期間を統合せず、全12記録を独立して選べる。狭い画面の年表内スクロールも確認する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "p3",
+            "kind": "episode",
+            "subject": "p3",
+            "object": null,
+            "assertion": "【仮想】架空の並行活動3",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=dense-overlap",
+                "title": "仮想ケースの定義",
+                "locator": "dense-overlap / p3",
+                "excerpt": "同じ端の期間を統合せず、全12記録を独立して選べる。狭い画面の年表内スクロールも確認する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "p4",
+            "kind": "episode",
+            "subject": "p4",
+            "object": null,
+            "assertion": "【仮想】架空の並行活動4",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=dense-overlap",
+                "title": "仮想ケースの定義",
+                "locator": "dense-overlap / p4",
+                "excerpt": "同じ端の期間を統合せず、全12記録を独立して選べる。狭い画面の年表内スクロールも確認する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "p5",
+            "kind": "episode",
+            "subject": "p5",
+            "object": null,
+            "assertion": "【仮想】架空の並行活動5",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=dense-overlap",
+                "title": "仮想ケースの定義",
+                "locator": "dense-overlap / p5",
+                "excerpt": "同じ端の期間を統合せず、全12記録を独立して選べる。狭い画面の年表内スクロールも確認する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "p6",
+            "kind": "episode",
+            "subject": "p6",
+            "object": null,
+            "assertion": "【仮想】架空の並行活動6",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=dense-overlap",
+                "title": "仮想ケースの定義",
+                "locator": "dense-overlap / p6",
+                "excerpt": "同じ端の期間を統合せず、全12記録を独立して選べる。狭い画面の年表内スクロールも確認する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "p7",
+            "kind": "episode",
+            "subject": "p7",
+            "object": null,
+            "assertion": "【仮想】架空の並行活動7",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=dense-overlap",
+                "title": "仮想ケースの定義",
+                "locator": "dense-overlap / p7",
+                "excerpt": "同じ端の期間を統合せず、全12記録を独立して選べる。狭い画面の年表内スクロールも確認する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "p8",
+            "kind": "episode",
+            "subject": "p8",
+            "object": null,
+            "assertion": "【仮想】架空の並行活動8",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=dense-overlap",
+                "title": "仮想ケースの定義",
+                "locator": "dense-overlap / p8",
+                "excerpt": "同じ端の期間を統合せず、全12記録を独立して選べる。狭い画面の年表内スクロールも確認する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "p9",
+            "kind": "episode",
+            "subject": "p9",
+            "object": null,
+            "assertion": "【仮想】架空の並行活動9",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=dense-overlap",
+                "title": "仮想ケースの定義",
+                "locator": "dense-overlap / p9",
+                "excerpt": "同じ端の期間を統合せず、全12記録を独立して選べる。狭い画面の年表内スクロールも確認する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "p10",
+            "kind": "episode",
+            "subject": "p10",
+            "object": null,
+            "assertion": "【仮想】架空の並行活動10",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=dense-overlap",
+                "title": "仮想ケースの定義",
+                "locator": "dense-overlap / p10",
+                "excerpt": "同じ端の期間を統合せず、全12記録を独立して選べる。狭い画面の年表内スクロールも確認する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "p11",
+            "kind": "episode",
+            "subject": "p11",
+            "object": null,
+            "assertion": "【仮想】架空の並行活動11",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=dense-overlap",
+                "title": "仮想ケースの定義",
+                "locator": "dense-overlap / p11",
+                "excerpt": "同じ端の期間を統合せず、全12記録を独立して選べる。狭い画面の年表内スクロールも確認する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "p12",
+            "kind": "episode",
+            "subject": "p12",
+            "object": null,
+            "assertion": "【仮想】架空の並行活動12",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030-05-04",
+              "to": "2030-05-15",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=dense-overlap",
+                "title": "仮想ケースの定義",
+                "locator": "dense-overlap / p12",
+                "excerpt": "同じ端の期間を統合せず、全12記録を独立して選べる。狭い画面の年表内スクロールも確認する。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
+    }
+  ]
+}

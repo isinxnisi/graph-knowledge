@@ -1,0 +1,194 @@
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--color-muted);
+  padding: 4px 0 18px;
+  border-bottom: 1px solid var(--color-border);
+}
+.top a,
+.picker a,
+.coverage a {
+  color: var(--color-accent);
+  text-underline-offset: 3px;
+}
+.heading {
+  font: 28px/1.4 var(--font-editorial);
+  margin: 24px 0 8px;
+}
+.intro {
+  color: var(--color-muted);
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0 0 20px;
+}
+.picker {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  margin: 18px 0;
+  font-size: 12px;
+}
+.picker label {
+  display: grid;
+  gap: 5px;
+  flex: 1;
+  max-width: 640px;
+  color: var(--color-muted);
+  font-size: 11px;
+}
+.picker label select {
+  width: 100%;
+  max-width: none;
+  font-size: 14px;
+}
+.picker > a,
+.steps {
+  white-space: nowrap;
+  margin-bottom: 10px;
+}
+.caseInfo {
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 15px 18px;
+  margin-bottom: 16px;
+  background: var(--color-panel);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.title h2 {
+  font-size: 17px;
+  margin: 0;
+}
+.title > span {
+  white-space: nowrap;
+  border: 1px solid var(--color-border);
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 10px;
+  color: var(--color-muted);
+}
+.caseInfo p {
+  margin: 8px 0;
+}
+.caseInfo[data-status="gap"] {
+  border-left: 3px solid var(--color-accent);
+}
+.gap {
+  color: var(--color-accent);
+}
+.caseInfo summary,
+.source summary,
+.coverage summary,
+.rejection summary {
+  cursor: pointer;
+  color: var(--color-muted);
+  font-size: 11px;
+}
+.caseInfo li {
+  margin: 5px 0;
+}
+.save {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+.save span {
+  font-size: 11px;
+  color: var(--color-muted);
+}
+.source,
+.coverage {
+  padding: 15px 0;
+  border-top: 1px solid var(--color-border);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.source textarea {
+  min-height: 300px;
+  font: 12px/1.6 monospace;
+  resize: vertical;
+}
+.rejection {
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 22px;
+  font-size: 12px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.rejection h3 {
+  font-size: 15px;
+  margin: 0 0 12px;
+}
+.coverage {
+  overflow-x: auto;
+}
+.coverage table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 400px;
+}
+.coverage td,
+.coverage th {
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--color-border);
+  padding: 10px;
+}
+.coverage td a {
+  display: inline-block;
+  margin: 0 10px 6px 0;
+}
+@media (max-width: 600px) {
+  .heading {
+    font-size: 23px;
+    margin-top: 18px;
+  }
+  .top {
+    font-size: 10px;
+  }
+  .intro {
+    font-size: 12px;
+  }
+  .picker {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .picker label {
+    flex-basis: 100%;
+  }
+  .picker label select {
+    font-size: 16px;
+  }
+  .picker > a,
+  .steps {
+    margin-bottom: 0;
+  }
+  .title {
+    align-items: start;
+  }
+  .title h2 {
+    font-size: 15px;
+  }
+  .caseInfo {
+    padding: 12px;
+  }
+  .caseInfo p {
+    font-size: 11px;
+  }
+  .save button {
+    width: 100%;
+  }
+}
