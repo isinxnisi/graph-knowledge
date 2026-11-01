@@ -42,10 +42,10 @@
   },
   "controlError": null,
   "requestsByPhase": {
-    "waiting-control": 28,
+    "waiting-control": 30,
     "blocked": 4,
-    "retry-wait": 3,
     "completed": 25,
+    "retry-wait": 1,
     "awaiting-recovery": 2
   },
   "issueIntake": {
@@ -138,8 +138,9 @@
       "checkedAt": "2026-11-01T13:24:26+00:00"
     },
     "collection-control/issue-sources/69.json": {
-      "status": "registered: issue-69-dot-ishinomori-three-20261029",
-      "checkedAt": "2026-11-01T12:00:29+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno 104] Connection reset by peer>",
+      "checkedAt": "2026-11-01T14:14:45+00:00"
     },
     "collection-control/issue-sources/70.json": {
       "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
@@ -193,5 +194,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T14:13:11.996941+00:00"
+  "checkedAt": "2026-11-01T14:17:24.070827+00:00"
 }
