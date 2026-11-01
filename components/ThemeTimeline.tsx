@@ -9,6 +9,8 @@ import type {
 import { buildTimelineGroups } from "../lib/domain/theme-timeline";
 import { calendarMeaning, themeTimeLabel } from "../lib/domain/theme-time";
 import css from "./ThemeTimeline.module.css";
+import CalendarTimelineGraph from "./CalendarTimelineGraph";
+import { calendarLayoutBounds } from "../lib/domain/calendar-graph";
 
 type Props = {
   records: ThemeRecord[];
@@ -34,26 +36,6 @@ const meaningLabels = {
   "occurrence-window": "発生時期の幅",
   "unclassified-range": "時期の範囲 · 未区別",
 };
-
-// Layout coordinates only: never replace a saved partial date with these bounds.
-// Numeric calendar coordinates avoid Date.UTC's special treatment of years 0–99.
-function calendarLayoutBounds(value: string): [number, number] {
-  const [year, month, day] = value.split("-").map(Number);
-  const firstMonth = month ?? 1,
-    lastMonth = month ?? 12;
-  const days =
-    lastMonth === 2
-      ? year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)
-        ? 29
-        : 28
-      : [4, 6, 9, 11].includes(lastMonth)
-        ? 30
-        : 31;
-  return [
-    year * 10000 + firstMonth * 100 + (day ?? 1),
-    year * 10000 + lastMonth * 100 + (day ?? days),
-  ];
-}
 
 function calendarBoundariesOverlap(time: CalendarTime) {
   return (
@@ -195,166 +177,6 @@ function Period({ record }: { record: ThemeRecord }) {
   );
 }
 
-function CalendarComparison({
-  records,
-  onOpenRecord,
-}: {
-  records: ThemeRecord[];
-  onOpenRecord: (id: string) => void;
-}) {
-  const dated = records.filter(
-    (record): record is ThemeRecord & { time: CalendarTime } =>
-      record.time?.kind === "calendar",
-  );
-  if (
-    dated.filter((record) => calendarMeaning(record.time) !== "point").length <
-    2
-  )
-    return null;
-  const rawDates = [
-    ...new Set(
-      dated.flatMap(({ time }) =>
-        [time.from, time.startLatest, time.endEarliest, time.to].filter(
-          (value): value is string => !!value,
-        ),
-      ),
-    ),
-  ];
-  const dates = [...new Set(rawDates.flatMap(calendarLayoutBounds))].sort(
-    (a, b) => a - b,
-  );
-  if (dates.length < 2) return null;
-  const position = (date: number) =>
-    3 + (dates.indexOf(date) / (dates.length - 1)) * 94;
-  const firstLabel = [...rawDates].sort(
-    (a, b) => calendarLayoutBounds(a)[0] - calendarLayoutBounds(b)[0],
-  )[0];
-  const lastLabel = [...rawDates].sort(
-    (a, b) => calendarLayoutBounds(b)[1] - calendarLayoutBounds(a)[1],
-  )[0];
-  return (
-    <details className={css.comparison}>
-      <summary>
-        時期を並べて見る <span>各記録を同じ軸で比較</span>
-      </summary>
-      <p className={css.comparisonNote}>
-        境界の日付順・間隔は等間隔。年・月だけの記録は薄い幅で示します。重なりから所属や因果は決まりません。
-      </p>
-      <div className={css.comparisonRows}>
-        {dated.map((record) => {
-          const time = record.time,
-            meaning = calendarMeaning(time);
-          const fromBounds = calendarLayoutBounds(time.from),
-            toBounds = calendarLayoutBounds(time.to ?? time.from);
-          const from = position(fromBounds[0]),
-            to = position(toBounds[1]);
-          const start = position(
-              calendarLayoutBounds(time.startLatest ?? time.from)[1],
-            ),
-            end = position(
-              calendarLayoutBounds(time.endEarliest ?? time.to ?? time.from)[0],
-            );
-          const coarsePoint =
-            meaning === "point" && fromBounds[0] !== fromBounds[1];
-          const precision = time.from.length === 4 ? "年精度" : "月精度";
-          return (
-            <div
-              className={css.comparisonRow}
-              key={record.id}
-              data-meaning={meaning}
-            >
-              <button
-                type="button"
-                onClick={() => onOpenRecord(record.id)}
-                aria-label={`記録を読む：${record.assertion}`}
-                title={record.assertion}
-              >
-                {record.assertion}
-              </button>
-              <div
-                className={css.comparisonTrack}
-                role="img"
-                aria-label={`${record.assertion} · ${themeTimeLabel(time)}${coarsePoint ? ` · ${precision}の幅（日付未確定）` : ""}`}
-                style={
-                  {
-                    "--range-start": `${from}%`,
-                    "--range-width": `${Math.max(0, to - from)}%`,
-                  } as CSSProperties
-                }
-              >
-                {meaning === "point" ? (
-                  coarsePoint ? (
-                    <i
-                      className={css.precisionBand}
-                      data-precision={precision}
-                      style={{
-                        left: `${from}%`,
-                        width: `${Math.max(0, to - from)}%`,
-                      }}
-                    />
-                  ) : (
-                    <i className={css.comparisonPoint} />
-                  )
-                ) : (
-                  <>
-                    <i className={css.comparisonBand} />
-                    {meaning === "duration" && (
-                      <>
-                        {(time.startLatest ||
-                          fromBounds[0] !== fromBounds[1]) && (
-                          <i
-                            className={
-                              time.startLatest
-                                ? css.uncertainBand
-                                : css.precisionBand
-                            }
-                            data-precision={
-                              !time.startLatest ? "開始の精度幅" : undefined
-                            }
-                            style={{
-                              left: `${from}%`,
-                              width: `${Math.max(0, Math.min(to, start) - from)}%`,
-                            }}
-                          />
-                        )}
-                        {(time.endEarliest || toBounds[0] !== toBounds[1]) && (
-                          <i
-                            className={
-                              time.endEarliest
-                                ? css.uncertainBand
-                                : css.precisionBand
-                            }
-                            data-precision={
-                              !time.endEarliest ? "終了の精度幅" : undefined
-                            }
-                            style={{
-                              left: `${Math.max(from, end)}%`,
-                              width: `${Math.max(0, to - Math.max(from, end))}%`,
-                            }}
-                          />
-                        )}
-                      </>
-                    )}
-                  </>
-                )}
-              </div>
-              <small>
-                {meaningLabels[meaning]}
-                {coarsePoint ? ` · ${precision}` : ""}
-                {time.startLatest || time.endEarliest ? " · 境界に幅" : ""}
-              </small>
-            </div>
-          );
-        })}
-      </div>
-      <div className={css.comparisonDates}>
-        <span>{firstLabel}</span>
-        <span>{lastLabel}</span>
-      </div>
-    </details>
-  );
-}
-
 export default function ThemeTimeline({
   records,
   entities,
@@ -418,6 +240,173 @@ export default function ThemeTimeline({
       const indexes = rows.flatMap((r, i) => (r.subject === id ? [i] : []));
       return { id, first: Math.min(...indexes), last: Math.max(...indexes) };
     });
+    const renderRow = (record: ThemeRecord, index: number) => {
+      const nested = children(record.id);
+      const open =
+        expanded.has(record.id) ||
+        focusedRecordId === record.id ||
+        hasFocusedChild(record.id);
+      const t = record.time;
+      const label =
+        group.kind === "none"
+          ? "背景"
+          : t?.kind === "calendar"
+            ? t.from
+            : t?.kind === "cycle"
+              ? `${t.from} ${t.unit}`
+              : t?.kind === "qualitative"
+                ? t.from
+                : "";
+      return (
+        <li
+          className={css.row}
+          data-record-id={record.id}
+          key={record.id}
+          data-focused={focusedRecordId === record.id || undefined}
+        >
+          <div className={css.date}>
+            {label}
+            {t?.kind === "calendar" && t.from.length < 10 && (
+              <small>
+                {t.from.length === 4 ? "年までの記録" : "月までの記録"}
+              </small>
+            )}
+          </div>
+          <div className={css.rail} aria-hidden="true">
+            {group.kind !== "none" &&
+              ranges.map((lane) => (
+                <span
+                  key={lane.id}
+                  className={css.lane}
+                  style={{ "--trace-color": color(lane.id) } as CSSProperties}
+                >
+                  {index >= lane.first &&
+                    index <= lane.last &&
+                    lane.first !== lane.last && (
+                      <i
+                        className={css.traceLine}
+                        data-first={index === lane.first || undefined}
+                        data-last={index === lane.last || undefined}
+                      />
+                    )}
+                  {record.subject === lane.id && <b className={css.point} />}
+                </span>
+              ))}
+          </div>
+          <div className={css.content}>
+            <div className={css.rowMain}>
+              {onToggleSelected && (
+                <input
+                  type="checkbox"
+                  aria-label={`Capsuleに含める：${record.assertion}`}
+                  checked={selectedRecordIds.includes(record.id)}
+                  onChange={() => onToggleSelected(record.id)}
+                />
+              )}
+              <button
+                type="button"
+                className={css.openRow}
+                aria-expanded={open}
+                aria-controls={`${prefix}-${encodeURIComponent(group.id)}-${record.id}`}
+                onClick={() => toggle(record.id, open)}
+              >
+                <span className={css.rowText}>
+                  <span className={css.assertion}>{record.assertion}</span>
+                  <span className={css.meta}>
+                    {name(record.subject)}
+                    {record.object ? ` → ${name(record.object)}` : ""}
+                    {t?.label ? ` · ${t.label}` : ""}
+                    {nested.length ? ` · 詳しい時間軸 ${nested.length}件` : ""}
+                  </span>
+                </span>
+                <span
+                  className={css.chevron}
+                  aria-hidden="true"
+                  data-open={open || undefined}
+                >
+                  ⌄
+                </span>
+              </button>
+            </div>
+            {group.kind === "calendar" ? (
+              <p className={css.meta}>{themeTimeLabel(record.time)}</p>
+            ) : (
+              <Period record={record} />
+            )}
+            <div
+              id={`${prefix}-${encodeURIComponent(group.id)}-${record.id}`}
+              className={css.expansion}
+              data-open={open || undefined}
+              aria-hidden={!open}
+              inert={!open}
+            >
+              <div className={css.expansionInner}>
+                <div className={css.details}>
+                  {group.kind === "calendar" && <Period record={record} />}
+                  {record.scope && (
+                    <p className={css.scope}>範囲：{record.scope}</p>
+                  )}
+                  {t?.kind === "qualitative" && (
+                    <p className={css.note}>{t.coordinateMeaning}</p>
+                  )}
+                  {t?.kind === "calendar" &&
+                    calendarMeaning(t) === "duration" &&
+                    (t.startLatest || t.endEarliest) && (
+                      <p className={css.note}>
+                        {t.startLatest &&
+                          `開始は ${t.from}〜${t.startLatest} のどこか。`}
+                        {t.endEarliest &&
+                          `終了は ${t.endEarliest}〜${t.to} のどこか。`}
+                        境界の幅が、続いた期間そのものを表すわけではありません。
+                      </p>
+                    )}
+                  {record.polarity !== "affirmed" && (
+                    <p className={css.note}>
+                      {record.polarity === "denied"
+                        ? "否定されている内容"
+                        : "推測・不確実な内容"}
+                    </p>
+                  )}
+                  <div className={css.evidenceList}>
+                    {record.evidence.map((e, i) => (
+                      <div key={i} className={css.evidence}>
+                        <a href={e.url} target="_blank" rel="noreferrer">
+                          {e.title} <span aria-hidden="true">↗</span>
+                        </a>
+                        <p className={css.locator}>{e.locator}</p>
+                        <p>{e.excerpt}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className={css.actions}>
+                    {onShowGraph &&
+                      (graphRecordIds === undefined ||
+                        graphRecordIds.includes(record.id)) && (
+                        <button
+                          type="button"
+                          onClick={() => onShowGraph(record)}
+                        >
+                          関係図で見る <span aria-hidden="true">↗</span>
+                        </button>
+                      )}
+                    {onEditRecord && (
+                      <button
+                        type="button"
+                        onClick={() => onEditRecord(record)}
+                      >
+                        記録を訂正
+                      </button>
+                    )}
+                    <span>内容版 {record.revision}</span>
+                  </div>
+                  {nested.map((g) => renderGroup(g, [...ancestors, group.id]))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      );
+    };
     return (
       <section
         className={css.group}
@@ -439,201 +428,39 @@ export default function ThemeTimeline({
           </div>
           <span>{rows.length}件</span>
         </header>
-        {group.kind === "calendar" && (
-          <CalendarComparison
+        {group.kind === "calendar" ? (
+          <CalendarTimelineGraph
             records={rows}
-            onOpenRecord={(id) => toggle(id, false)}
+            focusedRecordId={focusedRecordId}
+            highlightedSubject={activeTrace}
+            onFocus={(id) => toggle(id, false)}
+            renderRecord={renderRow}
           />
-        )}
-        {lanes.length > 0 && group.kind !== "none" && (
-          <div className={css.laneKey} aria-label="たどっている主語の対象">
-            {lanes.map((id) => (
-              <span key={id}>
-                <i style={{ backgroundColor: color(id) }} />
-                {name(id)}
-              </span>
-            ))}
-            {!activeTrace && subjectIds.length > 5 && (
-              <small>ほかの対象は上の選択欄から</small>
+        ) : (
+          <>
+            {lanes.length > 0 && group.kind !== "none" && (
+              <div className={css.laneKey} aria-label="たどっている主語の対象">
+                {lanes.map((id) => (
+                  <span key={id}>
+                    <i style={{ backgroundColor: color(id) }} />
+                    {name(id)}
+                  </span>
+                ))}
+                {!activeTrace && subjectIds.length > 5 && (
+                  <small>ほかの対象は上の選択欄から</small>
+                )}
+              </div>
             )}
-          </div>
+            <ol
+              className={css.rows}
+              style={
+                { "--lane-count": Math.max(1, lanes.length) } as CSSProperties
+              }
+            >
+              {rows.map(renderRow)}
+            </ol>
+          </>
         )}
-        <ol
-          className={css.rows}
-          style={{ "--lane-count": Math.max(1, lanes.length) } as CSSProperties}
-        >
-          {rows.map((record, index) => {
-            const nested = children(record.id);
-            const open =
-              expanded.has(record.id) ||
-              focusedRecordId === record.id ||
-              hasFocusedChild(record.id);
-            const t = record.time;
-            const label =
-              group.kind === "none"
-                ? "背景"
-                : t?.kind === "calendar"
-                  ? t.from
-                  : t?.kind === "cycle"
-                    ? `${t.from} ${t.unit}`
-                    : t?.kind === "qualitative"
-                      ? t.from
-                      : "";
-            return (
-              <li
-                className={css.row}
-                key={record.id}
-                data-focused={focusedRecordId === record.id || undefined}
-              >
-                <div className={css.date}>
-                  {label}
-                  {t?.kind === "calendar" && t.from.length < 10 && (
-                    <small>
-                      {t.from.length === 4 ? "年までの記録" : "月までの記録"}
-                    </small>
-                  )}
-                </div>
-                <div className={css.rail} aria-hidden="true">
-                  {group.kind !== "none" &&
-                    ranges.map((lane) => (
-                      <span
-                        key={lane.id}
-                        className={css.lane}
-                        style={
-                          { "--trace-color": color(lane.id) } as CSSProperties
-                        }
-                      >
-                        {index >= lane.first &&
-                          index <= lane.last &&
-                          lane.first !== lane.last && (
-                            <i
-                              className={css.traceLine}
-                              data-first={index === lane.first || undefined}
-                              data-last={index === lane.last || undefined}
-                            />
-                          )}
-                        {record.subject === lane.id && (
-                          <b className={css.point} />
-                        )}
-                      </span>
-                    ))}
-                </div>
-                <div className={css.content}>
-                  <div className={css.rowMain}>
-                    {onToggleSelected && (
-                      <input
-                        type="checkbox"
-                        aria-label={`Capsuleに含める：${record.assertion}`}
-                        checked={selectedRecordIds.includes(record.id)}
-                        onChange={() => onToggleSelected(record.id)}
-                      />
-                    )}
-                    <button
-                      type="button"
-                      className={css.openRow}
-                      aria-expanded={open}
-                      aria-controls={`${prefix}-${encodeURIComponent(group.id)}-${record.id}`}
-                      onClick={() => toggle(record.id, open)}
-                    >
-                      <span className={css.rowText}>
-                        <span className={css.assertion}>
-                          {record.assertion}
-                        </span>
-                        <span className={css.meta}>
-                          {name(record.subject)}
-                          {record.object ? ` → ${name(record.object)}` : ""}
-                          {t?.label ? ` · ${t.label}` : ""}
-                          {nested.length
-                            ? ` · 詳しい時間軸 ${nested.length}件`
-                            : ""}
-                        </span>
-                      </span>
-                      <span
-                        className={css.chevron}
-                        aria-hidden="true"
-                        data-open={open || undefined}
-                      >
-                        ⌄
-                      </span>
-                    </button>
-                  </div>
-                  <Period record={record} />
-                  <div
-                    id={`${prefix}-${encodeURIComponent(group.id)}-${record.id}`}
-                    className={css.expansion}
-                    data-open={open || undefined}
-                    aria-hidden={!open}
-                    inert={!open}
-                  >
-                    <div className={css.expansionInner}>
-                      <div className={css.details}>
-                        {record.scope && (
-                          <p className={css.scope}>範囲：{record.scope}</p>
-                        )}
-                        {t?.kind === "qualitative" && (
-                          <p className={css.note}>{t.coordinateMeaning}</p>
-                        )}
-                        {t?.kind === "calendar" &&
-                          calendarMeaning(t) === "duration" &&
-                          (t.startLatest || t.endEarliest) && (
-                            <p className={css.note}>
-                              {t.startLatest &&
-                                `開始は ${t.from}〜${t.startLatest} のどこか。`}
-                              {t.endEarliest &&
-                                `終了は ${t.endEarliest}〜${t.to} のどこか。`}
-                              境界の幅が、続いた期間そのものを表すわけではありません。
-                            </p>
-                          )}
-                        {record.polarity !== "affirmed" && (
-                          <p className={css.note}>
-                            {record.polarity === "denied"
-                              ? "否定されている内容"
-                              : "推測・不確実な内容"}
-                          </p>
-                        )}
-                        <div className={css.evidenceList}>
-                          {record.evidence.map((e, i) => (
-                            <div key={i} className={css.evidence}>
-                              <a href={e.url} target="_blank" rel="noreferrer">
-                                {e.title} <span aria-hidden="true">↗</span>
-                              </a>
-                              <p className={css.locator}>{e.locator}</p>
-                              <p>{e.excerpt}</p>
-                            </div>
-                          ))}
-                        </div>
-                        <div className={css.actions}>
-                          {onShowGraph &&
-                            (graphRecordIds === undefined ||
-                              graphRecordIds.includes(record.id)) && (
-                              <button
-                                type="button"
-                                onClick={() => onShowGraph(record)}
-                              >
-                                関係図で見る <span aria-hidden="true">↗</span>
-                              </button>
-                            )}
-                          {onEditRecord && (
-                            <button
-                              type="button"
-                              onClick={() => onEditRecord(record)}
-                            >
-                              記録を訂正
-                            </button>
-                          )}
-                          <span>内容版 {record.revision}</span>
-                        </div>
-                        {nested.map((g) =>
-                          renderGroup(g, [...ancestors, group.id]),
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            );
-          })}
-        </ol>
       </section>
     );
   }

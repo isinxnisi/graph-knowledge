@@ -96,12 +96,14 @@ it("opens the explicitly nested axis only when its parent row is opened", () => 
     />,
   );
   expect(screen.queryByRole("region", { name: "一日の流れ" })).toBeNull();
-  const row = screen.getByRole("button", { name: /旅の一日/ });
+  const row = screen.getByRole("button", { name: /^旅の一日/ });
   expect(row.getAttribute("aria-expanded")).toBe("false");
   fireEvent.click(row);
   expect(focus).toHaveBeenCalledWith(parent.id);
   expect(screen.getByRole("region", { name: "一日の流れ" })).toBeTruthy();
-  expect(screen.getByRole("button", { name: /日の出に出発する/ })).toBeTruthy();
+  expect(
+    screen.getByRole("button", { name: /^日の出に出発する/ }),
+  ).toBeTruthy();
 });
 
 it("keeps the parent expanded when another view focuses the child", () => {
@@ -118,12 +120,12 @@ it("keeps the parent expanded when another view focuses the child", () => {
   );
   expect(
     screen
-      .getByRole("button", { name: /旅の一日/ })
+      .getByRole("button", { name: /^旅の一日/ })
       .getAttribute("aria-expanded"),
   ).toBe("true");
   expect(
     screen
-      .getByRole("button", { name: /日の出に出発する/ })
+      .getByRole("button", { name: /^日の出に出発する/ })
       .getAttribute("aria-expanded"),
   ).toBe("true");
   expect(screen.getByRole("region", { name: "一日の流れ" })).toBeTruthy();
@@ -147,7 +149,7 @@ it("changes Capsule membership independently of the reading focus", () => {
   expect(focus).not.toHaveBeenCalled();
   expect(
     screen
-      .getByRole("button", { name: /旅の一日/ })
+      .getByRole("button", { name: /^旅の一日/ })
       .getAttribute("aria-expanded"),
   ).toBe("false");
 });
@@ -198,7 +200,7 @@ it("shows explicit interval endpoints, cycle wrapping and undated context withou
     screen.getByRole("region", { name: "時期を定めない情報" }),
   ).toBeTruthy();
   expect(
-    screen.getByRole("button", { name: /時期を定めない背景/ }),
+    screen.getByRole("button", { name: /^時期を定めない背景/ }),
   ).toBeTruthy();
   expect(document.body.textContent).not.toContain("2020-01-01");
   expect(document.body.textContent).not.toContain("2022-12-31");
@@ -251,35 +253,19 @@ it("distinguishes duration, uncertain occurrence and unclassified legacy ranges 
       .getByLabelText(/^時期の範囲（未区別）：1984〜1990/)
       .getAttribute("data-meaning"),
   ).toBe("unclassified-range");
-  const summary = screen
-    .getByText("時期を並べて見る", { exact: false })
-    .closest("summary")!;
-  expect(summary.closest("details")!.open).toBe(false);
-  fireEvent.click(summary);
-  expect(screen.getByText(/重なりから所属や因果は決まりません/)).toBeTruthy();
-  const durationTrack = screen.getByRole("img", {
-    name: /ある活動が続いた · 期間：/,
+  const durationLine = screen.getByRole("button", {
+    name: /時期の線を選ぶ：ある活動が続いた/,
   });
-  const occurrenceTrack = screen.getByRole("img", {
-    name: /ある発見が起きた · 発生時期の幅：/,
+  const occurrenceLine = screen.getByRole("button", {
+    name: /時期の線を選ぶ：ある発見が起きた/,
   });
-  const pointTrack = screen.getByRole("img", {
-    name: /別の出来事が起きた · 1987/,
-  });
-  expect(durationTrack.parentElement!.parentElement).toBe(
-    occurrenceTrack.parentElement!.parentElement,
-  );
-  expect(pointTrack.parentElement!.parentElement).toBe(
-    durationTrack.parentElement!.parentElement,
-  );
+  expect(durationLine.getAttribute("data-meaning")).toBe("duration");
+  expect(occurrenceLine.getAttribute("data-meaning")).toBe("occurrence-window");
+  expect(durationLine.parentElement).toBe(occurrenceLine.parentElement);
   expect(
-    screen
-      .getByRole("button", { name: /^ある活動が続いた/ })
-      .getAttribute("aria-expanded"),
-  ).toBe("false");
-  fireEvent.click(
-    screen.getByRole("button", { name: "記録を読む：ある発見が起きた" }),
-  );
+    document.querySelector('[aria-label="期間と出来事の年表グラフ"]'),
+  ).toBeTruthy();
+  fireEvent.click(occurrenceLine);
   expect(focus).toHaveBeenCalledWith(occurrence.id);
   expect(
     screen
@@ -327,126 +313,22 @@ it("retains uncertainty at both duration boundaries, including overlapping bound
   expect(document.body.textContent).not.toContain("1985-01-01");
 });
 
-it("uses possible date domains for mixed precision without reversing ranges or fixing a coarse point to January", () => {
-  const mixed = record("mixed", "月から年の終端へ", {
-    kind: "calendar",
-    meaning: "duration",
-    from: "1903-12",
-    to: "1903",
-    label: "原表記",
-  });
-  const uncertain = record("mixed-uncertain", "年精度の最遅開始", {
-    kind: "calendar",
-    meaning: "duration",
-    from: "1903-12",
-    startLatest: "1903",
-    endEarliest: "1903-12",
-    to: "1904",
-    label: "架空例",
-  });
-  const year = record("year-point", "年まで分かる一点", {
-    kind: "calendar",
-    meaning: "point",
-    from: "1903",
-    label: "年まで",
-  });
-  const month = record("month-point", "月まで分かる一点", {
-    kind: "calendar",
-    meaning: "point",
-    from: "1903-12",
-    label: "月まで",
-  });
-  const day = record("day-point", "日が分かる一点", {
-    kind: "calendar",
-    meaning: "point",
-    from: "1903-12-15",
-    label: "日まで",
-  });
-  render(
-    <ThemeTimeline
-      {...common}
-      records={[mixed, uncertain, year, month, day]}
-    />,
-  );
-  fireEvent.click(
-    screen.getByText("時期を並べて見る", { exact: false }).closest("summary")!,
-  );
-  const track = (assertion: string) =>
-    screen.getByRole("img", { name: new RegExp(`^${assertion} ·`) });
-  const extent = (element: HTMLElement) => {
-    const start = parseFloat(element.style.getPropertyValue("--range-start"));
-    return {
-      start,
-      end: start + parseFloat(element.style.getPropertyValue("--range-width")),
-    };
+it("offers graph navigation only for records still present in an edited Capsule graph", () => {
+  const showGraph = vi.fn();
+  const props = {
+    ...common,
+    records: [parent],
+    focusedRecordId: parent.id,
+    onShowGraph: showGraph,
   };
-  const mixedRange = extent(track(mixed.assertion));
-  expect(mixedRange.end).toBeGreaterThan(mixedRange.start);
-  const yearRange = extent(track(year.assertion)),
-    monthRange = extent(track(month.assertion)),
-    dayPosition = extent(track(day.assertion));
-  expect(yearRange.start).toBeLessThan(monthRange.start);
-  expect(yearRange.end).toBeGreaterThanOrEqual(monthRange.end);
-  expect(monthRange.start).toBeLessThan(dayPosition.start);
-  expect(monthRange.end).toBeGreaterThan(dayPosition.start);
-  expect(
-    track(year.assertion).querySelector('[data-precision="年精度"]'),
-  ).not.toBeNull();
-  expect(
-    track(month.assertion).querySelector('[data-precision="月精度"]'),
-  ).not.toBeNull();
-  expect(track(day.assertion).querySelector("[data-precision]")).toBeNull();
-  for (const band of document.querySelectorAll<HTMLElement>('[role="img"] i')) {
-    if (band.style.width)
-      expect(parseFloat(band.style.width)).toBeGreaterThanOrEqual(0);
-  }
-  expect(
-    screen
-      .getByLabelText(/^期間：開始 1903-12〜1903 · 終了 1903-12〜1904/)
-      .querySelector("[data-overlapping-boundaries]"),
-  ).not.toBeNull();
-  expect(document.body.textContent).not.toContain("1903-01-01");
-  expect(document.body.textContent).not.toContain("1903-12-31");
-});
-
-it("keeps early-year and leap-month precision in layout without Date.UTC year coercion", () => {
-  const duration = record("early", "古い年の期間", {
-    kind: "calendar",
-    meaning: "duration",
-    from: "0004-02",
-    to: "0004",
-    label: "架空例",
-  });
-  const window = record("early-window", "古い年の発生幅", {
-    kind: "calendar",
-    meaning: "occurrence-window",
-    from: "0004-02",
-    to: "0004-03",
-    label: "架空例",
-  });
-  const leap = record("leap", "閏日の一点", {
-    kind: "calendar",
-    meaning: "point",
-    from: "0004-02-29",
-    label: "架空例",
-  });
-  render(<ThemeTimeline {...common} records={[duration, window, leap]} />);
-  fireEvent.click(
-    screen.getByText("時期を並べて見る", { exact: false }).closest("summary")!,
-  );
-  const durationTrack = screen.getByRole("img", { name: /^古い年の期間/ }),
-    leapTrack = screen.getByRole("img", { name: /^閏日の一点/ });
-  const from = parseFloat(
-      durationTrack.style.getPropertyValue("--range-start"),
-    ),
-    width = parseFloat(durationTrack.style.getPropertyValue("--range-width")),
-    leapPosition = parseFloat(
-      leapTrack.style.getPropertyValue("--range-start"),
-    );
-  expect(width).toBeGreaterThan(0);
-  expect(leapPosition).toBeGreaterThan(from);
-  expect(leapPosition).toBeLessThan(from + width);
-  expect(document.body.textContent).not.toContain("1904");
+  const view = render(<ThemeTimeline {...props} graphRecordIds={[]} />);
+  expect(screen.queryByRole("button", { name: "関係図で見る" })).toBeNull();
+  expect(screen.getByRole("button", { name: /^旅の一日/ })).toBeTruthy();
+  view.rerender(<ThemeTimeline {...props} graphRecordIds={[parent.id]} />);
+  fireEvent.click(screen.getByRole("button", { name: "関係図で見る" }));
+  expect(showGraph).toHaveBeenCalledWith(parent);
+  view.rerender(<ThemeTimeline {...props} />);
+  expect(screen.getByRole("button", { name: "関係図で見る" })).toBeTruthy();
 });
 
 it("keeps expansion controls linked for a free-text axis name containing spaces", () => {
@@ -458,26 +340,8 @@ it("keeps expansion controls linked for a free-text axis name containing spaces"
     coordinateMeaning: "daily qualitative phases",
   });
   render(<ThemeTimeline {...common} records={[phase]} />);
-  const button = screen.getByRole("button", { name: /朝の段階/ });
+  const button = screen.getByRole("button", { name: /^朝の段階/ });
   const controlled = button.getAttribute("aria-controls")!;
   expect(controlled).not.toMatch(/\s/);
   expect(document.getElementById(controlled)).not.toBeNull();
-});
-
-it("offers graph navigation only for records still present in an edited Capsule graph", () => {
-  const showGraph = vi.fn();
-  const props = {
-    ...common,
-    records: [parent],
-    focusedRecordId: parent.id,
-    onShowGraph: showGraph,
-  };
-  const view = render(<ThemeTimeline {...props} graphRecordIds={[]} />);
-  expect(screen.queryByRole("button", { name: "関係図で見る" })).toBeNull();
-  expect(screen.getByRole("button", { name: /旅の一日/ })).toBeTruthy();
-  view.rerender(<ThemeTimeline {...props} graphRecordIds={[parent.id]} />);
-  fireEvent.click(screen.getByRole("button", { name: "関係図で見る" }));
-  expect(showGraph).toHaveBeenCalledWith(parent);
-  view.rerender(<ThemeTimeline {...props} />);
-  expect(screen.getByRole("button", { name: "関係図で見る" })).toBeTruthy();
 });

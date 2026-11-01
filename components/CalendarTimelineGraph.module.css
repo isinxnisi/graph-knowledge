@@ -1,0 +1,286 @@
+.surface {
+  min-width: 0;
+}
+.caption {
+  margin: 12px 0;
+  font-size: 10px;
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+.scroll {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+.graph {
+  --step: 19px;
+  --gutter: 78px;
+  display: grid;
+  position: relative;
+  grid-template-columns:
+    var(--gutter) calc((var(--lanes) + 1) * var(--step))
+    minmax(170px, 1fr);
+  min-width: calc(var(--gutter) + (var(--lanes) + 1) * var(--step) + 170px);
+}
+.date {
+  grid-column: 1;
+  padding: 18px 8px 0 0;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-muted);
+  overflow-wrap: anywhere;
+}
+.date small {
+  display: block;
+  font-size: 9px;
+  margin-top: 3px;
+}
+.axis {
+  grid-column: 2;
+  position: relative;
+  pointer-events: none;
+}
+.axis::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px;
+  width: 1px;
+  background: var(--color-border);
+}
+.axis i {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-muted);
+  top: 22px;
+  left: 1px;
+}
+.records {
+  grid-column: 3;
+  min-width: 0;
+  padding: 0 0 14px 8px;
+}
+.recordList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.recordList > li {
+  display: block;
+}
+.recordList > li > div:nth-child(-n + 2) {
+  display: none;
+}
+.recordList > li > div:nth-child(3) {
+  padding-left: 0;
+}
+.sameDate {
+  display: block;
+  font-size: 9px;
+  color: var(--color-muted);
+  padding-top: 7px;
+}
+.graph .range {
+  position: relative;
+  z-index: 2;
+  align-self: stretch;
+  justify-self: start;
+  display: block;
+  width: 17px;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  border-radius: 5px;
+  color: var(--line-color);
+  left: calc((var(--lane) + 1) * var(--step) - 4px);
+  transform: translateY(24px);
+  cursor: pointer;
+}
+.range i {
+  display: block;
+  position: absolute;
+  left: 6px;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background: transparent;
+  border: 1px dashed var(--line-color);
+}
+.range::before,
+.range::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  width: 11px;
+  height: 2px;
+  background: var(--line-color);
+}
+.range::before {
+  top: 0;
+}
+.range::after {
+  bottom: 0;
+}
+.range[data-meaning="occurrence-window"] i {
+  width: 9px;
+  left: 4px;
+  background: color-mix(in srgb, var(--line-color) 9%, var(--color-panel));
+  border-radius: 6px;
+}
+.range[data-meaning="point"] i {
+  width: 7px;
+  left: 5px;
+  background: color-mix(in srgb, var(--line-color) 18%, var(--color-panel));
+  border-style: dotted;
+}
+.range[data-meaning="unclassified-range"] i {
+  border-color: var(--color-muted);
+  border-style: dotted;
+}
+.range:not([data-meaning="duration"])::before,
+.range:not([data-meaning="duration"])::after {
+  content: none;
+}
+.graph .range[data-point] {
+  align-self: start;
+  height: 8px;
+  transform: translateY(20px);
+}
+.range[data-point][data-meaning="point"] i {
+  border: 0;
+  border-radius: 50%;
+  background: var(--line-color);
+  width: 8px;
+}
+.range[data-focused] {
+  background: color-mix(in srgb, var(--line-color) 15%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--line-color) 22%, transparent);
+}
+.range[data-muted] {
+  opacity: 0.3;
+}
+.graph .range:hover {
+  background: color-mix(in srgb, var(--line-color) 12%, transparent);
+}
+.segment {
+  grid-column: 2;
+  z-index: 3;
+  pointer-events: none;
+  position: relative;
+  align-self: stretch;
+  justify-self: start;
+  left: calc((var(--lane) + 1) * var(--step) + 2px);
+  width: 5px;
+  transform: translateY(24px);
+  box-sizing: border-box;
+}
+.segment[data-kind="certain"] {
+  background: var(--line-color);
+  border-radius: 3px;
+}
+.segment[data-kind^="uncertain"] {
+  border-left: 3px dotted var(--line-color);
+}
+.connector {
+  grid-column: 2;
+  position: relative;
+  pointer-events: none;
+  align-self: start;
+  height: 0;
+  top: 24px;
+  margin-left: calc((var(--lane) + 1) * var(--step) + 8px);
+  border-top: 1px dotted var(--line-color);
+  opacity: 0.55;
+}
+.endings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 10px;
+  padding: 13px 0 3px;
+}
+.graph .endings button {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  min-height: 28px;
+  max-width: 100%;
+  padding: 3px 0;
+  border: 0;
+  background: transparent;
+  font-size: 10px;
+  color: var(--color-muted);
+  text-align: left;
+  justify-content: flex-start;
+}
+.endings button span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 350px;
+}
+.endings i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: none;
+}
+.endings small {
+  white-space: nowrap;
+  font-size: 9px;
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .graph {
+    --step: 13px;
+    --gutter: 61px;
+  }
+  .date {
+    font-size: 10px;
+  }
+  .date small {
+    font-size: 8px;
+  }
+  .records {
+    padding-left: 5px;
+  }
+  .caption {
+    font-size: 9px;
+  }
+  .graph .range {
+    width: 12px;
+  }
+  .endings button span {
+    max-width: 150px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .range {
+    transition: none;
+  }
+}
+
+.range,
+.segment {
+  opacity: var(--line-opacity, 1);
+}
+.connector {
+  opacity: calc(var(--line-opacity, 1) * 0.55);
+}
+
+.range[data-point][data-meaning="duration"] i {
+  background: var(--line-color);
+  border: 0;
+}
