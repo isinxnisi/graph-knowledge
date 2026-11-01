@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-11-01T13:30:03.420468+00:00",
+  "beforeCounts": {
+    "themes": 13,
+    "capsules": 14,
+    "shares": 8
+  },
+  "afterCounts": {
+    "themes": 16,
+    "capsules": 18,
+    "shares": 9
+  },
+  "unchanged": {
+    "themes": true,
+    "capsules": true,
+    "shares": true
+  },
+  "backup": ".local/issue75/review-before.dump",
+  "backupSha256": "f1b6217384dc830e0edfc197034f7eacdc19ddd74986f5e41f10534470df16e8"
+}

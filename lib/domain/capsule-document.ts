@@ -38,7 +38,7 @@ export const capsuleNodeSchema = z.strictObject({
 export const capsuleRelationSchema = z.strictObject({
   key, source: key, target: key, label: z.string().max(200), note: z.string().max(8000),
   origin: z.discriminatedUnion("kind", [
-    z.strictObject({ kind: z.literal("local") }),
+    z.strictObject({ kind: z.literal("local"), polarity: z.enum(["affirmed", "denied", "uncertain"]).optional() }),
     z.strictObject({ kind: z.literal("kg"), id: key, ...observation.shape, snapshot: claimSummarySchema,
       detail: claimDetailSchema.nullable() }),
   ]),

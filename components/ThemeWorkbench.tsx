@@ -6,6 +6,7 @@ import Icon from "./Icon";
 import CapsuleStudio from "./CapsuleStudio";
 import ThemeTimeline from "./ThemeTimeline";
 import ThemeTimeFields from "./ThemeTimeFields";
+import ThemeEvidenceFields from "./ThemeEvidenceFields";
 import { themeTimeLabel } from "../lib/domain/theme-time";
 import type { Selection } from "../lib/client/graph-state";
 import { CapsuleModal } from "./CapsuleSurface";
@@ -410,7 +411,12 @@ export default function ThemeWorkbench({
   async function makeCapsule() {
     if (!theme) return;
     await submit(
-      { action: "capsule-create", themeId: theme.id, recordIds: selected },
+      {
+        action: "capsule-create",
+        themeRevision: theme.revision,
+        themeId: theme.id,
+        recordIds: selected,
+      },
       (v) => {
         router.push("/themes/capsules/" + (v as ThemeCapsule).id);
       },
@@ -1398,24 +1404,13 @@ function RecordForm({
           }
           const subject = entity(get("subject")),
             object = kind === "relation" ? entity(get("object")) : null;
-          const evidence = [
-            {
-              title: get("sourceTitle"),
-              url: get("url"),
-              locator: get("locator"),
-              excerpt: get("excerpt"),
-              retrievedAt: record?.evidence[0]?.retrievedAt ?? enteredAt,
-            },
-            ...(record?.evidence
-              .slice(1)
-              .map(({ url, title, locator, excerpt, retrievedAt }) => ({
-                url,
-                title,
-                locator,
-                excerpt,
-                retrievedAt,
-              })) ?? []),
-          ];
+          const evidence = f.getAll("evidenceKey").map((key) => ({
+            title: get(`evidence.${key}.title`),
+            url: get(`evidence.${key}.url`),
+            locator: get(`evidence.${key}.locator`),
+            excerpt: get(`evidence.${key}.excerpt`),
+            retrievedAt: get(`evidence.${key}.retrievedAt`),
+          }));
           const r = {
             id: record?.id ?? newId,
             kind,
@@ -1583,42 +1578,12 @@ function RecordForm({
         具体的に何が分かるか
         <textarea required name="assertion" defaultValue={record?.assertion} />
       </label>
-      <label>
-        根拠URL
-        <input
-          required
-          type="url"
-          name="url"
-          defaultValue={record?.evidence[0]?.url}
-        />
-      </label>
-      <div className={css.columns}>
-        <label>
-          資料名
-          <input
-            required
-            name="sourceTitle"
-            defaultValue={record?.evidence[0]?.title}
-          />
-        </label>
-        <label>
-          根拠の箇所
-          <input
-            required
-            name="locator"
-            placeholder="見出し、ページ、段落など"
-            defaultValue={record?.evidence[0]?.locator}
-          />
-        </label>
-      </div>
-      <label>
-        確認した内容・短い抜粋
-        <textarea
-          required
-          name="excerpt"
-          defaultValue={record?.evidence[0]?.excerpt}
-        />
-      </label>
+      <ThemeEvidenceFields
+        evidence={record?.evidence}
+        records={theme?.records ?? []}
+        enteredAt={enteredAt}
+        busy={busy}
+      />
       <details open={!!record}>
         <summary>範囲・時期を補足</summary>
         <label>

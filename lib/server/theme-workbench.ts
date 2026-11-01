@@ -167,6 +167,7 @@ export const themeCommand = z.discriminatedUnion("action", [
     ...base,
     action: z.literal("capsule-create"),
     themeId: key,
+    themeRevision: z.number().int(),
     recordIds: z.array(key).min(1).max(400),
   }),
   z.strictObject({
@@ -221,6 +222,7 @@ export function themeRecordKeys(
 function projectThemeDocument(
   snapshot: ThemeSnapshot,
   supportingRecords: boolean,
+  preservePolarity = true,
 ): CapsuleDocument {
   const graphRecords = supportingRecords
     ? snapshot.records
@@ -266,7 +268,10 @@ function projectThemeDocument(
         { affirmed: "肯定", denied: "否定", uncertain: "推測・不確実" }[
           r.polarity
         ],
-      origin: { kind: "local" as const },
+      origin: {
+        kind: "local" as const,
+        ...(preservePolarity ? { polarity: r.polarity } : {}),
+      },
     }));
   const texts = graphRecords
     .filter((r) => r.kind !== "relation")
@@ -327,7 +332,8 @@ export function themeDocument(snapshot: ThemeSnapshot): CapsuleDocument {
 export function themeGraphCleanup(
   cap: Pick<ThemeCapsule, "snapshot" | "document" | "sourceDocument">,
 ) {
-  const before = cap.sourceDocument ?? projectThemeDocument(cap.snapshot, true);
+  const before =
+    cap.sourceDocument ?? projectThemeDocument(cap.snapshot, true, false);
   const document = structuredClone(cap.document);
   const supporting = cap.snapshot.records.filter((r) => r.kind !== "relation");
   const recordKeys = new Set(
@@ -387,9 +393,18 @@ export function themeGraphCleanup(
     }
     return true;
   });
+  const sourceDocument = themeDocument(cap.snapshot);
+  // Cleaning annotations does not change saved relationship semantics. Keep the
+  // matching baseline for an old relation whose polarity was not stored yet, so
+  // a later explicit source refresh can distinguish it from an authored override.
+  for (const relation of sourceDocument.relations) {
+    const old = before.relations.find((r) => r.key === relation.key);
+    if (old?.origin.kind === "local" && relation.origin.kind === "local")
+      relation.origin = structuredClone(old.origin);
+  }
   return {
     document: capsuleDocumentSchema.parse(document),
-    sourceDocument: themeDocument(cap.snapshot),
+    sourceDocument,
     changed: removedTexts + cleanedDescriptions + removedEvidence > 0,
     removedTexts,
     cleanedDescriptions,
@@ -588,8 +603,9 @@ export async function executeThemeCommand(raw: unknown) {
       t.updatedAt = now;
       result = t;
     } else if (cmd.action === "capsule-create") {
-      const t = findTheme(s, cmd.themeId),
-        records = t.records.filter((r) => cmd.recordIds.includes(r.id));
+      const t = findTheme(s, cmd.themeId);
+      conflict(t.revision, cmd.themeRevision);
+      const records = t.records.filter((r) => cmd.recordIds.includes(r.id));
       if (new Set(cmd.recordIds).size !== records.length)
         throw new ThemeError("選択した記録がありません");
       const snapshot = {
@@ -667,7 +683,8 @@ export async function executeThemeCommand(raw: unknown) {
           cmd.recordIds.includes(d.recordId),
         );
         if (!diffs.length) throw new ThemeError("取り込める差分がありません");
-        const oldDoc = cap.sourceDocument ?? themeDocument(cap.snapshot);
+        const oldDoc =
+          cap.sourceDocument ?? projectThemeDocument(cap.snapshot, true, false);
         const nextSnapshot = {
           ...cap.snapshot,
           entities: t.entities.filter((e) =>
@@ -759,6 +776,16 @@ export async function executeThemeCommand(raw: unknown) {
             if (target.note === old.note) target.note = next.note;
             if (target.source === old.source) target.source = next.source;
             if (target.target === old.target) target.target = next.target;
+            if (
+              target.origin.kind === "local" &&
+              old.origin.kind === "local" &&
+              next.origin.kind === "local" &&
+              target.origin.polarity === old.origin.polarity
+            )
+              target.origin = {
+                ...target.origin,
+                polarity: next.origin.polarity,
+              };
           }
           const text = cap.document.texts.find((r) => r.key === key),
             ot = oldDoc.texts.find((r) => r.key === key),

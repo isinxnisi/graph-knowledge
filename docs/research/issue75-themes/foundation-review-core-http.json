@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-11-01T13:16:51.778640+00:00",
+  "themeId": "regression-a62358f189",
+  "capsuleId": "dc901802-e378-4093-ad7a-1a0834b83fb6",
+  "checks": [
+    "same request is idempotent",
+    "conflicting retries and cross-origin mutations rejected",
+    "mapping does not rewrite the evidence or content revision",
+    "exact meaning search uses verified mappings",
+    "stale Capsule creation neither changes state nor captures unseen content",
+    "ordinary save leaves shared snapshot unchanged",
+    "content correction clears semantic approval",
+    "meaning definition remains reusable after its last assignment is cleared",
+    "cleared assignments cannot permit redefinition of an existing meaning",
+    "current search sees corrected content",
+    "Capsule detects content difference without auto-applying",
+    "explicit import preserves authored title, label and layout",
+    "explicit import updates evidence baseline without updating sharing",
+    "publish preserves URL and advances its snapshot",
+    "endpoint correction adds required node",
+    "stale writers cannot overwrite newer saves",
+    "stopped and malformed shares are unavailable",
+    "episode correction stays in the source snapshot without creating graph annotations"
+  ],
+  "count": 18
+}

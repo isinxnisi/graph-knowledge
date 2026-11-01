@@ -262,7 +262,7 @@ export default function CapsuleStudio({ externalFocus, onFocusKey, allowKgSearch
         doc.relations = doc.relations.map(r => r.key === key ? { ...r, label:draft.title, note:draft.description, ...(r.origin.kind === "local" && draft.reverse ? {source:r.target,target:r.source} : {}) } : r);
         const updated = doc.relations.find(r => r.key === key);
         if (updated?.origin.kind === "local" && draft.addReverse && updated.source !== updated.target && !doc.relations.some(r => r.origin.kind === "local" && r.source === updated.target && r.target === updated.source && r.label === updated.label)) {
-          doc.relations.push({key:crypto.randomUUID(),source:updated.target,target:updated.source,label:updated.label,note:"",origin:{kind:"local"}});
+          doc.relations.push({key:crypto.randomUUID(),source:updated.target,target:updated.source,label:updated.label,note:"",origin:{...updated.origin}});
         }
         doc.evidence = [...doc.evidence.filter(e => e.targetKey !== key),...draft.evidence];
       }

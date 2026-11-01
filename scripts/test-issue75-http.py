@@ -24,7 +24,11 @@ record=theme['records'][0];evidence=copy.deepcopy(record['evidence'])
 theme=post('mapping',themeId=theme['id'],expected=1,recordId='r',concept={'id':'invite-'+suffix,'label':'招待','definition':'招待したこと。参加は含意しない。'},reason='試験の意味対応')
 check('mapping does not rewrite the evidence or content revision',theme['records'][0]['evidence']==evidence and theme['records'][0]['revision']==1)
 check('exact meaning search uses verified mappings',len(call('?concept=invite-'+suffix))==1)
-cap=post('capsule-create',themeId=theme['id'],recordIds=['r']);cap=post('share',id=cap['id'],expected=1);token=cap['shareToken'];original=call('?shared='+token)
+# A different tab changed the theme after the caller observed revision 1.
+before_stale=call()
+call(body={'requestId':str(uuid.uuid4()),'action':'capsule-create','themeId':theme['id'],'themeRevision':1,'recordIds':['r']},expected=409)
+check('stale Capsule creation neither changes state nor captures unseen content',call()==before_stale)
+cap=post('capsule-create',themeId=theme['id'],themeRevision=theme['revision'],recordIds=['r']);cap=post('share',id=cap['id'],expected=1);token=cap['shareToken'];original=call('?shared='+token)
 doc=copy.deepcopy(cap['document']);doc['relations'][0]['label']='作者の独自ラベル';node=doc['nodes'][0]['key'];doc['layout']['positions'][node]={'x':42,'y':87}
 cap=post('capsule-save',id=cap['id'],expected=1,title='作者のタイトル',description='独自の説明',document=doc)
 check('ordinary save leaves shared snapshot unchanged',call('?shared='+token)==original)
@@ -47,7 +51,7 @@ check('stale writers cannot overwrite newer saves',True)
 post('share',id=cap['id'],expected=cap['revision'],stop=True);call('?shared='+token,expected=404);call('?shared=__proto__',expected=404);check('stopped and malformed shares are unavailable',True)
 episode={'id':'episode','kind':'episode','subject':'a','assertion':'Aについての条件付き構想。','scope':'構想と実績を区別','evidence':raw['evidence']}
 theme=post('record',themeId=theme['id'],expected=theme['revision'],record=episode,reason='試験エピソード')
-episode_cap=post('capsule-create',themeId=theme['id'],recordIds=['episode'])
+episode_cap=post('capsule-create',themeId=theme['id'],themeRevision=theme['revision'],recordIds=['episode'])
 episode['assertion']='Aについての改訂した条件付き構想。'
 theme=post('record',themeId=theme['id'],expected=theme['revision'],record=episode,reason='構想の説明を訂正')
 episode_cap=post('capsule-refresh',id=episode_cap['id'],expected=episode_cap['revision'],themeRevision=theme['revision'],recordIds=['episode'])

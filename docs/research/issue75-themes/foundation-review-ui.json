@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-11-01T13:29:25.422219+00:00",
+  "themeId": "review-evidence-20261101",
+  "capsuleId": "f0648992-a429-4e6a-b1ef-a8a4dad6955b",
+  "sharedUrl": "http://localhost:3276/themes/shared/iG_XAJHHn503rgyZLKXIBhlJvDUd7Ff9",
+  "browserChecks": [
+    "desktop second evidence edited without replacing first evidence/date",
+    "source title and URL reused; locator and excerpt stayed blank until entered",
+    "source add/remove/restore preserved all draft input",
+    "390x844 mobile save succeeded with no horizontal page overflow",
+    "Capsule created with all three observed records",
+    "source correction kept saved and shared snapshot unchanged",
+    "explicit correction import advanced private Capsule only",
+    "explicit share kept URL and advanced shared revision from 1 to 2"
+  ],
+  "notChecked": [
+    "physical iPhone / Safari keyboard",
+    "human registration time or burden",
+    "timeline-vs-timeline comparison or merge",
+    "existing Google auth / main service integration"
+  ],
+  "finalFixturePreparation": "After the browser cycle, normal input/refresh/share APIs restored the synthetic uncertain example, without deleting history.",
+  "finalCapsuleRevision": 3,
+  "finalThemeRevision": 5,
+  "finalBuild": "haFEgPJMum1L1ozNIkfNa",
+  "finalBuildChecks": [
+    "shared revision 3 opened in Chrome",
+    "denied/uncertain qualifiers visible in parallel view",
+    "HTTP 200 for themes, review theme and shared URL"
+  ]
+}

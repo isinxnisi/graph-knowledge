@@ -128,7 +128,7 @@ def main():
           not graph["document"]["evidence"]
           and {r["id"]: r["time"] for r in stored["records"]} == expected_times)
 
-    cap = post("capsule-create", themeId=theme["id"], recordIds=artifacts["recordIds"])
+    cap = post("capsule-create", themeId=theme["id"], themeRevision=theme["revision"], recordIds=artifacts["recordIds"])
     artifacts["capsuleIds"].append(cap["id"])
     check("Capsule snapshot retains all temporal fields and creates no relations",
           {r["id"]: r["time"] for r in cap["snapshot"]["records"]} == expected_times

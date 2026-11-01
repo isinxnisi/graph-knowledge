@@ -13,7 +13,11 @@ export function capsulePresentation(document: CapsuleDocument, locale: string) {
     if (overrides.length) relation.canvasLabel = relation.label = overrides.join(" / ");
   }
   for (const r of document.relations.filter(r => r.origin.kind === "local")) {
-    relations[r.key] = { id: r.key, subjectId: r.source, objectId: r.target, claimIds: [], polarity: "affirmed", label: r.label || (locale === "en" ? "Related" : "関係する"), canvasLabel: r.label || (locale === "en" ? "Related" : "関係する"), badge: locale === "en" ? "Capsule" : "独自" };
+    const polarity = r.origin.kind === "local" ? r.origin.polarity ?? "affirmed" : "affirmed";
+    const text = r.label || (locale === "en" ? "Related" : "関係する");
+    const suffix = polarity === "denied" ? (locale === "en" ? " (denied)" : "（否定）") : polarity === "uncertain" ? (locale === "en" ? " (uncertain)" : "（不確実）") : "";
+    const label = text + suffix;
+    relations[r.key] = { id: r.key, subjectId: r.source, objectId: r.target, claimIds: [], polarity, label, canvasLabel: label, badge: locale === "en" ? "Capsule" : "独自" };
     members[r.key] = [r.key];
   }
   return { members, relations, nodes: [

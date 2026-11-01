@@ -176,3 +176,26 @@ describe("KG relationship presence comparisons", () => {
     expect(fetchAdjacentNeighbors).toHaveBeenCalledTimes(2); expect(vi.mocked(fetchAdjacentNeighbors).mock.calls[1][1]).toBe("next");
   });
 });
+
+
+describe("Local relationship polarity", () => {
+  it.each(["affirmed", "denied", "uncertain"] as const)("preserves %s without changing the concrete 200-character relation label", polarity => {
+    const doc = capture().document!;
+    doc.relations = [{ key: crypto.randomUUID(), source: doc.nodes[0].key, target: doc.nodes[1].key, label: "語".repeat(200), note: "根拠はこの主張を支持する", origin: { kind: "local", polarity } }];
+    const parsed = capsuleDocumentSchema.parse(doc);
+    const shown = capsulePresentation(parsed, "ja").relations[parsed.relations[0].key];
+    expect(parsed.relations[0].label).toBe("語".repeat(200));
+    expect(shown.polarity).toBe(polarity);
+    expect(shown.label).toContain("語".repeat(200));
+    if (polarity === "denied") expect(shown.label).toContain("否定");
+    if (polarity === "uncertain") expect(shown.label).toContain("不確実");
+    expect(shown.polarity).not.toBe("mixed");
+  });
+  it("keeps legacy local relations compatible without inferring polarity from free text", () => {
+    const doc = capture().document!;
+    doc.relations = [{ key: crypto.randomUUID(), source: doc.nodes[0].key, target: doc.nodes[1].key, label: "旧ラベル", note: "推測という語の説明", origin: { kind: "local" } }];
+    const parsed = capsuleDocumentSchema.parse(doc);
+    expect(parsed.relations[0].origin).toEqual({ kind: "local" });
+    expect(capsulePresentation(parsed, "ja").relations[parsed.relations[0].key]).toMatchObject({ polarity: "affirmed", label: "旧ラベル" });
+  });
+});

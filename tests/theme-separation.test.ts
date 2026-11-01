@@ -131,3 +131,16 @@ it("can identify the historical generated representation when sourceDocument was
     "作者が図に残す注記・分離検証用",
   ]);
 });
+
+it("retains negative and uncertain source polarity in new graph documents without shortening concrete meaning", () => {
+  const snapshot = legacy().snapshot;
+  for (const polarity of ["affirmed", "denied", "uncertain"] as const) {
+    const relation = snapshot.records.find((r) => r.kind === "relation")!;
+    relation.polarity = polarity;
+    relation.relation = "語".repeat(200);
+    const doc = themeDocument(snapshot);
+    expect(doc.relations[0].origin).toEqual({ kind: "local", polarity });
+    expect(doc.relations[0].label).toBe(relation.relation);
+    expect(doc.evidence[0].stance).toBe("support");
+  }
+});

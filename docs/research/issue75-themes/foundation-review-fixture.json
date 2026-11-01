@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "review-evidence-20261101",
+  "title": "【仮想】根拠の再利用と関係の確かさ",
+  "description": "入力・訂正の操作検証用。実在の出来事ではありません。否定・不確実の見え方を確認できます。",
+  "entities": [
+    {
+      "id": "a",
+      "name": "架空の作家A",
+      "kind": "人物"
+    },
+    {
+      "id": "b",
+      "name": "作品B",
+      "kind": "作品"
+    },
+    {
+      "id": "c",
+      "name": "企画C",
+      "kind": "企画"
+    }
+  ],
+  "records": [
+    {
+      "id": "denied",
+      "kind": "relation",
+      "subject": "a",
+      "object": "b",
+      "assertion": "架空の作家Aが作品Bを執筆したという主張を否定する検証記録。",
+      "relation": "執筆した",
+      "polarity": "denied",
+      "time": {
+        "kind": "calendar",
+        "meaning": "point",
+        "from": "1987"
+      },
+      "evidence": [
+        {
+          "url": "https://example.org/review/source-a",
+          "title": "仮想資料（操作検証用）",
+          "locator": "検証用第1節",
+          "excerpt": "実在の人物・作品についての主張ではありません。",
+          "retrievedAt": "2026-11-01T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "uncertain",
+      "kind": "relation",
+      "subject": "a",
+      "object": "c",
+      "assertion": "架空の作家Aが企画Cに参加した可能性を示す検証記録。",
+      "relation": "参加した",
+      "polarity": "uncertain",
+      "time": {
+        "kind": "calendar",
+        "meaning": "point",
+        "from": "1988"
+      },
+      "evidence": [
+        {
+          "url": "https://example.org/review/source-a",
+          "title": "仮想資料（操作検証用）",
+          "locator": "検証用第1節",
+          "excerpt": "実在の人物・作品についての主張ではありません。",
+          "retrievedAt": "2026-11-01T00:00:00Z"
+        },
+        {
+          "url": "https://example.org/review/source-b",
+          "title": "仮想資料（操作検証用）",
+          "locator": "検証用第2節",
+          "excerpt": "第二の根拠を個別に訂正するための仮想資料です。",
+          "retrievedAt": "2026-11-01T00:00:00Z"
+        }
+      ]
+    }
+  ]
+}

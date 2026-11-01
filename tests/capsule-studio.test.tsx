@@ -118,7 +118,7 @@ it("reverses a local arrow as one undoable edit and saves its new endpoints",asy
 });
 
 it("makes reciprocal local arrows without duplicating reverse evidence or an existing reverse relation",async()=>{
-  const value=capsule();value.document!.evidence[0]={...value.document!.evidence[0],targetKey:relation,supports:"relation"};
+  const value=capsule();value.document!.evidence[0]={...value.document!.evidence[0],targetKey:relation,supports:"relation"};value.document!.relations[0].origin={kind:"local",polarity:"uncertain"};
   const save=vi.fn(saveResult);render(<CapsuleStudio capsule={value} isNew onSave={save}/>);
   act(()=>mocks.canvas!.onRelationDoubleClick!(relation));click("Add the reverse relation too");click("Apply");
   expect(Object.values(mocks.canvas!.content!.relations)).toHaveLength(2);
@@ -128,7 +128,7 @@ it("makes reciprocal local arrows without duplicating reverse evidence or an exi
   expect(Object.values(mocks.canvas!.content!.relations)).toHaveLength(2);
   click("Save");await waitFor(()=>expect(save).toHaveBeenCalledOnce());
   const saved=save.mock.calls[0][0].document!,reverse=saved.relations.find(r=>r.source===b && r.target===a)!;
-  expect(reverse).toBeTruthy();expect(saved.evidence).toHaveLength(1);expect(saved.evidence[0].targetKey).toBe(relation);
+  expect(reverse).toBeTruthy();expect(reverse.origin).toEqual({kind:"local",polarity:"uncertain"});expect(saved.evidence).toHaveLength(1);expect(saved.evidence[0].targetKey).toBe(relation);
   expect(saved.evidence.some(e=>e.targetKey===reverse.key)).toBe(false);
 });
 

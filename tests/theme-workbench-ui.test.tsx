@@ -328,3 +328,185 @@ it("opens a supporting-only theme in the timeline and offers no invented graph t
   ).toBeTruthy();
   expect(screen.queryByTestId("graph-version")).toBeNull();
 });
+
+it("edits every imported evidence entry and preserves untouched confirmation dates", async () => {
+  const second = {
+    ...record.evidence[0],
+    url: "https://second.example.org",
+    title: "補足資料",
+    locator: "2頁",
+    excerpt: "二つ目の内容",
+    retrievedAt: "2026-10-30T00:00:00Z",
+  };
+  let submitted: { record: { evidence: typeof record.evidence } } | undefined;
+  vi.stubGlobal(
+    "fetch",
+    vi.fn((url: string, options?: RequestInit) => {
+      if (options?.method === "POST")
+        submitted = JSON.parse(String(options.body));
+      return Promise.resolve({
+        ok: true,
+        json: async () =>
+          url.startsWith("/api/themes/graph")
+            ? projected(1)
+            : {
+                ...base,
+                entities,
+                records: [
+                  { ...record, evidence: [...record.evidence, second] },
+                ],
+              },
+      });
+    }),
+  );
+  render(<ThemeWorkbench themeId="t" />);
+  await screen.findByText("図の版 1");
+  fireEvent.click(screen.getByRole("button", { name: "記録と根拠" }));
+  fireEvent.click(screen.getByRole("button", { name: "訂正" }));
+  fireEvent.click(screen.getByText("根拠 2 · 補足資料"));
+  fireEvent.change(screen.getAllByLabelText("根拠の箇所")[1], {
+    target: { value: "訂正した2頁" },
+  });
+  fireEvent.change(screen.getByLabelText("訂正の理由"), {
+    target: { value: "二つ目の箇所を修正" },
+  });
+  fireEvent.submit(
+    screen.getByRole("button", { name: "訂正を保存" }).closest("form")!,
+  );
+  await waitFor(() => expect(submitted).toBeDefined());
+  expect(submitted!.record.evidence).toEqual([
+    record.evidence[0],
+    { ...second, locator: "訂正した2頁" },
+  ]);
+});
+
+it("reuses only a source title and URL for a new record and keeps the claim draft through add/remove", async () => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn((url: string) =>
+      Promise.resolve({
+        ok: true,
+        json: async () =>
+          url.startsWith("/api/themes/graph")
+            ? projected(1)
+            : { ...base, entities, records: [record] },
+      }),
+    ),
+  );
+  render(<ThemeWorkbench themeId="t" />);
+  await screen.findByText("図の版 1");
+  fireEvent.click(screen.getByRole("button", { name: "＋ 記録を加える" }));
+  fireEvent.change(screen.getByLabelText("具体的に何が分かるか"), {
+    target: { value: "新しい主張の下書き" },
+  });
+  fireEvent.change(screen.getByLabelText("根拠 1 の資料を再利用"), {
+    target: { value: "0" },
+  });
+  expect((screen.getByLabelText("根拠URL") as HTMLInputElement).value).toBe(
+    record.evidence[0].url,
+  );
+  expect((screen.getByLabelText("資料名") as HTMLInputElement).value).toBe(
+    record.evidence[0].title,
+  );
+  expect((screen.getByLabelText("根拠の箇所") as HTMLInputElement).value).toBe(
+    "",
+  );
+  expect(
+    (screen.getByLabelText("確認した内容・短い抜粋") as HTMLTextAreaElement)
+      .value,
+  ).toBe("");
+  fireEvent.click(screen.getByRole("button", { name: "＋ 根拠を追加" }));
+  fireEvent.change(screen.getAllByLabelText("資料名")[1], {
+    target: { value: "二つ目の下書き" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "根拠 2 を外す" }));
+  fireEvent.click(screen.getByRole("button", { name: "外した根拠を戻す" }));
+  expect(
+    (screen.getAllByLabelText("資料名")[1] as HTMLInputElement).value,
+  ).toBe("二つ目の下書き");
+  expect(
+    (screen.getByLabelText("具体的に何が分かるか") as HTMLTextAreaElement)
+      .value,
+  ).toBe("新しい主張の下書き");
+});
+
+it("retains all evidence edits when a stale revision is rejected", async () => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn((url: string, options?: RequestInit) =>
+      Promise.resolve(
+        options?.method === "POST"
+          ? {
+              ok: false,
+              json: async () => ({
+                error: "別の更新があります。入力を確認してください。",
+              }),
+            }
+          : {
+              ok: true,
+              json: async () =>
+                url.startsWith("/api/themes/graph")
+                  ? projected(1)
+                  : { ...base, entities, records: [record] },
+            },
+      ),
+    ),
+  );
+  render(<ThemeWorkbench themeId="t" />);
+  await screen.findByText("図の版 1");
+  fireEvent.click(screen.getByRole("button", { name: "記録と根拠" }));
+  fireEvent.click(screen.getByRole("button", { name: "訂正" }));
+  fireEvent.change(screen.getByLabelText("確認した内容・短い抜粋"), {
+    target: { value: "保存したい訂正" },
+  });
+  fireEvent.change(screen.getByLabelText("訂正の理由"), {
+    target: { value: "根拠を読み直した" },
+  });
+  fireEvent.submit(
+    screen.getByRole("button", { name: "訂正を保存" }).closest("form")!,
+  );
+  await screen.findAllByText("別の更新があります。入力を確認してください。");
+  expect(
+    (screen.getByLabelText("確認した内容・短い抜粋") as HTMLTextAreaElement)
+      .value,
+  ).toBe("保存したい訂正");
+});
+
+it("binds Capsule creation to the observed theme revision and keeps selection on conflict", async () => {
+  let submitted:
+    | { action: string; themeRevision: number; recordIds: string[] }
+    | undefined;
+  vi.stubGlobal(
+    "fetch",
+    vi.fn((url: string, options?: RequestInit) => {
+      if (options?.method === "POST") {
+        submitted = JSON.parse(String(options.body));
+        return Promise.resolve({
+          ok: false,
+          json: async () => ({ error: "テーマが更新されています" }),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: async () =>
+          url.startsWith("/api/themes/graph")
+            ? projected(7)
+            : { ...base, revision: 7, entities, records: [record] },
+      });
+    }),
+  );
+  render(<ThemeWorkbench themeId="t" />);
+  await screen.findByText("図の版 7");
+  fireEvent.click(
+    screen.getByRole("button", { name: "選択した1件をCapsuleへ" }),
+  );
+  await screen.findByText("テーマが更新されています");
+  expect(submitted).toMatchObject({
+    action: "capsule-create",
+    themeRevision: 7,
+    recordIds: ["r"],
+  });
+  expect(
+    screen.getByRole("button", { name: "選択した1件をCapsuleへ" }),
+  ).toBeTruthy();
+});

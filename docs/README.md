@@ -1,3 +1,5 @@
+- Issue #75 継続入口：[全体レビュー・サービス導線の論点・次担当への依頼](design/THEME_FOUNDATION_NEXT.md)／[今回の修正と検証](verification/THEME_FOUNDATION_REVIEW_20261101.md)。年表同士の比較・マージと、正式な画面構成の採用は別の未決事項。
+
 - Issue #75 独立初版：[テーマ登録・意味対応・Capsule訂正の設計](design/THEME_FOUNDATION_ISSUE75.md)／[年表の設計](design/THEME_TIMELINE_PREVIEW.md)／[テーマ・年表・関係図の表示分離・最新確認先](verification/THEME_VIEW_SEPARATION_20261101.md)／[密度と関係図への対応](verification/THEME_TIMELINE_CONTEXT_20261101.md)／[表示単位と接続](verification/THEME_TEMPORAL_PROJECTION_20261101.md)／[仮想ケース集](verification/THEME_TEMPORAL_CASES_20261101.md)／[期間グラフ](verification/THEME_PERIOD_GRAPH_20261101.md)／[期間と時期の不確かさ](verification/THEME_TEMPORAL_MEANING_20261101.md)／[年表の確認・制限](verification/THEME_TIMELINE_PREVIEW_20261101.md)／[実テーマ・検証・再開手順](verification/THEME_FOUNDATION_ISSUE75_20261101.md)。作業ブランチとlocalhost:3276のみ。main／3200／β／本番へは未統合。
 
 2026-10-30 Issue #63の共有URL更新・OGP・関係先選択は[検証・反映記録](verification/CAPSULE_SHARING_20261030.md)と[現行Capsule契約](design/CAPSULE_EDITOR.md)を参照。今回の反映先は3200／HTTPS βで、本番VPSは対象外。
