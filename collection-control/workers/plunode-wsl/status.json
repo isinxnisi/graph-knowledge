@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-01T21:13:20.061283+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-01T22:18:33.054677+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-01T21:13:20.061283+00:00",
-    "windowEndAt": "2026-11-01T22:00:00+00:00"
+    "eligibleAt": "2026-11-02T00:00:00+00:00",
+    "windowEndAt": "2026-11-02T03:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-25-utc-recovery-06",
+    "startedAt": "2026-11-01T21:13:33.054682+00:00",
+    "limitAt": "2026-11-01T22:08:33.054677+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-46-dot-aoyama-three-20261027",
     "endedAt": "2026-11-01T21:03:20.061290+00:00"
@@ -192,5 +196,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T21:04:40.113719+00:00"
+  "checkedAt": "2026-11-01T21:13:40.060103+00:00"
 }
