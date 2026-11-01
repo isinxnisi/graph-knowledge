@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-02 03:08:53 JST。
+確認: 2026-11-02 03:13:02 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -8,9 +8,11 @@
 
 日本時間: 03:00〜07:00、09:00〜12:00、15:00〜18:00。ジョブ間10分休憩。
 
-次の開始候補: 2026-11-02 03:12:17 JST
+次の開始候補: 2026-11-02 04:17:40 JST
 
 最後の操作SHA-256: 1cef6cdd4cb0e4eca8b60a3ae51c6b25a96271b01ffcac788f41f36a5439bf79
+
+処理中: issue-50-dot-endo-tista-20261027
 
 ChatGPTは[未承認の操作雛形](control-template.json)を読み、運営者が明示した操作だけを controls/plunode-wsl/ID.json に新規登録する。
 
@@ -75,9 +77,8 @@ Issue確認結果:
     "checkedAt": "2026-10-31T07:53:01+00:00"
   },
   "collection-control/issue-sources/59.json": {
-    "status": "held",
-    "reason": "Remote end closed connection without response",
-    "checkedAt": "2026-11-01T17:57:48+00:00"
+    "status": "registered: issue-59-dot-kubo-two-20261028",
+    "checkedAt": "2026-11-01T18:10:12+00:00"
   },
   "collection-control/issue-sources/60.json": {
     "status": "registered: issue-60-dot-ichikawa-houseki-20261028",
