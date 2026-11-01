@@ -618,7 +618,7 @@ add(
       subject: "artist",
     },
   ],
-  "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは関係図では注記になるが、年表だけに隠す指定は未実装。",
+  "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは年表・記録に残り、関係図へ自動で注記を出さない。",
 );
 
 const categoryOrder = [...new Set(cases.map((c) => c.category))];

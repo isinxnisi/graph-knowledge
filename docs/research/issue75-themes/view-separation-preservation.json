@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-11-01T12:47:31.212218+00:00",
+  "database": "plunode_theme75",
+  "baseline": {
+    "themes": 10,
+    "capsules": 8,
+    "shares": 7
+  },
+  "allBaselineHashesUnchanged": true,
+  "current": {
+    "themes": 13,
+    "capsules": 14,
+    "shares": 8
+  },
+  "backupSha256": "5d005f8a818907914b8c8e20285cb68c9f38516d5d30fb00253e0f0f78d939c2",
+  "backupRetainedPrivately": true,
+  "migrationRequired": false,
+  "addedData": "Isolated synthetic fixtures and normal UI/API verification only; no baseline rows modified."
+}

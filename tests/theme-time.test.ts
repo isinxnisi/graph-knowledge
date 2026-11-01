@@ -229,7 +229,7 @@ describe("calendar time meaning and uncertainty", () => {
     expect(groups[0].records.map((r) => r.time)).toEqual(rs.map((r) => r.time));
     const document = themeDocument(snapshot);
     expect(document.relations).toEqual([]);
-    expect(document.texts).toHaveLength(3);
-    expect(document.nodes).toHaveLength(1);
+    expect(document.texts).toHaveLength(0);
+    expect(document.nodes).toHaveLength(0);
   });
 });

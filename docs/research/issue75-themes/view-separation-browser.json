@@ -1,0 +1,37 @@
+{
+  "checkedAt": "2026-11-01T12:48:22.819490+00:00",
+  "build": "OGosgFVyPxKDiIpI5qzHc",
+  "browser": "Chrome, real browser via CUA",
+  "desktop": {
+    "width": 1400,
+    "height": 1000,
+    "url": "http://localhost:3276/themes/pattern-record-context-1a8007b0",
+    "sourceRecords": 3,
+    "graphNodes": 2,
+    "graphRelations": 1,
+    "autoTextNotes": 0,
+    "timelineGraphLinks": 1,
+    "horizontalOverflow": false
+  },
+  "mobile": {
+    "width": 390,
+    "height": 844,
+    "url": "http://localhost:3276/themes/capsules/a0199be4-9739-4683-af2e-8fcb219cbb1d",
+    "initialView": "timeline",
+    "sourceRecords": 2,
+    "graphNodes": 0,
+    "graphRelations": 0,
+    "autoTextNotes": 0,
+    "timelineGraphLinks": 0,
+    "horizontalOverflow": false,
+    "emptyGraphOffersTimelineAndCreate": true
+  },
+  "privateEmptyGraphEditStartedAndDiscarded": true,
+  "legacyCleanupRestorePublish": "Actual UI operations; exact API/DB assertions in view-separation-share-checks.json",
+  "consoleWarningsOrErrorsOnProofTab": [],
+  "viewportOverrideReset": true,
+  "limitations": [
+    "Desktop responsive viewport is not a physical iPhone/WebKit test.",
+    "No main, localhost:3200, HTTPS beta or production deployment."
+  ]
+}

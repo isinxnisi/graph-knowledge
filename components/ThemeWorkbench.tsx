@@ -94,6 +94,26 @@ function timeLabel(r: ThemeRecord) {
   return themeTimeLabel(r.time);
 }
 
+function EmptyRelationshipGraph({
+  onTimeline,
+  onCreate,
+}: {
+  onTimeline: () => void;
+  onCreate?: () => void;
+}) {
+  return (
+    <section className={css.emptyGraph} aria-label="関係図に表示する内容なし">
+      <Icon name="graph" />
+      <h3>この図には、対象間の関係がありません</h3>
+      <p>説明やエピソードは、年表と記録の中で読めます。</p>
+      <div className={css.actions}>
+        <button onClick={onTimeline}>年表で読む</button>
+        {onCreate && <button onClick={onCreate}>関係図を作る</button>}
+      </div>
+    </section>
+  );
+}
+
 function Evidence({ record }: { record: ThemeRecord }) {
   return (
     <>
@@ -247,6 +267,16 @@ export default function ThemeWorkbench({
     [shareUrl, setShareUrl] = useState("");
   const [catalog, setCatalog] = useState<ThemeConcept[]>([]);
   const [studioEditing, setStudioEditing] = useState(false);
+  const [createEmptyGraph, setCreateEmptyGraph] = useState(false);
+  const [graphCleanup, setGraphCleanup] = useState<{
+    removedTexts: number;
+    cleanedDescriptions: number;
+  } | null>(null);
+  const initialTabFor = useRef("");
+  const onStudioEditingChange = useCallback((editing: boolean) => {
+    setStudioEditing(editing);
+    if (!editing) setCreateEmptyGraph(false);
+  }, []);
   const [focusedRecordId, setFocusedRecordId] = useState<string | null>(null);
   const [recordKeys, setRecordKeys] = useState<Record<string, string>>({});
   const focusRecord = (theme?.records ?? cap?.snapshot.records ?? []).find(
@@ -254,13 +284,18 @@ export default function ThemeWorkbench({
   );
   const graphFocus = useMemo<Selection>(
     () =>
-      focusRecord && recordKeys[focusRecord.id]
+      focusRecord &&
+      recordKeys[focusRecord.id] &&
+      (focusRecord.kind === "relation"
+        ? (cap?.document ?? graph?.document)?.relations
+        : (cap?.document ?? graph?.document)?.texts
+      )?.some((item) => item.key === recordKeys[focusRecord.id])
         ? {
             kind: focusRecord.kind === "relation" ? "relation" : "entity",
             id: recordKeys[focusRecord.id],
           }
         : null,
-    [focusRecord, recordKeys],
+    [focusRecord, recordKeys, cap?.document, graph?.document],
   );
   function focusGraphKey(key: string) {
     const id = Object.entries(recordKeys).find(
@@ -291,11 +326,34 @@ export default function ThemeWorkbench({
           : "";
     return api(query)
       .then((d) => {
+        const navigation = shareToken
+          ? `shared:${shareToken}`
+          : capId
+            ? `capsule:${capId}`
+            : themeId
+              ? `theme:${themeId}`
+              : "";
+        if (navigation && initialTabFor.current !== navigation) {
+          initialTabFor.current = navigation;
+          const document = shareToken
+            ? d.document
+            : capId
+              ? d.capsule.document
+              : null;
+          const hasGraph = document
+            ? document.nodes.length +
+                document.relations.length +
+                document.texts.length >
+              0
+            : d.records.some((r: ThemeRecord) => r.kind === "relation");
+          setTab(hasGraph ? "graph" : "time");
+        }
         if (shareToken) {
           setCap(d);
           setRecordKeys(d.recordKeys ?? {});
         } else if (capId) {
           setCap(d.capsule);
+          setGraphCleanup(d.graphCleanup ?? null);
           setRecordKeys(d.recordKeys ?? {});
           setDiff(d.diff);
           setThemeRevision(d.themeRevision);
@@ -664,23 +722,40 @@ export default function ThemeWorkbench({
               {(!graph || graph.revision !== theme.revision) && (
                 <p role="status">この内容版の図を準備しています…</p>
               )}
-              {graph && graph.revision === theme.revision && (
-                <div className={css.studioWrap}>
-                  <CapsuleStudio
-                    allowKgSearch={false}
-                    allowCopySave={false}
-                    key={"graph" + theme.revision}
-                    capsule={initialView(graph)}
-                    readOnly
-                    externalFocus={graphFocus}
-                    onFocusKey={focusGraphKey}
-                    destination="テーマの現在版"
-                  />
-                </div>
-              )}
+              {graph &&
+                graph.revision === theme.revision &&
+                !graph.document?.nodes.length &&
+                !graph.document?.texts.length && (
+                  <EmptyRelationshipGraph onTimeline={() => setTab("time")} />
+                )}
+              {graph &&
+                graph.revision === theme.revision &&
+                !!(
+                  graph.document?.nodes.length || graph.document?.texts.length
+                ) && (
+                  <div className={css.studioWrap}>
+                    <CapsuleStudio
+                      allowKgSearch={false}
+                      allowCopySave={false}
+                      key={"graph" + theme.revision}
+                      capsule={initialView(graph)}
+                      readOnly
+                      externalFocus={graphFocus}
+                      onFocusKey={focusGraphKey}
+                      destination="テーマの現在版"
+                    />
+                  </div>
+                )}
             </div>
             <div className={css.timelinePane} hidden={tab === "graph"}>
               <ThemeTimeline
+                graphRecordIds={
+                  graph?.revision === theme.revision
+                    ? theme.records
+                        .filter((r) => r.kind === "relation")
+                        .map((r) => r.id)
+                    : []
+                }
                 records={theme.records}
                 entities={theme.entities}
                 timeline={theme.timeline}
@@ -865,6 +940,66 @@ export default function ThemeWorkbench({
               />
             </label>
           )}
+          {!shareToken && graphCleanup && (
+            <details className={css.updates}>
+              <summary>旧形式の自動注記を整理</summary>
+              <p className={css.caption}>
+                年表の説明から作られた注記{graphCleanup.removedTexts}
+                件と対象の自動説明{graphCleanup.cleanedDescriptions}
+                件を、関係図から外します。
+                文面・書式・配置を編集した注記や、独自の対象・関係は残します。年表の記録は残り、共有中の版は変わりません。図の編集を保存する前なら、整理前へ戻せます。
+              </p>
+              <button
+                disabled={busy || studioEditing}
+                onClick={() =>
+                  void submit(
+                    {
+                      action: "capsule-clean-graph",
+                      id: cap.id,
+                      expected: cap.revision,
+                    },
+                    async () => {
+                      await load();
+                      setGeneration((g) => g + 1);
+                      setMessage(
+                        "関係図の自動注記を整理しました。共有先へは、共有への反映操作で更新できます。",
+                      );
+                    },
+                  )
+                }
+              >
+                自動注記を図から外す
+              </button>
+            </details>
+          )}
+          {!shareToken && cap.graphCleanupUndo && (
+            <div className={css.actions}>
+              <button
+                disabled={busy || studioEditing}
+                onClick={() =>
+                  void submit(
+                    {
+                      action: "capsule-restore-graph",
+                      id: cap.id,
+                      expected: cap.revision,
+                    },
+                    async () => {
+                      await load();
+                      setGeneration((g) => g + 1);
+                      setMessage(
+                        "整理前の図へ戻しました。共有中の版は変わりません。",
+                      );
+                    },
+                  )
+                }
+              >
+                整理前の図に戻す
+              </button>
+              <span className={css.caption}>
+                図の編集を保存する前まで戻せます
+              </span>
+            </div>
+          )}
           {!shareToken && !!diff.length && (
             <details className={css.updates}>
               <summary>
@@ -954,35 +1089,48 @@ export default function ThemeWorkbench({
           </div>
           <div className={css.visualWorkspace} data-mode={tab}>
             <div className={css.graphPane} hidden={tab === "time"}>
-              <div className={css.studioWrap}>
-                <CapsuleStudio
-                  allowKgSearch={false}
-                  allowCopySave={false}
-                  key={cap.id + ":" + generation}
-                  capsule={initialView(local(cap))}
-                  externalFocus={graphFocus}
-                  onFocusKey={focusGraphKey}
-                  onEditingChange={setStudioEditing}
-                  readOnly={!!shareToken}
-                  destination="独立確認環境"
-                  onSave={
-                    shareToken
-                      ? undefined
-                      : async (v) => {
-                          const saved = (await run({
-                            action: "capsule-save",
-                            id: cap.id,
-                            expected: cap.revision,
-                            title: v.title,
-                            description: v.note,
-                            document: v.document,
-                          })) as ThemeCapsule;
-                          setCap(saved);
-                          return local(saved);
-                        }
+              {!cap.document.nodes.length &&
+              !cap.document.texts.length &&
+              !createEmptyGraph &&
+              !studioEditing ? (
+                <EmptyRelationshipGraph
+                  onTimeline={() => setTab("time")}
+                  onCreate={
+                    shareToken ? undefined : () => setCreateEmptyGraph(true)
                   }
                 />
-              </div>
+              ) : (
+                <div className={css.studioWrap}>
+                  <CapsuleStudio
+                    allowKgSearch={false}
+                    allowCopySave={false}
+                    key={cap.id + ":" + generation}
+                    capsule={initialView(local(cap))}
+                    externalFocus={graphFocus}
+                    onFocusKey={focusGraphKey}
+                    onEditingChange={onStudioEditingChange}
+                    startEditing={createEmptyGraph}
+                    readOnly={!!shareToken}
+                    destination="独立確認環境"
+                    onSave={
+                      shareToken
+                        ? undefined
+                        : async (v) => {
+                            const saved = (await run({
+                              action: "capsule-save",
+                              id: cap.id,
+                              expected: cap.revision,
+                              title: v.title,
+                              description: v.note,
+                              document: v.document,
+                            })) as ThemeCapsule;
+                            setCap(saved);
+                            return local(saved);
+                          }
+                    }
+                  />
+                </div>
+              )}
             </div>
             <div className={css.timelinePane} hidden={tab === "graph"}>
               <ThemeTimeline

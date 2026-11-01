@@ -141,12 +141,12 @@ describe("theme input and read model", () => {
         records: t.records,
       });
     expect(d.relations.map((r) => r.label)).toContain("英訳した");
-    expect(d.evidence).toHaveLength(5);
+    expect(d.evidence).toHaveLength(4);
     expect(
       d.nodes.find((n) => n.title === "Ada Lovelace")?.description,
-    ).toContain("作曲");
+    ).not.toContain("作曲");
     expect(d.nodes.every((n) => n.origin.kind === "local")).toBe(true);
-    expect(d.layout.positions[d.texts[0].key].y).toBeGreaterThan(500);
+    expect(d.texts).toEqual([]);
     expect(documentKey(t.id, "entity:ada")).not.toBe(
       documentKey("different", "entity:ada"),
     );

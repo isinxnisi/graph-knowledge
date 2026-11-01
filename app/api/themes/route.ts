@@ -6,6 +6,7 @@ import {
   executeThemeCommand,
   ThemeError,
   themeRecordKeys,
+  themeGraphCleanup,
 } from "../../../lib/server/theme-workbench";
 import {
   themeRecordSearchText,
@@ -67,9 +68,16 @@ export async function GET(req: Request) {
     } else if (capsule) {
       const cap = s.capsules.find((c) => c.id === capsule);
       if (!cap) throw new ThemeError("Capsuleがありません", 404);
+      const cleanup = themeGraphCleanup(cap);
       result = {
         capsule: cap,
         recordKeys: themeRecordKeys(cap.snapshot.themeId, cap.snapshot.records),
+        graphCleanup: cleanup.changed
+          ? {
+              removedTexts: cleanup.removedTexts,
+              cleanedDescriptions: cleanup.cleanedDescriptions,
+            }
+          : null,
         diff: themeDiff(
           cap.snapshot,
           s.themes.find((t) => t.id === cap.snapshot.themeId)!,

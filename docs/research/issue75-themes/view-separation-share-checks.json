@@ -1,0 +1,16 @@
+{
+  "legacyCapsuleId": "19d58e53-8afe-495a-9f68-227aaf70dc2c",
+  "sharedPath": "/themes/shared/EvR8Cn-6ic_CbieHg0qLq8leHbNF8qsb",
+  "beforeRevision": 2,
+  "cleanedRevision": 3,
+  "restoredRevision": 4,
+  "publishedRevision": 5,
+  "autoNotesRemoved": 2,
+  "manualNotePreserved": true,
+  "sourceSnapshotUnchanged": true,
+  "sharedStayedAt2UntilPublish": true,
+  "sameShareUrl": true,
+  "privateUndoOmittedFromShare": true,
+  "repeatCleanupRejectedWithoutMutation": true,
+  "staleRestoreRejectedWithoutMutation": true
+}

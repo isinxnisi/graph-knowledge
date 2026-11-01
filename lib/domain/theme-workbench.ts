@@ -285,6 +285,10 @@ export type ThemeCapsule = {
   revision: number;
   document: CapsuleDocument;
   sourceDocument?: CapsuleDocument;
+  graphCleanupUndo?: {
+    document: CapsuleDocument;
+    sourceDocument?: CapsuleDocument;
+  };
   snapshot: ThemeSnapshot;
   createdAt: string;
   updatedAt: string;

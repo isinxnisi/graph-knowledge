@@ -51,5 +51,5 @@ episode_cap=post('capsule-create',themeId=theme['id'],recordIds=['episode'])
 episode['assertion']='Aについての改訂した条件付き構想。'
 theme=post('record',themeId=theme['id'],expected=theme['revision'],record=episode,reason='構想の説明を訂正')
 episode_cap=post('capsule-refresh',id=episode_cap['id'],expected=episode_cap['revision'],themeRevision=theme['revision'],recordIds=['episode'])
-check('episode correction updates description evidence against the retained projection',episode['assertion'] in episode_cap['document']['nodes'][0]['description'] and episode_cap['sourceDocument']['nodes'][0]['description']==episode_cap['document']['nodes'][0]['description'])
+check('episode correction stays in the source snapshot without creating graph annotations',episode_cap['snapshot']['records'][0]['assertion']==episode['assertion'] and not episode_cap['document']['nodes'] and not episode_cap['document']['texts'] and not episode_cap['document']['evidence'] and not episode_cap['sourceDocument']['nodes'])
 print(json.dumps({'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'themeId':theme['id'],'capsuleId':cap['id'],'checks':checks,'count':len(checks)},ensure_ascii=False,indent=2))

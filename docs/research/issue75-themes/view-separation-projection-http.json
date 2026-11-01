@@ -1,0 +1,99 @@
+{
+  "checkedAt": "2026-11-01",
+  "themes": [
+    {
+      "themeId": "ada-engine",
+      "sourceRecords": 5,
+      "graphNodes": 6,
+      "graphRelations": 4,
+      "autoTextNotes": 0
+    },
+    {
+      "themeId": "webb-partnership",
+      "sourceRecords": 6,
+      "graphNodes": 6,
+      "graphRelations": 6,
+      "autoTextNotes": 0
+    },
+    {
+      "themeId": "webb-partnership2",
+      "sourceRecords": 5,
+      "graphNodes": 6,
+      "graphRelations": 5,
+      "autoTextNotes": 0
+    },
+    {
+      "themeId": "webb-deployment-timeline",
+      "sourceRecords": 11,
+      "graphNodes": 6,
+      "graphRelations": 5,
+      "autoTextNotes": 0
+    },
+    {
+      "themeId": "time-meaning-check-15c2aed882",
+      "sourceRecords": 5,
+      "graphNodes": 0,
+      "graphRelations": 0,
+      "autoTextNotes": 0
+    },
+    {
+      "themeId": "picasso-blue-period",
+      "sourceRecords": 6,
+      "graphNodes": 6,
+      "graphRelations": 6,
+      "autoTextNotes": 0
+    },
+    {
+      "themeId": "temporal-boundaries-example",
+      "sourceRecords": 3,
+      "graphNodes": 0,
+      "graphRelations": 0,
+      "autoTextNotes": 0
+    },
+    {
+      "themeId": "pattern-precision-mixed-46f82d1c",
+      "sourceRecords": 3,
+      "graphNodes": 0,
+      "graphRelations": 0,
+      "autoTextNotes": 0
+    },
+    {
+      "themeId": "pattern-explicit-inset-239bc3f6",
+      "sourceRecords": 1,
+      "graphNodes": 0,
+      "graphRelations": 0,
+      "autoTextNotes": 0
+    },
+    {
+      "themeId": "pattern-record-context-0dc833bc",
+      "sourceRecords": 3,
+      "graphNodes": 2,
+      "graphRelations": 1,
+      "autoTextNotes": 0
+    },
+    {
+      "themeId": "regression-2d15ae4a24",
+      "sourceRecords": 2,
+      "graphNodes": 2,
+      "graphRelations": 1,
+      "autoTextNotes": 0
+    },
+    {
+      "themeId": "time-meaning-check-7e0bda84e5",
+      "sourceRecords": 5,
+      "graphNodes": 0,
+      "graphRelations": 0,
+      "autoTextNotes": 0
+    },
+    {
+      "themeId": "pattern-record-context-1a8007b0",
+      "sourceRecords": 3,
+      "graphNodes": 2,
+      "graphRelations": 1,
+      "autoTextNotes": 0
+    }
+  ],
+  "newMixedCapsule": "33012c5d-e88f-458c-97d2-9d592a605977",
+  "timelineOnlyCapsule": "a0199be4-9739-4683-af2e-8fcb219cbb1d",
+  "allSourceRecordsRetained": true
+}

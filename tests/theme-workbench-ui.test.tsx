@@ -20,6 +20,19 @@ vi.mock("../components/CapsuleSurface", () => ({
     <div role="dialog">{children}</div>
   ),
 }));
+const projected = (revision: number) => ({
+  revision,
+  document: {
+    nodes: [{ key: "00000000-0000-4000-a000-000000000001" }],
+    relations: [],
+    texts: [],
+    layout: {
+      positions: { "00000000-0000-4000-a000-000000000001": { x: 0, y: 0 } },
+      pan: { x: 0, y: 0 },
+      zoom: 1,
+    },
+  },
+});
 const base = {
   id: "t",
   title: "テーマ",
@@ -48,7 +61,7 @@ it("does not mount a stale graph while a newly loaded theme revision is being pr
           });
         return Promise.resolve({
           ok: true,
-          json: async () => ({ revision: 1 }),
+          json: async () => projected(1),
         });
       }
       return Promise.resolve({
@@ -64,7 +77,7 @@ it("does not mount a stale graph while a newly loaded theme revision is being pr
   await screen.findByText("この内容版の図を準備しています…");
   expect(screen.queryByTestId("graph-version")).toBeNull();
   await waitFor(() => expect(finish).toBeDefined());
-  finish!({ ok: true, json: async () => ({ revision: 2 }) });
+  finish!({ ok: true, json: async () => projected(2) });
   await screen.findByText("図の版 2");
 });
 
@@ -108,7 +121,7 @@ it("preserves the existing calendar label when correcting an unrelated field", a
         ok: true,
         json: async () =>
           url.startsWith("/api/themes/graph")
-            ? { revision: 1 }
+            ? projected(1)
             : { ...base, entities, records: [record] },
       });
     }),
@@ -204,7 +217,7 @@ it("lets a correction explicitly detach a date from its configured timeline", as
         ok: true,
         json: async () =>
           url.startsWith("/api/themes/graph")
-            ? { revision: 1 }
+            ? projected(1)
             : { ...base, entities, records: [record], timeline },
       });
     }),
@@ -239,7 +252,7 @@ it("saves uncertain duration boundaries without turning them into an occurrence 
         ok: true,
         json: async () =>
           url.startsWith("/api/themes/graph")
-            ? { revision: 1 }
+            ? projected(1)
             : { ...base, entities, records: [record] },
       });
     }),
@@ -281,4 +294,37 @@ it("saves uncertain duration boundaries without turning them into an occurrence 
     endEarliest: "1844",
     label: record.time.label,
   });
+});
+
+it("opens a supporting-only theme in the timeline and offers no invented graph target", async () => {
+  const note = {
+    ...record,
+    kind: "note",
+    object: null,
+    relation: "",
+    assertion: "年表だけの説明",
+  };
+  vi.stubGlobal(
+    "fetch",
+    vi.fn((url: string) =>
+      Promise.resolve({
+        ok: true,
+        json: async () =>
+          url.startsWith("/api/themes/graph")
+            ? { revision: 1, document: { nodes: [], relations: [], texts: [] } }
+            : { ...base, entities, records: [note] },
+      }),
+    ),
+  );
+  render(<ThemeWorkbench themeId="t" />);
+  await screen.findByRole("heading", { name: "年月日・期間" });
+  expect(
+    screen.getByRole("button", { name: "年表" }).getAttribute("aria-pressed"),
+  ).toBe("true");
+  expect(screen.queryByRole("button", { name: /^関係図で見る：/ })).toBeNull();
+  fireEvent.click(screen.getByRole("button", { name: "関係図" }));
+  expect(
+    screen.getByRole("region", { name: "関係図に表示する内容なし" }),
+  ).toBeTruthy();
+  expect(screen.queryByTestId("graph-version")).toBeNull();
 });

@@ -830,3 +830,29 @@
     grid-template-columns: 1fr;
   }
 }
+.emptyGraph {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 28px 20px;
+  text-align: center;
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+.emptyGraph > svg {
+  width: 28px;
+  height: 28px;
+  color: var(--color-muted);
+}
+.emptyGraph h3 {
+  margin: 14px 0 4px;
+  font-size: 16px;
+}
+.emptyGraph p {
+  font-size: 12px;
+  color: var(--color-muted);
+  margin: 4px 0 16px;
+}

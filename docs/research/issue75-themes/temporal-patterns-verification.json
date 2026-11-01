@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-01T11:48:01.887Z",
+  "checkedAt": "2026-11-01T12:27:48.451Z",
   "caseCount": 61,
   "checkedDisplayUnits": [
     "auto",
@@ -12,7 +12,7 @@
     "gap": 9,
     "rejected": 7
   },
-  "fixtureSha256": "6af92047cafc39e07370ff96cf750e6d1e3f70e29a3506eec0c5e0c1c3c9ea3a",
+  "fixtureSha256": "cc4f56c25b11be2b25be75e126e16df77c06ff1809b05ba0766ba863c6bd4cf5",
   "scope": "共通schema・座標・元データの検証。見やすさの人間受入、全ケースの実ブラウザ確認、未対応機能の完成を意味しない。",
   "cases": [
     {
@@ -719,7 +719,7 @@
       "title": "関係・エピソード・説明の対応",
       "category": "表示単位と接続先",
       "status": "renderable",
-      "expectation": "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは関係図では注記になるが、年表だけに隠す指定は未実装。",
+      "expectation": "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは年表・記録に残り、関係図へ自動で注記を出さない。",
       "expectedAcceptance": true,
       "actualAcceptance": true,
       "recordCount": 3,

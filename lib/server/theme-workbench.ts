@@ -2,6 +2,7 @@ import { themeTimeLabel } from "../domain/theme-time";
 import { Pool } from "pg";
 import { createHash, randomUUID, randomBytes } from "node:crypto";
 import { z } from "zod";
+import { isDeepStrictEqual } from "node:util";
 import {
   subsetThemeTimeline,
   themeTimelineIssues,
@@ -179,6 +180,18 @@ export const themeCommand = z.discriminatedUnion("action", [
   }),
   z.strictObject({
     ...base,
+    action: z.literal("capsule-clean-graph"),
+    id: z.uuidv4(),
+    expected: z.number().int(),
+  }),
+  z.strictObject({
+    ...base,
+    action: z.literal("capsule-restore-graph"),
+    id: z.uuidv4(),
+    expected: z.number().int(),
+  }),
+  z.strictObject({
+    ...base,
     action: z.literal("capsule-refresh"),
     id: z.uuidv4(),
     expected: z.number().int(),
@@ -205,12 +218,15 @@ export function themeRecordKeys(
     records.map((r) => [r.id, documentKey(themeId, "record:" + r.id)]),
   );
 }
-export function themeDocument(snapshot: ThemeSnapshot): CapsuleDocument {
+function projectThemeDocument(
+  snapshot: ThemeSnapshot,
+  supportingRecords: boolean,
+): CapsuleDocument {
+  const graphRecords = supportingRecords
+    ? snapshot.records
+    : snapshot.records.filter((r) => r.kind === "relation");
   const used = new Set(
-    snapshot.records.flatMap((r) => [
-      r.subject,
-      ...(r.object ? [r.object] : []),
-    ]),
+    graphRecords.flatMap((r) => [r.subject, ...(r.object ? [r.object] : [])]),
   );
   const nodes = snapshot.entities
     .filter((e) => used.has(e.id))
@@ -219,7 +235,7 @@ export function themeDocument(snapshot: ThemeSnapshot): CapsuleDocument {
       title: e.name,
       description: [
         e.description,
-        ...snapshot.records
+        ...graphRecords
           .filter((r) => r.kind !== "relation" && r.subject === e.id)
           .map(
             (r) =>
@@ -235,7 +251,7 @@ export function themeDocument(snapshot: ThemeSnapshot): CapsuleDocument {
         e.kind === "人物" ? ("circle" as const) : ("round-rectangle" as const),
       origin: { kind: "local" as const },
     }));
-  const relations = snapshot.records
+  const relations = graphRecords
     .filter((r) => r.kind === "relation" && r.object)
     .map((r) => ({
       key: documentKey(snapshot.themeId, "record:" + r.id),
@@ -252,7 +268,7 @@ export function themeDocument(snapshot: ThemeSnapshot): CapsuleDocument {
         ],
       origin: { kind: "local" as const },
     }));
-  const texts = snapshot.records
+  const texts = graphRecords
     .filter((r) => r.kind !== "relation")
     .map((r) => ({
       key: documentKey(snapshot.themeId, "record:" + r.id),
@@ -261,7 +277,7 @@ export function themeDocument(snapshot: ThemeSnapshot): CapsuleDocument {
       width: 420,
       fontSize: 14,
     }));
-  const evidence = snapshot.records.flatMap((r) =>
+  const evidence = graphRecords.flatMap((r) =>
     r.evidence.map((e, i) => ({
       key: documentKey(snapshot.themeId, `evidence:${r.id}:${i}`),
       targetKey: documentKey(
@@ -298,6 +314,87 @@ export function themeDocument(snapshot: ThemeSnapshot): CapsuleDocument {
     unresolvedClaimIds: [],
     layout: { positions, pan: { x: 0, y: 0 }, zoom: 1 },
   });
+}
+
+/** A theme is the source collection; its relationship diagram is one projection.
+ * Non-relational records remain in the timeline/snapshot, not graph annotations. */
+export function themeDocument(snapshot: ThemeSnapshot): CapsuleDocument {
+  return projectThemeDocument(snapshot, false);
+}
+
+/** Explicit owner operation for old saved diagrams. Never rewrites a shared copy.
+ * Authored text, positions, nodes, relationships and description edits are retained. */
+export function themeGraphCleanup(
+  cap: Pick<ThemeCapsule, "snapshot" | "document" | "sourceDocument">,
+) {
+  const before = cap.sourceDocument ?? projectThemeDocument(cap.snapshot, true);
+  const document = structuredClone(cap.document);
+  const supporting = cap.snapshot.records.filter((r) => r.kind !== "relation");
+  const recordKeys = new Set(
+    supporting.map((r) => documentKey(cap.snapshot.themeId, "record:" + r.id)),
+  );
+  let removedTexts = 0,
+    cleanedDescriptions = 0,
+    removedEvidence = 0;
+  document.texts = document.texts.filter((text) => {
+    const old = before.texts.find((t) => t.key === text.key);
+    if (
+      recordKeys.has(text.key) &&
+      old &&
+      isDeepStrictEqual(text, old) &&
+      isDeepStrictEqual(
+        document.layout.positions[text.key],
+        before.layout.positions[text.key],
+      )
+    ) {
+      delete document.layout.positions[text.key];
+      removedTexts++;
+      return false;
+    }
+    return true;
+  });
+  const unchangedDescriptionKeys = new Set<string>();
+  for (const node of document.nodes) {
+    const old = before.nodes.find((n) => n.key === node.key);
+    const entity = cap.snapshot.entities.find(
+      (e) => documentKey(cap.snapshot.themeId, "entity:" + e.id) === node.key,
+    );
+    if (old && entity && node.description === old.description) {
+      unchangedDescriptionKeys.add(node.key);
+      if (node.description !== entity.description) {
+        node.description = entity.description;
+        cleanedDescriptions++;
+      }
+    }
+  }
+  const supportingEvidenceKeys = new Set(
+    supporting.flatMap((r) =>
+      r.evidence.map((_, i) =>
+        documentKey(cap.snapshot.themeId, `evidence:${r.id}:${i}`),
+      ),
+    ),
+  );
+  document.evidence = document.evidence.filter((evidence) => {
+    const old = before.evidence.find((e) => e.key === evidence.key);
+    if (
+      supportingEvidenceKeys.has(evidence.key) &&
+      unchangedDescriptionKeys.has(evidence.targetKey) &&
+      old &&
+      isDeepStrictEqual(evidence, old)
+    ) {
+      removedEvidence++;
+      return false;
+    }
+    return true;
+  });
+  return {
+    document: capsuleDocumentSchema.parse(document),
+    sourceDocument: themeDocument(cap.snapshot),
+    changed: removedTexts + cleanedDescriptions + removedEvidence > 0,
+    removedTexts,
+    cleanedDescriptions,
+    removedEvidence,
+  };
 }
 function conflict(actual: number, expected: number) {
   if (actual !== expected)
@@ -530,7 +627,33 @@ export async function executeThemeCommand(raw: unknown) {
       const cap = s.capsules.find((x) => x.id === cmd.id);
       if (!cap) throw new ThemeError("Capsuleがありません", 404);
       conflict(cap.revision, cmd.expected);
+      if (cmd.action === "capsule-clean-graph") {
+        const cleaned = themeGraphCleanup(cap);
+        if (!cleaned.changed)
+          throw new ThemeError("整理できる自動注記はありません");
+        cap.graphCleanupUndo = {
+          document: structuredClone(cap.document),
+          ...(cap.sourceDocument
+            ? { sourceDocument: structuredClone(cap.sourceDocument) }
+            : {}),
+        };
+        cap.document = cleaned.document;
+        cap.sourceDocument = cleaned.sourceDocument;
+        cap.revision++;
+        cap.updatedAt = now;
+      }
+      if (cmd.action === "capsule-restore-graph") {
+        const undo = cap.graphCleanupUndo;
+        if (!undo) throw new ThemeError("戻せる整理はありません");
+        cap.document = undo.document;
+        if (undo.sourceDocument) cap.sourceDocument = undo.sourceDocument;
+        else delete cap.sourceDocument;
+        delete cap.graphCleanupUndo;
+        cap.revision++;
+        cap.updatedAt = now;
+      }
       if (cmd.action === "capsule-save") {
+        delete cap.graphCleanupUndo;
         cap.title = cmd.title;
         cap.description = cmd.description;
         cap.document = cmd.document;
@@ -592,7 +715,17 @@ export async function executeThemeCommand(raw: unknown) {
               409,
             );
         }
-        const nextDoc = themeDocument(nextSnapshot);
+        // Keep the old projection contract until its owner explicitly cleans it.
+        // A content refresh must not silently remove old annotations or lose the
+        // baseline needed to distinguish them from authored notes later.
+        const legacyProjection = cap.snapshot.records.some(
+          (r) =>
+            r.kind !== "relation" &&
+            oldDoc.texts.some(
+              (text) => text.key === documentKey(t.id, "record:" + r.id),
+            ),
+        );
+        const nextDoc = projectThemeDocument(nextSnapshot, legacyProjection);
         for (const d of diffs) {
           if (d.after && d.before.kind !== d.after.kind)
             throw new ThemeError(
@@ -652,6 +785,7 @@ export async function executeThemeCommand(raw: unknown) {
         cap.document = capsuleDocumentSchema.parse(cap.document);
         cap.snapshot = nextSnapshot;
         cap.sourceDocument = nextDoc;
+        delete cap.graphCleanupUndo;
         cap.revision++;
         cap.updatedAt = now;
       }
@@ -663,7 +797,9 @@ export async function executeThemeCommand(raw: unknown) {
         } else {
           cap.shareToken ??= randomBytes(24).toString("base64url");
           cap.sharedRevision = cap.revision;
-          s.shares[cap.shareToken] = JSON.parse(JSON.stringify(cap));
+          const published = structuredClone(cap);
+          delete published.graphCleanupUndo;
+          s.shares[cap.shareToken] = published;
         }
       }
       result = cap;

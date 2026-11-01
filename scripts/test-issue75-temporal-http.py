@@ -122,11 +122,11 @@ def main():
     graph = request("?theme=" + theme["id"], path="/api/themes/graph")
     check("overlapping dates create neither Graph relations nor implicit inset membership",
           not graph["document"]["relations"]
-          and len(graph["document"]["texts"]) == len(records)
+          and not graph["document"]["texts"] and not graph["document"]["nodes"]
           and stored["timeline"] == package["timeline"])
-    projected_notes = "\n".join(n["description"] for n in graph["document"]["nodes"])
-    check("Graph details preserve distinct time meanings and uncertain endpoints",
-          all(value in projected_notes for value in ["発生時期の幅", "未区別", "1988", "1986", "期間："]))
+    check("timeline-only temporal records stay in their source rather than Graph annotations",
+          not graph["document"]["evidence"]
+          and {r["id"]: r["time"] for r in stored["records"]} == expected_times)
 
     cap = post("capsule-create", themeId=theme["id"], recordIds=artifacts["recordIds"])
     artifacts["capsuleIds"].append(cap["id"])

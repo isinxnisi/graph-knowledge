@@ -5052,7 +5052,7 @@
       "title": "関係・エピソード・説明の対応",
       "category": "表示単位と接続先",
       "status": "renderable",
-      "expectation": "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは関係図では注記になるが、年表だけに隠す指定は未実装。",
+      "expectation": "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは年表・記録に残り、関係図へ自動で注記を出さない。",
       "expectedAcceptance": true,
       "actualAcceptance": true,
       "recordCount": 3,
@@ -5061,7 +5061,7 @@
         "schemaVersion": 1,
         "id": "pattern-record-context",
         "title": "【仮想】関係・エピソード・説明の対応",
-        "description": "すべて架空の検証データ。Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは関係図では注記になるが、年表だけに隠す指定は未実装。",
+        "description": "すべて架空の検証データ。Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは年表・記録に残り、関係図へ自動で注記を出さない。",
         "entities": [
           {
             "id": "artist",
@@ -5097,7 +5097,7 @@
                 "url": "http://localhost:3276/themes/patterns?case=record-context",
                 "title": "仮想ケースの定義",
                 "locator": "record-context / a",
-                "excerpt": "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは関係図では注記になるが、年表だけに隠す指定は未実装。",
+                "excerpt": "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは年表・記録に残り、関係図へ自動で注記を出さない。",
                 "retrievedAt": "2026-11-01T00:00:00Z"
               }
             ]
@@ -5123,7 +5123,7 @@
                 "url": "http://localhost:3276/themes/patterns?case=record-context",
                 "title": "仮想ケースの定義",
                 "locator": "record-context / b",
-                "excerpt": "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは関係図では注記になるが、年表だけに隠す指定は未実装。",
+                "excerpt": "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは年表・記録に残り、関係図へ自動で注記を出さない。",
                 "retrievedAt": "2026-11-01T00:00:00Z"
               }
             ]
@@ -5148,7 +5148,7 @@
                 "url": "http://localhost:3276/themes/patterns?case=record-context",
                 "title": "仮想ケースの定義",
                 "locator": "record-context / c",
-                "excerpt": "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは関係図では注記になるが、年表だけに隠す指定は未実装。",
+                "excerpt": "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは年表・記録に残り、関係図へ自動で注記を出さない。",
                 "retrievedAt": "2026-11-01T00:00:00Z"
               }
             ]
