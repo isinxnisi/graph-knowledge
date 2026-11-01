@@ -1,0 +1,15 @@
+{
+  "oldStateUnchanged": true,
+  "counts": {
+    "shares": 9,
+    "themes": 16,
+    "capsules": 18,
+    "meanings": 4
+  },
+  "hashes": {
+    "shares": "b0a28a3002716a0e483f45809dbfbd32de4be17e9870c528696ecd9ccb1e33bf",
+    "themes": "1a4a745330084de79c688fe377e082f66392e4a2273ce9dc18ff21b197139f1b",
+    "capsules": "01bc7aee45c653d417dbcc863bbb2f089f8a0d56238a01940c8b6a3acfde3d47",
+    "meanings": "73c06a55006309c49a68c22ecdf45078e04444faa362d939e96d8184097b0eac"
+  }
+}

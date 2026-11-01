@@ -485,6 +485,7 @@ export default function ThemeWorkbench({
         <div className={css.actions}>
           {!themeId && !capId && !shareToken && (
             <>
+              <Link href="/themes/records" className={css.button}>共通の記録</Link>
               <button
                 onClick={() => {
                   setRecord(null);

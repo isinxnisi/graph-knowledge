@@ -1,3 +1,5 @@
+2026-11-02、[本運用への統合計画](design/PLUNODE_PRODUCTION_INTEGRATION.md)をユーザーが採用。独立branch／3276で[共通原記録U1](design/KNOWLEDGE_FOUNDATION_U1.md)を実装し、テーマなし登録・共通参照・版固定・旧KG移入・別DB復元・独立Neo4j再投影を検証する。収集の全件管理者承認省略と、利用者投稿のAI審査・修正・通知を分ける。既存main／3200／β／本番・旧Workerへは未統合。[現在の確認先と残件](verification/KNOWLEDGE_FOUNDATION_U1_20261102.md)。以下の公開配置は現在の正式環境の記録。
+
 2026-10-31（現在の配置）、X公式Validatorで確認したCapsule共有ページのrobots巡回禁止を修正し、3200／HTTPS β／正式VPSへWeb更新を反映。アプリ `3a533256`、本番build `gICsYdcWaoj_SCu-Pm6jh`、3200／β build `BnsDx3WQt5OBxWKBlbZJg`。DB000〜019・KG・member-ops・認証設定・AI artifactは保持。正式HTTPで巡回許可・共有meta・PNGを確認したが、X側は反映後も旧拒否を返し、投稿前プレビューの画像表示成功は未確認。検索掲載のnoindexと共有認可を維持。[原因・公開後確認・残件](verification/CAPSULE_X_OGP_20261031.md)。以下は各時点の履歴。
 
 2026-10-31（コメント通報公開時点）、Issue #63のCapsule閲覧・共有・コミュニティ導線とコメント通報を正式サイトへ反映完了。アプリ `d1330ea8`、本番build `1gqqeqXTNSzWUrDAFyWUn`、3200／HTTPS β build `5O8HMYFaPiKps5cRvuky_`、会員DB000〜019。fresh backup・別DB復元・再実行・暗号化backup回収を確認し、実Googleセッションで同URL共有更新・旧版コメント保持・共有停止・条件横断追加・破棄・ごみ箱復元を正式URLで検証した。通報の受付から運営処置はβ、失効境界は隔離PG/OIDCで確認。本線KG・AI artifact・既存認証設定は保持。知識申請は準備中。[最新の配置と確認範囲](verification/CAPSULE_READING_REFINEMENT_20261030.md#2026-10-31-本番反映完了)。以下は各時点の履歴。

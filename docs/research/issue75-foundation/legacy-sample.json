@@ -1,0 +1,651 @@
+{
+  "schemaVersion": 1,
+  "provenance": {
+    "dataset": "public-kg",
+    "release": "publication-8b0b1d67656a15c7e505ba1f",
+    "sourceDataPath": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/public-kg/releases/publication-8b0b1d67656a15c7e505ba1f/data.json",
+    "sourceDataSha256": "908e6f3cc180a004d53cb5a34937daa8ca3ff539788dc35ffd56e496eca12f1b",
+    "sourceManifestSha256": "b54b3ceb0d7c5146bed49fd15b65bc8c0b1f675a15312a8593206706a986834c",
+    "publishedRevision": "f5dbf83f-c89e-4e40-95ee-57957016089f",
+    "publicationEvidence": "docs/research/publication-pipeline-bundle2-20261028/rollout/final-verification.json",
+    "selectedClaimIds": [
+      "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1",
+      "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+      "e84b2f8d-b173-47f9-8511-eb02bc0a2e39",
+      "b6ce3407-e3bb-44c9-867b-7b7434861af5",
+      "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+      "69ed2335-344f-41a6-a17f-77708faa0398"
+    ],
+    "selectedAt": "2026-11-01T15:39:30.584866+00:00",
+    "note": "Published real records; no new fact checking or production DB access. All source claims are affirmed. Negative polarity tests must be separate synthetic cases."
+  },
+  "fixture": {
+    "schemaVersion": 4,
+    "entities": [
+      {
+        "id": "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+        "kind": "work",
+        "name": "童夢",
+        "description": null,
+        "aliases": [
+          "Domu: A Child's Dream"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q1170375"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+        "kind": "person",
+        "name": "ヴェルナー・ハイゼンベルク",
+        "description": "理論物理学者。大学での早期経歴と研究所への訪問を収録。",
+        "aliases": [
+          "Werner Heisenberg"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q40904"
+          }
+        ],
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z",
+        "event": null
+      },
+      {
+        "id": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+        "kind": "event",
+        "name": "第5回ソルヴェイ物理会議（1927）",
+        "description": "ブリュッセルで1927年10月24〜29日に開催された特定回。会議シリーズ全体とは別。",
+        "aliases": [
+          "1927 Solvay Conference",
+          "Fifth Solvay Physics Conference",
+          "Electrons et photons",
+          "第5回ソルヴェイ会議"
+        ],
+        "externalIds": [],
+        "createdAt": "2026-10-05T14:30:00Z",
+        "updatedAt": "2026-10-05T14:30:00Z",
+        "event": {
+          "granularity": "occurrence",
+          "period": {
+            "from": {
+              "value": "1927-10-24",
+              "precision": "day"
+            },
+            "to": {
+              "value": "1927-10-29",
+              "precision": "day"
+            }
+          }
+        }
+      },
+      {
+        "id": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+        "kind": "person",
+        "name": "長崎尚志",
+        "description": "PLUTOのプロデュース、MASTERキートンの脚本、BILLY BATのストーリー共同制作。",
+        "aliases": [
+          "Takashi Nagasaki"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q3514203"
+          }
+        ],
+        "createdAt": "2026-10-03T05:13:37Z",
+        "updatedAt": "2026-10-03T05:13:37Z",
+        "event": null
+      },
+      {
+        "id": "326dd821-2ca6-406a-a683-e424eb534998",
+        "kind": "work",
+        "name": "BILLY BAT",
+        "description": "漫画作品。根拠は講談社の第4巻商品情報。",
+        "aliases": [
+          "Billy Bat"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q594758"
+          }
+        ],
+        "createdAt": "2026-10-03T05:13:37Z",
+        "updatedAt": "2026-10-03T05:13:37Z",
+        "event": null
+      },
+      {
+        "id": "32f5aa9e-1d60-40c9-9ba0-ce12f72cf524",
+        "kind": "person",
+        "name": "ヘンドリック・ローレンツ",
+        "description": "1927年第5回ソルヴェイ物理会議の参加者欄で会議議長と記載。",
+        "aliases": [
+          "Hendrik Lorentz",
+          "H.-A. Lorentz",
+          "ローレンツ"
+        ],
+        "externalIds": [],
+        "createdAt": "2026-10-05T14:30:00Z",
+        "updatedAt": "2026-10-05T14:30:00Z",
+        "event": null
+      },
+      {
+        "id": "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+        "kind": "person",
+        "name": "クリント・イーストウッド",
+        "description": null,
+        "aliases": [
+          "Clint Eastwood",
+          "Clinton \"Clint\" Eastwood, Jr.",
+          "Clinton Eastwood",
+          "Clinton Eastwood Jr.",
+          "Clinton Eastwood, Jr."
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q43203"
+          }
+        ],
+        "createdAt": "2026-10-26T03:49:50.355Z",
+        "updatedAt": "2026-10-26T03:49:50.355Z",
+        "event": null
+      },
+      {
+        "id": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+        "kind": "work",
+        "name": "ミリオンダラー・ベイビー",
+        "description": null,
+        "aliases": [
+          "Million Dollar Baby",
+          "ミリオンダラーベイビー"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q184255"
+          }
+        ],
+        "createdAt": "2026-10-26T03:49:50.355Z",
+        "updatedAt": "2026-10-26T03:49:50.355Z",
+        "event": null
+      },
+      {
+        "id": "8e322435-4318-4ad0-835b-3f71d2537421",
+        "kind": "organization",
+        "name": "ニールス・ボーア研究所",
+        "description": "コペンハーゲン大学の研究所。旧理論物理学研究所を1965年改称。現在名で表示。",
+        "aliases": [
+          "University of Copenhagen Niels Bohr Institute",
+          "Niels-Bohr-Institut",
+          "Niels Bohr Institutet ved Københavns Universitet",
+          "Niels Bohr Institute",
+          "Niels Bohr Institutet",
+          "University Institute of Theoretical Physics",
+          "Institute for Theoretical Physics"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q263761"
+          }
+        ],
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z",
+        "event": null
+      },
+      {
+        "id": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+        "kind": "person",
+        "name": "大友克洋",
+        "description": null,
+        "aliases": [
+          "Katsuhiro Otomo"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q378710"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "d900543a-9c11-48c1-be76-1822b756fcc4",
+        "kind": "person",
+        "name": "浦沢直樹",
+        "description": "漫画家。今回の収録作品：PLUTO、MASTERキートン、BILLY BAT。",
+        "aliases": [
+          "Naoki Urasawa"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q348436"
+          }
+        ],
+        "createdAt": "2026-10-03T05:13:37Z",
+        "updatedAt": "2026-10-03T05:13:37Z",
+        "event": null
+      },
+      {
+        "id": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+        "kind": "person",
+        "name": "手塚治虫",
+        "description": "浦沢直樹がインタビューで影響を受けた漫画家として言及。",
+        "aliases": [
+          "Osamu Tezuka"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q193300"
+          }
+        ],
+        "createdAt": "2026-10-03T05:13:37Z",
+        "updatedAt": "2026-10-03T05:13:37Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1",
+        "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+        "objectId": "326dd821-2ca6-406a-a683-e424eb534998",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-03T15:00:00Z",
+        "updatedAt": "2026-10-03T15:00:00Z",
+        "contribution": {
+          "roleId": "STORY_CO_CREATION",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784063729221",
+            "volumeLabel": "第4巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+        "subjectId": "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+        "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-26T03:49:50.355Z",
+        "updatedAt": "2026-10-26T03:49:50.355Z",
+        "contribution": {
+          "roleId": "DIRECTING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "69ed2335-344f-41a6-a17f-77708faa0398",
+        "subjectId": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+        "objectId": "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784065262634",
+            "volumeLabel": "全集第8巻（童夢）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "b6ce3407-e3bb-44c9-867b-7b7434861af5",
+        "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+        "objectId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+        "predicate": "INFLUENCED_BY",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-03T05:13:37Z",
+        "updatedAt": "2026-10-03T05:13:37Z",
+        "contribution": null,
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+        "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+        "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+        "predicate": "AFFILIATED_WITH",
+        "polarity": "affirmed",
+        "period": {
+          "from": {
+            "value": "1924",
+            "precision": "year"
+          },
+          "to": {
+            "value": "1925",
+            "precision": "year"
+          }
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-05T12:14:06.652778Z",
+        "updatedAt": "2026-10-05T12:14:06.652778Z",
+        "contribution": null,
+        "organizationParticipation": {
+          "positionId": "VISITOR"
+        },
+        "eventParticipation": null
+      },
+      {
+        "id": "e84b2f8d-b173-47f9-8511-eb02bc0a2e39",
+        "subjectId": "32f5aa9e-1d60-40c9-9ba0-ce12f72cf524",
+        "objectId": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+        "predicate": "PARTICIPATED_IN",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-05T14:30:00Z",
+        "updatedAt": "2026-10-05T14:30:00Z",
+        "contribution": null,
+        "organizationParticipation": null,
+        "eventParticipation": {
+          "roleId": "CHAIR"
+        }
+      }
+    ],
+    "sources": [
+      {
+        "id": "068ea87c-f422-4f69-b61f-5fc6da8836a2",
+        "kind": "web",
+        "title": "童夢 — 講談社",
+        "authors": [],
+        "publisher": "講談社",
+        "url": "https://www.kodansha.co.jp/comic/products/0000359052",
+        "publishedAt": null,
+        "edition": null,
+        "note": "公式資料の必要な書誌・担当表記のみ。本文・画像・あらすじを転載しない。正式受入済みの追加根拠。",
+        "isDemo": false
+      },
+      {
+        "id": "13bb6182-df5f-4cf7-871d-18f2b605ec4b",
+        "kind": "interview",
+        "title": "関弁連がゆく：浦沢直樹さん インタビュー",
+        "authors": [],
+        "publisher": "関東弁護士会連合会",
+        "url": "https://www.kanto-ba.org/series/211/",
+        "publishedAt": null,
+        "edition": null,
+        "note": "本人インタビュー。記載の2025年8月8日は取材日であり、公開日・影響を受けた期間ではありません。",
+        "isDemo": false
+      },
+      {
+        "id": "3d8bfd32-31fd-4e8a-aff6-7b7fb80265c0",
+        "kind": "web",
+        "title": "Werner Heisenberg",
+        "authors": [],
+        "publisher": "Niels Bohr Institute / University of Copenhagen",
+        "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/werner_heisenberg/",
+        "publishedAt": {
+          "value": "2010-06-02",
+          "precision": "day"
+        },
+        "edition": null,
+        "note": "原資料本文の言語：en。1924–25のVisitorと1926–27の別役職を列記。今回Visitorのみ受入。",
+        "isDemo": false
+      },
+      {
+        "id": "4d414446-24d5-42c1-942f-7a968e04d466",
+        "kind": "web",
+        "title": "Conferences archives — Physics 1927",
+        "authors": [],
+        "publisher": "International Solvay Institutes",
+        "url": "https://solvayinstitutes.be/home/archives/conferences-archives/",
+        "publishedAt": null,
+        "edition": null,
+        "note": "主催機関の現行索引。1927年5thとchairを明記。ページ公開日不明、URLのupload年は1927年の開催日ではない。",
+        "isDemo": false
+      },
+      {
+        "id": "54461ad1-e977-4b68-a2bf-7f972ff29002",
+        "kind": "web",
+        "title": "Million Dollar Baby — AFI Catalog",
+        "authors": [],
+        "publisher": "American Film Institute",
+        "url": "https://catalog.afi.com/Catalog/moviedetails/54369",
+        "publishedAt": null,
+        "edition": null,
+        "note": "映画作品クレジットの候補資料。版・地域・言語への適用は未構造化。",
+        "isDemo": false
+      },
+      {
+        "id": "5756c883-e9e9-45eb-8caa-f85c91cc7f45",
+        "kind": "book",
+        "title": "Électrons et photons : rapports et discussions du cinquième Conseil de physique",
+        "authors": [],
+        "publisher": "Institut international de physique Solvay / Gauthier-Villars / ULB digitisation",
+        "url": "https://solvayinstitutes.be/wp-content/uploads/2025/10/Proceedings-Physics-1927.pdf",
+        "publishedAt": {
+          "value": "1928",
+          "precision": "year"
+        },
+        "edition": null,
+        "note": "1928年議事録のULBデジタル複製を主催機関が配信。PDF第1頁APA/ULB来歴、第2頁title、12/13頁参加・欠席。開催は24–29Oct1927、URL2025/10は開催・出版日ではない。W.H.BraggとW.L.Braggを別人物と読む。",
+        "isDemo": false
+      },
+      {
+        "id": "699c3147-79e2-43c8-8c08-9369eab559fa",
+        "kind": "web",
+        "title": "講談社：BILLY BAT 第4巻 商品情報",
+        "authors": [],
+        "publisher": "講談社",
+        "url": "https://www.kodansha.co.jp/comic/products/0000014047",
+        "publishedAt": null,
+        "edition": "BILLY BAT 第4巻",
+        "note": "出版社のWeb商品情報を確認。書籍本文は未確認。発売日はWeb公開日や制作関与期間ではありません。",
+        "isDemo": false
+      },
+      {
+        "id": "ef3aa8c2-d2ba-48a0-a724-20b8eac18a31",
+        "kind": "web",
+        "title": "NDLサーチ: OTOMO THE COMPLETE WORKS. 8",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I031906385",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "021f7c10-51a9-4f61-af63-d5efd8488a14",
+        "claimId": "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+        "sourceId": "3d8bfd32-31fd-4e8a-aff6-7b7fb80265c0",
+        "locator": "Werner Heisenberg見出し直下、Niels Bohr Institute行",
+        "note": "NBIの資料がVisitorとして1924–25に関与したと記す。雇用種別を認定しない。 期間原表記：1924-25。対象はこの研究所への資料記載の関与。日本の客員職・有給・専任を保証しない。 資料が記すNBIでの立場と各期間に限定。既存広いClaimの受入だけから立場を自動構造化していない。 同じSourceからの限定付き主張であり独立した新しい根拠ではない。Sourceの「今回Visitorのみ受入」はv1の収集履歴。v2では2立場を個別に受け入れている。",
+        "accessedAt": "2026-10-05",
+        "stance": "support",
+        "roleEvidence": null,
+        "positionEvidence": {
+          "originalText": "Visitor",
+          "language": "en"
+        },
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "2d1e9423-8a0f-4106-9f26-5d52a075200c",
+        "claimId": "b6ce3407-e3bb-44c9-867b-7b7434861af5",
+        "sourceId": "13bb6182-df5f-4cf7-871d-18f2b605ec4b",
+        "locator": "「当時から今のような絵柄でしたか」という質問への本人回答",
+        "note": "役割・内容：絵のタッチへの影響。確認範囲：絵のタッチに関する本人回答。影響の強さ・全創作への影響・開始終了時期は断定しません。 本人が影響を受けた人物を明示。作品から作者への推測ではない。",
+        "accessedAt": "2026-10-03",
+        "stance": "support",
+        "roleEvidence": null,
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "6b09ad9a-d643-46bb-9e8d-fd600a9d5f90",
+        "claimId": "69ed2335-344f-41a6-a17f-77708faa0398",
+        "sourceId": "ef3aa8c2-d2ba-48a0-a724-20b8eac18a31",
+        "locator": "dc:creator（責任表示） / ISBN 9784065262634",
+        "note": "原表記（ja）: 大友克洋 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "大友克洋 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "7c831c01-8513-4ce2-ad79-e670a6f54b16",
+        "claimId": "e84b2f8d-b173-47f9-8511-eb02bc0a2e39",
+        "sourceId": "4d414446-24d5-42c1-942f-7a968e04d466",
+        "locator": "Physics > 1927 > 5th",
+        "note": "特定会議のchair。 1927年特定回、会議議長。series全回の役職でも全日程の出席保証でもない。 開催期間原表記：索引は開催年のみ。Eventの期間であり人物の全日程出席を保証しない。会議議長としての参加。 Lorentzの広い参加と議長参加は同じ資料事実の別粒度であり独立した根拠数を意味しない。",
+        "accessedAt": "2026-10-05",
+        "stance": "support",
+        "roleEvidence": null,
+        "positionEvidence": null,
+        "eventParticipationEvidence": {
+          "originalText": "Chair",
+          "language": "en"
+        }
+      },
+      {
+        "id": "8a6fe8f5-f3b3-4d08-8ad9-60eae3f8a583",
+        "claimId": "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+        "sourceId": "54461ad1-e977-4b68-a2bf-7f972ff29002",
+        "locator": "CREDITS / PRODUCTION CREDITS / DIRECTORS / Clint Eastwood / Dir",
+        "note": "原語は選択した人物別credit行。資料採録時点の候補記録であり、現在の語彙採用・Claim受入状態は正式catalog／receiptを参照。",
+        "accessedAt": "2026-10-26",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Dir",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "c9248d87-f3e6-4ce4-9140-12279fc83004",
+        "claimId": "69ed2335-344f-41a6-a17f-77708faa0398",
+        "sourceId": "068ea87c-f422-4f69-b61f-5fc6da8836a2",
+        "locator": "書名・著者欄／紙版ISBN／目次「童夢」",
+        "note": "当該ISBNの書名・著者・収録作品を支持。NDLの別タイトル／内容細目も童夢。scopeは全集第8巻（童夢）であり、漫画第8巻・全全集・旧版を意味しない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "著： 大友 克洋",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "ef69e88a-9351-4a14-a6ec-db4f4eec0bdc",
+        "claimId": "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1",
+        "sourceId": "699c3147-79e2-43c8-8c08-9369eab559fa",
+        "locator": "タイトル直下のクレジット・内容紹介末尾",
+        "note": "v1の広いClaim 1ad08ee5-bbc3-41bf-b647-4b7419820a14 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+        "accessedAt": "2026-10-03",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "ストーリー共同制作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "f49d6fde-edfb-4867-a331-07ebebf67502",
+        "claimId": "e84b2f8d-b173-47f9-8511-eb02bc0a2e39",
+        "sourceId": "5756c883-e9e9-45eb-8caa-f85c91cc7f45",
+        "locator": "PDF第12ページ／印刷p.VII、Lorentz行",
+        "note": "参加者のPrésidentとして記載。 1927年特定回、会議議長。series全回の役職でも全日程の出席保証でもない。 開催期間原表記：24 au 29 octobre 1927（会議の期間）。Eventの期間であり人物の全日程出席を保証しない。会議議長としての参加。 Lorentzの広い参加と議長参加は同じ資料事実の別粒度であり独立した根拠数を意味しない。",
+        "accessedAt": "2026-10-05",
+        "stance": "support",
+        "roleEvidence": null,
+        "positionEvidence": null,
+        "eventParticipationEvidence": {
+          "originalText": "Président",
+          "language": "fr"
+        }
+      }
+    ]
+  },
+  "claimOrigins": [
+    {
+      "claimId": "b6ce3407-e3bb-44c9-867b-7b7434861af5",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "b6ce3407-e3bb-44c9-867b-7b7434861af5"
+    },
+    {
+      "claimId": "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1"
+    },
+    {
+      "claimId": "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "e71f548b-65c2-4032-a40f-342ab75b5d3e"
+    },
+    {
+      "claimId": "e84b2f8d-b173-47f9-8511-eb02bc0a2e39",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "e84b2f8d-b173-47f9-8511-eb02bc0a2e39"
+    },
+    {
+      "claimId": "69ed2335-344f-41a6-a17f-77708faa0398",
+      "dataset": "manga-r0003-accepted",
+      "sourceClaimId": "69ed2335-344f-41a6-a17f-77708faa0398"
+    },
+    {
+      "claimId": "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+      "dataset": "film-workflow-accepted",
+      "sourceClaimId": "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "checks": [
+    "local read",
+    "private cache boundary",
+    "not indexed",
+    "real legacy sample",
+    "server actor cannot be selected in input",
+    "cross-origin write rejected",
+    "missing origin rejected",
+    "wrong host rejected",
+    "invalid JSON preserves state",
+    "input limit enforced",
+    "two themes share a stable record",
+    "only theme A reflects revision 2",
+    "theme B retains citation",
+    "relation correction visible in diff",
+    "observed diff token present",
+    "rejected requests changed no objects"
+  ],
+  "passed": 16,
+  "recordId": "b9227b17-ef7d-4a1c-b33f-2bc7078e4425",
+  "themes": {
+    "updated": "4f0cfe62-7637-4954-af49-7a4f9f6bf301",
+    "fixed": "40f86a59-a5ef-40b7-b296-3c6ef05de222"
+  },
+  "writes": 0
+}

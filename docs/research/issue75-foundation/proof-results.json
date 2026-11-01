@@ -1,0 +1,154 @@
+{
+  "startedAt": "2026-11-01T16:01:36.804Z",
+  "source": "six-real-published-claims",
+  "mainBetaProductionUntouched": true,
+  "completed": true,
+  "legacy": {
+    "sampleSha256": "0a5186237e063bae4362885158ec3586653e21db8b530d66b646e87ca6053796",
+    "sourceDataSha256": "908e6f3cc180a004d53cb5a34937daa8ca3ff539788dc35ffd56e496eca12f1b",
+    "claimIds": [
+      "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1",
+      "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+      "69ed2335-344f-41a6-a17f-77708faa0398",
+      "b6ce3407-e3bb-44c9-867b-7b7434861af5",
+      "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+      "e84b2f8d-b173-47f9-8511-eb02bc0a2e39"
+    ],
+    "entities": 12,
+    "records": 6,
+    "sources": 8,
+    "citations": 8,
+    "warnings": [],
+    "sampleComparedToPublishedPackage": true,
+    "immutableLinks": true,
+    "typedPayloadRoundTrip": true,
+    "oldTheme75Unchanged": true,
+    "idempotentImport": true
+  },
+  "database": {
+    "migration": {
+      "name": "001-records.sql",
+      "checksum": "efa53919c3529edb48b5ae1ef5ffb10b77716a81773a42af8be404f02fe87e69",
+      "applied": false
+    },
+    "repeatedUnchanged": true,
+    "checksumMismatchRejected": true,
+    "restoredDatabase": "plunode_knowledge75_restore_1793548916851",
+    "dumpSha256": "8eab343e9681499c3c77d506c4e3ecf2b345d2828972a44ec3ad7bc4373b4544",
+    "dumpBytes": 325263,
+    "sourceFingerprint": {
+      "knowledge75.changes": {
+        "rows": 33,
+        "sha256": "9b0d01f2871694ee43edcf93f5c0775e53e4893d9bb7737d1f3ecca03c03825e"
+      },
+      "knowledge75.concepts": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "knowledge75.legacy_links": {
+        "rows": 6,
+        "sha256": "d3c1a9b1bcae642c533fcc2ca2af6b06f079feef010c8bf9ec730515179d27e2"
+      },
+      "knowledge75.migrations": {
+        "rows": 1,
+        "sha256": "ed1ee791cb0b569323fbc646ccd1e651e0845250a5048fa7a34014df51cf7bea"
+      },
+      "knowledge75.objects": {
+        "rows": 32,
+        "sha256": "e1759f15dbff5cf193577859f2a4c9809b05185202593ad44aae1a6e3201a2bf"
+      },
+      "knowledge75.operations": {
+        "rows": 5,
+        "sha256": "3284c4e547da3bec9b8565fc2ad5be7591550ad2f541d18765d1e292b55e1e24"
+      },
+      "knowledge75.published_revisions": {
+        "rows": 33,
+        "sha256": "39bd4efdc1f87367702a39b6434a3aa876165e619a6846070e08347d46bf3646"
+      },
+      "knowledge75.revisions": {
+        "rows": 33,
+        "sha256": "0e4bef3182c49c4a2cead1b335de251dfe6d8658a140389aeced882c158df9a9"
+      },
+      "theme75.events": {
+        "rows": 195,
+        "sha256": "f48d8f803bcefe68678652bb0acef9aec9cc94f993f260d1dcaed9c3d00445da"
+      },
+      "theme75.receipts": {
+        "rows": 192,
+        "sha256": "75430fa7cd9476e33515a3909a93bb427b0d26674e148ec0c785be124ead21f6"
+      },
+      "theme75.state": {
+        "rows": 1,
+        "sha256": "01d9a12441c816753e43b34a4ae04d843766cf3e1bb8b17140e92a5d8df00d16"
+      }
+    },
+    "restoredFingerprint": {
+      "knowledge75.changes": {
+        "rows": 33,
+        "sha256": "9b0d01f2871694ee43edcf93f5c0775e53e4893d9bb7737d1f3ecca03c03825e"
+      },
+      "knowledge75.concepts": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "knowledge75.legacy_links": {
+        "rows": 6,
+        "sha256": "d3c1a9b1bcae642c533fcc2ca2af6b06f079feef010c8bf9ec730515179d27e2"
+      },
+      "knowledge75.migrations": {
+        "rows": 1,
+        "sha256": "ed1ee791cb0b569323fbc646ccd1e651e0845250a5048fa7a34014df51cf7bea"
+      },
+      "knowledge75.objects": {
+        "rows": 32,
+        "sha256": "e1759f15dbff5cf193577859f2a4c9809b05185202593ad44aae1a6e3201a2bf"
+      },
+      "knowledge75.operations": {
+        "rows": 5,
+        "sha256": "3284c4e547da3bec9b8565fc2ad5be7591550ad2f541d18765d1e292b55e1e24"
+      },
+      "knowledge75.published_revisions": {
+        "rows": 33,
+        "sha256": "39bd4efdc1f87367702a39b6434a3aa876165e619a6846070e08347d46bf3646"
+      },
+      "knowledge75.revisions": {
+        "rows": 33,
+        "sha256": "0e4bef3182c49c4a2cead1b335de251dfe6d8658a140389aeced882c158df9a9"
+      },
+      "theme75.events": {
+        "rows": 195,
+        "sha256": "f48d8f803bcefe68678652bb0acef9aec9cc94f993f260d1dcaed9c3d00445da"
+      },
+      "theme75.receipts": {
+        "rows": 192,
+        "sha256": "75430fa7cd9476e33515a3909a93bb427b0d26674e148ec0c785be124ead21f6"
+      },
+      "theme75.state": {
+        "rows": 1,
+        "sha256": "01d9a12441c816753e43b34a4ae04d843766cf3e1bb8b17140e92a5d8df00d16"
+      }
+    },
+    "restoredExactly": true,
+    "correctionsOnlyInRestoredDatabase": true
+  },
+  "projection": {
+    "image": "sha256:da584bdd8f0d2bdcf3dbd0e5232db1547d17d1b6daba12308322ceceeae47d69",
+    "container": "plunode-issue75-p0-neo4j",
+    "generations": {
+      "original": "f9457d50-fb51-488f-9f85-ec285fb10a56-original",
+      "corrected": "f9457d50-fb51-488f-9f85-ec285fb10a56-corrected",
+      "hidden": "f9457d50-fb51-488f-9f85-ec285fb10a56-hidden",
+      "rejected": "f9457d50-fb51-488f-9f85-ec285fb10a56-failed",
+      "rebuilt": "f9457d50-fb51-488f-9f85-ec285fb10a56-rebuilt"
+    },
+    "originalRecords": 6,
+    "hiddenRecords": 5,
+    "oldGenerationPreserved": true,
+    "failedActivationPreservesActive": true,
+    "repeatUnchanged": true,
+    "rebuiltFromPg": true,
+    "legacyLinkStaysAtRevision1": true
+  },
+  "durationMs": 176697,
+  "neo4jStoppedAndRetained": true
+}

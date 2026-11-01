@@ -1,4 +1,6 @@
-- 本運用への統合計画（2026-11-02、採用待ち）：[完成目標・#63/#74/#75の分担・工程](design/PLUNODE_PRODUCTION_INTEGRATION.md)／[Solへ渡す実装単位と次の依頼](design/PLUNODE_PRODUCTION_HANDOFF.md)／[調査・文書検証](verification/PLUNODE_PRODUCTION_PLAN_20261102.md)。収集結果の管理者承認省略と、利用者投稿のAI審査・状態表示を分ける。今回は文書のみで、main・3276・3200・β・本番・Workerの実行環境は変更しない。
+- 共通原記録U1（2026-11-02）：[契約](design/KNOWLEDGE_FOUNDATION_U1.md)／[実装・実KG・復元と再投影・操作検証](verification/KNOWLEDGE_FOUNDATION_U1_20261102.md)。[確認画面](http://localhost:3276/themes/records)でテーマなし登録・複数テーマ参照・訂正と明示反映を確認できる。既存16テーマ・18Capsule・9共有は保持。作業branchと3276のみで、main・3200・β・本番は未統合。
+
+- 本運用への統合計画（2026-11-02、採用・U1着手）：[完成目標・#63/#74/#75の分担・工程](design/PLUNODE_PRODUCTION_INTEGRATION.md)／[実装単位と引継ぎ](design/PLUNODE_PRODUCTION_HANDOFF.md)／[計画作成時の調査](verification/PLUNODE_PRODUCTION_PLAN_20261102.md)。収集結果の管理者承認省略と、利用者投稿のAI審査・状態表示を分ける。後続はU2の公開検索・新Graph投影の接続。
 
 - Issue #75 独立初版のレビュー：[実装の評価・旧継続順序](design/THEME_FOUNDATION_NEXT.md)／[修正と検証](verification/THEME_FOUNDATION_REVIEW_20261101.md)。次の着手順は上記統合計画を優先し、名称訂正だけを先に進める旧依頼は使わない。年表同士の比較・マージと、正式な画面構成の採用は別の未決事項。
 
