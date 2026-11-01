@@ -2,6 +2,7 @@ import {
   themeGuard,
   themeState,
   themeDocument,
+  themeRecordKeys,
 } from "../../../../lib/server/theme-workbench";
 export async function GET(req: Request) {
   try {
@@ -22,6 +23,7 @@ export async function GET(req: Request) {
         createdAt: t.createdAt,
         entityIds: [],
         claimIds: [],
+        recordKeys: themeRecordKeys(t.id, t.records),
         document: themeDocument({
           themeId: t.id,
           themeRevision: t.revision,

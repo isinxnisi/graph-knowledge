@@ -21,7 +21,7 @@ import { ClaimCard } from "./ClaimDetails";
 import Icon from "./Icon";
 import css from "./CapsuleStudio.module.css";
 
-type Props = { allowKgSearch?: boolean; allowCopySave?: boolean; onEditingChange?: (editing: boolean) => void; capsule: LocalCapsule; isNew?: boolean; startEditing?: boolean; byline?: ReactNode; onEditRequest?: (view:LocalCapsule)=>void; readOnly?: boolean; destination?: string; onClose?: () => void; onSave?: (value: LocalCapsule, asCopy: boolean) => Promise<LocalCapsule>; sharing?: ReactNode; commentDraft?: { hasDraft: () => boolean; hasPending: () => boolean; clear: () => void }; locked?: boolean; capacity?: { documents: boolean; storageBytes: number; totalBytes: number } | null };
+type Props = { externalFocus?: Selection; onFocusKey?: (key: string) => void; allowKgSearch?: boolean; allowCopySave?: boolean; onEditingChange?: (editing: boolean) => void; capsule: LocalCapsule; isNew?: boolean; startEditing?: boolean; byline?: ReactNode; onEditRequest?: (view:LocalCapsule)=>void; readOnly?: boolean; destination?: string; onClose?: () => void; onSave?: (value: LocalCapsule, asCopy: boolean) => Promise<LocalCapsule>; sharing?: ReactNode; commentDraft?: { hasDraft: () => boolean; hasPending: () => boolean; clear: () => void }; locked?: boolean; capacity?: { documents: boolean; storageBytes: number; totalBytes: number } | null };
 
 type Comparison = { key: string; state: "same" | "changed" | "missing" | "failed"; entity?: EntityDetail; claim?: ClaimDetail; revision?: string | null; neighborhood?: CapsuleNeighborhoodComparison };
 const noAction = () => {};
@@ -41,7 +41,7 @@ function sameEditingValue(left: LocalCapsule, right: LocalCapsule) {
     && keys.every(key => b.positions[key] && Math.abs(a.positions[key].x-b.positions[key].x) <= .0001 && Math.abs(a.positions[key].y-b.positions[key].y) <= .0001);
 }
 
-export default function CapsuleStudio({ allowKgSearch = true, allowCopySave = true, onEditingChange, capsule, isNew = false, startEditing=false, byline, onEditRequest, readOnly = false, destination, onClose, onSave, sharing, commentDraft, capacity, locked = false }: Props) {
+export default function CapsuleStudio({ externalFocus, onFocusKey, allowKgSearch = true, allowCopySave = true, onEditingChange, capsule, isNew = false, startEditing=false, byline, onEditRequest, readOnly = false, destination, onClose, onSave, sharing, commentDraft, capacity, locked = false }: Props) {
   const { locale } = useUiLocale();
   const t = (ja: string, en: string) => locale === "en" ? en : ja;
   const evidenceSupports = { identity: t("対象の同定", "Identity"), name: t("名称", "Name"), description: t("説明・属性", "Description / attribute"), relation: t("この関係", "This relation") };
@@ -94,6 +94,18 @@ export default function CapsuleStudio({ allowKgSearch = true, allowCopySave = tr
   },[]);
   const value = history.present, contentDocument = value.document!;
   const presentation = useMemo(() => capsulePresentation(contentDocument, locale), [contentDocument, locale]);
+  useEffect(() => {
+    if (editing || locked || externalFocus === undefined) return;
+    if (externalFocus && ![...contentDocument.nodes, ...contentDocument.relations, ...contentDocument.texts].some(item => item.key === externalFocus.id)) return;
+    let active = true;
+    queueMicrotask(() => {
+      if (!active) return;
+      setSelection(externalFocus);
+      setSelected(externalFocus ? [externalFocus.id] : []);
+      if (externalFocus) canvas.current?.focusElements?.(externalFocus.id);
+    });
+    return () => { active = false; };
+  }, [externalFocus, editing, locked, contentDocument]);
   const graph = useMemo(() => emptyGraph(generation), [generation]);
   const view = useMemo(() => ({ generation, view: suspendedView?.generation === generation ? suspendedView.view : capsuleGraphView(contentDocument.layout) }), [generation, contentDocument.layout, suspendedView]);
   const current = () => withCapsuleView(historyRef.current.present, canvas.current?.capture() ?? null);
@@ -431,7 +443,7 @@ export default function CapsuleStudio({ allowKgSearch = true, allowCopySave = tr
         </div>
         {selection && <div className={css.selectionTools}><span>{selected.length > 1 ? t(`${selected.length}要素`, `${selected.length} elements`) : node?.title ?? (text ? t("テキスト", "Text") : t("関係", "Relation"))}</span>{editing && <button aria-label={t("選択対象の操作", "Selection actions")} title={t("選択対象の操作", "Selection actions")} onClick={event => { const rect = event.currentTarget.getBoundingClientRect(); setMenu({kind:selection.kind === "relation" ? "edge" : "node",id:selection.id,selectedKeys:selected,clientX:rect.left,clientY:rect.bottom+6,position:canvas.current?.capture()?.center ?? {x:0,y:0},source:"keyboard"}); }}><Icon name="more"/></button>}<button aria-label={t("選択の詳細", "Selection details")} onClick={() => setInspector(true)}><Icon name="panel"/></button></div>}
         <div className={css.graph}><GraphCanvas ref={bindCanvas} interactionBlocked={saving} fillHeight compactGuide contentOnly graph={graph} content={presentation} restoration={view} selection={selection} selectedKeys={selected} onSelectionChange={ids => { setSelected(ids); if (!ids.length) setSelection(null); }}
-          onEntity={id => { setSelection({kind:"entity",id}); setComparison(null); }} onRelation={id => { setSelection({kind:"relation",id}); setComparison(null); }} onToggleEntity={noAction}
+          onEntity={id => { setSelection({kind:"entity",id}); setComparison(null); onFocusKey?.(id); }} onRelation={id => { setSelection({kind:"relation",id}); setComparison(null); onFocusKey?.(id); }} onToggleEntity={noAction}
           onEntityDoubleClick={id => { if (editing && !busy) editSelected(id); else setInspector(true); }} onRelationDoubleClick={id => { if (editing && !busy) editSelected(id); else setInspector(true); }}
           onMove={(before: GraphView, after: GraphView) => { if (editing) setHistory(h => recordCapsule({...h,present:withCapsuleView(h.present,before)},withCapsuleView(h.present,after))); }}
           onViewChange={() => { if (!editing) return; const now = canvas.current?.capture(), baseline = beforeEdit.capsule.document?.layout; if (now && baseline) { const center = baseline.center; setViewChanged(Math.abs(now.zoom-baseline.zoom) > .0001 || !!center && !!now.center && (Math.abs(center.x-now.center.x) > .5 || Math.abs(center.y-now.center.y) > .5)); } }}

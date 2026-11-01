@@ -1,0 +1,13 @@
+{
+  "archivedThemeIds": [
+    "timeline-check-3dc57d6f15",
+    "regression-5aea531d70"
+  ],
+  "removedCapsules": 5,
+  "themes": 4,
+  "capsules": 4,
+  "userDataPreserved": true,
+  "backupFile": "timeline-after-checks-20261101T060725Z.dump",
+  "backupSha256": "19d01c37158e74d8819bf1a07f9d2aae0e9d71665b9966a6ed6a31bd6bb61047",
+  "restoration": "Archive event retains complete pre-cleanup state; earlier database restore rehearsal unchanged."
+}

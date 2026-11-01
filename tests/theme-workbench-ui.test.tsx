@@ -153,6 +153,12 @@ it("shows the actual old and new evidence for an evidence-only Capsule correctio
     shareToken: null,
     sharedRevision: null,
     snapshot: { themeId: "t", themeRevision: 1, entities, records: [record] },
+    document: {
+      nodes: [],
+      relations: [],
+      texts: [],
+      layout: { positions: {}, pan: { x: 0, y: 0 }, zoom: 1 },
+    },
   };
   vi.stubGlobal(
     "fetch",
@@ -177,4 +183,47 @@ it("shows the actual old and new evidence for an evidence-only Capsule correctio
   expect(details.textContent).toContain("https://new.example.org/evidence");
   expect(details.textContent).toContain("原資料での記載");
   expect(details.textContent).toContain("訂正した資料の記載");
+});
+
+it("lets a correction explicitly detach a date from its configured timeline", async () => {
+  let submitted:
+    | { record: typeof record; detachTimelinePlacement: boolean }
+    | undefined;
+  const timeline = {
+    version: 1,
+    axes: [{ id: "dates", kind: "calendar", label: "年表" }],
+    placements: [{ recordId: "r", axisId: "dates" }],
+    insets: [],
+  };
+  vi.stubGlobal(
+    "fetch",
+    vi.fn((url: string, options?: RequestInit) => {
+      if (options?.method === "POST")
+        submitted = JSON.parse(String(options.body));
+      return Promise.resolve({
+        ok: true,
+        json: async () =>
+          url.startsWith("/api/themes/graph")
+            ? { revision: 1 }
+            : { ...base, entities, records: [record], timeline },
+      });
+    }),
+  );
+  render(<ThemeWorkbench themeId="t" />);
+  await screen.findByText("図の版 1");
+  fireEvent.click(screen.getByRole("button", { name: "記録と根拠" }));
+  fireEvent.click(screen.getByRole("button", { name: "訂正" }));
+  fireEvent.change(screen.getByLabelText("時点／開始（年・年月・年月日）"), {
+    target: { value: "" },
+  });
+  fireEvent.click(screen.getByLabelText("この記録の年表配置を外して訂正する"));
+  fireEvent.change(screen.getByLabelText("訂正の理由"), {
+    target: { value: "年代が未確定と判明" },
+  });
+  fireEvent.submit(
+    screen.getByRole("button", { name: "訂正を保存" }).closest("form")!,
+  );
+  await waitFor(() => expect(submitted).toBeDefined());
+  expect(submitted?.record.time).toBeNull();
+  expect(submitted?.detachTimelinePlacement).toBe(true);
 });

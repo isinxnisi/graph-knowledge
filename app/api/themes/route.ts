@@ -5,6 +5,7 @@ import {
   themeState,
   executeThemeCommand,
   ThemeError,
+  themeRecordKeys,
 } from "../../../lib/server/theme-workbench";
 import {
   themeRecordSearchText,
@@ -55,11 +56,20 @@ export async function GET(req: Request) {
           : undefined;
       if (!result)
         throw new ThemeError("この共有は停止済み、または見つかりません", 404);
+      const sharedCap = s.shares[shared];
+      result = {
+        ...sharedCap,
+        recordKeys: themeRecordKeys(
+          sharedCap.snapshot.themeId,
+          sharedCap.snapshot.records,
+        ),
+      };
     } else if (capsule) {
       const cap = s.capsules.find((c) => c.id === capsule);
       if (!cap) throw new ThemeError("Capsuleがありません", 404);
       result = {
         capsule: cap,
+        recordKeys: themeRecordKeys(cap.snapshot.themeId, cap.snapshot.records),
         diff: themeDiff(
           cap.snapshot,
           s.themes.find((t) => t.id === cap.snapshot.themeId)!,

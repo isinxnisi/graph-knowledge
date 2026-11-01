@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { CapsuleDocument } from "./capsule-document";
+import { themeTimelineIssues } from "./theme-timeline";
 
 const id = z
   .string()
@@ -89,6 +90,24 @@ export const themeConceptSchema = z.strictObject({
   label: short,
   definition: z.string().trim().min(1).max(4000),
 });
+export const themeTimelineSchema = z.strictObject({
+  version: z.literal(1),
+  axes: z
+    .array(
+      z.strictObject({
+        id,
+        kind: z.enum(["calendar", "cycle", "qualitative"]),
+        label: short,
+        order: z.array(short).min(1).max(400).optional(),
+        originLabel: short.optional(),
+      }),
+    )
+    .max(32),
+  placements: z.array(z.strictObject({ recordId: id, axisId: id })).max(400),
+  insets: z
+    .array(z.strictObject({ parentRecordId: id, axisId: id, label: short }))
+    .max(32),
+});
 export const themeRecordInputSchema = z
   .strictObject({
     id,
@@ -117,6 +136,7 @@ export const themePackageSchema = z
     description: z.string().max(8000),
     entities: z.array(themeEntitySchema).min(1).max(200),
     records: z.array(themeRecordInputSchema).min(1).max(400),
+    timeline: themeTimelineSchema.optional(),
     mappings: z
       .array(
         z.strictObject({
@@ -150,6 +170,12 @@ export const themePackageSchema = z
           code: "custom",
           message: "意味対応の対象記録がありません",
         });
+    for (const issue of themeTimelineIssues(p.records, p.timeline))
+      c.addIssue({
+        code: "custom",
+        path: ["timeline", ...issue.path],
+        message: issue.message,
+      });
   });
 export type ThemeEntity = z.infer<typeof themeEntitySchema>;
 export type ThemeEvidence = z.infer<typeof themeEvidenceSchema> & {
@@ -157,6 +183,7 @@ export type ThemeEvidence = z.infer<typeof themeEvidenceSchema> & {
 };
 export type ThemeTime = z.infer<typeof themeTimeSchema>;
 export type ThemeConcept = z.infer<typeof themeConceptSchema>;
+export type ThemeTimelineConfig = z.infer<typeof themeTimelineSchema>;
 export type ThemeRecordInput = z.input<typeof themeRecordInputSchema>;
 export type ThemePackage = z.input<typeof themePackageSchema>;
 export type ThemeMapping = {
@@ -183,6 +210,7 @@ export type ThemeDetail = {
   createdAt: string;
   updatedAt: string;
   sourceHash: string;
+  timeline?: ThemeTimelineConfig;
 };
 export type ThemeSummary = Pick<
   ThemeDetail,
@@ -200,6 +228,7 @@ export type ThemeSnapshot = {
   themeRevision: number;
   entities: ThemeEntity[];
   records: ThemeRecord[];
+  timeline?: ThemeTimelineConfig;
 };
 export type ThemeCapsule = {
   id: string;

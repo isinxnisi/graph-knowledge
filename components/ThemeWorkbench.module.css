@@ -760,6 +760,47 @@
   margin: 6px 0;
 }
 
+.visualWorkspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 18px;
+}
+.visualWorkspace[hidden],
+.visualWorkspace [hidden] {
+  display: none;
+}
+.visualWorkspace[data-mode="both"] {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+}
+.graphPane,
+.timelinePane {
+  min-width: 0;
+}
+.visualWorkspace[data-mode="both"] .graphPane {
+  position: sticky;
+  top: 12px;
+}
+.visualWorkspace[data-mode="both"] .studioWrap {
+  height: min(72dvh, 700px);
+  min-height: 420px;
+}
+@media (max-width: 1000px) {
+  .visualWorkspace[data-mode="both"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .visualWorkspace[data-mode="both"] .graphPane {
+    position: static;
+  }
+  .visualWorkspace[data-mode="both"] .studioWrap {
+    height: 310px;
+    min-height: 310px;
+  }
+  .tabs {
+    flex-wrap: wrap;
+  }
+}
+
 @media (max-width: 760px) {
   .record > .actions {
     flex-basis: calc(100% - 30px);

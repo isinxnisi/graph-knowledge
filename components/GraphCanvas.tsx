@@ -6,7 +6,7 @@ import { explorerLabels } from "../lib/i18n/explorer";
 import { contributionLabels } from "../lib/i18n/contribution";
 import { entryLabels } from "../lib/i18n/exploration-entry";
 import { graphViewportLabels } from "../lib/i18n/graph-viewport";
-import cytoscape, { type Core, type ElementDefinition } from "cytoscape";
+import cytoscape, { type Core, type ElementDefinition, type CollectionReturnValue } from "cytoscape";
 import { useEffect, useImperativeHandle, useRef, useState } from "react";
 import type { ReactNode, Ref } from "react";
 import { restorationPan, restorationPositions, viewportCenter } from "../lib/client/graph-view";
@@ -14,7 +14,7 @@ import { CAPSULE_TEXT_FONT, capsuleTextFormat, capsuleTextLayout, type CanvasTex
 import { capsuleNodeShapeLayout } from "../lib/client/capsule-node-layout";
 import type { CapsuleNodeShape } from "../lib/domain/capsule-document";
 import type { GraphView, ViewRestoration } from "../lib/client/graph-view";
-export type GraphCanvasHandle = { capture: () => GraphView | null; focusEntity: (id: string) => void; ensureVisible?: (id: string) => void; focus?: () => void };
+export type GraphCanvasHandle = { capture: () => GraphView | null; focusEntity: (id: string) => void; focusElements?: (id: string) => void; ensureVisible?: (id: string) => void; focus?: () => void };
 import type { GraphState, Selection } from "../lib/client/graph-state";
 import { graphRootReady } from "../lib/client/graph-state";
 import { entityLabel, edgeRoutes, displayRelations, relationId, type CanvasRelation } from "../lib/client/graph-presentation";
@@ -32,6 +32,12 @@ export type GraphContextMenuRequest = {
   clientX: number; clientY: number; position: { x: number; y: number }; source: "pointer" | "keyboard";
 };
 const noSelection: string[] = [];
+function fitElementsInViewport(cy: Core, selected: CollectionReturnValue) {
+  const elements = selected.union(selected.connectedNodes());
+  cy.fit(elements, 40);
+  cy.zoom(Math.min(1.15, cy.zoom()));
+  cy.center(elements);
+}
 type Props = { onInspectEntity?: (id: string) => void; content?: CanvasContent; selectedKeys?: string[]; onSelectionChange?: (ids: string[]) => void; onMove?: (before: GraphView, after: GraphView) => void; onContextMenu?: (request: GraphContextMenuRequest) => void; compactGuide?: boolean; fillHeight?: boolean; footerAction?: ReactNode; onViewChange?: () => void; contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; notification?: ReactNode; feedback?: ReactNode; navigation?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onRelationDoubleClick?: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
 
 export default function GraphCanvas({ onInspectEntity, content, selectedKeys, onSelectionChange, onMove, onContextMenu, compactGuide = false, fillHeight = false, footerAction, onViewChange, contentOnly = false, ref, feedback, notification, navigation, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick }: Props) {
@@ -66,6 +72,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
   const savedPositions = useRef<Record<string, { x: number; y: number }>>({});
   const initialLayoutDone = useRef(false);
   const viewportSize = useRef<{ width: number; height: number } | null>(null);
+  const pendingFocus = useRef<string | null>(null);
   const textMeasurement = useRef<CanvasRenderingContext2D | null>(null);
   function resizeCanvas() {
     const cy = core.current;
@@ -78,6 +85,13 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       cy.pan(restorationPan({ pan, zoom, center: viewportCenter(pan, zoom, before) }, after));
     }
     viewportSize.current = after;
+    // The timeline can keep the mounted graph hidden. Wait for a real viewport
+    // before fitting its focused record, then consume that request only once.
+    if (pendingFocus.current !== null) {
+      const selected = cy.getElementById(pendingFocus.current);
+      pendingFocus.current = null;
+      if (selected.length) fitElementsInViewport(cy, selected);
+    }
   }
   function captureView(): GraphView | null {
     const cy = core.current;
@@ -119,10 +133,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       cy.zoom(Math.max(1, cy.zoom()));
       cy.center(selected);
     } else {
-      const elements = selected.union(selected.connectedNodes());
-      cy.fit(elements, 40);
-      cy.zoom(Math.min(1.15, cy.zoom()));
-      cy.center(elements);
+      fitElementsInViewport(cy, selected);
     }
   }
   useImperativeHandle(ref, () => ({ capture: () => {
@@ -140,6 +151,12 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     resizeCanvas();
     cy.zoom(Math.max(1, cy.zoom()));
     cy.center(node);
+  }, focusElements: (id) => {
+    const cy = core.current, selected = cy?.getElementById(id);
+    if (!cy || !selected?.length) return;
+    cancelGestures();
+    pendingFocus.current = id;
+    resizeCanvas();
   }, ensureVisible: (id) => {
     const cy = core.current, node = cy?.getElementById(id);
     if (!cy || !node?.length) return;
@@ -308,7 +325,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     cy.on("drag pan zoom cxttapstart", () => input.cancel());
     const resize = new ResizeObserver(resizeCanvas);
     resize.observe(container.current);
-    return () => { motion.current?.dispose(); motion.current = null; removeBadges(); input.dispose(); cancelClicks(); surface.removeEventListener("keydown", keyboardContext); relationGestures.current = null; gestures.current = null; contentGestures.current = null; touchInput.current = null; themeObserver.disconnect(); resize.disconnect(); cy.destroy(); core.current = null; viewportSize.current = null; generation.current = -1; initialLayoutDone.current = false; };
+    return () => { motion.current?.dispose(); motion.current = null; removeBadges(); input.dispose(); cancelClicks(); surface.removeEventListener("keydown", keyboardContext); relationGestures.current = null; gestures.current = null; contentGestures.current = null; touchInput.current = null; themeObserver.disconnect(); resize.disconnect(); cy.destroy(); core.current = null; viewportSize.current = null; pendingFocus.current = null; generation.current = -1; initialLayoutDone.current = false; };
   }, []);
 
   useEffect(() => {

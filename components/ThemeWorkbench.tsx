@@ -1,9 +1,11 @@
 "use client";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Icon from "./Icon";
 import CapsuleStudio from "./CapsuleStudio";
+import ThemeTimeline from "./ThemeTimeline";
+import type { Selection } from "../lib/client/graph-state";
 import { CapsuleModal } from "./CapsuleSurface";
 import type { LocalCapsule } from "../lib/client/local-capsules";
 import {
@@ -61,9 +63,24 @@ function initialView(c: LocalCapsule): LocalCapsule {
     c.document.layout.viewport
   )
     return c;
-  const zoom = Math.min(
-    c.document.layout.zoom,
-    Math.max(0.15, (window.innerWidth - 70) / 850),
+  const points = Object.values(c.document.layout.positions);
+  const width = points.length
+    ? Math.max(...points.map((p) => p.x)) -
+      Math.min(...points.map((p) => p.x)) +
+      460
+    : 850;
+  const height = points.length
+    ? Math.max(...points.map((p) => p.y)) -
+      Math.min(...points.map((p) => p.y)) +
+      160
+    : 560;
+  const zoom = Math.max(
+    0.15,
+    Math.min(
+      c.document.layout.zoom,
+      (Math.min(window.innerWidth, 1440) - 90) / width,
+      Math.max(240, Math.min(840, window.innerHeight - 180) - 190) / height,
+    ),
   );
   return {
     ...c,
@@ -232,6 +249,37 @@ export default function ThemeWorkbench({
     [shareUrl, setShareUrl] = useState("");
   const [catalog, setCatalog] = useState<ThemeConcept[]>([]);
   const [studioEditing, setStudioEditing] = useState(false);
+  const [focusedRecordId, setFocusedRecordId] = useState<string | null>(null);
+  const [recordKeys, setRecordKeys] = useState<Record<string, string>>({});
+  const focusRecord = (theme?.records ?? cap?.snapshot.records ?? []).find(
+    (r) => r.id === focusedRecordId,
+  );
+  const graphFocus = useMemo<Selection>(
+    () =>
+      focusRecord && recordKeys[focusRecord.id]
+        ? {
+            kind: focusRecord.kind === "relation" ? "relation" : "entity",
+            id: recordKeys[focusRecord.id],
+          }
+        : null,
+    [focusRecord, recordKeys],
+  );
+  function focusGraphKey(key: string) {
+    const id = Object.entries(recordKeys).find(
+      ([, value]) => value === key,
+    )?.[0];
+    if (id) setFocusedRecordId(id);
+  }
+  function toggleRecord(id: string) {
+    setSelected((a) =>
+      a.includes(id) ? a.filter((i) => i !== id) : [...a, id],
+    );
+  }
+  function showRecordInGraph(record: ThemeRecord) {
+    setFocusedRecordId(record.id);
+    setTab("both");
+  }
+
   const meaningIds = useRef(new Map<string, string>());
   const pendingRequest = useRef<{ signature: string; id: string } | null>(null);
   const [updates, setUpdates] = useState<string[]>([]);
@@ -245,9 +293,12 @@ export default function ThemeWorkbench({
           : "";
     return api(query)
       .then((d) => {
-        if (shareToken) setCap(d);
-        else if (capId) {
+        if (shareToken) {
+          setCap(d);
+          setRecordKeys(d.recordKeys ?? {});
+        } else if (capId) {
           setCap(d.capsule);
+          setRecordKeys(d.recordKeys ?? {});
           setDiff(d.diff);
           setThemeRevision(d.themeRevision);
           setUpdates(d.diff.map((x: { recordId: string }) => x.recordId));
@@ -336,8 +387,10 @@ export default function ThemeWorkbench({
         const d = await res.json();
         if (!res.ok) throw new Error(d.error);
         if (active) {
-          if (d.revision === theme.revision) setGraph(d);
-          else
+          if (d.revision === theme.revision) {
+            setGraph(d);
+            setRecordKeys(d.recordKeys ?? {});
+          } else
             setError(
               "テーマに新しい変更があります。「最新を読む」で確認してください。",
             );
@@ -491,7 +544,7 @@ export default function ThemeWorkbench({
             <p className={css.caption}>
               資料を読み、主張と根拠箇所を整理した入力例です。内容を確認してから取り込みます。
             </p>
-            {["ada", "webb"].map((n) => (
+            {["ada", "webb", "webb-timeline"].map((n) => (
               <button
                 key={n}
                 onClick={async () => {
@@ -501,7 +554,12 @@ export default function ThemeWorkbench({
                   setModal("import");
                 }}
               >
-                {n === "ada" ? "解析機関と翻訳" : "Webbと国際協力"}を確認
+                {n === "ada"
+                  ? "解析機関と翻訳"
+                  : n === "webb"
+                    ? "Webbと国際協力"
+                    : "Webbの展開年表"}
+                を確認
               </button>
             ))}
           </details>
@@ -545,8 +603,9 @@ export default function ThemeWorkbench({
             <div className={css.tabs}>
               {[
                 ["graph", "関係図"],
+                ["time", "年表"],
+                ["both", "並べて読む"],
                 ["list", "記録と根拠"],
-                ["time", "時期から読む"],
               ].map(([id, label]) => (
                 <button
                   key={id}
@@ -586,28 +645,54 @@ export default function ThemeWorkbench({
               </div>
             )}
           </div>
-          {tab !== "graph" && (
+          {tab === "list" && (
             <p className={css.caption}>
               {shown.length} / {theme.records.length}件 · 意味未整理{" "}
               {theme.records.filter((r) => !r.mapping?.concept).length}
               件。意味条件は対応を確認した記録だけを表示します。
             </p>
           )}
-          {tab === "graph" && (!graph || graph.revision !== theme.revision) && (
-            <p role="status">この内容版の図を準備しています…</p>
-          )}
-          {tab === "graph" && graph && graph.revision === theme.revision && (
-            <div className={css.studioWrap}>
-              <CapsuleStudio
-                allowKgSearch={false}
-                allowCopySave={false}
-                key={"graph" + theme.revision}
-                capsule={initialView(graph)}
-                readOnly
-                destination="テーマの現在版"
+          <div
+            className={css.visualWorkspace}
+            data-mode={tab}
+            hidden={tab === "list"}
+          >
+            <div className={css.graphPane} hidden={tab === "time"}>
+              {(!graph || graph.revision !== theme.revision) && (
+                <p role="status">この内容版の図を準備しています…</p>
+              )}
+              {graph && graph.revision === theme.revision && (
+                <div className={css.studioWrap}>
+                  <CapsuleStudio
+                    allowKgSearch={false}
+                    allowCopySave={false}
+                    key={"graph" + theme.revision}
+                    capsule={initialView(graph)}
+                    readOnly
+                    externalFocus={graphFocus}
+                    onFocusKey={focusGraphKey}
+                    destination="テーマの現在版"
+                  />
+                </div>
+              )}
+            </div>
+            <div className={css.timelinePane} hidden={tab === "graph"}>
+              <ThemeTimeline
+                records={theme.records}
+                entities={theme.entities}
+                timeline={theme.timeline}
+                focusedRecordId={focusedRecordId}
+                onFocusRecord={setFocusedRecordId}
+                selectedRecordIds={selected}
+                onToggleSelected={toggleRecord}
+                onShowGraph={showRecordInGraph}
+                onEditRecord={(r) => {
+                  setRecord(r);
+                  setModal("record");
+                }}
               />
             </div>
-          )}
+          </div>
           {tab === "list" && (
             <details className={css.selection}>
               <summary>
@@ -688,43 +773,6 @@ export default function ThemeWorkbench({
                 </li>
               ))}
             </ul>
-          )}
-          {tab === "time" && (
-            <div className={css.timeList}>
-              {["calendar", "qualitative", "cycle", "none"].map((kind) => (
-                <section key={kind}>
-                  <h2 className={css.sectionTitle}>
-                    {
-                      {
-                        calendar: "年月日・期間",
-                        qualitative: "そのころ・段階",
-                        cycle: "周期",
-                        none: "時期を定めない情報",
-                      }[kind]
-                    }
-                  </h2>
-                  {shown
-                    .filter((r) => (r.time?.kind ?? "none") === kind)
-                    .sort((a, b) =>
-                      (a.time?.kind === "calendar"
-                        ? a.time.from
-                        : ""
-                      ).localeCompare(
-                        b.time?.kind === "calendar" ? b.time.from : "",
-                      ),
-                    )
-                    .map((r) => (
-                      <div className={css.timeRow} key={r.id}>
-                        <span className={css.timeLabel}>{timeLabel(r)}</span>
-                        <details>
-                          <summary>{r.assertion}</summary>
-                          <Evidence record={r} />
-                        </details>
-                      </div>
-                    ))}
-                </section>
-              ))}
-            </div>
           )}
         </>
       )}
@@ -878,32 +926,81 @@ export default function ThemeWorkbench({
               </button>
             </details>
           )}
-          <div className={css.studioWrap}>
-            <CapsuleStudio
-              allowKgSearch={false}
-              allowCopySave={false}
-              key={cap.id + ":" + generation}
-              capsule={initialView(local(cap))}
-              onEditingChange={setStudioEditing}
-              readOnly={!!shareToken}
-              destination="独立確認環境"
-              onSave={
-                shareToken
-                  ? undefined
-                  : async (v) => {
-                      const saved = (await run({
-                        action: "capsule-save",
-                        id: cap.id,
-                        expected: cap.revision,
-                        title: v.title,
-                        description: v.note,
-                        document: v.document,
-                      })) as ThemeCapsule;
-                      setCap(saved);
-                      return local(saved);
-                    }
-              }
-            />
+          <div className={css.toolbar}>
+            <div className={css.tabs} aria-label="Capsuleの表示">
+              {[
+                ["graph", "関係図"],
+                ["time", "年表"],
+                ["both", "並べて読む"],
+              ].map(([id, label]) => (
+                <button
+                  key={id}
+                  aria-pressed={tab === id}
+                  disabled={studioEditing}
+                  onClick={() => setTab(id)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            {tab !== "graph" && (
+              <span className={css.caption}>
+                保存した記録の時期 · 図の独自編集と分けて保持
+              </span>
+            )}
+          </div>
+          <div className={css.visualWorkspace} data-mode={tab}>
+            <div className={css.graphPane} hidden={tab === "time"}>
+              <div className={css.studioWrap}>
+                <CapsuleStudio
+                  allowKgSearch={false}
+                  allowCopySave={false}
+                  key={cap.id + ":" + generation}
+                  capsule={initialView(local(cap))}
+                  externalFocus={graphFocus}
+                  onFocusKey={focusGraphKey}
+                  onEditingChange={setStudioEditing}
+                  readOnly={!!shareToken}
+                  destination="独立確認環境"
+                  onSave={
+                    shareToken
+                      ? undefined
+                      : async (v) => {
+                          const saved = (await run({
+                            action: "capsule-save",
+                            id: cap.id,
+                            expected: cap.revision,
+                            title: v.title,
+                            description: v.note,
+                            document: v.document,
+                          })) as ThemeCapsule;
+                          setCap(saved);
+                          return local(saved);
+                        }
+                  }
+                />
+              </div>
+            </div>
+            <div className={css.timelinePane} hidden={tab === "graph"}>
+              <ThemeTimeline
+                graphRecordIds={cap.snapshot.records
+                  .filter((r) => {
+                    const key = recordKeys[r.id];
+                    return [
+                      ...cap.document.relations,
+                      ...cap.document.texts,
+                    ].some((item) => item.key === key);
+                  })
+                  .map((r) => r.id)}
+                records={cap.snapshot.records}
+                entities={cap.snapshot.entities}
+                timeline={cap.snapshot.timeline}
+                focusedRecordId={focusedRecordId}
+                onFocusRecord={setFocusedRecordId}
+                selectedRecordIds={[]}
+                onShowGraph={showRecordInGraph}
+              />
+            </div>
           </div>
         </>
       )}
@@ -1177,18 +1274,21 @@ function RecordForm({
             relation: get("relation"),
             scope: get("scope"),
             polarity: get("polarity"),
-            time: get("from")
-              ? {
-                  kind: "calendar",
-                  from: get("from"),
-                  ...(get("to") ? { to: get("to") } : {}),
-                  ...(record?.time?.kind === "calendar"
-                    ? { label: record.time.label }
-                    : {}),
-                }
-              : record?.time?.kind === "calendar"
+            time:
+              f.get("clearTime") === "on"
                 ? null
-                : (record?.time ?? null),
+                : get("from")
+                  ? {
+                      kind: "calendar",
+                      from: get("from"),
+                      ...(get("to") ? { to: get("to") } : {}),
+                      ...(record?.time?.kind === "calendar"
+                        ? { label: record.time.label }
+                        : {}),
+                    }
+                  : record?.time?.kind === "calendar"
+                    ? null
+                    : (record?.time ?? null),
             evidence,
           };
           void onSubmit(
@@ -1200,6 +1300,8 @@ function RecordForm({
                   record: r,
                   entities,
                   reason: get("reason") || "記録の追加",
+                  detachTimelinePlacement:
+                    f.get("detachTimelinePlacement") === "on",
                 }
               : {
                   action: "import",
@@ -1375,6 +1477,19 @@ function RecordForm({
             />
           </label>
         </div>
+        {record?.time && record.time.kind !== "calendar" && (
+          <label className={css.checkLabel}>
+            <input type="checkbox" name="clearTime" />
+            この記録の時期を未確定に戻す
+          </label>
+        )}
+        {record &&
+          theme?.timeline?.placements.some((p) => p.recordId === record.id) && (
+            <label className={css.checkLabel}>
+              <input type="checkbox" name="detachTimelinePlacement" />
+              この記録の年表配置を外して訂正する
+            </label>
+          )}
         <p className={css.caption}>
           時期不明は空欄。周期・定性軸はパッケージ取込で保持できます。
         </p>

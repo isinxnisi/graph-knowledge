@@ -2,6 +2,10 @@ import { Pool } from "pg";
 import { createHash, randomUUID, randomBytes } from "node:crypto";
 import { z } from "zod";
 import {
+  subsetThemeTimeline,
+  themeTimelineIssues,
+} from "../domain/theme-timeline";
+import {
   capsuleDocumentSchema,
   type CapsuleDocument,
 } from "../domain/capsule-document";
@@ -146,6 +150,7 @@ export const themeCommand = z.discriminatedUnion("action", [
     record: themeRecordInputSchema,
     entities: z.array(themeEntitySchema).max(2).default([]),
     reason: z.string().trim().min(1).max(4000),
+    detachTimelinePlacement: z.boolean().default(false),
   }),
   z.strictObject({
     ...base,
@@ -190,6 +195,14 @@ export const themeCommand = z.discriminatedUnion("action", [
 export function documentKey(themeId: string, id: string) {
   const s = hash([themeId, id]);
   return `${s.slice(0, 8)}-${s.slice(8, 12)}-4${s.slice(13, 16)}-a${s.slice(17, 20)}-${s.slice(20, 32)}`;
+}
+export function themeRecordKeys(
+  themeId: string,
+  records: Pick<ThemeRecord, "id">[],
+) {
+  return Object.fromEntries(
+    records.map((r) => [r.id, documentKey(themeId, "record:" + r.id)]),
+  );
 }
 export function themeDocument(snapshot: ThemeSnapshot): CapsuleDocument {
   const used = new Set(
@@ -374,6 +387,7 @@ export async function executeThemeCommand(raw: unknown) {
         revision: 1,
         entities: pack.entities,
         records: pack.records.map((r) => enrich(r, 1, "初回登録")),
+        ...(pack.timeline ? { timeline: pack.timeline } : {}),
         createdAt: now,
         updatedAt: now,
         sourceHash: hash(pack),
@@ -408,6 +422,24 @@ export async function executeThemeCommand(raw: unknown) {
         )
           throw new ThemeError("対象がテーマにありません");
         const old = t.records.find((r) => r.id === cmd.record.id);
+        if (cmd.detachTimelinePlacement) {
+          if (
+            !old ||
+            !t.timeline?.placements.some((p) => p.recordId === old.id)
+          )
+            throw new ThemeError("この記録には外す年表の配置がありません");
+          // The record and any child axes remain. Only its explicit placement is
+          // removed, so an unknown or newly qualified time can use a fallback axis.
+          t.timeline = subsetThemeTimeline(
+            {
+              ...t.timeline,
+              placements: t.timeline.placements.filter(
+                (p) => p.recordId !== old.id,
+              ),
+            },
+            t.records.map((r) => r.id),
+          );
+        }
         const revised = enrich(
           cmd.record,
           (old?.revision ?? 0) + 1,
@@ -428,6 +460,14 @@ export async function executeThemeCommand(raw: unknown) {
           if (t.records.length >= 400)
             throw new ThemeError("記録上限400件です");
           t.records.push(revised);
+        }
+        if (t.timeline) {
+          const issues = themeTimelineIssues(t.records, t.timeline);
+          if (issues.length)
+            throw new ThemeError(
+              "時期と年表の配置を確認してください：" +
+                issues.map((i) => i.message).join(" / "),
+            );
         }
       } else {
         const r = t.records.find((r) => r.id === cmd.recordId);
@@ -451,8 +491,18 @@ export async function executeThemeCommand(raw: unknown) {
       const snapshot = {
         themeId: t.id,
         themeRevision: t.revision,
-        entities: t.entities,
+        entities: t.entities.filter((e) =>
+          records.some((r) => r.subject === e.id || r.object === e.id),
+        ),
         records,
+        ...(t.timeline
+          ? {
+              timeline: subsetThemeTimeline(
+                t.timeline,
+                records.map((r) => r.id),
+              ),
+            }
+          : {}),
       };
       const cap: ThemeCapsule = {
         id: randomUUID(),
@@ -490,7 +540,14 @@ export async function executeThemeCommand(raw: unknown) {
         const oldDoc = cap.sourceDocument ?? themeDocument(cap.snapshot);
         const nextSnapshot = {
           ...cap.snapshot,
-          entities: t.entities,
+          entities: t.entities.filter((e) =>
+            cap.snapshot.records.some((r) => {
+              const next = cmd.recordIds.includes(r.id)
+                ? (t.records.find((n) => n.id === r.id) ?? r)
+                : r;
+              return next.subject === e.id || next.object === e.id;
+            }),
+          ),
           themeRevision: t.revision,
           records: cap.snapshot.records.map((r) =>
             cmd.recordIds.includes(r.id)
@@ -498,6 +555,36 @@ export async function executeThemeCommand(raw: unknown) {
               : r,
           ),
         };
+        if (cap.snapshot.timeline) {
+          const selectedChanges = new Set(diffs.map((d) => d.recordId));
+          const currentPlacements = new Map(
+            t.timeline?.placements.map((p) => [p.recordId, p.axisId]),
+          );
+          // Import an explicit detachment only with that record's correction.
+          // Other records keep the saved placement and axis definitions, even
+          // when the source theme has since changed their configuration.
+          nextSnapshot.timeline = subsetThemeTimeline(
+            {
+              ...cap.snapshot.timeline,
+              placements: cap.snapshot.timeline.placements.filter(
+                (p) =>
+                  !selectedChanges.has(p.recordId) ||
+                  currentPlacements.get(p.recordId) === p.axisId,
+              ),
+            },
+            nextSnapshot.records.map((r) => r.id),
+          );
+          const issues = themeTimelineIssues(
+            nextSnapshot.records,
+            nextSnapshot.timeline,
+          );
+          if (issues.length)
+            throw new ThemeError(
+              "選択した訂正と保存済みの年表構成が合いません：" +
+                issues.map((i) => i.message).join(" / "),
+              409,
+            );
+        }
         const nextDoc = themeDocument(nextSnapshot);
         for (const d of diffs) {
           if (d.after && d.before.kind !== d.after.kind)

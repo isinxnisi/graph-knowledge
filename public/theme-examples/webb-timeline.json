@@ -1,0 +1,242 @@
+{
+  "schemaVersion": 1,
+  "id": "webb-deployment-timeline",
+  "title": "Webbが宇宙でひらくまで",
+  "description": "打上げからL2周辺の軌道投入まで。遮熱膜をひらいた期間と、同じ対象の出来事をたどる流れを読み分ける。副鏡展開の行では、その日の工程を開ける。",
+  "entities": [
+    { "id": "webb", "name": "Webb宇宙望遠鏡", "kind": "宇宙望遠鏡", "description": "" },
+    { "id": "ariane", "name": "Ariane 5", "kind": "ロケット", "description": "" },
+    { "id": "sunshield", "name": "Webbの遮熱膜", "kind": "遮熱装置", "description": "" },
+    { "id": "secondary-mirror", "name": "Webbの副鏡・支持構造", "kind": "光学系", "description": "" },
+    { "id": "primary-mirror", "name": "Webbの主鏡", "kind": "光学系", "description": "" },
+    { "id": "l2", "name": "太陽・地球系L2", "kind": "ラグランジュ点", "description": "" }
+  ],
+  "records": [
+    {
+      "id": "launch",
+      "kind": "relation",
+      "subject": "ariane",
+      "object": "webb",
+      "relation": "打ち上げた",
+      "assertion": "Ariane 5はWebb宇宙望遠鏡を打ち上げた。",
+      "scope": "フランス領ギアナからの打上げ",
+      "polarity": "affirmed",
+      "time": { "kind": "calendar", "from": "2021-12-25", "label": "打上げ" },
+      "evidence": [{
+        "url": "https://science.nasa.gov/mission/webb/launch/",
+        "title": "NASA：Webb Launch",
+        "locator": "Launch Date / Vehicle",
+        "excerpt": "本文は2021年12月25日にAriane 5でフランス領ギアナから打ち上げたと記載する。",
+        "retrievedAt": "2026-11-01T05:45:13Z"
+      }]
+    },
+    {
+      "id": "sunshield-deployment",
+      "kind": "relation",
+      "subject": "webb",
+      "object": "sunshield",
+      "relation": "遮熱膜を展開した",
+      "assertion": "Webbの遮熱膜の展開工程は12月28日に始まり、1月4日に完了した。",
+      "scope": "工程の開始から完了まで。電力系統とモーターの最適化のための停止日を含み、連続稼働時間ではない。",
+      "polarity": "affirmed",
+      "time": { "kind": "calendar", "from": "2021-12-28", "to": "2022-01-04", "label": "遮熱膜の展開期間（停止日を含む）" },
+      "evidence": [{
+        "url": "https://www.nasa.gov/news-release/sunshield-successfully-deploys-on-nasas-next-flagship-telescope/",
+        "title": "NASA：Sunshield Successfully Deploys on NASA’s Next Flagship Telescope",
+        "locator": "RELEASE 22-002：開始日を述べる本文／工程一覧の最後／その次の停止日についての段落",
+        "excerpt": "12月28日に遠隔展開を開始し、1月4日に展開完了。本文は途中の一日停止も記録する。",
+        "retrievedAt": "2026-11-01T05:45:13Z"
+      }]
+    },
+    {
+      "id": "mid-booms",
+      "kind": "episode",
+      "subject": "sunshield",
+      "object": null,
+      "relation": "",
+      "assertion": "遮熱膜を左右に広げる二つのミッドブームが伸び、所定の位置に固定された。",
+      "scope": "遮熱膜の幅方向への展開。五層の張力調整はこの後の工程。",
+      "polarity": "affirmed",
+      "time": { "kind": "calendar", "from": "2021-12-31", "label": "遮熱膜が全幅に広がる" },
+      "evidence": [{
+        "url": "https://science.nasa.gov/blogs/webb/2021/12/31/with-webbs-mid-booms-extended-sunshield-takes-shape/",
+        "title": "NASA：With Webb’s Mid-Booms Extended, Sunshield Takes Shape",
+        "locator": "冒頭の展開結果／二つのアームの最終位置での固定を述べる段落",
+        "excerpt": "12月31日に二つ目のブームの展開を完了。両アームが固定され、遮熱膜が全幅に広がった。",
+        "retrievedAt": "2026-11-01T05:45:13Z"
+      }]
+    },
+    {
+      "id": "first-three-layers",
+      "kind": "episode",
+      "subject": "sunshield",
+      "object": null,
+      "relation": "",
+      "assertion": "遮熱膜の最初の三層の張力調整が完了した。",
+      "scope": "太陽に近い側の三層。五層すべての完了とは区別する。",
+      "polarity": "affirmed",
+      "time": { "kind": "calendar", "from": "2022-01-03", "label": "三層の張力調整を完了" },
+      "evidence": [{
+        "url": "https://science.nasa.gov/blogs/webb/2022/01/03/second-and-third-layers-of-sunshield-fully-tightened/",
+        "title": "NASA：Second and Third Layers of Sunshield Fully Tightened",
+        "locator": "冒頭の完了報告／第2層・第3層の工程を述べる段落",
+        "excerpt": "1月3日、最初の三層の張力調整を完了。残る二層は翌日の予定として区別される。",
+        "retrievedAt": "2026-11-01T05:45:13Z"
+      }]
+    },
+    {
+      "id": "secondary-deployment",
+      "kind": "relation",
+      "subject": "webb",
+      "object": "secondary-mirror",
+      "relation": "副鏡支持構造を展開した",
+      "assertion": "Webbの副鏡支持構造が展開され、固定と工程の完了が確認された。",
+      "scope": "2022年1月5日の工程。この日の内訳はESTで報告された概数時刻。",
+      "polarity": "affirmed",
+      "time": { "kind": "calendar", "from": "2022-01-05", "label": "副鏡を展開・固定" },
+      "evidence": [{
+        "url": "https://science.nasa.gov/blogs/webb/2022/01/05/secondary-mirror-deployment-confirmed/",
+        "title": "NASA：Secondary Mirror Deployment Confirmed",
+        "locator": "冒頭の成功報告／工程の開始・移動・ラッチ・確認時刻をまとめた段落",
+        "excerpt": "1月5日に副鏡支持構造の展開が成功し、固定と完了を確認した。",
+        "retrievedAt": "2026-11-01T05:45:13Z"
+      }]
+    },
+    {
+      "id": "primary-deployment",
+      "kind": "relation",
+      "subject": "webb",
+      "object": "primary-mirror",
+      "relation": "主鏡の展開を完了した",
+      "assertion": "Webbの主鏡の最後の翼が展開・固定され、主要構造の展開が完了した。",
+      "scope": "構造の展開完了。光学調整や科学観測の準備完了を意味しない。",
+      "polarity": "affirmed",
+      "time": { "kind": "calendar", "from": "2022-01-08", "label": "主鏡の展開完了" },
+      "evidence": [{
+        "url": "https://www.nasa.gov/news-release/nasas-webb-telescope-reaches-major-milestone-as-mirror-unfolds/",
+        "title": "NASA：NASA’s Webb Telescope Reaches Major Milestone as Mirror Unfolds",
+        "locator": "RELEASE 22-004：二枚の翼の展開日／最後の翼の固定／続く光学調整についての段落",
+        "excerpt": "最初の翼は1月7日、二枚目は1月8日に展開。最後の固定で主要構造の展開を完了し、その後に光学調整が続く。",
+        "retrievedAt": "2026-11-01T05:45:13Z"
+      }]
+    },
+    {
+      "id": "l2-insertion",
+      "kind": "relation",
+      "subject": "webb",
+      "object": "l2",
+      "relation": "周辺の軌道へ入った",
+      "assertion": "Webbは最後の軌道修正噴射によって太陽・地球系L2周辺の軌道へ入った。",
+      "scope": "L2点の周辺を巡るハロー軌道。地球周回軌道やL2点での静止とは区別する。",
+      "polarity": "affirmed",
+      "time": { "kind": "calendar", "from": "2022-01-24", "label": "L2周辺の軌道へ" },
+      "evidence": [{
+        "url": "https://science.nasa.gov/blogs/webb/2022/01/24/orbital-insertion-burn-a-success-webb-arrives-at-l2/",
+        "title": "NASA：Orbital Insertion Burn a Success, Webb Arrives at L2",
+        "locator": "冒頭二段落の最終軌道修正とハロー軌道の説明",
+        "excerpt": "1月24日の最終軌道修正噴射により、太陽・地球系L2周辺のハロー軌道へ向かったと報告する。",
+        "retrievedAt": "2026-11-01T05:45:13Z"
+      }]
+    },
+    {
+      "id": "secondary-start",
+      "kind": "episode",
+      "subject": "secondary-mirror",
+      "object": null,
+      "relation": "",
+      "assertion": "副鏡支持構造の展開工程を開始した。",
+      "scope": "2022年1月5日、ESTでの概数時刻。",
+      "polarity": "affirmed",
+      "time": { "kind": "qualitative", "axis": "副鏡展開・2022-01-05 EST", "from": "09:52頃", "coordinateMeaning": "2022-01-05 EST の概数時刻。資料の時刻表記を順序として保持し、UTCへの換算や秒精度の補完をしない。", "label": "展開を開始" },
+      "evidence": [{
+        "url": "https://science.nasa.gov/blogs/webb/2022/01/05/secondary-mirror-deployment-confirmed/",
+        "title": "NASA：Secondary Mirror Deployment Confirmed",
+        "locator": "工程時刻の段落・最初の文（開始）",
+        "excerpt": "展開工程は午前9時52分頃ESTに始まった。",
+        "retrievedAt": "2026-11-01T05:45:13Z"
+      }]
+    },
+    {
+      "id": "secondary-extended",
+      "kind": "episode",
+      "subject": "secondary-mirror",
+      "object": null,
+      "relation": "",
+      "assertion": "副鏡が展開位置まで移動した。",
+      "scope": "位置への到達。ラッチによる固定や完了確認とは区別する。",
+      "polarity": "affirmed",
+      "time": { "kind": "qualitative", "axis": "副鏡展開・2022-01-05 EST", "from": "11:28頃", "coordinateMeaning": "2022-01-05 EST の概数時刻。資料の時刻表記を順序として保持し、UTCへの換算や秒精度の補完をしない。", "label": "展開位置へ到達" },
+      "evidence": [{
+        "url": "https://science.nasa.gov/blogs/webb/2022/01/05/secondary-mirror-deployment-confirmed/",
+        "title": "NASA：Secondary Mirror Deployment Confirmed",
+        "locator": "工程時刻の段落・最初の文（移動完了）",
+        "excerpt": "副鏡は午前11時28分頃ESTに展開位置まで移動した。",
+        "retrievedAt": "2026-11-01T05:45:13Z"
+      }]
+    },
+    {
+      "id": "secondary-latched",
+      "kind": "episode",
+      "subject": "secondary-mirror",
+      "object": null,
+      "relation": "",
+      "assertion": "副鏡支持構造がラッチで固定された。",
+      "scope": "機構による固定。地上側の完了確認とは区別する。",
+      "polarity": "affirmed",
+      "time": { "kind": "qualitative", "axis": "副鏡展開・2022-01-05 EST", "from": "11:51頃", "coordinateMeaning": "2022-01-05 EST の概数時刻。資料の時刻表記を順序として保持し、UTCへの換算や秒精度の補完をしない。", "label": "ラッチで固定" },
+      "evidence": [{
+        "url": "https://science.nasa.gov/blogs/webb/2022/01/05/secondary-mirror-deployment-confirmed/",
+        "title": "NASA：Secondary Mirror Deployment Confirmed",
+        "locator": "工程時刻の段落・二番目の文（ラッチ）",
+        "excerpt": "副鏡支持構造は午前11時51分頃ESTにラッチで固定された。",
+        "retrievedAt": "2026-11-01T05:45:13Z"
+      }]
+    },
+    {
+      "id": "secondary-confirmed",
+      "kind": "episode",
+      "subject": "secondary-mirror",
+      "object": null,
+      "relation": "",
+      "assertion": "技術者が副鏡支持構造の固定と展開完了を確認した。",
+      "scope": "工程の完了確認。記事公開時刻ではない。",
+      "polarity": "affirmed",
+      "time": { "kind": "qualitative", "axis": "副鏡展開・2022-01-05 EST", "from": "12:23頃", "coordinateMeaning": "2022-01-05 EST の概数時刻。資料の時刻表記を順序として保持し、UTCへの換算や秒精度の補完をしない。", "label": "固定・完了を確認" },
+      "evidence": [{
+        "url": "https://science.nasa.gov/blogs/webb/2022/01/05/secondary-mirror-deployment-confirmed/",
+        "title": "NASA：Secondary Mirror Deployment Confirmed",
+        "locator": "工程時刻の段落・最後の文（技術者の確認）",
+        "excerpt": "午後0時23分頃EST、技術者が構造の固定と展開工程の完了を確認した。",
+        "retrievedAt": "2026-11-01T05:45:13Z"
+      }]
+    }
+  ],
+  "timeline": {
+    "version": 1,
+    "axes": [
+      { "id": "calendar", "kind": "calendar", "label": "展開から軌道投入まで" },
+      {
+        "id": "mirror-day",
+        "kind": "qualitative",
+        "label": "副鏡展開の一日",
+        "originLabel": "2022-01-05 / EST (UTC−05:00)・概数",
+        "order": ["09:52頃", "11:28頃", "11:51頃", "12:23頃"]
+      }
+    ],
+    "placements": [
+      { "recordId": "launch", "axisId": "calendar" },
+      { "recordId": "sunshield-deployment", "axisId": "calendar" },
+      { "recordId": "mid-booms", "axisId": "calendar" },
+      { "recordId": "first-three-layers", "axisId": "calendar" },
+      { "recordId": "secondary-deployment", "axisId": "calendar" },
+      { "recordId": "primary-deployment", "axisId": "calendar" },
+      { "recordId": "l2-insertion", "axisId": "calendar" },
+      { "recordId": "secondary-start", "axisId": "mirror-day" },
+      { "recordId": "secondary-extended", "axisId": "mirror-day" },
+      { "recordId": "secondary-latched", "axisId": "mirror-day" },
+      { "recordId": "secondary-confirmed", "axisId": "mirror-day" }
+    ],
+    "insets": [{ "parentRecordId": "secondary-deployment", "axisId": "mirror-day", "label": "この日の工程" }]
+  },
+  "mappings": []
+}

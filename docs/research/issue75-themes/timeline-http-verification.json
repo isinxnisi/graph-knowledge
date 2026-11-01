@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-11-01T06:06:39.770417+00:00",
+  "themeId": "timeline-check-3dc57d6f15",
+  "checks": [
+    "axes and inset relationships persist",
+    "parent-only capsule does not include hidden child records or axes",
+    "snapshot excludes unselected entity descriptions",
+    "child-only snapshot retains date and timezone context",
+    "shared snapshot preserves nested axes and approximate clock labels",
+    "ordinary record correction leaves shared timeline unchanged",
+    "explicit correction preserves inset context",
+    "invalid axis correction is rejected without modifying stored content",
+    "same URL publishes corrected timeline snapshot",
+    "explicit detachment persists the undated parent and retains its child inset",
+    "refreshing another record keeps the saved parent placement and child inset",
+    "detachment and an unrelated snapshot refresh leave the published version unchanged",
+    "explicit parent refresh removes only its placement and preserves the nested axis context",
+    "taking in the parent correction does not overwrite the old shared snapshot",
+    "explicit sharing publishes the detached timeline at the same URL",
+    "stopped timeline share is inaccessible"
+  ],
+  "count": 16
+}

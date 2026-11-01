@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { createRef } from "react";
-const created = vi.hoisted(() => ({ cores: [] as import("cytoscape").Core[] }));
+import { createRef, useEffect } from "react";
+const created = vi.hoisted(() => ({ cores: [] as import("cytoscape").Core[], resizeCallbacks: [] as (() => void)[] }));
 vi.mock("cytoscape", async original => {
   const runtime = await original<{ default: (options: import("cytoscape").CytoscapeOptions) => import("cytoscape").Core }>();
   return { default: (options: import("cytoscape").CytoscapeOptions) => {
@@ -20,7 +20,7 @@ function modifierTap(node: import("cytoscape").CollectionReturnValue, originalEv
   emit.call(node, { type: "tap", originalEvent });
 }
 beforeEach(() => {
-  vi.stubGlobal("ResizeObserver", class { observe() {} disconnect() {} });
+  vi.stubGlobal("ResizeObserver", class { constructor(callback: () => void) { created.resizeCallbacks.push(callback); } observe() {} disconnect() {} });
   vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
   const computed = globalThis.getComputedStyle;
   vi.spyOn(globalThis, "getComputedStyle").mockImplementation(el => {
@@ -28,7 +28,7 @@ beforeEach(() => {
     return new Proxy(style, { get: (target, key) => key === "getPropertyValue" ? (name: string) => name.startsWith("--color-") ? "#334455" : target.getPropertyValue(name) : Reflect.get(target, key) });
   });
 });
-afterEach(() => { cleanup(); created.cores = []; vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+afterEach(() => { cleanup(); created.cores = []; created.resizeCallbacks = []; vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 it("既存Canvasへ完全経路の和集合を渡すと配置し、閉じると共有分だけ残す", () => {
   const a = route(100, 2), b = route(100, 3), graph = openPatternNode(mergePatternPage(emptyPatternGraph(root, relation), page([a, b]), null), a.nodeIds[1]);
   const props = { selection: null, onEntity: vi.fn(), onRelation: vi.fn(), onToggleEntity: vi.fn() };
@@ -95,6 +95,91 @@ it("追加対象を必要な分だけpanして画面に収め、倍率と配置�
   expect(cy.zoom()).toBe(0.75); expect(node.position()).toEqual({ x: 1500, y: 1500 });
   const bounds = node.renderedBoundingBox(); expect(bounds.x1).toBeGreaterThanOrEqual(28); expect(bounds.y1).toBeGreaterThanOrEqual(28); expect(bounds.x2).toBeLessThanOrEqual(572); expect(bounds.y2).toBeLessThanOrEqual(372);
   const pan = { ...cy.pan() }; await act(async () => ref.current!.ensureVisible!(root.id)); expect(cy.pan()).toEqual(pan);
+});
+
+it("外部から指定した線と両端を収め、保存配置や選択を変えずに読みやすい倍率へ移動する", async () => {
+  const ref = createRef<GraphCanvasHandle>(), graph = mergePatternPage(emptyPatternGraph(root, relation), page([route(100, 2)]), null);
+  const onEntity = vi.fn(), onRelation = vi.fn();
+  render(<GraphCanvas ref={ref} graph={graph} selection={null} onEntity={onEntity} onRelation={onRelation} onToggleEntity={vi.fn()} />);
+  await act(async () => {});
+  const cy = created.cores[0], edge = cy.edges()[0], endpoints = edge.connectedNodes();
+  vi.spyOn(cy, "width").mockReturnValue(600); vi.spyOn(cy, "height").mockReturnValue(400);
+  const fit = vi.spyOn(cy, "fit");
+  await act(async () => {
+    endpoints[0].position({ x: 1500, y: 1200 }); endpoints[1].position({ x: 1700, y: 1260 });
+    cy.zoom(2); cy.pan({ x: 0, y: 0 });
+    ref.current!.focusElements!(edge.id());
+  });
+  expect(fit).toHaveBeenLastCalledWith(expect.anything(), 40);
+  const fitted = fit.mock.calls.at(-1)![0] as import("cytoscape").CollectionReturnValue;
+  expect(new Set(fitted.map(element => element.id()))).toEqual(new Set([edge.id(), ...endpoints.map(node => node.id())]));
+  expect(cy.zoom()).toBeLessThanOrEqual(1.15);
+  const bounds = endpoints.renderedBoundingBox();
+  expect(bounds.x1).toBeGreaterThanOrEqual(39); expect(bounds.y1).toBeGreaterThanOrEqual(39);
+  expect(bounds.x2).toBeLessThanOrEqual(561); expect(bounds.y2).toBeLessThanOrEqual(361);
+  expect(endpoints[0].position()).toEqual({ x: 1500, y: 1200 });
+  expect(endpoints[1].position()).toEqual({ x: 1700, y: 1260 });
+  expect(cy.$(".chosen")).toHaveLength(0); expect(onEntity).not.toHaveBeenCalled(); expect(onRelation).not.toHaveBeenCalled();
+  const before = { zoom: cy.zoom(), pan: { ...cy.pan() } };
+  act(() => ref.current!.focusElements!("missing-relation"));
+  expect({ zoom: cy.zoom(), pan: cy.pan() }).toEqual(before);
+});
+
+it("非表示中の外部フォーカスでは視点を変えず、表示復帰時に最新の対象を一度だけ収める", async () => {
+  const ref = createRef<GraphCanvasHandle>(), graph = mergePatternPage(emptyPatternGraph(root, relation), page([route(100, 2)]), null);
+  render(<GraphCanvas ref={ref} graph={graph} selection={null} onEntity={vi.fn()} onRelation={vi.fn()} onToggleEntity={vi.fn()} />);
+  await act(async () => {});
+  const cy = created.cores[0], edge = cy.edges()[0], endpoints = edge.connectedNodes();
+  const width = vi.spyOn(cy, "width").mockReturnValue(600), height = vi.spyOn(cy, "height").mockReturnValue(400);
+  const resize = () => created.resizeCallbacks.forEach(callback => callback());
+  await act(async () => {
+    resize(); cy.zoom(0.7); cy.pan({ x: 20, y: 35 });
+    endpoints[0].position({ x: 1500, y: 1200 }); endpoints[1].position({ x: 1700, y: 1260 });
+  });
+  const before = { zoom: cy.zoom(), pan: { ...cy.pan() } }, fit = vi.spyOn(cy, "fit");
+  width.mockReturnValue(0); height.mockReturnValue(0);
+  await act(async () => {
+    resize(); ref.current!.focusElements!(endpoints[0].id()); ref.current!.focusElements!(edge.id()); resize();
+  });
+  expect(fit).not.toHaveBeenCalled();
+  expect({ zoom: cy.zoom(), pan: cy.pan() }).toEqual(before);
+  expect(ref.current!.capture()).toMatchObject(before);
+  width.mockReturnValue(600); height.mockReturnValue(400);
+  await act(async () => resize());
+  expect(fit).toHaveBeenCalledTimes(1);
+  const fitted = fit.mock.calls[0][0] as import("cytoscape").CollectionReturnValue;
+  expect(new Set(fitted.map(element => element.id()))).toEqual(new Set([edge.id(), ...endpoints.map(node => node.id())]));
+  expect(cy.zoom()).toBeLessThanOrEqual(1.15);
+  const bounds = endpoints.renderedBoundingBox();
+  expect(bounds.x1).toBeGreaterThanOrEqual(39); expect(bounds.y1).toBeGreaterThanOrEqual(39);
+  expect(bounds.x2).toBeLessThanOrEqual(561); expect(bounds.y2).toBeLessThanOrEqual(361);
+  const focused = ref.current!.capture()!;
+  width.mockReturnValue(800); height.mockReturnValue(500);
+  await act(async () => resize());
+  expect(fit).toHaveBeenCalledTimes(1);
+  const resized = ref.current!.capture()!;
+  expect(resized.zoom).toBe(focused.zoom);
+  expect(resized.center!.x).toBeCloseTo(focused.center!.x);
+  expect(resized.center!.y).toBeCloseTo(focused.center!.y);
+  expect(resized.positions).toEqual(focused.positions);
+});
+
+it("親の初回effectから指定した線もCanvas配置完了後にフォーカスできる", async () => {
+  const ref = createRef<GraphCanvasHandle>(), graph = mergePatternPage(emptyPatternGraph(root, relation), page([route(100, 2)]), null);
+  const focused = vi.fn();
+  function Parent() {
+    useEffect(() => {
+      const cy = created.cores[0], edge = cy.edges()[0];
+      const fit = vi.spyOn(cy, "fit");
+      ref.current!.focusElements!(edge.id());
+      const fitted = fit.mock.calls[0]?.[0] as import("cytoscape").CollectionReturnValue | undefined;
+      focused(fitted?.map(element => element.id()));
+    }, []);
+    return <GraphCanvas ref={ref} graph={graph} selection={null} onEntity={vi.fn()} onRelation={vi.fn()} onToggleEntity={vi.fn()} />;
+  }
+  render(<Parent/>); await act(async () => {});
+  const edge = created.cores[0].edges()[0];
+  expect(focused).toHaveBeenCalledWith(expect.arrayContaining([edge.id(), ...edge.connectedNodes().map(node => node.id())]));
 });
 
 it("右クリックは既存の複数選択を維持し、背景の図座標とキーボードから同じメニューへ届く", async () => {

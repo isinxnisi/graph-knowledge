@@ -15,7 +15,7 @@ import CapsuleStudio from "../components/CapsuleStudio";
 import CapsuleContextMenu from "../components/CapsuleContextMenu";
 
 type CanvasProps = ComponentProps<typeof GraphCanvas>;
-const mocks = vi.hoisted(() => ({ canvas: null as CanvasProps | null, view: null as GraphView | null, search: vi.fn(), neighbors:vi.fn(), focus: vi.fn() }));
+const mocks = vi.hoisted(() => ({ canvas: null as CanvasProps | null, view: null as GraphView | null, search: vi.fn(), neighbors:vi.fn(), focus: vi.fn(), focusElements: vi.fn() }));
 vi.mock("../lib/client/ui-locale", () => ({ useUiLocale: () => ({ locale: "en" }) }));
 vi.mock("../lib/client/api", async () => ({ ...await vi.importActual("../lib/client/api"), searchEntities: mocks.search, fetchNeighbors:mocks.neighbors }));
 // This double exposes the real canvas contract. Renderer geometry has its own
@@ -24,7 +24,7 @@ vi.mock("../components/GraphCanvas", async () => {
   const { useEffect, useImperativeHandle } = await import("react");
   return { default: function Canvas(props: CanvasProps) {
     mocks.canvas = props;
-    useImperativeHandle(props.ref, () => ({ capture: () => mocks.view && structuredClone(mocks.view), focusEntity: mocks.focus, ensureVisible: mocks.focus, focus: mocks.focus }), []);
+    useImperativeHandle(props.ref, () => ({ capture: () => mocks.view && structuredClone(mocks.view), focusEntity: mocks.focus, focusElements: mocks.focusElements, ensureVisible: mocks.focus, focus: mocks.focus }), []);
     useEffect(() => {
       if (props.restoration) mocks.view = structuredClone(props.restoration.view);
       props.onViewChange?.();
@@ -65,6 +65,47 @@ beforeEach(()=>{
   vi.spyOn(window.history,"pushState").mockImplementation(()=>{});vi.spyOn(window.history,"back").mockImplementation(()=>{});vi.spyOn(window.history,"forward").mockImplementation(()=>{});
 });
 afterEach(()=>{cleanup();vi.restoreAllMocks();});
+
+it("brings external reading focus into view on mount and after switching targets without saving",async()=>{
+  const value=capsule(),save=vi.fn(saveResult);
+  const view=render(<CapsuleStudio capsule={value} onSave={save} externalFocus={{kind:"relation",id:relation}}/>);
+  await act(async()=>{});
+  expect(mocks.canvas!.selection).toEqual({kind:"relation",id:relation});
+  expect(mocks.canvas!.selectedKeys).toEqual([relation]);
+  expect(mocks.focusElements).toHaveBeenLastCalledWith(relation);
+  view.rerender(<CapsuleStudio capsule={value} onSave={save} externalFocus={{kind:"entity",id:b}}/>);
+  await act(async()=>{});
+  expect(mocks.focusElements).toHaveBeenLastCalledWith(b);
+  expect(mocks.canvas!.selectedKeys).toEqual([b]);
+  expect(save).not.toHaveBeenCalled();
+  expect(unloadIsBlocked()).toBe(false);
+});
+
+it("does not move the graph for missing external records, cleared focus, or an active edit",async()=>{
+  const value=capsule();
+  const view=render(<CapsuleStudio capsule={value} onSave={saveResult} externalFocus={{kind:"relation",id:"removed-relation"}}/>);
+  await act(async()=>{});
+  expect(mocks.focusElements).not.toHaveBeenCalled();
+  view.rerender(<CapsuleStudio capsule={value} onSave={saveResult} externalFocus={null}/>);
+  await act(async()=>{});
+  expect(mocks.focusElements).not.toHaveBeenCalled();
+  click("Edit");
+  view.rerender(<CapsuleStudio capsule={value} onSave={saveResult} externalFocus={{kind:"relation",id:relation}}/>);
+  await act(async()=>{});
+  expect(mocks.focusElements).not.toHaveBeenCalled();
+  expect(mocks.canvas!.selectedKeys).toEqual([]);
+});
+
+it("waits for the private graph to remount before restoring external reading focus",async()=>{
+  const value=capsule(),focus={kind:"relation" as const,id:relation};
+  const view=render(<CapsuleStudio capsule={value} externalFocus={focus} locked/>);
+  await act(async()=>{});
+  expect(mocks.focusElements).not.toHaveBeenCalled();
+  view.rerender(<CapsuleStudio capsule={value} externalFocus={focus}/>);
+  await act(async()=>{});
+  expect(mocks.focusElements).toHaveBeenLastCalledWith(relation);
+  expect(mocks.canvas!.selectedKeys).toEqual([relation]);
+});
 
 it("reverses a local arrow as one undoable edit and saves its new endpoints",async()=>{
   const save=vi.fn(saveResult);render(<CapsuleStudio capsule={capsule()} isNew onSave={save}/>);
