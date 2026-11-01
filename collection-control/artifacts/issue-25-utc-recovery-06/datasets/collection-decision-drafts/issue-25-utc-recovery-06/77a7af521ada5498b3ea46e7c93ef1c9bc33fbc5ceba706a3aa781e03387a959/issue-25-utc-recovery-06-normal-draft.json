@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "decisionId": "issue-25-utc-recovery-06-normal",
+  "status": "draft-not-approved",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": null,
+    "decidedAt": null,
+    "statement": null
+  },
+  "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "review": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/review-manifest.json",
+    "sha256": "77a7af521ada5498b3ea46e7c93ef1c9bc33fbc5ceba706a3aa781e03387a959"
+  },
+  "referenceArtifacts": [
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/README.md",
+      "sha256": "401ee93d4f4665626b306ed6e24638aee64ef3dc383b0d3ab612de70b24e5b25"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/context.json",
+      "sha256": "1b88538e679f168c2ebe9f6e17ef83dc1b49d9eca169fa2b157619af15f2ffbd"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/decision-request.json",
+      "sha256": "447790da947f795377d084cfdc225827c4c7862844ba4ab9caae70747c8969fe"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/exploration-paths.json",
+      "sha256": "3f08afdda78f6ddf3bfeb1242a7a77a3c127d2e87c0ca52ecbd6825906b3981d"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/proposed-records.json",
+      "sha256": "58b7666ca44a79ab4c9b5081e0a70bc0b5b9934cabdc3c6c8ea0e62ece256b67"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/review-manifest.json",
+      "sha256": "77a7af521ada5498b3ea46e7c93ef1c9bc33fbc5ceba706a3aa781e03387a959"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/review.json",
+      "sha256": "584edf8d337a7c17d4d08aec16fdc807903bad688c2f81a77619431f31c8dee5"
+    }
+  ],
+  "acceptedRecordIds": {
+    "entities": [
+      "648a399e-70c0-4042-b969-e914a4410544",
+      "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+      "a546e8f9-0e9e-4e39-a591-21e3e1ffd9dc",
+      "fe378e87-1945-4e1d-869e-c8ec88e998d4"
+    ],
+    "claims": [
+      "45a9d1b7-9f6f-4879-807a-ac4b175e4243",
+      "682fc119-9ac2-4061-b8a1-5d0de889f9ef",
+      "bdbb1592-4e6a-47c7-80ca-b120f9780e97"
+    ],
+    "sources": [
+      "8034f99b-fddb-4e9e-a577-87807158a1cb",
+      "910ae880-e134-4f9e-8dfa-48837982bc76",
+      "b9e867ab-b22d-4505-8253-59b3cd5c4e00"
+    ],
+    "citations": [
+      "0696f0a4-1721-4484-8d87-cc5b41089f7e",
+      "2bda879a-bb80-44c7-ac62-60d47248a8a2",
+      "37c5b39c-732d-4476-8ece-08a79e8c54de"
+    ]
+  },
+  "recordSha256": {
+    "entities": {
+      "648a399e-70c0-4042-b969-e914a4410544": "90ccffbcf3a20b4646bd8b9480f1cca3b489321c19d78423d1c0ab6843423a63",
+      "9888fc07-92c4-414b-b449-d33f7b9b07bc": "eaeae678968088b58df3a7ffddc47c97cd91505a54b959e74f047f7f12258f88",
+      "a546e8f9-0e9e-4e39-a591-21e3e1ffd9dc": "5afeb2241c720650490604d5deffc3994ce72427b67347d718147e7ef50a114c",
+      "fe378e87-1945-4e1d-869e-c8ec88e998d4": "e757459214be2816087a011d69f51985ea3d39d5db197f1cf9d40b480c83c1f8"
+    },
+    "claims": {
+      "45a9d1b7-9f6f-4879-807a-ac4b175e4243": "170bd5b2b2c8b922b7b7aa77cd6c59fa9c77588ac7e2dfdebedd6443c2b96006",
+      "682fc119-9ac2-4061-b8a1-5d0de889f9ef": "65d654211e2c7e8fe062d62ee48f26e31295c4c7f97930dfb9a07f28d17d5f82",
+      "bdbb1592-4e6a-47c7-80ca-b120f9780e97": "65eaba95fd6a8000eab174415faf33908aab656ee3bc103e4b6d0d3afbdcb864"
+    },
+    "sources": {
+      "8034f99b-fddb-4e9e-a577-87807158a1cb": "90ac849d67fb227bda294ee6d5b03f590896a4cabf071b0b74333eb4c344d7d9",
+      "910ae880-e134-4f9e-8dfa-48837982bc76": "c3f8fa436e3b8bf6dcbeb143a08585e3e3522ba1332692c68f7e0c9726024ff2",
+      "b9e867ab-b22d-4505-8253-59b3cd5c4e00": "44a153ccce417531773b8c6e87605b8b013327a209b2ed4904a51766be74989e"
+    },
+    "citations": {
+      "0696f0a4-1721-4484-8d87-cc5b41089f7e": "73b628b4815c2e856efceb3781fb6926d6d0819308944c4efc079e5d185e1127",
+      "2bda879a-bb80-44c7-ac62-60d47248a8a2": "618e952425c0605395b6db6caddd426ee5ac27de2ddfecc1c7e84e22ff43c6c1",
+      "37c5b39c-732d-4476-8ece-08a79e8c54de": "2e2f2a6a65a36af4a3639a1693da64b974094341ce205aeeeff058d8bd1ef47f"
+    }
+  },
+  "scopeByClaim": [
+    {
+      "id": "45a9d1b7-9f6f-4879-807a-ac4b175e4243",
+      "subjectId": "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+      "objectId": "648a399e-70c0-4042-b969-e914a4410544",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784086187657",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "682fc119-9ac2-4061-b8a1-5d0de889f9ef",
+      "subjectId": "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+      "objectId": "fe378e87-1945-4e1d-869e-c8ec88e998d4",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088538204",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "bdbb1592-4e6a-47c7-80ca-b120f9780e97",
+      "subjectId": "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+      "objectId": "a546e8f9-0e9e-4e39-a591-21e3e1ffd9dc",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088562094",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    }
+  ],
+  "baseRelease": "20261014-credits-001",
+  "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+  "releaseId": "manga-issue-25-utc-recovery-06-normal"
+}
