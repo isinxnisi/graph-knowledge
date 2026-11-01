@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-01T01:50:48.235185+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-01T00:56:29.749641+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-01T01:50:48.235185+00:00",
+    "eligibleAt": "2026-11-01T00:56:29.749641+00:00",
     "windowEndAt": "2026-11-01T03:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-59-dot-kubo-two-20261028",
-    "startedAt": "2026-11-01T00:45:48.235188+00:00",
-    "limitAt": "2026-11-01T01:40:48.235185+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-57-dot-oshima-two-20261028-batch-01",
-    "endedAt": "2026-11-01T00:34:19.831791+00:00"
+    "requestId": "issue-59-dot-kubo-two-20261028",
+    "endedAt": "2026-11-01T00:46:29.749643+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 10,
-    "waiting-control": 15,
-    "completed": 35,
+    "waiting-control": 14,
+    "completed": 36,
     "awaiting-recovery": 2
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T00:45:55.527360+00:00"
+  "checkedAt": "2026-11-01T00:47:29.877888+00:00"
 }
