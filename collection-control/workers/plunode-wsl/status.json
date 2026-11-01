@@ -26,31 +26,27 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-01T07:18:40.402730+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-01T06:25:09.107375+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-01T07:18:40.402730+00:00",
+    "eligibleAt": "2026-11-01T06:25:09.107375+00:00",
     "windowEndAt": "2026-11-01T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-70-dot-fujikof-doraemon-20261029",
-    "startedAt": "2026-11-01T06:13:40.402735+00:00",
-    "limitAt": "2026-11-01T07:08:40.402730+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-58-dot-takeuchi-two-20261028-batch-01",
-    "endedAt": "2026-11-01T02:34:54.897593+00:00"
+    "requestId": "issue-70-dot-fujikof-doraemon-20261029",
+    "endedAt": "2026-11-01T06:15:09.107377+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 9,
-    "waiting-lock": 19,
+    "waiting-control": 14,
     "completed": 29,
-    "awaiting-recovery": 4,
-    "running": 1
+    "awaiting-recovery": 5,
+    "waiting-lock": 5
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -166,7 +162,7 @@
     },
     "issue-25-utc-recovery-02": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-01",
-      "phase": "waiting-lock"
+      "phase": "waiting-control"
     },
     "issue-25-utc-recovery-03": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-04",
@@ -197,5 +193,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T06:14:29.120694+00:00"
+  "checkedAt": "2026-11-01T06:19:19.117634+00:00"
 }
