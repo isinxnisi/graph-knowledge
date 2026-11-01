@@ -1,0 +1,83 @@
+{
+  "synthetic": true,
+  "origin": "http://localhost:3276",
+  "ids": {
+    "subject": "u2-live-8a6176adbf3146e3-observer",
+    "object": "u2-live-8a6176adbf3146e3-observatory",
+    "source": "u2-live-8a6176adbf3146e3-source",
+    "record": "u2-live-8a6176adbf3146e3-record"
+  },
+  "steps": {
+    "create": {
+      "complete": true,
+      "completedAt": "2026-11-01T17:52:22.166946+00:00",
+      "generation": "k75-7a65434b8e7674f24137b35df7384ccb",
+      "recordRevision": 1,
+      "changeToken": "f61df5b1d973a0045f56fe81ffe361e839ad8d1a71ef7fde5ce62e6dd09aabb3",
+      "searchUrl": "http://localhost:3276/themes/explore",
+      "searchText": "u2-live-8a6176adbf3146e3-",
+      "detailUrl": "http://localhost:3276/api/knowledge/public?mode=record&generation=k75-7a65434b8e7674f24137b35df7384ccb&recordId=u2-live-8a6176adbf3146e3-record"
+    },
+    "correct": {
+      "complete": true,
+      "completedAt": "2026-11-01T17:52:45.406779+00:00",
+      "generation": "k75-afc8f07a3aa6bfd9abefee48cea6b5eb",
+      "recordRevision": 2,
+      "oldGeneration": "k75-7a65434b8e7674f24137b35df7384ccb",
+      "oldRevisionRetained": true,
+      "newRelation": "記録を共同で整理した",
+      "changeToken": "7bf880e80c12045b5179bce8443f86f1cf6f782cbc4c8c452ebfa3c322ab6ff7"
+    },
+    "hide": {
+      "complete": true,
+      "completedAt": "2026-11-01T17:53:13.681166+00:00",
+      "checksBeforeDependencyStop": [
+        {
+          "generation": "k75-7a65434b8e7674f24137b35df7384ccb",
+          "detailStatus": 404,
+          "searchEmpty": true,
+          "graphEmpty": true,
+          "neighborsEmptyOrStopped": true,
+          "pathsEmptyOrStopped": true
+        },
+        {
+          "generation": "k75-afc8f07a3aa6bfd9abefee48cea6b5eb",
+          "detailStatus": 404,
+          "searchEmpty": true,
+          "graphEmpty": true,
+          "neighborsEmptyOrStopped": true,
+          "pathsEmptyOrStopped": true
+        }
+      ],
+      "checks": [
+        {
+          "generation": "k75-7a65434b8e7674f24137b35df7384ccb",
+          "detailStatus": 404,
+          "searchEmpty": true,
+          "graphEmpty": true,
+          "neighborsEmptyOrStopped": true,
+          "pathsEmptyOrStopped": true
+        },
+        {
+          "generation": "k75-afc8f07a3aa6bfd9abefee48cea6b5eb",
+          "detailStatus": 404,
+          "searchEmpty": true,
+          "graphEmpty": true,
+          "neighborsEmptyOrStopped": true,
+          "pathsEmptyOrStopped": true
+        }
+      ],
+      "hiddenIds": {
+        "subject": "u2-live-8a6176adbf3146e3-observer",
+        "object": "u2-live-8a6176adbf3146e3-observatory",
+        "source": "u2-live-8a6176adbf3146e3-source",
+        "record": "u2-live-8a6176adbf3146e3-record"
+      },
+      "activeGeneration": "k75-089b8c4f52c9f3c10826db5783c77587",
+      "changeToken": "edaf750a90e736a92e1f2131d218a1e09ad5ffdfe8d1422fe2542e35c80c10ce",
+      "pending": false,
+      "syntheticHistoryRetained": true
+    }
+  },
+  "browserVerifiedSeparately": true
+}

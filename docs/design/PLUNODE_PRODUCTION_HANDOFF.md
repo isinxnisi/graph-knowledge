@@ -1,8 +1,8 @@
 # 本運用統合の実装引継ぎ
 
-2026-11-02。[統合計画](PLUNODE_PRODUCTION_INTEGRATION.md)をユーザーが採用し、最初のU1を実装・検証した。[現在の契約](KNOWLEDGE_FOUNDATION_U1.md)／[確認先・検証・制限](../verification/KNOWLEDGE_FOUNDATION_U1_20261102.md)を次担当は先に読む。下のU1依頼文は着手時の記録であり、同じ実装をやり直さない。
+2026-11-02。[統合計画](PLUNODE_PRODUCTION_INTEGRATION.md)をユーザーが採用し、U1に続いてU2を独立branch／3276へ実装・検証した。次担当は[U1契約](KNOWLEDGE_FOUNDATION_U1.md)、[U2契約](KNOWLEDGE_PUBLIC_READ_U2.md)、[U2の実操作と配置記録](../verification/KNOWLEDGE_PUBLIC_READ_U2_20261102.md)を先に読む。下のU1依頼文は着手時の記録であり、同じ実装をやり直さない。
 
-次はU2：PGの共通原記録・公開版から、索引付き検索・新Graph DTO・公開世代の読取経路を作る。現在のP0投影scriptを通常運転の完成と扱わない。実6件のtyped限定を新読取条件へ運ぶこと、自由関係を具体語のまま検索・Graphへ出すこと、非表示・再投影・版付きcursorをまとめて検証する。既存探索と会員Capsuleの全面統合はU3／U4で接続する。
+次はU3：既存探索・テーマ・年表／並列表示を、新しい共通Recordと公開読取へ自然に接続する。U2の具体語・typed条件・世代cursor・現在の公開可否を再実装せず利用する。現在の探索画面の全構成が正式採用されたとは扱わない。会員Capsuleのorigin／新断面／OGP・旧版コメント・固定掲載との接続はU4、一般投稿AI審査はU5、運営収集と予算はU6。main／β／本番の切替は今回行っていない。
 
 ## 最初に保持する判断
 
@@ -15,8 +15,8 @@
 ## 現在の資材
 
 - 独立worktree：`/home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation`
-- branch：`codex/issue75-theme-foundation`、実装基準：`6f5817088ad6d7fd117ff5c3d6fb483d74883371`
-- 3276の記録上のbuild：`haFEgPJMum1L1ozNIkfNa`。起動・再開は[直近検証](../verification/THEME_FOUNDATION_REVIEW_20261101.md#確認先と再開)。今回の文書更新でbuildは変更しない。
+- branch：`codex/issue75-theme-foundation`、U2アプリsource：`5d9ab5d7a3448a8901262be9ffb57bc5a1a1cab3`
+- 3276のbuild：`sF8VDlqJ0YGnEhPOPExhY`。起動・再開は[U2の手順](KNOWLEDGE_PUBLIC_READ_U2.md#確認環境の起動再開)。専用PG／Neo4j／通常publisherを引き継ぐ。
 - main確認時：`cd84b76ecf5b5f36009fb43ee01ffc7ac6cf9206`、未追跡`memo.txt`を保護。既存mainの構成とこのbranchの差分を開始時に再確認する。
 - 専用PGは `plunode-issue75-postgres`、127.0.0.1:55475。既存会員DB・KGとは別。volumeを削除しない。
 
@@ -37,6 +37,17 @@
 
 U5/U6はjob実行・利用量・request ID照合を共用できる。投稿の審査状態と収集状態、AIの判断契約は共用しない。両方の巨大な汎用workflowエンジンを先に作らず、二つの実経路から必要な共通処理だけを切り出す。
 
+## U2後の次の一単位
+
+U3では、まず既存探索↔共通の記録↔テーマ・年表／並列表示の往復を一つの実テーマで通す。既存GraphCanvasはU2でも再利用済みであり、未知の関係名を旧Claim ENUMへ変換するadapterを増やさない。`knowledge-publication.ts` の読取service／domain DTOと、U1のTheme固定参照を使う。
+
+- テーマが固定したRecord・Entity・Sourceの版と、検索のactive世代の最新headを混同しない。年表の説明・期間だけの記録は関係図の辺へ増やさない。
+- 関係図と年表のどちらから選んでも、同じRecordと根拠へ戻れる。位置・条件・選択・入力途中が往復で失われないことをPC・スマホで確認する。
+- 今の `/themes/explore` は公開読取の確認面。既存探索へ組み込む際の配置やURL、再開の設計を、この画面全体の採用済み仕様に固定しない。
+- 年表同士の比較／マージ、会員Capsuleの保存・共有更新、投稿審査、収集AIの起動はU3へ混ぜない。U4以降へ渡す断面とoriginの契約は保持する。
+
+推奨担当は引き続きSol 6.1 高。U1/U2の正本・読取・公開停止の契約を守る通常実装として進め、既存契約ではデータの意味や固定版を守れない具体的な問題が見つかったときだけ横断設計へ戻る。
+
 ## U1の受入例
 
 U1は、小さいAPI・操作面・代表データ・差分処理で次の接続を実証する範囲。公開検索の全経路はU2、本番Capsule reader・OGP・会話の統合はU4へ残す。以下を理由にU2〜U6をU1で全実装しない。
@@ -52,9 +63,9 @@ U1は、小さいAPI・操作面・代表データ・差分処理で次の接続
 
 U7/U8では公開済みデータだけでなく、旧Workerの未完了job・cache・未受理成果・受入済み未公開releaseを棚卸しし、継続／引継ぎ／保留と新旧操作ID対応を残す。保存成果の取り残し・二重処理がないことを切替条件に含める。
 
-## 次担当へ渡す依頼案
+## U1着手時の依頼（実施済み）
 
-次は**統合計画をユーザーが採用した後**に送る。
+以下は実施済みのU1依頼。現在の着手順は冒頭とU2検証記録を優先する。
 
 > Plunode本運用初版の統合計画に沿って、U1／P0「共通原記録と接続契約の実証」を実装してください。AGENTS、PROJECT_CONTEXT、ARCHITECTURE、PLUNODE_PRODUCTION_INTEGRATION.md、PLUNODE_PRODUCTION_HANDOFF.md、最新のIssue #75検証を読み、現在のbranch・dirty・並行作業・実行buildを再確認してください。Autopilot review、hold取得、token確認を行い、既存の3276データを保全してください。
 >
