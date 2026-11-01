@@ -1,0 +1,48 @@
+{
+  "backup": ".local/issue75/context-before-20261101T114846Z.dump",
+  "backupSha256": "d275b4fdbe1dac60d514f9e7e7fe556bc4f250019b3392054f5d424487484b47",
+  "before": {
+    "themes": {
+      "ada-engine": "50244e1912a0793d81162079b81a4fe5761a7aa491b4656874f3e05d8d52cc48",
+      "webb-partnership": "6624c15f75bde51418a739a412532349dfee797d55c421ae074260966e004c88",
+      "webb-partnership2": "00940c934cfd0900cde2ce6c9b85fd5b8960764b4230b3e0466db060553175f0",
+      "webb-deployment-timeline": "068d3c4a5f510f66ab64eabd3472c8445631ba0041cf925a3ead0c8aceb69610",
+      "time-meaning-check-15c2aed882": "10d8ddb2a5747d2c786b2b843984b05f6219666ef661f9fdc4aea5c3f1b03d02",
+      "picasso-blue-period": "147af8a82ecb1c57924aa1afbcf14ce75c04f8136e196a56cd2edf7254092ce1",
+      "temporal-boundaries-example": "6ae354a22214d7cb1398f1c53bfc91761e8fc9888c096f9e0246b09b155d1f9e",
+      "pattern-precision-mixed-46f82d1c": "06ad6fa4284dd893001fefdcc1f8a10f9cca71559e642c465681a3cc94d16bc4",
+      "pattern-explicit-inset-239bc3f6": "4e9ca0fb24573ab9ec951f1d1aa8774e58bb8ecab1b5cc7584a15cd4847b02bc"
+    },
+    "capsules": {
+      "44282431-8929-406a-870a-f56b5bad1f12": "bff9001bde331e58a7e5eacd12ee8c7d779673d05d4dd504c75b912702641da3",
+      "25c0a443-2778-4cd2-984c-8fb0376a93ce": "cfddd7a09ff57e40c1aacd9958adfe518e57515eb90a36476e90515c3d76fa2e",
+      "e2952adb-d233-456a-9de4-d979621b53c4": "bbf7dfeb9ab4aae6e560dee662a07d951892ae1c5d0bbf68833d2a6ef2d96681",
+      "c3c27c18-569f-4743-a56a-bd78ad15deb6": "c8f3efe2d29b667fc97d90687d75f3e011ee6aba22d7562576ee12909104f70f",
+      "f3ec3509-d023-41a4-93f3-422038599d7c": "673f827f9d88336dd7c04abe15ce92d1d8254d35b75b6879901387df06ecfe67",
+      "9ad27bb1-af81-4b8f-bd43-cf47c506c75c": "6889793c63974135b5969fef2a839eeabd6dc8b79976531013b774486d4c21c9",
+      "60d63560-1501-4096-9fc9-5c3b2edf7af6": "edd132cf3703afed096ff8b041e4f2bf15e27c28b160697d9056138ffad8aceb",
+      "a9769835-46d7-4a83-9416-902f296a5d63": "09643a4ae02689f975ee11f3fd7f0374151baef614f91353229115e26166fcef"
+    }
+  },
+  "sharesSha256": "c8aecaa6d74a6777e996a7f2b72586cea332b4064e6d86172bc4ffa373268bc1",
+  "oldRowsUnchanged": {
+    "themes": true,
+    "capsules": true
+  },
+  "sharesUnchanged": true,
+  "afterCounts": {
+    "themes": 10,
+    "capsules": 8
+  },
+  "newThemeId": "pattern-record-context-0dc833bc",
+  "newThemeEntityIds": [
+    "artist",
+    "work"
+  ],
+  "newThemeRecordKinds": [
+    "relation",
+    "note",
+    "episode"
+  ],
+  "dbMigration": false
+}

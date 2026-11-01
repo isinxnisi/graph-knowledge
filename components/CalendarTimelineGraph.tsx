@@ -72,7 +72,7 @@ export default function CalendarTimelineGraph({
           style={
             {
               "--lanes": graph.laneCount,
-              gridTemplateRows: `repeat(${graph.rows.length}, minmax(52px, auto))`,
+              gridTemplateRows: `repeat(${graph.rows.length}, minmax(34px, auto))`,
             } as CSSProperties
           }
           aria-label="期間と出来事の年表グラフ"

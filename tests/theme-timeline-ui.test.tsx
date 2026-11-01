@@ -322,13 +322,13 @@ it("offers graph navigation only for records still present in an edited Capsule 
     onShowGraph: showGraph,
   };
   const view = render(<ThemeTimeline {...props} graphRecordIds={[]} />);
-  expect(screen.queryByRole("button", { name: "関係図で見る" })).toBeNull();
+  expect(screen.queryByRole("button", { name: /^関係図で見る：/ })).toBeNull();
   expect(screen.getByRole("button", { name: /^旅の一日/ })).toBeTruthy();
   view.rerender(<ThemeTimeline {...props} graphRecordIds={[parent.id]} />);
-  fireEvent.click(screen.getByRole("button", { name: "関係図で見る" }));
+  fireEvent.click(screen.getByRole("button", { name: /^関係図で見る：/ }));
   expect(showGraph).toHaveBeenCalledWith(parent);
   view.rerender(<ThemeTimeline {...props} />);
-  expect(screen.getByRole("button", { name: "関係図で見る" })).toBeTruthy();
+  expect(screen.getByRole("button", { name: /^関係図で見る：/ })).toBeTruthy();
 });
 
 it("keeps expansion controls linked for a free-text axis name containing spaces", () => {
@@ -452,4 +452,85 @@ it("shows an entirely uncertain duration as one continuous uncertain stroke with
   );
   expect(segments).toHaveLength(1);
   expect(segments[0].getAttribute("data-kind")).toBe("uncertain");
+});
+
+it("shows the concrete directed relation between the same entity IDs without opening the row", () => {
+  const relation = {
+    ...record("relation", "旅人が詩集を執筆した", {
+      kind: "calendar",
+      from: "2030",
+      label: "",
+    }),
+    kind: "relation" as const,
+    object: "book",
+    relation: "執筆した",
+    polarity: "denied" as const,
+  };
+  const show = vi.fn(),
+    focus = vi.fn(),
+    membership = vi.fn();
+  render(
+    <ThemeTimeline
+      {...common}
+      records={[relation]}
+      entities={[
+        ...common.entities,
+        { id: "book", name: "ある詩集", kind: "作品", description: "" },
+      ]}
+      onShowGraph={show}
+      onFocusRecord={focus}
+      onToggleSelected={membership}
+    />,
+  );
+  const context = document.querySelector('[data-record-kind="relation"]')!;
+  expect(context.textContent).toContain("旅人執筆したある詩集否定");
+  expect(
+    [...context.querySelectorAll("[data-entity-id]")].map((e) =>
+      e.getAttribute("data-entity-id"),
+    ),
+  ).toEqual(["traveler", "book"]);
+  expect(
+    context
+      .querySelector('[data-entity-id="traveler"] i')
+      ?.getAttribute("data-shape"),
+  ).toBe("circle");
+  expect(
+    context
+      .querySelector('[data-entity-id="book"] i')
+      ?.getAttribute("data-shape"),
+  ).toBe("round-rectangle");
+  fireEvent.click(
+    screen.getByRole("button", { name: "関係図で見る：旅人が詩集を執筆した" }),
+  );
+  expect(show).toHaveBeenCalledWith(relation);
+  expect(focus).not.toHaveBeenCalled();
+  expect(membership).not.toHaveBeenCalled();
+  expect(
+    screen
+      .getByRole("button", { name: /^旅人が詩集/ })
+      .getAttribute("aria-expanded"),
+  ).toBe("false");
+});
+
+it("does not invent a relation arrow or a period entity for non-relational period information", () => {
+  const period = {
+    ...record("period", "ある作風の期間", {
+      kind: "calendar",
+      meaning: "duration",
+      from: "2030",
+      to: "2032",
+      label: "架空の青の時代",
+    }),
+    kind: "note" as const,
+  };
+  render(<ThemeTimeline {...common} records={[period]} />);
+  const context = document.querySelector('[data-record-kind="note"]')!;
+  expect(context.textContent).toContain("旅人説明");
+  expect(context.querySelector("[data-relation-mark]")).toBeNull();
+  expect(
+    [...context.querySelectorAll("[data-entity-id]")].map((e) =>
+      e.getAttribute("data-entity-id"),
+    ),
+  ).toEqual(["traveler"]);
+  expect(screen.getByRole("button", { name: /^ある作風の期間/ })).toBeTruthy();
 });

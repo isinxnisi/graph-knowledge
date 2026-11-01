@@ -14,17 +14,17 @@
 .graph {
   --step: 19px;
   --gutter: 78px;
-  --anchor: 26px;
+  --anchor: 20px;
   display: grid;
   position: relative;
-  grid-template-columns: var(--gutter) calc(
-      (var(--lanes) + 1) * var(--step)
-    ) minmax(170px, 1fr);
+  grid-template-columns:
+    var(--gutter) calc((var(--lanes) + 1) * var(--step))
+    minmax(170px, 1fr);
   min-width: calc(var(--gutter) + (var(--lanes) + 1) * var(--step) + 170px);
 }
 .date {
   grid-column: 1;
-  padding: 18px 8px 0 0;
+  padding: 12px 8px 0 0;
   font-size: 11px;
   font-variant-numeric: tabular-nums;
   color: var(--color-muted);
@@ -72,7 +72,7 @@
 .records {
   grid-column: 3;
   min-width: 0;
-  padding: 0 0 8px 9px;
+  padding: 0 0 4px 9px;
 }
 .recordList {
   list-style: none;
@@ -237,7 +237,7 @@
   align-items: center;
   width: 100%;
   min-height: 28px;
-  margin-top: 12px;
+  margin-top: 6px;
   padding: 0 5px 0 0;
   border: 0;
   background: transparent;

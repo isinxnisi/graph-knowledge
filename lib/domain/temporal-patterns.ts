@@ -6,6 +6,7 @@ import {
 
 type Input = {
   id: string;
+  kind?: "relation" | "episode" | "note";
   label: string;
   time: unknown;
   subject?: string;
@@ -592,6 +593,34 @@ add(
   "年表示でも1991〜1992の幅を保つ。比較相手がないという理由だけで点にはしない。",
 );
 
+add(
+  "record-context",
+  "関係・エピソード・説明の対応",
+  "表示単位と接続先",
+  [
+    {
+      ...item("a", point(8), "ある作者が作品を制作した"),
+      subject: "artist",
+      object: "work",
+      relation: "制作した",
+    },
+    {
+      ...item(
+        "b",
+        calendar("2030", "duration", "2032", { label: "架空の青の時代" }),
+        "ある作者の作風の時期区分",
+      ),
+      kind: "note",
+      subject: "artist",
+    },
+    {
+      ...item("c", point(10), "ある作者についてのエピソード"),
+      subject: "artist",
+    },
+  ],
+  "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは関係図では注記になるが、年表だけに隠す指定は未実装。",
+);
+
 const categoryOrder = [...new Set(cases.map((c) => c.category))];
 export const temporalPatterns: readonly TemporalPattern[] = cases.toSorted(
   (a, b) =>
@@ -622,7 +651,7 @@ export function temporalPatternPackage(
     entities,
     records: pattern.records.map((r) => ({
       id: r.id,
-      kind: r.object ? "relation" : "episode",
+      kind: r.kind ?? (r.object ? "relation" : "episode"),
       subject: r.subject ?? r.id,
       object: r.object ?? null,
       assertion: `【仮想】${r.label}`,

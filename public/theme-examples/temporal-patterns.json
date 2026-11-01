@@ -5046,6 +5046,116 @@
         ],
         "mappings": []
       }
+    },
+    {
+      "id": "record-context",
+      "title": "関係・エピソード・説明の対応",
+      "category": "表示単位と接続先",
+      "status": "renderable",
+      "expectation": "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは関係図では注記になるが、年表だけに隠す指定は未実装。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 3,
+      "validationIssues": [],
+      "package": {
+        "schemaVersion": 1,
+        "id": "pattern-record-context",
+        "title": "【仮想】関係・エピソード・説明の対応",
+        "description": "すべて架空の検証データ。Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは関係図では注記になるが、年表だけに隠す指定は未実装。",
+        "entities": [
+          {
+            "id": "artist",
+            "name": "架空の対象ARTIST",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          },
+          {
+            "id": "work",
+            "name": "架空の対象WORK",
+            "kind": "仮想データ",
+            "description": "検証用。実在の人物・出来事ではありません。"
+          }
+        ],
+        "records": [
+          {
+            "id": "a",
+            "kind": "relation",
+            "subject": "artist",
+            "object": "work",
+            "assertion": "【仮想】ある作者が作品を制作した",
+            "relation": "制作した",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-08",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=record-context",
+                "title": "仮想ケースの定義",
+                "locator": "record-context / a",
+                "excerpt": "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは関係図では注記になるが、年表だけに隠す指定は未実装。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "kind": "note",
+            "subject": "artist",
+            "object": null,
+            "assertion": "【仮想】ある作者の作風の時期区分",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "duration",
+              "from": "2030",
+              "to": "2032",
+              "label": "架空の青の時代"
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=record-context",
+                "title": "仮想ケースの定義",
+                "locator": "record-context / b",
+                "excerpt": "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは関係図では注記になるが、年表だけに隠す指定は未実装。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          },
+          {
+            "id": "c",
+            "kind": "episode",
+            "subject": "artist",
+            "object": null,
+            "assertion": "【仮想】ある作者についてのエピソード",
+            "relation": "",
+            "scope": "検証用の仮定。史実や実資料ではない。",
+            "polarity": "affirmed",
+            "time": {
+              "kind": "calendar",
+              "meaning": "point",
+              "from": "2030-05-10",
+              "label": ""
+            },
+            "evidence": [
+              {
+                "url": "http://localhost:3276/themes/patterns?case=record-context",
+                "title": "仮想ケースの定義",
+                "locator": "record-context / c",
+                "excerpt": "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは関係図では注記になるが、年表だけに隠す指定は未実装。",
+                "retrievedAt": "2026-11-01T00:00:00Z"
+              }
+            ]
+          }
+        ],
+        "mappings": []
+      }
     }
   ]
 }

@@ -1,0 +1,612 @@
+{
+  "checkedAt": "2026-11-01T11:57:25.972Z",
+  "density": {
+    "before": {
+      "graphHeight": 576.375,
+      "rows": [
+        {
+          "height": 118.09375,
+          "id": "a"
+        },
+        {
+          "height": 118.09375,
+          "id": "b"
+        },
+        {
+          "height": 118.09375,
+          "id": "c"
+        },
+        {
+          "height": 118.09375,
+          "id": "d"
+        }
+      ],
+      "width": 1100
+    },
+    "after": {
+      "graphHeight": 404.375,
+      "misconnected": 0,
+      "rows": [
+        {
+          "height": 83.09375,
+          "id": "a"
+        },
+        {
+          "height": 83.09375,
+          "id": "b"
+        },
+        {
+          "height": 83.09375,
+          "id": "c"
+        },
+        {
+          "height": 83.09375,
+          "id": "d"
+        }
+      ],
+      "width": 1100
+    }
+  },
+  "caseSweep": [
+    {
+      "id": "pair-before",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "pair-after",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "pair-meets",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "pair-met-by",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "pair-overlaps",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "pair-overlapped-by",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "pair-starts",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "pair-started-by",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "pair-during",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "pair-contains",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "pair-finishes",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "pair-finished-by",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "pair-equal",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "precision-year",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "precision-month",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "precision-day",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "precision-mixed",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "precision-reversed-looking",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "same-day",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "same-date-independent",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "leap-and-year-crossing",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "first-half-defined",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "window-empty",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "window-with-event",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "window-event-at-boundary",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "windows-overlap",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "window-filtered-event",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "gap",
+      "width": 390
+    },
+    {
+      "id": "duration-empty",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "boundary-start",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "boundary-end",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "boundaries-separate",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "boundaries-overlap",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "boundaries-mixed",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "membership-none",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "membership-explicit",
+      "arrows": 1,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 1,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "undated",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "cycle",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "qualitative",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "explicit-inset",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "hour",
+      "arrows": 0,
+      "documentWidth": 390,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "gap",
+      "width": 390
+    },
+    {
+      "id": "minute",
+      "arrows": 0,
+      "documentWidth": 390,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "gap",
+      "width": 390
+    },
+    {
+      "id": "timezone",
+      "arrows": 0,
+      "documentWidth": 390,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "gap",
+      "width": 390
+    },
+    {
+      "id": "local-clock",
+      "arrows": 0,
+      "documentWidth": 390,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "gap",
+      "width": 390
+    },
+    {
+      "id": "first-half-undefined",
+      "arrows": 0,
+      "documentWidth": 390,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "gap",
+      "width": 390
+    },
+    {
+      "id": "first-half-label",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "gap",
+      "width": 390
+    },
+    {
+      "id": "relative-stage",
+      "arrows": 0,
+      "documentWidth": 390,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "gap",
+      "width": 390
+    },
+    {
+      "id": "multiple-windows",
+      "arrows": 0,
+      "documentWidth": 390,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "gap",
+      "width": 390
+    },
+    {
+      "id": "invalid-date",
+      "arrows": 0,
+      "documentWidth": 390,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "rejected",
+      "width": 390
+    },
+    {
+      "id": "invalid-reverse",
+      "arrows": 0,
+      "documentWidth": 390,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "rejected",
+      "width": 390
+    },
+    {
+      "id": "invalid-missing-end",
+      "arrows": 0,
+      "documentWidth": 390,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "rejected",
+      "width": 390
+    },
+    {
+      "id": "invalid-start-boundary",
+      "arrows": 0,
+      "documentWidth": 390,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "rejected",
+      "width": 390
+    },
+    {
+      "id": "invalid-end-boundary",
+      "arrows": 0,
+      "documentWidth": 390,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "rejected",
+      "width": 390
+    },
+    {
+      "id": "invalid-window-boundary",
+      "arrows": 0,
+      "documentWidth": 390,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "rejected",
+      "width": 390
+    },
+    {
+      "id": "invalid-point-end",
+      "arrows": 0,
+      "documentWidth": 390,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "rejected",
+      "width": 390
+    },
+    {
+      "id": "dense-overlap",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "display-granularity",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "year-point-and-window",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "month-window-and-duration",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "shared-start-anchors",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "year-crossing-window",
+      "arrows": 0,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 0,
+      "status": "renderable",
+      "width": 390
+    },
+    {
+      "id": "record-context",
+      "arrows": 1,
+      "documentWidth": 380,
+      "misconnected": 0,
+      "relations": 1,
+      "status": "renderable",
+      "width": 390
+    }
+  ],
+  "exampleUrl": "http://localhost:3276/themes/pattern-record-context-0dc833bc",
+  "example": {
+    "normalImport": true,
+    "entities": 2,
+    "relations": 1,
+    "records": 3,
+    "periodCreatedEntity": false,
+    "quickGraphNavigation": true
+  },
+  "viewportReset": true,
+  "build": "GYW1MMgYuNfRHFSdBseGW"
+}

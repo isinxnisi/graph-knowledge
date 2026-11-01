@@ -10,6 +10,7 @@ import { buildTimelineGroups } from "../lib/domain/theme-timeline";
 import { calendarMeaning, themeTimeLabel } from "../lib/domain/theme-time";
 import css from "./ThemeTimeline.module.css";
 import CalendarTimelineGraph from "./CalendarTimelineGraph";
+import Icon from "./Icon";
 import {
   calendarLayoutBounds,
   type CalendarResolution,
@@ -40,6 +41,52 @@ const meaningLabels = {
   "occurrence-window": "発生時期の幅",
   "unclassified-range": "時期の範囲 · 未区別",
 };
+
+function RecordContext({
+  record,
+  entities,
+}: {
+  record: ThemeRecord;
+  entities: ThemeEntity[];
+}) {
+  const entity = (id: string) => {
+    const value = entities.find((e) => e.id === id);
+    return (
+      <span className={css.entityTag} data-entity-id={id}>
+        <i
+          className={css.entityShape}
+          data-shape={value?.kind === "人物" ? "circle" : "round-rectangle"}
+          aria-hidden="true"
+        />
+        <span>{value?.name ?? id}</span>
+      </span>
+    );
+  };
+  return (
+    <span className={css.recordContext} data-record-kind={record.kind}>
+      {entity(record.subject)}
+      {record.kind === "relation" && record.object ? (
+        <>
+          <span className={css.relationMark} data-relation-mark>
+            <span>{record.relation}</span>
+            <Icon name="arrow" />
+          </span>
+          {entity(record.object)}
+        </>
+      ) : (
+        <span className={css.contextKind}>
+          <Icon name={record.kind === "episode" ? "event" : "book"} />
+          {record.kind === "episode" ? "エピソード" : "説明"}
+        </span>
+      )}
+      {record.polarity !== "affirmed" && (
+        <span className={css.contextKind}>
+          {record.polarity === "denied" ? "否定" : "推測・不確実"}
+        </span>
+      )}
+    </span>
+  );
+}
 
 function calendarBoundariesOverlap(time: CalendarTime) {
   return (
@@ -318,12 +365,16 @@ export default function ThemeTimeline({
               >
                 <span className={css.rowText}>
                   <span className={css.assertion}>{record.assertion}</span>
-                  <span className={css.meta}>
-                    {name(record.subject)}
-                    {record.object ? ` → ${name(record.object)}` : ""}
-                    {t?.label ? ` · ${t.label}` : ""}
-                    {nested.length ? ` · 詳しい時間軸 ${nested.length}件` : ""}
-                  </span>
+                  <RecordContext record={record} entities={entities} />
+                  {(nested.length > 0 ||
+                    (group.kind !== "calendar" && t?.label)) && (
+                    <span className={css.meta}>
+                      {group.kind !== "calendar" ? t?.label : ""}
+                      {nested.length
+                        ? ` · 詳しい時間軸 ${nested.length}件`
+                        : ""}
+                    </span>
+                  )}
                 </span>
                 <span
                   className={css.chevron}
@@ -333,6 +384,23 @@ export default function ThemeTimeline({
                   ⌄
                 </span>
               </button>
+              {onShowGraph &&
+                (graphRecordIds === undefined ||
+                  graphRecordIds.includes(record.id)) && (
+                  <button
+                    type="button"
+                    className={css.graphJump}
+                    aria-label={`関係図で見る：${record.assertion}`}
+                    title={
+                      record.kind === "relation"
+                        ? "関係図のこの関係を見る"
+                        : "関係図のこの注記を見る"
+                    }
+                    onClick={() => onShowGraph(record)}
+                  >
+                    <Icon name="graph" />
+                  </button>
+                )}
             </div>
             {group.kind === "calendar" ? (
               <p className={css.meta}>{themeTimeLabel(record.time)}</p>
@@ -385,16 +453,6 @@ export default function ThemeTimeline({
                     ))}
                   </div>
                   <div className={css.actions}>
-                    {onShowGraph &&
-                      (graphRecordIds === undefined ||
-                        graphRecordIds.includes(record.id)) && (
-                        <button
-                          type="button"
-                          onClick={() => onShowGraph(record)}
-                        >
-                          関係図で見る <span aria-hidden="true">↗</span>
-                        </button>
-                      )}
                     {onEditRecord && (
                       <button
                         type="button"

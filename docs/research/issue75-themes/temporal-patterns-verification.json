@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-11-01T11:16:24.742Z",
-  "caseCount": 60,
+  "checkedAt": "2026-11-01T11:48:01.887Z",
+  "caseCount": 61,
   "checkedDisplayUnits": [
     "auto",
     "year",
@@ -8,11 +8,11 @@
     "day"
   ],
   "statusCounts": {
-    "renderable": 44,
+    "renderable": 45,
     "gap": 9,
     "rejected": 7
   },
-  "fixtureSha256": "e5cc98d85aca0fda912796255d791434b2498bc83a6071d62a7d62d4f423e228",
+  "fixtureSha256": "6af92047cafc39e07370ff96cf750e6d1e3f70e29a3506eec0c5e0c1c3c9ea3a",
   "scope": "共通schema・座標・元データの検証。見やすさの人間受入、全ケースの実ブラウザ確認、未対応機能の完成を意味しない。",
   "cases": [
     {
@@ -712,6 +712,17 @@
       "expectedAcceptance": true,
       "actualAcceptance": true,
       "recordCount": 1,
+      "validationIssues": []
+    },
+    {
+      "id": "record-context",
+      "title": "関係・エピソード・説明の対応",
+      "category": "表示単位と接続先",
+      "status": "renderable",
+      "expectation": "Aだけが二者を結ぶ関係。Bの期間名からEntityや所属の辺を自動生成しない。B・Cは関係図では注記になるが、年表だけに隠す指定は未実装。",
+      "expectedAcceptance": true,
+      "actualAcceptance": true,
+      "recordCount": 3,
       "validationIssues": []
     }
   ]
