@@ -42,10 +42,10 @@
   },
   "controlError": null,
   "requestsByPhase": {
-    "waiting-control": 26,
-    "blocked": 6,
-    "completed": 27,
-    "retry-wait": 1,
+    "waiting-control": 27,
+    "blocked": 5,
+    "completed": 26,
+    "retry-wait": 2,
     "awaiting-recovery": 2
   },
   "issueIntake": {
@@ -59,7 +59,7 @@
     },
     "collection-control/issue-sources/5.json": {
       "status": "registered: issue-5-dot-tezuka-adolf-20261025",
-      "checkedAt": "2026-10-30T13:35:03+00:00"
+      "checkedAt": "2026-11-01T13:24:01+00:00"
     },
     "collection-control/issue-sources/42.json": {
       "status": "registered: issue-42-dot-matsumoto-three-20261026",
@@ -111,19 +111,19 @@
     },
     "collection-control/issue-sources/61.json": {
       "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
-      "checkedAt": "2026-11-01T12:24:36+00:00"
+      "checkedAt": "2026-11-01T13:24:16+00:00"
     },
     "collection-control/issue-sources/62.json": {
       "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
-      "checkedAt": "2026-11-01T12:14:14+00:00"
+      "checkedAt": "2026-11-01T13:24:17+00:00"
     },
     "collection-control/issue-sources/64.json": {
       "status": "registered: issue-64-dot-oda-onepiece-20261029",
-      "checkedAt": "2026-10-31T16:19:13+00:00"
+      "checkedAt": "2026-11-01T13:24:19+00:00"
     },
     "collection-control/issue-sources/65.json": {
       "status": "registered: issue-65-dot-inoue-three-20261029",
-      "checkedAt": "2026-10-29T00:09:25+00:00"
+      "checkedAt": "2026-11-01T13:24:21+00:00"
     },
     "collection-control/issue-sources/66.json": {
       "status": "registered: issue-66-dot-togashi-two-20261029",
@@ -135,7 +135,7 @@
     },
     "collection-control/issue-sources/68.json": {
       "status": "registered: issue-68-dot-fujikoa-two-20261029",
-      "checkedAt": "2026-10-31T16:23:13+00:00"
+      "checkedAt": "2026-11-01T13:24:26+00:00"
     },
     "collection-control/issue-sources/69.json": {
       "status": "registered: issue-69-dot-ishinomori-three-20261029",
@@ -147,11 +147,11 @@
     },
     "collection-control/issue-sources/71.json": {
       "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
-      "checkedAt": "2026-11-01T05:26:20+00:00"
+      "checkedAt": "2026-11-01T13:24:31+00:00"
     },
     "collection-control/issue-sources/73.json": {
       "status": "registered: issue-73-dot-murata-onepunch-20261030",
-      "checkedAt": "2026-11-01T09:14:29+00:00"
+      "checkedAt": "2026-11-01T13:24:33+00:00"
     }
   },
   "publicApply": false,
@@ -193,5 +193,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T13:13:28.380321+00:00"
+  "checkedAt": "2026-11-01T13:27:15.301590+00:00"
 }

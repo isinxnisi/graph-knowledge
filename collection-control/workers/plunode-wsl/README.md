@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-01 22:13:28 JST。
+確認: 2026-11-01 22:27:15 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -32,7 +32,7 @@ Issue確認結果:
   },
   "collection-control/issue-sources/5.json": {
     "status": "registered: issue-5-dot-tezuka-adolf-20261025",
-    "checkedAt": "2026-10-30T13:35:03+00:00"
+    "checkedAt": "2026-11-01T13:24:01+00:00"
   },
   "collection-control/issue-sources/42.json": {
     "status": "registered: issue-42-dot-matsumoto-three-20261026",
@@ -84,19 +84,19 @@ Issue確認結果:
   },
   "collection-control/issue-sources/61.json": {
     "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
-    "checkedAt": "2026-11-01T12:24:36+00:00"
+    "checkedAt": "2026-11-01T13:24:16+00:00"
   },
   "collection-control/issue-sources/62.json": {
     "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
-    "checkedAt": "2026-11-01T12:14:14+00:00"
+    "checkedAt": "2026-11-01T13:24:17+00:00"
   },
   "collection-control/issue-sources/64.json": {
     "status": "registered: issue-64-dot-oda-onepiece-20261029",
-    "checkedAt": "2026-10-31T16:19:13+00:00"
+    "checkedAt": "2026-11-01T13:24:19+00:00"
   },
   "collection-control/issue-sources/65.json": {
     "status": "registered: issue-65-dot-inoue-three-20261029",
-    "checkedAt": "2026-10-29T00:09:25+00:00"
+    "checkedAt": "2026-11-01T13:24:21+00:00"
   },
   "collection-control/issue-sources/66.json": {
     "status": "registered: issue-66-dot-togashi-two-20261029",
@@ -108,7 +108,7 @@ Issue確認結果:
   },
   "collection-control/issue-sources/68.json": {
     "status": "registered: issue-68-dot-fujikoa-two-20261029",
-    "checkedAt": "2026-10-31T16:23:13+00:00"
+    "checkedAt": "2026-11-01T13:24:26+00:00"
   },
   "collection-control/issue-sources/69.json": {
     "status": "registered: issue-69-dot-ishinomori-three-20261029",
@@ -120,11 +120,11 @@ Issue確認結果:
   },
   "collection-control/issue-sources/71.json": {
     "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
-    "checkedAt": "2026-11-01T05:26:20+00:00"
+    "checkedAt": "2026-11-01T13:24:31+00:00"
   },
   "collection-control/issue-sources/73.json": {
     "status": "registered: issue-73-dot-murata-onepunch-20261030",
-    "checkedAt": "2026-11-01T09:14:29+00:00"
+    "checkedAt": "2026-11-01T13:24:33+00:00"
   }
 }
 ```
