@@ -43,8 +43,7 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 8,
-    "waiting-control": 21,
-    "retry-wait": 1,
+    "waiting-control": 22,
     "completed": 30,
     "awaiting-recovery": 2
   },
@@ -114,9 +113,8 @@
       "checkedAt": "2026-11-01T05:15:08+00:00"
     },
     "collection-control/issue-sources/62.json": {
-      "status": "held",
-      "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-      "checkedAt": "2026-11-01T12:09:32+00:00"
+      "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
+      "checkedAt": "2026-11-01T12:14:14+00:00"
     },
     "collection-control/issue-sources/64.json": {
       "status": "registered: issue-64-dot-oda-onepiece-20261029",
@@ -194,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T12:12:55.278541+00:00"
+  "checkedAt": "2026-11-01T12:16:35.345238+00:00"
 }
