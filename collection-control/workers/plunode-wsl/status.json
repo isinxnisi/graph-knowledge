@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-01T01:20:10.882157+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-01T02:26:50.165094+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-01T01:20:10.882157+00:00",
+    "eligibleAt": "2026-11-01T02:26:50.165094+00:00",
     "windowEndAt": "2026-11-01T03:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-61-dot-gotouge-kimetsu-20261028",
+    "startedAt": "2026-11-01T01:21:50.165097+00:00",
+    "limitAt": "2026-11-01T02:16:50.165094+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-60-dot-ichikawa-houseki-20261028",
     "endedAt": "2026-11-01T01:10:10.882159+00:00"
@@ -192,5 +196,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T01:11:09.922412+00:00"
+  "checkedAt": "2026-11-01T01:21:57.210824+00:00"
 }
