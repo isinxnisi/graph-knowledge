@@ -70,8 +70,9 @@
       "checkedAt": "2026-10-30T13:28:58+00:00"
     },
     "collection-control/issue-sources/47.json": {
-      "status": "registered: issue-47-dot-yukimura-two-20261027",
-      "checkedAt": "2026-10-30T13:06:52+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+      "checkedAt": "2026-11-01T12:05:12+00:00"
     },
     "collection-control/issue-sources/48.json": {
       "status": "registered: issue-48-dot-toriyama-three-20261027",
@@ -193,5 +194,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T12:04:03.803921+00:00"
+  "checkedAt": "2026-11-01T12:08:08.252583+00:00"
 }

@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-01 21:04:03 JST。
+確認: 2026-11-01 21:08:08 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -43,8 +43,9 @@ Issue確認結果:
     "checkedAt": "2026-10-30T13:28:58+00:00"
   },
   "collection-control/issue-sources/47.json": {
-    "status": "registered: issue-47-dot-yukimura-two-20261027",
-    "checkedAt": "2026-10-30T13:06:52+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-01T12:05:12+00:00"
   },
   "collection-control/issue-sources/48.json": {
     "status": "registered: issue-48-dot-toriyama-three-20261027",
