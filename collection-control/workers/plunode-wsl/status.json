@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-01T07:21:39.243396+00:00",
-  "phase": "ready",
+  "nextStartAt": "2026-11-01T08:49:20.399040+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
-    "ready": true,
-    "reason": "ready",
-    "eligibleAt": null,
-    "windowEndAt": "2026-11-01T09:00:00+00:00"
+    "ready": false,
+    "reason": "interval",
+    "eligibleAt": "2026-11-01T18:00:00+00:00",
+    "windowEndAt": "2026-11-01T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-68-dot-fujikoa-two-20261029",
+    "startedAt": "2026-11-01T07:44:20.399042+00:00",
+    "limitAt": "2026-11-01T08:39:20.399040+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-5-dot-tezuka-adolf-20261025-batch-01",
     "endedAt": "2026-11-01T07:11:39.243399+00:00"
@@ -192,5 +196,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T07:27:21.694216+00:00"
+  "checkedAt": "2026-11-01T07:44:27.469081+00:00"
 }
