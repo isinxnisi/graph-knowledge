@@ -42,10 +42,10 @@
   },
   "controlError": null,
   "requestsByPhase": {
-    "waiting-control": 32,
-    "blocked": 4,
+    "waiting-control": 30,
+    "retry-wait": 4,
+    "blocked": 3,
     "completed": 23,
-    "retry-wait": 1,
     "awaiting-recovery": 2
   },
   "issueIntake": {
@@ -146,8 +146,9 @@
       "checkedAt": "2026-10-31T16:05:23+00:00"
     },
     "collection-control/issue-sources/71.json": {
-      "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
-      "checkedAt": "2026-11-01T13:24:31+00:00"
+      "status": "held",
+      "reason": "Remote end closed connection without response",
+      "checkedAt": "2026-11-01T15:06:58+00:00"
     },
     "collection-control/issue-sources/73.json": {
       "status": "registered: issue-73-dot-murata-onepunch-20261030",
@@ -193,5 +194,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T15:04:21.501975+00:00"
+  "checkedAt": "2026-11-01T15:11:36.559582+00:00"
 }
