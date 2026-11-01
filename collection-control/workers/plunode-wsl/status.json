@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-01T06:58:07.021126+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-01T08:04:58.107113+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-01T06:58:07.021126+00:00",
+    "eligibleAt": "2026-11-01T08:04:58.107113+00:00",
     "windowEndAt": "2026-11-01T09:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-64-dot-oda-onepiece-20261029",
+    "startedAt": "2026-11-01T06:59:58.107116+00:00",
+    "limitAt": "2026-11-01T07:54:58.107113+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-25-manga23-20261019-repair1-batch-09",
     "endedAt": "2026-11-01T06:48:07.021128+00:00"
@@ -192,5 +196,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T06:49:05.740160+00:00"
+  "checkedAt": "2026-11-01T07:00:05.848191+00:00"
 }
