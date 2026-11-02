@@ -19,7 +19,7 @@ export function useDiscoveryHistory(snapshot: Record<string, unknown>, ready: bo
     if (key === last.current.key) { dirty.current = false; return true; }
     try {
       history.replaceState(current.lab ? { ...history.state, discoveryPrototype: current.snapshot } : {
-        ...history.state, plunodeDiscovery: { ...(current.snapshot.listCriteria as object), presentation: current.snapshot.entry === "list" ? "list" : "explore" },
+        ...history.state, plunodeDiscovery: { ...(current.snapshot.listCriteria as object), presentation: current.snapshot.entry === "themes" ? "themes" : current.snapshot.entry === "list" ? "list" : "explore" },
         discoveryWorkspace: current.snapshot, discoveryReturnFocus: current.source,
       }, "", location.href);
       if (current.lab) { try { sessionStorage.setItem("plunode.discovery-prototype.v1", JSON.stringify(current.snapshot)); } catch { /* Optional storage. */ } }

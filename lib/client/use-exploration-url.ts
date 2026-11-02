@@ -14,7 +14,8 @@ import { WorkspaceError, WorkspaceRootNotFound } from "./saved-workspace";
 import { fetchDatasetRevision } from "./api";
 import { parseDiscoveryHandoff, verifyDiscoveryHandoff } from "./discovery-relation-navigation";
 
-export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply, locale }: {
+export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply, locale, suspended = false }: {
+  suspended?: boolean;
   dataset: DatasetMode; initialRoot?: string; graph: GraphState; capture: () => GraphView | null;
   apply: (value: RebuiltWorkspace) => void; locale: "ja" | "en";
 }) {
@@ -27,15 +28,15 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
   const [canRestart, setCanRestart] = useState(false);
   const savedInput = useRef<SavedWorkspace | null>(null);
   const [ready, setReady] = useState(false);
-  const latest = useRef({ graph, capture, apply, dataset, locale });
+  const latest = useRef({ graph, capture, apply, dataset, locale, suspended });
   const restoring = useRef(!!initialRoot);
   const failed = useRef(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => { latest.current = { graph, capture, apply, dataset, locale }; });
+  useEffect(() => { latest.current = { graph, capture, apply, dataset, locale, suspended }; });
   const update = useCallback(() => {
     const { graph, capture, dataset, locale } = latest.current;
     const labels = explorationUrlLabels(locale);
-    if (restoring.current || failed.current || !graph.centerId || new URLSearchParams(location.search).has("read")) return false;
+    if (latest.current.suspended || restoring.current || failed.current || !graph.centerId || new URLSearchParams(location.search).has("read")) return false;
     try {
       const view = capture(); if (!view) return false;
       const rawHref = explorationHref(captureWorkspace(dataset, "URL", graph, view));
@@ -60,7 +61,7 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(update, 350);
   }, [update]);
-  useEffect(() => { schedule(); }, [graph, locale, schedule]);
+  useEffect(() => { schedule(); }, [graph, locale, schedule, suspended]);
   useEffect(() => {
     window.addEventListener("pagehide", update);
     return () => { window.removeEventListener("pagehide", update); if (timer.current) clearTimeout(timer.current); };

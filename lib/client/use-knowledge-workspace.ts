@@ -73,7 +73,7 @@ function writeReference(s: State, push = false) {
 }
 
 /** Keeps ordinary exploration and a pinned Theme as two independent reading states. */
-export function useKnowledgeWorkspace({ initialRootId }: { initialRootId?: string } = {}) {
+export function useKnowledgeWorkspace({ initialRootId, embedded = false }: { initialRootId?: string; embedded?: boolean } = {}) {
   const [state, setState] = useState<State>(() => ({ query: "", kind: "", normal: blankNormal(), entityPage: null, themes: [], activeTheme: null, retainedTheme: null, themeView: "graph", themeSelection: null, neighborPages: {}, normalRestoration: null, themeRestoration: null }));
   const current = useRef(state), alive = useRef(false), ready = useRef(false);
   const epoch = useRef(0), entitySearch = useRef(0), themeSearch = useRef(0), access = useRef<string | null>(null);
@@ -146,6 +146,12 @@ export function useKnowledgeWorkspace({ initialRootId }: { initialRootId?: strin
     alive.current = true;
     let disposed = false; const pendingEpoch = epoch, pendingEntitySearch = entitySearch, pendingThemeSearch = themeSearch;
     const stored = savedReference() ?? emptyKnowledgeReference();
+    if (embedded) {
+      // The existing Explorer owns ordinary URLs. Only explicit Theme/common links activate this reader.
+      stored.theme = null;
+      const commonRoot=new URL(location.href).searchParams.get("kentity");
+      if(commonRoot && stored.rootId!==commonRoot){stored.rootId=commonRoot;stored.recordIds=[];stored.generation=null;stored.selection={kind:"entity",id:commonRoot};}
+    }
     if (initialRootId && stored.rootId !== initialRootId) { stored.rootId = initialRootId; stored.recordIds = []; stored.selection = { kind: "entity", id: initialRootId }; stored.theme = null; }
     queueMicrotask(() => { if (!disposed) void restore(stored, knowledgeThemeLocation(new URL(location.href))); });
     const pop = () => { void restore(parseKnowledgeReference(window.history.state?.[workspaceHistoryKey]) ?? emptyKnowledgeReference(), knowledgeThemeLocation(new URL(location.href))); };
@@ -237,7 +243,7 @@ export function useKnowledgeWorkspace({ initialRootId }: { initialRootId?: strin
     const token = begin(), before = current.current.normal;
     try {
       const result = await readKnowledge<Neighbors>("neighbors", { generation: !latest ? before.generation ?? undefined : undefined, entityId: id, cursor: cursor ?? undefined });
-      if (!live(token)) return;
+      if (!live(token)) return false;
       if (!latest && before.generation && result.generation !== before.generation) throw new Error("公開版が一致しません。");
       update(s => {
         const records = start ? result.records : mergeRecords(s.normal.records, result.records);
@@ -246,9 +252,10 @@ export function useKnowledgeWorkspace({ initialRootId }: { initialRootId?: strin
           neighborPages: { ...(start ? {} : s.neighborPages), [id]: { cursor: result.nextCursor, hasMore: result.hasMore } } };
       }, start ? "push" : "replace");
       setMessage(result.records.length ? "周囲の関係を表示しました。" : "この対象に表示できる関係はありません。");
-    } catch (e) { if (live(token)) setError(messageOf(e)); } finally { finish(token); }
+      return true;
+    } catch (e) { if (live(token)) setError(messageOf(e)); return false; } finally { finish(token); }
   }
-  async function startFrom(entity: KnowledgeEntityVersion) { await loadNeighbors(entity.id, undefined, true, Boolean(current.current.activeTheme)); }
+  async function startFrom(entity: KnowledgeEntityVersion) { return loadNeighbors(entity.id, undefined, true, Boolean(current.current.activeTheme)); }
   async function expandEntity(id: string, cursor?: string | null) { await loadNeighbors(id, cursor); }
   function selectEntity(id: string) {
     epoch.current++; setBusy(false);
@@ -273,7 +280,7 @@ export function useKnowledgeWorkspace({ initialRootId }: { initialRootId?: strin
       if (live(token)) { setError(messageOf(e)); if (unavailable(e)) update(s => s.retainedTheme?.theme.id === ref.id ? { ...s, activeTheme: null, retainedTheme: null, themeSelection: null, themeCanvasView: undefined, themeRestoration: null } : s); }
     } finally { finish(token); }
   }
-  function closeTheme() { epoch.current++; setBusy(false); update(s => ({ ...s, activeTheme: null }), "push"); }
+  function closeTheme(history: "push" | "replace" = "push") { epoch.current++; setBusy(false); update(s => ({ ...s, activeTheme: null }), history); }
   function setThemeView(themeView: KnowledgeView) { epoch.current++; setBusy(false); update(s => ({ ...s, themeView })); }
   function setThemeSelection(selection: KnowledgeSelection) {
     epoch.current++; setBusy(false);

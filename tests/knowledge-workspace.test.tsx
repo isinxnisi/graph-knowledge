@@ -197,3 +197,26 @@ it("応答本文が停止しても15秒で再試行可能にする", async () =>
   await vi.advanceTimersByTimeAsync(15_000);
   expect((await outcome as Error).message).toContain("再試行できます");
 });
+
+
+it("既存Explorerの通常URLへ戻ったときsession内の古いテーマを再表示しない",async()=>{
+ const {result,unmount}=await setup();
+ await act(()=>result.current.openTheme({id:"theme",revision:3}));
+ unmount();history.replaceState({},"","/?ordinary=1");
+ const embedded=renderHook(()=>useKnowledgeWorkspace({embedded:true}));await flush();
+ expect(embedded.result.current.activeTheme).toBeNull();
+ expect(location.search).toBe("?ordinary=1");
+});
+it("既存Explorerからのテーマ明示URLは、古いsessionより指定の構成版を優先する",async()=>{
+ server();history.replaceState({},"","/?ktheme=theme&krev=3");
+ const {result}=renderHook(()=>useKnowledgeWorkspace({embedded:true}));await flush();
+ expect(result.current.activeTheme?.theme.revision).toBe(3);
+ expect(location.search).toContain("ktheme=theme");
+});
+
+it("失効した対象探索は成功扱いせず、呼出側のURLを付け替えない",async()=>{
+ const {api,result}=await setup();const pending=api.hold("neighbors");
+ let outcome:unknown;act(()=>{void result.current.startFrom(a).then(v=>{outcome=v;});});await flush();
+ act(()=>result.current.closeTheme("replace"));await pending.finish();await flush();
+ expect(outcome).toBe(false);expect(result.current.normal.rootId).toBeNull();
+});

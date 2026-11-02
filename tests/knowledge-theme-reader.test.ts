@@ -164,6 +164,23 @@ describe.skipIf(!url || !password)("public fixed Theme and generation Entity rea
     expect(knowledgeEntityQuerySchema.safeParse({ entityIds: Array.from({ length: 201 }, (_, i) => "limit-" + i) }).success).toBe(false);
   });
 
+  it("filters authorised themes by presentation and retains registration dates across revision updates",async()=>{
+    await seed("discovery-");await theme("discovery-");
+    const first=(await publication.themes({q:"discovery-",kind:"graph"})).themes[0];
+    expect(first).toMatchObject({id:"discovery-t",hasRelations:true,hasTimeline:false});
+    expect(first.publishedAt).toMatch(/^\d{4}-/);
+    expect((await publication.themes({q:"discovery-",kind:"timeline"})).themes).toEqual([]);
+    expect((await publication.themes({kind:"timeline"})).themes).toEqual(expect.arrayContaining([expect.objectContaining({id:"period-t",hasTimeline:true,hasRelations:false})]));
+    await correct("record","discovery-r",1,{...relation("discovery-"),assertion:"訂正"});
+    await run("refresh-theme",{id:"discovery-t",expectedRevision:1,refreshToken:(await foundation.diffTheme(operator,"discovery-t")).refreshToken});
+    const current=(await publication.themes({q:"discovery-"})).themes[0];
+    expect(current.revision).toBe(2);expect(current.publishedAt).toBe(first.publishedAt);
+    const sorted=(await publication.themes({order:"name"})).themes;
+    expect(sorted.map(t=>t.title)).toEqual(sorted.map(t=>t.title).sort((a,b)=>a.localeCompare(b,"ja")));
+    await visibility("record","discovery-r","hidden",(await foundation.list(operator)).statuses.find(s=>s.id==="discovery-r")!.revision);
+    expect((await publication.themes({q:"discovery-",kind:"graph"})).themes).toEqual([]);
+  });
+
   it("escapes SQL wildcard literals in Theme and Entity searches", async () => {
     await seed("literal-");
     await correct("entity", "literal-a", 1, { name: "literal 100%_name", kind: "person" });

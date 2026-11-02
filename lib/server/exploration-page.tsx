@@ -16,11 +16,10 @@ export async function discoveryMetadata(locale: PublicLocale, stateful: boolean,
     { locale, paired: true, ...(subject ? { image: `${path}/opengraph-image` } : {}) });
 }
 export async function ExplorationPage({ locale, id }: { locale: PublicLocale; id?: string }) {
-  if (process.env.THEME_WORKBENCH_ENABLED === "1" && process.env.KNOWLEDGE_WORKSPACE_ENABLED === "1")
-    return <Explorer dataset="demo" initialRoot={id} knowledgeEnabled />;
+  const knowledgeEnabled=process.env.THEME_WORKBENCH_ENABLED === "1" && process.env.KNOWLEDGE_WORKSPACE_ENABLED === "1";
   const dataset = datasetMode(process.env.GRAPH_DATASET), subject = dataset === "public-kg" && id ? await publicSubject(id) : undefined;
   if (dataset === "public-kg" && id && !subject) notFound();
   const overview = subject ? <PublicDiscovery locale={locale} subject={subject} /> : undefined;
   const home = dataset === "public-kg" && !id ? await discoveryHomeData() : undefined;
-  return <Explorer dataset={dataset} initialRoot={id} services={await publicationPolicy()} publicOverview={overview} discoveryHome={home} />;
+  return <Explorer knowledgeEnabled={knowledgeEnabled} dataset={dataset} initialRoot={id} services={await publicationPolicy()} publicOverview={overview} discoveryHome={home} />;
 }

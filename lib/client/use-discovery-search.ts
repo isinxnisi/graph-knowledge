@@ -6,7 +6,7 @@ import type { SearchKind } from "../domain/search";
 import type { DiscoveryTheme } from "../domain/discovery";
 import { dataReleaseLabels } from "../i18n/data-release";
 import type { PredicateFilter } from "../domain/exploration";
-export type DiscoveryCriteria = { recordView?: boolean; contributionRole?: import("../domain/contribution").ContributionRoleId | null; presentation?: "explore" | "list"; q: string; kind: SearchKind | null; around?: string; theme?: DiscoveryTheme; predicates?: PredicateFilter };
+export type DiscoveryCriteria = { recordView?: boolean; contributionRole?: import("../domain/contribution").ContributionRoleId | null; presentation?: "explore" | "list" | "themes"; q: string; kind: SearchKind | null; around?: string; theme?: DiscoveryTheme; predicates?: PredicateFilter };
 const cache = new Map<string, { at: number; result: DiscoverySearchResponse }>();
 
 export function useDiscoverySearch(criteria: DiscoveryCriteria, after: string | null, composing: boolean) {

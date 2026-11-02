@@ -21,6 +21,14 @@ def configuration():
  for k in list(env):
   if k.startswith(('MEMBER_','GOOGLE_','GRAPH_','NEO4J_','AI_LAB_','KG_ADMIN_')):env.pop(k)
  env.update(THEME_WORKBENCH_ENABLED='1',KNOWLEDGE_WORKSPACE_ENABLED='1',THEME_DATABASE_URL='postgresql://theme75:'+cfg['password']+'@127.0.0.1:55475/plunode_theme75',THEME_ORIGIN='http://localhost:3276',NEXT_TELEMETRY_DISABLED='1')
+ public_config=Path.home()/'.local/state/plunode-previews/beta-confirmation.json'
+ if not public_config.exists():raise SystemExit('Existing read-only public KG configuration is required for Explorer integration')
+ if public_config.stat().st_uid!=os.getuid() or public_config.stat().st_mode & 0o077:raise SystemExit('Public KG configuration must be owned by the current user with mode 0600')
+ public=json.loads(public_config.read_text())
+ assert public['NEO4J_URI']=='bolt://127.0.0.1:7697' and public['NEO4J_DATABASE']=='neo4j','Public confirmation target mismatch'
+ env.update({k:public[k] for k in ['NEO4J_URI','NEO4J_USER','NEO4J_PASSWORD','NEO4J_DATABASE']})
+ env.update(GRAPH_DATASET='public-kg',GRAPH_FILM_BETA='0',NEO4J_READ_TIMEOUT_MS='10000')
+
  neo=STATE/'knowledge-proof/neo4j-private.json'
  if neo.exists():
   private=json.loads(neo.read_text())
@@ -115,7 +123,8 @@ def main():
   run(str(NODE),cli,'build','--webpack',cwd=ROOT,env=env);return
  with socket.socket() as s:
   if s.connect_ex(('127.0.0.1',PORT))==0:raise SystemExit('Port 3276 already in use; use status. No existing process changed.')
- if args.action=='start' and not (ROOT/'.next/BUILD_ID').exists():raise SystemExit('Run build first, or dev for development')
+ build_dir=ROOT/('.next-public' if env.get('GRAPH_DATASET')=='public-kg' else '.next')
+ if args.action=='start' and not (build_dir/'BUILD_ID').exists():raise SystemExit('Run build first, or dev for development')
  publication_database()
  publication_worker(env)
  with (STATE/'server.log').open('ab') as log:

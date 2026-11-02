@@ -23,11 +23,12 @@ import { focusDestination } from "../lib/client/focus-destination";
 import { useDialogDismiss } from "../lib/client/use-dialog-dismiss";
 import { useDialogBackdrop } from "../lib/client/use-dialog-backdrop";
 import DiscoveryListPanel from "./DiscoveryListPanel";
+import {ThemeSearchPanel, initialThemeCriteria, type ThemeCriteria, type OpenTheme} from "./ThemeDiscovery";
 import styles from "./DiscoveryExplorer.module.css";
 import DiscoveryConnections from "./DiscoveryConnections";
 import { connectionsWorkspaceSchema, initialConnectionsWorkspace, type ConnectionsWorkspace } from "../lib/domain/discovery-connections";
 import { useDiscoveryHistory } from "../lib/client/use-discovery-history";
-type Entry = "connections" | "worlds" | "list";
+type Entry = "connections" | "worlds" | "list" | "themes";
 type Variant = "staged" | "tabs";
 type Label = readonly [string, string];
 const textOf = (value: Label, locale: string) => value[locale === "en" ? 1 : 0];
@@ -52,11 +53,16 @@ function Seed({ seed, preset = false, requiredKind, onChoose }: { seed: typeof p
   </span>;
 }
 
-export default function DiscoveryExplorer({ lab = false, presetBrowser = false, initial = { q: "", kind: null, presentation: "explore" }, onClose, onChoose }: {
+export default function DiscoveryExplorer({ lab = false, presetBrowser = false, initial = { q: "", kind: null, presentation: "explore" }, onClose, onChoose, onChooseTheme }: {
+  onChooseTheme?: OpenTheme;
   lab?: boolean; presetBrowser?: boolean; initial?: DiscoveryCriteria; onClose?: (source?: string | null) => void; onChoose?: (entity: EntitySummary, predicates?: PredicateFilter, roles?: import("../lib/domain/exploration").ContributionRoleFilter) => void;
 }) {
   const { locale, setLocale } = useUiLocale(), en = locale === "en";
   const t = (ja: string, english: string) => en ? english : ja;
+  const themesEnabled=Boolean(onChooseTheme);
+  const entries: Entry[]=lab?["connections","worlds"]:["connections","worlds","list",...(themesEnabled?["themes" as const]:[])];
+  const labelFor=(value:Entry,short=false)=>value==="connections"?t(short?"接点から":"今ある接点から","Existing connections"):value==="worlds"?t(short?"知識世界":"知識世界から","Knowledge worlds"):value==="themes"?t(short?"テーマ":"テーマから","Themes"):t(short?"一覧検索":"一覧・条件から","Browse & refine");
+  const [themeCriteria,setThemeCriteria]=useState<ThemeCriteria>(initialThemeCriteria);
   const [catalog, setCatalog] = useState<CatalogWorkspace>(initialCatalogWorkspace);
   const [connectionFlow,setConnectionFlow]=useState<ConnectionsWorkspace>(initialConnectionsWorkspace);
   const [catalogBusy, setCatalogBusy] = useState(false), [catalogError, setCatalogError] = useState<string | null>(null);
@@ -66,7 +72,7 @@ export default function DiscoveryExplorer({ lab = false, presetBrowser = false, 
   const [pathUi,setPathUi] = useState<PathUi>({scope:"",open:false,depth:2,selected:null});
   const [lookupOpen, setLookupOpen] = useState(false), [lookupQ, setLookupQ] = useState("");
   const [undo, setUndo] = useState<{ context: DiscoveryContext; label: Label; lookupOpen: boolean; lookupQ: string; pathUi: PathUi; reader?: "records" | "paths" } | null>(null);
-  const [entry, setEntry] = useState<Entry>(!lab && initial.presentation !== "explore" ? "list" : "connections"), [variant, setVariant] = useState<Variant>("tabs");
+  const [entry, setEntry] = useState<Entry>(themesEnabled && initial.presentation === "themes" ? "themes" : !lab && initial.presentation !== "explore" ? "list" : "connections"), [variant, setVariant] = useState<Variant>("tabs");
   const preview = presetBrowser && entry === "connections";
   const browsingPresets = preview && catalog.mode === "presets";
   const pendingPreset = presetCatalog.find(p => p.id === catalog.pending);
@@ -78,7 +84,7 @@ export default function DiscoveryExplorer({ lab = false, presetBrowser = false, 
   // Name lookup changes the visible operation, while keeping all exploration criteria.
   const names = (preview && catalog.mode === "names") || lookupOpen || (!context.anchor && basePlan.state !== "unsupported");
   const plan = names ? lookupQ.trim() ? { state: "ready" as const, operation: "names" as const, q: lookupQ.trim() } : { state: "needs-name" as const } : basePlan;
-  const query = usePrototypeQuery(ready && entry !== "list" && !browsingPresets && !preview ? plan : { state: "needs-anchor" }, names ? null : cursors.at(-1)!, composing && names);
+  const query = usePrototypeQuery(ready && entry !== "list" && entry !== "themes" && !browsingPresets && !preview ? plan : { state: "needs-anchor" }, names ? null : cursors.at(-1)!, composing && names);
   useEffect(() => {
     const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const resumed = !!window.history.state?.plunodeDiscovery;
@@ -100,6 +106,8 @@ export default function DiscoveryExplorer({ lab = false, presetBrowser = false, 
         setContext({ ...restored, names: false, q: restored.names ? "" : restored.q });
         setLookupOpen(saved.lookupOpen === true || restored.names);
         setLookupQ(typeof saved.lookupQ === "string" ? saved.lookupQ.slice(0, 100) : restored.names ? restored.q : "");
+        if (themesEnabled && saved.entry === "themes") setEntry("themes");
+        if (saved.themeCriteria && typeof saved.themeCriteria.q === "string" && ["all","timeline","graph","context"].includes(saved.themeCriteria.kind) && ["newest","name"].includes(saved.themeCriteria.order)) setThemeCriteria({...saved.themeCriteria,q:saved.themeCriteria.q.slice(0,200)});
         if (saved.entry === "worlds" || (!lab && saved.entry === "list")) setEntry(saved.entry);
         if (!lab && saved.listCriteria && typeof saved.listCriteria.q === "string") setListCriteria(saved.listCriteria);
         if (!lab && Array.isArray(saved.listCursors) && saved.listCursors.length && saved.listCursors.every((v: unknown) => v === null || typeof v === "string")) setListCursors(saved.listCursors);
@@ -116,8 +124,8 @@ export default function DiscoveryExplorer({ lab = false, presetBrowser = false, 
         if (target?.isConnected) focusDestination(target);
       });
     };
-  }, [lab, onClose, presetBrowser]);
-  const snapshot = useMemo(() => ({ layoutVersion: 2, context, entry, variant, lookupOpen, lookupQ, listCriteria, listCursors, pathUi, ...(presetBrowser ? { catalog,connectionFlow } : {}) }), [context, entry, variant, lookupOpen, lookupQ, listCriteria, listCursors, pathUi, presetBrowser, catalog,connectionFlow]);
+  }, [lab, onClose, presetBrowser, themesEnabled]);
+  const snapshot = useMemo(() => ({ layoutVersion: 2, themeCriteria, context, entry, variant, lookupOpen, lookupQ, listCriteria, listCursors, pathUi, ...(presetBrowser ? { catalog,connectionFlow } : {}) }), [context, entry, variant, lookupOpen, lookupQ, listCriteria, listCursors, pathUi, presetBrowser, catalog,connectionFlow,themeCriteria]);
   const {checkpoint,flush}=useDiscoveryHistory(snapshot,ready,lab,returnFocus);
   const checkpointConnection=useCallback((flow:ConnectionsWorkspace)=>{if(!selected.current)setConnectionFlow(flow);checkpoint(flow);},[checkpoint]);
   useLayoutEffect(() => {
@@ -259,11 +267,10 @@ export default function DiscoveryExplorer({ lab = false, presetBrowser = false, 
       <header className={styles.header}><div><span className={styles.brand}><Icon name="graph"/>PLUNODE<span>{lab ? "Discovery Lab" : "Discovery"}</span></span><h2 id="prototype-title" tabIndex={-1} data-focus-destination>{lab ? t("探索する", "Explore") : t("知識を探す", "Discover")}</h2></div><div className={styles.headerActions}>{lab && <button className={styles.layoutToggle} aria-label={variant === "tabs" ? t("段階表示を試す", "Try staged layout") : t("タブ表示に戻す", "Use tabs")} onClick={() => setVariant(variant === "tabs" ? "staged" : "tabs")}><span className={styles.layoutLabel}>{variant === "tabs" ? t("段階表示を試す", "Try staged layout") : t("タブ表示に戻す", "Use tabs")}</span><span className={styles.layoutCompact} aria-hidden="true">{variant === "tabs" ? t("段階", "Stages") : t("タブ", "Tabs")}</span></button>}<div className={styles.language} aria-label={t("表示言語", "Language")}><button aria-pressed={!en} onClick={() => setLocale("ja")}>JA</button><button aria-pressed={en} onClick={() => setLocale("en")}>EN</button></div><button className={styles.close} aria-label={lab ? t("試作を閉じる", "Close prototype") : t("検索を閉じる", "Close search")} onClick={close}><Icon name="close"/></button></div></header>
       <div ref={body} className={styles.body} data-testid="prototype-body">
           <nav className={styles.entryNav} aria-label={t("探索の入口", "Discovery entrances")}>
-            {variant === "tabs" ? <div className={styles.tabs} role="tablist" aria-label={t("探索の入口", "Discovery entrances")}>{((lab ? ["connections", "worlds"] : ["connections", "worlds", "list"]) as Entry[]).map(value => <button key={value} role="tab" aria-label={value === "connections" ? t("今ある接点から", "Existing connections") : value === "worlds" ? t("知識世界から", "Knowledge worlds") : t("一覧・条件から", "Browse & refine")} id={"prototype-tab-" + value} aria-controls={value === "list" ? "discovery-list-panel" : "prototype-entry"} aria-selected={entry === value} tabIndex={entry === value ? 0 : -1} onClick={() => switchEntry(value)} onKeyDown={e => { if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) { e.preventDefault(); const values: Entry[] = lab ? ["connections", "worlds"] : ["connections", "worlds", "list"]; const next = e.key === "Home" ? values[0] : e.key === "End" ? values.at(-1)! : values[(values.indexOf(entry) + (e.key === "ArrowRight" ? 1 : values.length - 1)) % values.length]; switchEntry(next); document.getElementById("prototype-tab-" + next)?.focus({ preventScroll: true }); } }}>{value === "connections" ? <Icon name="graph"/> : value === "worlds" ? <DiscoveryWorldIcon world="geography"/> : <Icon name="list"/>}<span className={styles.tabLong}>{value === "connections" ? t("今ある接点から", "Existing connections") : value === "worlds" ? t("知識世界から", "Knowledge worlds") : t("一覧・条件から", "Browse & refine")}</span><span className={styles.tabShort} aria-hidden="true">{value === "connections" ? t("接点から", "Connections") : value === "worlds" ? t("知識世界", "Worlds") : t("一覧検索", "Browse")}</span></button>)}</div>
-            : <button className={styles.stagedSwitch} onClick={() => switchEntry(entry === "connections" ? "worlds" : "connections")}>{entry === "connections" ? t("知識世界から探す →", "Explore knowledge worlds →") : t("接点から探す →", "Explore connections →")}</button>}
+            {variant === "tabs" ? <div className={styles.tabs} role="tablist" aria-label={t("探索の入口","Discovery entrances")}>{entries.map(value=><button key={value} role="tab" aria-label={labelFor(value)} id={"prototype-tab-"+value} aria-controls={value==="themes"?"discovery-theme-panel":value==="list"?"discovery-list-panel":"prototype-entry"} aria-selected={entry===value} tabIndex={entry===value?0:-1} onClick={()=>switchEntry(value)} onKeyDown={e=>{if(["ArrowLeft","ArrowRight","Home","End"].includes(e.key)){e.preventDefault();const next=e.key==="Home"?entries[0]:e.key==="End"?entries.at(-1)!:entries[(entries.indexOf(entry)+(e.key==="ArrowRight"?1:entries.length-1))%entries.length];switchEntry(next);document.getElementById("prototype-tab-"+next)?.focus({preventScroll:true});}}}>{value==="connections"?<Icon name="graph"/>:value==="worlds"?<DiscoveryWorldIcon world="geography"/>:<Icon name={value==="themes"?"event":"list"}/>}<span className={styles.tabLong}>{labelFor(value)}</span><span className={styles.tabShort} aria-hidden="true">{labelFor(value,true)}</span></button>)}</div>:<button className={styles.stagedSwitch} onClick={()=>switchEntry(entry==="connections"?"worlds":"connections")}>{entry==="connections"?t("知識世界から探す →","Explore knowledge worlds →"):t("接点から探す →","Explore connections →")}</button>}
 
           </nav>
-        {preview ? ready&&<DiscoveryConnections value={connectionFlow} onChange={setConnectionFlow} body={body} onCheckpoint={checkpointConnection} onGraph={snapshot=>{
+        {entry === "themes" && onChooseTheme ? <ThemeSearchPanel criteria={themeCriteria} onChange={setThemeCriteria} onOpen={ref=>{flush();selected.current=true;window.addEventListener("popstate",()=>{onChooseTheme(ref);requestAnimationFrame(()=>focusDestination(document.getElementById("explorer-graph")));},{once:true});window.history.back();}} /> : preview ? ready&&<DiscoveryConnections value={connectionFlow} onChange={setConnectionFlow} body={body} onCheckpoint={checkpointConnection} onGraph={snapshot=>{
           selected.current=true;
           checkpoint(snapshot,true);
         }}/>:entry === "list" ? <DiscoveryListPanel criteria={listCriteria} cursors={listCursors} onChange={value => { setListCriteria(value); setListCursors([null]); }} onPage={setListCursors} onChoose={chooseListResult}/> : browsingPresets ? <DiscoveryPresetBrowser filters={catalog.filters} onChange={filters=>setCatalog(old=>({...old,filters}))} onSelect={selectCatalog} onNames={showCatalogNames} busy={catalogBusy} error={catalogError}/> : <>

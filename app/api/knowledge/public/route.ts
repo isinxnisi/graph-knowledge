@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
+import themeDiscovery from "../../../../data/theme-discovery.json";
 import { themeGuard } from "../../../../lib/server/theme-workbench";
 import { knowledgePublicationPreview } from "../../../../lib/server/knowledge-publication-preview";
 
@@ -13,8 +14,9 @@ export async function GET(request: Request) {
     const generation = params.get("generation") ?? undefined;
     const service = await knowledgePublicationPreview();
     let result: unknown;
-    if (mode === "status") result = await service.status();
-    else if (mode === "themes") result = await service.themes({ ...(params.has("entityId") ? { entityId: params.get("entityId")! } : {}), ...(params.has("q") ? { q: params.get("q")! } : {}) });
+    if (mode === "theme-home") { const page=await service.themes(); const byId=new Map(page.themes.map(t=>[t.id,t])); result={featured:themeDiscovery.featuredThemeIds.flatMap(id=>byId.has(id)?[byId.get(id)!]:[]),recent:page.themes.slice(0,8),total:page.themes.length}; }
+    else if (mode === "status") result = await service.status();
+    else if (mode === "themes") result = await service.themes({ ...(params.has("entityId") ? { entityId: params.get("entityId")! } : {}), ...(params.has("q") ? { q: params.get("q")! } : {}), ...(params.has("kind") ? {kind:params.get("kind")!} : {}), ...(params.has("order") ? {order:params.get("order")!} : {}) });
     else if (mode === "theme") result = await service.theme({ themeId: params.get("themeId") ?? "", ...(params.has("revision") ? { revision: Number(params.get("revision")) } : {}) });
     else if (mode === "entities") result = await service.entities({ generation, ...(params.has("entityId") ? { entityId: params.get("entityId")! } : {}), ...(params.has("entityIds") ? { entityIds: (params.get("entityIds") ?? "").split(",").filter(Boolean) } : {}), ...(params.has("q") ? { q: params.get("q")! } : {}), ...(params.has("kind") ? { kind: params.get("kind")! } : {}), limit: Number(params.get("limit") ?? 20), ...(params.has("cursor") ? { cursor: params.get("cursor")! } : {}) });
     else if (mode === "facets") result = await service.facets({ generation });

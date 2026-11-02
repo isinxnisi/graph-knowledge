@@ -8,6 +8,7 @@ import { trackPublicEvent } from "../lib/client/public-events";
 import { discoveryHomeLabels } from "../lib/i18n/discovery-home";
 import { searchLabels } from "../lib/i18n/entity-search";
 import Icon from "./Icon";
+import {HomeThemes, type OpenTheme} from "./ThemeDiscovery";
 import { discoverySearchLabels } from "../lib/i18n/discovery-search";
 import styles from "./DiscoveryHome.module.css";
 
@@ -38,7 +39,7 @@ function FeatureMap({ feature, locale }: { feature: DiscoveryFeature; locale: st
   </figure>;
 }
 
-export default function DiscoveryHome({ data, onSearch, onDiscover }: { data: DiscoveryHomeData; onSearch: () => void; onDiscover: () => void }) {
+export default function DiscoveryHome({ data, onSearch, onDiscover, onTheme, onThemeSearch }: { data: DiscoveryHomeData; onSearch: () => void; onDiscover: () => void; onTheme?:OpenTheme;onThemeSearch?:()=>void }) {
   const { locale } = useUiLocale(), text = discoveryHomeLabels(locale), kinds = searchLabels(locale).kinds;
   const href = (id: string) => localizedPublicHref(`/explore/${id}`, locale);
   const explore = () => trackPublicEvent("explore_start");
@@ -49,12 +50,13 @@ export default function DiscoveryHome({ data, onSearch, onDiscover }: { data: Di
       <button className={styles.searchLaunch} onClick={onDiscover} aria-haspopup="dialog" data-testid="discovery-search-entry" data-discovery-launch="home"><Icon name="search" /><span>{discoverySearchLabels(locale).homeEntry}</span><Icon name="arrow" /></button>
     </header>
     {data.unavailable && <p role="status">{text.unavailable}</p>}
+    {onTheme && onThemeSearch && <HomeThemes onOpen={onTheme} onBrowse={onThemeSearch} part="featured" />}
     {featured && <a className={styles.featured} href={href(featured.entity.id)} onClick={explore} data-testid="discovery-featured" data-discovery-reveal>
       <p className={styles.eyebrow}>{text.featured}</p><h3>{featured.entity.name === "PLUTO" ? text.featureTitle : featured.entity.name}</h3>
       {featured.entity.name === "PLUTO" && <p className={styles.featureDescription}>{text.featureDescription}</p>}
       <FeatureMap feature={featured} locale={locale} /><span className={styles.start}><Icon name="graph" />{text.explore(featured.entity.name)}<Icon name="arrow" /></span>
     </a>}
-    {!!data.features.filter(f => f !== featured).length && <section className={styles.fields} aria-labelledby="discovery-fields-title" data-discovery-reveal><h3 id="discovery-fields-title">{text.fields}</h3><div className={styles.fieldGrid}>
+    {!!data.features.filter(f => f !== featured).length && <section className={styles.fields} aria-labelledby="discovery-fields-title" data-discovery-reveal><h3 id="discovery-fields-title">{onTheme ? locale === "en" ? "Explore other subjects" : "ほかの対象から探す" : text.fields}</h3><div className={styles.fieldGrid}>
       {data.features.filter(f => f !== featured).map(f => <a key={f.entity.id} href={href(f.entity.id)} onClick={explore} data-testid="discovery-field"><Icon name={f.entity.kind === "event" ? "event" : f.entity.kind === "organization" ? "organization" : "person"} /><span><small>{f.entity.kind === "event" ? text.event : f.entity.kind === "organization" ? text.science : text.manga}</small><strong>{f.entity.name}</strong><span>{f.entity.kind === "event" ? text.eventDescription : f.entity.kind === "organization" ? text.scienceDescription : text.mangaDescription}</span></span><Icon name="arrow" /></a>)}
     </div></section>}
     <section className={styles.recent} aria-labelledby="discovery-recent-title" data-discovery-reveal><h3 id="discovery-recent-title">{text.recent}</h3>
@@ -65,6 +67,7 @@ export default function DiscoveryHome({ data, onSearch, onDiscover }: { data: Di
       })}</ul>
       {!data.recentEntities.length && !data.recentClaims.length && !data.unavailable && <p>{text.noRecent}</p>}<p className={styles.note}>{text.dateNote}</p>
     </section>
+    {onTheme && onThemeSearch && <HomeThemes onOpen={onTheme} onBrowse={onThemeSearch} part="recent" />}
     <section className={styles.search} data-discovery-reveal><div><h3>{text.searchTitle}</h3><p>{text.searchHint}</p></div><button onClick={onSearch}><Icon name="search" />{text.search}<Icon name="arrow" /></button></section>
   </section>;
 }

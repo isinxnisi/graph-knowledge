@@ -7,6 +7,7 @@ import DiscoveryExplorer from "./DiscoveryExplorer";
 import DiscoverySearchLegacy from "./DiscoverySearchLegacy";
 
 export default function DiscoverySearch({ dataset, ...props }: {
+  onChooseTheme?: (ref: {id:string;revision?:number}) => void;
   presetBrowser?: boolean; dataset: DatasetMode; initial: DiscoveryCriteria; onClose: (source?: string | null) => void;
   onChoose: (entity: EntitySummary, predicates?: PredicateFilter, roles?: import("../lib/domain/exploration").ContributionRoleFilter) => void;
 }) {

@@ -1,0 +1,102 @@
+"use client";
+import { createContext, useContext, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import Link from "next/link";
+import {useSearchParams} from "next/navigation";
+import Icon from "./Icon";
+import GraphCanvas, {type GraphCanvasHandle} from "./GraphCanvas";
+import KnowledgeTimeline from "./KnowledgeTimeline";
+import KnowledgeSplit from "./KnowledgeSplit";
+import KnowledgeThemeContext from "./KnowledgeThemeContext";
+import KnowledgeRecordDetail from "./KnowledgeRecordDetail";
+import {emptyGraph, type Selection} from "../lib/client/graph-state";
+import {knowledgeCanvas} from "../lib/client/knowledge-canvas";
+import {useKnowledgeWorkspace, readKnowledge} from "../lib/client/use-knowledge-workspace";
+import {useUiLocale} from "../lib/client/ui-locale";
+import type {KnowledgeEntityVersion} from "../lib/domain/knowledge-foundation";
+import {knowledgeThemeTypeLabel, type KnowledgeThemePage} from "../lib/domain/knowledge-theme-reader";
+import type {EntitySummary} from "../lib/domain/api";
+import type {OpenTheme} from "./ThemeDiscovery";
+import base from "./Explorer.module.css";
+import css from "./KnowledgeReading.module.css";
+type ThemeSummary=KnowledgeThemePage["themes"][number];
+const canvasSelection=(s:{kind:"entity"|"record";id:string}|null):Selection=>s?s.kind==="record"?{kind:"relation",id:"record:"+s.id}:{kind:"entity",id:s.id}:null;
+type Host={beforeOpen:()=>boolean;onPane:(p:"search"|"graph"|"detail")=>void;onReturn:()=>void;onLegacyEntity:(entity:EntitySummary)=>void};
+export type KnowledgeReadingContract={active:boolean;restoring:boolean;center:ReactNode;detail:ReactNode;openTheme:OpenTheme;leave:()=>void;checkpoint:()=>void;attachHost:(value:Host)=>()=>void;error:string;message:string;busy:boolean};
+const ReadingContext=createContext<KnowledgeReadingContract|undefined>(undefined);
+export const useKnowledgeReading=()=>useContext(ReadingContext);
+export default function KnowledgeReading({children}:{children:ReactNode}) {
+ const w=useKnowledgeWorkspace({embedded:true}); const locationParams=useSearchParams(); const {locale}=useUiLocale(),en=locale==="en";
+ const [commonVisible,setCommonVisible]=useState(false);
+ const [requested,setRequested]=useState(false);
+ const host=useRef<Host|null>(null);
+ const attachHost=useCallback((value:Host)=>{host.current=value;return()=>{if(host.current===value)host.current=null;};},[]);
+ const normalCanvas=useRef<GraphCanvasHandle>(null),themeCanvas=useRef<GraphCanvasHandle>(null),themeGraphPane=useRef<HTMLDivElement>(null);
+ const checkpointTimer=useRef<ReturnType<typeof setTimeout>|null>(null);
+ const active=w.activeTheme,retained=w.retainedTheme;
+ const closeTheme=w.closeTheme;
+ const selection=active?w.themeSelection:w.normal.selection;
+ const records=active?active.records:w.normal.records;
+ const entities=active?active.snapshot.entities:w.normal.entities;
+ const selectedRecord=selection?.kind==="record"?records.find(r=>r.record.id===selection.id):null;
+ const selectedEntity=selection?.kind==="entity"?entities.find(e=>e.id===selection.id):null;
+ const normalContent=useMemo(()=>knowledgeCanvas(w.normal.records,w.normal.entities),[w.normal.records,w.normal.entities]);
+ const normalState=useMemo(()=>emptyGraph(w.normal.epoch),[w.normal.epoch]);
+ const themeState=useMemo(()=>emptyGraph(retained?.theme.revision??0),[retained?.theme.revision]);
+ const themeContent=useMemo(()=>{const rows=retained?.records.filter(r=>r.record.content.kind==="relation")??[];const ids=new Set(rows.flatMap(r=>[r.record.content.subjectId,r.record.content.objectId]));return knowledgeCanvas(rows,retained?.snapshot.entities.filter(e=>ids.has(e.id))??[]);},[retained]);
+ const themeHasTime=Boolean(retained?.snapshot.records.some(r=>r.content.times.length)),themeHasGraph=Boolean(themeContent.nodes.length);
+ const themeMode=themeHasTime?themeHasGraph&&w.themeView==="split"?"split":"timeline":"graph";
+ const busy=w.busy||w.restoring;
+ const [relatedPage,setRelatedPage]=useState<{id:string;themes:ThemeSummary[]}|null>(null);
+ const entityId=selectedEntity?.id;
+ const related=relatedPage&&relatedPage.id===entityId?relatedPage.themes:[];
+ useEffect(()=>{let live=true;if(entityId)void readKnowledge<KnowledgeThemePage>("themes",{entityId}).then(p=>{if(live)setRelatedPage({id:entityId,themes:p.themes});}).catch(()=>{if(live)setRelatedPage(null);});return()=>{live=false;};},[entityId,w.status?.changeToken]);
+ useEffect(()=>{const sync=()=>{const url=new URL(location.href);setCommonVisible(url.searchParams.has("kentity"));setRequested(url.searchParams.has("ktheme")||url.searchParams.has("kentity"));};queueMicrotask(sync);window.addEventListener("popstate",sync);return()=>window.removeEventListener("popstate",sync);},[]);
+ // A same-route Next Link to Home changes searchParams without a popstate event.
+ // Close the reader only after an actual Theme/common view exists; an in-flight open still uses the prior URL.
+ useEffect(()=>{if((active||commonVisible)&&!locationParams.has("ktheme")&&!locationParams.has("kentity")){queueMicrotask(()=>{const url=new URL(location.href);if(url.searchParams.has("ktheme")||url.searchParams.has("kentity"))return;closeTheme("replace");setCommonVisible(false);setRequested(false);});}},[active,commonVisible,locationParams,closeTheme]);
+ function setPane(p:"search"|"graph"|"detail"){host.current?.onPane(p);}
+ function checkpoint(){if(checkpointTimer.current)clearTimeout(checkpointTimer.current);if(active)w.captureThemeView(themeCanvas.current?.capture()??null);else if(commonVisible)w.captureNormalView(normalCanvas.current?.capture()??null);}
+ function scheduleCheckpoint(){if(checkpointTimer.current)clearTimeout(checkpointTimer.current);checkpointTimer.current=setTimeout(checkpoint,350);}
+ useEffect(()=>{const save=()=>checkpoint();window.addEventListener("pagehide",save);return()=>{window.removeEventListener("pagehide",save);if(checkpointTimer.current)clearTimeout(checkpointTimer.current);};});
+ function openTheme(ref:{id:string;revision?:number}){if(host.current&&!host.current.beforeOpen())return;checkpoint();setRequested(true);void w.openTheme(ref);setPane("graph");}
+ function leave(){checkpoint();setRequested(false);w.closeTheme("replace");setCommonVisible(false);const url=new URL(location.href);url.searchParams.delete("kentity");history.replaceState(history.state,"",url);}
+ function chooseEntity(id:string){if(active)w.setThemeSelection({kind:"entity",id});else w.selectEntity(id);setPane("detail");}
+ function chooseRecord(id:string){if(active)w.setThemeSelection({kind:"record",id});else void w.selectRecord(id);setPane("detail");}
+ async function startFrom(entity:KnowledgeEntityVersion){
+   checkpoint();
+   // Stable IDs from the KG import are reused. A missing KG entity opens the common read model, never a guessed same-name entity.
+   try {const response=await fetch('/api/entities/'+encodeURIComponent(entity.id),{cache:'no-store'});if(response.ok){const value=await response.json();const legacy=value.entity??value;if(legacy?.id===entity.id){leave();host.current?.onLegacyEntity(legacy);setPane("graph");return;}}} catch { /* The common model remains available independently. */ }
+   const opened=await w.startFrom(entity);if(!opened)return;const url=new URL(location.href);url.searchParams.set("kentity",entity.id);history.replaceState(history.state,"",url);setCommonVisible(true);setPane("graph");
+ }
+ function graphFromTimeline(id:string){w.setThemeSelection({kind:"record",id});w.setThemeView("split");requestAnimationFrame(()=>{themeCanvas.current?.ensureVisible?.("record:"+id);if(matchMedia("(max-width:1100px)").matches)themeGraphPane.current?.scrollIntoView({block:"start"});});}
+ const themeButton=(t:ThemeSummary)=><button key={t.id} className={css.result} disabled={busy} onClick={()=>openTheme(t)}><strong>{t.title}</strong><small>{knowledgeThemeTypeLabel(t,en)}</small></button>;
+ const value:KnowledgeReadingContract={active:Boolean(active)||commonVisible||(busy&&requested),restoring:w.restoring,openTheme,leave,checkpoint,attachHost,error:w.error,message:w.message,busy,
+ center:<div className={css.workspace}>
+ {w.error&&<p role="alert" className={base.error}>{w.error}<button onClick={()=>void w.refreshLatest()}>再取得</button></p>}
+ {busy&&(active||commonVisible||requested)&&<p role="status" className={css.notice}>読み込んでいます…</p>}
+ {w.message&&<p role="status" className={css.notice}>{w.message}</p>}
+ {commonVisible&&!active&&w.status?.active&&w.normal.generation&&w.status.active.id!==w.normal.generation&&<p className={css.notice}>新しい公開版があります。<button disabled={busy} onClick={()=>void w.refreshLatest()}>最新版を読む</button></p>}
+ {commonVisible&&!active&&<button className={css.return} onClick={()=>{leave();host.current?.onReturn();}}><Icon name="back"/>元の探索へ戻る</button>}
+        <section hidden={Boolean(active) || !commonVisible} className={`${base.panel} ${base.graphPanel} ${css.stage}`} aria-label={en ? "Ordinary exploration" : "通常の関係探索"}>
+          <header className={css.stageHeader}><h2>Graph</h2><span role="status">{busy ? en ? "Reading…" : "読み込み中…" : `${w.normal.entities.length} ${en ? "subjects" : "対象"} · ${w.normal.records.filter(r => r.record.content.kind === "relation").length} ${en ? "relations" : "関係"}`}</span></header>
+
+          <div className={css.canvasFrame}><GraphCanvas ref={normalCanvas} graph={normalState} content={normalContent} restoration={w.normalRestoration} onViewChange={scheduleCheckpoint} contentOnly fillHeight compactGuide selection={canvasSelection(w.normal.selection)} interactionBlocked={busy || Boolean(active)} onEntity={(id) => w.selectEntity(id)} onEntityDoubleClick={(id) => { void w.expandEntity(id); }} onToggleEntity={(id) => { void w.expandEntity(id); }} onRelation={(id) => chooseRecord(id.replace(/^record:/,""))} /></div>
+          <div className={css.recordStrip}>{w.normal.records.map((r) => <button key={r.record.id} onClick={() => chooseRecord(r.record.id)} aria-pressed={w.normal.selection?.kind === "record" && w.normal.selection.id === r.record.id}>{r.label || r.record.content.assertion}</button>)}</div>
+        </section>
+        {retained && <section hidden={!active} className={`${base.panel} ${base.graphPanel} ${css.stage}`} aria-label={en ? "Theme reading" : "テーマを読む"}>
+          <header className={css.themeHeader}><button onClick={() => { checkpoint(); setRequested(false); w.closeTheme(); if(!commonVisible)host.current?.onReturn(); }} className={css.return}><Icon name="back" />{en ? "Back to exploration" : "探索に戻る"}</button><span>{en ? "Saved composition" : "構成版"} {retained.theme.revision}</span><h2 title={retained.theme.content.title}>{retained.theme.content.title}</h2><button className={css.themeInfo} aria-label={en ? "About this theme" : "テーマについて"} title={en ? "About this theme" : "テーマについて"} onClick={() => { w.setThemeSelection(null); setPane("detail"); }}><Icon name="book" /></button></header>
+          <KnowledgeThemeContext key={retained.theme.id + ":" + retained.theme.revision} records={retained.records} selectedRecordId={w.themeSelection?.kind === "record" ? w.themeSelection.id : null} onRead={(id) => { w.setThemeSelection({ kind: "record", id }); setPane("detail"); }} />
+
+          {(themeHasTime||themeHasGraph)&&<KnowledgeSplit mode={themeMode}>
+            <div className={css.timelinePane} hidden={!themeHasTime || themeMode === "graph"}><KnowledgeTimeline key={retained.theme.id + ":" + retained.theme.revision} snapshot={retained.snapshot} headerAction={themeHasTime && themeHasGraph && <button className={css.themeInfo} aria-label={themeMode === "split" ? en ? "Close relation diagram" : "関係図を閉じる" : en ? "Show relation diagram" : "関係図を並べて表示"} title={themeMode === "split" ? "関係図を閉じる" : "関係図を並べて表示"} aria-pressed={themeMode === "split"} onClick={() => w.setThemeView(themeMode === "split" ? "timeline" : "split")}><Icon name="panel" /></button>} untimedInContext focusedRecordId={w.themeSelection?.kind === "record" ? w.themeSelection.id : null} onFocusRecord={(id) => w.setThemeSelection(id ? { kind: "record", id } : null)} onShowGraph={(id) => graphFromTimeline(id)} /></div>
+            <div ref={themeGraphPane} hidden={!themeHasGraph || themeMode === "timeline"} className={`${css.canvasFrame} ${css.themeCanvas}`}><GraphCanvas key={retained.theme.id + ":" + retained.theme.revision} ref={themeCanvas} graph={themeState} content={themeContent} restoration={w.themeRestoration} onViewChange={scheduleCheckpoint} contentOnly fillHeight compactGuide selection={canvasSelection(w.themeSelection)} interactionBlocked={busy || !active} onEntity={(id) => w.setThemeSelection({ kind: "entity", id })} onEntityDoubleClick={(id) => { w.setThemeSelection({ kind: "entity", id }); setPane("detail"); }} onToggleEntity={(id) => { w.setThemeSelection({ kind: "entity", id }); setPane("detail"); }} onRelation={(id) => chooseRecord(id.replace(/^record:/,""))} /></div>
+          </KnowledgeSplit>}
+        </section>}
+</div>,detail:<div className={css.workspace}><h2><Icon name="book"/>{en?"Details":"詳細"}</h2>        {selectedRecord ? <><KnowledgeRecordDetail dto={selectedRecord} onEntity={chooseEntity} /><Link className={css.editRecord} href={`/themes/records?record=${encodeURIComponent(selectedRecord.record.id)}&fromRevision=${selectedRecord.record.revision}`} onClick={() => checkpoint()}><Icon name="edit" />{en ? "Correct this record" : "この記録を訂正"}</Link></> : selectedEntity ? <><h2>{selectedEntity.content.name}</h2><p className={base.muted}>{selectedEntity.content.kind}</p>{selectedEntity.content.description && <p>{selectedEntity.content.description}</p>}
+          {active ? <button onClick={() => startFrom(selectedEntity)} disabled={busy}><Icon name="arrow" />{en ? "Explore from this subject" : "この対象から探索する"}</button> : <div className={base.actions}><button onClick={() => void w.expandEntity(selectedEntity.id)} disabled={busy}><Icon name="graph" />{en ? "Expand connections" : "周囲の関係を広げる"}</button>{w.neighborPages[selectedEntity.id]?.hasMore && <button disabled={busy} onClick={() => void w.expandEntity(selectedEntity.id, w.neighborPages[selectedEntity.id]?.cursor)}>{en ? "More connections" : "関係の続きを追加"}</button>}</div>}
+          {related.length > 0 && <section className={css.related}><h3>{en ? "Related themes" : "この対象のテーマ"}</h3>{related.map(themeButton)}</section>}
+          <section className={css.related}><h3>{en ? "Records in this view" : "この表示の記録"}</h3>{records.filter(r => [r.record.content.subjectId,r.record.content.objectId].includes(selectedEntity.id)).map(r => <button key={r.record.id} className={css.result} onClick={() => chooseRecord(r.record.id)}>{r.record.content.assertion}</button>)}</section>
+        </> : active ? <><h3>{active.theme.content.title}</h3><p className={base.muted}>{en ? "Saved composition" : "構成版"} {active.theme.revision}</p>{active.theme.content.description && <p>{active.theme.content.description}</p>}<p className={base.muted}>{en ? "Choose a timeline entry or a relation to read the same record and its evidence here." : "年表の記録や図の関係を選ぶと、対応する内容と根拠をここで読めます。"}</p></> : <p className={base.muted}>{en ? "Select a subject or relation in the graph." : "図の対象や関係を選ぶと、内容と根拠を読めます。"}</p>}
+</div>};
+ return <ReadingContext value={value}>{children}</ReadingContext>;
+}

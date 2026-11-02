@@ -175,12 +175,14 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
       const values:unknown[]=[];const conditions=["o.kind='theme'","o.visibility='public'","p.id IS NOT NULL"];
       if(q.entityId){values.push(q.entityId);conditions.push(`EXISTS (SELECT 1 FROM jsonb_array_elements(r.content->'entityPins') pin WHERE pin->>'id'=$${values.length})`);}
       if(q.q){values.push("%"+normalize(q.q).replace(/[\\%_]/g,"\\$&")+"%");conditions.push(`lower(normalize(concat_ws(' ',r.content->>'title',r.content->>'description'),NFKC)) LIKE $${values.length} ESCAPE E'\\\\'`);}
-      const candidates=(await c.query(`SELECT r.id,r.revision FROM knowledge75.objects o JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=o.current_revision LEFT JOIN knowledge75.published_revisions p ON p.kind=r.kind AND p.id=r.id AND p.revision=r.revision WHERE ${conditions.join(" AND ")} ORDER BY r.id`,values)).rows;
+      const candidates=(await c.query(`SELECT r.id,r.revision,(SELECT min(first.created_at) FROM knowledge75.revisions first WHERE first.kind='theme' AND first.id=r.id) AS first_created_at FROM knowledge75.objects o JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=o.current_revision LEFT JOIN knowledge75.published_revisions p ON p.kind=r.kind AND p.id=r.id AND p.revision=r.revision WHERE ${conditions.join(" AND ")} ORDER BY r.id`,values)).rows;
       const result:KnowledgeThemePage={themes:[]};
       for(const candidate of candidates){
-        try{const resolved=await resolvePublicKnowledgeTheme(c,candidate.id,Number(candidate.revision));const {theme,snapshot}=resolved;result.themes.push({id:theme.id,revision:theme.revision,title:theme.content.title,description:theme.content.description,initialView:theme.content.initialView,hasTimeline:snapshot.records.some(r=>r.content.times.length>0),entityIds:snapshot.entities.map(e=>e.id)});}
+        try{const resolved=await resolvePublicKnowledgeTheme(c,candidate.id,Number(candidate.revision));const {theme,snapshot}=resolved;result.themes.push({id:theme.id,revision:theme.revision,title:theme.content.title,description:theme.content.description,initialView:theme.content.initialView,hasTimeline:snapshot.records.some(r=>r.content.times.length>0),hasRelations:snapshot.records.some(r=>r.content.kind==='relation'),publishedAt:new Date(candidate.first_created_at).toISOString(),entityIds:snapshot.entities.map(e=>e.id)});}
         catch(error){if(error instanceof KnowledgeError && (error.status===403||error.status===404))continue;throw error;}
       }
+      result.themes=result.themes.filter(t=>q.kind==='all'||(t.hasTimeline?'timeline':t.hasRelations?'graph':'context')===q.kind);
+      result.themes.sort((a,b)=>q.order==='name'?a.title.localeCompare(b.title,'ja')||a.id.localeCompare(b.id):(b.publishedAt??'').localeCompare(a.publishedAt??'')||a.id.localeCompare(b.id));
       return result;
     }),
     theme:(raw:unknown)=>read(async c=>{
