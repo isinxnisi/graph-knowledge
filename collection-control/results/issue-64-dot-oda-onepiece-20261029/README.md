@@ -1,13 +1,10 @@
 # 収集Workerの処理結果
 
-issue-64-dot-oda-onepiece-20261029：**retry-wait**
+issue-64-dot-oda-onepiece-20261029：**waiting-control**
 
 公開apply・restore・本番配置は行わない。承認者名は本人認証の証明ではない。
 
-fatal: HttpRequestException encountered.
-   ���̗v���̑��M���ɃG���[���������܂����B
-fatal: unable to get password from user
-
+Execution gate: outside-window
 
 ```json
 {
