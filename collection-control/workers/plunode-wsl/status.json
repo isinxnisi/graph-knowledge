@@ -42,10 +42,10 @@
   },
   "controlError": null,
   "requestsByPhase": {
-    "waiting-control": 29,
-    "blocked": 4,
+    "retry-wait": 11,
+    "waiting-control": 22,
+    "blocked": 2,
     "completed": 23,
-    "retry-wait": 2,
     "awaiting-recovery": 4
   },
   "issueIntake": {
@@ -178,7 +178,7 @@
     },
     "issue-25-utc-recovery-06": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-07",
-      "phase": "waiting-control"
+      "phase": "retry-wait"
     },
     "issue-25-utc-recovery-07": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-08",
@@ -193,5 +193,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-02T12:43:42.009936+00:00"
+  "checkedAt": "2026-11-02T12:55:03.408537+00:00"
 }
