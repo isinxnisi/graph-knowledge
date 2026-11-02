@@ -1,4 +1,8 @@
-2026-11-02、採用済み統合計画の[公開読取U2](design/KNOWLEDGE_PUBLIC_READ_U2.md)を独立branch／3276へ接続。アプリsource `5d9ab5d7`、build `sF8VDlqJ0YGnEhPOPExhY`。索引付き具体語・typed検索、世代固定のGraph／根拠、通常publisher、旧世代にも作用する表示停止を実PG・専用Neo4j・PC/スマホ幅で検証した。元データは保全、main／3200／β／本番・既存Workerは未更新。[確認先・実操作・残件](verification/KNOWLEDGE_PUBLIC_READ_U2_20261102.md)。次はU3、会員Capsule統合はU4。以下は各工程の履歴。
+2026-11-02、[通常探索・テーマ・年表U3](design/KNOWLEDGE_EXPLORER_U3.md)を独立branch／3276へ実装。年表を通常Explorer中央の表示方式とし、Theme選択時に関係図／年表／並列を同じ場所で切り替える。時期なし情報もテーマの主内容として共通欄で読み、元探索の状態とTheme固定版を分けて保持する。Record入力・訂正の再開と資料再利用、現行Webbテーマの汎用観測移入を接続し、旧16テーマ・18Capsule・9共有を保持。確認結果・配置資材・制約は[U3検証記録](verification/KNOWLEDGE_EXPLORER_U3_20261102.md)を参照。次はU4の既存会員Capsule接続。main／3200／HTTPS β／本番・既存Workerは未更新。以下は各工程の履歴。
+
+U3の最後の補助UI圧縮後の実操作・native wheel連鎖は、ブラウザ接続の安全判定停止により未確認。次担当はU3検証記録の残件を確認してからU4へ進む。
+
+2026-11-02、採用済み統合計画の[公開読取U2](design/KNOWLEDGE_PUBLIC_READ_U2.md)を独立branch／3276へ接続。アプリsource `5d9ab5d7`、build `sF8VDlqJ0YGnEhPOPExhY`。索引付き具体語・typed検索、世代固定のGraph／根拠、通常publisher、旧世代にも作用する表示停止を実PG・専用Neo4j・PC/スマホ幅で検証した。元データは保全、main／3200／β／本番・既存Workerは未更新。[確認先・実操作・残件](verification/KNOWLEDGE_PUBLIC_READ_U2_20261102.md)。U2時点の次工程はU3。現在地は上記U3を参照。以下は各工程の履歴。
 
 2026-11-02、[本運用への統合計画](design/PLUNODE_PRODUCTION_INTEGRATION.md)をユーザーが採用。独立branch／3276で[共通原記録U1](design/KNOWLEDGE_FOUNDATION_U1.md)を実装し、テーマなし登録・共通参照・版固定・旧KG移入・別DB復元・独立Neo4j再投影を検証する。収集の全件管理者承認省略と、利用者投稿のAI審査・修正・通知を分ける。既存main／3200／β／本番・旧Workerへは未統合。[現在の確認先と残件](verification/KNOWLEDGE_FOUNDATION_U1_20261102.md)。以下の公開配置は現在の正式環境の記録。
 

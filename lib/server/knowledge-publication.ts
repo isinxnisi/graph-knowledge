@@ -6,7 +6,9 @@ import neo4j, { type Driver, type ManagedTransaction } from "neo4j-driver";
 import { z } from "zod";
 import { knowledgeEntityContentSchema, knowledgeSourceContentSchema, knowledgeRecordContentSchema, knowledgeMappingContentSchema, type KnowledgeEntityVersion, type KnowledgeSourceVersion, type KnowledgeRecordVersion, type KnowledgeMappingVersion } from "../domain/knowledge-foundation";
 import { buildKnowledgePublishedRecord, flattenKnowledgePublishedRecord, knowledgePublicationQuerySchema, type KnowledgePublishedRecord } from "../domain/knowledge-publication";
-import { ensureKnowledgeFoundationSchema, KnowledgeError, knowledgeDigest } from "./knowledge-foundation";
+import { ensureKnowledgeFoundationSchema, resolvePublicKnowledgeTheme, KnowledgeError, knowledgeDigest } from "./knowledge-foundation";
+
+import { knowledgeThemeListQuerySchema, knowledgeThemeReadQuerySchema, knowledgeEntityQuerySchema, type KnowledgeThemePage, type KnowledgeThemeRead, type KnowledgeEntityPage } from "../domain/knowledge-theme-reader";
 
 const generationSchema = z.string().regex(/^k75-[a-f0-9]{32}$/);
 const iso = (v: unknown) => v instanceof Date ? v.toISOString() : String(v);
@@ -168,6 +170,47 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
   async function entity(c:PoolClient,generationId:string,id:string){const r=(await c.query("SELECT e.body FROM knowledge75.publication_entities e JOIN knowledge75.objects o ON o.kind='entity' AND o.id=e.id AND o.visibility='public' JOIN knowledge75.published_revisions p ON p.kind='entity' AND p.id=e.id AND p.revision=e.revision WHERE e.generation=$1 AND e.id=$2",[generationId,id])).rows[0];if(!r)throw new KnowledgeError("この対象は閲覧できません",404,"NOT_FOUND");return r.body as KnowledgeEntityVersion;}
   return {
     publishPending,status:()=>read(statusIn),
+    themes:(raw:unknown={})=>read(async c=>{
+      const q=knowledgeThemeListQuerySchema.parse(raw);
+      const values:unknown[]=[];const conditions=["o.kind='theme'","o.visibility='public'","p.id IS NOT NULL"];
+      if(q.entityId){values.push(q.entityId);conditions.push(`EXISTS (SELECT 1 FROM jsonb_array_elements(r.content->'entityPins') pin WHERE pin->>'id'=$${values.length})`);}
+      if(q.q){values.push("%"+normalize(q.q).replace(/[\\%_]/g,"\\$&")+"%");conditions.push(`lower(normalize(concat_ws(' ',r.content->>'title',r.content->>'description'),NFKC)) LIKE $${values.length} ESCAPE E'\\\\'`);}
+      const candidates=(await c.query(`SELECT r.id,r.revision FROM knowledge75.objects o JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=o.current_revision LEFT JOIN knowledge75.published_revisions p ON p.kind=r.kind AND p.id=r.id AND p.revision=r.revision WHERE ${conditions.join(" AND ")} ORDER BY r.id`,values)).rows;
+      const result:KnowledgeThemePage={themes:[]};
+      for(const candidate of candidates){
+        try{const resolved=await resolvePublicKnowledgeTheme(c,candidate.id,Number(candidate.revision));const {theme,snapshot}=resolved;result.themes.push({id:theme.id,revision:theme.revision,title:theme.content.title,description:theme.content.description,initialView:theme.content.initialView,hasTimeline:snapshot.records.some(r=>r.content.times.length>0),entityIds:snapshot.entities.map(e=>e.id)});}
+        catch(error){if(error instanceof KnowledgeError && (error.status===403||error.status===404))continue;throw error;}
+      }
+      return result;
+    }),
+    theme:(raw:unknown)=>read(async c=>{
+      const q=knowledgeThemeReadQuerySchema.parse(raw);
+      let resolved;
+      try{resolved=await resolvePublicKnowledgeTheme(c,q.themeId,q.revision);}
+      catch(error){if(error instanceof KnowledgeError && (error.status===403||error.status===404))throw new KnowledgeError("このテーマは閲覧できません",404,"NOT_FOUND");throw error;}
+      const {snapshot}=resolved;
+      const links=(await c.query("SELECT * FROM knowledge75.legacy_links WHERE record_id=ANY($1::text[]) ORDER BY dataset,legacy_claim_id",[snapshot.records.map(r=>r.id)])).rows;
+      const records=snapshot.records.map(record=>{
+        const link=links.find(l=>l.record_id===record.id);
+        if(link&&knowledgeDigest(link.payload)!==link.sha256)throw new KnowledgeError("旧原本のhashが一致しません",503,"LEGACY_HASH_MISMATCH");
+        return buildKnowledgePublishedRecord(record,{entities:snapshot.entities,sources:snapshot.sources,mappings:snapshot.mappings,...(link?{legacyLink:{dataset:link.dataset,legacyClaimId:link.legacy_claim_id,recordId:link.record_id,importedRevision:Number(link.imported_revision),payload:link.payload,sha256:link.sha256}}:{})});
+      });
+      return {...resolved,records} satisfies KnowledgeThemeRead;
+    }),
+    entities:(raw:unknown={})=>read(async c=>{
+      const q=knowledgeEntityQuerySchema.parse(raw);const cursor=decodeCursor(q.cursor);const actual=await generation(c,q.generation??cursor?.generation);
+      const filter=knowledgeDigest({kind:"entities",q:normalize(q.q),entityKind:q.kind??null,entityId:q.entityId??null,entityIds:q.entityIds??null,limit:q.limit});
+      if(cursor&&(cursor.generation!==actual.id||cursor.filter!==filter))throw new KnowledgeError("対象の検索条件と続きの取得条件が一致しません",400,"CURSOR_MISMATCH");
+      const values:unknown[]=[actual.id,cursor?.after??""];const conditions=["e.generation=$1","e.id>$2","o.visibility='public'","p.id IS NOT NULL"];
+      if(q.entityId){values.push(q.entityId);conditions.push(`e.id=$${values.length}`);}
+      if(q.entityIds){values.push(q.entityIds);conditions.push(`e.id=ANY($${values.length}::text[])`);}
+      if(q.kind){values.push(q.kind);conditions.push(`e.body#>>'{content,kind}'=$${values.length}`);}
+      if(q.q){values.push("%"+normalize(q.q).replace(/[\\%_]/g,"\\$&")+"%");conditions.push(`lower(normalize(concat_ws(' ',e.body#>>'{content,name}',(e.body#>'{content,aliases}')::text),NFKC)) LIKE $${values.length} ESCAPE E'\\\\'`);}
+      values.push(q.limit+1);
+      const rows=(await c.query(`SELECT e.id,e.body FROM knowledge75.publication_entities e LEFT JOIN knowledge75.objects o ON o.kind='entity' AND o.id=e.id LEFT JOIN knowledge75.published_revisions p ON p.kind='entity' AND p.id=e.id AND p.revision=e.revision WHERE ${conditions.join(" AND ")} ORDER BY e.id LIMIT $${values.length}`,values)).rows;
+      const hasMore=rows.length>q.limit;const selected=rows.slice(0,q.limit);
+      return {generation:actual.id,entities:selected.map(r=>r.body as KnowledgeEntityVersion),hasMore,nextCursor:hasMore?encodeCursor({v:1,generation:actual.id,filter,after:selected.at(-1)!.id}):null} satisfies KnowledgeEntityPage;
+    }),
     search:(raw:unknown)=>read(async c=>{
       const q=knowledgePublicationQuerySchema.parse(raw);const cursor=decodeCursor(q.cursor);const actual=await generation(c,q.generation??cursor?.generation);
       const {cursor:_cursor,generation:_generation,...filters}=q;void _cursor;void _generation;

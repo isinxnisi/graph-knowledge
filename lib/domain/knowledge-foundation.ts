@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { themeTimeSchema } from "./theme-workbench";
+import { themeTimelineIssues } from "./theme-timeline";
+import { knowledgeTimelineLayout, knowledgeTimelineRows } from "./knowledge-timeline";
 
 // A common record is independent of any editorial Theme. IDs never derive from
 // display names; a pin identifies one immutable content revision.
@@ -100,18 +102,17 @@ export function knowledgeRecordSearchText(record: KnowledgeRecordVersion, entiti
 export function knowledgeTimelineIssues(records: KnowledgeRecordVersion[], timeline?: KnowledgeTimeline): string[] {
   if (!timeline) return [];
   const issues: string[] = [];
-  const axes = new Map(timeline.axes.map(a => [a.id, a]));
   const byRecord = new Map(records.map(r => [r.id, r]));
-  if (axes.size !== timeline.axes.length) issues.push("年表軸IDが重複しています");
   const seen = new Set<string>();
   for (const p of timeline.placements) {
-    const time = byRecord.get(p.recordId)?.content.times.find(t => t.id === p.timeId)?.time;
-    const axis = axes.get(p.axisId);
-    if (!time || !axis || time.kind !== axis.kind) issues.push("時間注釈と年表軸の参照・種類が一致しません");
-    const key = p.recordId + ":" + p.timeId;
+    if (!byRecord.get(p.recordId)?.content.times.some(t => t.id === p.timeId))
+      issues.push("時間注釈の参照がありません");
+    const key = JSON.stringify([p.recordId, p.timeId]);
     if (seen.has(key)) issues.push("同じ時間注釈の配置が重複しています");
     seen.add(key);
   }
-  for (const i of timeline.insets) if (!byRecord.has(i.parentRecordId) || !axes.has(i.axisId)) issues.push("子軸の参照がありません");
-  return issues;
+  // Reuse the established axis semantics and explicit nesting contracts after
+  // separating factual Record identity from each time annotation's drawing row.
+  issues.push(...themeTimelineIssues(knowledgeTimelineRows(records), knowledgeTimelineLayout(records, timeline)).map(i => i.message));
+  return [...new Set(issues)];
 }

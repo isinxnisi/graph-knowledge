@@ -2,11 +2,10 @@
 
 import { useId, useMemo, useState, type CSSProperties } from "react";
 import type {
-  ThemeEntity,
-  ThemeRecord,
   ThemeTimelineConfig,
 } from "../lib/domain/theme-workbench";
-import { buildTimelineGroups } from "../lib/domain/theme-timeline";
+import { timelineRecordId, type TimelineDisplayRecord, type TimelineDisplayEntity } from "../lib/domain/timeline-display";
+import { buildTimelineGroups, type ThemeTimelineGroup } from "../lib/domain/theme-timeline";
 import { calendarMeaning, themeTimeLabel } from "../lib/domain/theme-time";
 import css from "./ThemeTimeline.module.css";
 import CalendarTimelineGraph from "./CalendarTimelineGraph";
@@ -16,22 +15,23 @@ import {
   type CalendarResolution,
 } from "../lib/domain/calendar-graph";
 
-type Props = {
+type Props<R extends TimelineDisplayRecord> = {
   selectionLabel?: string;
-  records: ThemeRecord[];
-  entities: ThemeEntity[];
+  records: R[];
+  entities: TimelineDisplayEntity[];
   timeline?: ThemeTimelineConfig;
   focusedRecordId: string | null;
   onFocusRecord: (id: string | null) => void;
   selectedRecordIds: string[];
   onToggleSelected?: (id: string) => void;
-  onEditRecord?: (record: ThemeRecord) => void;
-  onShowGraph?: (record: ThemeRecord) => void;
+  onEditRecord?: (record: R) => void;
+  onShowGraph?: (record: R) => void;
   graphRecordIds?: readonly string[];
+  compactControls?: boolean;
 };
-type Group = ReturnType<typeof buildTimelineGroups>[number];
+type Group<R extends TimelineDisplayRecord> = ThemeTimelineGroup<R>;
 type CalendarTime = Extract<
-  NonNullable<ThemeRecord["time"]>,
+  NonNullable<TimelineDisplayRecord["time"]>,
   { kind: "calendar" }
 >;
 const colors = ["#376f9a", "#aa6b32", "#5b7e59", "#8b668f", "#537e84"];
@@ -46,8 +46,8 @@ function RecordContext({
   record,
   entities,
 }: {
-  record: ThemeRecord;
-  entities: ThemeEntity[];
+  record: TimelineDisplayRecord;
+  entities: TimelineDisplayEntity[];
 }) {
   const entity = (id: string) => {
     const value = entities.find((e) => e.id === id);
@@ -64,7 +64,7 @@ function RecordContext({
   };
   return (
     <span className={css.recordContext} data-record-kind={record.kind}>
-      {entity(record.subject)}
+      {record.subject && entity(record.subject)}
       {record.kind === "relation" && record.object ? (
         <>
           <span className={css.relationMark} data-relation-mark>
@@ -95,7 +95,7 @@ function calendarBoundariesOverlap(time: CalendarTime) {
   );
 }
 
-function timeText(record: ThemeRecord) {
+function timeText(record: TimelineDisplayRecord) {
   const t = record.time;
   if (!t) return "時期なし";
   if (t.kind === "calendar") return t.from + (t.to ? ` → ${t.to}` : "");
@@ -104,7 +104,7 @@ function timeText(record: ThemeRecord) {
   return t.from + (t.to ? ` → ${t.to}` : "");
 }
 
-function orderedRecords(group: Group) {
+function orderedRecords<R extends TimelineDisplayRecord>(group: Group<R>) {
   if (group.kind === "calendar") {
     return [...group.records].sort((a, b) =>
       (a.time?.kind === "calendar" ? a.time.from : "").localeCompare(
@@ -113,7 +113,7 @@ function orderedRecords(group: Group) {
     );
   }
   if (group.kind === "qualitative" && group.order?.length) {
-    const rank = (r: ThemeRecord) =>
+    const rank = (r: TimelineDisplayRecord) =>
       r.time?.kind === "qualitative" ? group.order!.indexOf(r.time.from) : -1;
     return [...group.records].sort((a, b) => {
       const x = rank(a),
@@ -134,7 +134,7 @@ function orderedRecords(group: Group) {
   return group.records;
 }
 
-function Period({ record }: { record: ThemeRecord }) {
+function Period({ record }: { record: TimelineDisplayRecord }) {
   const t = record.time;
   if (t?.kind === "calendar") {
     const meaning = calendarMeaning(t);
@@ -228,7 +228,7 @@ function Period({ record }: { record: ThemeRecord }) {
   );
 }
 
-export default function ThemeTimeline({
+export default function ThemeTimeline<R extends TimelineDisplayRecord>({
   selectionLabel = "Capsuleに含める",
   records,
   entities,
@@ -240,16 +240,20 @@ export default function ThemeTimeline({
   onEditRecord,
   onShowGraph,
   graphRecordIds,
-}: Props) {
+  compactControls = false,
+}: Props<R>) {
   const groups = useMemo(
     () => buildTimelineGroups(records, timeline),
     [records, timeline],
   );
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
   const [trace, setTrace] = useState("");
+  const [activeRowId, setActiveRowId] = useState<string | null>(null);
   const [resolution, setResolution] = useState<CalendarResolution>("auto");
   const prefix = useId();
-  const subjects = [...new Set(records.map((r) => r.subject))];
+  const subjects = [...new Set(records.map((r) => r.subject).filter((id): id is string => id !== null))];
+  const focusedRow = records.find((r) => r.id === activeRowId && timelineRecordId(r) === focusedRecordId)
+    ?? records.find((r) => timelineRecordId(r) === focusedRecordId);
   const activeTrace = subjects.includes(trace) ? trace : "";
   const name = (id: string | null) =>
     entities.find((e) => e.id === id)?.name ?? id ?? "";
@@ -265,7 +269,7 @@ export default function ThemeTimeline({
     visited.add(recordId);
     return children(recordId).some((g) =>
       g.records.some(
-        (r) => r.id === focusedRecordId || hasFocusedChild(r.id, visited),
+        (r) => timelineRecordId(r) === focusedRecordId || hasFocusedChild(r.id, visited),
       ),
     );
   };
@@ -276,16 +280,18 @@ export default function ThemeTimeline({
       else next.add(id);
       return next;
     });
-    onFocusRecord(open ? null : id);
+    setActiveRowId(open ? null : id);
+    const record = records.find((r) => r.id === id);
+    onFocusRecord(open || !record ? null : timelineRecordId(record));
   };
   const roots = groups.filter(
     (g) => !g.parentRecordId || !records.some((r) => r.id === g.parentRecordId),
   );
 
-  function renderGroup(group: Group, ancestors: string[] = []) {
+  function renderGroup(group: Group<R>, ancestors: string[] = []) {
     if (ancestors.includes(group.id)) return null;
     const rows = orderedRecords(group);
-    const subjectIds = [...new Set(rows.map((r) => r.subject))];
+    const subjectIds = [...new Set(rows.map((r) => r.subject).filter((id): id is string => id !== null))];
     const lanes = activeTrace
       ? subjectIds.filter((id) => id === activeTrace)
       : subjectIds.slice(0, 5);
@@ -293,11 +299,11 @@ export default function ThemeTimeline({
       const indexes = rows.flatMap((r, i) => (r.subject === id ? [i] : []));
       return { id, first: Math.min(...indexes), last: Math.max(...indexes) };
     });
-    const renderRow = (record: ThemeRecord, index: number) => {
+    const renderRow = (record: R, index: number) => {
       const nested = children(record.id);
       const open =
         expanded.has(record.id) ||
-        focusedRecordId === record.id ||
+        focusedRow?.id === record.id ||
         hasFocusedChild(record.id);
       const t = record.time;
       const label =
@@ -313,9 +319,11 @@ export default function ThemeTimeline({
       return (
         <li
           className={css.row}
-          data-record-id={record.id}
+          data-record-id={timelineRecordId(record)}
+          data-timeline-row-id={record.id}
+          data-time-id={record.timeId ?? undefined}
           key={record.id}
-          data-focused={focusedRecordId === record.id || undefined}
+          data-focused={focusedRecordId === timelineRecordId(record) || undefined}
         >
           <div className={css.date}>
             {label}
@@ -352,8 +360,8 @@ export default function ThemeTimeline({
                 <input
                   type="checkbox"
                   aria-label={`${selectionLabel}：${record.assertion}`}
-                  checked={selectedRecordIds.includes(record.id)}
-                  onChange={() => onToggleSelected(record.id)}
+                  checked={selectedRecordIds.includes(timelineRecordId(record))}
+                  onChange={() => onToggleSelected(timelineRecordId(record))}
                 />
               )}
               <button
@@ -386,7 +394,7 @@ export default function ThemeTimeline({
               </button>
               {onShowGraph &&
                 (graphRecordIds === undefined ||
-                  graphRecordIds.includes(record.id)) && (
+                  graphRecordIds.includes(timelineRecordId(record))) && (
                   <button
                     type="button"
                     className={css.graphJump}
@@ -443,12 +451,18 @@ export default function ThemeTimeline({
                   )}
                   <div className={css.evidenceList}>
                     {record.evidence.map((e, i) => (
-                      <div key={i} className={css.evidence}>
-                        <a href={e.url} target="_blank" rel="noreferrer">
-                          {e.title} <span aria-hidden="true">↗</span>
-                        </a>
+                      <div key={i} className={css.evidence} data-source-id={e.sourceId} data-source-revision={e.sourceRevision}>
+                        {e.url ? (
+                          <a href={e.url} target="_blank" rel="noreferrer">
+                            {e.title} <span aria-hidden="true">↗</span>
+                          </a>
+                        ) : <span>{e.title}</span>}
+                        {e.sourceRevision !== undefined && (
+                          <p className={css.meta}>資料版 {e.sourceRevision}{e.stance ? ` · ${{ support: "支持", refute: "反証", background: "背景" }[e.stance]}` : ""}</p>
+                        )}
+                        {e.bibliography && <p className={css.locator}>{e.bibliography}</p>}
                         <p className={css.locator}>{e.locator}</p>
-                        <p>{e.excerpt}</p>
+                        {e.excerpt && <p>{e.excerpt}</p>}
                       </div>
                     ))}
                   </div>
@@ -496,7 +510,7 @@ export default function ThemeTimeline({
               </p>
             )}
           </div>
-          <span>{rows.length}件</span>
+          <span>{new Set(rows.map(timelineRecordId)).size}件{new Set(rows.map(timelineRecordId)).size < rows.length ? ` · ${rows.length}時期` : ""}</span>
         </header>
         {group.kind === "calendar" ? (
           <CalendarTimelineGraph
@@ -536,11 +550,26 @@ export default function ThemeTimeline({
     );
   }
 
+  const hasCalendar = records.some((r) => r.time?.kind === "calendar");
+  const settingsSummary = [hasCalendar && resolution !== "auto" ? ({ year: "年", month: "月", day: "日" } as const)[resolution] : "", activeTrace ? name(activeTrace) : ""].filter(Boolean).join(" · ");
+  const readingControls = <>
+    {hasCalendar && <label className={css.resolutionSelect}>表示
+      <select aria-label="暦の表示単位" value={resolution} onChange={(e) => setResolution(e.target.value as CalendarResolution)}>
+        <option value="auto">自動</option><option value="year">年</option><option value="month">月</option><option value="day">日</option>
+      </select>
+    </label>}
+    {subjects.length > 1 && <label className={css.traceSelect}>たどる対象
+      <select aria-label="たどる対象" value={activeTrace} onChange={(e) => setTrace(e.target.value)}>
+        <option value="">{subjects.length > 5 ? "先頭の5対象" : "すべて"}</option>
+        {subjects.map((id) => <option key={id} value={id}>{name(id)}</option>)}
+      </select>
+    </label>}
+  </>;
   return (
     <div className={css.timeline}>
-      <div className={css.controls}>
+      <div className={`${css.controls} ${compactControls ? css.compactControls : ""}`}>
         <details className={css.guide}>
-          <summary>線の見方</summary>
+          <summary>{compactControls && <Icon name="chevron" />}線の見方</summary>
           <div className={css.legend}>
             <span>
               <i className={css.legendTrace} />
@@ -563,42 +592,10 @@ export default function ThemeTimeline({
             線の接続先が、その点・期間の記録です。両端付きの線は続いた期間、丸い端の破線は発生候補の幅です。不確かな期間境界だけを点線にします。表示単位の内に収まる出来事は点、期間は短い両端付きの線で示します。元の日付・意味は行を開いて確認できます。時間が重なっても所属や因果は作りません。暦以外の細い対象線は、同じ主語をたどる案内です。
           </p>
         </details>
-        {records.some((r) => r.time?.kind === "calendar") && (
-          <label className={css.resolutionSelect}>
-            表示
-            <select
-              aria-label="暦の表示単位"
-              value={resolution}
-              onChange={(e) =>
-                setResolution(e.target.value as CalendarResolution)
-              }
-            >
-              <option value="auto">自動</option>
-              <option value="year">年</option>
-              <option value="month">月</option>
-              <option value="day">日</option>
-            </select>
-          </label>
-        )}
-        {subjects.length > 1 && (
-          <label className={css.traceSelect}>
-            たどる対象
-            <select
-              aria-label="たどる対象"
-              value={activeTrace}
-              onChange={(e) => setTrace(e.target.value)}
-            >
-              <option value="">
-                {subjects.length > 5 ? "先頭の5対象" : "すべて"}
-              </option>
-              {subjects.map((id) => (
-                <option key={id} value={id}>
-                  {name(id)}
-                </option>
-              ))}
-            </select>
-          </label>
-        )}
+        {compactControls ? (hasCalendar || subjects.length > 1) && <details className={css.displaySettings}>
+          <summary aria-label={`年表の表示設定${settingsSummary ? `：${settingsSummary}` : ""}`} title={settingsSummary || undefined}><Icon name="settings" /><span>表示設定</span>{settingsSummary && <small>{settingsSummary}</small>}<span className={css.settingsChevron}><Icon name="chevron" /></span></summary>
+          <div className={css.displaySettingsBody}>{readingControls}</div>
+        </details> : readingControls}
       </div>
       {roots.length ? (
         roots.map((g) => renderGroup(g))

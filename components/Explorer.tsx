@@ -60,8 +60,13 @@ import WorkspaceDialog from "./WorkspaceDialog";
 import { workspaceLabels } from "../lib/i18n/workspace";
 import SavedViews from "./SavedViews";
 import { savedViewLabels } from "../lib/i18n/saved-views";
+import KnowledgeWorkspace from "./KnowledgeWorkspace";
 
-export default function Explorer({ dataset = "demo", initialRoot, services, publicOverview, discoveryHome }: { dataset?: DatasetMode; initialRoot?: string; services?: PublicServicesPolicy; publicOverview?: import("react").ReactNode; discoveryHome?: DiscoveryHomeData }) {
+type ExplorerProps = { dataset?: DatasetMode; initialRoot?: string; services?: PublicServicesPolicy; publicOverview?: import("react").ReactNode; discoveryHome?: DiscoveryHomeData; knowledgeEnabled?: boolean };
+export default function Explorer(props: ExplorerProps) {
+  return props.knowledgeEnabled ? <KnowledgeWorkspace dataset={props.dataset} initialRoot={props.initialRoot} /> : <LegacyExplorer {...props} />;
+}
+function LegacyExplorer({ dataset = "demo", initialRoot, services, publicOverview, discoveryHome }: ExplorerProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { locale } = useUiLocale();

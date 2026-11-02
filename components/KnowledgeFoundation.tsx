@@ -1,18 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent, type ChangeEvent } from "react";
 import Link from "next/link";
 import { themeTimeLabel } from "../lib/domain/theme-time";
 import type {
-  KnowledgeEntityContent as EntityContent,
   KnowledgeEntityVersion as EntityVersion,
   KnowledgeSourceVersion as SourceVersion,
-  KnowledgeRecordContent as RecordContent,
   KnowledgeRecordVersion as RecordVersion,
   KnowledgeThemeVersion as ThemeVersion,
   KnowledgeList,
   KnowledgeSnapshot,
 } from "../lib/domain/knowledge-foundation";
+import { correctionKnowledgeInputDraft, newKnowledgeInputDraft, prepareKnowledgeInputSubmission, readKnowledgeInputDraft, writeKnowledgeInputDraft, type KnowledgeInputDraft, type KnowledgeInputField, type KnowledgeInputChoice } from "../lib/client/knowledge-input-draft";
 import css from "./KnowledgeFoundation.module.css";
 
 type Catalog = KnowledgeList & { sourceVersions?: SourceVersion[] };
@@ -57,10 +56,11 @@ export default function KnowledgeFoundation() {
   const [query, setQuery] = useState("");
   const [creating, setCreating] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [kind, setKind] = useState("relation");
-  const [subject, setSubject] = useState("");
-  const [object, setObject] = useState("");
-  const [source, setSource] = useState("");
+  const [draft, setDraft] = useState<KnowledgeInputDraft | null>(null);
+  const [entryContext, setEntryContext] = useState<{ id: string; revision: number } | null>(null);
+  const creatingDraft = draft?.mode === "create" ? draft : null;
+  const kind = creatingDraft?.kind ?? "relation";
+  const editBase = editing && draft?.mode === "correct" ? draft.base : null;
   const [busy, setBusy] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [message, setMessage] = useState("");
@@ -70,59 +70,77 @@ export default function KnowledgeFoundation() {
   const [changes, setChanges] = useState<Change[]>([]);
   const [refreshToken, setRefreshToken] = useState("");
   const [showList, setShowList] = useState(true);
-  const ids = useRef<{ record: string; subject: string; object: string; source: string } | null>(null);
   const requests = useRef(new Map<string, string>());
   const themeRequest = useRef<string | null>(null);
   const active = catalog.records.find((r) => r.id === selected);
   const activeStatus = catalog.statuses?.find((s) => s.kind === "record" && s.id === selected);
   const load = useCallback(async () => { const value = await api(); setCatalog(value); setLoaded(true); }, []);
-  useEffect(() => { let alive = true; api().then((v) => { if (alive) { setCatalog(v); setLoaded(true); } }).catch((e) => { if (alive) setError(e.message); }); return () => { alive = false; }; }, []);
+  useEffect(() => {
+    let alive = true; let restored: KnowledgeInputDraft | null = null;
+    try { restored = readKnowledgeInputDraft(sessionStorage); } catch { /* Storage is optional; live input remains usable. */ }
+    api().then((v: Catalog) => { if (alive) {
+      setCatalog(v); setDraft(restored); setLoaded(true);
+      const params = new URL(window.location.href).searchParams, recordId = params.get("record");
+      if (recordId && v.records.some(r => r.id === recordId)) {
+        setSelected(recordId); setShowList(false);
+        const from = params.get("fromRevision") ?? "", revision = Number(from);
+        if (/^[1-9][0-9]*$/.test(from) && Number.isSafeInteger(revision)) setEntryContext({ id: recordId, revision });
+      }
+    } }).catch((e) => { if (alive) { setDraft(restored); setError(e.message); } });
+    return () => { alive = false; };
+  }, []);
 
-  async function execute(command: Record<string, unknown>, success: string) {
+  function preserveDraft(next: KnowledgeInputDraft | null) {
+    setDraft(next);
+    try { if (!writeKnowledgeInputDraft(sessionStorage, next)) setError("このタブで入力を保持できません。移動する前に保存してください。"); } catch { setError("このタブで入力を保持できません。移動する前に保存してください。"); }
+  }
+  function field(name: KnowledgeInputField) { return { value: draft?.values[name] ?? "", onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => { if (draft) preserveDraft({ ...draft, values: { ...draft.values, [name]: event.target.value } }); } }; }
+  const choiceValue = (choice: KnowledgeInputChoice | null | undefined) => choice ? choice.id + "@" + choice.revision : "";
+  function choose(side: "subject" | "object" | "source", value: string) {
+    if (!creatingDraft) return;
+    const choice = side === "source" ? catalog.sources.find(s => choiceValue({ ...s, label: s.content.title }) === value) : catalog.entities.find(e => choiceValue({ ...e, label: e.content.name }) === value);
+    preserveDraft({ ...creatingDraft, [side]: choice ? { id: choice.id, revision: choice.revision, label: "title" in choice.content ? choice.content.title : choice.content.name } : null });
+  }
+  function resumeDraft() {
+    if (!draft) return;
+    if (draft.mode === "correct" && !catalog.records.some(r => r.id === draft.base.id)) { setError("訂正元の記録を読み込めません。入力は保持しています。"); return; }
+    setCreating(draft.mode === "create"); setEditing(draft.mode === "correct"); setSelected(draft.mode === "correct" ? draft.base.id : null); setTheme(null); setShowList(false); setError(""); setMessage("");
+  }
+  function discardDraft() { preserveDraft(null); setCreating(false); setEditing(false); setMessage("保存前の入力を破棄しました。"); }
+  function beginCorrection() {
+    if (editing) { setEditing(false); return; }
+    if (!active) return;
+    if (draft) { if (draft.mode === "correct" && draft.base.id === active.id) resumeDraft(); else setMessage("保存前の入力を再開するか、破棄してください。"); return; }
+    preserveDraft(correctionKnowledgeInputDraft(active)); setEditing(true); setCreating(false); setMessage("");
+  }
+
+  async function execute(command: Record<string, unknown>, success: string, onSaved?: () => void) {
     const key = JSON.stringify(command);
-    const requestId = requests.current.get(key) ?? crypto.randomUUID();
+    const requestId = typeof command.requestId === "string" ? command.requestId : requests.current.get(key) ?? crypto.randomUUID();
     requests.current.set(key, requestId);
     setBusy(true); setError(""); setMessage("");
+    let saved = false;
     try {
-      await api("", { ...command, requestId }); await load(); setMessage(success); return true;
-    } catch (e) { setError(e instanceof Error ? e.message : "操作を完了できませんでした"); return false; }
+      await api("", { ...command, requestId }); saved = true; onSaved?.(); await load(); setMessage(success); return true;
+    } catch (e) { setError(saved ? "保存は完了しました。一覧を再読込してください。" : e instanceof Error ? e.message : "操作を完了できませんでした"); if (saved) setMessage(success); return saved; }
     finally { setBusy(false); }
   }
 
   function begin() {
-    ids.current = { record: crypto.randomUUID(), subject: crypto.randomUUID(), object: crypto.randomUUID(), source: crypto.randomUUID() };
-    setCreating(true); setEditing(false); setSelected(null); setTheme(null); setSubject(""); setObject(""); setSource(""); setKind("relation"); setShowList(false); setMessage("");
+    if (draft) { setMessage("保存前の入力を再開するか、破棄してください。"); return; }
+    preserveDraft(newKnowledgeInputDraft()); setCreating(true); setEditing(false); setSelected(null); setTheme(null); setShowList(false); setMessage("");
   }
 
   async function addRecord(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); const f = new FormData(event.currentTarget); const value = (n: string) => String(f.get(n) ?? "").trim();
-    const keys = ids.current!;
-    const entities: { id: string; content: EntityContent }[] = [];
-    const entityPins: { id: string; revision: number }[] = [];
-    const endpoint = (name: "subject" | "object", chosen: string) => {
-      if (chosen) { const entity = catalog.entities.find((e) => e.id === chosen)!; entityPins.push({ id: entity.id, revision: entity.revision }); return entity.id; }
-      if (!value(name + "Name")) return null;
-      entities.push({ id: keys[name], content: { name: value(name + "Name"), aliases: [], kind: value(name + "Kind") || "person", description: "", language: "ja" } });
-      return keys[name];
-    };
-    const subjectId = endpoint("subject", subject), objectId = kind === "relation" ? endpoint("object", object) : null;
-    const knownSource = catalog.sources.find((s) => s.id === source);
-    const date = value("from");
-    const content: RecordContent = {
-      kind: kind as RecordContent["kind"], subjectId, objectId, assertion: value("assertion"), relation: value("relation"),
-      polarity: value("polarity") as RecordContent["polarity"], scope: value("scope"),
-      times: date ? [{ id: "time-1", time: { kind: "calendar", from: date, ...(value("to") ? { to: value("to"), meaning: "duration" as const } : { meaning: "point" as const }), label: "" } }] : [],
-      evidence: [{ id: "evidence-1", source: { id: knownSource?.id ?? keys.source, revision: knownSource?.revision ?? 1 }, locator: value("locator"), excerpt: value("excerpt"), stance: "support" }],
-    };
-    const success = await execute({ action: "create-bundle", entities, entityPins: [...new Map(entityPins.map((p) => [p.id, p])).values()], sources: knownSource ? [] : [{ id: keys.source, content: { title: value("sourceTitle"), url: value("sourceUrl") || null, bibliography: value("bibliography"), language: "ja" } }], records: [{ id: keys.record, content }], reason: "画面から根拠付き記録を登録" }, "記録を登録しました。テーマへは必要なときに追加できます。");
-    if (success) { setCreating(false); setSelected(keys.record); ids.current = null; }
+    event.preventDefault(); if (!creatingDraft) return;
+    const prepared = prepareKnowledgeInputSubmission(creatingDraft); preserveDraft(prepared.draft);
+    await execute(prepared.command, "記録を登録しました。テーマへは必要なときに追加できます。", () => { preserveDraft(null); setCreating(false); setSelected(creatingDraft.ids.record); });
   }
 
   async function correct(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); if (!active) return;
-    const f = new FormData(event.currentTarget);
-    const ok = await execute({ action: "correct", kind: "record", id: active.id, expectedRevision: active.revision, content: { ...active.content, assertion: String(f.get("assertion")), relation: String(f.get("relation") ?? active.content.relation) }, reason: String(f.get("reason")) }, "原記録を訂正しました。テーマの保存版はそのままです。");
-    if (ok) setEditing(false);
+    event.preventDefault(); if (draft?.mode !== "correct") return;
+    const prepared = prepareKnowledgeInputSubmission(draft); preserveDraft(prepared.draft);
+    await execute(prepared.command, "原記録を訂正しました。テーマの保存版はそのままです。", () => { preserveDraft(null); setEditing(false); });
   }
 
   async function openTheme(id: string, preserveMessage = false) {
@@ -141,8 +159,9 @@ export default function KnowledgeFoundation() {
 
   const records = catalog.records.filter((r) => [r.content.assertion, r.content.relation, ...catalog.entities.filter((e) => [r.content.subjectId, r.content.objectId].includes(e.id)).map((e) => e.content.name)].join(" ").normalize("NFKC").toLowerCase().includes(query.normalize("NFKC").toLowerCase()));
   return <main className={css.shell}>
-    <header className={css.header}><Link href="/themes">← テーマと年表</Link><Link href="/themes/explore">記録を探索する →</Link><span className={css.meta}>このPCの確認用 · 運営者の操作</span></header>
+    <header className={css.header}><Link href="/themes">← テーマと年表</Link><Link href="/">探索へ戻る →</Link><span className={css.meta}>このPCの確認用 · 運営者の操作</span></header>
     <div className={css.intro}><h1>共通の記録</h1><p>根拠とともに残し、複数のテーマから同じ記録を使えます。</p></div>
+    {draft && !creating && !editing && <div className={css.notice}><span>{draft.mode === "create" ? "保存前の記録があります。" : "保存前の訂正があります。"}</span><button disabled={!loaded || busy} onClick={resumeDraft}>入力を再開</button><button disabled={busy} onClick={discardDraft}>入力を破棄</button></div>}
     {message && <p className={css.notice} role="status">{message}</p>}
     {error && <div className={`${css.notice} ${css.error}`} role="alert">{error}<button onClick={() => { setError(""); if (theme) void openTheme(theme.theme.id); else void load().catch((e) => setError(e.message)); }}>{theme ? "最新の差分を確認" : "表示を再読込"}</button></div>}
     <fieldset className={css.interaction} disabled={busy || !loaded}><div className={css.grid}>
@@ -158,18 +177,19 @@ export default function KnowledgeFoundation() {
       </section>
       <section className={css.panel} aria-label="記録の内容">
         {creating ? <><div className={css.heading}><h2>記録を加える</h2><button onClick={() => setCreating(false)}>閉じる</button></div><form className={css.form} onSubmit={addRecord}>
-          <label>記録の種類<select value={kind} onChange={(e) => setKind(e.target.value)}><option value="relation">対象どうしの関係</option><option value="episode">出来事・エピソード</option><option value="note">説明・期間</option></select></label>
-          <div className={css.pair}>{(["subject", ...(kind === "relation" ? ["object"] : [])] as ("subject" | "object")[]).map((side) => <fieldset key={side}><legend>{side === "subject" ? "対象" : "相手"}{kind !== "relation" && "（任意）"}</legend><label>登録済みから選ぶ<select value={side === "subject" ? subject : object} onChange={(e) => (side === "subject" ? setSubject : setObject)(e.target.value)}><option value="">新しい対象／指定しない</option>{catalog.entities.map((e) => <option key={e.id} value={e.id}>{e.content.name} · {e.content.kind} · {e.id.slice(0, 6)}</option>)}</select></label>{!(side === "subject" ? subject : object) && <><label>名前<input name={side + "Name"} required={kind === "relation"} maxLength={200} /></label><label>分類<input name={side + "Kind"} placeholder="人物、作品、組織など" maxLength={60} /></label></>}</fieldset>)}</div>
-          {kind === "relation" && <label>具体的な関係<input name="relation" required maxLength={200} placeholder="原資料の意味に合う言葉で" /></label>}
-          <label>具体的な内容<textarea name="assertion" required maxLength={4000} /></label>
-          <label>肯否・不確実性<select name="polarity"><option value="affirmed">肯定</option><option value="denied">否定</option><option value="uncertain">不確実</option></select></label>
-          <details><summary>範囲・時期を添える</summary><div className={css.form}><label>対象範囲<input name="scope" maxLength={3000} /></label><div className={css.pair}><label>時点／期間の始まり<input name="from" placeholder="1991 または 1991-05-04" pattern="[0-9]{4}(-[0-9]{2})?(-[0-9]{2})?" /></label><label>期間の終わり<input name="to" placeholder="継続した期間の場合" pattern="[0-9]{4}(-[0-9]{2})?(-[0-9]{2})?" /></label></div></div></details>
-          <fieldset><legend>根拠</legend><label>資料を再利用<select value={source} onChange={(e) => setSource(e.target.value)}><option value="">新しい資料</option>{catalog.sources.map((s) => <option key={s.id} value={s.id}>{s.content.title} · 版 {s.revision}</option>)}</select></label>{!source && <><label>資料名<input name="sourceTitle" required maxLength={300} /></label><label>URL<input name="sourceUrl" type="url" maxLength={2000} placeholder="書籍などは空欄にして書誌を記入" /></label><label>書誌・版<input name="bibliography" maxLength={3000} /></label></>}<label>該当箇所<input name="locator" required maxLength={1000} /></label><label>その箇所の内容・抜粋<textarea name="excerpt" required maxLength={4000} /></label></fieldset>
-          <div className={css.actions}><button data-primary disabled={busy}>{busy ? "保存中…" : "記録を登録"}</button><button type="button" onClick={() => setCreating(false)} disabled={busy}>取消</button></div>
+          <label>記録の種類<select value={kind} onChange={(e) => { if (creatingDraft) preserveDraft({ ...creatingDraft, kind: e.target.value as "relation" | "episode" | "note" }); }}><option value="relation">対象どうしの関係</option><option value="episode">出来事・エピソード</option><option value="note">説明・期間</option></select></label>
+          <div className={css.pair}>{(["subject", ...(kind === "relation" ? ["object"] : [])] as ("subject" | "object")[]).map((side) => <fieldset key={side}><legend>{side === "subject" ? "対象" : "相手"}{kind !== "relation" && "（任意）"}</legend><label>登録済みから選ぶ<select value={choiceValue(creatingDraft?.[side])} onChange={(e) => choose(side, e.target.value)}><option value="">新しい対象／指定しない</option>{creatingDraft?.[side] && !catalog.entities.some(e => e.id === creatingDraft[side]?.id && e.revision === creatingDraft[side]?.revision) && <option value={choiceValue(creatingDraft[side])}>{creatingDraft[side]?.label} · 版 {creatingDraft[side]?.revision}（入力時）</option>}{catalog.entities.map((e) => <option key={e.id} value={choiceValue({ ...e, label: e.content.name })}>{e.content.name} · {e.content.kind} · 版 {e.revision} · {e.id.slice(0, 6)}</option>)}</select></label>{!creatingDraft?.[side] && <><label>名前<input {...field(side === "subject" ? "subjectName" : "objectName")} name={side + "Name"} required={kind === "relation"} maxLength={200} /></label><label>分類<input {...field(side === "subject" ? "subjectKind" : "objectKind")} name={side + "Kind"} placeholder="人物、作品、組織など" maxLength={60} /></label></>}</fieldset>)}</div>
+          {kind === "relation" && <label>具体的な関係<input {...field("relation")} name="relation" required maxLength={200} placeholder="原資料の意味に合う言葉で" /></label>}
+          <label>具体的な内容<textarea {...field("assertion")} name="assertion" required maxLength={4000} /></label>
+          <label>肯否・不確実性<select {...field("polarity")} name="polarity"><option value="affirmed">肯定</option><option value="denied">否定</option><option value="uncertain">不確実</option></select></label>
+          <details><summary>範囲・時期を添える</summary><div className={css.form}><label>対象範囲<input {...field("scope")} name="scope" maxLength={3000} /></label><div className={css.pair}><label>時点／期間の始まり<input {...field("from")} name="from" placeholder="1991 または 1991-05-04" pattern="[0-9]{4}(-[0-9]{2})?(-[0-9]{2})?" /></label><label>期間の終わり<input {...field("to")} name="to" placeholder="継続した期間の場合" pattern="[0-9]{4}(-[0-9]{2})?(-[0-9]{2})?" /></label></div></div></details>
+          <fieldset><legend>根拠</legend><label>資料を再利用<select value={choiceValue(creatingDraft?.source)} onChange={(e) => choose("source", e.target.value)}><option value="">新しい資料</option>{creatingDraft?.source && !catalog.sources.some(s => s.id === creatingDraft.source?.id && s.revision === creatingDraft.source?.revision) && <option value={choiceValue(creatingDraft.source)}>{creatingDraft.source.label} · 版 {creatingDraft.source.revision}（入力時）</option>}{catalog.sources.map((s) => <option key={s.id} value={choiceValue({ ...s, label: s.content.title })}>{s.content.title} · 版 {s.revision}</option>)}</select></label>{!creatingDraft?.source && <><label>資料名<input {...field("sourceTitle")} name="sourceTitle" required maxLength={300} /></label><label>URL<input {...field("sourceUrl")} name="sourceUrl" type="url" maxLength={2000} placeholder="書籍などは空欄にして書誌を記入" /></label><label>書誌・版<input {...field("bibliography")} name="bibliography" maxLength={3000} /></label></>}<label>該当箇所<input {...field("locator")} name="locator" required maxLength={1000} /></label><label>その箇所の内容・抜粋<textarea {...field("excerpt")} name="excerpt" required maxLength={4000} /></label></fieldset>
+          <div className={css.actions}><button data-primary disabled={busy}>{busy ? "保存中…" : "記録を登録"}</button><button type="button" onClick={discardDraft} disabled={busy}>入力を破棄</button></div>
         </form></> : active ? <>
-          <div className={css.heading}><h2>記録の内容</h2><button onClick={() => setEditing(!editing)} disabled={busy}>{editing ? "編集を閉じる" : "内容を訂正"}</button></div>
+          <div className={css.heading}><h2>記録の内容</h2><button onClick={beginCorrection} disabled={busy}>{editing ? "編集を閉じる" : "内容を訂正"}</button></div>
+          {!editing && entryContext?.id === active.id && entryContext.revision !== active.revision && <p className={css.hint}>読んでいた内容版 {entryContext.revision} ／ 編集対象 {active.revision}。内容を確認してから訂正できます。</p>}
           {activeStatus?.visibility !== "public" && <p className={css.notice}>この記録は現在、閲覧用の表示から外れています。</p>}
-          {editing ? <form className={css.form} onSubmit={correct}>{active.content.kind === "relation" && <label>関係の言葉<input name="relation" defaultValue={active.content.relation} required /></label>}<label>具体的な内容<textarea name="assertion" defaultValue={active.content.assertion} required /></label><label>訂正理由<input name="reason" required /></label><button data-primary disabled={busy}>新しい版として保存</button></form> : <RecordDetail record={active} entities={catalog.entities} sources={catalog.sourceVersions ?? catalog.sources} />}
+          {editing && editBase ? <form className={css.form} onSubmit={correct}><span className={css.hint}>内容版 {editBase.revision} からの訂正</span>{editBase.content.kind === "relation" && <label>関係の言葉<input {...field("relation")} name="relation" required /></label>}<label>具体的な内容<textarea {...field("assertion")} name="assertion" required /></label><label>訂正理由<input {...field("reason")} name="reason" required /></label><div className={css.actions}><button data-primary disabled={busy}>新しい版として保存</button><button type="button" onClick={discardDraft}>入力を破棄</button></div></form> : <RecordDetail record={active} entities={catalog.entities} sources={catalog.sourceVersions ?? catalog.sources} />}
           <details><summary>登場する対象の名前を訂正</summary>{catalog.entities.filter((e) => [active.content.subjectId, active.content.objectId].includes(e.id)).map((entity) => <form key={entity.id + ":" + entity.revision} className={css.form} onSubmit={async (event) => { event.preventDefault(); const f = new FormData(event.currentTarget); await execute({ action: "correct", kind: "entity", id: entity.id, expectedRevision: entity.revision, content: { ...entity.content, name: String(f.get("name")) }, reason: String(f.get("reason")) }, "対象の名前を訂正しました。テーマ内の観測版は保持しています。"); }}><label>名前<input name="name" defaultValue={entity.content.name} required /></label><label>理由<input name="reason" required /></label><button disabled={busy}>対象の訂正を保存</button></form>)}</details>
           {activeStatus && <details><summary>この記録の表示を管理</summary><form className={css.form} onSubmit={async (event) => { event.preventDefault(); const f = new FormData(event.currentTarget); await execute({ action: "set-visibility", kind: "record", id: active.id, expectedStatusRevision: activeStatus.revision, visibility: activeStatus.visibility === "public" ? "hidden" : "public", reason: String(f.get("reason")) }, activeStatus.visibility === "public" ? "閲覧用の表示から外しました。記録と履歴は保持しています。" : "閲覧用の表示へ戻しました。"); }}><label>変更理由<input name="reason" required /></label><button disabled={busy}>{activeStatus.visibility === "public" ? "表示を止める" : "表示を戻す"}</button></form></details>}
         </> : theme ? <>

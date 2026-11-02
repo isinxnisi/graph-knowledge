@@ -12,13 +12,13 @@ import {
   type CalendarResolution,
 } from "../lib/domain/calendar-graph";
 import { themeTimeLabel } from "../lib/domain/theme-time";
-import type { ThemeRecord } from "../lib/domain/theme-workbench";
+import { timelineRecordId, type TimelineDisplayRecord } from "../lib/domain/timeline-display";
 import css from "./CalendarTimelineGraph.module.css";
 
 const colors = ["#397a85", "#aa713c", "#6878a2", "#8b668f", "#6d844f"];
 const unitNames = { year: "年", month: "月", day: "日" };
 
-export default function CalendarTimelineGraph({
+export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
   records,
   resolution,
   focusedRecordId,
@@ -26,12 +26,12 @@ export default function CalendarTimelineGraph({
   onFocus,
   renderRecord,
 }: {
-  records: ThemeRecord[];
+  records: R[];
   resolution: CalendarResolution;
   focusedRecordId: string | null;
   highlightedSubject: string;
   onFocus: (id: string) => void;
-  renderRecord: (record: ThemeRecord, index: number) => ReactNode;
+  renderRecord: (record: R, index: number) => ReactNode;
 }) {
   const container = useRef<HTMLDivElement>(null);
   const open = (id: string) => {
@@ -39,9 +39,9 @@ export default function CalendarTimelineGraph({
     requestAnimationFrame(() => {
       const row = [
         ...(container.current?.querySelectorAll<HTMLElement>(
-          "[data-record-id]",
+          "[data-timeline-row-id]",
         ) ?? []),
-      ].find((row) => row.dataset.recordId === id);
+      ].find((row) => row.dataset.timelineRowId === id);
       row?.scrollIntoView?.({ block: "nearest" });
     });
   };
@@ -49,8 +49,8 @@ export default function CalendarTimelineGraph({
     () => calendarGraph(records, resolution),
     [records, resolution],
   );
-  const shortName = (r: ThemeRecord) => r.time?.label || r.assertion;
-  const lineStyle = (record: ThemeRecord) => {
+  const shortName = (r: R) => r.time?.label || r.assertion;
+  const lineStyle = (record: R) => {
     const range = graph.ranges.find((r) => r.record.id === record.id)!;
     return {
       "--lane": range.lane,
@@ -132,7 +132,7 @@ export default function CalendarTimelineGraph({
                     type="button"
                     className={css.ending}
                     data-focused={
-                      focusedRecordId === row.ending.id || undefined
+                      focusedRecordId === timelineRecordId(row.ending) || undefined
                     }
                     onClick={() => open(row.ending!.id)}
                     title={themeTimeLabel(row.ending.time)}
@@ -198,10 +198,10 @@ export default function CalendarTimelineGraph({
                   data-meaning={meaning}
                   data-point={point || undefined}
                   data-uncertain={range.uncertainBoundary || undefined}
-                  data-focused={focusedRecordId === record.id || undefined}
+                  data-focused={focusedRecordId === timelineRecordId(record) || undefined}
                   title={`${record.assertion} · ${themeTimeLabel(record.time)}`}
                   aria-label={`時期の線を選ぶ：${record.assertion} · ${themeTimeLabel(record.time)}`}
-                  aria-pressed={focusedRecordId === record.id}
+                  aria-pressed={focusedRecordId === timelineRecordId(record)}
                   onClick={() => open(record.id)}
                 >
                   <i />

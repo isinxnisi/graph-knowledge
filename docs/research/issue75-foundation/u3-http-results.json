@@ -1,0 +1,64 @@
+{
+  "completed": true,
+  "checkedAt": "2026-11-02T04:19:28.794334+00:00",
+  "baseUrl": "http://localhost:3276",
+  "generation": "k75-15070b498ab7cd4c0ad54cdfd79b2428",
+  "readOnly": true,
+  "httpGetRequests": 15,
+  "realThemes": [
+    {
+      "themeId": "u3:fbaa9ee12f288cfa:theme",
+      "themeRevision": 1,
+      "sourceThemeRevision": 1,
+      "records": 11,
+      "entities": 6,
+      "timeAnnotations": 11,
+      "fixedPinsMatchObservedPlan": true,
+      "timelineConfigurationPreserved": true,
+      "allConcreteRecordContentPreserved": true,
+      "exactSourcePinsPreserved": true,
+      "ordinaryEntitySearch": true,
+      "ordinaryConcreteSearch": true,
+      "ordinaryNeighbors": true
+    },
+    {
+      "themeId": "u3:a508eb51cfd248dd:theme",
+      "themeRevision": 1,
+      "sourceThemeRevision": 5,
+      "records": 6,
+      "entities": 6,
+      "timeAnnotations": 1,
+      "fixedPinsMatchObservedPlan": true,
+      "timelineConfigurationPreserved": true,
+      "allConcreteRecordContentPreserved": true,
+      "exactSourcePinsPreserved": true,
+      "ordinaryEntitySearch": true,
+      "ordinaryConcreteSearch": true,
+      "ordinaryNeighbors": true
+    }
+  ],
+  "sharedWebbEntityRelatedThemes": true,
+  "virtualNote": {
+    "recordId": "2049c070-9fb9-4879-ac09-c9fa6eb31a23",
+    "themeId": "3e565192-8106-4346-988f-ff7e0491d76e",
+    "themeRevision": 1,
+    "pinnedRecordRevision": 1,
+    "currentRecordRevision": 2,
+    "nullableEndpointsPreserved": true,
+    "noInventedTimeOrEntity": true,
+    "sourcePins": [
+      {
+        "id": "8c2b9255-4573-4cd8-9440-45b9dbd397c8",
+        "revision": 1
+      }
+    ],
+    "unchangedEvidenceAcrossCorrection": true,
+    "searchFindsCorrectedRevision": true,
+    "themeRetainsOriginalRevision": true
+  },
+  "checks": {
+    "responsesNoStore": true,
+    "redirectsAllowed": false,
+    "writesPerformed": false
+  }
+}

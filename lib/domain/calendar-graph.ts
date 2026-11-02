@@ -1,5 +1,5 @@
 import { calendarMeaning, type CalendarTime } from "./theme-time";
-import type { ThemeRecord } from "./theme-workbench";
+import type { TimelineTimedRow } from "./timeline-display";
 
 export type CalendarUnit = "year" | "month" | "day";
 export type CalendarResolution = "auto" | CalendarUnit;
@@ -31,12 +31,12 @@ export function calendarLayoutBounds(value: string): [number, number] {
   ];
 }
 
-export function calendarGraph(
-  records: ThemeRecord[],
+export function calendarGraph<R extends TimelineTimedRow>(
+  records: R[],
   resolution: CalendarResolution = "auto",
 ) {
   const dated = records.filter(
-    (r): r is ThemeRecord & { time: CalendarTime } =>
+    (r): r is R & { time: CalendarTime } =>
       r.time?.kind === "calendar",
   );
   const values = dated.flatMap(({ time }) =>
@@ -121,7 +121,7 @@ export function calendarGraph(
   // Every record and every interval end has its own anchor row. A date group
   // must not send all connectors to its first card when several records share it.
   const rows = slices.flatMap((slice) => {
-    const entries: { record?: ThemeRecord; ending?: ThemeRecord }[] = [
+    const entries: { record?: R; ending?: R }[] = [
       ...slice.records.map((record) => ({ record })),
       ...slice.ending.map((ending) => ({ ending })),
     ];

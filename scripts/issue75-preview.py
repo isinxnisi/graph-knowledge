@@ -20,7 +20,7 @@ def configuration():
  env=dict(os.environ)
  for k in list(env):
   if k.startswith(('MEMBER_','GOOGLE_','GRAPH_','NEO4J_','AI_LAB_','KG_ADMIN_')):env.pop(k)
- env.update(THEME_WORKBENCH_ENABLED='1',THEME_DATABASE_URL='postgresql://theme75:'+cfg['password']+'@127.0.0.1:55475/plunode_theme75',THEME_ORIGIN='http://localhost:3276',NEXT_TELEMETRY_DISABLED='1')
+ env.update(THEME_WORKBENCH_ENABLED='1',KNOWLEDGE_WORKSPACE_ENABLED='1',THEME_DATABASE_URL='postgresql://theme75:'+cfg['password']+'@127.0.0.1:55475/plunode_theme75',THEME_ORIGIN='http://localhost:3276',NEXT_TELEMETRY_DISABLED='1')
  neo=STATE/'knowledge-proof/neo4j-private.json'
  if neo.exists():
   private=json.loads(neo.read_text())
@@ -120,5 +120,5 @@ def main():
  publication_worker(env)
  with (STATE/'server.log').open('ab') as log:
   p=subprocess.Popen([str(NODE),cli,'dev' if args.action=='dev' else 'start','--hostname','127.0.0.1','--port',str(PORT),*(['--webpack'] if args.action=='dev' else [])],cwd=ROOT,env=env,stdin=subprocess.DEVNULL,stdout=log,stderr=log,start_new_session=True)
- pidfile.write_text(str(p.pid));print('Started isolated preview: http://localhost:3276/themes (PID '+str(p.pid)+')')
+ pidfile.write_text(str(p.pid));print('Started isolated preview: http://localhost:3276/ (PID '+str(p.pid)+')')
 if __name__=='__main__':main()

@@ -91,6 +91,17 @@ function selectLegacyTyped(record: KnowledgeRecordVersion, link?: KnowledgeLegac
   if (link.importedRevision !== record.revision) return null;
   if (!/^[a-f0-9]{64}$/.test(link.sha256) || link.importedRevision !== 1)
     throw new Error("Legacy link is not an immutable import reference");
+  // An observed Theme source also uses the immutable provenance registry, but
+  // is not a typed legacy KG Claim. Its free relation remains the common label.
+  const themeOrigin = z.object({ importKind: z.literal("theme75"),
+    origin: z.object({ kind: z.literal("theme75-observation"), observedSha256: z.string().regex(/^[a-f0-9]{64}$/) }),
+    record: z.object({ id: z.string() }),
+  }).safeParse(link.payload);
+  if (themeOrigin.success) {
+    if (link.dataset !== `theme75:${themeOrigin.data.origin.observedSha256}` || themeOrigin.data.record.id !== link.legacyClaimId)
+      throw new Error("Theme origin does not identify this imported record");
+    return null;
+  }
   // The persistence layer verifies the payload hash. Do not expose the raw payload.
   const payload = z.object({
     fixtureSchemaVersion: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]),

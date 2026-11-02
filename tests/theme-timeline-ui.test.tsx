@@ -85,6 +85,12 @@ const common = {
   onFocusRecord: vi.fn(),
 };
 
+it("keeps the existing standalone display controls visible by default", () => {
+  render(<ThemeTimeline {...common} records={[parent]} />);
+  expect(screen.getByRole("combobox", { name: "暦の表示単位" })).toBeTruthy();
+  expect(screen.queryByText("表示設定")).toBeNull();
+});
+
 it("opens the explicitly nested axis only when its parent row is opened", () => {
   const focus = vi.fn();
   render(

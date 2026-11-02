@@ -182,6 +182,11 @@ async function resolve(c: PoolClient, id: string, revision: number | undefined, 
   return { theme, snapshot: await capture(c, theme.content.recordPins, { ...theme.content, publicOnly }) };
 }
 
+/** Public Theme reads can share the caller's read transaction with DTO construction. */
+export function resolvePublicKnowledgeTheme(client: PoolClient, id: string, revision?: number) {
+  return resolve(client, id, revision, true);
+}
+
 export function createKnowledgeFoundationService(pool: Pool) {
   let initialized: Promise<unknown> | undefined;
   const ready = () => initialized ??= ensureKnowledgeFoundationSchema(pool).catch(e => { initialized = undefined; throw e; });

@@ -4,11 +4,11 @@ import type {
   ThemeTimelineConfig,
 } from "./theme-workbench";
 
-export type ThemeTimelineGroup = {
+export type ThemeTimelineGroup<R extends TimedRecord = ThemeRecord> = {
   id: string;
   kind: "calendar" | "cycle" | "qualitative" | "none";
   label: string;
-  records: ThemeRecord[];
+  records: R[];
   order?: string[];
   originLabel?: string;
   parentRecordId?: string;
@@ -142,11 +142,11 @@ export function themeTimelineIssues(
 }
 
 /** No sorting or synthetic dates: each original time value and precision survives. */
-export function buildTimelineGroups(
-  records: ThemeRecord[],
+export function buildTimelineGroups<R extends TimedRecord>(
+  records: R[],
   config?: ThemeTimelineConfig,
-): ThemeTimelineGroup[] {
-  const groups = new Map<string, ThemeTimelineGroup>();
+): ThemeTimelineGroup<R>[] {
+  const groups = new Map<string, ThemeTimelineGroup<R>>();
   const recordIds = new Set(records.map((r) => r.id));
   const placements = new Map(
     config?.placements.map((p) => [p.recordId, p.axisId]),

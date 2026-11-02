@@ -24,10 +24,10 @@ import { appearanceKey, defaultAppearance, readAppearance, type Appearance } fro
 import MyCapsules from "./MyCapsules";
 import ProfileAvatar from './ProfileAvatar';
 import {usePublicProfilesEnabled} from './PublicProfileAvailability';
-export default function SiteHeader({ dataset, page = "explore", onBeforeAccountNavigation, onPrivacySettings, onLogout, accountBusy = false }: { onBeforeAccountNavigation?: () => boolean; onPrivacySettings?: () => void; onLogout?: () => void; accountBusy?: boolean; user?: MemberUser | null; dataset: DatasetMode; page?: "explore" | "member" | "community" | "shared" | "support" | "ai-lab" }) {
+export default function SiteHeader({ dataset, datasetNotice, memberTools = true, page = "explore", onBeforeAccountNavigation, onPrivacySettings, onLogout, accountBusy = false }: { memberTools?: boolean; datasetNotice?: { badge: string; description: string }; onBeforeAccountNavigation?: () => boolean; onPrivacySettings?: () => void; onLogout?: () => void; accountBusy?: boolean; user?: MemberUser | null; dataset: DatasetMode; page?: "explore" | "member" | "community" | "shared" | "support" | "ai-lab" }) {
   const communitiesEnabled=useCommunitiesEnabled(),profiles=usePublicProfilesEnabled();
   const { locale, setLocale, storageError: languageError } = useUiLocale();
-  const ui = explorerLabels(locale), text = siteLabels(locale), data = datasetLabels(dataset, locale);
+  const ui = explorerLabels(locale), text = siteLabels(locale), data = { ...datasetLabels(dataset, locale), ...datasetNotice };
   const identity = useMemberSession();
   const currentUser = identity.user;
   const operations=useOperationsSummary();
@@ -96,9 +96,9 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
     </div>
     <p className={styles.description}>{data.description}</p>
     <div className={styles.tools}>
-      <button className={styles.capsulesEntry} aria-label="My Capsules" title="My Capsules" onClick={() => setCapsulesOpen(true)}><Icon name="capsule" /><span className={styles.toolLabel}>My Capsules</span></button>
-      {capsulesOpen && <MyCapsules dataset={dataset} onClose={() => setCapsulesOpen(false)} />}
-      {currentUser?.siteOperator&&<Link className={styles.operationsEntry} href="/operations" onClick={closeAccount} aria-label={operationsLabel} title={operationsLabel+" · "+pendingLabel}><Icon name="shield"/><span className={styles.toolLabel}>{locale==='en'?'Operations':'運営'}</span>{operationsBadge}</Link>}
+      {memberTools && <button className={styles.capsulesEntry} aria-label="My Capsules" title="My Capsules" onClick={() => setCapsulesOpen(true)}><Icon name="capsule" /><span className={styles.toolLabel}>My Capsules</span></button>}
+      {memberTools && capsulesOpen && <MyCapsules dataset={dataset} onClose={() => setCapsulesOpen(false)} />}
+      {memberTools && currentUser?.siteOperator&&<Link className={styles.operationsEntry} href="/operations" onClick={closeAccount} aria-label={operationsLabel} title={operationsLabel+" · "+pendingLabel}><Icon name="shield"/><span className={styles.toolLabel}>{locale==='en'?'Operations':'運営'}</span>{operationsBadge}</Link>}
       <details className={`${styles.settings} ${styles.siteMenu}`} data-floating-menu ref={siteMenu} onToggle={event=>{if(event.currentTarget.open){if(accountMenu.current)accountMenu.current.open=false;if(menu.current)menu.current.open=false;}}}>
         <summary aria-label={locale==='en'?'Site menu':'サイトメニュー'} title={locale==='en'?'Explore & communities':'探索とコミュニティ'}><Icon name="list"/><span className={styles.toolLabel}>{locale==='en'?'Explore & connect':'探索・コミュニティ'}</span><Icon name="chevron"/></summary>
         <div className={styles.settingsPanel}><nav className={styles.settingsLinks} aria-label={text.navigation}>
@@ -108,7 +108,7 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
           <Link href={localizedPublicHref('/support',locale)} onClick={closeAccount}><Icon name="heart"/>{supportLabels(locale).link}</Link>
         </nav></div>
       </details>
-      <details className={`${styles.settings} ${styles.accountMenu}`} data-floating-menu ref={accountMenu} onToggle={event=>{if(event.currentTarget.open){if(menu.current)menu.current.open=false;if(siteMenu.current)siteMenu.current.open=false;}}}>
+      <details hidden={!memberTools} className={`${styles.settings} ${styles.accountMenu}`} data-floating-menu ref={accountMenu} onToggle={event=>{if(event.currentTarget.open){if(menu.current)menu.current.open=false;if(siteMenu.current)siteMenu.current.open=false;}}}>
         <summary aria-label={locale==='en'?'Account menu':'アカウントメニュー'} aria-description={currentUser?text.signedInAs(displayName):undefined} title={currentUser?text.signedInAs(displayName):text.accountLink} data-signed-in={currentUser?'true':identity.status==='guest'?'false':undefined}>
           {currentUser?mark:<Icon name="person"/>}<span className={styles.accountLabel}>{currentUser?displayName:identity.status==='guest'?(locale==='en'?'Account':'アカウント'):identity.error?(locale==='en'?'Unavailable':'確認失敗'):(locale==='en'?'Checking…':'確認中…')}</span>
           {currentUser&&communitiesEnabled&&<InvitationBadge/>}<Icon name="chevron"/>

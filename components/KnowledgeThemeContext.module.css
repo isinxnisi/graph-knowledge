@@ -1,0 +1,28 @@
+.context { margin: 6px 0 10px; padding: 4px 0; border-block: 1px solid var(--color-border); }
+.context header { display: flex; gap: 10px; align-items: center; justify-content: space-between; min-height: 24px; }
+.context header h3 { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 11px; font-weight: 500; color: var(--color-muted); }
+.context small { font-size: 10px; color: var(--color-muted); }
+.context :global(.ui-icon) { width: 12px; height: 12px; flex-shrink: 0; }
+.context ul { display: grid; grid-template-columns: repeat(auto-fit,minmax(210px,1fr)); list-style: none; gap: 2px 8px; margin: 0; padding: 0; overscroll-behavior-y: auto; }
+.context li { min-width: 0; }
+.context li button { width: 100%; display: grid; gap: 4px; min-height: 32px; padding: 5px 6px; text-align: left; border: 0; background: transparent; }
+.context li button[aria-pressed="true"] { background: var(--color-accent-soft); box-shadow: inset 2px 0 var(--color-accent); }
+.assertion { display: block; min-width: 0; font-size: 12px; line-height: 1.7; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.polarity { margin-right: 6px; }
+.context ul[data-expanded] .assertion { white-space: normal; }
+.context ul[data-expanded] li button { padding-block: 8px; }
+.link { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; font-size: 10px; color: var(--color-muted); }
+.meta { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--color-muted); }
+.meta :global(.ui-icon) { margin-left: auto; transform: rotate(-90deg); }
+.context header .more { display: flex; flex-shrink: 0; align-items: center; gap: 4px; min-height: 24px; font-size: 11px; padding: 2px 4px; border: 0; background: transparent; }
+.more[aria-expanded="true"] :global(.ui-icon) { transform: rotate(180deg); }
+.extra, .context header .mobileOnly, .mobileCount { display: none; }
+.context ul[data-expanded] .extra { display: block; }
+@media (max-width: 800px) {
+ .context ul { grid-template-columns: 1fr; }
+ .context li button { min-height: 44px; }
+ .context.context header .more { min-height: 28px; }
+ .second, .desktopCount { display: none; }
+ .context ul[data-expanded] .second, .mobileCount { display: block; }
+ .context header .mobileOnly { display: flex; }
+}
