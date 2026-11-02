@@ -27,12 +27,12 @@
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
   "nextStartAt": "2026-11-02T02:49:58.625652+00:00",
-  "phase": "outside-window",
+  "phase": "ready",
   "recoveredAttempt": null,
   "admission": {
-    "ready": false,
-    "reason": "outside-window",
-    "eligibleAt": "2026-11-02T06:00:00+00:00",
+    "ready": true,
+    "reason": "ready",
+    "eligibleAt": null,
     "windowEndAt": "2026-11-02T09:00:00+00:00"
   },
   "activeAttempt": null,
@@ -43,9 +43,10 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 7,
-    "waiting-control": 26,
+    "waiting-control": 17,
+    "completed": 23,
+    "waiting-lock": 10,
     "retry-wait": 2,
-    "completed": 24,
     "awaiting-recovery": 3
   },
   "issueIntake": {
@@ -126,8 +127,9 @@
       "checkedAt": "2026-11-01T16:06:29+00:00"
     },
     "collection-control/issue-sources/66.json": {
-      "status": "registered: issue-66-dot-togashi-two-20261029",
-      "checkedAt": "2026-10-31T16:23:10+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno 104] Connection reset by peer>",
+      "checkedAt": "2026-11-02T05:57:04+00:00"
     },
     "collection-control/issue-sources/67.json": {
       "status": "registered: issue-67-dot-mizuki-two-20261029",
@@ -166,7 +168,7 @@
     },
     "issue-25-utc-recovery-03": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-04",
-      "phase": "waiting-control"
+      "phase": "waiting-lock"
     },
     "issue-25-utc-recovery-04": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-05",
@@ -178,7 +180,7 @@
     },
     "issue-25-utc-recovery-06": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-07",
-      "phase": "waiting-control"
+      "phase": "waiting-lock"
     },
     "issue-25-utc-recovery-07": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-08",
@@ -193,5 +195,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-02T05:54:25.587840+00:00"
+  "checkedAt": "2026-11-02T06:04:18.097520+00:00"
 }
