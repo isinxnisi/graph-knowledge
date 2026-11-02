@@ -26,28 +26,24 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-02T21:59:36.010418+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-02T21:04:57.313299+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-03T00:00:00+00:00",
-    "windowEndAt": "2026-11-03T03:00:00+00:00"
+    "eligibleAt": "2026-11-02T21:04:57.313299+00:00",
+    "windowEndAt": "2026-11-02T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-25-manga23-20261019",
-    "startedAt": "2026-11-02T20:54:36.010420+00:00",
-    "limitAt": "2026-11-02T21:49:36.010418+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-utc-recovery-07",
-    "endedAt": "2026-11-02T20:43:33.725130+00:00"
+    "requestId": "issue-25-manga23-20261019",
+    "endedAt": "2026-11-02T20:54:57.313300+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
-    "waiting-control": 44,
-    "blocked": 5,
+    "blocked": 6,
+    "waiting-control": 43,
     "completed": 12,
     "awaiting-recovery": 1
   },
@@ -196,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-02T20:54:43.288740+00:00"
+  "checkedAt": "2026-11-02T20:56:44.726007+00:00"
 }
