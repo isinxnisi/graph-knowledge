@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-03 01:35:19 JST。
+確認: 2026-11-03 02:01:17 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -27,8 +27,9 @@ Issue確認結果:
     "checkedAt": "2026-11-02T16:16:49+00:00"
   },
   "collection-control/issue-sources/16.json": {
-    "status": "registered: issue-16-adachi-three-20261025",
-    "checkedAt": "2026-11-02T16:16:46+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-02T16:46:52+00:00"
   },
   "collection-control/issue-sources/5.json": {
     "status": "registered: issue-5-dot-tezuka-adolf-20261025",
@@ -55,23 +56,21 @@ Issue確認結果:
     "checkedAt": "2026-11-02T16:25:05+00:00"
   },
   "collection-control/issue-sources/50.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
-    "checkedAt": "2026-11-02T16:25:24+00:00"
+    "status": "registered: issue-50-dot-endo-tista-20261027",
+    "checkedAt": "2026-11-02T16:37:10+00:00"
   },
   "collection-control/issue-sources/51.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
-    "checkedAt": "2026-11-02T16:25:44+00:00"
+    "status": "registered: issue-51-dot-araki-rohan-20261027",
+    "checkedAt": "2026-11-02T16:37:13+00:00"
   },
   "collection-control/issue-sources/56.json": {
-    "status": "registered: issue-56-dot-urushibara-two-20261028",
-    "checkedAt": "2026-11-02T15:51:42+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
+    "checkedAt": "2026-11-02T16:48:01+00:00"
   },
   "collection-control/issue-sources/57.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T16:18:02+00:00"
+    "status": "registered: issue-57-dot-oshima-two-20261028",
+    "checkedAt": "2026-11-02T16:37:18+00:00"
   },
   "collection-control/issue-sources/58.json": {
     "status": "registered: issue-58-dot-takeuchi-two-20261028",
@@ -118,19 +117,17 @@ Issue確認結果:
     "checkedAt": "2026-11-02T15:13:28+00:00"
   },
   "collection-control/issue-sources/70.json": {
-    "status": "held",
-    "reason": "Remote end closed connection without response",
-    "checkedAt": "2026-11-02T16:27:02+00:00"
+    "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
+    "checkedAt": "2026-11-02T16:37:42+00:00"
   },
   "collection-control/issue-sources/71.json": {
-    "status": "held",
-    "reason": "<urlopen error _ssl.c:990: The handshake operation timed out>",
-    "checkedAt": "2026-11-02T16:27:27+00:00"
+    "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
+    "checkedAt": "2026-11-02T16:48:33+00:00"
   },
   "collection-control/issue-sources/73.json": {
     "status": "held",
-    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-    "checkedAt": "2026-11-02T16:27:47+00:00"
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-02T16:48:49+00:00"
   }
 }
 ```
