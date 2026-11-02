@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-02T01:42:20.359581+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-02T02:47:31.173562+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-02T01:42:20.359581+00:00",
-    "windowEndAt": "2026-11-02T03:00:00+00:00"
+    "eligibleAt": "2026-11-02T06:00:00+00:00",
+    "windowEndAt": "2026-11-02T09:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-66-dot-togashi-two-20261029-batch-01",
+    "startedAt": "2026-11-02T01:42:31.173566+00:00",
+    "limitAt": "2026-11-02T02:37:31.173562+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-68-dot-fujikoa-two-20261029-batch-01",
     "endedAt": "2026-11-02T01:32:20.359585+00:00"
@@ -137,8 +141,9 @@
       "checkedAt": "2026-11-01T15:02:23+00:00"
     },
     "collection-control/issue-sources/69.json": {
-      "status": "registered: issue-69-dot-ishinomori-three-20261029",
-      "checkedAt": "2026-11-01T17:20:28+00:00"
+      "status": "held",
+      "reason": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1007)>",
+      "checkedAt": "2026-11-02T01:40:46+00:00"
     },
     "collection-control/issue-sources/70.json": {
       "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
@@ -192,5 +197,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-02T01:36:12.209395+00:00"
+  "checkedAt": "2026-11-02T01:42:38.385755+00:00"
 }
