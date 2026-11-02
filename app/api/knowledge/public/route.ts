@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { knowledgeThemeHome } from "../../../../lib/server/knowledge-theme-home";
-import { themeGuard } from "../../../../lib/server/theme-workbench";
+import { knowledgeReadGuard } from "../../../../lib/server/knowledge-read-runtime";
 import { knowledgePublicationPreview } from "../../../../lib/server/knowledge-publication-preview";
 
 export const dynamic = "force-dynamic";
 const headers = { "Cache-Control": "private, no-store", "X-Robots-Tag": "noindex, nofollow" };
 export async function GET(request: Request) {
   try {
-    themeGuard(request);
+    knowledgeReadGuard(request);
     const params = new URL(request.url).searchParams;
     const mode = params.get("mode") ?? "search";
     const generation = params.get("generation") ?? undefined;

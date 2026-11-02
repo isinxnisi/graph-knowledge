@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { capsuleKnowledgeSchema } from "./capsule-knowledge";
-import { knowledgePinSchema } from "./knowledge-foundation";
+import { knowledgePinSchema, knowledgeTimeAnnotationSchema } from "./knowledge-foundation";
 import { claimDetailSchema, claimSummarySchema, entityDetailSchema, entitySummarySchema } from "./api";
 
 // A Capsule is its own document. References identify the KG record; snapshots
@@ -40,6 +40,8 @@ export const capsuleNodeSchema = z.strictObject({
 });
 export const capsuleRelationSchema = z.strictObject({
   key, source: key, target: key, label: z.string().max(200), note: z.string().max(8000),
+  // Undefined inherits the observed edition; [] explicitly removes its times.
+  times: z.array(knowledgeTimeAnnotationSchema).max(16).refine(rows => new Set(rows.map(r => r.id)).size === rows.length, "Duplicate time annotation").optional(),
   origin: z.discriminatedUnion("kind", [
     z.strictObject({ kind: z.literal("knowledge"), ...knowledgePinSchema.shape }),
     z.strictObject({ kind: z.literal("local"), polarity: z.enum(["affirmed", "denied", "uncertain"]).optional() }),
@@ -74,6 +76,7 @@ export const capsuleDocumentSchema = z.strictObject({
   if (new Set(all).size !== all.length) issue("Element keys must be unique");
   const globalNodes = document.nodes.filter(n => n.origin.kind !== "local").map(n => n.origin.kind !== "local" ? `${n.origin.kind}:${n.origin.id}` : "");
   const snapshot=document.knowledge?.snapshot;
+  if (!document.knowledge && document.relations.some(r => r.times !== undefined)) issue("Relation times require a timeline attachment");
   for(const n of document.nodes)if(n.origin.kind==="knowledge"&&!snapshot?.entities.some(e=>n.origin.kind==="knowledge"&&e.id===n.origin.id&&e.revision===n.origin.revision))issue("Missing knowledge node baseline");
   const knowledgeRecords=new Set<string>();
   for(const r of document.relations)if(r.origin.kind==="knowledge"){

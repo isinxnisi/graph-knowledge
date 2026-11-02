@@ -8,7 +8,7 @@ process.on("SIGTERM", () => { stopping = true; });
 process.on("SIGINT", () => { stopping = true; });
 let failures = 0;
 try {
-  const publication = await knowledgePublicationPreview();
+  const publication = await knowledgePublicationPreview(true);
   while (!stopping) {
     try {
       const result = await publication.publishPending({ force: args.has("--force") });

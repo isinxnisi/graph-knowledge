@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { claimDetailSchema, entityDetailSchema, type ClaimDetail, type EntityDetail, type NeighborsResponse } from "../lib/domain/api";
-import { type CapsuleDocument, type CapsuleNode } from "../lib/domain/capsule-document";
+import { capsuleRelationSchema, type CapsuleDocument, type CapsuleNode } from "../lib/domain/capsule-document";
 import { capsuleHistory, capsuleClone, recordCapsule, undoCapsule, redoCapsule, sameCapsuleValue, withCapsuleView, withDocument, removeCapsuleElements, snapshotEntity, snapshotClaim, compareCapsuleNeighborhood, capsuleGraphView, type CapsuleNeighborhoodComparison } from "../lib/client/capsule-editor";
 import { capsulePresentation } from "../lib/client/capsule-presentation";
 import { capsuleInsertionPoint } from "../lib/client/capsule-insertion";
@@ -22,7 +22,8 @@ import Icon from "./Icon";
 import KnowledgeSplit from "./KnowledgeSplit";
 import CapsuleKnowledgeTimeline from "./CapsuleKnowledgeTimeline";
 import KnowledgeRecordDetail from "./KnowledgeRecordDetail";
-import { capsuleKnowledgeProjection } from "../lib/client/capsule-knowledge";
+import { capsuleKnowledgeProjection, capsuleRelationTimes, capsuleRelationRecordId, withCapsuleTimeline } from "../lib/client/capsule-knowledge";
+import { themeTimeLabel } from "../lib/domain/theme-time";
 import { buildKnowledgePublishedRecord } from "../lib/domain/knowledge-publication";
 import css from "./CapsuleStudio.module.css";
 
@@ -106,8 +107,9 @@ export default function CapsuleStudio({ externalFocus, onFocusKey, allowKgSearch
     setKnowledgeView(mode);
     if(editing&&contentDocument.knowledge)changeDocument({...contentDocument,knowledge:{...contentDocument.knowledge,initialView:mode}});
   }
-  const focusedKnowledgeId=knowledgeFocus??contentDocument.relations.find(r=>r.key===selection?.id&&r.origin.kind==="knowledge")?.origin;
-  const knowledgeRecord=knowledgeSnapshot?.records.find(r=>r.id===(typeof focusedKnowledgeId==="string"?focusedKnowledgeId:focusedKnowledgeId?.kind==="knowledge"?focusedKnowledgeId.id:null));
+  const selectedKnowledgeRelation=contentDocument.relations.find(r=>r.key===selection?.id);
+  const focusedKnowledgeId=knowledgeFocus??(selectedKnowledgeRelation?capsuleRelationRecordId(selectedKnowledgeRelation):null);
+  const knowledgeRecord=knowledgeSnapshot?.records.find(r=>r.id===(focusedKnowledgeId));
   const originalKnowledgeRecord=contentDocument.knowledge?.snapshot.records.find(r=>r.id===knowledgeRecord?.id);
 
 
@@ -234,7 +236,7 @@ export default function CapsuleStudio({ externalFocus, onFocusKey, allowKgSearch
     if (!fresh) {
       if (kind === "capsule") draft = { ...draft, title: value.title, description: value.note };
       if (kind === "node" && node) draft = { ...draft, title: node.title, description: node.description, badge: node.badge, shape: node.shape };
-      if (kind === "relation" && relations.length) draft = { ...draft, title: relations[0].label, description: relations[0].note };
+      if (kind === "relation" && relations.length) draft = { ...draft, title: relations[0].label, description: relations[0].note, times:capsuleClone(capsuleRelationTimes(contentDocument,relations[0])) };
       if (kind === "text" && text) draft = { ...draft, title: text.text, style: text.style, width: text.width ?? 260, fontSize: text.fontSize ?? (text.style === "heading" ? 24 : 16), fontWeight: text.fontWeight ?? (text.style === "heading" ? "bold" : "normal"), align: text.align ?? "left" };
       if (kind === "node" || kind === "relation") draft.evidence = capsuleClone(contentDocument.evidence.filter(e => keys.includes(e.targetKey)));
     }
@@ -244,7 +246,7 @@ export default function CapsuleStudio({ externalFocus, onFocusKey, allowKgSearch
   function chooseRelation(key:string) {
     const relation=contentDocument.relations.find(item => item.key === key);
     if (!relation) return;
-    const baseline=relationBaselines.current.get(key) ?? {...blankEditor("relation",[key]),title:relation.label,description:relation.note,evidence:capsuleClone(contentDocument.evidence.filter(e => e.targetKey === key))};
+    const baseline=relationBaselines.current.get(key) ?? {...blankEditor("relation",[key]),title:relation.label,description:relation.note,times:capsuleClone(capsuleRelationTimes(contentDocument,relation)),evidence:capsuleClone(contentDocument.evidence.filter(e => e.targetKey === key))};
     relationBaselines.current.set(key,baseline); setEditorBaseline(baseline);
     setEditor(relationDrafts.current.get(key) ?? capsuleClone(baseline));
   }
@@ -263,7 +265,14 @@ export default function CapsuleStudio({ externalFocus, onFocusKey, allowKgSearch
     if (!editor) return;
     if (editor.kind === "evidence" && editor.url && !/^https?:\/\//i.test(editor.url)) { setError(t("資料URLはhttpまたはhttpsを指定してください。", "Use an http or https source URL.")); return; }
     if (editor.kind === "node" && editor.fresh && contentDocument.nodes.length >= 200 || editor.kind === "text" && editor.fresh && contentDocument.texts.length >= 100 || editor.kind === "evidence" && contentDocument.evidence.length + (node ? 1 : relationKeys.length) > 1000) { setError(t("この種類の要素数が上限に達しています。", "The limit for this element type has been reached.")); return; }
-    const source = current(), doc = capsuleClone(source.document!);
+    if (editor.kind==="relation") {
+      for (const draft of [...relationDrafts.current.values(),editor]) {
+        const relation=contentDocument.relations.find(r=>r.key===draft.keys[0]);
+        if (relation && !capsuleRelationSchema.safeParse({...relation,times:draft.times}).success) { setError(t("時期を確認してください。年月日は2021、2021-12、2021-12-25の形式で、範囲の終わりは始め以降に指定します。", "Check the time: use YYYY, YYYY-MM or YYYY-MM-DD, with the upper bound after the lower bound.")); return; }
+      }
+    }
+    const source = current(); let doc = capsuleClone(source.document!);
+    if (!doc.knowledge && editor.kind==="relation" && [...relationDrafts.current.values(),editor].some(d=>d.times!==undefined&&!sameCapsuleValue(d.times,capsuleRelationTimes(doc,doc.relations.find(r=>r.key===d.keys[0])!)))) doc=withCapsuleTimeline(doc);
     if ((editor.kind === "node" || editor.kind === "relation") && !editor.fresh) doc.evidence = [...doc.evidence.filter(e => !editor.keys.includes(e.targetKey)), ...editor.evidence];
     if (editor.kind === "capsule") { if (commit({ ...source, title: editor.title, note: editor.description })) setEditor(null); return; }
     if (editor.kind === "node") {
@@ -277,7 +286,7 @@ export default function CapsuleStudio({ externalFocus, onFocusKey, allowKgSearch
     } else if (editor.kind === "relation") {
       relationDrafts.current.set(editor.keys[0],editor);
       for (const [key,draft] of relationDrafts.current) {
-        doc.relations = doc.relations.map(r => r.key === key ? { ...r, label:draft.title, note:draft.description, ...(r.origin.kind === "local" && draft.reverse ? {source:r.target,target:r.source} : {}) } : r);
+        doc.relations = doc.relations.map(r => r.key === key ? { ...r, label:draft.title, note:draft.description, ...(draft.times!==undefined&&!sameCapsuleValue(draft.times,capsuleRelationTimes(doc,r))?{times:draft.times}:{}), ...(r.origin.kind === "local" && draft.reverse ? {source:r.target,target:r.source} : {}) } : r);
         const updated = doc.relations.find(r => r.key === key);
         if (updated?.origin.kind === "local" && draft.addReverse && updated.source !== updated.target && !doc.relations.some(r => r.origin.kind === "local" && r.source === updated.target && r.target === updated.source && r.label === updated.label)) {
           doc.relations.push({key:crypto.randomUUID(),source:updated.target,target:updated.source,label:updated.label,note:"",origin:{...updated.origin}});
@@ -446,7 +455,7 @@ export default function CapsuleStudio({ externalFocus, onFocusKey, allowKgSearch
         {titleDraft !== null ? <div className={css.titleEditor}><input ref={titleInput} aria-label={t("Capsuleのタイトル", "Capsule title")} disabled={busy} maxLength={80} value={titleDraft} onChange={event => setTitleDraft(event.target.value)} onCompositionStart={() => { composing.current = true; }} onCompositionEnd={() => { composing.current = false; }} onKeyDown={event => { if (event.nativeEvent.isComposing || composing.current || event.keyCode === 229) return; if (event.key === "Enter") { event.preventDefault(); applyTitle(); } if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); setTitleDraft(null); } }}/><button disabled={busy} aria-label={t("タイトルを適用", "Apply title")} onClick={applyTitle}><Icon name="check"/></button><button disabled={busy} aria-label={t("タイトルの変更を取り消す", "Cancel title change")} onClick={() => setTitleDraft(null)}><Icon name="close"/></button></div> : <h2>{editing ? <button className={css.titleButton} disabled={busy} title={t("タイトルを編集", "Edit title")} onClick={() => setTitleDraft(value.title)}><span>{value.title}</span><Icon name="edit"/></button> : value.title}</h2>}
       </div></div>
       <div className={css.actions}>
-        {contentDocument.knowledge&&<button className={css.iconButton} aria-label={knowledgeMode==="graph"?t("年表を表示","Show timeline"):t("関係図だけを表示","Show relation diagram only")} title={knowledgeMode==="graph"?t("年表を表示","Show timeline"):t("関係図だけを表示","Show relation diagram only")} aria-pressed={knowledgeMode!=="graph"} onClick={()=>chooseKnowledgeView(knowledgeMode==="graph"?"split":"graph")}><Icon name="event"/></button>}
+        {(contentDocument.knowledge||editing)&&<button disabled={busy} className={css.iconButton} aria-label={knowledgeMode==="graph"?t("年表を表示","Show timeline"):t("関係図だけを表示","Show relation diagram only")} title={knowledgeMode==="graph"?t("年表を表示","Show timeline"):t("関係図だけを表示","Show relation diagram only")} aria-pressed={knowledgeMode!=="graph"} onClick={()=>{if(!contentDocument.knowledge){changeDocument(withCapsuleTimeline(contentDocument));setKnowledgeView("split");}else chooseKnowledgeView(knowledgeMode==="graph"?"split":"graph");}}><Icon name="event"/></button>}
         {sharing&&contentDocument.knowledge&&<button disabled title={t("年表付きCapsuleの共有は準備中です","Timeline Capsule sharing is being connected")} aria-label={t("共有は準備中","Sharing is being connected")}><Icon name="share"/></button>}
         {byline}{readOnly&&onEditRequest&&<button onClick={()=>onEditRequest(current())}><Icon name="edit"/>{t("編集","Edit")}</button>}
         {editing ? <><button disabled={busy} className={css.quietButton} onClick={() => editingChanged || !saved ? setLeave("discard") : discard()}>{t("破棄", "Discard")}</button><button data-variant="primary" disabled={busy || !onSave || capacity?.documents === false} onClick={() => void save()}><Icon name="check"/>{t("保存", "Save")}</button></> : <>{sharing && !contentDocument.knowledge && <button aria-label={t("共有", "Share")} title={t("共有", "Share")} onClick={() => setShareOpen(true)}><Icon name="share"/><span className={css.optionalLabel}>{t("共有", "Share")}</span></button>}{!readOnly && onSave && <button data-variant="primary" onClick={begin}><Icon name="edit"/>{t("編集", "Edit")}</button>}</>}
@@ -454,12 +463,12 @@ export default function CapsuleStudio({ externalFocus, onFocusKey, allowKgSearch
       </div>
     </header>
     {capacity?.documents === false && <p className={css.notice} role="status">{t("保存先は更新準備中です。入力はこの画面で保持しています。", "Storage is being updated. Your input is retained here.")}</p>}
-    {(error || message) && <div className={css.notice} role={error ? "alert" : "status"}>{!error && <Icon name="check"/>}<span>{error ?? message}</span>{error && editing && onSave && allowCopySave && <button disabled={busy} onClick={() => void save(true)}>{t("別のCapsuleとして保存", "Save as a new Capsule")}</button>}<button className={`${css.iconButton} ${css.quietButton}`} aria-label={t("通知を閉じる", "Dismiss notice")} onClick={() => { setError(null); setMessage(null); }}><Icon name="close"/></button></div>}
+    {!editor && (error || message) && <div className={css.notice} role={error ? "alert" : "status"}>{!error && <Icon name="check"/>}<span>{error ?? message}</span>{error && editing && onSave && allowCopySave && <button disabled={busy} onClick={() => void save(true)}>{t("別のCapsuleとして保存", "Save as a new Capsule")}</button>}<button className={`${css.iconButton} ${css.quietButton}`} aria-label={t("通知を閉じる", "Dismiss notice")} onClick={() => { setError(null); setMessage(null); }}><Icon name="close"/></button></div>}
     <div className={css.body} data-inspector={inspector || undefined} inert={saving}>
       <div className={css.canvasArea}>
         <div className={css.knowledgeFrame}>
         <KnowledgeSplit mode={knowledgeSnapshot?knowledgeMode:"graph"} fill>
-          <div hidden={!knowledgeSnapshot||knowledgeMode==="graph"}>{knowledgeSnapshot&&<CapsuleKnowledgeTimeline document={contentDocument} focused={knowledgeFocus} onFocus={id=>{setKnowledgeFocus(id);setInspector(Boolean(id));}} split={knowledgeMode==="split"} onToggleGraph={()=>chooseKnowledgeView(knowledgeMode==="split"?"timeline":"split")} onShowGraph={id=>{setKnowledgeFocus(id);chooseKnowledgeView("split");const key=contentDocument.relations.find(r=>r.origin.kind==="knowledge"&&r.origin.id===id)?.key;if(key){setSelection({kind:"relation",id:key});setSelected([key]);}}}/>}</div>
+          <div hidden={!knowledgeSnapshot||knowledgeMode==="graph"}>{knowledgeSnapshot&&<CapsuleKnowledgeTimeline document={contentDocument} focused={knowledgeFocus} onFocus={id=>{setKnowledgeFocus(id);setInspector(Boolean(id));}} split={knowledgeMode==="split"} onToggleGraph={()=>chooseKnowledgeView(knowledgeMode==="split"?"timeline":"split")} onShowGraph={id=>{setKnowledgeFocus(id);chooseKnowledgeView("split");const key=contentDocument.relations.find(r=>capsuleRelationRecordId(r)===id)?.key;if(key){setSelection({kind:"relation",id:key});setSelected([key]);}}}/>}</div>
           <div className={css.graphPane} hidden={Boolean(knowledgeSnapshot)&&knowledgeMode==="timeline"}>
         <div className={css.toolRail} role="toolbar" aria-label={t("Capsuleの操作", "Capsule tools")}>
           {editing && <><button title={t("元に戻す · Ctrl/⌘ Z", "Undo · Ctrl/⌘ Z")} aria-label={t("元に戻す", "Undo")} disabled={!history.past.length || busy} onClick={() => navigateHistory()}><Icon name="undo"/></button><button title={t("やり直す · Ctrl/⌘ Shift Z", "Redo · Ctrl/⌘ Shift Z")} aria-label={t("やり直す", "Redo")} disabled={!history.future.length || busy} onClick={() => navigateHistory(true)}><Icon name="redo"/></button><span className={css.toolDivider}/><button title={t("独自Entityを追加", "Add custom entity")} aria-label={t("独自Entityを追加", "Add custom entity")} disabled={busy} onClick={() => create("node")}><Icon name="plus"/></button>{allowKgSearch && <button title={t("KGから検索して追加", "Search the KG")} aria-label={t("KGから検索して追加", "Search the KG")} disabled={busy} onClick={startSearch}><Icon name="search"/></button>}<button title={t("テキストを追加", "Add text")} aria-label={t("テキストを追加", "Add text")} disabled={busy} onClick={() => create("text")}><Icon name="text"/></button><span className={css.toolDivider}/></>}
@@ -477,8 +486,8 @@ export default function CapsuleStudio({ externalFocus, onFocusKey, allowKgSearch
       </div></KnowledgeSplit></div></div>
       {inspector && <aside className={css.detail} id={`capsule-detail-${value.id}`} tabIndex={-1}><header className={css.dialogHeading}><span className={css.eyebrow}>{t("詳細と根拠", "Details & evidence")}</span><button aria-label={t("詳細を閉じる", "Close details")} onClick={() => setInspector(false)}><Icon name="close"/></button></header>
       {selected.length > 1 && <><h3>{selected.length} {t("要素を選択", "elements selected")}</h3><p>{t("選択したノードを一緒に動かせます。", "Drag a selected node to move the group.")}</p></>}
-      {knowledgeRecord&&originalKnowledgeRecord&&JSON.stringify(knowledgeRecord.content)!==JSON.stringify(originalKnowledgeRecord.content)&&<><p className={css.badge}>{t("Capsule内で編集した表示", "Edited within this Capsule")}</p><details><summary>{t("取得時の原文", "Captured wording")}</summary><p>{originalKnowledgeRecord.content.assertion}</p></details></>}
-      {knowledgeRecord&&knowledgeSnapshot&&<KnowledgeRecordDetail dto={buildKnowledgePublishedRecord(knowledgeRecord,knowledgeSnapshot)} onEntity={id=>{const found=contentDocument.nodes.find(n=>n.origin.kind==="knowledge"&&n.origin.id===id);if(found){setKnowledgeFocus(null);setSelection({kind:"entity",id:found.key});}}}/>}
+      {knowledgeRecord&&originalKnowledgeRecord&&JSON.stringify(knowledgeRecord.content)!==JSON.stringify(originalKnowledgeRecord.content)&&<><p className={css.badge}>{t("Capsule内で編集した表示", "Edited within this Capsule")}</p><details><summary>{t("取得時の原文", "Captured wording")}</summary><p>{originalKnowledgeRecord.content.assertion}</p>{originalKnowledgeRecord.content.times.map(time=><p key={time.id}>{themeTimeLabel(time.time)}</p>)}</details></>}
+      {knowledgeRecord&&knowledgeSnapshot&&<KnowledgeRecordDetail dto={buildKnowledgePublishedRecord(knowledgeRecord,knowledgeSnapshot)} onEntity={id=>{const found=contentDocument.nodes.find(n=>(n.origin.kind==="knowledge"?n.origin.id:"capsule-node:"+n.key)===id);if(found){setKnowledgeFocus(null);setSelection({kind:"entity",id:found.key});}}}/>}
       {!selection && !knowledgeRecord && <><h3>{t("このCapsuleについて", "About this Capsule")}</h3><p>{value.note || t("ノードや線を選ぶと詳細・根拠が表示されます。", "Select a node or line to see details and evidence.")}</p><p className={css.status}>{contentDocument.nodes.length} Entity · {contentDocument.relations.length} {t("関係", "relations")} · {contentDocument.texts.length} {t("テキスト", "texts")}</p></>}
       {node && <><span className={css.badge}>{node.origin.kind === "local" ? t("Capsule独自", "Capsule local") : node.origin.kind === "knowledge" ? t("原記録の保存版", "Saved knowledge record") : node.origin.kind === "unresolved" ? t("未取得のKG参照", "Unresolved KG reference") : t("KGから取り込み", "Captured from KG")}</span>{node.badge && <span className={css.badge}>{node.badge}</span>}<h3>{node.title}</h3><p>{node.description}</p></>}
       {text && <><h3>{t("テキスト", "Text")}</h3><p>{text.text}</p></>}

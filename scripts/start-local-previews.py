@@ -9,6 +9,7 @@ from pathlib import Path
 import shutil
 import socket
 import time
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE = Path.home() / '.local/state/plunode-previews'
@@ -24,6 +25,43 @@ def listening(port):
             return True
     except OSError:
         return False
+
+
+def beta_knowledge():
+    private = STATE / 'beta-knowledge.json'
+    if not private.exists(): return {}
+    info = private.lstat()
+    if private.is_symlink() or info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) != 0o600:
+        raise ValueError('Private knowledge beta configuration must be owned by this user and mode 0600')
+    values = json.loads(private.read_text())
+    from urllib.parse import urlsplit
+    expected = {'KNOWLEDGE_RUNTIME':'beta','KNOWLEDGE_PUBLICATION_ENABLED':'1','KNOWLEDGE_WORKSPACE_ENABLED':'1','KNOWLEDGE_PUBLIC_ORIGIN':'https://graph-beta.isinxnisi.com','KNOWLEDGE_NEO4J_URL':'bolt://127.0.0.1:7699'}
+    if set(values) != set(expected) | {'KNOWLEDGE_DATABASE_URL','KNOWLEDGE_NEO4J_PASSWORD'} or any(values.get(k) != v for k,v in expected.items()):
+        raise ValueError('Unexpected knowledge beta configuration')
+    url = urlsplit(values['KNOWLEDGE_DATABASE_URL'])
+    if (url.scheme,url.hostname,url.port,url.path) != ('postgresql','127.0.0.1',55476,'/plunode_knowledge75_beta') or not values['KNOWLEDGE_NEO4J_PASSWORD']:
+        raise ValueError('Dedicated knowledge beta databases required')
+    return {**values,'THEME_WORKBENCH_ENABLED':'0'}
+
+
+def start_knowledge_publisher(node, env):
+    # Only pre-provisioned, named knowledge beta stores. No creation or migration.
+    for name, volume, port, inside in [('plunode-knowledge-beta-postgres','plunode-knowledge-beta-pg','55476','5432/tcp'),('plunode-knowledge-beta-neo4j','plunode-knowledge-beta-neo','7699','7687/tcp')]:
+        result = subprocess.run(['docker','inspect',name],capture_output=True,text=True,check=True)
+        value = json.loads(result.stdout)[0]
+        if value['Config']['Labels'].get('plunode.scope') != 'knowledge-beta' or not any(m.get('Name') == volume for m in value['Mounts']) or value['HostConfig']['PortBindings'].get(inside) != [{'HostIp':'127.0.0.1','HostPort':port}]:
+            raise ValueError('Knowledge beta container ownership mismatch')
+        subprocess.run(['docker','start',name],stdout=subprocess.DEVNULL,check=True)
+    pidfile = STATE / 'knowledge-beta-worker.pid'
+    if pidfile.exists():
+        proc = Path('/proc') / pidfile.read_text().strip()
+        if (proc/'cmdline').exists() and (proc/'cmdline').read_bytes():
+            if (proc/'cwd').resolve() != ROOT or b'scripts/knowledge-publication-worker.ts' not in (proc/'cmdline').read_bytes(): raise ValueError('Publisher PID belongs to another process')
+            return
+    with (STATE/'knowledge-beta-worker.log').open('ab') as log:
+        os.chmod(STATE/'knowledge-beta-worker.log',0o600)
+        child = subprocess.Popen([node,'--import','tsx','scripts/knowledge-publication-worker.ts'],cwd=ROOT,env=env,stdin=subprocess.DEVNULL,stdout=log,stderr=log,start_new_session=True)
+    pidfile.write_text(str(child.pid)); pidfile.chmod(0o600)
 
 
 def start(name, node):
@@ -52,6 +90,10 @@ def start(name, node):
             or film['NEO4J_USER'] != 'neo4j' or film['NEO4J_DATABASE'] != 'neo4j'
             or not isinstance(film['NEO4J_PASSWORD'], str) or not film['NEO4J_PASSWORD']):
             raise ValueError('Unexpected isolated film beta configuration')
+    knowledge = beta_knowledge() if name == 'beta' else {}
+    if knowledge:
+        publisher_env = dict(os.environ); publisher_env.update(knowledge)
+        start_knowledge_publisher(node, publisher_env)
     log = STATE / f'{name}.log'
     pidfile = STATE / f'{name}.pid'
     pid = os.fork()
@@ -69,6 +111,7 @@ def start(name, node):
         env = dict(os.environ)
         env['NEO4J_READ_TIMEOUT_MS'] = '10000'
         env.update(film)
+        env.update(knowledge)
         try:
             os.execve(node, [node, *args], env)
         except Exception as error:

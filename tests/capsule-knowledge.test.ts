@@ -1,7 +1,7 @@
 import { beforeAll, expect, it } from "vitest";
 import { webcrypto } from "node:crypto";
 import type { KnowledgeSnapshot } from "../lib/domain/knowledge-foundation";
-import { captureKnowledgeCapsule, capsuleKnowledgeProjection } from "../lib/client/capsule-knowledge";
+import { captureKnowledgeCapsule, capsuleKnowledgeProjection, capsuleRelationTimes, withCapsuleTimeline } from "../lib/client/capsule-knowledge";
 import { capsuleDocumentSchema, capsuleReferences } from "../lib/domain/capsule-document";
 import { memberCapsuleContentSchema } from "../lib/domain/member-capsule";
 import { removeCapsuleElements, capsuleHistory, recordCapsule, undoCapsule } from "../lib/client/capsule-editor";
@@ -60,4 +60,29 @@ it("同じ資料の異なる版を区別して保持し、重複した同版だ�
  doc.knowledge!.snapshot.records[0].content.evidence.push({...evidence[0],id:"cite-v2",source:{id:source.id,revision:2}});
  expect(capsuleDocumentSchema.safeParse(doc).success).toBe(true);
  doc.knowledge!.snapshot.sources.push(structuredClone(source));expect(capsuleDocumentSchema.safeParse(doc).success).toBe(false);
+});
+
+it("原記録の時期を保持したままCapsule独自の時期で年表を投影し、明示解除できる",()=>{
+ const doc=capture().document!,r=doc.relations[0];
+ const baseline=structuredClone(doc.knowledge!.snapshot);
+ expect(capsuleRelationTimes(doc,r)).toEqual(relation.content.times);
+ r.times=[{id:"authored-time",time:{kind:"calendar",from:"2022",to:"2023",meaning:"occurrence-window",label:"作者の解釈"}}];
+ const p=capsuleKnowledgeProjection(capsuleDocumentSchema.parse(doc))!;
+ expect(p.records[0].content.times).toEqual(r.times);expect(p.timeline!.placements.some(x=>x.timeId==="time:date")).toBe(false);expect(p.timeline!.placements.some(x=>x.timeId==="authored-time")).toBe(true);
+ expect(doc.knowledge!.snapshot).toEqual(baseline);
+ r.times=[];expect(capsuleKnowledgeProjection(doc)!.records[0].content.times).toEqual([]);
+ expect(capsuleKnowledgeProjection(doc)!.timeline!.placements.some(x=>x.recordId===relation.id)).toBe(false);
+});
+it("通常Graphから任意の年表を追加し、独自関係の期間と時期なし情報を保存できる",()=>{
+ const captured=capture().document!;
+ const doc=withCapsuleTimeline({...captured,knowledge:undefined,nodes:captured.nodes.map(n=>({...n,origin:{kind:"local" as const}})),relations:captured.relations.map(r=>({...r,origin:{kind:"local" as const},times:[{id:"time",time:{kind:"calendar" as const,from:"1991",to:"1993",meaning:"duration" as const,label:"期間"}}]}))});
+ expect(capsuleDocumentSchema.safeParse(doc).success).toBe(true);
+ const projected=capsuleKnowledgeProjection(doc)!;expect(projected.records).toHaveLength(1);expect(projected.records[0].content.times[0].time).toMatchObject({from:"1991",to:"1993"});expect(projected.entities.map(e=>e.content.name)).toEqual(doc.nodes.map(n=>n.title));expect(projected.timeline!.placements).toHaveLength(1);expect(doc.knowledge!.snapshot.records).toEqual([]);
+ doc.relations[0].times=[];expect(capsuleKnowledgeProjection(doc)!.records[0].content.times).toEqual([]);
+});
+it("時期の不正日付・逆転範囲・重複ID・添付なしを保存schemaで拒否する",()=>{
+ const doc=capture().document!;doc.relations[0].times=[{id:"time",time:{kind:"calendar",from:"2021-02-30",meaning:"point",label:""}}];
+ expect(capsuleDocumentSchema.safeParse(doc).success).toBe(false);
+ doc.relations[0].times=[{id:"time",time:{kind:"calendar",from:"2022",to:"2021",meaning:"duration",label:""}}];expect(capsuleDocumentSchema.safeParse(doc).success).toBe(false);
+ doc.relations[0].times=[{id:"time",time:{kind:"calendar",from:"2021",meaning:"point",label:""}}];expect(capsuleDocumentSchema.safeParse(doc).success).toBe(true);doc.relations[0].times.push(doc.relations[0].times[0]);expect(capsuleDocumentSchema.safeParse(doc).success).toBe(false);
 });

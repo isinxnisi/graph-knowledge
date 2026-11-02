@@ -1,6 +1,6 @@
 import { beforeAll, afterAll, beforeEach, expect, it, vi } from "vitest";
 import { randomUUID } from "node:crypto";
-import {captureKnowledgeCapsule} from "../lib/client/capsule-knowledge";
+import {captureKnowledgeCapsule,withCapsuleTimeline} from "../lib/client/capsule-knowledge";
 import { startMemberOidc } from "./support/member-oidc";
 import { migrateMemberDatabase } from "../lib/server/member/migrate";
 import { memberHandle } from "../lib/server/member/http";
@@ -428,4 +428,9 @@ it('新原記録と年表の断面を本人だけが保存・再訪・更新で�
  expect((await update.json()).capsule.content.document.knowledge.snapshot).toEqual(value.document!.knowledge!.snapshot);
  expect((await call(()=>service().update(request(a,{expectedRevision:1,content}),cap.id))).status).toBe(409);
  const shared=await call(()=>service().issueShare(request(a,{expectedRevision:2,expectedShareId:null}),cap.id));expect(shared.status).toBe(503);expect((await shared.json()).error.code).toBe("KNOWLEDGE_SHARING_UNAVAILABLE");
+});
+
+it('通常Graphに追加した時期を本人だけが保存でき、元のGraphを変えず再訪できる',async()=>{
+ const content=local('年表を任意追加');content.document=withCapsuleTimeline(content.document!);content.document.relations[0].times=[{id:'authored-time',time:{kind:'calendar',from:'1991',to:'1993',meaning:'occurrence-window',label:'この期間のどこか'}}];
+ const cap=await create(content);const read=await call(()=>service().read(request(a),cap.id));expect((await read.json()).capsule.content.document).toEqual(content.document);expect((await call(()=>service().read(request(b),cap.id))).status).toBe(404);
 });

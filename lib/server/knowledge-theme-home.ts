@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import configured from "../../data/theme-discovery.json";
 import type { KnowledgeThemeHome, KnowledgeThemePage } from "../domain/knowledge-theme-reader";
 import { knowledgePublicationPreview } from "./knowledge-publication-preview";
-import { themeGuard } from "./theme-workbench";
+import { knowledgeReadGuard } from "./knowledge-read-runtime";
 
 type ThemeReader = { themes: () => Promise<KnowledgeThemePage> };
 /** The HTML and the refresh endpoint use the same authorised catalogue. No process cache. */
@@ -21,7 +21,7 @@ export async function initialKnowledgeThemeHome(): Promise<KnowledgeThemeHome | 
   let timer: ReturnType<typeof setTimeout> | undefined;
   try {
     const requestHeaders = await headers();
-    themeGuard(new Request("http://localhost:3276/", { headers: { host: requestHeaders.get("host") ?? "" } }));
+    knowledgeReadGuard(new Request("http://localhost:3276/", { headers: { host: requestHeaders.get("host") ?? "" } }));
     return await Promise.race([
       knowledgeThemeHome(),
       new Promise<null>(resolve => { timer = setTimeout(() => resolve(null), 8000); }),

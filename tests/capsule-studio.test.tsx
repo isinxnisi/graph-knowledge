@@ -460,3 +460,18 @@ it("guards browser navigation only when a comment draft exists and clears it onl
   click("Close Capsule");expect(screen.getByText(/A comment submission is unconfirmed/)).toBeTruthy();click("Keep editing");expect(close).not.toHaveBeenCalled();expect(unloadIsBlocked()).toBe(true);
   click("Close Capsule");click("Discard changes");expect(close).toHaveBeenCalledOnce();expect(unloadIsBlocked()).toBe(false);
 });
+
+it("adds a timeline through the relation form, validates dates and retains its period after saving and reopening",async()=>{
+ const save=vi.fn(saveResult);const view=render(<CapsuleStudio capsule={capsule()} isNew onSave={save}/>);
+ act(()=>mocks.canvas!.onRelationDoubleClick!(relation));click("Add time");change("Time 1 start","2021-02-30");click("Apply");
+ expect(screen.getByRole('alert').textContent).toContain('Check the time');expect(screen.getByLabelText('Time 1 start')).toBeTruthy();
+ change("Time 1 start","2021-12");change("Time meaning","duration");change("Time 1 end","2022-01");click("Apply");
+ expect(screen.getByRole('button',{name:'Show relation diagram only'})).toBeTruthy();
+ click("Undo");expect(screen.getByRole('button',{name:'Show timeline'})).toBeTruthy();click("Redo");click("Save");
+ await waitFor(()=>expect(save).toHaveBeenCalledOnce());const saved=save.mock.calls[0][0];expect(saved.document!.relations[0].times?.[0].time).toMatchObject({from:'2021-12',to:'2022-01',meaning:'duration'});expect(saved.document!.knowledge!.snapshot.records).toEqual([]);
+ view.unmount();render(<CapsuleStudio capsule={saved} onSave={saveResult}/>);expect(screen.getByRole('button',{name:'Show relation diagram only'})).toBeTruthy();
+});
+it("opts into a timeline without adding dates and can discard that choice",()=>{
+ const original=capsule();render(<CapsuleStudio capsule={original} onSave={saveResult}/>);click('Edit');click('Show timeline');
+ expect(screen.getByRole('button',{name:'Show relation diagram only'})).toBeTruthy();expect(original.document!.knowledge).toBeUndefined();click('Discard');click('Discard changes');expect(screen.queryByRole('button',{name:'Show relation diagram only'})).toBeNull();
+});

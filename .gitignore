@@ -58,3 +58,6 @@ playwright-report/
 
 # Issue75 isolated runtime, credentials, logs and verification database
 /.local/issue75/
+
+# Private U4 beta connection, selected input and backups
+.local/u4-beta/

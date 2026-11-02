@@ -64,11 +64,11 @@ import { savedViewLabels } from "../lib/i18n/saved-views";
 import KnowledgeReading, {useKnowledgeReading} from "./KnowledgeReading";
 import RelatedThemes from "./RelatedThemes";
 
-type ExplorerProps = { dataset?: DatasetMode; initialRoot?: string; services?: PublicServicesPolicy; publicOverview?: import("react").ReactNode; discoveryHome?: DiscoveryHomeData; knowledgeEnabled?: boolean; initialThemes?: KnowledgeThemeHome | null };
+type ExplorerProps = { dataset?: DatasetMode; initialRoot?: string; services?: PublicServicesPolicy; publicOverview?: import("react").ReactNode; discoveryHome?: DiscoveryHomeData; knowledgeEnabled?: boolean; knowledgeOperatorEnabled?: boolean; initialThemes?: KnowledgeThemeHome | null };
 export default function Explorer(props: ExplorerProps) {
-  return props.knowledgeEnabled ? <KnowledgeReading><ExplorerBody {...props}/></KnowledgeReading> : <ExplorerBody {...props} />;
+  return props.knowledgeEnabled ? <KnowledgeReading operatorEnabled={props.knowledgeOperatorEnabled}><ExplorerBody {...props}/></KnowledgeReading> : <ExplorerBody {...props} />;
 }
-function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview, discoveryHome, knowledgeEnabled, initialThemes }: ExplorerProps) {
+function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview, discoveryHome, knowledgeOperatorEnabled, initialThemes }: ExplorerProps) {
   const knowledge=useKnowledgeReading();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -198,7 +198,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
     onLegacyEntity:startFrom,
   }));
   return <><div className={styles.explorer}>
-    <SiteHeader dataset={dataset} memberTools={!knowledgeEnabled} onBeforeAccountNavigation={beforeAccountNavigation} onPrivacySettings={services && (services.ads || services.analytics) ? () => publicServices.current?.openSettings() : undefined} />
+    <SiteHeader dataset={dataset} memberTools={!knowledgeOperatorEnabled} onBeforeAccountNavigation={beforeAccountNavigation} onPrivacySettings={services && (services.ads || services.analytics) ? () => publicServices.current?.openSettings() : undefined} />
     {navigationError && <p role="alert">{locale === "en" ? "The exploration is not ready to restore. Wait for loading to finish, or save the workspace before leaving." : "探索を復元できる状態にできませんでした。取得の完了を待つか、探索途中を保存してから移動してください。"}</p>}
     <nav ref={paneNavigation} className={styles.paneNavigation} aria-label={panes.navigation}>
       {(["search", "graph", "detail"] as const).map(pane => <button key={pane} aria-label={pane === "graph" && atHome ? discoveryHomeLabels(locale).home : panes[pane]} aria-pressed={activePane === pane} aria-controls={`explorer-${pane}`} onClick={() => moveToPane(pane)}><Icon name={pane === "search" ? "search" : pane === "graph" ? "graph" : "book"} /><span>{pane === "detail" ? ui.detail : pane === "graph" && atHome ? discoveryHomeLabels(locale).home : panes[pane]}</span></button>)}

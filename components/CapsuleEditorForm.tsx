@@ -1,10 +1,13 @@
 "use client";
 import { useRef } from "react";
 import type { CapsuleEvidence, CapsuleNodeShape } from "../lib/domain/capsule-document";
+import type { z } from "zod";
+import type { knowledgeTimeAnnotationSchema } from "../lib/domain/knowledge-foundation";
+import CapsuleTimeFields from "./CapsuleTimeFields";
 import Icon from "./Icon";
 import css from "./CapsuleStudio.module.css";
 
-export type CapsuleEditorDraft = { kind: "capsule" | "node" | "relation" | "text" | "evidence"; keys: string[]; fresh?: boolean; reverse?: boolean; addReverse?: boolean; shape?: CapsuleNodeShape; title: string; description: string; badge: string; style: "note" | "heading" | "muted"; width: number; fontSize: number; fontWeight: "normal" | "bold"; align: "left" | "center" | "right"; url: string; locator: string; supports: CapsuleEvidence["supports"]; stance: CapsuleEvidence["stance"]; evidence: CapsuleEvidence[] };
+export type CapsuleEditorDraft = { kind: "capsule" | "node" | "relation" | "text" | "evidence"; keys: string[]; times?: z.infer<typeof knowledgeTimeAnnotationSchema>[]; fresh?: boolean; reverse?: boolean; addReverse?: boolean; shape?: CapsuleNodeShape; title: string; description: string; badge: string; style: "note" | "heading" | "muted"; width: number; fontSize: number; fontWeight: "normal" | "bold"; align: "left" | "center" | "right"; url: string; locator: string; supports: CapsuleEvidence["supports"]; stance: CapsuleEvidence["stance"]; evidence: CapsuleEvidence[] };
 type Props = { value: CapsuleEditorDraft; onChange: (value: CapsuleEditorDraft) => void; onSubmit: () => void; onCancel: () => void; locale: string; anchor?: string; direction?: { source: string; target: string; editable: boolean; self: boolean }; relationChoices?: { key: string; label: string; choose: () => void }[] };
 export default function CapsuleEditorForm({ value: v, onChange, onSubmit, onCancel, locale, anchor, direction, relationChoices = [] }: Props) {
   const t = (ja: string, en: string) => locale === "en" ? en : ja;
@@ -47,6 +50,7 @@ export default function CapsuleEditorForm({ value: v, onChange, onSubmit, onCanc
           <span>{shape === "circle" ? t("丸", "Circle") : shape === "diamond" ? t("ひし形", "Diamond") : shape === "rectangle" ? t("四角", "Rectangle") : shape === "round-rectangle" ? t("角丸", "Rounded") : t("標準", "Default")}</span>
         </button>)}
       </div></fieldset>}
+      {v.kind === "relation" && <CapsuleTimeFields value={v.times??[]} onChange={times=>patch({times})} locale={locale}/>}
       {(v.kind === "node" || v.kind === "relation") && <fieldset className={css.evidenceFields}><legend>{t("根拠・参考資料", "Evidence & sources")}</legend>{v.evidence.map((e,index) => <div key={e.key} className={css.evidenceEditor}>{evidenceFields(e, next => patch({evidence:v.evidence.map(item => item.key === e.key ? next : item)}))}<button type="button" className={css.quietButton} onClick={() => patch({evidence:v.evidence.filter(item => item.key !== e.key)})}><Icon name="minus"/>{t(`資料${index+1}を外す`, `Remove source ${index+1}`)}</button></div>)}<button type="button" onClick={() => patch({evidence:[...v.evidence,{key:crypto.randomUUID(),targetKey:v.keys[0] ?? "",title:"",url:null,locator:"",note:"",supports:v.kind === "relation" ? "relation" : "description",stance:"background"}]})}><Icon name="plus"/>{t("資料を追加", "Add a source")}</button></fieldset>}
     </>}
     {v.fresh && v.kind === "node" && anchor && <p className={css.contextHint}><Icon name="link"/>{t(`「${anchor}」とつなぐ`, `Connect to “${anchor}”`)}</p>}

@@ -1,7 +1,7 @@
 import type { GraphView } from "./graph-view";
 import type { KnowledgeSnapshot, KnowledgeThemeResolved } from "../domain/knowledge-foundation";
 import { capsuleSchema, type LocalCapsule } from "./local-capsules";
-import { capsuleDocumentSchema, type CapsuleDocument } from "../domain/capsule-document";
+import { capsuleDocumentSchema, type CapsuleDocument, type CapsuleRelation } from "../domain/capsule-document";
 
 
 /** Capture exactly the already-read edition. The editor never fetches a newer source implicitly. */
@@ -24,12 +24,30 @@ export function capsuleKnowledgeProjection(document:CapsuleDocument):KnowledgeSn
   if(record.content.kind!=="relation")return [record];
   const relation=document.relations.find(r=>r.origin.kind==="knowledge"&&r.origin.id===record.id);
   if(!relation)return [];
-  return [{...record,content:{...record.content,relation:relation.label,assertion:relation.note||record.content.assertion}}];
+  return [{...record,content:{...record.content,relation:relation.label,assertion:relation.note||record.content.assertion,times:relation.times??record.content.times}}];
  });
  // Local additions are content too; without a time they remain in the information section.
  const entityId=(key:string)=>{const n=document.nodes.find(n=>n.key===key);return n?.origin.kind==="knowledge"?n.origin.id:"capsule-node:"+key;};
  for(const n of document.nodes.filter(n=>n.origin.kind!=="knowledge"))result.entities.push({id:entityId(n.key),revision:1,createdAt:document.knowledge!.capturedAt,reason:"Capsule内の独自編集",content:{name:n.title,description:n.description,kind:n.badge||"対象",aliases:[],language:"ja"}});
- for(const relation of document.relations.filter(r=>r.origin.kind==="local"))result.records.push({id:"capsule-relation:"+relation.key,revision:1,createdAt:document.knowledge!.capturedAt,reason:"Capsule内の独自編集",content:{kind:"relation",subjectId:entityId(relation.source),objectId:entityId(relation.target),assertion:relation.note||relation.label||"関係する",relation:relation.label||"関係する",polarity:relation.origin.kind==="local"?relation.origin.polarity??"affirmed":"affirmed",scope:"",times:[],evidence:[]}});
- if(result.timeline){const ids=new Set(result.records.map(r=>r.id));result.timeline={...result.timeline,placements:result.timeline.placements.filter(p=>ids.has(p.recordId)),insets:result.timeline.insets.filter(p=>ids.has(p.parentRecordId))};}
+ for(const relation of document.relations.filter(r=>r.origin.kind!=="knowledge"))result.records.push({id:capsuleRelationRecordId(relation),revision:1,createdAt:document.knowledge!.capturedAt,reason:"Capsule内の独自編集",content:{kind:"relation",subjectId:entityId(relation.source),objectId:entityId(relation.target),assertion:relation.note||relation.label||"関係する",relation:relation.label||"関係する",polarity:relation.origin.kind==="local"?relation.origin.polarity??"affirmed":"affirmed",scope:"",times:relation.times??[],evidence:[]}});
+ const records=new Map(result.records.map(r=>[r.id,r]));
+ const timeline=result.timeline??{version:1 as const,axes:[],placements:[],insets:[]};
+ timeline.placements=timeline.placements.filter(p=>records.get(p.recordId)?.content.times.some(t=>t.id===p.timeId&&timeline.axes.some(a=>a.id===p.axisId&&a.kind===t.time.kind)));
+ timeline.insets=timeline.insets.filter(p=>records.has(p.parentRecordId));
+ const missing=result.records.flatMap(r=>r.content.times.filter(t=>t.time.kind==="calendar"&&!timeline.placements.some(p=>p.recordId===r.id&&p.timeId===t.id)).map(t=>({recordId:r.id,timeId:t.id})));
+ if(missing.length){let axis=timeline.axes.find(a=>a.kind==="calendar");if(!axis){axis={id:"capsule-calendar",kind:"calendar",label:"年月日・期間"};timeline.axes.push(axis);}timeline.placements.push(...missing.map(p=>({...p,axisId:axis.id})));}
+ result.timeline=timeline;
+
  return result;
+}
+
+export function capsuleRelationRecordId(relation:CapsuleRelation):string {
+ return relation.origin.kind==="knowledge"?relation.origin.id:"capsule-relation:"+relation.key;
+}
+export function capsuleRelationTimes(document:CapsuleDocument,relation:CapsuleRelation) {
+ return relation.times??(relation.origin.kind==="knowledge"?document.knowledge?.snapshot.records.find(r=>r.id===capsuleRelationRecordId(relation))?.content.times:undefined)??[];
+}
+/** Opt-in is authored presentation, never a synthetic source record. */
+export function withCapsuleTimeline(document:CapsuleDocument):CapsuleDocument {
+ return {...document,knowledge:document.knowledge?{...document.knowledge,initialView:"split"}:{schemaVersion:1,capturedAt:new Date().toISOString(),initialView:"split",snapshot:{schemaVersion:1,entities:[],records:[],sources:[],mappings:[],initialView:"graph"}}};
 }

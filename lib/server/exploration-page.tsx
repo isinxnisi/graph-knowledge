@@ -17,7 +17,8 @@ export async function discoveryMetadata(locale: PublicLocale, stateful: boolean,
     { locale, paired: true, ...(subject ? { image: `${path}/opengraph-image` } : {}) });
 }
 export async function ExplorationPage({ locale, id }: { locale: PublicLocale; id?: string }) {
-  const knowledgeEnabled=process.env.THEME_WORKBENCH_ENABLED === "1" && process.env.KNOWLEDGE_WORKSPACE_ENABLED === "1";
+  const knowledgeOperatorEnabled=process.env.THEME_WORKBENCH_ENABLED === "1";
+  const knowledgeEnabled=(knowledgeOperatorEnabled||process.env.KNOWLEDGE_RUNTIME === "beta") && process.env.KNOWLEDGE_WORKSPACE_ENABLED === "1";
   const dataset = datasetMode(process.env.GRAPH_DATASET), subject = dataset === "public-kg" && id ? await publicSubject(id) : undefined;
   if (dataset === "public-kg" && id && !subject) notFound();
   const overview = subject ? <PublicDiscovery locale={locale} subject={subject} /> : undefined;
@@ -27,5 +28,5 @@ export async function ExplorationPage({ locale, id }: { locale: PublicLocale; id
     isHome && knowledgeEnabled ? initialKnowledgeThemeHome() : undefined,
     publicationPolicy(),
   ]);
-  return <Explorer knowledgeEnabled={knowledgeEnabled} dataset={dataset} initialRoot={id} services={services} publicOverview={overview} discoveryHome={home} initialThemes={initialThemes} />;
+  return <Explorer knowledgeOperatorEnabled={knowledgeOperatorEnabled} knowledgeEnabled={knowledgeEnabled} dataset={dataset} initialRoot={id} services={services} publicOverview={overview} discoveryHome={home} initialThemes={initialThemes} />;
 }
