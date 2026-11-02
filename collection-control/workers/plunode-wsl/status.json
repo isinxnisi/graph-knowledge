@@ -106,7 +106,7 @@
     },
     "collection-control/issue-sources/60.json": {
       "status": "registered: issue-60-dot-ichikawa-houseki-20261028",
-      "checkedAt": "2026-11-02T03:36:40+00:00"
+      "checkedAt": "2026-11-02T11:23:29+00:00"
     },
     "collection-control/issue-sources/61.json": {
       "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
@@ -192,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-02T11:02:56.782669+00:00"
+  "checkedAt": "2026-11-02T11:26:11.860487+00:00"
 }
