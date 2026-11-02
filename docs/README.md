@@ -1,4 +1,6 @@
-- 通常探索・テーマ・年表U3（2026-11-02）：[中央Graphの表示・固定版・再開契約](design/KNOWLEDGE_EXPLORER_U3.md)／[確認環境・検証結果と残件](verification/KNOWLEDGE_EXPLORER_U3_20261102.md)。[通常探索の入口](http://localhost:3276/)でテーマを選び、同じ中央領域を関係図／年表／並列へ切り替える。時期なし情報も全表示共通のテーマ本文として読み、元の探索へ戻れる。現行Webbテーマを観測移入し、旧テーマ・Capsule・共有を保持。独立branch／3276のみ。次はU4の既存会員Capsuleへの接続。
+- 通常探索・テーマ・年表U3（2026-11-02）：[中央Graphの表示・固定版・再開契約](design/KNOWLEDGE_EXPLORER_U3.md)／[確認環境・検証結果と残件](verification/KNOWLEDGE_EXPLORER_U3_20261102.md)。[通常探索の入口](http://localhost:3276/)でテーマを選び、同じ中央領域で年表を主役にし、関係図を開閉する。時期なし情報も全表示共通のテーマ本文として読み、元の探索へ戻れる。現行Webbテーマを観測移入し、旧テーマ・Capsule・共有を保持。独立branch／3276のみ。次はU4の既存会員Capsuleへの接続。
+
+最新UIの配置・検証は [U3 一体枠・境界調整](verification/KNOWLEDGE_EXPLORER_U3_SPLIT_20261102.md) を参照。年表中心の関係図開閉、見出し内の設定、下端の見方、点と選択線を改修した。
 
 U3の最終占有低減とnative scroll-chainの実操作は、ブラウザ接続の安全判定停止により残っています。テスト・buildと実操作の確認範囲は上記U3検証記録で分け、U4へ進む前に残りを確認してください。
 

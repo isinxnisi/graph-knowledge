@@ -5,6 +5,7 @@ import SiteHeader from "./SiteHeader";
 import SiteFooter from "./SiteFooter";
 import Icon from "./Icon";
 import GraphCanvas, { type GraphCanvasHandle } from "./GraphCanvas";
+import KnowledgeSplit from "./KnowledgeSplit";
 import KnowledgeTimeline from "./KnowledgeTimeline";
 import KnowledgeRecordDetail from "./KnowledgeRecordDetail";
 import KnowledgeThemeContext from "./KnowledgeThemeContext";
@@ -37,6 +38,7 @@ export default function KnowledgeWorkspace({ dataset = "demo", initialRoot }: { 
   const recordRequest = useRef(0), recordFilter = useRef<Record<string, unknown>>({});
   const normalCanvas = useRef<GraphCanvasHandle>(null), themeCanvas = useRef<GraphCanvasHandle>(null);
   const central = useRef<HTMLDivElement>(null), detail = useRef<HTMLElement>(null);
+  const themeGraphPane = useRef<HTMLDivElement>(null);
   const scrollBeforeTheme = useRef({ central: 0, detail: 0, pane: "graph" as typeof pane });
   const previousTheme = useRef<string | null>(null);
   const checkpointTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -57,7 +59,7 @@ export default function KnowledgeWorkspace({ dataset = "demo", initialRoot }: { 
   }, [retained]);
   const themeHasTime = Boolean(retained?.snapshot.records.some((r) => r.content.times.length));
   const themeHasGraph = Boolean(themeContent.nodes.length);
-  const themeMode = !themeHasGraph && themeHasTime ? "timeline" : !themeHasTime && w.themeView !== "graph" ? "graph" : w.themeView;
+  const themeMode = themeHasTime ? themeHasGraph && w.themeView === "split" ? "split" : "timeline" : "graph";
   const kinds = [...new Set(["person", "work", "organization", "event", ...(w.entityPage?.entities ?? []).map((e) => e.content.kind), ...entities.map((e) => e.content.kind), ...(w.kind ? [w.kind] : [])])];
   const busy = w.busy || searchPending || (recordLoading !== false && recordLoading === w.normal.generation) || w.restoring;
   const related = relatedRead?.id === selectedEntity?.id && relatedRead?.accessToken === w.status?.changeToken ? relatedRead?.themes ?? [] : [];
@@ -146,8 +148,8 @@ export default function KnowledgeWorkspace({ dataset = "demo", initialRoot }: { 
   }
   function graphFromTimeline(id: string) {
     w.setThemeSelection({ kind: "record", id });
-    w.setThemeView(matchMedia("(max-width: 800px)").matches ? "graph" : "split");
-    requestAnimationFrame(() => themeCanvas.current?.ensureVisible?.("record:" + id));
+    w.setThemeView("split");
+    requestAnimationFrame(() => { themeCanvas.current?.ensureVisible?.("record:" + id); if (matchMedia("(max-width: 1100px)").matches) themeGraphPane.current?.scrollIntoView({ block: "start", behavior: "smooth" }); });
   }
   const themeButton = (t: ThemeSummary) => <button key={t.id} className={css.result} onClick={() => openTheme(t)} disabled={busy}><span className={css.resultHeading}><Icon name={t.hasTimeline ? "event" : "graph"} /><strong>{t.title}</strong></span><small>{t.hasTimeline ? en ? "Timeline & relations" : "年表と関係図" : en ? "Theme" : "テーマ"}</small></button>;
   return <><div className={`${base.explorer} ${css.workspace}`}>
@@ -182,11 +184,11 @@ export default function KnowledgeWorkspace({ dataset = "demo", initialRoot }: { 
         {retained && <section hidden={!active} className={`${base.panel} ${base.graphPanel} ${css.stage}`} aria-label={en ? "Theme reading" : "テーマを読む"}>
           <header className={css.themeHeader}><button onClick={() => { checkpoint.current(); w.closeTheme(); }} className={css.return}><Icon name="back" />{en ? "Back to exploration" : "探索に戻る"}</button><span>{en ? "Saved composition" : "構成版"} {retained.theme.revision}</span><h2 title={retained.theme.content.title}>{retained.theme.content.title}</h2><button className={css.themeInfo} aria-label={en ? "About this theme" : "テーマについて"} title={en ? "About this theme" : "テーマについて"} onClick={() => { w.setThemeSelection(null); setPane("detail"); }}><Icon name="book" /></button></header>
           <KnowledgeThemeContext key={retained.theme.id + ":" + retained.theme.revision} records={retained.records} selectedRecordId={w.themeSelection?.kind === "record" ? w.themeSelection.id : null} onRead={(id) => { w.setThemeSelection({ kind: "record", id }); setPane("detail"); }} />
-          {themeHasTime && <div className={css.viewTabs} role="group" aria-label={en ? "Graph presentation" : "Graphの表示方式"}>{(["graph", "timeline", "split"] as const).map((v) => <button key={v} disabled={v !== "timeline" && !themeHasGraph} aria-pressed={themeMode === v} onClick={() => w.setThemeView(v)}><Icon name={v === "graph" ? "graph" : v === "timeline" ? "event" : "panel"} />{v === "graph" ? en ? "Relations" : "関係図" : v === "timeline" ? en ? "Timeline" : "年表" : en ? "Side by side" : "並べて読む"}</button>)}</div>}
-          <div className={css.themeLayout} data-view={themeMode}>
-            <div className={css.timelinePane} hidden={!themeHasTime || themeMode === "graph"}><KnowledgeTimeline key={retained.theme.id + ":" + retained.theme.revision} snapshot={retained.snapshot} untimedInContext focusedRecordId={w.themeSelection?.kind === "record" ? w.themeSelection.id : null} onFocusRecord={(id) => w.setThemeSelection(id ? { kind: "record", id } : null)} onShowGraph={(id) => graphFromTimeline(id)} /></div>
-            <div hidden={!themeHasGraph || themeMode === "timeline"} className={css.canvasFrame}><GraphCanvas key={retained.theme.id + ":" + retained.theme.revision} ref={themeCanvas} graph={themeState} content={themeContent} restoration={w.themeRestoration} onViewChange={scheduleCheckpoint} contentOnly fillHeight compactGuide selection={canvasSelection(w.themeSelection)} interactionBlocked={busy || !active} onEntity={(id) => w.setThemeSelection({ kind: "entity", id })} onEntityDoubleClick={(id) => { w.setThemeSelection({ kind: "entity", id }); setPane("detail"); }} onToggleEntity={(id) => { w.setThemeSelection({ kind: "entity", id }); setPane("detail"); }} onRelation={(id) => chooseRecord(id.replace(/^record:/,""))} /></div>
-          </div>
+
+          <KnowledgeSplit mode={themeMode}>
+            <div className={css.timelinePane} hidden={!themeHasTime || themeMode === "graph"}><KnowledgeTimeline key={retained.theme.id + ":" + retained.theme.revision} snapshot={retained.snapshot} headerAction={themeHasTime && themeHasGraph && <button className={css.themeInfo} aria-label={themeMode === "split" ? en ? "Close relation diagram" : "関係図を閉じる" : en ? "Show relation diagram" : "関係図を並べて表示"} title={themeMode === "split" ? "関係図を閉じる" : "関係図を並べて表示"} aria-pressed={themeMode === "split"} onClick={() => w.setThemeView(themeMode === "split" ? "timeline" : "split")}><Icon name="panel" /></button>} untimedInContext focusedRecordId={w.themeSelection?.kind === "record" ? w.themeSelection.id : null} onFocusRecord={(id) => w.setThemeSelection(id ? { kind: "record", id } : null)} onShowGraph={(id) => graphFromTimeline(id)} /></div>
+            <div ref={themeGraphPane} hidden={!themeHasGraph || themeMode === "timeline"} className={`${css.canvasFrame} ${css.themeCanvas}`}><GraphCanvas key={retained.theme.id + ":" + retained.theme.revision} ref={themeCanvas} graph={themeState} content={themeContent} restoration={w.themeRestoration} onViewChange={scheduleCheckpoint} contentOnly fillHeight compactGuide selection={canvasSelection(w.themeSelection)} interactionBlocked={busy || !active} onEntity={(id) => w.setThemeSelection({ kind: "entity", id })} onEntityDoubleClick={(id) => { w.setThemeSelection({ kind: "entity", id }); setPane("detail"); }} onToggleEntity={(id) => { w.setThemeSelection({ kind: "entity", id }); setPane("detail"); }} onRelation={(id) => chooseRecord(id.replace(/^record:/,""))} /></div>
+          </KnowledgeSplit>
         </section>}
       </div>
       <aside ref={detail} id="explorer-detail" className={`${base.panel} ${css.details}`} aria-label={en ? "Details and evidence" : "内容と根拠"}>

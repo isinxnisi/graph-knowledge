@@ -750,3 +750,37 @@
 .row[data-record-id] .details .calendarRange .period {
   padding-left: 0;
 }
+
+/* The shared Explorer frame owns the border and height. */
+.embedded { height: 100%; min-height: 0; display: flex; flex-direction: column; border: 0; border-radius: 0; padding: 0; }
+.embedded .readingBody { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain auto; padding: 0 18px 12px; }
+.embedded > .controls { order: 2; flex-shrink: 0; border-top: 1px solid var(--color-border); padding: 0 14px; min-height: 44px; }
+.embedded .readingBody > .group:first-child { margin-top: 14px; }
+@media (max-width: 800px) { .embedded .readingBody { padding-inline: 10px; } }
+
+.embedded > .controls > .guide { flex: 1; }
+.embedded > .controls > .guide > summary { width: 100%; }
+.embedded .groupHeader > div:first-child { flex: 1; min-width: 0; }
+.embedded .groupHeader { align-items: center; gap: 8px; }
+.headerSettings { display: inline-flex; align-items: center; justify-content: center; gap: 5px; font-size: 11px; padding: 4px; border: 0; background: transparent; color: var(--color-muted); flex-shrink: 0; min-height: 32px; }
+.headerSettings :global(.ui-icon) { width: 13px; height: 13px; }
+.headerSettings[aria-expanded="true"] :global(.ui-icon):last-child { transform: rotate(180deg); }
+.headerSettingsBody { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 0; border-bottom: 1px solid var(--color-border); }
+.headerSettingsBody[hidden] { display: none; }
+.headerSettingsBody label { margin-left: 0; }
+@media (max-width: 800px) { .headerSettings { min-height: 44px; } .headerSettings > span { display: none; } }
+
+/* Keep header actions in normal flow, independent of the Explorer's generic button chrome. */
+.embedded .groupHeader { padding-bottom: 6px; }
+.embedded .readingBody > .group:first-child { margin-top: 8px; }
+.embedded .headerSettings, .embedded .headerAction button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  border: 0; border-radius: 4px; background: transparent; box-shadow: none;
+  width: auto; min-width: 28px; min-height: 28px; padding: 2px 4px;
+  font-size: 11px; line-height: 1.5; color: var(--color-muted);
+}
+.embedded .headerAction { display: inline-flex; flex-shrink: 0; }
+.embedded .headerAction button { margin: 0; }
+.embedded .headerAction :global(.ui-icon) { width: 15px; height: 15px; margin: 0; }
+.embedded .headerSettings:hover, .embedded .headerAction button:hover { background: var(--color-hover); }
+@media (max-width: 800px) { .embedded .headerSettings, .embedded .headerAction button { min-width: 34px; min-height: 34px; } }

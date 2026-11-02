@@ -296,3 +296,36 @@
     max-width: 150px;
   }
 }
+
+/* Hit targets and marks have independent geometry; mobile button rules must not stretch a dot. */
+.graph .range[data-point], .graph .range[data-point][data-meaning="duration"] {
+  height: 44px; min-height: 44px; transform: translateY(calc(var(--anchor) - 22px));
+}
+.graph .range[data-point]:not([data-meaning="duration"]) i {
+  top: 18px; bottom: auto; height: 8px; width: 8px; border-radius: 50%;
+}
+.graph .range[data-point][data-meaning="duration"] i {
+  top: 15px; bottom: auto; height: 14px; width: 2px;
+}
+.graph .range[data-point][data-meaning="duration"]::before { top: 15px; }
+.graph .range[data-point][data-meaning="duration"]::after { bottom: 15px; }
+.range[data-meaning="duration"]::before, .range[data-meaning="duration"]::after { width: 10px; }
+.segment { width: 2px; }
+.segment[data-kind^="uncertain"] { border-left-width: 2px; }
+/* Selection follows the geometry, never a rounded rectangle around its button. */
+.graph .range[data-focused], .graph .range:hover, .graph .range:active, .graph .range:focus-visible {
+  background: transparent; box-shadow: none; outline: none;
+}
+.range[data-focused] i, .range:focus-visible i { filter: drop-shadow(0 0 2px var(--line-color)); }
+.range[data-point]:not([data-meaning="duration"])[data-focused] i {
+  filter: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--line-color) 18%, transparent);
+}
+.range[data-point]:not([data-meaning="duration"]):focus-visible i {
+  filter: none; box-shadow: 0 0 0 2px var(--color-accent);
+}
+
+/* Generic aria-pressed button chrome must never shift or frame a calendar mark. */
+.surface .graph button.range, .surface .graph button.range[aria-pressed="true"],
+.surface .graph button.range:hover, .surface .graph button.range:active {
+  border: 0 !important; background: transparent !important; box-shadow: none !important; border-radius: 0;
+}

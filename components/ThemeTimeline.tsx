@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo, useState, type CSSProperties } from "react";
+import { useId, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import type {
   ThemeTimelineConfig,
 } from "../lib/domain/theme-workbench";
@@ -28,6 +28,8 @@ type Props<R extends TimelineDisplayRecord> = {
   onShowGraph?: (record: R) => void;
   graphRecordIds?: readonly string[];
   compactControls?: boolean;
+  embedded?: boolean;
+  headerAction?: ReactNode;
 };
 type Group<R extends TimelineDisplayRecord> = ThemeTimelineGroup<R>;
 type CalendarTime = Extract<
@@ -241,6 +243,8 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
   onShowGraph,
   graphRecordIds,
   compactControls = false,
+  embedded = false,
+  headerAction,
 }: Props<R>) {
   const groups = useMemo(
     () => buildTimelineGroups(records, timeline),
@@ -251,6 +255,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
   const [activeRowId, setActiveRowId] = useState<string | null>(null);
   const [resolution, setResolution] = useState<CalendarResolution>("auto");
   const prefix = useId();
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const subjects = [...new Set(records.map((r) => r.subject).filter((id): id is string => id !== null))];
   const focusedRow = records.find((r) => r.id === activeRowId && timelineRecordId(r) === focusedRecordId)
     ?? records.find((r) => timelineRecordId(r) === focusedRecordId);
@@ -511,7 +516,10 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
             )}
           </div>
           <span>{new Set(rows.map(timelineRecordId)).size}件{new Set(rows.map(timelineRecordId)).size < rows.length ? ` · ${rows.length}時期` : ""}</span>
+          {embedded && group.id === roots[0]?.id && !ancestors.length && (hasCalendar || subjects.length > 1) && <button className={css.headerSettings} aria-label={`年表の表示設定${settingsSummary ? `：${settingsSummary}` : ""}`} aria-expanded={settingsOpen} aria-controls={`${prefix}-settings`} title={settingsSummary || undefined} onClick={() => setSettingsOpen(v => !v)}><Icon name="settings" /><span>表示設定</span><Icon name="chevron" /></button>}
+          {embedded && group.id === roots[0]?.id && !ancestors.length && <span className={css.headerAction}>{headerAction}</span>}
         </header>
+        {embedded && group.id === roots[0]?.id && !ancestors.length && <div id={`${prefix}-settings`} className={css.headerSettingsBody} hidden={!settingsOpen}>{readingControls}</div>}
         {group.kind === "calendar" ? (
           <CalendarTimelineGraph
             records={rows}
@@ -566,7 +574,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
     </label>}
   </>;
   return (
-    <div className={css.timeline}>
+    <div className={`${css.timeline} ${embedded ? css.embedded : ""}`}>
       <div className={`${css.controls} ${compactControls ? css.compactControls : ""}`}>
         <details className={css.guide}>
           <summary>{compactControls && <Icon name="chevron" />}線の見方</summary>
@@ -592,16 +600,18 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
             線の接続先が、その点・期間の記録です。両端付きの線は続いた期間、丸い端の破線は発生候補の幅です。不確かな期間境界だけを点線にします。表示単位の内に収まる出来事は点、期間は短い両端付きの線で示します。元の日付・意味は行を開いて確認できます。時間が重なっても所属や因果は作りません。暦以外の細い対象線は、同じ主語をたどる案内です。
           </p>
         </details>
-        {compactControls ? (hasCalendar || subjects.length > 1) && <details className={css.displaySettings}>
+        {embedded ? null : compactControls ? (hasCalendar || subjects.length > 1) && <details className={css.displaySettings}>
           <summary aria-label={`年表の表示設定${settingsSummary ? `：${settingsSummary}` : ""}`} title={settingsSummary || undefined}><Icon name="settings" /><span>表示設定</span>{settingsSummary && <small>{settingsSummary}</small>}<span className={css.settingsChevron}><Icon name="chevron" /></span></summary>
           <div className={css.displaySettingsBody}>{readingControls}</div>
         </details> : readingControls}
       </div>
+      <div className={css.readingBody}>
       {roots.length ? (
         roots.map((g) => renderGroup(g))
       ) : (
         <p className={css.empty}>表示する記録がありません。</p>
       )}
+      </div>
     </div>
   );
 }

@@ -1,5 +1,7 @@
 # 本運用統合の実装引継ぎ
 
+最新UIの配置・検証は [U3 一体枠・境界調整](../verification/KNOWLEDGE_EXPLORER_U3_SPLIT_20261102.md) を参照。年表中心の関係図開閉、見出し内の設定、下端の見方、点と選択線を改修した。
+
 U4着手前に、U3検証記録に残した最終UIの実viewport・native wheel連鎖を確認する。実装とテスト・buildは残すが、ブラウザ接続停止後の実操作を完了扱いしない。確認用390px viewportの解除も残っている。
 
 2026-11-02。[統合計画](PLUNODE_PRODUCTION_INTEGRATION.md)のU1/U2に続き、通常探索・テーマ・年表のU3を独立branch／3276へ接続した。次担当は[U1契約](KNOWLEDGE_FOUNDATION_U1.md)、[U2契約](KNOWLEDGE_PUBLIC_READ_U2.md)、[U3の表示・固定版・再開契約](KNOWLEDGE_EXPLORER_U3.md)、[U3の確認結果と配置記録](../verification/KNOWLEDGE_EXPLORER_U3_20261102.md)を先に読む。下のU1依頼文は着手時の記録であり、同じ実装をやり直さない。

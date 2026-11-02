@@ -57,26 +57,22 @@ it("can move undated context outside the timeline without losing explicit inset 
   expect(screen.getByRole("region", { name: "詳しい時期" })).toBeTruthy();
 });
 
-it("keeps display controls compact until requested and shows non-default settings while closed", () => {
+it("opens settings below the heading and retains their values after closing", () => {
   const data = { ...s, records: [...s.records, { ...s.records[0], id: "second", content: { ...s.records[0].content, subjectId: "b", objectId: "a", assertion: "別の対象に関する記録" } }] };
   const onFocus = vi.fn();
   render(<KnowledgeTimeline snapshot={data} focusedRecordId={null} onFocusRecord={onFocus} />);
-  const summary = screen.getByText("表示設定").closest("summary")!;
-  const settings = summary.closest("details")!;
-  expect(settings.open).toBe(false);
-  expect(summary.getAttribute("aria-label")).toBe("年表の表示設定");
-  // jsdom's accessibility tree does not hide closed native-details descendants.
-  expect(screen.getByRole("combobox", { name: "暦の表示単位" }).closest("details")).toBe(settings);
+  const summary = screen.getByRole("button", { name: "年表の表示設定" });
+  expect(summary.getAttribute("aria-expanded")).toBe("false");
+  expect(screen.queryByRole("combobox", { name: "暦の表示単位" })).toBeNull();
   expect(screen.getByText("線の見方").closest("details")?.open).toBe(false);
   fireEvent.click(summary);
-  expect(settings.open).toBe(true);
+  expect(summary.getAttribute("aria-expanded")).toBe("true");
   fireEvent.change(screen.getByRole("combobox", { name: "暦の表示単位" }), { target: { value: "month" } });
   fireEvent.change(screen.getByRole("combobox", { name: "たどる対象" }), { target: { value: "b" } });
   expect(summary.getAttribute("aria-label")).toBe("年表の表示設定：月 · 対象b");
   fireEvent.click(summary);
-  expect(settings.open).toBe(false);
-  expect(summary.textContent).toContain("月 · 対象b");
-  expect(screen.getByRole("combobox", { name: "たどる対象" }).closest("details")).toBe(settings);
+  expect(summary.getAttribute("aria-expanded")).toBe("false");
+  expect(screen.queryByRole("combobox", { name: "たどる対象" })).toBeNull();
   expect(screen.getAllByRole("button", { name: /^装画と挿絵を手掛けた/ })).toHaveLength(2);
   expect(onFocus).not.toHaveBeenCalled();
   fireEvent.click(summary);
