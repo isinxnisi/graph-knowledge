@@ -43,10 +43,9 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 7,
-    "waiting-control": 17,
-    "completed": 23,
-    "waiting-lock": 10,
-    "retry-wait": 2,
+    "retry-wait": 4,
+    "waiting-lock": 26,
+    "completed": 22,
     "awaiting-recovery": 3
   },
   "issueIntake": {
@@ -127,13 +126,13 @@
       "checkedAt": "2026-11-01T16:06:29+00:00"
     },
     "collection-control/issue-sources/66.json": {
-      "status": "held",
-      "reason": "<urlopen error [Errno 104] Connection reset by peer>",
-      "checkedAt": "2026-11-02T05:57:04+00:00"
+      "status": "registered: issue-66-dot-togashi-two-20261029",
+      "checkedAt": "2026-11-02T06:07:01+00:00"
     },
     "collection-control/issue-sources/67.json": {
-      "status": "registered: issue-67-dot-mizuki-two-20261029",
-      "checkedAt": "2026-11-01T01:52:18+00:00"
+      "status": "held",
+      "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+      "checkedAt": "2026-11-02T06:07:20+00:00"
     },
     "collection-control/issue-sources/68.json": {
       "status": "registered: issue-68-dot-fujikoa-two-20261029",
@@ -195,5 +194,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-02T06:04:18.097520+00:00"
+  "checkedAt": "2026-11-02T06:25:44.141705+00:00"
 }
