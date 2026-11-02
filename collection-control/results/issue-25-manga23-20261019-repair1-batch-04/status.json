@@ -82,12 +82,12 @@
   },
   "requestSha256": "7ff25d34dee666ffbc02ef6a6c85d3c240577bacaf6711d2a3ae88570b9ddffd",
   "kind": "collect-review",
-  "phase": "retry-wait",
-  "generation": 13458,
+  "phase": "waiting-control",
+  "generation": 13459,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
-  "updatedAt": "2026-11-02T15:54:13+00:00",
-  "message": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+  "updatedAt": "2026-11-02T16:04:51+00:00",
+  "message": "Execution gate: outside-window",
   "retryAt": 1793634989.9114428
 }
