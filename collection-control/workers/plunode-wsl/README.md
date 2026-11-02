@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-02 15:25:44 JST。
+確認: 2026-11-02 15:43:29 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -67,12 +67,14 @@ Issue確認結果:
     "checkedAt": "2026-11-01T14:08:21+00:00"
   },
   "collection-control/issue-sources/57.json": {
-    "status": "registered: issue-57-dot-oshima-two-20261028",
-    "checkedAt": "2026-11-01T14:08:23+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-02T06:27:52+00:00"
   },
   "collection-control/issue-sources/58.json": {
-    "status": "registered: issue-58-dot-takeuchi-two-20261028",
-    "checkedAt": "2026-10-31T07:53:01+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-02T06:28:19+00:00"
   },
   "collection-control/issue-sources/59.json": {
     "status": "registered: issue-59-dot-kubo-two-20261028",
@@ -95,17 +97,17 @@ Issue確認結果:
     "checkedAt": "2026-11-01T16:06:27+00:00"
   },
   "collection-control/issue-sources/65.json": {
-    "status": "registered: issue-65-dot-inoue-three-20261029",
-    "checkedAt": "2026-11-01T16:06:29+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-02T06:29:25+00:00"
   },
   "collection-control/issue-sources/66.json": {
     "status": "registered: issue-66-dot-togashi-two-20261029",
     "checkedAt": "2026-11-02T06:07:01+00:00"
   },
   "collection-control/issue-sources/67.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T06:07:20+00:00"
+    "status": "registered: issue-67-dot-mizuki-two-20261029",
+    "checkedAt": "2026-11-02T06:29:58+00:00"
   },
   "collection-control/issue-sources/68.json": {
     "status": "registered: issue-68-dot-fujikoa-two-20261029",
