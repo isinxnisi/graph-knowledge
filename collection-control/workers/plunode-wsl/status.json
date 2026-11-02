@@ -26,27 +26,31 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-02T07:32:47.636005+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-02T08:40:36.338078+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-02T07:32:47.636005+00:00",
+    "eligibleAt": "2026-11-02T08:40:36.338078+00:00",
     "windowEndAt": "2026-11-02T09:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-42-matsumoto-recovery-20261026",
+    "startedAt": "2026-11-02T07:35:36.338082+00:00",
+    "limitAt": "2026-11-02T08:30:36.338078+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-58-dot-takeuchi-two-20261028-batch-01",
     "endedAt": "2026-11-02T07:22:47.636012+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
-    "waiting-control": 30,
+    "retry-wait": 3,
     "blocked": 5,
-    "completed": 24,
-    "awaiting-recovery": 2,
-    "retry-wait": 1
+    "waiting-control": 29,
+    "completed": 23,
+    "awaiting-recovery": 2
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -110,8 +114,9 @@
       "checkedAt": "2026-11-02T03:36:40+00:00"
     },
     "collection-control/issue-sources/61.json": {
-      "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
-      "checkedAt": "2026-11-02T03:36:42+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+      "checkedAt": "2026-11-02T07:33:26+00:00"
     },
     "collection-control/issue-sources/62.json": {
       "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
@@ -193,5 +198,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-02T07:31:52.415183+00:00"
+  "checkedAt": "2026-11-02T07:35:43.575131+00:00"
 }
