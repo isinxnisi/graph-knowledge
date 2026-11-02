@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-03 00:12:07 JST。
+確認: 2026-11-03 00:17:33 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -63,38 +63,32 @@ Issue確認結果:
     "checkedAt": "2026-11-02T13:57:09+00:00"
   },
   "collection-control/issue-sources/56.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T15:01:20+00:00"
+    "status": "registered: issue-56-dot-urushibara-two-20261028",
+    "checkedAt": "2026-11-02T15:13:04+00:00"
   },
   "collection-control/issue-sources/57.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T15:01:36+00:00"
+    "status": "registered: issue-57-dot-oshima-two-20261028",
+    "checkedAt": "2026-11-02T15:13:06+00:00"
   },
   "collection-control/issue-sources/58.json": {
     "status": "registered: issue-58-dot-takeuchi-two-20261028",
     "checkedAt": "2026-11-02T13:27:54+00:00"
   },
   "collection-control/issue-sources/59.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T15:02:02+00:00"
+    "status": "registered: issue-59-dot-kubo-two-20261028",
+    "checkedAt": "2026-11-02T15:13:10+00:00"
   },
   "collection-control/issue-sources/60.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
-    "checkedAt": "2026-11-02T15:02:30+00:00"
+    "status": "registered: issue-60-dot-ichikawa-houseki-20261028",
+    "checkedAt": "2026-11-02T15:13:12+00:00"
   },
   "collection-control/issue-sources/61.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T15:02:45+00:00"
+    "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
+    "checkedAt": "2026-11-02T15:13:14+00:00"
   },
   "collection-control/issue-sources/62.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T15:03:01+00:00"
+    "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
+    "checkedAt": "2026-11-02T15:13:16+00:00"
   },
   "collection-control/issue-sources/64.json": {
     "status": "registered: issue-64-dot-oda-onepiece-20261029",
@@ -105,38 +99,32 @@ Issue確認結果:
     "checkedAt": "2026-11-02T06:45:15+00:00"
   },
   "collection-control/issue-sources/66.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T15:03:38+00:00"
+    "status": "registered: issue-66-dot-togashi-two-20261029",
+    "checkedAt": "2026-11-02T15:13:20+00:00"
   },
   "collection-control/issue-sources/67.json": {
     "status": "registered: issue-67-dot-mizuki-two-20261029",
     "checkedAt": "2026-11-02T13:29:07+00:00"
   },
   "collection-control/issue-sources/68.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-    "checkedAt": "2026-11-02T15:03:53+00:00"
+    "status": "registered: issue-68-dot-fujikoa-two-20261029",
+    "checkedAt": "2026-11-02T15:13:26+00:00"
   },
   "collection-control/issue-sources/69.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T15:04:09+00:00"
+    "status": "registered: issue-69-dot-ishinomori-three-20261029",
+    "checkedAt": "2026-11-02T15:13:28+00:00"
   },
   "collection-control/issue-sources/70.json": {
-    "status": "held",
-    "reason": "Remote end closed connection without response",
-    "checkedAt": "2026-11-02T15:04:24+00:00"
+    "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
+    "checkedAt": "2026-11-02T15:13:30+00:00"
   },
   "collection-control/issue-sources/71.json": {
-    "status": "held",
-    "reason": "Remote end closed connection without response",
-    "checkedAt": "2026-11-02T15:04:38+00:00"
+    "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
+    "checkedAt": "2026-11-02T15:13:32+00:00"
   },
   "collection-control/issue-sources/73.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-    "checkedAt": "2026-11-02T15:04:54+00:00"
+    "status": "registered: issue-73-dot-murata-onepunch-20261030",
+    "checkedAt": "2026-11-02T15:13:33+00:00"
   }
 }
 ```
