@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-02T08:08:59.588246+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-02T09:14:11.788431+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-02T08:08:59.588246+00:00",
-    "windowEndAt": "2026-11-02T09:00:00+00:00"
+    "eligibleAt": "2026-11-02T18:00:00+00:00",
+    "windowEndAt": "2026-11-02T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-69-dot-ishinomori-three-20261029",
+    "startedAt": "2026-11-02T08:09:11.788433+00:00",
+    "limitAt": "2026-11-02T09:04:11.788431+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-25-manga23-20261019",
     "endedAt": "2026-11-02T07:58:59.588248+00:00"
@@ -192,5 +196,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-02T08:00:47.264375+00:00"
+  "checkedAt": "2026-11-02T08:09:19.078815+00:00"
 }
