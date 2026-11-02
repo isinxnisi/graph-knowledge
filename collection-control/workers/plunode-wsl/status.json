@@ -26,8 +26,8 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-02T09:20:00+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-02T08:54:53.954172+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
@@ -35,20 +35,16 @@
     "eligibleAt": "2026-11-02T18:00:00+00:00",
     "windowEndAt": "2026-11-02T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-73-dot-murata-onepunch-20261030",
-    "startedAt": "2026-11-02T08:44:11.740312+00:00",
-    "limitAt": "2026-11-02T09:10:00+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-47-dot-yukimura-two-20261027",
-    "endedAt": "2026-11-02T08:34:04.195192+00:00"
+    "requestId": "issue-73-dot-murata-onepunch-20261030",
+    "endedAt": "2026-11-02T08:44:53.954175+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 6,
-    "waiting-control": 27,
-    "completed": 25,
+    "waiting-control": 26,
+    "completed": 26,
     "awaiting-recovery": 4
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-02T08:44:18.968378+00:00"
+  "checkedAt": "2026-11-02T08:45:42.871051+00:00"
 }
