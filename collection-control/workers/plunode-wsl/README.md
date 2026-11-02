@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-02 22:26:12 JST。
+確認: 2026-11-02 22:37:53 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -23,9 +23,8 @@ Issue確認結果:
 ```json
 {
   "collection-control/issue-sources/25.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-    "checkedAt": "2026-11-02T13:17:02+00:00"
+    "status": "registered: issue-25-manga23-20261019",
+    "checkedAt": "2026-11-02T13:26:58+00:00"
   },
   "collection-control/issue-sources/16.json": {
     "status": "registered: issue-16-adachi-three-20261025",
@@ -36,24 +35,20 @@ Issue確認結果:
     "checkedAt": "2026-11-02T03:27:45+00:00"
   },
   "collection-control/issue-sources/42.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-    "checkedAt": "2026-11-02T13:17:18+00:00"
+    "status": "registered: issue-42-dot-matsumoto-three-20261026",
+    "checkedAt": "2026-11-02T13:27:02+00:00"
   },
   "collection-control/issue-sources/46.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T13:17:34+00:00"
+    "status": "registered: issue-46-dot-aoyama-three-20261027",
+    "checkedAt": "2026-11-02T13:27:05+00:00"
   },
   "collection-control/issue-sources/47.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T13:17:50+00:00"
+    "status": "registered: issue-47-dot-yukimura-two-20261027",
+    "checkedAt": "2026-11-02T13:27:07+00:00"
   },
   "collection-control/issue-sources/48.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T13:18:07+00:00"
+    "status": "registered: issue-48-dot-toriyama-three-20261027",
+    "checkedAt": "2026-11-02T13:27:12+00:00"
   },
   "collection-control/issue-sources/49.json": {
     "status": "registered: issue-49-dot-hara-souten-20261027",
@@ -64,22 +59,21 @@ Issue確認結果:
     "checkedAt": "2026-11-02T03:36:25+00:00"
   },
   "collection-control/issue-sources/51.json": {
-    "status": "registered: issue-51-dot-araki-rohan-20261027",
-    "checkedAt": "2026-10-31T15:14:56+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-02T13:27:41+00:00"
   },
   "collection-control/issue-sources/56.json": {
     "status": "registered: issue-56-dot-urushibara-two-20261028",
     "checkedAt": "2026-11-01T14:08:21+00:00"
   },
   "collection-control/issue-sources/57.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T13:18:43+00:00"
+    "status": "registered: issue-57-dot-oshima-two-20261028",
+    "checkedAt": "2026-11-02T13:27:49+00:00"
   },
   "collection-control/issue-sources/58.json": {
-    "status": "held",
-    "reason": "<urlopen error _ssl.c:990: The handshake operation timed out>",
-    "checkedAt": "2026-11-02T13:19:17+00:00"
+    "status": "registered: issue-58-dot-takeuchi-two-20261028",
+    "checkedAt": "2026-11-02T13:27:54+00:00"
   },
   "collection-control/issue-sources/59.json": {
     "status": "held",
@@ -87,9 +81,8 @@ Issue確認結果:
     "checkedAt": "2026-11-02T13:19:33+00:00"
   },
   "collection-control/issue-sources/60.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T13:19:49+00:00"
+    "status": "registered: issue-60-dot-ichikawa-houseki-20261028",
+    "checkedAt": "2026-11-02T13:28:37+00:00"
   },
   "collection-control/issue-sources/61.json": {
     "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
@@ -108,14 +101,12 @@ Issue確認結果:
     "checkedAt": "2026-11-02T06:45:15+00:00"
   },
   "collection-control/issue-sources/66.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-    "checkedAt": "2026-11-02T13:20:25+00:00"
+    "status": "registered: issue-66-dot-togashi-two-20261029",
+    "checkedAt": "2026-11-02T13:29:04+00:00"
   },
   "collection-control/issue-sources/67.json": {
-    "status": "held",
-    "reason": "Remote end closed connection without response",
-    "checkedAt": "2026-11-02T13:20:43+00:00"
+    "status": "registered: issue-67-dot-mizuki-two-20261029",
+    "checkedAt": "2026-11-02T13:29:07+00:00"
   },
   "collection-control/issue-sources/68.json": {
     "status": "registered: issue-68-dot-fujikoa-two-20261029",
@@ -152,6 +143,6 @@ Issue確認結果:
 - [issue-25-utc-recovery-04](../../results/issue-25-utc-recovery-04/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-05）
 - [issue-25-utc-recovery-05](../../results/issue-25-utc-recovery-05/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-06）
 - [issue-25-utc-recovery-06](../../results/issue-25-utc-recovery-06/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-07）
-- [issue-25-utc-recovery-07](../../results/issue-25-utc-recovery-07/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-08）
-- [issue-25-utc-recovery-08](../../results/issue-25-utc-recovery-08/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-09）
+- [issue-25-utc-recovery-07](../../results/issue-25-utc-recovery-07/README.md): retry-wait（旧 issue-25-manga23-20261019-repair1-batch-08）
+- [issue-25-utc-recovery-08](../../results/issue-25-utc-recovery-08/README.md): retry-wait（旧 issue-25-manga23-20261019-repair1-batch-09）
 - [issue-25-utc-recovery-09](../../results/issue-25-utc-recovery-09/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-10）
