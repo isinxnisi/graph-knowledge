@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-02T08:20:35.954977+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-02T09:20:00+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-02T08:20:35.954977+00:00",
-    "windowEndAt": "2026-11-02T09:00:00+00:00"
+    "eligibleAt": "2026-11-02T18:00:00+00:00",
+    "windowEndAt": "2026-11-02T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-42-matsumoto-recovery-20261026-batch-01",
+    "startedAt": "2026-11-02T08:20:45.246911+00:00",
+    "limitAt": "2026-11-02T09:10:00+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-69-dot-ishinomori-three-20261029",
     "endedAt": "2026-11-02T08:10:35.954979+00:00"
@@ -192,5 +196,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-02T08:11:29.381147+00:00"
+  "checkedAt": "2026-11-02T08:20:52.413892+00:00"
 }
