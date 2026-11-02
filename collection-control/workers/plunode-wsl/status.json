@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-02T02:47:31.173562+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-02T01:53:13.860223+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-02T06:00:00+00:00",
-    "windowEndAt": "2026-11-02T09:00:00+00:00"
+    "eligibleAt": "2026-11-02T01:53:13.860223+00:00",
+    "windowEndAt": "2026-11-02T03:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-66-dot-togashi-two-20261029-batch-01",
-    "startedAt": "2026-11-02T01:42:31.173566+00:00",
-    "limitAt": "2026-11-02T02:37:31.173562+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-68-dot-fujikoa-two-20261029-batch-01",
-    "endedAt": "2026-11-02T01:32:20.359585+00:00"
+    "requestId": "issue-66-dot-togashi-two-20261029-batch-01",
+    "endedAt": "2026-11-02T01:43:13.860225+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 8,
-    "waiting-control": 12,
-    "completed": 36,
+    "waiting-control": 11,
+    "completed": 37,
     "awaiting-recovery": 6
   },
   "issueIntake": {
@@ -197,5 +193,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-02T01:42:38.385755+00:00"
+  "checkedAt": "2026-11-02T01:43:16.006582+00:00"
 }
