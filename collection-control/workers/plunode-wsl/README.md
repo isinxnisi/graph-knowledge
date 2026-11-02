@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-02 12:34:52 JST。
+確認: 2026-11-02 12:39:56 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -55,9 +55,8 @@ Issue確認結果:
     "checkedAt": "2026-11-01T10:25:55+00:00"
   },
   "collection-control/issue-sources/50.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T03:19:02+00:00"
+    "status": "registered: issue-50-dot-endo-tista-20261027",
+    "checkedAt": "2026-11-02T03:36:25+00:00"
   },
   "collection-control/issue-sources/51.json": {
     "status": "registered: issue-51-dot-araki-rohan-20261027",
@@ -80,19 +79,16 @@ Issue確認結果:
     "checkedAt": "2026-11-01T18:10:12+00:00"
   },
   "collection-control/issue-sources/60.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
-    "checkedAt": "2026-11-02T03:28:33+00:00"
+    "status": "registered: issue-60-dot-ichikawa-houseki-20261028",
+    "checkedAt": "2026-11-02T03:36:40+00:00"
   },
   "collection-control/issue-sources/61.json": {
-    "status": "held",
-    "reason": "Remote end closed connection without response",
-    "checkedAt": "2026-11-02T03:28:48+00:00"
+    "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
+    "checkedAt": "2026-11-02T03:36:42+00:00"
   },
   "collection-control/issue-sources/62.json": {
-    "status": "held",
-    "reason": "<urlopen error _ssl.c:990: The handshake operation timed out>",
-    "checkedAt": "2026-11-02T03:29:20+00:00"
+    "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
+    "checkedAt": "2026-11-02T03:36:45+00:00"
   },
   "collection-control/issue-sources/64.json": {
     "status": "registered: issue-64-dot-oda-onepiece-20261029",
