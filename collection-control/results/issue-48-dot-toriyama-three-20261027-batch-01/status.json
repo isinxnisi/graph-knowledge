@@ -82,12 +82,12 @@
   },
   "requestSha256": "42647bce621bda1430fe1abe5ac77fda6be97db99885827eefd7248346e104ce",
   "kind": "collect-review",
-  "phase": "completed",
-  "generation": 2572,
+  "phase": "retry-wait",
+  "generation": 2731,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-01T19:54:34+00:00",
+  "updatedAt": "2026-11-02T06:20:35+00:00",
   "result": {
     "jobId": "issue-48-dot-toriyama-three-20261027-r0001-bfe689d065a388d9",
     "collectionUnchanged": false,
@@ -113,5 +113,6 @@
   "decisionDrafts": [
     "datasets/collection-decision-drafts/issue-48-dot-toriyama-three-20261027-batch-01/4607282644225dd3f239445ba377ba5750cee423ac0cabd972fb0e5285417d6a/issue-48-dot-toriyama-three-20261027-batch-01-identity-draft.json"
   ],
-  "retryAt": 1793540515.6653047
+  "retryAt": 1793600584.9497917,
+  "message": "<urlopen error [Errno -3] Temporary failure in name resolution>"
 }
