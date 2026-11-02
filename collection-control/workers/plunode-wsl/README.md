@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-03 02:28:32 JST。
+確認: 2026-11-03 02:42:41 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -23,40 +23,48 @@ Issue確認結果:
 ```json
 {
   "collection-control/issue-sources/25.json": {
-    "status": "registered: issue-25-manga23-20261019",
-    "checkedAt": "2026-11-02T16:16:49+00:00"
+    "status": "held",
+    "reason": "The read operation timed out",
+    "checkedAt": "2026-11-02T17:31:30+00:00"
   },
   "collection-control/issue-sources/16.json": {
     "status": "registered: issue-16-adachi-three-20261025",
     "checkedAt": "2026-11-02T17:02:48+00:00"
   },
   "collection-control/issue-sources/5.json": {
-    "status": "registered: issue-5-dot-tezuka-adolf-20261025",
-    "checkedAt": "2026-11-02T16:25:08+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-02T17:33:16+00:00"
   },
   "collection-control/issue-sources/42.json": {
-    "status": "registered: issue-42-dot-matsumoto-three-20261026",
-    "checkedAt": "2026-11-02T13:27:02+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-02T17:31:45+00:00"
   },
   "collection-control/issue-sources/46.json": {
-    "status": "registered: issue-46-dot-aoyama-three-20261027",
-    "checkedAt": "2026-11-02T13:27:05+00:00"
+    "status": "held",
+    "reason": "<urlopen error _ssl.c:990: The handshake operation timed out>",
+    "checkedAt": "2026-11-02T17:32:13+00:00"
   },
   "collection-control/issue-sources/47.json": {
-    "status": "registered: issue-47-dot-yukimura-two-20261027",
-    "checkedAt": "2026-11-02T14:07:01+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-02T17:32:29+00:00"
   },
   "collection-control/issue-sources/48.json": {
-    "status": "registered: issue-48-dot-toriyama-three-20261027",
-    "checkedAt": "2026-11-02T13:27:12+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-02T17:32:45+00:00"
   },
   "collection-control/issue-sources/49.json": {
-    "status": "registered: issue-49-dot-hara-souten-20261027",
-    "checkedAt": "2026-11-02T16:25:05+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-02T17:33:00+00:00"
   },
   "collection-control/issue-sources/50.json": {
-    "status": "registered: issue-50-dot-endo-tista-20261027",
-    "checkedAt": "2026-11-02T16:37:10+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-02T17:33:32+00:00"
   },
   "collection-control/issue-sources/51.json": {
     "status": "registered: issue-51-dot-araki-rohan-20261027",
@@ -115,9 +123,8 @@ Issue確認結果:
     "checkedAt": "2026-11-02T17:24:59+00:00"
   },
   "collection-control/issue-sources/70.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T17:25:15+00:00"
+    "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
+    "checkedAt": "2026-11-02T17:34:19+00:00"
   },
   "collection-control/issue-sources/71.json": {
     "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
