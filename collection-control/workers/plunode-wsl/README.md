@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-03 02:01:17 JST。
+確認: 2026-11-03 02:14:37 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -27,9 +27,8 @@ Issue確認結果:
     "checkedAt": "2026-11-02T16:16:49+00:00"
   },
   "collection-control/issue-sources/16.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-    "checkedAt": "2026-11-02T16:46:52+00:00"
+    "status": "registered: issue-16-adachi-three-20261025",
+    "checkedAt": "2026-11-02T17:02:48+00:00"
   },
   "collection-control/issue-sources/5.json": {
     "status": "registered: issue-5-dot-tezuka-adolf-20261025",
@@ -64,9 +63,8 @@ Issue確認結果:
     "checkedAt": "2026-11-02T16:37:13+00:00"
   },
   "collection-control/issue-sources/56.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
-    "checkedAt": "2026-11-02T16:48:01+00:00"
+    "status": "registered: issue-56-dot-urushibara-two-20261028",
+    "checkedAt": "2026-11-02T17:03:08+00:00"
   },
   "collection-control/issue-sources/57.json": {
     "status": "registered: issue-57-dot-oshima-two-20261028",
@@ -125,9 +123,8 @@ Issue確認結果:
     "checkedAt": "2026-11-02T16:48:33+00:00"
   },
   "collection-control/issue-sources/73.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T16:48:49+00:00"
+    "status": "registered: issue-73-dot-murata-onepunch-20261030",
+    "checkedAt": "2026-11-02T17:03:38+00:00"
   }
 }
 ```
