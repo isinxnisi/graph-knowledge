@@ -26,29 +26,27 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-02T07:53:33.178200+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-02T06:59:22.577519+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-02T07:53:33.178200+00:00",
+    "eligibleAt": "2026-11-02T06:59:22.577519+00:00",
     "windowEndAt": "2026-11-02T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-56-dot-urushibara-two-20261028",
-    "startedAt": "2026-11-02T06:48:33.178205+00:00",
-    "limitAt": "2026-11-02T07:43:33.178200+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1-batch-02",
-    "endedAt": "2026-11-02T02:39:58.625654+00:00"
+    "requestId": "issue-56-dot-urushibara-two-20261028",
+    "endedAt": "2026-11-02T06:49:22.577524+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
-    "waiting-lock": 31,
-    "blocked": 6,
-    "completed": 22,
+    "waiting-lock": 9,
+    "retry-wait": 1,
+    "blocked": 5,
+    "waiting-control": 21,
+    "completed": 23,
     "awaiting-recovery": 3
   },
   "issueIntake": {
@@ -169,7 +167,7 @@
     },
     "issue-25-utc-recovery-03": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-04",
-      "phase": "waiting-lock"
+      "phase": "waiting-control"
     },
     "issue-25-utc-recovery-04": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-05",
@@ -181,7 +179,7 @@
     },
     "issue-25-utc-recovery-06": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-07",
-      "phase": "waiting-lock"
+      "phase": "waiting-control"
     },
     "issue-25-utc-recovery-07": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-08",
@@ -196,5 +194,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-02T06:48:40.936386+00:00"
+  "checkedAt": "2026-11-02T06:56:51.765314+00:00"
 }
