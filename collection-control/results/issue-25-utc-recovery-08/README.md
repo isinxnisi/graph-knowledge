@@ -6,7 +6,8 @@ issue-25-utc-recovery-08：**retry-wait**
 
 復旧元: [issue-25-manga23-20261019-repair1-batch-09](../issue-25-manga23-20261019-repair1-batch-09/README.md)。旧依頼・承認・失敗履歴は保持し、日時の表記だけをUTC Zへ修正。同じ取得cache・通算予算を使用する。
 
-<urlopen error [Errno 104] Connection reset by peer>
+fatal: unable to access 'https://github.com/isinxnisi/graph-knowledge.git/': OpenSSL SSL_connect: Connection reset by peer in connection to github.com:443 
+
 
 ```json
 {
