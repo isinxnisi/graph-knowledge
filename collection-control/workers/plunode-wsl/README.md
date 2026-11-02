@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-02 19:52:00 JST。
+確認: 2026-11-02 19:59:01 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -23,12 +23,14 @@ Issue確認結果:
 ```json
 {
   "collection-control/issue-sources/25.json": {
-    "status": "registered: issue-25-manga23-20261019",
-    "checkedAt": "2026-11-02T03:17:57+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-02T10:56:11+00:00"
   },
   "collection-control/issue-sources/16.json": {
-    "status": "registered: issue-16-adachi-three-20261025",
-    "checkedAt": "2026-11-02T02:49:48+00:00"
+    "status": "held",
+    "reason": "fatal: HttpRequestException encountered.\n   ���̗v���̑��M���ɃG���[���������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-02T10:55:53+00:00"
   },
   "collection-control/issue-sources/5.json": {
     "status": "registered: issue-5-dot-tezuka-adolf-20261025",
