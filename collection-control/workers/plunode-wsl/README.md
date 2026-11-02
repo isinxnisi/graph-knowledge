@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-02 23:01:08 JST。
+確認: 2026-11-02 23:05:53 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -43,8 +43,9 @@ Issue確認結果:
     "checkedAt": "2026-11-02T13:27:05+00:00"
   },
   "collection-control/issue-sources/47.json": {
-    "status": "registered: issue-47-dot-yukimura-two-20261027",
-    "checkedAt": "2026-11-02T13:49:05+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-02T14:02:19+00:00"
   },
   "collection-control/issue-sources/48.json": {
     "status": "registered: issue-48-dot-toriyama-three-20261027",
@@ -137,7 +138,7 @@ Issue確認結果:
 
 - [issue-25-utc-recovery-01](../../results/issue-25-utc-recovery-01/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-03）
 - [issue-25-utc-recovery-02](../../results/issue-25-utc-recovery-02/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-01）
-- [issue-25-utc-recovery-03](../../results/issue-25-utc-recovery-03/README.md): retry-wait（旧 issue-25-manga23-20261019-repair1-batch-04）
+- [issue-25-utc-recovery-03](../../results/issue-25-utc-recovery-03/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-04）
 - [issue-25-utc-recovery-04](../../results/issue-25-utc-recovery-04/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-05）
 - [issue-25-utc-recovery-05](../../results/issue-25-utc-recovery-05/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-06）
 - [issue-25-utc-recovery-06](../../results/issue-25-utc-recovery-06/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-07）
