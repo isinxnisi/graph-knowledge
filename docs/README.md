@@ -1,3 +1,4 @@
+- U3のTOP調整（2026-11-02）：[既存デザイン・配置順・初期HTML読取](verification/KNOWLEDGE_EXPLORER_U3_TOP_20261102.md)。既存「ほかの対象から探す」を保持し、テーマ検索も既存の一覧表現を共有する。
 - U3の最新実装（2026-11-02）：[既存TOP・検索モーダルへのテーマ統合](verification/KNOWLEDGE_EXPLORER_U3_DISCOVERY_20261102.md)。紹介テーマは横送り、新着一覧、検索「テーマから」に名前・説明／種類／並び順を追加。関係図・年表を開く前に区別できる。既存Explorer本体を維持し、Themeを中央で読んで元の探索へ戻る。独立3276のみ、会員Capsuleの新断面はU4。
 - U3契約：[中央Graph・固定版・再開](design/KNOWLEDGE_EXPLORER_U3.md)。以前の[確認記録](verification/KNOWLEDGE_EXPLORER_U3_20261102.md)／[一体枠・境界調整](verification/KNOWLEDGE_EXPLORER_U3_SPLIT_20261102.md)は当時の実装・検証として残す。
 

@@ -1,5 +1,7 @@
 # 本運用統合の実装引継ぎ
 
+TOPの配置・テーマ一覧の既存デザインへの統一・初期HTML読取の追補は[U3 TOP調整](../verification/KNOWLEDGE_EXPLORER_U3_TOP_20261102.md)を参照する。
+
 最新の実source統合・TOP紹介／新着・検索tab・種類表示は [U3テーマ導線](../verification/KNOWLEDGE_EXPLORER_U3_DISCOVERY_20261102.md) を優先する。既存Explorerを別shellで置換していた状態から、実TOP・検索モーダル・Graph・詳細へ接続し直した。年表の枠・境界の経緯は [U3 一体枠](../verification/KNOWLEDGE_EXPLORER_U3_SPLIT_20261102.md) を参照。
 
 2026-11-02。[統合計画](PLUNODE_PRODUCTION_INTEGRATION.md)のU1/U2に続き、通常探索・テーマ・年表のU3を独立branch／3276へ接続した。次担当は[U1契約](KNOWLEDGE_FOUNDATION_U1.md)、[U2契約](KNOWLEDGE_PUBLIC_READ_U2.md)、[U3の表示・固定版・再開契約](KNOWLEDGE_EXPLORER_U3.md)、[U3の確認結果と配置記録](../verification/KNOWLEDGE_EXPLORER_U3_20261102.md)を先に読む。下のU1依頼文は着手時の記録であり、同じ実装をやり直さない。

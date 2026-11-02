@@ -1,9 +1,15 @@
 {
   "completed": true,
-  "checkedAt": "2026-11-02T12:53:04.017224+00:00",
+  "checkedAt": "2026-11-02T13:52:51.313222+00:00",
   "base": "http://localhost:3276",
-  "buildId": "XIpDUEnaZTa2Es7sjBtP6",
+  "buildId": "95582cvRlCOD54b3L_zW0",
   "checks": [
+    "TOP HTML localhost:3276: HTTP 200",
+    "initial HTML retains PLUTO, featured, other subjects, new themes, recent knowledge in requested order",
+    "initial HTML includes three other subject entries",
+    "initial HTML contains themes before client fetch",
+    "TOP HTML untrusted.invalid: HTTP 200",
+    "foreign Host cannot read initial Theme HTML",
     "/api/knowledge/public?mode=themes: HTTP 200",
     "/api/knowledge/public?mode=themes: no-store",
     "/api/knowledge/public?mode=themes: noindex",
@@ -55,7 +61,7 @@
     "/api/knowledge/public?mode=themes&kind=invalid: no-store",
     "/api/knowledge/public?mode=themes&kind=invalid: noindex"
   ],
-  "requests": 12,
+  "requests": 14,
   "writes": 0,
   "dataset": {
     "dataset": "public-kg",
