@@ -40,9 +40,11 @@ afterEach(()=>{cleanup();vi.restoreAllMocks();});
 it("waits for identity resolution and saves a newly created graph in the authenticated account",async()=>{
   const initial=capsule();setup((_path,options)=>Promise.resolve({capsule:member({...initial,...options.body!.content}),replayed:false}));
   const view=render(<CapsuleWorkspace initial={initial} isNew/>);
+  const surface=screen.getByRole("dialog",{name:"Capsule"});expect(within(surface).getByRole("status").textContent).toBe("Checking the destination account…");
   const early=screen.queryByRole("button",{name:"Save draft"});expect(!early||(early as HTMLButtonElement).disabled).toBe(true);expect(writes()).toHaveLength(0);
   authenticated();view.rerender(<CapsuleWorkspace initial={initial} isNew/>);
   await waitFor(()=>expect((screen.getByRole("button",{name:"Save draft"}) as HTMLButtonElement).disabled).toBe(false));save();
+  expect(screen.getByRole("dialog",{name:"Capsule"})).toBe(surface);
   await waitFor(()=>expect(writes()).toHaveLength(1));expect(writes()[0][2].user).toBe(a.id);expect(writes()[0][2].method).toBe("POST");expect(mocks.browser).not.toHaveBeenCalled();
 });
 it("accepts the same saved content when PostgreSQL reorders layout object keys",async()=>{
@@ -227,4 +229,16 @@ it("keeps saved-date ordering despite an older Capsule's recent read metadata",a
  setup(()=>Promise.resolve({capsules:[older,newer]}));render(<MyCapsules dataset="demo" onClose={()=>{}}/>);
  await screen.findByRole('heading',{name:'Newer save'});
  expect(screen.getAllByRole('heading',{level:3}).map(e=>e.textContent)).toEqual(['Newer save','Older save']);
+});
+
+it("shows an identity error and explicit browser choice inside the same modal as the new Capsule",async()=>{
+  const initial=capsule(),onClose=vi.fn();
+  const view=render(<CapsuleWorkspace initial={initial} isNew onClose={onClose}/>);
+  const surface=screen.getByRole('dialog',{name:'Capsule'});
+  mocks.identity={...mocks.identity,error:true};view.rerender(<CapsuleWorkspace initial={initial} isNew onClose={onClose}/>);
+  expect(within(surface).getByRole('alert').textContent).toBe('Could not verify the destination account.');
+  expect(screen.queryByTestId('canvas')).toBeNull();expect(writes()).toHaveLength(0);expect(mocks.browser).not.toHaveBeenCalled();
+  fireEvent.click(within(surface).getByRole('button',{name:'Continue with browser storage'}));
+  expect(screen.getByRole('dialog',{name:'Capsule'})).toBe(surface);
+  expect(within(surface).getByTestId('canvas')).toBeTruthy();expect(within(surface).getByText('This browser')).toBeTruthy();expect(onClose).not.toHaveBeenCalled();
 });

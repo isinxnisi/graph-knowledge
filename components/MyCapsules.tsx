@@ -129,10 +129,15 @@ export function CapsuleWorkspace({ initial, member, ownerId, isNew = false, star
     catch { throw Error(t("ブラウザに保存できませんでした。容量や別タブの更新を確認してください。入力は残っています。", "Could not save in this browser. Check storage capacity or changes in another tab. Your draft is retained.")); }
     setBase(next); return next;
   }
-  if (owner === undefined) return <section className={css.library}><p role="status">{t("保存先のアカウントを確認しています…", "Checking the destination account…")}</p><button onClick={() => void refreshMemberIdentity(true).catch(() => {})}>{t("再確認", "Retry")}</button>{!member && identity.error && <button onClick={() => setOwner(null)}>{t("ブラウザ保存で続ける", "Continue with browser storage")}</button>}<button onClick={onClose}>{t("閉じる", "Close")}</button></section>;
-  if (!ready) return <section className={css.library}><p role={error ? "alert" : "status"}>{error ?? t("Capsuleを開いています…", "Opening Capsule…")}</p>{error && <button onClick={() => { setError(null); setAttempt(v => v + 1); }}>{t("再試行", "Retry")}</button>}<button onClick={onClose}>{t("閉じる", "Close")}</button></section>;
-  return <CapsuleSurface onClose={onClose}><CapsuleStudio capsule={ready} isNew={isNew} startEditing={startEditing} onClose={onClose} onSave={save} locked={locked} capacity={capacity} commentDraft={commentDraft} destination={owner ? t("アカウント", "Account") : t("このブラウザ", "This browser")}
-    sharing={server && owner ? <CapsuleShareControls key={`${server.id}:${server.revision}`} capsule={server} userId={owner} disabled={locked} draftCache={commentDraft} onUnauthorized={() => void refreshMemberIdentity(true).catch(() => {})} /> : undefined} /></CapsuleSurface>;
+  return <CapsuleSurface onClose={onClose}>{owner === undefined ? <section className={`${css.library} ${css.opening}`}>
+    <h2>{initial.title}</h2>
+    <p role={identity.error ? "alert" : "status"}>{identity.error ? t("保存先のアカウントを確認できませんでした。", "Could not verify the destination account.") : t("保存先のアカウントを確認しています…", "Checking the destination account…")}</p>
+    <div className={css.actions}><button onClick={() => void refreshMemberIdentity(true).catch(() => {})}>{t("再確認", "Retry")}</button>{!member && identity.error && <button onClick={() => setOwner(null)}>{t("ブラウザ保存で続ける", "Continue with browser storage")}</button>}<button onClick={onClose}>{t("閉じる", "Close")}</button></div>
+  </section> : !ready ? <section className={`${css.library} ${css.opening}`}>
+    <h2>{initial.title}</h2><p role={error ? "alert" : "status"}>{error ?? t("Capsuleを開いています…", "Opening Capsule…")}</p>
+    <div className={css.actions}>{error && <button onClick={() => { setError(null); setAttempt(v => v + 1); }}>{t("再試行", "Retry")}</button>}<button onClick={onClose}>{t("閉じる", "Close")}</button></div>
+  </section> : <CapsuleStudio capsule={ready} isNew={isNew} startEditing={startEditing} onClose={onClose} onSave={save} locked={locked} capacity={capacity} commentDraft={commentDraft} destination={owner ? t("アカウント", "Account") : t("このブラウザ", "This browser")}
+    sharing={server && owner ? <CapsuleShareControls key={`${server.id}:${server.revision}`} capsule={server} userId={owner} disabled={locked} draftCache={commentDraft} onUnauthorized={() => void refreshMemberIdentity(true).catch(() => {})} /> : undefined} />}</CapsuleSurface>;
 }
 
 type Item = { key: string; title: string; updatedAt: string; member?: MemberCapsuleSummary; browser?: LocalCapsule; metadata: CapsuleMetadata };

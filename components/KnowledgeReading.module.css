@@ -26,7 +26,7 @@
 .recordStrip { display: flex; gap: 6px; flex-wrap: wrap; padding-top: 12px; }
 .recordStrip button { font-size: 12px; }
 .themeHeader { display: flex; flex-wrap: nowrap; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; position: sticky; top: 0; z-index: 14; background: var(--color-panel); padding: 2px 0; border-bottom: 1px solid var(--color-border); }
-.themeHeader h2 { flex: 1; min-width: 0; order: 1; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.6; margin: 0; }
+.workspace .themeHeader h2 { flex: 1; min-width: 0; order: 1; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.6; margin: 0; }
 .themeHeader > span { order: 2; white-space: nowrap; }
 .workspace .themeInfo { order: 3; display: inline-flex; align-items: center; justify-content: center; padding: 5px; border: 0; background: transparent; }
 .workspace .return { display: inline-flex; align-items: center; gap: 5px; padding: 3px 0; border: 0; background: none; font-size: 12px; white-space: nowrap; }

@@ -96,3 +96,5 @@
 .graphPane{height:100%;min-width:0;min-height:0;position:relative}
 .graphPane[hidden]{display:none}
 .knowledgeTimeline{height:100%;overflow:auto;min-width:0;overscroll-behavior-y:auto}
+
+.opening{justify-content:center;align-items:center;gap:18px;text-align:center;overflow:auto}.opening h2{margin:0;font-size:18px}.opening .actions{justify-content:center}
