@@ -26,31 +26,26 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-02T02:58:57.012289+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-02T02:04:39.676869+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-02T06:00:00+00:00",
-    "windowEndAt": "2026-11-02T09:00:00+00:00"
+    "eligibleAt": "2026-11-02T02:04:39.676869+00:00",
+    "windowEndAt": "2026-11-02T03:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-59-dot-kubo-two-20261028",
-    "startedAt": "2026-11-02T01:53:57.012291+00:00",
-    "limitAt": "2026-11-02T02:48:57.012289+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-66-dot-togashi-two-20261029-batch-01",
-    "endedAt": "2026-11-02T01:43:13.860225+00:00"
+    "requestId": "issue-59-dot-kubo-two-20261028",
+    "endedAt": "2026-11-02T01:54:39.676873+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 8,
     "waiting-control": 11,
-    "completed": 36,
-    "awaiting-recovery": 6,
-    "retry-wait": 1
+    "completed": 37,
+    "awaiting-recovery": 6
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -197,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-02T01:54:04.456171+00:00"
+  "checkedAt": "2026-11-02T01:56:06.263758+00:00"
 }
