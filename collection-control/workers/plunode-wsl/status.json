@@ -26,23 +26,19 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-02T20:19:59.298322+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-02T19:26:24.522575+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-02T20:19:59.298322+00:00",
+    "eligibleAt": "2026-11-02T19:26:24.522575+00:00",
     "windowEndAt": "2026-11-02T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-60-dot-ichikawa-houseki-20261028",
-    "startedAt": "2026-11-02T19:14:59.298327+00:00",
-    "limitAt": "2026-11-02T20:09:59.298322+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1-batch-02",
-    "endedAt": "2026-11-02T19:04:49.473073+00:00"
+    "requestId": "issue-60-dot-ichikawa-houseki-20261028",
+    "endedAt": "2026-11-02T19:16:24.522578+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
@@ -50,7 +46,7 @@
     "blocked": 1,
     "completed": 8,
     "retry-wait": 2,
-    "running": 1
+    "awaiting-recovery": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -197,5 +193,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-02T19:15:43.108189+00:00"
+  "checkedAt": "2026-11-02T19:17:34.817475+00:00"
 }
