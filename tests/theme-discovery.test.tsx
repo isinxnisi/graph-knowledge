@@ -27,7 +27,8 @@ it("TOPの初期HTML用データはAPIの応答を待たず、紹介と新着に
  expect(screen.getByRole("heading",{name:"新着テーマ"})).toBeTruthy();
  expect(screen.getByText("2026-11-02")).toBeTruthy();
  expect(screen.getByRole("list",{name:/紹介テーマ/}).children).toHaveLength(2);
- expect(fetcher).toHaveBeenCalledTimes(1);
+ expect(fetcher).not.toHaveBeenCalled();
+ await act(()=>vi.advanceTimersByTimeAsync(30000));expect(fetcher).toHaveBeenCalledTimes(1);
 });
 it("検索条件を変えた瞬間から旧結果を操作不可にし、遅い旧応答で上書きしない",async()=>{
  let release!:(v:ReturnType<typeof reply>)=>void;
@@ -52,4 +53,11 @@ it("表示内容・並び順と名前を同じ検索へ渡し、解除できる"
  expect(Object.fromEntries(requests.at(-1)!)).toMatchObject({q:"Webb",kind:"timeline",order:"name"});
  fireEvent.click(screen.getByRole("button",{name:"条件をクリア"}));await tick();
  expect(Object.fromEntries(requests.at(-1)!)).toMatchObject({kind:"all",order:"newest"});
+});
+
+it("TOPの共有リクエスト失敗は見出し付きで一度だけ案内し、再試行で両方を回復する",async()=>{
+ let recover=false;vi.stubGlobal('fetch',vi.fn(async()=>{if(!recover)throw Error('unavailable');return reply({featured:[graph],recent:[timeline],total:2});}));
+ function Home(){const state=useHomeThemes(null);return <><HomeThemes part="featured" state={state} onOpen={vi.fn()} onBrowse={vi.fn()}/><HomeThemes part="recent" state={state} onOpen={vi.fn()} onBrowse={vi.fn()}/></>;}
+ render(<Home/>);await act(async()=>{});expect(screen.getByRole('heading',{name:'紹介テーマ'})).toBeTruthy();expect(screen.getAllByText('テーマを読み込めませんでした。')).toHaveLength(1);expect(screen.getAllByRole('button',{name:'再試行'})).toHaveLength(1);
+ recover=true;fireEvent.click(screen.getByRole('button',{name:'再試行'}));await act(async()=>{});expect(screen.getByRole('heading',{name:'新着テーマ'})).toBeTruthy();expect(screen.getByText(graph.title)).toBeTruthy();expect(screen.queryByText('テーマを読み込めませんでした。')).toBeNull();
 });

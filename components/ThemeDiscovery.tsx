@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { readKnowledge } from "../lib/client/use-knowledge-workspace";
 import { knowledgeThemeTypeLabel, type KnowledgeThemeSummary, type KnowledgeThemePage, type KnowledgeThemeHome } from "../lib/domain/knowledge-theme-reader";
 import { useUiLocale } from "../lib/client/ui-locale";
@@ -42,26 +42,33 @@ export function ThemeLink({ theme, onOpen, appearance = "row", showDescription =
 export function useHomeThemes(initialData?: KnowledgeThemeHome | null, enabled = true) {
   const [data, setData] = useState<KnowledgeThemeHome | null>(initialData ?? null);
   const [failed, setFailed] = useState(initialData === null), [attempt, setAttempt] = useState(0);
+  const [busy,setBusy]=useState(false), first=useRef(true);
   useEffect(() => {
     if (!enabled) return;
     let live = true;
-    const read = () => readKnowledge<KnowledgeThemeHome>("theme-home")
+    const read = () => { setBusy(true); return readKnowledge<KnowledgeThemeHome>("theme-home")
       .then(value => { if (live) { setData(value); setFailed(false); } })
-      .catch(() => { if (live) { setData(null); setFailed(true); } });
-    // Reauthorise on returning Home; the server data is already visible during this refresh.
-    void read();
+      .catch(() => { if (live) { setData(null); setFailed(true); } }).finally(()=>{if(live)setBusy(false);}); };
+    // The initial HTML was just authorised. Recheck on later returns, retry and polling.
+    if(!first.current||!initialData)void read();
+    first.current=false;
     const timer = setInterval(() => void read(), 30000);
     return () => { live = false; clearInterval(timer); };
+    // initialData belongs to the server render; returning Home explicitly rechecks it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled, attempt]);
-  return { data, failed, retry: () => setAttempt(value => value + 1) };
+  return { data, failed, busy, retry: () => setAttempt(value => value + 1) };
 }
 export function HomeThemes({ state, onOpen, onBrowse, part = "both" }: {
   state: ReturnType<typeof useHomeThemes>; onOpen: OpenTheme; onBrowse: () => void; part?: "featured" | "recent" | "both";
 }) {
   const { locale } = useUiLocale(), en = locale === "en";
-  const { data, failed, retry } = state;
-  if (failed) return <section className={css.home}><p role="status">{en ? "Themes could not be loaded." : "テーマを取得できませんでした。"} <button onClick={retry}>{en ? "Retry" : "再取得"}</button></p></section>;
-  if (!data) return <p className={css.loading} role="status">{en ? "Loading themes…" : "テーマを読み込んでいます…"}</p>;
+  const { data, failed, busy, retry } = state;
+  if (failed || !data) {
+    // Both slots share one request. Keep one contextual message and one retry.
+    if(part==="recent")return null;
+    return <div className={css.home}><section className={home.fields} aria-labelledby="home-theme-featured"><div className={css.heading}><h3 id="home-theme-featured">{en?"Featured themes":"紹介テーマ"}</h3></div><div className={css.statusLine} role="status"><span>{busy?en?"Loading themes…":"テーマを読み込んでいます…":en?"Themes could not be loaded.":"テーマを読み込めませんでした。"}</span>{failed&&<button disabled={busy} onClick={retry}><Icon name="refresh"/>{en?"Retry":"再試行"}</button>}</div></section></div>;
+  }
   if (!data.total) return null;
   return <div className={css.home}>
     {part !== "recent" && !!data.featured.length && <section className={home.fields} aria-labelledby="home-theme-featured"><div className={css.heading}><h3 id="home-theme-featured">{en ? "Featured themes" : "紹介テーマ"}</h3><button onClick={onBrowse}>{en ? "Explore themes" : "テーマを探す"}<Icon name="arrow" /></button></div><div className={css.featured} role="list" aria-label={en ? "Featured themes · scroll horizontally" : "紹介テーマ・横にスクロールできます"}>{data.featured.map(theme=><div key={theme.id} role="listitem"><ThemeLink theme={theme} onOpen={onOpen} appearance="featured" showDescription/></div>)}</div></section>}

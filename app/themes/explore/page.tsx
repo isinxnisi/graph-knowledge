@@ -1,4 +1,4 @@
+import { themePageGuard } from "../../../lib/server/theme-page-guard";
 import KnowledgeExplorer from "../../../components/KnowledgeExplorer";
-import { themeGuard } from "../../../lib/server/theme-workbench";
 export const dynamic = "force-dynamic";
-export default function Page() { themeGuard(); return <KnowledgeExplorer />; }
+export default function Page() { themePageGuard(); return <KnowledgeExplorer />; }

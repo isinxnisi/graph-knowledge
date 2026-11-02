@@ -1,3 +1,4 @@
+import { themePageGuard } from "../../../lib/server/theme-page-guard";
 import { notFound } from "next/navigation";
 import TemporalPatternLab from "../../../components/TemporalPatternLab";
 export const dynamic = "force-dynamic";
@@ -12,5 +13,6 @@ export default async function Page({
   )
     notFound();
   const query = await searchParams;
+  themePageGuard();
   return <TemporalPatternLab caseId={query.case ?? "precision-mixed"} />;
 }

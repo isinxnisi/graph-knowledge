@@ -16,7 +16,7 @@ export async function knowledgePublicationPreview(publisher=false) {
   driver ??= neo4j.driver(config.neo,neo4j.auth.basic("neo4j",config.password),{maxConnectionPoolSize:3,connectionAcquisitionTimeout:10000});
   initialized ??= (config.beta ? verifyKnowledgeReadSchema(pool) : ensureKnowledgePublicationSchema(pool)).then(()=>undefined).catch(error=>{initialized=undefined;throw error;});
   await initialized;
-  return createKnowledgePublicationService(pool, driver);
+  return createKnowledgePublicationService(pool, driver, {}, {prepareSchema:()=>initialized!});
 }
 export async function closeKnowledgePublicationPreview() {
   await driver?.close(); await pool?.end(); driver = undefined; pool = undefined; initialized = undefined;

@@ -92,9 +92,9 @@ async function capturePublication(c:PoolClient) {
 }
 
 type PublicationHooks={afterStage?:()=>Promise<void>;beforeActivate?:()=>Promise<void>};
-export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:PublicationHooks={}) {
+export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:PublicationHooks={},options:{prepareSchema?:()=>Promise<unknown>}={}) {
   let initialized:Promise<unknown>|undefined;
-  const ready=()=>initialized??=ensureKnowledgePublicationSchema(pool).catch(e=>{initialized=undefined;throw e;});
+  const ready=()=>initialized??=(options.prepareSchema?.()??ensureKnowledgePublicationSchema(pool)).catch(e=>{initialized=undefined;throw e;});
   async function read<T>(fn:(c:PoolClient)=>Promise<T>):Promise<T>{await ready();const c=await pool.connect();try{await c.query("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY");const value=await fn(c);await c.query("COMMIT");return value;}catch(e){await c.query("ROLLBACK");throw e;}finally{c.release();}}
   async function generation(c:PoolClient,requested?:string){
     if(requested)generationSchema.parse(requested);

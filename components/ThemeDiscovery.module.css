@@ -21,3 +21,5 @@
  .filters .mobileToggle { display: inline-flex; align-items: center; gap: 5px; }
  .filters:not([data-open]) .filterBody { display: none; }
 }
+
+.statusLine{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--color-muted);font-size:12px}.home .statusLine button{display:inline-flex;align-items:center;gap:5px;border:0;background:transparent;padding:4px 0;min-height:32px;font-size:12px}.statusLine :global(.ui-icon){width:14px;height:14px}
