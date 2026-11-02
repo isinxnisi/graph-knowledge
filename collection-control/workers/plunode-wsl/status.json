@@ -26,28 +26,24 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-02T21:04:30.699543+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-02T20:09:51.793480+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-02T21:04:30.699543+00:00",
+    "eligibleAt": "2026-11-02T20:09:51.793480+00:00",
     "windowEndAt": "2026-11-02T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1-batch-09",
-    "startedAt": "2026-11-02T19:59:30.699545+00:00",
-    "limitAt": "2026-11-02T20:54:30.699543+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-16-adachi-three-20261025",
-    "endedAt": "2026-11-02T19:49:22.039771+00:00"
+    "requestId": "issue-25-manga23-20261019-repair1-batch-09",
+    "endedAt": "2026-11-02T19:59:51.793483+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
-    "waiting-control": 49,
-    "blocked": 2,
+    "waiting-control": 48,
+    "blocked": 3,
     "completed": 10,
     "awaiting-recovery": 1
   },
@@ -196,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-02T19:59:37.942257+00:00"
+  "checkedAt": "2026-11-02T20:00:44.540823+00:00"
 }
