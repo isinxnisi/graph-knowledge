@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-01T21:47:19.586996+00:00",
-  "phase": "outside-window",
+  "nextStartAt": "2026-11-02T01:05:47.725780+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
-    "reason": "outside-window",
-    "eligibleAt": "2026-11-02T00:00:00+00:00",
+    "reason": "interval",
+    "eligibleAt": "2026-11-02T01:05:47.725780+00:00",
     "windowEndAt": "2026-11-02T03:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-51-dot-araki-rohan-20261027",
+    "startedAt": "2026-11-02T00:00:47.725783+00:00",
+    "limitAt": "2026-11-02T00:55:47.725780+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-25-utc-recovery-08",
     "endedAt": "2026-11-01T21:37:19.586998+00:00"
@@ -192,5 +196,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-01T23:49:53.546239+00:00"
+  "checkedAt": "2026-11-02T00:00:54.862659+00:00"
 }
