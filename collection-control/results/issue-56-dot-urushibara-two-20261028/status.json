@@ -66,12 +66,12 @@
   },
   "requestSha256": "79a6f50ef6ec42c5e87c9337d9949db9659e05aa3970735fbdb2fc86018f0f07",
   "kind": "issue-prepare",
-  "phase": "retry-wait",
-  "generation": 2232,
+  "phase": "waiting-control",
+  "generation": 2233,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-02T02:21:11+00:00",
+  "updatedAt": "2026-11-02T02:26:18+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -196,5 +196,5 @@
   },
   "executionComplete": true,
   "retryAt": 1793586206.5528388,
-  "message": "Remote end closed connection without response"
+  "message": "Execution gate: interval"
 }
