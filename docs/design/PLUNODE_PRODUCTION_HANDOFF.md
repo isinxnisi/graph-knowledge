@@ -1,5 +1,7 @@
 # 本運用統合の実装引継ぎ
 
+2026-11-03：U4の時期フォーム・通常Graphからの任意年表・実会員保存をmain／3200／HTTPS βへ段階反映。[最新の配置・実Google操作・backup・残件](../verification/KNOWLEDGE_CAPSULE_U4_BETA_20261103.md)を優先する。3276の全DBや仮想例はβへ移さず、実テーマ3件の別知識領域を使用する。新形式共有はまだ無効。次は訂正の明示取込と共有／停止／年表OGPで、U4全体の完了ではない。以下の未統合という記述は各工程当時の境界。
+
 2026-11-03：U4に着手。[新断面・編集連動・段階β統合の契約](KNOWLEDGE_CAPSULE_U4.md)を追加した。U4全体の完了とは扱わず、途中の完成範囲と残件は[保存・編集の中間検証](../verification/KNOWLEDGE_CAPSULE_U4_SAVE_20261103.md)を優先する。
 
 TOPの配置・テーマ一覧の既存デザインへの統一・初期HTML読取の追補は[U3 TOP調整](../verification/KNOWLEDGE_EXPLORER_U3_TOP_20261102.md)を参照する。

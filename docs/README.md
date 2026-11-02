@@ -282,3 +282,5 @@ Phase 08：任意のEntity関係俯瞰、明示起点切替、直前一件復帰
 
 - [実装・互換契約](research/publication-pipeline-bundle2-20261028/README.md)
 - [main／3200／beta／本番Web／operator／固定Workerの完了・実検証・復旧資材](research/publication-pipeline-bundle2-20261028/rollout/COMPLETED.md)
+
+- [U4：年表付きCapsuleの段階β・実会員保存](verification/KNOWLEDGE_CAPSULE_U4_BETA_20261103.md)：2026-11-03の現配置。main／3200／HTTPS β、時期フォーム・任意年表・実Google保存。U4共有／訂正取込は途中。[β再開runbook](runbooks/KNOWLEDGE_BETA.md)。
