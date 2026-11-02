@@ -26,31 +26,26 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-02T08:52:34.716714+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-02T07:58:18.699720+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-02T18:00:00+00:00",
-    "windowEndAt": "2026-11-02T22:00:00+00:00"
+    "eligibleAt": "2026-11-02T07:58:18.699720+00:00",
+    "windowEndAt": "2026-11-02T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-16-adachi-three-20261025",
-    "startedAt": "2026-11-02T07:47:34.716717+00:00",
-    "limitAt": "2026-11-02T08:42:34.716714+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-42-matsumoto-recovery-20261026",
-    "endedAt": "2026-11-02T07:36:19.277580+00:00"
+    "requestId": "issue-16-adachi-three-20261025",
+    "endedAt": "2026-11-02T07:48:18.699722+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "waiting-control": 31,
     "blocked": 5,
-    "completed": 23,
-    "awaiting-recovery": 2,
-    "retry-wait": 1
+    "completed": 24,
+    "awaiting-recovery": 2
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -197,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-02T07:47:42.260931+00:00"
+  "checkedAt": "2026-11-02T07:50:20.327405+00:00"
 }
