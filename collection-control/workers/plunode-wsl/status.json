@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-02T19:47:45.135581+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-02T20:53:38.675742+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-02T19:47:45.135581+00:00",
+    "eligibleAt": "2026-11-02T20:53:38.675742+00:00",
     "windowEndAt": "2026-11-02T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-16-adachi-three-20261025",
+    "startedAt": "2026-11-02T19:48:38.675746+00:00",
+    "limitAt": "2026-11-02T20:43:38.675742+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-57-dot-oshima-two-20261028-batch-01",
     "endedAt": "2026-11-02T19:37:45.135582+00:00"
@@ -192,5 +196,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-02T19:37:54.521496+00:00"
+  "checkedAt": "2026-11-02T19:48:45.992604+00:00"
 }
