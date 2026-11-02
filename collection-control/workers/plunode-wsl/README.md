@@ -1,16 +1,18 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-02 15:43:29 JST。
+確認: 2026-11-02 15:48:40 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
-**ready**／停止モード: なし
+**interval**／停止モード: なし
 
 日本時間: 03:00〜07:00、09:00〜12:00、15:00〜18:00。ジョブ間10分休憩。
 
-次の開始候補: 開始可能
+次の開始候補: 2026-11-02 16:53:33 JST
 
 最後の操作SHA-256: 1cef6cdd4cb0e4eca8b60a3ae51c6b25a96271b01ffcac788f41f36a5439bf79
+
+処理中: issue-56-dot-urushibara-two-20261028
 
 ChatGPTは[未承認の操作雛形](control-template.json)を読み、運営者が明示した操作だけを controls/plunode-wsl/ID.json に新規登録する。
 
@@ -67,14 +69,12 @@ Issue確認結果:
     "checkedAt": "2026-11-01T14:08:21+00:00"
   },
   "collection-control/issue-sources/57.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-02T06:27:52+00:00"
+    "status": "registered: issue-57-dot-oshima-two-20261028",
+    "checkedAt": "2026-11-02T06:45:03+00:00"
   },
   "collection-control/issue-sources/58.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-    "checkedAt": "2026-11-02T06:28:19+00:00"
+    "status": "registered: issue-58-dot-takeuchi-two-20261028",
+    "checkedAt": "2026-11-02T06:45:05+00:00"
   },
   "collection-control/issue-sources/59.json": {
     "status": "registered: issue-59-dot-kubo-two-20261028",
@@ -97,9 +97,8 @@ Issue確認結果:
     "checkedAt": "2026-11-01T16:06:27+00:00"
   },
   "collection-control/issue-sources/65.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-    "checkedAt": "2026-11-02T06:29:25+00:00"
+    "status": "registered: issue-65-dot-inoue-three-20261029",
+    "checkedAt": "2026-11-02T06:45:15+00:00"
   },
   "collection-control/issue-sources/66.json": {
     "status": "registered: issue-66-dot-togashi-two-20261029",
