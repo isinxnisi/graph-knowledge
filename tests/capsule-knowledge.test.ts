@@ -8,7 +8,6 @@ import { removeCapsuleElements, capsuleHistory, recordCapsule, undoCapsule } fro
 import examples from "../docs/API_RESPONSE_EXAMPLES.json";
 import { captureCapsule } from "../lib/client/capsule-editor";
 import { emptyGraph } from "../lib/client/graph-state";
-import { relationLabel } from "../lib/client/format";
 import type { NeighborsResponse } from "../lib/domain/api";
 import { capsulePresentation } from "../lib/client/capsule-presentation";
 
@@ -93,7 +92,7 @@ it("時期の不正日付・逆転範囲・重複ID・添付なしを保存schem
 });
 
 it("既存KGの関係名が空の編集値でも具体的な役割・否定を年表情報で失わない",()=>{
- const page=examples.neighbors as NeighborsResponse,claim={...page.claims[0],polarity:'denied' as const};const graph={...emptyGraph(),nodes:Object.fromEntries(page.nodes.map(n=>[n.id,n])),claims:{[claim.id]:claim}};
+ const page=examples.neighbors as NeighborsResponse,claim={...page.claims[0],polarity:'denied' as const,contribution:{roleId:'AUTHORSHIP' as const,scope:null}};const graph={...emptyGraph(),nodes:Object.fromEntries(page.nodes.map(n=>[n.id,n])),claims:{[claim.id]:claim}};
  const value=captureCapsule(graph,null,'demo','既存KG');const doc=withCapsuleTimeline(value.document!);expect(doc.relations[0].label).toBe('');
- const p=capsuleKnowledgeProjection(doc)!;expect(p.records[0].content.relation).toBe(relationLabel(claim,'ja'));expect(p.records[0].content.polarity).toBe('denied');expect(p.records[0].content.times).toEqual([]);
+ const p=capsuleKnowledgeProjection(doc)!;expect(p.records[0].content.relation).toBe('著者（否定のみ）');expect(p.records[0].content.polarity).toBe('denied');expect(p.records[0].content.times).toEqual([]);
 });
