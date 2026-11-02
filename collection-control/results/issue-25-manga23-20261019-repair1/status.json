@@ -153,11 +153,11 @@
   "requestSha256": "03bec8fbdac351776eab61b2dc4b47c7c9a687094ed8bfca5873b90a2ea86b35",
   "kind": "issue-prepare",
   "phase": "retry-wait",
-  "generation": 13470,
+  "generation": 13471,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
-  "updatedAt": "2026-11-02T16:38:38+00:00",
+  "updatedAt": "2026-11-02T16:49:26+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -1102,5 +1102,5 @@
   },
   "executionComplete": true,
   "message": "fatal: unable to access 'https://github.com/isinxnisi/graph-knowledge.git/': Could not resolve host: github.com\n",
-  "retryAt": 1793637684.7605665
+  "retryAt": 1793638306.426259
 }
