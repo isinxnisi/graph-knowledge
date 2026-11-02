@@ -26,8 +26,8 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-02T22:20:00+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-02T21:48:40.584661+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
@@ -35,19 +35,15 @@
     "eligibleAt": "2026-11-03T00:00:00+00:00",
     "windowEndAt": "2026-11-03T03:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1-batch-04",
-    "startedAt": "2026-11-02T21:38:19.475228+00:00",
-    "limitAt": "2026-11-02T22:10:00+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-42-dot-matsumoto-three-20261026",
-    "endedAt": "2026-11-02T21:28:11.222454+00:00"
+    "requestId": "issue-25-manga23-20261019-repair1-batch-04",
+    "endedAt": "2026-11-02T21:38:40.584662+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
-    "blocked": 7,
-    "waiting-control": 40,
+    "blocked": 8,
+    "waiting-control": 39,
     "completed": 14,
     "awaiting-recovery": 1
   },
@@ -196,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-02T21:38:26.616031+00:00"
+  "checkedAt": "2026-11-02T21:39:38.482475+00:00"
 }
