@@ -149,12 +149,12 @@
   },
   "requestSha256": "ac202bb18150f55b7da1103ce43f2d684aa101e4d5d5107a892223bce4590039",
   "kind": "issue-prepare",
-  "phase": "blocked",
-  "generation": 13373,
+  "phase": "retry-wait",
+  "generation": 13439,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "c87051e0d15c903737d37f7c114bff0f17702ffa",
-  "updatedAt": "2026-11-02T07:58:29+00:00",
+  "updatedAt": "2026-11-02T12:07:08+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -296,6 +296,6 @@
     "generatedArtifacts": {}
   },
   "executionComplete": true,
-  "message": "Artifact escapes runtime",
-  "retryAt": 1793605008.1517844
+  "message": "<urlopen error [Errno 104] Connection reset by peer>",
+  "retryAt": 1793621377.833525
 }
