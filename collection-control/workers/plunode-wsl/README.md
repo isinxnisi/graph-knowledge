@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-02 10:43:16 JST。
+確認: 2026-11-02 10:45:56 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -111,9 +111,8 @@ Issue確認結果:
     "checkedAt": "2026-11-01T15:02:23+00:00"
   },
   "collection-control/issue-sources/69.json": {
-    "status": "held",
-    "reason": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1007)>",
-    "checkedAt": "2026-11-02T01:40:46+00:00"
+    "status": "registered: issue-69-dot-ishinomori-three-20261029",
+    "checkedAt": "2026-11-02T01:44:18+00:00"
   },
   "collection-control/issue-sources/70.json": {
     "status": "registered: issue-70-dot-fujikof-doraemon-20261029",

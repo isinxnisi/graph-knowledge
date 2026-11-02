@@ -137,9 +137,8 @@
       "checkedAt": "2026-11-01T15:02:23+00:00"
     },
     "collection-control/issue-sources/69.json": {
-      "status": "held",
-      "reason": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1007)>",
-      "checkedAt": "2026-11-02T01:40:46+00:00"
+      "status": "registered: issue-69-dot-ishinomori-three-20261029",
+      "checkedAt": "2026-11-02T01:44:18+00:00"
     },
     "collection-control/issue-sources/70.json": {
       "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
@@ -193,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-02T01:43:16.006582+00:00"
+  "checkedAt": "2026-11-02T01:45:56.091339+00:00"
 }
