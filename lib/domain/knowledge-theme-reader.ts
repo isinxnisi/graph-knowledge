@@ -25,6 +25,7 @@ export const knowledgeEntityQuerySchema = z.strictObject({
 });
 
 export type KnowledgeThemeSummary = KnowledgeThemePage["themes"][number];
+export type KnowledgeThemeHome = { featured: KnowledgeThemeSummary[]; recent: KnowledgeThemeSummary[]; total: number };
 export function knowledgeThemeKind(theme: KnowledgeThemeSummary) { return theme.hasTimeline ? "timeline" : theme.hasRelations === false ? "context" : "graph"; }
 export function knowledgeThemeTypeLabel(theme: KnowledgeThemeSummary, en = false) {
   return theme.hasTimeline ? theme.hasRelations ? en ? "Timeline · relation diagram" : "年表・関係図" : en ? "Timeline" : "年表" : theme.hasRelations === false ? en ? "Reading" : "解説" : en ? "Relation diagram" : "関係図";

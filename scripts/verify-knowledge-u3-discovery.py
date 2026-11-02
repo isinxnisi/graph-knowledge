@@ -2,6 +2,7 @@
 """Read-only acceptance of the actual Explorer and the U3 theme catalogue on 3276."""
 from pathlib import Path
 import argparse,json,urllib.request,urllib.error,urllib.parse,subprocess,hashlib
+from html.parser import HTMLParser
 from datetime import datetime,timezone
 ROOT=Path(__file__).resolve().parents[1]
 BASE='http://localhost:3276'
@@ -25,6 +26,26 @@ def main():
     check(path+': noindex','noindex' in response.headers.get('X-Robots-Tag',''))
    return json.load(response)
  def public(mode,**params):return read('/api/knowledge/public?'+urllib.parse.urlencode({'mode':mode,**params}))
+ class HomeHTML(HTMLParser):
+  def __init__(self):super().__init__();self.order=[];self.links=[];self.fields=[]
+  def handle_starttag(self,tag,attrs):
+   attrs=dict(attrs)
+   if attrs.get('data-testid')=='discovery-featured':self.order.append('pluto')
+   if tag=='h3' and attrs.get('id') in ['home-theme-featured','discovery-fields-title','home-theme-recent','discovery-recent-title']:self.order.append(attrs['id'])
+   if tag=='a':self.links.append(attrs.get('href',''))
+   if attrs.get('data-testid')=='discovery-field':self.fields.append(attrs.get('href',''))
+ def html(host='localhost:3276'):
+  nonlocal requests
+  requests+=1
+  with urllib.request.urlopen(urllib.request.Request(BASE+'/',headers={'Host':host}),timeout=30) as response:
+   check('TOP HTML '+host+': HTTP 200',response.status==200)
+   result=HomeHTML();result.feed(response.read().decode());return result
+ top=html()
+ check('initial HTML retains PLUTO, featured, other subjects, new themes, recent knowledge in requested order',top.order==['pluto','home-theme-featured','discovery-fields-title','home-theme-recent','discovery-recent-title'])
+ check('initial HTML includes three other subject entries',set(top.fields)=={'/explore/29e9caea-6c44-4c1f-9abc-f4350003ca3b','/explore/8e322435-4318-4ad0-835b-3f71d2537421','/explore/247d3efb-6172-4a3e-aa09-dad69914b47c'})
+ check('initial HTML contains themes before client fetch',any('ktheme=' in href for href in top.links))
+ blocked=html('untrusted.invalid')
+ check('foreign Host cannot read initial Theme HTML',not any('ktheme=' in href for href in blocked.links) and 'home-theme-featured' not in blocked.order and 'home-theme-recent' not in blocked.order)
  page=public('themes')['themes'];by_id={t['id']:t for t in page}
  home=public('theme-home')
  configured=json.loads((ROOT/'data/theme-discovery.json').read_text())['featuredThemeIds']

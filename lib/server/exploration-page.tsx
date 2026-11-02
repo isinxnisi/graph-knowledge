@@ -8,6 +8,7 @@ import { explorationMetadata, publicationPolicy } from "./publication";
 import { publicSubject } from "./public-discovery";
 import { notFound } from "next/navigation";
 import { discoveryHomeData } from "./discovery-home";
+import { initialKnowledgeThemeHome } from "./knowledge-theme-home";
 export async function discoveryMetadata(locale: PublicLocale, stateful: boolean, id?: string) {
   const text = discoveryLabels(locale), subject = id ? await publicSubject(id) : null;
   const path = localizedPublicHref(id ? `/explore/${id}` : "/", locale);
@@ -20,6 +21,11 @@ export async function ExplorationPage({ locale, id }: { locale: PublicLocale; id
   const dataset = datasetMode(process.env.GRAPH_DATASET), subject = dataset === "public-kg" && id ? await publicSubject(id) : undefined;
   if (dataset === "public-kg" && id && !subject) notFound();
   const overview = subject ? <PublicDiscovery locale={locale} subject={subject} /> : undefined;
-  const home = dataset === "public-kg" && !id ? await discoveryHomeData() : undefined;
-  return <Explorer knowledgeEnabled={knowledgeEnabled} dataset={dataset} initialRoot={id} services={await publicationPolicy()} publicOverview={overview} discoveryHome={home} />;
+  const isHome = dataset === "public-kg" && !id;
+  const [home, initialThemes, services] = await Promise.all([
+    isHome ? discoveryHomeData() : undefined,
+    isHome && knowledgeEnabled ? initialKnowledgeThemeHome() : undefined,
+    publicationPolicy(),
+  ]);
+  return <Explorer knowledgeEnabled={knowledgeEnabled} dataset={dataset} initialRoot={id} services={services} publicOverview={overview} discoveryHome={home} initialThemes={initialThemes} />;
 }

@@ -84,9 +84,9 @@
 @keyframes finding { from { transform: scaleX(.35); } to { transform: scaleX(1); } }
 .results { list-style: none; padding: 0; margin: 0; }
 .results > li { margin: 0; border-bottom: 1px solid var(--color-border); }
-.results > li > button { width: 100%; display: grid; grid-template-columns: 18px minmax(0, 1fr) 12px; align-items: center; gap: 10px; padding: 10px 4px; border: 0; border-radius: 4px; color: var(--color-text); background: transparent; text-align: left; }
-.results button > svg { width: 16px; height: 16px; color: var(--color-muted); margin: 0; }
-.results button > svg:last-child { width: 12px; height: 12px; transform: rotate(-90deg); }
+.results > li > button, .resultRow { width: 100%; display: grid; grid-template-columns: 18px minmax(0, 1fr) 12px; align-items: center; gap: 10px; padding: 10px 4px; border: 0; border-radius: 4px; color: var(--color-text); background: transparent; text-align: left; }
+.results button > svg, .resultRow > svg { width: 16px; height: 16px; color: var(--color-muted); margin: 0; }
+.results button > svg:last-child, .resultRow > svg:last-child { width: 12px; height: 12px; transform: rotate(-90deg); }
 .identity { display: grid; gap: 2px; min-width: 0; }
 .name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; overflow-wrap: anywhere; }
 .name strong { font-size: 13px; font-weight: 600; color: var(--color-accent); }
@@ -143,3 +143,7 @@ button.entry { display: inline-flex; align-items: center; gap: 6px; min-height: 
   .theme, .cut, .cut > svg, .refinements > summary::after, .resultEntrance { transition: none !important; }
   .themeOrbit, .cutChoices, .selection, .resultEntrance, .progressLine { animation: none !important; }
 }
+
+/* Theme links share the subject-result row geometry and typography. */
+a.resultRow[href] { min-height: 44px; box-sizing: border-box; text-decoration: none; }
+a.resultRow[href]:hover { background: var(--color-hover); }

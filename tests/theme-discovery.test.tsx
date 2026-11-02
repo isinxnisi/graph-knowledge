@@ -2,7 +2,7 @@
 import React,{useState} from "react";
 import {act,cleanup,fireEvent,render,screen} from "@testing-library/react";
 import {afterEach,beforeEach,expect,it,vi} from "vitest";
-import {HomeThemes,ThemeSearchPanel,initialThemeCriteria,ThemeLink} from "../components/ThemeDiscovery";
+import {HomeThemes,useHomeThemes,ThemeSearchPanel,initialThemeCriteria,ThemeLink} from "../components/ThemeDiscovery";
 import {knowledgeThemeTypeLabel,type KnowledgeThemeSummary} from "../lib/domain/knowledge-theme-reader";
 const graph:KnowledgeThemeSummary={id:"graph",revision:2,title:"制作のつながり",description:"関係だけのテーマ",hasTimeline:false,hasRelations:true,entityIds:[],initialView:"graph",publishedAt:"2026-11-02T00:00:00.000Z"};
 const timeline:KnowledgeThemeSummary={...graph,id:"timeline",title:"展開の年表",hasTimeline:true,initialView:"timeline"};
@@ -19,13 +19,15 @@ it("年表・関係図・解説を開く前に区別し、固定版への通常�
  expect(knowledgeThemeTypeLabel({...timeline,hasRelations:false})).toBe("年表");
  expect(knowledgeThemeTypeLabel({...graph,hasRelations:false})).toBe("解説");
 });
-it("TOPの紹介と新着を同じ認可済み読取から示す",async()=>{
- vi.stubGlobal("fetch",vi.fn(async()=>reply({featured:[timeline,graph],recent:[graph],total:2})));
- render(<HomeThemes onOpen={vi.fn()} onBrowse={vi.fn()}/>);await tick();
+it("TOPの初期HTML用データはAPIの応答を待たず、紹介と新着に同時表示する",async()=>{
+ const fetcher=vi.fn(()=>new Promise(()=>{}));vi.stubGlobal("fetch",fetcher);
+ function Home(){const state=useHomeThemes({featured:[timeline,graph],recent:[graph],total:2});return <HomeThemes state={state} onOpen={vi.fn()} onBrowse={vi.fn()}/>;}
+ render(<Home/>);
  expect(screen.getByRole("heading",{name:"紹介テーマ"})).toBeTruthy();
  expect(screen.getByRole("heading",{name:"新着テーマ"})).toBeTruthy();
  expect(screen.getByText("2026-11-02")).toBeTruthy();
  expect(screen.getByRole("list",{name:/紹介テーマ/}).children).toHaveLength(2);
+ expect(fetcher).toHaveBeenCalledTimes(1);
 });
 it("検索条件を変えた瞬間から旧結果を操作不可にし、遅い旧応答で上書きしない",async()=>{
  let release!:(v:ReturnType<typeof reply>)=>void;
@@ -48,6 +50,6 @@ it("表示内容・並び順と名前を同じ検索へ渡し、解除できる"
  fireEvent.change(screen.getByRole("combobox",{name:"並び順"}),{target:{value:"name"}});
  fireEvent.change(screen.getByRole("textbox"),{target:{value:"Webb"}});await tick();
  expect(Object.fromEntries(requests.at(-1)!)).toMatchObject({q:"Webb",kind:"timeline",order:"name"});
- fireEvent.click(screen.getByRole("button",{name:"解除"}));await tick();
+ fireEvent.click(screen.getByRole("button",{name:"条件をクリア"}));await tick();
  expect(Object.fromEntries(requests.at(-1)!)).toMatchObject({kind:"all",order:"newest"});
 });

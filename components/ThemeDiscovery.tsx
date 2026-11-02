@@ -1,33 +1,71 @@
 "use client";
-import { useEffect, useState, type MouseEvent, type ReactNode } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { readKnowledge } from "../lib/client/use-knowledge-workspace";
-import { knowledgeThemeTypeLabel, type KnowledgeThemeSummary, type KnowledgeThemePage } from "../lib/domain/knowledge-theme-reader";
+import { knowledgeThemeTypeLabel, type KnowledgeThemeSummary, type KnowledgeThemePage, type KnowledgeThemeHome } from "../lib/domain/knowledge-theme-reader";
 import { useUiLocale } from "../lib/client/ui-locale";
 import Icon from "./Icon";
 import layout from "./DiscoveryExplorer.module.css";
 import css from "./ThemeDiscovery.module.css";
+import home from "./DiscoveryHome.module.css";
+import results from "./DiscoverySearch.module.css";
 
 export type ThemeCriteria = { q: string; kind: "all" | "timeline" | "graph" | "context"; order: "newest" | "name" };
 export const initialThemeCriteria: ThemeCriteria = { q: "", kind: "all", order: "newest" };
 export type OpenTheme = (ref: { id: string; revision?: number }) => void;
-export function ThemeLink({ theme, onOpen, children }: { theme: KnowledgeThemeSummary; onOpen: OpenTheme; children?: ReactNode }) {
+export function ThemeLink({ theme, onOpen, appearance = "row", showDescription = false }: {
+  theme: KnowledgeThemeSummary; onOpen: OpenTheme;
+  appearance?: "row" | "featured" | "recent"; showDescription?: boolean;
+}) {
   const { locale } = useUiLocale(), en = locale === "en";
-  function choose(event: MouseEvent<HTMLAnchorElement>) { if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); onOpen({ id: theme.id, revision: theme.revision }); }
-  return <a className={css.themeLink} href={`${en ? "/en" : "/"}?${new URLSearchParams({ ktheme: theme.id, krev: String(theme.revision), kview: theme.initialView })}`} onClick={choose}>
-    <span className={css.type}><Icon name={theme.hasTimeline ? "event" : theme.hasRelations === false ? "book" : "graph"} />{knowledgeThemeTypeLabel(theme, en)}</span><strong>{theme.title}</strong>{children}<Icon name="arrow" />
+  const type = knowledgeThemeTypeLabel(theme, en);
+  const icon = theme.hasTimeline ? "event" : theme.hasRelations === false ? "book" : "graph";
+  const href = `${en ? "/en" : "/"}?${new URLSearchParams({ ktheme: theme.id, krev: String(theme.revision), kview: theme.initialView })}`;
+  function choose(event: MouseEvent<HTMLAnchorElement>) {
+    if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault(); onOpen({ id: theme.id, revision: theme.revision });
+  }
+  if (appearance === "recent") return <a className={css.recentLink} href={href} onClick={choose}>
+    <Icon name={icon}/>{theme.title}<span>{type}</span>
+  </a>;
+  if (appearance === "featured") return <a className={`${home.themeFeature} ${css.featureLink}`} href={href} onClick={choose}>
+    <Icon name={icon}/><span><small>{type}</small><strong>{theme.title}</strong>
+      {showDescription && theme.description && <span className={css.featureDescription}>{theme.description}</span>}
+    </span><Icon name="arrow"/>
+  </a>;
+  return <a className={`${results.resultRow} ${css.themeRow}`} href={href} onClick={choose}>
+    <Icon name={icon}/><span className={results.identity}>
+      <span className={results.name}><strong>{theme.title}</strong><small>{type}</small></span>
+      {showDescription && theme.description && <span className={results.description}>{theme.description}</span>}
+    </span><Icon name="chevron"/>
   </a>;
 }
-export function HomeThemes({ onOpen, onBrowse, part = "both" }: { onOpen: OpenTheme; onBrowse: () => void; part?: "featured" | "recent" | "both" }) {
+export function useHomeThemes(initialData?: KnowledgeThemeHome | null, enabled = true) {
+  const [data, setData] = useState<KnowledgeThemeHome | null>(initialData ?? null);
+  const [failed, setFailed] = useState(initialData === null), [attempt, setAttempt] = useState(0);
+  useEffect(() => {
+    if (!enabled) return;
+    let live = true;
+    const read = () => readKnowledge<KnowledgeThemeHome>("theme-home")
+      .then(value => { if (live) { setData(value); setFailed(false); } })
+      .catch(() => { if (live) { setData(null); setFailed(true); } });
+    // Reauthorise on returning Home; the server data is already visible during this refresh.
+    void read();
+    const timer = setInterval(() => void read(), 30000);
+    return () => { live = false; clearInterval(timer); };
+  }, [enabled, attempt]);
+  return { data, failed, retry: () => setAttempt(value => value + 1) };
+}
+export function HomeThemes({ state, onOpen, onBrowse, part = "both" }: {
+  state: ReturnType<typeof useHomeThemes>; onOpen: OpenTheme; onBrowse: () => void; part?: "featured" | "recent" | "both";
+}) {
   const { locale } = useUiLocale(), en = locale === "en";
-  const [data, setData] = useState<{ featured: KnowledgeThemeSummary[]; recent: KnowledgeThemeSummary[]; total: number } | null>(null);
-  const [failed, setFailed] = useState(false), [attempt, setAttempt] = useState(0);
-  useEffect(() => { let live=true; const read=()=>readKnowledge<NonNullable<typeof data>>("theme-home").then(value=>{if(live){setData(value);setFailed(false);}}).catch(()=>{if(live){setData(null);setFailed(true);}}); void read(); const timer=setInterval(()=>void read(),30000); return()=>{live=false;clearInterval(timer);}; },[attempt]);
-  if (failed) return <section className={css.home}><p role="status">{en ? "Themes could not be loaded." : "テーマを取得できませんでした。"} <button onClick={()=>setAttempt(v=>v+1)}>{en ? "Retry" : "再取得"}</button></p></section>;
+  const { data, failed, retry } = state;
+  if (failed) return <section className={css.home}><p role="status">{en ? "Themes could not be loaded." : "テーマを取得できませんでした。"} <button onClick={retry}>{en ? "Retry" : "再取得"}</button></p></section>;
   if (!data) return <p className={css.loading} role="status">{en ? "Loading themes…" : "テーマを読み込んでいます…"}</p>;
   if (!data.total) return null;
   return <div className={css.home}>
-    {part !== "recent" && !!data.featured.length && <section aria-labelledby="home-theme-featured"><div className={css.heading}><h3 id="home-theme-featured">{en ? "Featured themes" : "紹介テーマ"}</h3><button onClick={onBrowse}>{en ? "Explore themes" : "テーマを探す"}<Icon name="arrow" /></button></div><div className={css.featured} role="list" aria-label={en ? "Featured themes · scroll horizontally" : "紹介テーマ・横にスクロールできます"}>{data.featured.map(theme=><div key={theme.id} role="listitem"><ThemeLink theme={theme} onOpen={onOpen}><p>{theme.description}</p></ThemeLink></div>)}</div></section>}
-    {part !== "featured" && <section aria-labelledby="home-theme-recent"><div className={css.heading}><h3 id="home-theme-recent">{en ? "New themes" : "新着テーマ"}</h3><button onClick={onBrowse}>{en ? "Browse all" : "一覧を見る"}<Icon name="arrow" /></button></div><ul className={css.recent}>{data.recent.map(theme=><li key={theme.id}><ThemeLink theme={theme} onOpen={onOpen} /><time dateTime={theme.publishedAt}>{theme.publishedAt?.slice(0,10)}</time></li>)}</ul><small>{en ? "Theme registration dates, not dates of historical events." : "テーマの登録日です。出来事が起きた日付ではありません。"}</small></section>}
+    {part !== "recent" && !!data.featured.length && <section className={home.fields} aria-labelledby="home-theme-featured"><div className={css.heading}><h3 id="home-theme-featured">{en ? "Featured themes" : "紹介テーマ"}</h3><button onClick={onBrowse}>{en ? "Explore themes" : "テーマを探す"}<Icon name="arrow" /></button></div><div className={css.featured} role="list" aria-label={en ? "Featured themes · scroll horizontally" : "紹介テーマ・横にスクロールできます"}>{data.featured.map(theme=><div key={theme.id} role="listitem"><ThemeLink theme={theme} onOpen={onOpen} appearance="featured" showDescription/></div>)}</div></section>}
+    {part !== "featured" && <section className={home.recent} aria-labelledby="home-theme-recent"><div className={css.heading}><h3 id="home-theme-recent">{en ? "New themes" : "新着テーマ"}</h3><button onClick={onBrowse}>{en ? "Browse all" : "一覧を見る"}<Icon name="arrow" /></button></div><ul>{data.recent.map(theme=><li key={theme.id}><ThemeLink theme={theme} onOpen={onOpen} appearance="recent"/><time dateTime={theme.publishedAt}>{theme.publishedAt?.slice(0,10)}</time></li>)}</ul><p className={home.note}>{en ? "Theme registration dates, not dates of historical events." : "テーマの登録日です。出来事が起きた日付ではありません。"}</p></section>}
   </div>;
 }
 export function ThemeSearchPanel({ criteria, onChange, onOpen }: { criteria: ThemeCriteria; onChange: (value: ThemeCriteria) => void; onOpen: OpenTheme }) {
@@ -39,9 +77,9 @@ export function ThemeSearchPanel({ criteria, onChange, onOpen }: { criteria: The
   useEffect(()=>{let live=true;const query:ThemeCriteria=JSON.parse(key);const timer=setTimeout(()=>{if(composing)return;setBusy(true);setError(false);void readKnowledge<KnowledgeThemePage>("themes",query).then(value=>{if(live)setResponse({key,page:value});}).catch(()=>{if(live){setResponse(null);setError(true);}}).finally(()=>{if(live)setBusy(false);});},250);return()=>{live=false;clearTimeout(timer);};},[key,attempt,composing]);
   const choices = [["all", en?"All":"すべて"],["timeline",en?"Timelines":"年表"],["graph",en?"Relation diagrams only":"関係図のみ"],["context",en?"Readings":"解説"]] as const;
   return <div id="discovery-theme-panel" role="tabpanel" aria-labelledby="prototype-tab-themes" className={layout.listWorkspace}>
-    <aside className={`${layout.listFilters} ${css.filters}`} data-open={filtersOpen || undefined}><div className={layout.sectionHeading}><h3>{en?"Theme filters":"テーマの条件"}</h3><button className={css.mobileToggle} aria-expanded={filtersOpen} onClick={()=>setFiltersOpen(v=>!v)}>{en?"Filters":"条件"}<Icon name="chevron" /></button><button className={layout.clearAll} onClick={()=>onChange(initialThemeCriteria)}>{en?"Clear":"解除"}</button></div><div className={css.filterBody}><div className={layout.listGroup}><span className={layout.fieldLabel}>{en?"Presentation":"表示内容"}</span><div className={layout.listOptions} role="group" aria-label={en?"Theme presentation":"テーマの表示内容"}>{choices.map(([kind,label])=><button key={kind} aria-pressed={criteria.kind===kind} onClick={()=>onChange({...criteria,kind})}>{label}</button>)}</div></div><label className={css.sort}>{en?"Order":"並び順"}<select value={criteria.order} onChange={e=>onChange({...criteria,order:e.target.value as ThemeCriteria["order"]})}><option value="newest">{en?"Newest":"新着順"}</option><option value="name">{en?"Name":"名前順"}</option></select></label></div></aside>
-    <section className={layout.matches} aria-label={en?"Theme results":"テーマの検索結果"} aria-busy={pending}><form className={layout.keyword} onSubmit={e=>{e.preventDefault();setAttempt(v=>v+1);}}><div className={layout.keywordLabel}><label htmlFor="theme-search-name">{en?"Theme name or description":"テーマの名前・説明"}</label></div><div className={layout.inputRow}><Icon name="search" /><input id="theme-search-name" value={criteria.q} maxLength={200} placeholder={en?"A subject, a period, a theme…":"人物・時代・気になるテーマ…"} onCompositionStart={()=>setComposing(true)} onCompositionEnd={()=>setComposing(false)} onChange={e=>onChange({...criteria,q:e.target.value})} /><button type="submit" className={layout.searchSubmit}>{en?"Search":"検索"}<Icon name="arrow" /></button></div></form><div className={layout.resultHeading}><h3>{en?"Themes":"テーマ"}</h3><span role="status">{pending?en?"Searching…":"検索中…":result?`${result.themes.length}${en?" matches":"件"}`:""}</span></div>
-      {error?<div role="alert" className={layout.unavailable}>{en?"Could not load themes.":"テーマを取得できませんでした。"}<button onClick={()=>setAttempt(v=>v+1)}>{en?"Retry":"再取得"}</button></div>:<div className={css.results} inert={pending || composing}>{result?.themes.map(theme=><ThemeLink key={theme.id} theme={theme} onOpen={onOpen}><p>{theme.description}</p></ThemeLink>)}{!pending&&result&&!result.themes.length&&<p>{en?"No themes match these filters.":"条件に合うテーマはありません。"}</p>}</div>}
+    <aside className={`${layout.listFilters} ${css.filters}`} data-open={filtersOpen || undefined}><div className={layout.sectionHeading}><h3>{en?"Theme filters":"テーマの条件"}</h3><button className={css.mobileToggle} aria-expanded={filtersOpen} onClick={()=>setFiltersOpen(v=>!v)}>{en?"Filters":"条件"}<Icon name="chevron" /></button><button className={layout.clearAll} onClick={()=>onChange(initialThemeCriteria)}>{en?"Clear filters":"条件をクリア"}</button></div><div className={css.filterBody}><div className={layout.listGroup}><span className={layout.fieldLabel}>{en?"Presentation":"表示内容"}</span><div className={layout.listOptions} role="group" aria-label={en?"Theme presentation":"テーマの表示内容"}>{choices.map(([kind,label])=><button key={kind} aria-pressed={criteria.kind===kind} onClick={()=>onChange({...criteria,kind})}>{label}</button>)}</div></div><label className={css.sort}>{en?"Order":"並び順"}<select value={criteria.order} onChange={e=>onChange({...criteria,order:e.target.value as ThemeCriteria["order"]})}><option value="newest">{en?"Newest":"新着順"}</option><option value="name">{en?"Name":"名前順"}</option></select></label></div></aside>
+    <section className={`${layout.matches} ${css.matches}`} aria-label={en?"Theme results":"テーマの検索結果"} aria-busy={pending}><form className={layout.keyword} onSubmit={e=>{e.preventDefault();setAttempt(v=>v+1);}}><div className={layout.keywordLabel}><label htmlFor="theme-search-name">{en?"Theme name or description":"テーマの名前・説明"}</label></div><div className={layout.inputRow}><Icon name="search" /><input id="theme-search-name" value={criteria.q} maxLength={200} placeholder={en?"A subject, a period, a theme…":"人物・時代・気になるテーマ…"} onCompositionStart={()=>setComposing(true)} onCompositionEnd={()=>setComposing(false)} onChange={e=>onChange({...criteria,q:e.target.value})} /><button type="submit" className={layout.searchSubmit}>{en?"Search":"検索"}<Icon name="arrow" /></button></div></form><div className={layout.resultHeading}><div><h3>{en?"Themes":"テーマ"}</h3><span role="status">{pending?en?"Searching…":"検索中…":result?`${result.themes.length}${en?" matches":"件"}`:""}</span></div></div>
+      {error?<div role="alert" className={layout.unavailable}>{en?"Could not load themes.":"テーマを取得できませんでした。"}<button onClick={()=>setAttempt(v=>v+1)}>{en?"Retry":"再取得"}</button></div>:<><ul className={`${results.results} ${css.results}`} inert={pending || composing}>{result?.themes.map(theme=><li key={theme.id}><ThemeLink theme={theme} onOpen={onOpen} showDescription/></li>)}</ul>{!pending&&result&&!result.themes.length&&<p className={layout.note}>{en?"No themes match these filters.":"条件に合うテーマはありません。"}</p>}</>}
     </section>
   </div>;
 }

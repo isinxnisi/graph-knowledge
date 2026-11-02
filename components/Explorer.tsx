@@ -3,6 +3,7 @@ import { focusDestination } from "../lib/client/focus-destination";
 import { graphNoticePresentation } from "../lib/client/graph-notice";
 import GraphNotice from "./GraphNotice";
 import DiscoveryHome from "./DiscoveryHome";
+import type { KnowledgeThemeHome } from "../lib/domain/knowledge-theme-reader";
 import type { DiscoveryHomeData } from "../lib/domain/discovery-home";
 import { discoveryHomeLabels } from "../lib/i18n/discovery-home";
 import Icon from "./Icon";
@@ -63,11 +64,11 @@ import { savedViewLabels } from "../lib/i18n/saved-views";
 import KnowledgeReading, {useKnowledgeReading} from "./KnowledgeReading";
 import RelatedThemes from "./RelatedThemes";
 
-type ExplorerProps = { dataset?: DatasetMode; initialRoot?: string; services?: PublicServicesPolicy; publicOverview?: import("react").ReactNode; discoveryHome?: DiscoveryHomeData; knowledgeEnabled?: boolean };
+type ExplorerProps = { dataset?: DatasetMode; initialRoot?: string; services?: PublicServicesPolicy; publicOverview?: import("react").ReactNode; discoveryHome?: DiscoveryHomeData; knowledgeEnabled?: boolean; initialThemes?: KnowledgeThemeHome | null };
 export default function Explorer(props: ExplorerProps) {
   return props.knowledgeEnabled ? <KnowledgeReading><ExplorerBody {...props}/></KnowledgeReading> : <ExplorerBody {...props} />;
 }
-function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview, discoveryHome, knowledgeEnabled }: ExplorerProps) {
+function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview, discoveryHome, knowledgeEnabled, initialThemes }: ExplorerProps) {
   const knowledge=useKnowledgeReading();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -206,7 +207,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
     <main inert={!knowledge?.active && (urlState.busy || !!urlState.failure) || !!capsuleSession} data-active-pane={activePane} className={`${styles.columns} ${detailWide ? styles.wideDetails : ""}`}>
       <div id="explorer-search" role="group" tabIndex={-1} data-focus-destination aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} onDiscover={openDiscovery} /><div lang={locale} className={styles.localActions}><h3>{designLabels(locale).tools}</h3><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />My Capsules</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
       <div id="explorer-graph" role="group" tabIndex={-1} data-focus-destination data-discovery-home={atHome || undefined} aria-label={panes.graph} className={styles.centralScroll}>
-      {atHome && <DiscoveryHome data={discoveryHome!} onTheme={knowledge?.openTheme} onThemeSearch={knowledge?()=>openDiscovery({q:"",kind:null,presentation:"themes"}):undefined} onDiscover={() => openDiscovery({ q: "", kind: null, presentation: "explore" })} onSearch={() => {
+      {atHome && <DiscoveryHome data={discoveryHome!} initialThemes={initialThemes} onTheme={knowledge?.openTheme} onThemeSearch={knowledge?()=>openDiscovery({q:"",kind:null,presentation:"themes"}):undefined} onDiscover={() => openDiscovery({ q: "", kind: null, presentation: "explore" })} onSearch={() => {
         moveToPane("search");
         requestAnimationFrame(() => document.querySelector<HTMLInputElement>("#explorer-search input")?.focus({ preventScroll: true }));
       }} />}
