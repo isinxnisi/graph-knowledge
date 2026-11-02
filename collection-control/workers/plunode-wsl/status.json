@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-02T21:04:57.313299+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-02T22:10:05.318213+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-02T21:04:57.313299+00:00",
-    "windowEndAt": "2026-11-02T22:00:00+00:00"
+    "eligibleAt": "2026-11-03T00:00:00+00:00",
+    "windowEndAt": "2026-11-03T03:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-64-dot-oda-onepiece-20261029",
+    "startedAt": "2026-11-02T21:05:05.318216+00:00",
+    "limitAt": "2026-11-02T22:00:05.318213+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-25-manga23-20261019",
     "endedAt": "2026-11-02T20:54:57.313300+00:00"
@@ -192,5 +196,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-02T20:56:44.726007+00:00"
+  "checkedAt": "2026-11-02T21:05:12.516136+00:00"
 }
