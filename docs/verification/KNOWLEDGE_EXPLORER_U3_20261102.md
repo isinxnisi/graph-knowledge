@@ -82,8 +82,8 @@ read-only HTTPはGET15回、実2Theme17記録を観測planと照合した。固�
 
 ## 最終配置
 
-3276の最終buildは **`_f21c1Z-S0V27wC8OL9vN`**。webpack production build・全TypeScript・page generationが成功し、専用publisherとWebを再起動した。最後のcompact変更でIconの未対応propを型検査が検出したため、Icon APIを拡張せずwrapperへ移して修正し、関連19テスト・lint・buildを再実行した。
+3276のアプリソースは **`01a71c0b75bd4bdec22da6c8a3ac056ab0ee1aa0`**、最終buildは **`_f21c1Z-S0V27wC8OL9vN`**。webpack production build・全TypeScript・page generationが成功し、専用publisherとWebを再起動した。最後のcompact変更でIconの未対応propを型検査が検出したため、Icon APIを拡張せずwrapperへ移して修正し、関連19テスト・lint・buildを再実行した。
 
 再起動後のroot HTTP200で中央WorkspaceのHTMLを確認し、上記HTTP acceptance15回も最終buildで再成功。公開世代は `k75-15070b498ab7cd4c0ad54cdfd79b2428`、pending false、lastFailure null。旧U2 buildや途中のU3 buildと混同しない。
 
-mainは `cd84b76ecf5b5f36009fb43ee01ffc7ac6cf9206` のまま、未追跡 `memo.txt` のみ。main／3200／HTTPS β／本番、既存Worker・AI・会員DB・本線KGへ今回の変更を反映していない。最終ソースはこの記録を含む日本語commitと、その後の配置識別記録で特定する。
+mainは `cd84b76ecf5b5f36009fb43ee01ffc7ac6cf9206` のまま、未追跡 `memo.txt` のみ。main／3200／HTTPS β／本番、既存Worker・AI・会員DB・本線KGへ今回の変更を反映していない。上記ソース以降の配置識別記録は文書だけの変更で、アプリの再buildは不要。
