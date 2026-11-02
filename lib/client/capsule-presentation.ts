@@ -12,12 +12,12 @@ export function capsulePresentation(document: CapsuleDocument, locale: string) {
     const overrides = [...new Set(items.map(r => r.label).filter(Boolean))];
     if (overrides.length) relation.canvasLabel = relation.label = overrides.join(" / ");
   }
-  for (const r of document.relations.filter(r => r.origin.kind === "local")) {
-    const polarity = r.origin.kind === "local" ? r.origin.polarity ?? "affirmed" : "affirmed";
+  for (const r of document.relations.filter(r => r.origin.kind === "local" || r.origin.kind === "knowledge")) {
+    const polarity = r.origin.kind === "local" ? r.origin.polarity ?? "affirmed" : document.knowledge?.snapshot.records.find(record=>r.origin.kind==="knowledge"&&record.id===r.origin.id)?.content.polarity ?? "affirmed";
     const text = r.label || (locale === "en" ? "Related" : "関係する");
     const suffix = polarity === "denied" ? (locale === "en" ? " (denied)" : "（否定）") : polarity === "uncertain" ? (locale === "en" ? " (uncertain)" : "（不確実）") : "";
     const label = text + suffix;
-    relations[r.key] = { id: r.key, subjectId: r.source, objectId: r.target, claimIds: [], polarity, label, canvasLabel: label, badge: locale === "en" ? "Capsule" : "独自" };
+    relations[r.key] = { id: r.key, subjectId: r.source, objectId: r.target, claimIds: [], polarity, label, canvasLabel: label, badge: r.origin.kind === "knowledge" ? "" : locale === "en" ? "Capsule" : "独自" };
     members[r.key] = [r.key];
   }
   return { members, relations, nodes: [

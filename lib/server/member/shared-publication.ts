@@ -23,7 +23,7 @@ export async function readSharedPublication(pool: Pool, dataset: DatasetMode, ra
       AND NOT COALESCE((to_jsonb(live)->>'sharing_blocked')::boolean,false)
       AND NOT COALESCE((to_jsonb(r)->>'sharing_blocked')::boolean,false)`, [hashCapsuleShareToken(token.data),dataset,revision??null]);
   const row=result.rows[0];
-  if (!row) throw new MemberError(404,"NOT_FOUND");
+  if (!row || row.snapshot?.content?.document?.knowledge) throw new MemberError(404,"NOT_FOUND");
   const author=(await publicPeople(pool,[row.owner_user_id])).get(row.owner_user_id)??null;
   return sharedCapsuleSchema.parse({capsule:row.snapshot,author,currentRevision:Number(row.current_revision),revisions:(row.publications??[]).map((p: {revision:number;publishedAt:string})=>({...p,publishedAt:new Date(p.publishedAt).toISOString()}))});
 }

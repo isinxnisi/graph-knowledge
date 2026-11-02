@@ -1,6 +1,9 @@
 "use client";
 import { createContext, useContext, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
+import {CapsuleWorkspace} from "./MyCapsules";
+import {captureKnowledgeCapsule} from "../lib/client/capsule-knowledge";
+import type {LocalCapsule} from "../lib/client/local-capsules";
 import {useSearchParams} from "next/navigation";
 import Icon from "./Icon";
 import GraphCanvas, {type GraphCanvasHandle} from "./GraphCanvas";
@@ -25,6 +28,7 @@ export type KnowledgeReadingContract={active:boolean;restoring:boolean;center:Re
 const ReadingContext=createContext<KnowledgeReadingContract|undefined>(undefined);
 export const useKnowledgeReading=()=>useContext(ReadingContext);
 export default function KnowledgeReading({children}:{children:ReactNode}) {
+ const [createdCapsule,setCreatedCapsule]=useState<LocalCapsule|null>(null);
  const w=useKnowledgeWorkspace({embedded:true}); const locationParams=useSearchParams(); const {locale}=useUiLocale(),en=locale==="en";
  const [commonVisible,setCommonVisible]=useState(false);
  const [requested,setRequested]=useState(false);
@@ -84,7 +88,7 @@ export default function KnowledgeReading({children}:{children:ReactNode}) {
           <div className={css.recordStrip}>{w.normal.records.map((r) => <button key={r.record.id} onClick={() => chooseRecord(r.record.id)} aria-pressed={w.normal.selection?.kind === "record" && w.normal.selection.id === r.record.id}>{r.label || r.record.content.assertion}</button>)}</div>
         </section>
         {retained && <section hidden={!active} className={`${base.panel} ${base.graphPanel} ${css.stage}`} aria-label={en ? "Theme reading" : "テーマを読む"}>
-          <header className={css.themeHeader}><button onClick={() => { checkpoint(); setRequested(false); w.closeTheme(); if(!commonVisible)host.current?.onReturn(); }} className={css.return}><Icon name="back" />{en ? "Back to exploration" : "探索に戻る"}</button><span>{en ? "Saved composition" : "構成版"} {retained.theme.revision}</span><h2 title={retained.theme.content.title}>{retained.theme.content.title}</h2><button className={css.themeInfo} aria-label={en ? "About this theme" : "テーマについて"} title={en ? "About this theme" : "テーマについて"} onClick={() => { w.setThemeSelection(null); setPane("detail"); }}><Icon name="book" /></button></header>
+          <header className={css.themeHeader}><button onClick={() => { checkpoint(); setRequested(false); w.closeTheme(); if(!commonVisible)host.current?.onReturn(); }} className={css.return}><Icon name="back" />{en ? "Back to exploration" : "探索に戻る"}</button><span>{en ? "Saved composition" : "構成版"} {retained.theme.revision}</span><h2 title={retained.theme.content.title}>{retained.theme.content.title}</h2><button className={css.themeInfo} aria-label={en?"Create Capsule":"Capsuleを作成"} title={en?"Create Capsule":"Capsuleを作成"} disabled={busy} onClick={()=>{checkpoint();setCreatedCapsule(captureKnowledgeCapsule({snapshot:retained.snapshot,theme:retained.theme,title:retained.theme.content.title,view:w.themeView,graphView:themeCanvas.current?.capture()}));}}><Icon name="capsule"/></button><button className={css.themeInfo} aria-label={en ? "About this theme" : "テーマについて"} title={en ? "About this theme" : "テーマについて"} onClick={() => { w.setThemeSelection(null); setPane("detail"); }}><Icon name="book" /></button></header>
           <KnowledgeThemeContext key={retained.theme.id + ":" + retained.theme.revision} records={retained.records} selectedRecordId={w.themeSelection?.kind === "record" ? w.themeSelection.id : null} onRead={(id) => { w.setThemeSelection({ kind: "record", id }); setPane("detail"); }} />
 
           {(themeHasTime||themeHasGraph)&&<KnowledgeSplit mode={themeMode}>
@@ -98,5 +102,5 @@ export default function KnowledgeReading({children}:{children:ReactNode}) {
           <section className={css.related}><h3>{en ? "Records in this view" : "この表示の記録"}</h3>{records.filter(r => [r.record.content.subjectId,r.record.content.objectId].includes(selectedEntity.id)).map(r => <button key={r.record.id} className={css.result} onClick={() => chooseRecord(r.record.id)}>{r.record.content.assertion}</button>)}</section>
         </> : active ? <><h3>{active.theme.content.title}</h3><p className={base.muted}>{en ? "Saved composition" : "構成版"} {active.theme.revision}</p>{active.theme.content.description && <p>{active.theme.content.description}</p>}<p className={base.muted}>{en ? "Choose a timeline entry or a relation to read the same record and its evidence here." : "年表の記録や図の関係を選ぶと、対応する内容と根拠をここで読めます。"}</p></> : <p className={base.muted}>{en ? "Select a subject or relation in the graph." : "図の対象や関係を選ぶと、内容と根拠を読めます。"}</p>}
 </div>};
- return <ReadingContext value={value}>{children}</ReadingContext>;
+ return <ReadingContext value={value}>{children}{createdCapsule&&<CapsuleWorkspace initial={createdCapsule} isNew onClose={()=>setCreatedCapsule(null)}/>}</ReadingContext>;
 }

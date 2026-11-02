@@ -91,3 +91,8 @@
 @media(prefers-reduced-motion:reduce){.libraryResults>ul{transition:none}.libraryResults>.empty{animation:none}}
 
 @keyframes libraryReveal{from{opacity:0;translate:0 3px}to{opacity:1;translate:0 0}}
+
+.knowledgeFrame{height:100%;min-height:0;overflow:auto;overscroll-behavior-y:auto}
+.graphPane{height:100%;min-width:0;min-height:0;position:relative}
+.graphPane[hidden]{display:none}
+.knowledgeTimeline{height:100%;overflow:auto;min-width:0;overscroll-behavior-y:auto}

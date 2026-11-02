@@ -1,5 +1,6 @@
 import { beforeAll, afterAll, beforeEach, expect, it, vi } from "vitest";
 import { randomUUID } from "node:crypto";
+import {captureKnowledgeCapsule} from "../lib/client/capsule-knowledge";
 import { startMemberOidc } from "./support/member-oidc";
 import { migrateMemberDatabase } from "../lib/server/member/migrate";
 import { memberHandle } from "../lib/server/member/http";
@@ -414,3 +415,17 @@ it('同じ共有URLの更新では旧版コメントを通報できるが、未�
  const context=(await pool().query('SELECT target_capsule_revision,capsule_share_id FROM community_report WHERE id=$1',[id])).rows[0];expect(Number(context.target_capsule_revision)).toBe(1);expect(context.capsule_share_id).toBe(issued.share.id);
  const other=await create();const bad=request(b,{...input,requestId:randomUUID()});bad.headers.set('x-capsule-token',issued.token);expect((await call(()=>service().reportDiscussionPost(bad,other.id))).status).toBe(404);
 },30_000);
+
+it('新原記録と年表の断面を本人だけが保存・再訪・更新でき、未接続の共有を拒否する',async()=>{
+ const version={revision:1,createdAt:"2026-11-03T00:00:00.000Z",reason:"初回"};
+ const value=captureKnowledgeCapsule({title:"期間だけのCapsule",view:"timeline",snapshot:{schemaVersion:1,initialView:"timeline",entities:[],mappings:[],sources:[{...version,id:"source:test",content:{title:"資料",url:"https://example.org/source",bibliography:"",language:"ja"}}],records:[{...version,id:"record:period",content:{kind:"note",subjectId:null,objectId:null,assertion:"年表専用の期間",relation:"",polarity:"affirmed",scope:"",times:[{id:"time:period",time:{kind:"calendar",from:"2020",to:"2021",label:"期間",meaning:"duration"}}],evidence:[{id:"cite",source:{id:"source:test",revision:1},locator:"本文",excerpt:"",stance:"support"}]}}]}});
+ const content:MemberCapsuleContent={dataset:"demo",title:value.title,note:"",language:"ja",entityIds:[],claimIds:[],document:value.document};
+ const cap=await create(content);
+ const read=await call(()=>service().read(request(a),cap.id));expect(read.status).toBe(200);expect((await read.json()).capsule.content.document.knowledge.snapshot).toEqual(value.document!.knowledge!.snapshot);
+ expect((await call(()=>service().read(request(b),cap.id))).status).toBe(404);
+ const changed={...content,title:"作者によるタイトル変更"};
+ const update=await call(()=>service().update(request(a,{requestId:randomUUID(),expectedRevision:1,content:changed}),cap.id));expect(update.status).toBe(200);
+ expect((await update.json()).capsule.content.document.knowledge.snapshot).toEqual(value.document!.knowledge!.snapshot);
+ expect((await call(()=>service().update(request(a,{expectedRevision:1,content}),cap.id))).status).toBe(409);
+ const shared=await call(()=>service().issueShare(request(a,{expectedRevision:2,expectedShareId:null}),cap.id));expect(shared.status).toBe(503);expect((await shared.json()).error.code).toBe("KNOWLEDGE_SHARING_UNAVAILABLE");
+});

@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { capsuleKnowledgeSchema } from "./capsule-knowledge";
+import { knowledgePinSchema } from "./knowledge-foundation";
 import { claimDetailSchema, claimSummarySchema, entityDetailSchema, entitySummarySchema } from "./api";
 
 // A Capsule is its own document. References identify the KG record; snapshots
@@ -28,6 +30,7 @@ export const capsuleNodeSchema = z.strictObject({
   shape: z.enum(CAPSULE_NODE_SHAPES).optional(),
   origin: z.discriminatedUnion("kind", [
     z.strictObject({ kind: z.literal("local") }),
+    z.strictObject({ kind: z.literal("knowledge"), ...knowledgePinSchema.shape }),
     z.strictObject({ kind: z.literal("kg"), id: key, ...observation.shape, snapshot: entitySummarySchema,
       detail: entityDetailSchema.nullable(), neighbors: neighborhood }),
     // Old readers may have an unresolved reference. Preserve identity without
@@ -38,6 +41,7 @@ export const capsuleNodeSchema = z.strictObject({
 export const capsuleRelationSchema = z.strictObject({
   key, source: key, target: key, label: z.string().max(200), note: z.string().max(8000),
   origin: z.discriminatedUnion("kind", [
+    z.strictObject({ kind: z.literal("knowledge"), ...knowledgePinSchema.shape }),
     z.strictObject({ kind: z.literal("local"), polarity: z.enum(["affirmed", "denied", "uncertain"]).optional() }),
     z.strictObject({ kind: z.literal("kg"), id: key, ...observation.shape, snapshot: claimSummarySchema,
       detail: claimDetailSchema.nullable() }),
@@ -62,12 +66,22 @@ export const capsuleDocumentSchema = z.strictObject({
   // Old claims whose endpoints could not be obtained stay explicit references.
   unresolvedClaimIds: z.array(key).max(CAPSULE_DOCUMENT_LIMITS.relations),
   layout: capsuleLayoutSchema,
+  knowledge: capsuleKnowledgeSchema.optional(),
 }).superRefine((document, ctx) => {
   const issue = (message: string) => ctx.addIssue({ code: "custom", message });
   const nodes = new Map(document.nodes.map(n => [n.key, n]));
   const all = [...document.nodes, ...document.relations, ...document.texts, ...document.evidence].map(n => n.key);
   if (new Set(all).size !== all.length) issue("Element keys must be unique");
-  const globalNodes = document.nodes.filter(n => n.origin.kind !== "local").map(n => n.origin.kind !== "local" ? n.origin.id : "");
+  const globalNodes = document.nodes.filter(n => n.origin.kind !== "local").map(n => n.origin.kind !== "local" ? `${n.origin.kind}:${n.origin.id}` : "");
+  const snapshot=document.knowledge?.snapshot;
+  for(const n of document.nodes)if(n.origin.kind==="knowledge"&&!snapshot?.entities.some(e=>n.origin.kind==="knowledge"&&e.id===n.origin.id&&e.revision===n.origin.revision))issue("Missing knowledge node baseline");
+  const knowledgeRecords=new Set<string>();
+  for(const r of document.relations)if(r.origin.kind==="knowledge"){
+    const record=snapshot?.records.find(record=>r.origin.kind==="knowledge"&&record.id===r.origin.id&&record.revision===r.origin.revision);
+    if(knowledgeRecords.has(r.origin.id))issue("Duplicate knowledge relation");knowledgeRecords.add(r.origin.id);
+    const source=nodes.get(r.source)?.origin,target=nodes.get(r.target)?.origin;
+    if(!record||record.content.kind!=="relation"||source?.kind!=="knowledge"||target?.kind!=="knowledge"||source.id!==record.content.subjectId||target.id!==record.content.objectId)issue("Knowledge relation identity mismatch");
+  }
   const globalClaims = [...document.relations.flatMap(r => r.origin.kind === "kg" ? [r.origin.id] : []), ...document.unresolvedClaimIds];
   if (new Set(globalNodes).size !== globalNodes.length || new Set(globalClaims).size !== globalClaims.length) issue("Duplicate KG reference");
   for (const n of document.nodes) if (n.origin.kind === "kg" && (n.origin.id !== n.origin.snapshot.id || n.origin.detail && n.origin.detail.id !== n.origin.id)) issue("Entity snapshot identity mismatch");
@@ -76,7 +90,7 @@ export const capsuleDocumentSchema = z.strictObject({
     if (!source || !target) issue("Missing relation endpoint");
     if (r.origin.kind === "kg") {
       const o = r.origin;
-      if (o.id !== o.snapshot.id || o.detail && o.detail.id !== o.id || source?.origin.kind === "local" || target?.origin.kind === "local"
+      if (o.id !== o.snapshot.id || o.detail && o.detail.id !== o.id || source?.origin.kind === "local" || target?.origin.kind === "local" || source?.origin.kind === "knowledge" || target?.origin.kind === "knowledge"
         || source?.origin.id !== o.snapshot.subjectId || target?.origin.id !== o.snapshot.objectId) issue("Claim snapshot identity mismatch");
       if (o.detail && JSON.stringify(claimSummarySchema.parse(Object.fromEntries(Object.keys(claimSummarySchema.shape).map(k => [k, o.detail![k as keyof typeof o.detail]])))) !== JSON.stringify(o.snapshot)) issue("Claim summary and detail disagree");
     }
@@ -96,7 +110,7 @@ export type CapsuleEvidence = z.infer<typeof capsuleEvidenceSchema>;
 export type CapsuleText = z.infer<typeof capsuleTextSchema>;
 export function capsuleReferences(document: CapsuleDocument) {
   return {
-    entityIds: document.nodes.flatMap(n => n.origin.kind === "local" ? [] : [n.origin.id]),
+    entityIds: document.nodes.flatMap(n => n.origin.kind === "kg" || n.origin.kind === "unresolved" ? [n.origin.id] : []),
     claimIds: [...document.relations.flatMap(r => r.origin.kind === "kg" ? [r.origin.id] : []), ...document.unresolvedClaimIds],
   };
 }

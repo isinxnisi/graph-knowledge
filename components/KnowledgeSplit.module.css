@@ -11,3 +11,6 @@
  .frame[data-view="split"] > :nth-child(3) { border-top: 1px solid var(--color-border); }
 }
 @media (max-width: 800px) { .frame { height: max(380px,65dvh); } }
+
+.frame[data-fill] { height:100%; border:0; border-radius:0; }
+@media(max-width:1100px){.frame[data-fill][data-view="split"]{height:auto;min-height:100%;}}
