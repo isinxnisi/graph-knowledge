@@ -6,11 +6,11 @@
     "themeStateHash": "dfbb1c92ad9f0d1fad1e4dda454e6e023e1a183dee72853292d828a83dd9649a"
   },
   "sourceDatabaseRestoredOrReset": false,
-  "testDatabase": "plunode_knowledge75_test_u3restore_1793592051879425857",
+  "testDatabase": "plunode_knowledge75_test_u3restore_1793623031366656349",
   "tables": {
     "knowledge75.changes": {
       "beforeRows": 45,
-      "afterRows": 88,
+      "afterRows": 89,
       "allOriginalRowsIdentical": true
     },
     "knowledge75.concepts": {
@@ -30,42 +30,42 @@
     },
     "knowledge75.objects": {
       "beforeRows": 36,
-      "afterRows": 78,
+      "afterRows": 79,
       "allOriginalRowsIdentical": true
     },
     "knowledge75.operations": {
       "beforeRows": 14,
-      "afterRows": 22,
+      "afterRows": 23,
       "allOriginalRowsIdentical": true
     },
     "knowledge75.publication_entities": {
       "beforeRows": 88,
-      "afterRows": 200,
+      "afterRows": 223,
       "allOriginalRowsIdentical": true
     },
     "knowledge75.publication_generations": {
       "beforeRows": 6,
-      "afterRows": 11,
+      "afterRows": 12,
       "allOriginalRowsIdentical": true
     },
     "knowledge75.publication_records": {
       "beforeRows": 44,
-      "afterRows": 161,
+      "afterRows": 186,
       "allOriginalRowsIdentical": true
     },
     "knowledge75.publication_seen_changes": {
       "beforeRows": 45,
-      "afterRows": 88,
+      "afterRows": 89,
       "allOriginalRowsIdentical": true
     },
     "knowledge75.published_revisions": {
       "beforeRows": 39,
-      "afterRows": 82,
+      "afterRows": 83,
       "allOriginalRowsIdentical": true
     },
     "knowledge75.revisions": {
       "beforeRows": 39,
-      "afterRows": 82,
+      "afterRows": 83,
       "allOriginalRowsIdentical": true
     },
     "theme75.events": {

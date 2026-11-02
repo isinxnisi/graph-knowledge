@@ -1,8 +1,5 @@
-- 通常探索・テーマ・年表U3（2026-11-02）：[中央Graphの表示・固定版・再開契約](design/KNOWLEDGE_EXPLORER_U3.md)／[確認環境・検証結果と残件](verification/KNOWLEDGE_EXPLORER_U3_20261102.md)。[通常探索の入口](http://localhost:3276/)でテーマを選び、同じ中央領域で年表を主役にし、関係図を開閉する。時期なし情報も全表示共通のテーマ本文として読み、元の探索へ戻れる。現行Webbテーマを観測移入し、旧テーマ・Capsule・共有を保持。独立branch／3276のみ。次はU4の既存会員Capsuleへの接続。
-
-最新UIの配置・検証は [U3 一体枠・境界調整](verification/KNOWLEDGE_EXPLORER_U3_SPLIT_20261102.md) を参照。年表中心の関係図開閉、見出し内の設定、下端の見方、点と選択線を改修した。
-
-U3の最終占有低減とnative scroll-chainの実操作は、ブラウザ接続の安全判定停止により残っています。テスト・buildと実操作の確認範囲は上記U3検証記録で分け、U4へ進む前に残りを確認してください。
+- U3の最新実装（2026-11-02）：[既存TOP・検索モーダルへのテーマ統合](verification/KNOWLEDGE_EXPLORER_U3_DISCOVERY_20261102.md)。紹介テーマは横送り、新着一覧、検索「テーマから」に名前・説明／種類／並び順を追加。関係図・年表を開く前に区別できる。既存Explorer本体を維持し、Themeを中央で読んで元の探索へ戻る。独立3276のみ、会員Capsuleの新断面はU4。
+- U3契約：[中央Graph・固定版・再開](design/KNOWLEDGE_EXPLORER_U3.md)。以前の[確認記録](verification/KNOWLEDGE_EXPLORER_U3_20261102.md)／[一体枠・境界調整](verification/KNOWLEDGE_EXPLORER_U3_SPLIT_20261102.md)は当時の実装・検証として残す。
 
 - 公開読取U2（2026-11-02）：[検索・世代・Graph契約](design/KNOWLEDGE_PUBLIC_READ_U2.md)／[実PG・Neo4j・復元・PC/スマホ実操作](verification/KNOWLEDGE_PUBLIC_READ_U2_20261102.md)。[記録を探索する](http://localhost:3276/themes/explore)で具体語／役割等から検索し、関係図と固定版の根拠を読める。更新は明示読込、表示停止は旧世代にも適用。独立branchと3276のみ。通常Explorerへの接続は上記U3を参照。
 
