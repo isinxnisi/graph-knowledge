@@ -1,5 +1,7 @@
 # 本運用統合の実装引継ぎ
 
+2026-11-03：U4に着手。[新断面・編集連動・段階β統合の契約](KNOWLEDGE_CAPSULE_U4.md)を追加した。U4全体の完了とは扱わず、途中の完成範囲と残件は[保存・編集の中間検証](../verification/KNOWLEDGE_CAPSULE_U4_SAVE_20261103.md)を優先する。
+
 TOPの配置・テーマ一覧の既存デザインへの統一・初期HTML読取の追補は[U3 TOP調整](../verification/KNOWLEDGE_EXPLORER_U3_TOP_20261102.md)を参照する。
 
 最新の実source統合・TOP紹介／新着・検索tab・種類表示は [U3テーマ導線](../verification/KNOWLEDGE_EXPLORER_U3_DISCOVERY_20261102.md) を優先する。既存Explorerを別shellで置換していた状態から、実TOP・検索モーダル・Graph・詳細へ接続し直した。年表の枠・境界の経緯は [U3 一体枠](../verification/KNOWLEDGE_EXPLORER_U3_SPLIT_20261102.md) を参照。
