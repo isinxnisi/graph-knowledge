@@ -42,10 +42,11 @@
   },
   "controlError": null,
   "requestsByPhase": {
-    "waiting-control": 39,
+    "waiting-control": 37,
     "blocked": 2,
-    "completed": 17,
-    "awaiting-recovery": 4
+    "completed": 16,
+    "awaiting-recovery": 4,
+    "retry-wait": 3
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -89,8 +90,9 @@
       "checkedAt": "2026-11-02T13:57:09+00:00"
     },
     "collection-control/issue-sources/56.json": {
-      "status": "registered: issue-56-dot-urushibara-two-20261028",
-      "checkedAt": "2026-11-02T13:57:12+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+      "checkedAt": "2026-11-02T14:55:19+00:00"
     },
     "collection-control/issue-sources/57.json": {
       "status": "registered: issue-57-dot-oshima-two-20261028",
@@ -192,5 +194,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-02T14:53:26.029436+00:00"
+  "checkedAt": "2026-11-02T15:00:12.241437+00:00"
 }
