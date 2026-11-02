@@ -1,3 +1,4 @@
+import { relationLabel } from "./format";
 import type { GraphView } from "./graph-view";
 import type { KnowledgeSnapshot, KnowledgeThemeResolved } from "../domain/knowledge-foundation";
 import { capsuleSchema, type LocalCapsule } from "./local-capsules";
@@ -29,7 +30,7 @@ export function capsuleKnowledgeProjection(document:CapsuleDocument):KnowledgeSn
  // Local additions are content too; without a time they remain in the information section.
  const entityId=(key:string)=>{const n=document.nodes.find(n=>n.key===key);return n?.origin.kind==="knowledge"?n.origin.id:"capsule-node:"+key;};
  for(const n of document.nodes.filter(n=>n.origin.kind!=="knowledge"))result.entities.push({id:entityId(n.key),revision:1,createdAt:document.knowledge!.capturedAt,reason:"Capsule内の独自編集",content:{name:n.title,description:n.description,kind:n.badge||"対象",aliases:[],language:"ja"}});
- for(const relation of document.relations.filter(r=>r.origin.kind!=="knowledge"))result.records.push({id:capsuleRelationRecordId(relation),revision:1,createdAt:document.knowledge!.capturedAt,reason:"Capsule内の独自編集",content:{kind:"relation",subjectId:entityId(relation.source),objectId:entityId(relation.target),assertion:relation.note||relation.label||"関係する",relation:relation.label||"関係する",polarity:relation.origin.kind==="local"?relation.origin.polarity??"affirmed":"affirmed",scope:"",times:relation.times??[],evidence:[]}});
+ for(const relation of document.relations.filter(r=>r.origin.kind!=="knowledge")){const label=relation.label||(relation.origin.kind==="kg"?relationLabel(relation.origin.snapshot,"ja"):"関係する");result.records.push({id:capsuleRelationRecordId(relation),revision:1,createdAt:document.knowledge!.capturedAt,reason:"Capsule内の独自編集",content:{kind:"relation",subjectId:entityId(relation.source),objectId:entityId(relation.target),assertion:relation.note||label,relation:label,polarity:relation.origin.kind==="local"?relation.origin.polarity??"affirmed":relation.origin.kind==="kg"?relation.origin.snapshot.polarity:"affirmed",scope:"",times:relation.times??[],evidence:[]}});}
  const records=new Map(result.records.map(r=>[r.id,r]));
  const timeline=result.timeline??{version:1 as const,axes:[],placements:[],insets:[]};
  timeline.placements=timeline.placements.filter(p=>records.get(p.recordId)?.content.times.some(t=>t.id===p.timeId&&timeline.axes.some(a=>a.id===p.axisId&&a.kind===t.time.kind)));

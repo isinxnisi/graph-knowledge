@@ -30,6 +30,7 @@ type Props<R extends TimelineDisplayRecord> = {
   compactControls?: boolean;
   embedded?: boolean;
   headerAction?: ReactNode;
+  emptyMessage?: string;
 };
 type Group<R extends TimelineDisplayRecord> = ThemeTimelineGroup<R>;
 type CalendarTime = Extract<
@@ -245,6 +246,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
   compactControls = false,
   embedded = false,
   headerAction,
+  emptyMessage="表示する記録がありません。",
 }: Props<R>) {
   const groups = useMemo(
     () => buildTimelineGroups(records, timeline),
@@ -609,7 +611,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
       {roots.length ? (
         roots.map((g) => renderGroup(g))
       ) : (
-        <p className={css.empty}>表示する記録がありません。</p>
+        <p className={css.empty}>{emptyMessage}</p>
       )}
       </div>
     </div>

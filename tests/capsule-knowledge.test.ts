@@ -5,6 +5,11 @@ import { captureKnowledgeCapsule, capsuleKnowledgeProjection, capsuleRelationTim
 import { capsuleDocumentSchema, capsuleReferences } from "../lib/domain/capsule-document";
 import { memberCapsuleContentSchema } from "../lib/domain/member-capsule";
 import { removeCapsuleElements, capsuleHistory, recordCapsule, undoCapsule } from "../lib/client/capsule-editor";
+import examples from "../docs/API_RESPONSE_EXAMPLES.json";
+import { captureCapsule } from "../lib/client/capsule-editor";
+import { emptyGraph } from "../lib/client/graph-state";
+import { relationLabel } from "../lib/client/format";
+import type { NeighborsResponse } from "../lib/domain/api";
 import { capsulePresentation } from "../lib/client/capsule-presentation";
 
 beforeAll(()=>{if(!globalThis.crypto)Object.defineProperty(globalThis,"crypto",{value:webcrypto});});
@@ -85,4 +90,10 @@ it("時期の不正日付・逆転範囲・重複ID・添付なしを保存schem
  expect(capsuleDocumentSchema.safeParse(doc).success).toBe(false);
  doc.relations[0].times=[{id:"time",time:{kind:"calendar",from:"2022",to:"2021",meaning:"duration",label:""}}];expect(capsuleDocumentSchema.safeParse(doc).success).toBe(false);
  doc.relations[0].times=[{id:"time",time:{kind:"calendar",from:"2021",meaning:"point",label:""}}];expect(capsuleDocumentSchema.safeParse(doc).success).toBe(true);doc.relations[0].times.push(doc.relations[0].times[0]);expect(capsuleDocumentSchema.safeParse(doc).success).toBe(false);
+});
+
+it("既存KGの関係名が空の編集値でも具体的な役割・否定を年表情報で失わない",()=>{
+ const page=examples.neighbors as NeighborsResponse,claim={...page.claims[0],polarity:'denied' as const};const graph={...emptyGraph(),nodes:Object.fromEntries(page.nodes.map(n=>[n.id,n])),claims:{[claim.id]:claim}};
+ const value=captureCapsule(graph,null,'demo','既存KG');const doc=withCapsuleTimeline(value.document!);expect(doc.relations[0].label).toBe('');
+ const p=capsuleKnowledgeProjection(doc)!;expect(p.records[0].content.relation).toBe(relationLabel(claim,'ja'));expect(p.records[0].content.polarity).toBe('denied');expect(p.records[0].content.times).toEqual([]);
 });
