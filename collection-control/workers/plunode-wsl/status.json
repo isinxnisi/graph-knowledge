@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-02T02:04:39.676869+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-02T03:10:08.440445+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-02T02:04:39.676869+00:00",
-    "windowEndAt": "2026-11-02T03:00:00+00:00"
+    "eligibleAt": "2026-11-02T06:00:00+00:00",
+    "windowEndAt": "2026-11-02T09:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-64-dot-oda-onepiece-20261029",
+    "startedAt": "2026-11-02T02:05:08.440448+00:00",
+    "limitAt": "2026-11-02T03:00:08.440445+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-59-dot-kubo-two-20261028",
     "endedAt": "2026-11-02T01:54:39.676873+00:00"
@@ -45,7 +49,8 @@
     "blocked": 8,
     "waiting-control": 11,
     "completed": 37,
-    "awaiting-recovery": 6
+    "awaiting-recovery": 5,
+    "retry-wait": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -192,5 +197,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-02T01:56:06.263758+00:00"
+  "checkedAt": "2026-11-02T02:05:15.652201+00:00"
 }
