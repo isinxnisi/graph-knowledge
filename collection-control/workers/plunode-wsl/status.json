@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-02T01:31:28.157022+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-02T02:36:36.710919+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-02T01:31:28.157022+00:00",
+    "eligibleAt": "2026-11-02T02:36:36.710919+00:00",
     "windowEndAt": "2026-11-02T03:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-68-dot-fujikoa-two-20261029-batch-01",
+    "startedAt": "2026-11-02T01:31:36.710922+00:00",
+    "limitAt": "2026-11-02T02:26:36.710919+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-65-dot-inoue-three-20261029-batch-01",
     "endedAt": "2026-11-02T01:21:28.157026+00:00"
@@ -44,7 +48,8 @@
   "requestsByPhase": {
     "blocked": 8,
     "waiting-control": 12,
-    "completed": 36,
+    "completed": 35,
+    "retry-wait": 1,
     "awaiting-recovery": 6
   },
   "issueIntake": {
@@ -177,7 +182,7 @@
     },
     "issue-25-utc-recovery-06": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-07",
-      "phase": "completed"
+      "phase": "retry-wait"
     },
     "issue-25-utc-recovery-07": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-08",
@@ -192,5 +197,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-02T01:25:15.385782+00:00"
+  "checkedAt": "2026-11-02T01:31:43.755130+00:00"
 }
