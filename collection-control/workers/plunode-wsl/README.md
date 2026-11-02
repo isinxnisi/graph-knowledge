@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-02 22:16:08 JST。
+確認: 2026-11-02 22:26:12 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -23,8 +23,9 @@ Issue確認結果:
 ```json
 {
   "collection-control/issue-sources/25.json": {
-    "status": "registered: issue-25-manga23-20261019",
-    "checkedAt": "2026-11-02T12:04:59+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-02T13:17:02+00:00"
   },
   "collection-control/issue-sources/16.json": {
     "status": "registered: issue-16-adachi-three-20261025",
@@ -35,20 +36,24 @@ Issue確認結果:
     "checkedAt": "2026-11-02T03:27:45+00:00"
   },
   "collection-control/issue-sources/42.json": {
-    "status": "registered: issue-42-dot-matsumoto-three-20261026",
-    "checkedAt": "2026-11-02T03:18:01+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-02T13:17:18+00:00"
   },
   "collection-control/issue-sources/46.json": {
-    "status": "registered: issue-46-dot-aoyama-three-20261027",
-    "checkedAt": "2026-11-01T13:56:53+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-02T13:17:34+00:00"
   },
   "collection-control/issue-sources/47.json": {
-    "status": "registered: issue-47-dot-yukimura-two-20261027",
-    "checkedAt": "2026-11-02T02:14:22+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-02T13:17:50+00:00"
   },
   "collection-control/issue-sources/48.json": {
-    "status": "registered: issue-48-dot-toriyama-three-20261027",
-    "checkedAt": "2026-11-01T13:56:58+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-02T13:18:07+00:00"
   },
   "collection-control/issue-sources/49.json": {
     "status": "registered: issue-49-dot-hara-souten-20261027",
@@ -67,20 +72,24 @@ Issue確認結果:
     "checkedAt": "2026-11-01T14:08:21+00:00"
   },
   "collection-control/issue-sources/57.json": {
-    "status": "registered: issue-57-dot-oshima-two-20261028",
-    "checkedAt": "2026-11-02T06:45:03+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-02T13:18:43+00:00"
   },
   "collection-control/issue-sources/58.json": {
-    "status": "registered: issue-58-dot-takeuchi-two-20261028",
-    "checkedAt": "2026-11-02T06:45:05+00:00"
+    "status": "held",
+    "reason": "<urlopen error _ssl.c:990: The handshake operation timed out>",
+    "checkedAt": "2026-11-02T13:19:17+00:00"
   },
   "collection-control/issue-sources/59.json": {
-    "status": "registered: issue-59-dot-kubo-two-20261028",
-    "checkedAt": "2026-11-01T18:10:12+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-02T13:19:33+00:00"
   },
   "collection-control/issue-sources/60.json": {
-    "status": "registered: issue-60-dot-ichikawa-houseki-20261028",
-    "checkedAt": "2026-11-02T11:23:29+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-02T13:19:49+00:00"
   },
   "collection-control/issue-sources/61.json": {
     "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
@@ -99,12 +108,14 @@ Issue確認結果:
     "checkedAt": "2026-11-02T06:45:15+00:00"
   },
   "collection-control/issue-sources/66.json": {
-    "status": "registered: issue-66-dot-togashi-two-20261029",
-    "checkedAt": "2026-11-02T06:07:01+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-02T13:20:25+00:00"
   },
   "collection-control/issue-sources/67.json": {
-    "status": "registered: issue-67-dot-mizuki-two-20261029",
-    "checkedAt": "2026-11-02T06:29:58+00:00"
+    "status": "held",
+    "reason": "Remote end closed connection without response",
+    "checkedAt": "2026-11-02T13:20:43+00:00"
   },
   "collection-control/issue-sources/68.json": {
     "status": "registered: issue-68-dot-fujikoa-two-20261029",
