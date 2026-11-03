@@ -26,8 +26,8 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-03T22:20:00+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-03T21:45:41.558647+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
@@ -35,22 +35,17 @@
     "eligibleAt": "2026-11-04T00:00:00+00:00",
     "windowEndAt": "2026-11-04T03:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-50-dot-endo-tista-20261027",
-    "startedAt": "2026-11-03T21:34:22.012979+00:00",
-    "limitAt": "2026-11-03T22:10:00+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-48-dot-toriyama-three-20261027",
-    "endedAt": "2026-11-03T21:23:58.989796+00:00"
+    "requestId": "issue-50-dot-endo-tista-20261027",
+    "endedAt": "2026-11-03T21:35:41.558650+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 3,
     "waiting-control": 44,
     "completed": 13,
-    "awaiting-recovery": 1,
-    "running": 1
+    "awaiting-recovery": 2
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -197,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-03T21:35:02.859972+00:00"
+  "checkedAt": "2026-11-03T21:36:21.280753+00:00"
 }
