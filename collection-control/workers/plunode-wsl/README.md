@@ -1,16 +1,18 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-03 17:32:06 JST。
+確認: 2026-11-03 17:39:24 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
-**ready**／停止モード: なし
+**interval**／停止モード: なし
 
 日本時間: 03:00〜07:00、09:00〜12:00、15:00〜18:00。ジョブ間10分休憩。
 
-次の開始候補: 開始可能
+次の開始候補: 2026-11-04 03:00:00 JST
 
 最後の操作SHA-256: 1cef6cdd4cb0e4eca8b60a3ae51c6b25a96271b01ffcac788f41f36a5439bf79
+
+処理中: issue-56-dot-urushibara-two-20261028
 
 ChatGPTは[未承認の操作雛形](control-template.json)を読み、運営者が明示した操作だけを controls/plunode-wsl/ID.json に新規登録する。
 
@@ -107,16 +109,19 @@ Issue確認結果:
     "checkedAt": "2026-11-03T05:03:15+00:00"
   },
   "collection-control/issue-sources/68.json": {
-    "status": "registered: issue-68-dot-fujikoa-two-20261029",
-    "checkedAt": "2026-11-03T07:35:51+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-03T08:33:50+00:00"
   },
   "collection-control/issue-sources/69.json": {
-    "status": "registered: issue-69-dot-ishinomori-three-20261029",
-    "checkedAt": "2026-11-03T07:35:54+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-03T08:34:06+00:00"
   },
   "collection-control/issue-sources/70.json": {
-    "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
-    "checkedAt": "2026-11-03T07:35:57+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-03T08:34:22+00:00"
   },
   "collection-control/issue-sources/71.json": {
     "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
