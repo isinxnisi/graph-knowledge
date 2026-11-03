@@ -34,7 +34,8 @@ export async function readAppeal(c:PoolClient,id:string){
  const r=(await c.query('SELECT * FROM member_knowledge.appeals WHERE id=$1',[id])).rows[0];if(!r)return null;
  const replies=(await c.query('SELECT action,reason,created_at FROM member_knowledge.appeal_operations WHERE appeal_id=$1 AND public_reply ORDER BY created_at,id',[id])).rows;
  const pending=(await c.query("SELECT 1 FROM member_knowledge.moderation_decisions WHERE appeal_id=$1 AND (state='pending' OR notified_at IS NULL) LIMIT 1",[id])).rowCount===1;
- return {id:r.id,revision:r.revision,status:r.status,pending,detail:r.detail,createdAt:stamp(r.created_at),replies:replies.map(v=>({action:v.action,reason:v.reason,createdAt:stamp(v.created_at)}))};
+ const moderation=(await c.query("SELECT state,command->>'visibility' AS visibility,reason FROM member_knowledge.moderation_decisions WHERE appeal_id=$1 ORDER BY created_at DESC,id DESC LIMIT 1",[id])).rows[0];
+ return {id:r.id,revision:r.revision,status:r.status,pending,...(moderation?{moderation}:{}),detail:r.detail,createdAt:stamp(r.created_at),replies:replies.map(v=>({action:v.action,reason:v.reason,createdAt:stamp(v.created_at)}))};
 }
 export function createKnowledgeAppeals(pool:Pool,origin:string,owner:(r:Request)=>Promise<{id:string;sessionId:string}>,knowledgePool?:Pool){
  let ready:Promise<void>|undefined,kpool=knowledgePool;

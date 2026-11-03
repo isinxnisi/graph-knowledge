@@ -239,3 +239,10 @@ it("starts from an explicit new search result in the latest generation while ord
  expect(api.requests.filter(q=>q.get("mode")==="neighbors").at(-1)?.has("generation")).toBe(false);
  expect(hook.result.current.normal).toMatchObject({generation:g2,rootId:c.id});
 });
+
+it("explains an unavailable explicitly linked record instead of leaving an unexplained empty graph",async()=>{
+ const api=server();api.hide('r1');history.replaceState({},'', '/?krecord=r1');const {result}=renderHook(()=>useKnowledgeWorkspace({embedded:true}));await flush();expect(result.current.normal.records).toHaveLength(0);expect(result.current.message).toContain('この知識は現在閲覧できません');
+});
+it("explains removal of the selected record when current visibility changes",async()=>{
+ const {api,result}=await setup();await act(()=>result.current.selectRecord('r1'));api.hide('r1');api.change('record-hidden');await tick();expect(result.current.normal.records.some(r=>r.record.id==='r1')).toBe(false);expect(result.current.message).toContain('選択していた知識は現在閲覧できません');
+});

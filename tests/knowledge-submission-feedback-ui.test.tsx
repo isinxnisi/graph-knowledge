@@ -71,3 +71,7 @@ it("a prepared publication is not presented as a readable public result",async()
  const data=result();data.receipt!.items[0]={...data.receipt!.items[0],state:"accepted",reason:"公開へ反映中",publication:{id:"not-yet-public",revision:1,state:"pending",reason:""}};
  fetcher.mockResolvedValueOnce(Response.json(data));render(<KnowledgeSubmissionFeedbackCard submissionId={submissionId} userId={user.id} currentRevision={1}/>);await screen.findByRole("heading",{name:"公開へ反映中"});expect(screen.queryByRole("link",{name:"公開先を開く"})).toBeNull();
 });
+
+it("a current operator block is distinguished from the successful historical publication",async()=>{
+ const data=result();data.receipt!.items[0]={...data.receipt!.items[0],state:'published',publication:{id:'public-record',revision:1,state:'published',reason:''},appeal:{id:submissionId,revision:3,status:'answered',pending:false,detail:'Request',createdAt:'2026-11-04T01:00:00Z',replies:[],moderation:{state:'applied',visibility:'hidden',reason:''}}};fetcher.mockResolvedValueOnce(Response.json(data));render(<KnowledgeSubmissionFeedbackCard submissionId={submissionId} userId={user.id} currentRevision={1}/>);await screen.findByRole('heading',{name:'公開を停止しました'});expect(screen.queryByRole('link',{name:'公開先を開く'})).toBeNull();expect(screen.getByText('公開履歴 1件 · 1項目')).toBeTruthy();
+});

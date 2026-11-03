@@ -122,6 +122,7 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false }: { ini
           }
         }
         const entities = mergeEntities(graph.entities, root ? [root] : []);
+        if(saved.selection?.kind==='record'&&!graph.records.some(r=>r.record.id===saved.selection!.id)&&live(token))setMessage("この知識は現在閲覧できません。公開停止や参照先の変更の可能性があります。");
         normal = { ...normal, rootId: root?.id ?? null, records: graph.records, entities, selection: validSelection(saved.selection, graph.records, entities) };
       }
       let theme: KnowledgeThemeRead | null = null;
@@ -207,6 +208,7 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false }: { ini
         if (generation && before.normal.rootId && !root) root = (await readKnowledge<KnowledgeEntityPage>("entities", { generation, entityId: before.normal.rootId })).entities[0];
         if (!live(token) || current.current !== before || candidateToken !== themeSearch.current) return;
         const records = graph?.records ?? before.normal.records;
+        if(graph&&before.normal.selection?.kind==='record'&&!records.some(r=>r.record.id===before.normal.selection!.id))setMessage("選択していた知識は現在閲覧できません。公開停止や参照先の変更の可能性があります。");
         const entities = graph ? mergeEntities(graph.entities, root ? [root] : []) : before.normal.entities;
         update(old => ({ ...old, normal: { ...old.normal, generation, rootId: root?.id ?? (graph ? null : old.normal.rootId), records, entities, selection: validSelection(old.normal.selection, records, entities) },
           entityPage: page ?? old.entityPage,
