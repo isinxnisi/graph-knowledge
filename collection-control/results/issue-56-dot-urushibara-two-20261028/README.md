@@ -1,10 +1,10 @@
 # 収集Workerの処理結果
 
-issue-56-dot-urushibara-two-20261028：**waiting-control**
+issue-56-dot-urushibara-two-20261028：**retry-wait**
 
 公開apply・restore・本番配置は行わない。承認者名は本人認証の証明ではない。
 
-Execution gate: outside-window
+<urlopen error _ssl.c:990: The handshake operation timed out>
 
 ```json
 {
