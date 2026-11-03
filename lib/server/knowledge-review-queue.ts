@@ -33,7 +33,7 @@ export async function reviewStatus(c:Pool|PoolClient,ownerId:string,id:string,re
  return {revision,workerAvailable,items:rows.map(r=>({key:r.item_key,state:r.state,reason:r.reason,nextAttemptAt:['retry','quota'].includes(r.state)?iso(r.not_before):null,attempts:r.attempts,result:r.result,...(r.publication?{publication:r.publication}:{})}))};
 }
 function submission(row:QueryResultRow):KnowledgeSubmission{
- return {id:row.id,revision:row.current_revision,version:row.state_version,state:row.state,content:knowledgeSubmissionContentSchema.parse(row.content),digest:row.digest,createdAt:iso(row.created_at),updatedAt:iso(row.updated_at),origin:row.source_capsule?{capsuleId:row.source_capsule.capsuleId,capsuleRevision:row.source_capsule.capsuleRevision,title:row.source_capsule.title,keys:row.source_capsule.keys}:null,...(row.source_capsule?.captured?{context:{entities:row.source_capsule.captured.entities,sources:row.source_capsule.captured.sources}}:{})};
+ return {id:row.id,revision:row.current_revision,version:row.state_version,state:row.state,content:knowledgeSubmissionContentSchema.parse(row.content),digest:row.digest,createdAt:iso(row.created_at),updatedAt:iso(row.updated_at),origin:row.source_capsule?.capsuleId?{capsuleId:row.source_capsule.capsuleId,capsuleRevision:row.source_capsule.capsuleRevision,title:row.source_capsule.title,keys:row.source_capsule.keys}:null,...(row.source_capsule?.captured?{context:{entities:row.source_capsule.captured.entities,sources:row.source_capsule.captured.sources}}:{})};
 }
 const quotaFormatter=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Los_Angeles",year:"numeric",month:"2-digit",day:"2-digit"});
 export function quotaDate(now:Date){return quotaFormatter.format(now);}

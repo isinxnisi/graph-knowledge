@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import {afterEach,beforeEach,describe,expect,it,vi} from "vitest";
-import {act,cleanup,fireEvent,render,screen,waitFor} from "@testing-library/react";
+import {act,cleanup,fireEvent,render,screen,waitFor,within} from "@testing-library/react";
 import {knowledgeSubmissionContentSchema,type KnowledgeSubmission} from "../lib/domain/knowledge-submission";
 const mocked=vi.hoisted(()=>({identity:{status:"authenticated",user:{id:"10000000-0000-4000-8000-000000000001"},error:false,version:1,rechecking:false}}));
 vi.mock("../lib/client/use-member-identity",()=>({useMemberSession:()=>mocked.identity,getMemberIdentitySnapshot:()=>mocked.identity,refreshMemberIdentity:vi.fn(async()=>mocked.identity.user),invalidateMemberIdentity:vi.fn()}));
@@ -21,7 +21,7 @@ beforeEach(()=>{
    if(postGate)await postGate;
    const body=JSON.parse(String(init.body));sent.push(body);if(failNext){failNext=false;throw Error("delivery unknown");}
    if(body.action==='capture-public'){const value:KnowledgeSubmission={id:body.id,revision:1,version:1,state:'draft',digest:'a'.repeat(64),createdAt:stamp,updatedAt:stamp,origin:null,content:knowledgeSubmissionContentSchema.parse({title:'公開済みの知識',items:[{key:'public-record',correction:{id:'public-record',revision:1},record:{kind:'note',assertion:'公開済みの知識',evidence:[]}}]})};stored.set(body.id,value);return Response.json({submission:value});}
-   if(body.action==='review'){const old=stored.get(body.id)!;old.review={revision:old.revision,workerAvailable:true,items:old.content.items.map(item=>({key:item.key,state:'queued',reason:'',attempts:0,nextAttemptAt:null,result:null}))};return Response.json({submission:old});}
+   if(body.action==='review'){const old=stored.get(body.id)!;old.review={revision:old.revision,workerAvailable:true,items:old.content.items.map(item=>({key:item.key,state:'queued',reason:'',attempts:0,nextAttemptAt:null,result:null})).reverse()};return Response.json({submission:old});}
    const old=stored.get(body.id);const content=body.content?knowledgeSubmissionContentSchema.parse(body.content):old!.content;
    const submission:KnowledgeSubmission={id:body.id,revision:body.action==="save"?(old?.revision??0)+1:old!.revision,version:(old?.version??0)+1,state:body.action==="save"?"draft":body.action==="submit"?"queued":"cancelled",content,digest:"a".repeat(64),createdAt:stamp,updatedAt:stamp,origin:null};stored.set(body.id,submission);return Response.json({submission});
   }
@@ -79,6 +79,12 @@ describe("member knowledge submission workflow",()=>{
   fireEvent.click(screen.getByRole('button',{name:'保存して知識を届ける'}));expect(sent).toHaveLength(0);
   fireEvent.click(screen.getByRole('checkbox'));fireEvent.click(screen.getByRole('button',{name:'保存して知識を届ける'}));await screen.findByText('受け付けました。確認結果と公開先をここにお知らせします。');
   expect(sent.at(-1)).toMatchObject({action:'review',consentVersion:'gemini-publication-beta-v1'});
+ });
+
+ it('keeps results in submitted item order when jobs arrive in another order',async()=>{
+  publishing=true;await write();fireEvent.click(screen.getByRole('button',{name:'項目を追加'}));fireEvent.change(screen.getAllByLabelText('内容',{exact:true})[1],{target:{value:'二つ目の知識。'}});
+  fireEvent.click(screen.getByRole('checkbox'));fireEvent.click(screen.getByRole('button',{name:'保存して知識を届ける'}));await screen.findByText('受け付けました。確認結果と公開先をここにお知らせします。');
+  const rows=within(screen.getByRole('region',{name:'受付版のAI確認'})).getAllByRole('listitem');expect(rows[0].textContent).toContain('項目 1');expect(rows[1].textContent).toContain('項目 2');
  });
 
  it('previews a public correction without writing and captures the source edition only on explicit action',async()=>{

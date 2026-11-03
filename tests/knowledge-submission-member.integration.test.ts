@@ -4,6 +4,7 @@ import {spawnSync} from "node:child_process";
 import {mkdir,writeFile} from "node:fs/promises";
 import {Pool} from "pg";
 import {createReviewQueue,quotaDate,type ReviewConfig} from "../lib/server/knowledge-review-queue";
+import {knowledgeSubmissionSchema} from "../lib/domain/knowledge-submission";
 import {buildKnowledgePublishedRecord} from "../lib/domain/knowledge-publication";
 import {captureKnowledgeCapsule} from "../lib/client/capsule-knowledge";
 import type {KnowledgeSnapshot} from "../lib/domain/knowledge-foundation";
@@ -324,7 +325,11 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
   publicRead.dto=buildKnowledgePublishedRecord(record,{entities:all.entities.filter(e=>e.id===record.content.subjectId||e.id===record.content.objectId),sources:all.sources.filter(source=>record.content.evidence.some(e=>e.source.id===source.id)),mappings:[]});
   const command={action:'capture-public',requestId:randomUUID(),id:randomUUID(),expectedVersion:0,recordId:rid,recordRevision:1};
   expect((await post({...command,recordRevision:99})).status).toBe(409);expect((await post({...command,snapshot:{}})).status).toBe(400);
-  const captured=await post(command);expect(captured.status).toBe(200);const value=(await captured.json()).submission;expect(value.content.items[0].correction).toEqual({id:rid,revision:1});expect(value.origin).toBeNull();expect(value.context.entities).toHaveLength(2);expect((await post(command)).status).toBe(200);process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='0';
+  const captured=await post(command);expect(captured.status).toBe(200);const value=(await captured.json()).submission;expect(value.content.items[0].correction).toEqual({id:rid,revision:1});expect(value.origin).toBeNull();expect(value.context.entities).toHaveLength(2);expect((await post(command)).status).toBe(200);
+  const submitted=(await (await post({action:'submit',id:value.id,requestId:randomUUID(),expectedVersion:value.version})).json()).submission;
+  const review={action:'review',id:value.id,requestId:randomUUID(),expectedVersion:submitted.version,consentVersion:PUBLICATION_CONSENT_VERSION};
+  for(let attempt=0;attempt<2;attempt++){const response=await post({...review,requestId:randomUUID()});expect(response.status).toBe(200);const dto=knowledgeSubmissionSchema.parse((await response.json()).submission);expect(dto.origin).toBeNull();expect(dto.review?.items).toHaveLength(1);}
+  await post({action:'cancel',id:value.id,requestId:randomUUID(),expectedVersion:submitted.version});process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='0';
  });
  it('does not send a forged correction target to the external AI provider',async()=>{
   process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='1';await memberRuntime().pool.query("UPDATE member_knowledge.submission_receipts SET submitted_at=clock_timestamp()-interval '2 hours'");
