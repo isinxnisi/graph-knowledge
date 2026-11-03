@@ -43,9 +43,9 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 2,
-    "waiting-control": 52,
+    "waiting-control": 48,
     "completed": 7,
-    "retry-wait": 1
+    "retry-wait": 5
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -69,12 +69,14 @@
       "checkedAt": "2026-11-03T09:46:55+00:00"
     },
     "collection-control/issue-sources/47.json": {
-      "status": "registered: issue-47-dot-yukimura-two-20261027",
-      "checkedAt": "2026-11-03T09:46:57+00:00"
+      "status": "held",
+      "reason": "Remote end closed connection without response",
+      "checkedAt": "2026-11-03T12:42:03+00:00"
     },
     "collection-control/issue-sources/48.json": {
-      "status": "registered: issue-48-dot-toriyama-three-20261027",
-      "checkedAt": "2026-11-03T05:47:06+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+      "checkedAt": "2026-11-03T12:42:19+00:00"
     },
     "collection-control/issue-sources/49.json": {
       "status": "registered: issue-49-dot-hara-souten-20261027",
@@ -109,12 +111,14 @@
       "checkedAt": "2026-11-03T10:34:20+00:00"
     },
     "collection-control/issue-sources/61.json": {
-      "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
-      "checkedAt": "2026-11-03T10:34:22+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno 104] Connection reset by peer>",
+      "checkedAt": "2026-11-03T12:42:55+00:00"
     },
     "collection-control/issue-sources/62.json": {
-      "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
-      "checkedAt": "2026-11-03T09:28:16+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+      "checkedAt": "2026-11-03T12:43:09+00:00"
     },
     "collection-control/issue-sources/64.json": {
       "status": "registered: issue-64-dot-oda-onepiece-20261029",
@@ -173,24 +177,24 @@
     },
     "issue-25-utc-recovery-05": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-06",
-      "phase": "waiting-control"
+      "phase": "retry-wait"
     },
     "issue-25-utc-recovery-06": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-07",
-      "phase": "waiting-control"
+      "phase": "retry-wait"
     },
     "issue-25-utc-recovery-07": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-08",
-      "phase": "waiting-control"
+      "phase": "retry-wait"
     },
     "issue-25-utc-recovery-08": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-09",
-      "phase": "waiting-control"
+      "phase": "retry-wait"
     },
     "issue-25-utc-recovery-09": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-10",
-      "phase": "waiting-control"
+      "phase": "retry-wait"
     }
   },
-  "checkedAt": "2026-11-03T12:41:04.758601+00:00"
+  "checkedAt": "2026-11-03T12:49:53.750230+00:00"
 }
