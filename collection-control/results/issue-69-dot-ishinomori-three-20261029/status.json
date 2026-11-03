@@ -70,13 +70,13 @@
   },
   "requestSha256": "a3f50dae8f31b200fc63d218d4c206ad20ade9fce955125a5af066d52220b20f",
   "kind": "issue-prepare",
-  "phase": "waiting-lock",
-  "generation": 1850,
+  "phase": "retry-wait",
+  "generation": 1851,
   "attempts": 5,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-03T08:13:21+00:00",
-  "message": "共通ロック使用中。次回に再確認する。",
+  "updatedAt": "2026-11-03T08:44:24+00:00",
+  "message": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
   "result": {
     "schemaVersion": 1,
     "status": "technical-incomplete",
@@ -124,5 +124,5 @@
     }
   },
   "executionComplete": false,
-  "retryAt": 1793676590.8999076
+  "retryAt": 1793697400.0316257
 }
