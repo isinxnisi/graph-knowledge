@@ -19,6 +19,7 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
 }) {
   const communitiesEnabled=useCommunitiesEnabled();
   const { locale } = useUiLocale(), text = capsuleSharingLabels(locale), fieldId = useId();
+  const [sourceAvailable, setSourceAvailable] = useState(true);
   const [blocked, setBlocked] = useState(false), [share, setShare] = useState<CapsuleShare | null>(null);
   const [known, setKnown] = useState(false), [busy, setBusy] = useState(true), [closed, setClosed] = useState(false);
   const [url, setUrl] = useState(""), [confirm, setConfirm] = useState<"issue" | "revoke" | null>(null);
@@ -37,6 +38,7 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
       if (mutation) { setKnown(false); setUrl(""); }
       if (cause instanceof MemberClientError && cause.status === 401) { setUrl(""); unauthorized.current(); return; }
       const labels = capsuleSharingLabels();
+      if(cause instanceof MemberClientError && ["KNOWLEDGE_REFERENCE_UNAVAILABLE","KNOWLEDGE_PUBLICATION_UNAVAILABLE"].includes(cause.code)){setSourceAvailable(false);setUrl("");setError(cause.code==="KNOWLEDGE_REFERENCE_UNAVAILABLE"?labels.sourceRejected:labels.sourceCheckFailed);return;}
       setError(cause instanceof MemberClientError && cause.code === "SHARING_BLOCKED" ? labels.blocked : cause instanceof MemberClientError && cause.status === 409 ? labels.conflict : cause instanceof MemberClientError && cause.code === "SHARE_REVISION_LIMIT" ? labels.limit : labels.failed);
     } finally { if (!controller.signal.aborted) setBusy(false); }
   }, []);
@@ -44,9 +46,9 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
     const result = await memberRequest(path, capsuleShareStatusSchema, { user: userId, signal });
     if (!signal.aborted) {
       const sameLink = currentShare.current === (result.share?.id ?? null);
-      setUrl(previous => !result.share || result.blocked ? "" : result.token ? `${location.origin}${capsuleSharePath(result.token)}` : sameLink ? previous : "");
+      setUrl(previous => !result.share || result.blocked || !result.sourceAvailable ? "" : result.token ? `${location.origin}${capsuleSharePath(result.token)}` : sameLink ? previous : "");
       currentShare.current = result.share?.id ?? null;
-      setShare(result.share); setBlocked(result.blocked); setClosed(result.commentsClosed); setKnown(true); setCommentVersion(value => value + 1);
+      setShare(result.share); setSourceAvailable(result.sourceAvailable); setBlocked(result.blocked); setClosed(result.commentsClosed); setKnown(true); setCommentVersion(value => value + 1);
     }
   }); }, [path, run, userId]);
   useEffect(() => { const timer = setTimeout(refresh, 0); return () => { clearTimeout(timer); active.current?.abort(); }; }, [refresh]);
@@ -55,14 +57,14 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
     setConfirm(null);
     void run(async signal => {
       const result = await memberRequest(path, capsuleShareIssuedSchema, { method: "POST", body: { expectedRevision: capsule.revision, expectedShareId: share?.id ?? null, commentsClosed: closed }, user: userId, signal });
-      if (!signal.aborted) { currentShare.current = result.share.id; setShare(result.share); setKnown(true); setUrl(`${location.origin}${capsuleSharePath(result.token)}`); setMessage(text.issued); }
+      if (!signal.aborted) { currentShare.current = result.share.id; setShare(result.share); setSourceAvailable(true); setKnown(true); setUrl(`${location.origin}${capsuleSharePath(result.token)}`); setMessage(text.issued); }
     }, true);
   }
   function publish() {
     if (!share || !known || discussionDraft.hasDraft()) return;
     void run(async signal => {
       const result = await memberRequest(path, z.object({share:capsuleShareSchema}), {method:"PATCH",body:{expectedShareId:share.id,expectedSharedRevision:share.revision,expectedRevision:capsule.revision},user:userId,signal});
-      if (!signal.aborted) { setShare(result.share); setKnown(true); setMessage(text.published); setCommentVersion(value=>value+1); }
+      if (!signal.aborted) { setShare(result.share); setSourceAvailable(true); setKnown(true); setMessage(text.published); setCommentVersion(value=>value+1); }
     },true);
   }
   function revoke() {
@@ -94,7 +96,8 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
       <button type="button" className={css.switch} role="switch" aria-label={text.comments} aria-checked={!closed} disabled={busy || disabled || !known || blocked} onClick={changeComments} /></div>
     {error && <p className={css.error} role="alert">{contentMessage(error, locale)}</p>}
     {message && <p className={css.feedback} role="status">{contentMessage(message, locale)}</p>}
-    {share && known && !busy && !blocked && !url && <p className={css.feedback}>{text.unrecoverable}</p>}
+    {share && !sourceAvailable && <p className={css.feedback}>{text.sourceUnavailable}</p>}
+    {share && known && !busy && !blocked && sourceAvailable && !url && <p className={css.feedback}>{text.unrecoverable}</p>}
     {url ? <div className={css.linkBox}><label htmlFor={fieldId}>{text.url}</label><div className={css.linkField}><input id={fieldId} readOnly value={url} onFocus={event => event.target.select()} />
       <button className={`${css.button} ${css.primary}`} onClick={() => void copy()}><Icon name="copy" />{text.copy}</button></div>
       <a className={`${css.button} ${css.quiet}`} href={url} target="_blank" rel="noopener noreferrer"><Icon name="external" />{text.preview}</a></div> : null}
@@ -103,10 +106,10 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
       {share && <button className={`${css.button} ${css.quiet}`} disabled={busy || disabled || !known} onClick={() => setConfirm("revoke")}>{text.revoke}</button>}
       {!share && <button className={`${css.button} ${css.primary}`} disabled={busy || disabled || !known || blocked} onClick={issue}><Icon name="link" />{text.issue}</button>}</div>
     {share && discussionDraft.hasDraft() && share.revision !== capsule.revision && <p className={css.muted}>{text.finishComment}</p>}
-    {share && <details className={css.details}><summary>{text.rotate}</summary><p>{text.rotationHelp}</p><button className={css.button} disabled={busy || disabled || !known || blocked} onClick={() => setConfirm("issue")}>{text.rotate}</button></details>}
+    {share && <details className={css.details}><summary>{text.rotate}</summary><p>{text.rotationHelp}</p><button className={css.button} disabled={busy || disabled || !known || blocked || !sourceAvailable} onClick={() => setConfirm("issue")}>{text.rotate}</button></details>}
     <details className={css.details}><summary>{text.details}</summary><p>{text.linkRecovery}</p><p>{text.commentScope}</p></details>
     {communitiesEnabled && <CapsuleDestinations key={`${userId}:${capsule.id}`} capsuleId={capsule.id} ownerId={userId}/>}
-    {capsule.content.document && share && !blocked && <CapsuleDiscussion key={`${capsule.id}:${share.revision}:${userId}`} capsuleId={capsule.id} revision={share.revision} userId={userId} draftCache={discussionDraft} onUnauthorized={onUnauthorized} showSettings={false} refreshVersion={commentVersion} revisionUrl={url ? revision => `${url}?revision=${revision}` : undefined} />}
+    {capsule.content.document && share && !blocked && sourceAvailable && <CapsuleDiscussion key={`${capsule.id}:${share.revision}:${userId}`} capsuleId={capsule.id} revision={share.revision} userId={userId} draftCache={discussionDraft} onUnauthorized={onUnauthorized} showSettings={false} refreshVersion={commentVersion} revisionUrl={url ? revision => `${url}?revision=${revision}` : undefined} />}
     {confirm && <CommunityDialog className={css.dialog} title={confirm === "issue" ? text.rotate : text.revoke} onCancel={() => setConfirm(null)} busy={busy}>
       <p>{confirm === "issue" ? text.rotationHelp : text.revokeHelp}</p><div className={css.actions}>
         <button className={css.button} onClick={() => setConfirm(null)} autoFocus>{text.cancel}</button><button className={`${css.button} ${css.primary}`} disabled={busy || disabled} onClick={confirm === "issue" ? issue : revoke}>{confirm === "issue" ? text.confirmIssue : text.confirmRevoke}</button>

@@ -1,3 +1,4 @@
+import {knowledgeReferencesSql,knowledgeReferencesAllowed,requireKnowledgeReferences} from "./knowledge-access";
 import {createHash, randomUUID} from "node:crypto";
 import type {Pool, PoolClient, QueryResultRow} from "pg";
 import {z} from "zod";
@@ -16,12 +17,13 @@ const missing=()=>new MemberError(404,"NOT_FOUND");
 // Only the reported comment is read; no Capsule title, graph or sibling comments.
 export async function capsulePostGrant(c:PoolClient,capsuleId:string,postRevision:number,shareId:string|null) {
  if(!shareId)return false;
- return !!(await c.query(`SELECT 1 FROM member_capsule cap JOIN "user" owner ON owner.id=cap.owner_user_id AND owner.active
+ const row=(await c.query(`SELECT ${knowledgeReferencesSql("r.snapshot")} AS knowledge_refs,${knowledgeReferencesSql("live.snapshot")} AS live_knowledge_refs FROM member_capsule cap JOIN "user" owner ON owner.id=cap.owner_user_id AND owner.active
  JOIN member_capsule_share s ON s.capsule_id=cap.id AND s.id=$3
  JOIN member_capsule_publication p ON p.share_id=s.id AND p.capsule_id=cap.id AND p.revision=$2
  JOIN member_capsule_revision r ON r.capsule_id=p.capsule_id AND r.revision=p.revision AND NOT r.sharing_blocked
  JOIN member_capsule_revision live ON live.capsule_id=s.capsule_id AND live.revision=s.revision AND NOT live.sharing_blocked
- WHERE cap.id=$1 AND cap.trashed_at IS NULL AND NOT cap.sharing_blocked`,[capsuleId,postRevision,shareId])).rowCount;
+ WHERE cap.id=$1 AND cap.trashed_at IS NULL AND NOT cap.sharing_blocked`,[capsuleId,postRevision,shareId])).rows[0];
+ if(!row)return false;return (await knowledgeReferencesAllowed([row.knowledge_refs,row.live_knowledge_refs])).every(Boolean);
 }
 export function createCapsulePostReports(pool:Pool,dataset:DatasetMode,origin:string,authenticate:(r:Request)=>Promise<{id:string}>) {
  return {async reportDiscussionPost(req:Request,rawId:string) {
@@ -34,11 +36,12 @@ export function createCapsulePostReports(pool:Pool,dataset:DatasetMode,origin:st
    const cap=(await c.query('SELECT * FROM member_capsule WHERE id=$1 AND dataset=$2 FOR UPDATE',[id,dataset])).rows[0];if(!cap)throw missing();
    const post=(await c.query('SELECT p.*,u.active FROM member_capsule_post p JOIN "user" u ON u.id=p.author_user_id WHERE p.id=$1 AND p.capsule_id=$2 FOR UPDATE OF p',[input.postId,id])).rows[0];
    if(!post||post.withdrawn_at||post.hidden_at||!post.active)throw missing();
-   const share=(await c.query(`SELECT s.id FROM member_capsule_share s
+   const share=(await c.query(`SELECT s.id,${knowledgeReferencesSql("r.snapshot")} AS knowledge_refs FROM member_capsule_share s
     JOIN member_capsule_publication p ON p.share_id=s.id AND p.capsule_id=s.capsule_id AND p.revision=$2
     JOIN member_capsule_revision r ON r.capsule_id=p.capsule_id AND r.revision=p.revision AND NOT r.sharing_blocked
     WHERE s.capsule_id=$1 AND ($3::boolean OR s.token_hash=$4)`,[id,input.revision,cap.owner_user_id===u.id,tokenHash(req.headers.get('x-capsule-token')??'')])).rows[0];
    if(!await capsulePostGrant(c,id,Number(post.revision),share?.id??null))throw missing();
+   await requireKnowledgeReferences([share.knowledge_refs]);
    if(post.moderation_revision!==input.expectedRevision)throw new MemberError(409,"COMMUNITY_CHANGED");
    const digest=hash(['capsule-post-report',id,input]);
    const receipt=(await c.query('SELECT hash,result_id FROM community_request WHERE user_id=$1 AND request_id=$2',[u.id,input.requestId])).rows[0];

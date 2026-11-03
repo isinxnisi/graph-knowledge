@@ -8,6 +8,8 @@ import { knowledgeEntityContentSchema, knowledgeSourceContentSchema, knowledgeRe
 import { buildKnowledgePublishedRecord, flattenKnowledgePublishedRecord, knowledgePublicationQuerySchema, type KnowledgePublishedRecord } from "../domain/knowledge-publication";
 import { ensureKnowledgeFoundationSchema, resolvePublicKnowledgeTheme, KnowledgeError, knowledgeDigest } from "./knowledge-foundation";
 
+import { capsuleKnowledgeSchema } from "../domain/capsule-knowledge";
+import { capsuleKnowledgeReferences, knowledgeReferenceGroupsSchema, type KnowledgeReference } from "../domain/capsule-knowledge-access";
 import { capsuleUpdateQuerySchema, type CapsuleUpdateResponse } from "../domain/capsule-updates";
 import { knowledgeThemeListQuerySchema, knowledgeThemeReadQuerySchema, knowledgeEntityQuerySchema, type KnowledgeThemePage, type KnowledgeThemeRead, type KnowledgeEntityPage } from "../domain/knowledge-theme-reader";
 
@@ -93,6 +95,17 @@ async function capturePublication(c:PoolClient) {
 }
 
 type PublicationHooks={afterStage?:()=>Promise<void>;beforeActivate?:()=>Promise<void>};
+/** Published once, public now, and the exact edition: never the current private head. */
+async function capsuleReferenceRows(c:PoolClient,groups:KnowledgeReference[][],content=false){
+ const pins=[...new Map(groups.flat().map(p=>[pinKey(p.kind,p.id,p.revision),p])).values()];
+ if(!pins.length)return new Map<string,QueryResultRow>();
+ const rows=(await c.query(`SELECT ${content?'r.*':'r.kind,r.id,r.revision'} FROM jsonb_to_recordset($1::jsonb) AS requested(kind text,id text,revision bigint)
+  JOIN knowledge75.revisions r ON r.kind=requested.kind AND r.id=requested.id AND r.revision=requested.revision
+  JOIN knowledge75.objects o ON o.kind=r.kind AND o.id=r.id AND o.visibility='public'
+  JOIN knowledge75.published_revisions p ON p.kind=r.kind AND p.id=r.id AND p.revision=r.revision`,[JSON.stringify(pins)])).rows;
+ return new Map(rows.map(r=>[pinKey(r.kind,r.id,Number(r.revision)),r]));
+}
+
 export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:PublicationHooks={},options:{prepareSchema?:()=>Promise<unknown>}={}) {
   let initialized:Promise<unknown>|undefined;
   const ready=()=>initialized??=(options.prepareSchema?.()??ensureKnowledgePublicationSchema(pool)).catch(e=>{initialized=undefined;throw e;});
@@ -171,6 +184,18 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
   async function entity(c:PoolClient,generationId:string,id:string){const r=(await c.query("SELECT e.body FROM knowledge75.publication_entities e JOIN knowledge75.objects o ON o.kind='entity' AND o.id=e.id AND o.visibility='public' JOIN knowledge75.published_revisions p ON p.kind='entity' AND p.id=e.id AND p.revision=e.revision WHERE e.generation=$1 AND e.id=$2",[generationId,id])).rows[0];if(!r)throw new KnowledgeError("この対象は閲覧できません",404,"NOT_FOUND");return r.body as KnowledgeEntityVersion;}
   return {
     publishPending,status:()=>read(statusIn),
+    capsulesReadable:(raw:unknown)=>read(async c=>{
+      const groups=knowledgeReferenceGroupsSchema.parse(raw),rows=await capsuleReferenceRows(c,groups);
+      return groups.map(group=>group.every(p=>rows.has(pinKey(p.kind,p.id,p.revision))));
+    }),
+    validateCapsuleKnowledge:(raw:unknown)=>read(async c=>{
+      const k=capsuleKnowledgeSchema.parse(raw),pins=capsuleKnowledgeReferences(k),rows=await capsuleReferenceRows(c,[pins],true);
+      if(pins.some(p=>!rows.has(pinKey(p.kind,p.id,p.revision))))return false;
+      return ([['records','record'],['entities','entity'],['sources','source'],['mappings','mapping']] as const).every(([group,kind])=>k.snapshot[group].every(version=>{
+        const row=rows.get(pinKey(kind,version.id,version.revision))!;
+        return knowledgeDigest({content:version.content,createdAt:version.createdAt,reason:version.reason})===knowledgeDigest({content:row.content,createdAt:iso(row.created_at),reason:row.reason});
+      }));
+    }),
     capsuleUpdates:(raw:unknown)=>read(async c=>{
       const q=capsuleUpdateQuerySchema.parse(raw);
       if(q.includeTheme&&q.theme){

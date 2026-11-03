@@ -1,4 +1,29 @@
 import type { MemberCapsule } from "./member-capsule";
+import { capsuleKnowledgeProjection } from "../client/capsule-knowledge";
+import { calendarMeaning, themeTimeLabel } from "./theme-time";
+
+/** A small, faithful excerpt of one axis. Separate calendars/cycles are never
+ * flattened into a fictitious common clock. Endpoints remain visible. */
+function timelinePreview(capsule:MemberCapsule) {
+  const document=capsule.content.document;
+  if(!document?.knowledge || document.knowledge.initialView==="graph")return null;
+  const snapshot=capsuleKnowledgeProjection(document)!;
+  const insets=new Set(snapshot.timeline?.insets.map(i=>i.axisId));
+  const main=snapshot.timeline?.axes.find(a=>!insets.has(a.id));
+  const rows=snapshot.records.flatMap(r=>r.content.times.map(t=>({record:r,time:t.time,timeId:t.id})));
+  const placements=snapshot.timeline?.placements??[];
+  const candidates=rows.filter(row=>main?placements.some(p=>p.recordId===row.record.id&&p.timeId===row.timeId&&p.axisId===main.id):row.time.kind==="calendar");
+  const selected=candidates.slice().sort((a,b)=>String(a.time.from).localeCompare(String(b.time.from))).slice(0,4);
+  const order=main?.kind==="qualitative"?main.order:undefined;
+  const keys=[...new Set(selected.flatMap(r=>[String(r.time.from),String(r.time.to??r.time.from)]))].sort((a,b)=>order?order.indexOf(a)-order.indexOf(b):main?.kind==="cycle"?Number(a)-Number(b):a.localeCompare(b));
+  const y=(key:string)=>76+(keys.indexOf(key)/Math.max(1,keys.length-1))*340;
+  return {axis:main?.label??"年月日・期間",total:rows.length,untimed:snapshot.records.filter(r=>!r.content.times.length).length,
+    ticks:keys.map(key=>({label:key,y:y(key)})),
+    items:selected.map((row,i)=>({id:row.record.id+":"+row.timeId,title:row.record.content.assertion,label:themeTimeLabel(row.time),
+      meaning:row.time.kind==="calendar"?calendarMeaning(row.time):row.time.to!==undefined?"duration":"point",
+      x:154+i*16,y:y(String(row.time.from)),end:y(String(row.time.to??row.time.from))})),
+  };
+}
 export function capsulePreviewModel(capsule:MemberCapsule) {
   const document=capsule.content.document;
   const degree=new Map<string,number>();
@@ -24,6 +49,7 @@ export function capsulePreviewModel(capsule:MemberCapsule) {
   // Multiple Claims may form the same visible connection; retain only actual endpoints.
   const seen=new Set<string>();
   const edges=(document?.relations??[]).filter(e=>{const k=e.source+":"+e.target;if(!keys.has(e.source)||!keys.has(e.target)||seen.has(k))return false;seen.add(k);return true;});
-  return {title:capsule.content.title,description:capsule.content.note.trim()||document?.texts.find(t=>t.text.trim())?.text.trim()||"",nodes,edges,totalNodes:document?.nodes.length??capsule.content.entityIds.length,totalRelations:document?.relations.length??capsule.content.claimIds.length};
+  const timeline=timelinePreview(capsule);
+  return {title:capsule.content.title,description:capsule.content.note.trim()||document?.texts.find(t=>t.text.trim())?.text.trim()||"",timeline,nodes,edges,totalNodes:document?.nodes.length??capsule.content.entityIds.length,totalRelations:document?.relations.length??capsule.content.claimIds.length};
 }
 export function previewExcerpt(text:string,length:number){const letters=Array.from(text.replace(/\s+/g," ").trim());return letters.slice(0,length).join("")+(letters.length>length?"…":"");}

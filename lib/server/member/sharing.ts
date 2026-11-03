@@ -1,3 +1,4 @@
+import {knowledgeReferencesSql,knowledgeReferencesAllowed,requireKnowledgeReferences} from "./knowledge-access";
 import { randomUUID } from "node:crypto";
 import type { Pool, QueryResultRow } from "pg";
 import type { DatasetMode } from "../../domain/dataset";
@@ -40,7 +41,7 @@ export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: s
       // Recheck the active owner in the same statement that reads the bearer
       // material. This endpoint is never authorized by a shared-link token.
       const result = await pool.query(`SELECT s.id, s.revision, s.created_at, (to_jsonb(s)->>'updated_at')::timestamptz AS updated_at, COALESCE((to_jsonb(s)->>'token_revision')::bigint,s.revision) AS token_revision, s.token_hash, (to_jsonb(s)->>'token_derivation_version')::smallint AS token_derivation_version,
-          c.sharing_blocked, COALESCE((to_jsonb(r)->>'sharing_blocked')::boolean,false) AS revision_blocked,
+          ${knowledgeReferencesSql("r.snapshot")} AS knowledge_refs, c.sharing_blocked, COALESCE((to_jsonb(r)->>'sharing_blocked')::boolean,false) AS revision_blocked,
           COALESCE(t.closed, false) AS comments_closed FROM member_capsule c
         JOIN "user" u ON u.id = c.owner_user_id AND u.active = true
         LEFT JOIN member_capsule_share s ON s.capsule_id = c.id
@@ -51,7 +52,8 @@ export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: s
       if (!row) throw new MemberError(404, "NOT_FOUND");
       const token = row.id && !row.sharing_blocked && !row.revision_blocked
         ? recoverCapsuleShareToken(secret, { dataset, capsuleId: id, shareId: row.id, revision: Number(row.token_revision) }, row.token_derivation_version, row.token_hash) : null;
-      return memberJson({ share: row.id ? shareDto(row) : null, blocked: row.sharing_blocked, commentsClosed: row.comments_closed, token });
+      const sourceAvailable=(await knowledgeReferencesAllowed([row.knowledge_refs]))[0];
+      return memberJson({ sourceAvailable, share: row.id ? shareDto(row) : null, blocked: row.sharing_blocked, commentsClosed: row.comments_closed, token });
     },
     async issueShare(request: Request, rawId: string) {
       assertMemberOrigin(request, origin);
@@ -75,7 +77,11 @@ export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: s
         if (!(await client.query("SELECT to_regclass('member_capsule_publication') AS ready")).rows[0]?.ready) throw new MemberError(503, "SHARE_PUBLICATION_UNAVAILABLE");
         const targetRevision = Number(existing.rows[0]?.revision ?? row.revision);
         if (!existing.rows[0]) await freezeCapsuleRevision(client, row);
-        else if ((await client.query("SELECT COALESCE((to_jsonb(r)->>'sharing_blocked')::boolean,false) AS blocked FROM member_capsule_revision r WHERE capsule_id=$1 AND revision=$2",[id,targetRevision])).rows[0]?.blocked) throw new MemberError(403,"SHARING_BLOCKED");
+        else {
+          const frozen=(await client.query(`SELECT COALESCE((to_jsonb(r)->>'sharing_blocked')::boolean,false) AS blocked,${knowledgeReferencesSql('r.snapshot')} AS knowledge_refs FROM member_capsule_revision r WHERE capsule_id=$1 AND revision=$2`,[id,targetRevision])).rows[0];
+          if(!frozen)throw new MemberError(404,"NOT_FOUND");if(frozen.blocked)throw new MemberError(403,"SHARING_BLOCKED");
+          await requireKnowledgeReferences([frozen.knowledge_refs]);
+        }
         // Issuing a link and selecting its comment setting are one operation.
         // An omitted setting preserves an existing owner's closure choice.
         await client.query("INSERT INTO member_capsule_thread (capsule_id, closed) VALUES ($1, false) ON CONFLICT DO NOTHING", [id]);

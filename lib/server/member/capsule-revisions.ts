@@ -1,6 +1,7 @@
 import type { PoolClient, QueryResultRow } from "pg";
 import { MEMBER_CAPSULE_LIMITS, memberCapsuleSchema } from "../../domain/member-capsule";
 import { SHARED_REVISION_LIMIT } from "../../domain/capsule-sharing";
+import { requireKnowledgePublication } from "./knowledge-access";
 import { MemberError } from "./http";
 
 export function capsuleDto(row: QueryResultRow) {
@@ -11,7 +12,7 @@ export function capsuleDto(row: QueryResultRow) {
 // Caller holds the current Capsule row lock and has checked owner, dataset and
 // expected revision. No read or ordinary save implicitly creates a shared copy.
 export async function freezeCapsuleRevision(client: PoolClient, row: QueryResultRow) {
-  if(row.content?.document?.knowledge)throw new MemberError(503,"KNOWLEDGE_SHARING_UNAVAILABLE");
+  await requireKnowledgePublication(capsuleDto(row));
   const existing = (await client.query("SELECT snapshot, COALESCE((to_jsonb(member_capsule_revision)->>'sharing_blocked')::boolean,false) AS sharing_blocked FROM member_capsule_revision WHERE capsule_id=$1 AND revision=$2", [row.id, row.revision])).rows[0];
   if (existing) { if (existing.sharing_blocked) throw new MemberError(403, "SHARING_BLOCKED"); return memberCapsuleSchema.parse(existing.snapshot); }
   const count = await client.query("SELECT count(*) FROM member_capsule_revision WHERE capsule_id=$1", [row.id]);

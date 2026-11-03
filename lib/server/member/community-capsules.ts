@@ -1,3 +1,4 @@
+import {knowledgeReferencesSql,knowledgeReferencesAllowed,requireKnowledgeReferences,requireKnowledgePublication} from "./knowledge-access";
 import {publicPeople} from "./public-people";
 import { createHash, randomUUID } from "node:crypto";
 import type { Pool, PoolClient, QueryResultRow } from "pg";
@@ -43,8 +44,9 @@ const summaryProjection = `l.*,r.snapshot#>>'{content,title}' AS capsule_title,
   COALESCE(jsonb_array_length(r.snapshot#>'{content,document,relations}'),jsonb_array_length(r.snapshot#>'{content,claimIds}')) AS claim_count`;
 
 export async function requireCapsuleListingAccess(c: PoolClient, id: string, userId: string | null) {
-  const row = (await c.query(`SELECT l.*,r.snapshot ${joins} WHERE l.id=$1 AND ${readableCapsuleListing}`, [id,userId])).rows[0];
+  const row = (await c.query(`SELECT l.*,r.snapshot,${knowledgeReferencesSql("r.snapshot")} AS knowledge_refs ${joins} WHERE l.id=$1 AND ${readableCapsuleListing}`, [id,userId])).rows[0];
   if (!row) throw missing();
+  await requireKnowledgeReferences([row.knowledge_refs]);
   return row;
 }
 
@@ -81,8 +83,9 @@ export function createCommunityCapsules(pool: Pool, h: Helpers, secret: string, 
       claimCount: snapshot ? snapshot.content.document?.relations.length ?? snapshot.content.claimIds.length : row.claim_count, canManage: row.owner_user_id === userId, threadId };
   }
   async function readable(c: PoolClient, id: string, userId: string | null) {
-    const row = (await c.query(`SELECT l.*,r.snapshot ${joins} WHERE l.id=$1 AND cap.dataset=$3 AND ${readableCapsuleListing}`, [id, userId, dataset])).rows[0];
+    const row = (await c.query(`SELECT l.*,r.snapshot,${knowledgeReferencesSql("r.snapshot")} AS knowledge_refs ${joins} WHERE l.id=$1 AND cap.dataset=$3 AND ${readableCapsuleListing}`, [id, userId, dataset])).rows[0];
     if (!row) throw missing();
+    await requireKnowledgeReferences([row.knowledge_refs]);
     return row;
   }
   async function saved(c: PoolClient, id: string, userId: string, wanted: number) {
@@ -90,9 +93,15 @@ export function createCommunityCapsules(pool: Pool, h: Helpers, secret: string, 
     if (!row) throw missing();
     if (row.sharing_blocked) throw new MemberError(403, "SHARING_BLOCKED");
     const frozen = (await c.query("SELECT snapshot,sharing_blocked FROM member_capsule_revision WHERE capsule_id=$1 AND revision=$2", [id, wanted])).rows[0];
-    if (frozen) { if (frozen.sharing_blocked) throw new MemberError(403, "SHARING_BLOCKED"); return; }
+    if (frozen) { if (frozen.sharing_blocked) throw new MemberError(403, "SHARING_BLOCKED"); await requireKnowledgePublication(memberCapsuleSchema.parse(frozen.snapshot)); return; }
     if (Number(row.revision) !== wanted) throw new MemberError(409, "REVISION_CONFLICT");
     await freezeCapsuleRevision(c, row);
+  }
+  // Resolve source gates for all member-authorized candidates before LIMIT/cursor.
+  async function visibleIds(c:PoolClient,fromWhere:string,values:unknown[]) {
+    const rows=(await c.query(`SELECT l.id,${knowledgeReferencesSql('r.snapshot')} AS knowledge_refs ${fromWhere}`,values)).rows;
+    const allowed=await knowledgeReferencesAllowed(rows.map(row=>row.knowledge_refs));
+    return rows.filter((_,i)=>allowed[i]).map(row=>row.id);
   }
   async function receipt(c: PoolClient, userId: string, requestId: string, input: unknown) {
     const hash = createHash("sha256").update(JSON.stringify(input)).digest("hex");
@@ -117,18 +126,21 @@ export function createCommunityCapsules(pool: Pool, h: Helpers, secret: string, 
         await requireCommunityCapsules(c);
         // Apply the same listing, membership-generation and community access
         // rules before pagination. Capsule ownership is not a read bypass.
-        const page=await communityPage(c,req,secret,'capsule-destinations:'+id,user.id,String(cap.revision),
-          `SELECT l.id,l.community_id,l.capsule_revision,l.audience,place.title,place.visibility,l.id AS page_id,${pageTime('l.created_at')}
-           ${joins} JOIN community place ON place.id=l.community_id
+        const fromWhere=`${joins} JOIN community place ON place.id=l.community_id
            WHERE l.capsule_id=$1 AND l.owner_user_id=$2 AND cap.dataset=$3 AND ${readableCapsuleListing}
-           AND place.status<>'suspended' AND (place.visibility='public' OR EXISTS(SELECT 1 FROM community_member m WHERE m.community_id=place.id AND m.user_id=$2 AND m.status='active'))`,
-          [id,user.id,dataset],'l.created_at','l.id');
+           AND place.status<>'suspended' AND (place.visibility='public' OR EXISTS(SELECT 1 FROM community_member m WHERE m.community_id=place.id AND m.user_id=$2 AND m.status='active'))`;
+        const ids=await visibleIds(c,fromWhere,[id,user.id,dataset]);
+        const page=await communityPage(c,req,secret,'capsule-destinations:'+id,user.id,String(cap.revision),
+          `SELECT l.id,l.community_id,l.capsule_revision,l.audience,place.title,place.visibility,l.id AS page_id,${pageTime('l.created_at')} ${fromWhere} AND l.id=ANY($4::uuid[])`,
+          [id,user.id,dataset,ids],'l.created_at','l.id');
         return memberJson({destinations:page.rows.map(row=>({id:row.id,communityId:row.community_id,title:row.title,visibility:row.visibility,audience:row.audience,revision:Number(row.capsule_revision)})),nextCursor:page.nextCursor});
       });
     },
     async threadCapsules(c: PoolClient, threadId: string, userId: string | null) {
       if (!(await c.query("SELECT to_regclass('community_capsule_listing') AS ready")).rows[0].ready) return [];
-      const rows = (await c.query(`SELECT ${summaryProjection} ${joins} WHERE l.thread_id=$1 AND cap.dataset=$3 AND ${readableCapsuleListing} ORDER BY l.created_at DESC,l.id DESC LIMIT 20`, [threadId,userId,dataset])).rows;
+      const fromWhere=`${joins} WHERE l.thread_id=$1 AND cap.dataset=$3 AND ${readableCapsuleListing}`;
+      const ids=await visibleIds(c,fromWhere,[threadId,userId,dataset]);
+      const rows = (await c.query(`SELECT ${summaryProjection} ${fromWhere} AND l.id=ANY($4::uuid[]) ORDER BY l.created_at DESC,l.id DESC LIMIT 20`, [threadId,userId,dataset,ids])).rows;
       return Promise.all(rows.map(row => dto(c,row,userId)));
     },
     async listCapsules(req: Request, rawId: string) {
@@ -137,8 +149,10 @@ export function createCommunityCapsules(pool: Pool, h: Helpers, secret: string, 
         if (user) await activeMember(c,user.id);
         await requireCommunityCapsules(c);
         const place = await h.context(c, id, user?.id ?? null);
+        const fromWhere=`${joins} WHERE l.community_id=$1 AND cap.dataset=$3 AND ${readableCapsuleListing}`;
+        const ids=await visibleIds(c,fromWhere,[id,user?.id??null,dataset]);
         const page = await communityPage(c, req, secret, 'capsules:' + id, user?.id ?? null, String(place.revision),
-          `SELECT ${summaryProjection},l.id AS page_id,${pageTime('l.created_at')} ${joins} WHERE l.community_id=$1 AND cap.dataset=$3 AND ${readableCapsuleListing}`, [id, user?.id ?? null, dataset], 'l.created_at', 'l.id');
+          `SELECT ${summaryProjection},l.id AS page_id,${pageTime('l.created_at')} ${fromWhere} AND l.id=ANY($4::uuid[])`, [id, user?.id ?? null, dataset,ids], 'l.created_at', 'l.id');
         return memberJson({ listings: await Promise.all(page.rows.map(row => dto(c, row, user?.id ?? null))), nextCursor: page.nextCursor, partial: page.partial });
       });
     },

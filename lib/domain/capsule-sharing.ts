@@ -8,7 +8,7 @@ export const capsuleShareSchema = z.strictObject({
   id: z.uuidv4(), revision: z.number().int().positive().max(Number.MAX_SAFE_INTEGER), createdAt: z.iso.datetime(), updatedAt: z.iso.datetime().optional(),
 });
 export type CapsuleShare = z.infer<typeof capsuleShareSchema>;
-export const capsuleShareStatusSchema = z.object({ share: capsuleShareSchema.nullable(), blocked: z.boolean().default(false), commentsClosed: z.boolean().default(false), token: capsuleShareTokenSchema.nullable().default(null) });
+export const capsuleShareStatusSchema = z.object({ share: capsuleShareSchema.nullable(), blocked: z.boolean().default(false), sourceAvailable: z.boolean().default(true), commentsClosed: z.boolean().default(false), token: capsuleShareTokenSchema.nullable().default(null) });
 export const capsuleShareIssueSchema = z.strictObject({
   expectedRevision: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
   expectedShareId: z.uuidv4().nullable(),

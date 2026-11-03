@@ -45,7 +45,7 @@ export default function SharedCapsule({ dataset, linkToken, initialRevision }: {
       const response = await fetch(`/api/shared/capsule${!adopt && pinnedRevision.current ? `?revision=${pinnedRevision.current}` : ""}`, { cache: "no-store", credentials: "omit", referrerPolicy: "no-referrer",
         headers: { "X-Capsule-Token": token.data }, signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15_000)]) });
       if (controller.signal.aborted) return;
-      if (!response.ok) { if ([401, 403, 404].includes(response.status)) { setCapsule(null); current.current=null; setAvailableRevision(null); } setError(response.status === 404 ? textMessages.unavailable : textMessages.readFailed); return; }
+      if (!response.ok) { if ([401, 403, 404].includes(response.status) || current.current?.content.document?.knowledge) { setCapsule(null); current.current=null; setAvailableRevision(null); } setError(response.status === 404 ? textMessages.unavailable : textMessages.readFailed); return; }
       const result = sharedCapsuleSchema.safeParse(await response.json());
       if (!result.success || result.data.capsule.content.dataset !== dataset) { setCapsule(null); current.current=null; setAvailableRevision(null); setError(textMessages.readFailed); return; }
       memberReaderCapsule(result.data.capsule, dataset);
@@ -63,7 +63,11 @@ export default function SharedCapsule({ dataset, linkToken, initialRevision }: {
         if (adopt) pinnedRevision.current=undefined;
         if (!shown || adopt || authorizedToken.current!==token.data) { current.current=result.data.capsule; setCapsule(result.data.capsule); }
         setAvailableRevision(latest!==current.current?.revision?latest:null); }
-    } catch { if (!controller.signal.aborted) setError(textMessages.readFailed); }
+    } catch { if (!controller.signal.aborted) {
+      // A knowledge snapshot may have lost source permission while offline.
+      if(current.current?.content.document?.knowledge){current.current=null;setCapsule(null);setAvailableRevision(null);setRevisions([]);}
+      setError(textMessages.readFailed);
+    } }
     finally { if (!controller.signal.aborted) setBusy(false); }
   }, [dataset,linkToken]);
   useEffect(() => {

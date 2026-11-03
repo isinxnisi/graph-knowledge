@@ -1,6 +1,12 @@
 import { beforeAll, afterAll, beforeEach, expect, it, vi } from "vitest";
 import { randomUUID } from "node:crypto";
+import {Pool} from "pg";
+const knowledgePool=new Pool({connectionString:process.env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL,max:5});
 import {captureKnowledgeCapsule,withCapsuleTimeline} from "../lib/client/capsule-knowledge";
+import {createKnowledgeFoundationService} from "../lib/server/knowledge-foundation";
+import {createKnowledgePublicationService} from "../lib/server/knowledge-publication";
+import {capsuleShareImage} from "../lib/server/capsule-share-image";
+import {readSharedPublication} from "../lib/server/member/shared-publication";
 import { startMemberOidc } from "./support/member-oidc";
 import { migrateMemberDatabase } from "../lib/server/member/migrate";
 import { memberHandle } from "../lib/server/member/http";
@@ -8,6 +14,12 @@ import { operateCommunitySafety } from "../lib/server/member/community-site-safe
 import { operateMember } from "../lib/server/member/operations";
 import type { MemberCapsuleContent } from "../lib/domain/member-capsule";
 vi.mock("server-only", () => ({}));
+// Only replace runtime wiring: use the real publication policy and SQL in this
+// disposable member database, never the configured beta knowledge database.
+vi.mock("../lib/server/knowledge-publication-preview",()=>({knowledgePublicationPreview:async()=>{
+ const {createKnowledgePublicationService}=await import("../lib/server/knowledge-publication");
+ return createKnowledgePublicationService(knowledgePool,{} as never);
+}}));
 import { memberRuntime } from "../lib/server/member/runtime";
 import * as authRoute from "../app/api/auth/[...all]/route";
 
@@ -56,12 +68,14 @@ async function publish(id: string, capsule: {id:string;revision:number}, audienc
 }
 beforeAll(async () => {
   if (process.env.MEMBER_FIXTURE_ENABLED !== '1') throw new Error('Dedicated member fixture database required');
+  expect(process.env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL).toBeTruthy();
+  expect((await knowledgePool.query("SELECT current_database() AS name")).rows[0].name).toBe("plunode_knowledge75_test_capsule_share");
   issuer = await startMemberOidc();
   await migrateMemberDatabase(pool(),true,true,true);
   a = await login('alice'); b = await login('bob'); late = await login('community-d');
 },30_000);
 beforeEach(async () => { await pool().query('DELETE FROM community_rate'); await pool().query('DELETE FROM member_capsule'); });
-afterAll(async () => { await pool().end(); await issuer?.close(); });
+afterAll(async () => { await pool().end(); await knowledgePool.end(); await issuer?.close(); });
 
 it('明示追加migration前は新writerを閉じ、旧保存・共有snapshotを改変せず011/012を冪等適用する', async () => {
   const beforeCaps = await (await service().capabilities(request(a))).json(); expect(beforeCaps).toMatchObject({documents:false,community:false,totalBytes:64_000_000});
@@ -416,7 +430,7 @@ it('同じ共有URLの更新では旧版コメントを通報できるが、未�
  const other=await create();const bad=request(b,{...input,requestId:randomUUID()});bad.headers.set('x-capsule-token',issued.token);expect((await call(()=>service().reportDiscussionPost(bad,other.id))).status).toBe(404);
 },30_000);
 
-it('新原記録と年表の断面を本人だけが保存・再訪・更新でき、未接続の共有を拒否する',async()=>{
+it('新原記録の私有断面は保存でき、公開原本と一致しない断面の共有を拒否する',async()=>{
  const version={revision:1,createdAt:"2026-11-03T00:00:00.000Z",reason:"初回"};
  const value=captureKnowledgeCapsule({title:"期間だけのCapsule",view:"timeline",snapshot:{schemaVersion:1,initialView:"timeline",entities:[],mappings:[],sources:[{...version,id:"source:test",content:{title:"資料",url:"https://example.org/source",bibliography:"",language:"ja"}}],records:[{...version,id:"record:period",content:{kind:"note",subjectId:null,objectId:null,assertion:"年表専用の期間",relation:"",polarity:"affirmed",scope:"",times:[{id:"time:period",time:{kind:"calendar",from:"2020",to:"2021",label:"期間",meaning:"duration"}}],evidence:[{id:"cite",source:{id:"source:test",revision:1},locator:"本文",excerpt:"",stance:"support"}]}}]}});
  const content:MemberCapsuleContent={dataset:"demo",title:value.title,note:"",language:"ja",entityIds:[],claimIds:[],document:value.document};
@@ -427,10 +441,94 @@ it('新原記録と年表の断面を本人だけが保存・再訪・更新で�
  const update=await call(()=>service().update(request(a,{requestId:randomUUID(),expectedRevision:1,content:changed}),cap.id));expect(update.status).toBe(200);
  expect((await update.json()).capsule.content.document.knowledge.snapshot).toEqual(value.document!.knowledge!.snapshot);
  expect((await call(()=>service().update(request(a,{expectedRevision:1,content}),cap.id))).status).toBe(409);
- const shared=await call(()=>service().issueShare(request(a,{expectedRevision:2,expectedShareId:null}),cap.id));expect(shared.status).toBe(503);expect((await shared.json()).error.code).toBe("KNOWLEDGE_SHARING_UNAVAILABLE");
+ const shared=await call(()=>service().issueShare(request(a,{expectedRevision:2,expectedShareId:null}),cap.id));expect(shared.status).toBe(403);expect((await shared.json()).error.code).toBe("KNOWLEDGE_REFERENCE_UNAVAILABLE");
 });
 
 it('通常Graphに追加した時期を本人だけが保存でき、元のGraphを変えず再訪できる',async()=>{
  const content=local('年表を任意追加');content.document=withCapsuleTimeline(content.document!);content.document.relations[0].times=[{id:'authored-time',time:{kind:'calendar',from:'1991',to:'1993',meaning:'occurrence-window',label:'この期間のどこか'}}];
  const cap=await create(content);const read=await call(()=>service().read(request(a),cap.id));expect((await read.json()).capsule.content.document).toEqual(content.document);expect((await call(()=>service().read(request(b),cap.id))).status).toBe(404);
+});
+
+async function knowledgeFixture() {
+ const prefix=randomUUID()+":";
+ const foundation=createKnowledgeFoundationService(knowledgePool);
+ const execute=(action:string,rest:Record<string,unknown>)=>foundation.execute({kind:"operator",id:"isolated-fixture"},{requestId:randomUUID(),reason:"隔離した共有検証",action,...rest});
+ await execute("create-bundle",{entities:[{id:prefix+"a",content:{name:"人物A",kind:"person"}},{id:prefix+"b",content:{name:"組織B",kind:"organization"}}],sources:[{id:prefix+"s",content:{title:"公開根拠",bibliography:"初版"}}],records:[{id:prefix+"r",content:{kind:"relation",subjectId:prefix+"a",objectId:prefix+"b",relation:"共同観測した",assertion:"具体的な関係",times:[{id:"period",time:{kind:"calendar",from:"1991",to:"1993",meaning:"duration",label:"観測期間"}}],evidence:[{id:"cite",source:{id:prefix+"s",revision:1},locator:"本文"}]}}]});
+ await execute("set-mapping",{recordId:prefix+"r",expectedMappingRevision:0,recordRevision:1,concept:{id:"observe",revision:1,label:"観測",definition:"共同で観測"}});
+ await execute("create-theme",{id:prefix+"t",title:"年表付きテーマ",recordPins:[{id:prefix+"r",revision:1}],initialView:"split"});
+ const publication=createKnowledgePublicationService(knowledgePool,{} as never);
+ const fixed=await publication.theme({themeId:prefix+"t",revision:1});
+ const value=captureKnowledgeCapsule({...fixed,title:"年表の共有",view:"split"});
+ const content:MemberCapsuleContent={dataset:"demo",title:value.title,note:"公開した期間と根拠",language:"ja",entityIds:[],claimIds:[],document:value.document};
+ return {prefix,execute,publication,content};
+}
+
+it('年表Capsuleを同じURLで明示更新し、会話の対象版とコミュニティ固定版を保持する',async()=>{
+ const f=await knowledgeFixture(),cap=await create(f.content),place=await community(),listing=await publish(place.id,cap);
+ const issued=await(await service().issueShare(request(a,{expectedRevision:1,expectedShareId:null}),cap.id)).json();
+ const preview=await readSharedPublication(pool(),"demo",issued.token);
+ expect((await capsuleShareImage(preview.capsule)).headers.get("cache-control")).toBe("private, no-store");
+ const shared=(rev?:number)=>{const req=new Request(origin+(rev?`/?revision=${rev}`:"/"),{headers:{"x-capsule-token":issued.token}});return call(()=>service().readShared(req));};
+ const post=async(revision:number,body:string)=>{const req=request(b,{requestId:randomUUID(),revision,body});req.headers.set("x-capsule-token",issued.token);return call(()=>service().createDiscussionPost(req,cap.id));};
+ expect((await post(1,"更新前の年表を見て投稿")).status).toBe(201);
+ await service().update(request(a,{expectedRevision:1,content:{...f.content,title:"作者の改善後"}}),cap.id);
+ expect((await(await shared()).json()).capsule.content.title).toBe("年表の共有");
+ expect((await call(()=>service().publishShare(request(a,{expectedRevision:2,expectedSharedRevision:1,expectedShareId:issued.share.id}),cap.id))).status).toBe(200);
+ expect((await(await service().shareStatus(request(a),cap.id)).json()).token).toBe(issued.token);
+ expect((await(await shared()).json()).capsule.content.title).toBe("作者の改善後");
+ expect((await(await shared(1)).json()).capsule.content.title).toBe("年表の共有");
+ expect((await post(1,"旧版への追記")).status).toBe(201);expect((await post(2,"更新後の年表を見て投稿")).status).toBe(201);
+ const req=request(b,undefined,"/?revision=2");req.headers.set("x-capsule-token",issued.token);
+ const posts=(await(await service().readDiscussion(req,cap.id)).json()).posts;expect(posts.map((p:{revision:number})=>p.revision)).toEqual([1,1,2]);
+ const fixed=await(await service().community.readCapsule(request(),listing.id)).json();expect(fixed.capsule.revision).toBe(1);expect(fixed.capsule.content.title).toBe("年表の共有");
+ await service().revokeShare(request(a,{expectedShareId:issued.share.id}),cap.id);expect((await shared()).status).toBe(404);
+ expect((await call(()=>service().community.readCapsule(request(),listing.id))).status).toBe(200);
+},30000);
+
+it.each(["theme","record","entity","source","mapping"] as const)('%s停止は共有の現行・旧版・会話・固定掲載・掲載先・通報検査へ反映し、本人の保存は残す',async kind=>{
+ const f=await knowledgeFixture(),cap=await create(f.content),place=await community(),listing=await publish(place.id,cap);
+ const issued=await(await service().issueShare(request(a,{expectedRevision:1,expectedShareId:null}),cap.id)).json();
+ const req=request(b,{requestId:randomUUID(),revision:1,body:"停止前の文脈"});req.headers.set("x-capsule-token",issued.token);
+ const post=(await(await service().createDiscussionPost(req,cap.id)).json()).postId;
+ const reportReq=request(b,{requestId:randomUUID(),postId:post,revision:1,expectedRevision:1,category:"other",detail:"表示停止の検証"});reportReq.headers.set("x-capsule-token",issued.token);
+ const report=await call(()=>service().reportDiscussionPost(reportReq,cap.id));expect(report.status).toBe(201);const reportId=(await report.json()).id;
+ const inspect=()=>operateCommunitySafety(pool(),{reportId,expectedReportRevision:1,expectedRevision:1,action:"inspect",actor:"fixture",caseReference:"u4",reason:"隔離検証"},true);
+ expect((await inspect()).content).toEqual({body:"停止前の文脈"});
+ const suffix={theme:"t",record:"r",entity:"a",source:"s",mapping:"r"}[kind];
+ if(kind==="mapping")await knowledgePool.query("UPDATE knowledge75.objects SET visibility='hidden' WHERE kind='mapping' AND id=$1",[f.prefix+suffix]);
+ else await f.execute("set-visibility",{kind,id:f.prefix+suffix,visibility:"hidden",expectedStatusRevision:1});
+ const shared=new Request(origin,{headers:{"x-capsule-token":issued.token}});
+ expect((await call(()=>service().readShared(shared))).status).toBe(404);
+ await expect(readSharedPublication(pool(),"demo",issued.token,1)).rejects.toMatchObject({status:404});
+ const old=new Request(origin+"/?revision=1",{headers:{"x-capsule-token":issued.token}});expect((await call(()=>service().readShared(old))).status).toBe(404);
+ const read=request(b,undefined,"/?revision=1");read.headers.set("x-capsule-token",issued.token);expect((await call(()=>service().readDiscussion(read,cap.id))).status).toBe(404);
+ const stoppedPost=request(b,{requestId:randomUUID(),revision:1,body:"停止後の新しい投稿"});stoppedPost.headers.set("x-capsule-token",issued.token);
+ expect((await call(()=>service().createDiscussionPost(stoppedPost,cap.id))).status).toBe(404);
+ expect((await call(()=>service().community.readCapsule(request(),listing.id))).status).toBe(404);
+ expect((await(await list(place.id)).json()).listings).toEqual([]);
+ expect((await(await service().community.ownCapsuleDestinations(request(a),cap.id)).json()).destinations).toEqual([]);
+ const inspected=await inspect();expect(inspected.content).toBeNull();expect(inspected.detail).toBeNull();
+ expect((await service().read(request(a),cap.id)).status).toBe(200);expect((await(await service().shareStatus(request(a),cap.id)).json()).sourceAvailable).toBe(false);
+ expect((await service().withdrawDiscussionPost(request(b,{postId:post}),cap.id)).status).toBe(200);
+ expect((await service().revokeShare(request(a,{expectedShareId:issued.share.id}),cap.id)).status).toBe(200);
+},30000);
+
+it('停止した旧文脈の会話と履歴だけを除外し、別の公開断面への明示更新は同じURLで読める',async()=>{
+ const old=await knowledgeFixture(),next=await knowledgeFixture(),cap=await create(old.content),issued=await(await service().issueShare(request(a,{expectedRevision:1,expectedShareId:null}),cap.id)).json();
+ const req=request(b,{requestId:randomUUID(),revision:1,body:"停止後には返さない本文"});req.headers.set("x-capsule-token",issued.token);expect((await service().createDiscussionPost(req,cap.id)).status).toBe(201);
+ await service().update(request(a,{expectedRevision:1,content:next.content}),cap.id);
+ await service().publishShare(request(a,{expectedRevision:2,expectedSharedRevision:1,expectedShareId:issued.share.id}),cap.id);
+ await old.execute("set-visibility",{kind:"source",id:old.prefix+"s",visibility:"hidden",expectedStatusRevision:1});
+ const shared=await(await service().readShared(new Request(origin,{headers:{"x-capsule-token":issued.token}}))).json();expect(shared.revisions.map((r:{revision:number})=>r.revision)).toEqual([2]);
+ const read=request(b,undefined,"/?revision=2");read.headers.set("x-capsule-token",issued.token);const discussion=await(await service().readDiscussion(read,cap.id)).json();expect(discussion.posts).toEqual([]);expect(JSON.stringify(discussion)).not.toContain("停止後には");
+},30000);
+
+it('公開ピンを借りた原文の改竄と一度も公開していない版を共有できない',async()=>{
+ const f=await knowledgeFixture(),forged=structuredClone(f.content);forged.document!.knowledge!.snapshot.records[0].content.assertion="偽の原文";
+ const cap=await create(forged),issue=()=>call(()=>service().issueShare(request(a,{expectedRevision:1,expectedShareId:null}),cap.id));expect((await issue()).status).toBe(403);
+ await f.execute("set-visibility",{kind:"record",id:f.prefix+"r",visibility:"private",expectedStatusRevision:1});
+ const original=f.content.document!.knowledge!.snapshot.records[0];await f.execute("correct",{kind:"record",id:f.prefix+"r",expectedRevision:1,content:{...original.content,assertion:"未公開の版"}});
+ await f.execute("correct",{kind:"record",id:f.prefix+"r",expectedRevision:2,content:{...original.content,assertion:"公開する版"}});
+ await f.execute("set-visibility",{kind:"record",id:f.prefix+"r",visibility:"public",expectedStatusRevision:Number((await knowledgePool.query("SELECT status_revision FROM knowledge75.objects WHERE kind='record' AND id=$1",[f.prefix+"r"])).rows[0].status_revision)});
+ expect(await f.publication.capsulesReadable([[{kind:"record",id:f.prefix+"r",revision:1}],[{kind:"record",id:f.prefix+"r",revision:2}],[{kind:"record",id:f.prefix+"r",revision:3}]])).toEqual([true,false,true]);
 });

@@ -22,13 +22,35 @@ beforeEach(() => {
     ? Promise.resolve(Response.json({ error: { code: "UNAUTHENTICATED" } }, { status: 401 })) : fetchMock(path, options));
 });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.restoreAllMocks(); vi.useRealTimers(); });
+const knowledgeCapsule:MemberCapsule={...capsule,schemaVersion:2,content:{...capsule.content,entityIds:[],document:{schemaVersion:1,nodes:[],relations:[],texts:[],evidence:[],unresolvedClaimIds:[],layout:{positions:{},pan:{x:0,y:0},zoom:1},knowledge:{schemaVersion:1,capturedAt:"2026-11-03T00:00:00Z",initialView:"timeline",snapshot:{schemaVersion:1,initialView:"timeline",entities:[],records:[],sources:[],mappings:[]}}}}};
+
+it("取得元が停止した共有はURLと会話を隠し、修正版の反映と停止を残す",async()=>{
+ fetchMock.mockResolvedValueOnce(Response.json({share,token,sourceAvailable:false,commentsClosed:false}));
+ render(<CapsuleShareControls capsule={{...knowledgeCapsule,revision:2}} userId={userId} disabled={false} onUnauthorized={vi.fn()}/>);
+ await screen.findByText(/共有内容に表示できない取得元があります/);
+ expect(screen.queryByLabelText("共有リンク")).toBeNull();expect(screen.queryByText("自動表示の会話")).toBeNull();
+ expect(screen.getByRole("button",{name:"保存した変更を共有へ反映"}).hasAttribute("disabled")).toBe(false);
+ expect(screen.getByRole("button",{name:"共有を停止"}).hasAttribute("disabled")).toBe(false);
+ expect(screen.queryByText(/このリンクは再表示に対応していません/)).toBeNull();
+});
+
+it.each(["network","policy"])("新断面の共有は%s障害で現在の取得元を確認できなければ表示を閉じる",async failure=>{
+ fetchMock.mockResolvedValueOnce(Response.json({capsule:knowledgeCapsule}));
+ render(<SharedCapsule dataset="demo" linkToken={token}/>);
+ await screen.findByRole("heading",{name:knowledgeCapsule.content.title});
+ await visibility("hidden");
+ if(failure==="network")fetchMock.mockRejectedValueOnce(new TypeError("Offline"));
+ else fetchMock.mockResolvedValueOnce(Response.json({error:{code:"KNOWLEDGE_PUBLICATION_UNAVAILABLE"}},{status:503}));
+ await visibility("visible");await waitFor(()=>expect(screen.queryByRole("heading",{name:knowledgeCapsule.content.title})).toBeNull());
+ expect(await screen.findByRole("alert")).toBeTruthy();
+});
 async function visibility(value: "hidden" | "visible") {
   await act(async () => { Object.defineProperty(document, "visibilityState", { configurable: true, value }); document.dispatchEvent(new Event("visibilitychange")); });
 }
 async function controls(value: { share: typeof share | null; commentsClosed: boolean; token?: string | null; blocked?: boolean } = { share: null, commentsClosed: false }) {
   fetchMock.mockResolvedValueOnce(Response.json(value));
   render(<CapsuleShareControls capsule={capsule} userId={userId} disabled={false} onUnauthorized={vi.fn()} />);
-  await screen.findByText(value.share ? `内容版 ${value.share.revision} の限定リンクが有効です。` : "有効な共有リンクはありません。本人だけが読めます。");
+  await screen.findByText(value.share ? `内容版 ${value.share.revision} の限定リンクが有効です。` : "有効な共有リンクはありません。");
   expect(screen.getByRole("switch", { name: "コメント受付" }).hasAttribute("disabled")).toBe(false);
 }
 describe("限定共有の所有者操作", () => {
@@ -124,7 +146,7 @@ describe("限定共有の所有者操作", () => {
     await waitFor(() => expect(onUnauthorized).toHaveBeenCalledOnce()); view.unmount();
     fetchMock.mockResolvedValueOnce(Response.json({ share: null }));
     const second = render(<CapsuleShareControls capsule={capsule} userId={userId} disabled={false} onUnauthorized={onUnauthorized} />);
-    await screen.findByText("有効な共有リンクはありません。本人だけが読めます。");
+    await screen.findByText("有効な共有リンクはありません。");
     let finish!: (response: Response) => void;
     fetchMock.mockImplementationOnce(() => new Promise<Response>(resolve => { finish = resolve; }));
     fireEvent.click(screen.getByRole("button", { name: "共有リンクを作る" }));

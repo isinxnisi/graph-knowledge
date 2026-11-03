@@ -38,6 +38,12 @@ try {
     await new Promise(resolve => setTimeout(resolve, 500));
   }
   if (!ready) throw new Error("Dedicated member PostgreSQL did not become ready");
+  if(capsuleTests){
+    const name="plunode_knowledge75_test_capsule_share";
+    if(docker(["exec",container,"createdb","-U","gk_member",name]).status!==0)throw new Error("Dedicated knowledge PostgreSQL could not start");
+    env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL=`postgresql://gk_member:${password}@127.0.0.1:55432/${name}`;
+  }
+
   child = spawn("node", browserTests
     ? ["--import", "tsx", "scripts/test-member-browser.ts", ...process.argv.slice(2).filter(arg => arg !== "--capsules" && arg !== "--e2e" && arg !== "--community" && arg !== "--safety" && arg !== "--operations" && arg !== "--accounts")]
     : ["node_modules/vitest/vitest.mjs", "run", ...(capsuleTests ? ["tests/capsule-document.integration.test.ts"] : communityTests ? [accountTests ? "tests/public-profiles.integration.test.ts" : operationsTests ? "tests/site-operations.integration.test.ts" : safetyTests ? "tests/community-safety.integration.test.ts" : "tests/community.integration.test.ts"] : ["tests/member.integration.test.ts", "tests/member-cold.integration.test.ts"]), "--maxWorkers=1", "--no-file-parallelism", "--exclude", "backups/**", "--exclude", ".local/**"], { env, stdio: "inherit" });
