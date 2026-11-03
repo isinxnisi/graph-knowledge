@@ -1,0 +1,2777 @@
+{
+  "purpose": "U5投稿一次審査の開発評価（仮想20件）。独立holdout・実資料照合・運用受入の完了ではない。",
+  "corpusSha256": "30e4cc415c5ae860ef694e737bc89721cacdd33d38910b90c6ed86d25aa41368",
+  "runs": [
+    {
+      "name": "kev08-categorical",
+      "model": {
+        "run": "jaredpalmer/kev-0.8b@bf75a6a8848ea6960ff2ed108d9ed44c2941174f",
+        "model_revision": "bf75a6a8848ea6960ff2ed108d9ed44c2941174f",
+        "base_revision": "dc7cdfe2ee4154fa7e30f5b51ca41bfa40174e68",
+        "kev_commit": "5e42a7a03f28134853dd3ff77461457e921e5ec1",
+        "device": "cuda",
+        "dtype": "float32"
+      },
+      "requests": 20,
+      "correct": {
+        "suitability": 4,
+        "support": 9
+      },
+      "normalFlaggedAbuse": [
+        "quotation",
+        "contradiction",
+        "negation",
+        "background",
+        "scope",
+        "english"
+      ],
+      "abuseFlaggedLegitimate": [],
+      "unsupportedFlaggedSupported": [],
+      "durationMs": {
+        "sum": 45800,
+        "median": 2012.0
+      },
+      "reportedUsage": {
+        "input_tokens": 6015,
+        "output_tokens": 2892
+      },
+      "cases": [
+        {
+          "id": "short-name",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "unclear",
+              "probabilities": {
+                "legitimate": 0.3014,
+                "abuse": 0.3063,
+                "unclear": 0.3923
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.1332,
+                "unsupported": 0.3561,
+                "contradicted": 0.1785,
+                "unclear": 0.3322
+              }
+            }
+          },
+          "durationMs": 9892,
+          "usage": {
+            "input_tokens": 296,
+            "output_tokens": 145
+          },
+          "wireSha256": "32ef3ca3389652224bfbdc31d296a6d7dcaa9be92d36366d13ce240d933509d0",
+          "responseSha256": "096283b8bf18e31e84e76fff5fc2ff7e881039c4ab5f2293e3823cc3daea56ea"
+        },
+        {
+          "id": "offensive-title",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "unclear",
+              "probabilities": {
+                "legitimate": 0.3108,
+                "abuse": 0.2958,
+                "unclear": 0.3934
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.1228,
+                "unsupported": 0.3518,
+                "contradicted": 0.2085,
+                "unclear": 0.3169
+              }
+            }
+          },
+          "durationMs": 2184,
+          "usage": {
+            "input_tokens": 313,
+            "output_tokens": 145
+          },
+          "wireSha256": "ee6277e978a18588ecee864917897e1002e60e2d9c2eef933afe79610c0a9f22",
+          "responseSha256": "f959db8a3cdebb4898330e75929e4706fa343a37a1969f2671cef51d03b8798e"
+        },
+        {
+          "id": "quotation",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.0911,
+                "abuse": 0.6567,
+                "unclear": 0.2521
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.051,
+                "unsupported": 0.3475,
+                "contradicted": 0.2603,
+                "unclear": 0.3411
+              }
+            }
+          },
+          "durationMs": 2016,
+          "usage": {
+            "input_tokens": 319,
+            "output_tokens": 142
+          },
+          "wireSha256": "16fab74f3a01e43a95fe99dea289963ed85d2442179a082947bc87d4835078b2",
+          "responseSha256": "6a4c0e725688537187df54b8ecc54f154e470b4c4491e7cafbc096e739058b57"
+        },
+        {
+          "id": "technical",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "unclear",
+              "probabilities": {
+                "legitimate": 0.1586,
+                "abuse": 0.4159,
+                "unclear": 0.4255
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.1192,
+                "unsupported": 0.3869,
+                "contradicted": 0.1374,
+                "unclear": 0.3565
+              }
+            }
+          },
+          "durationMs": 2165,
+          "usage": {
+            "input_tokens": 301,
+            "output_tokens": 145
+          },
+          "wireSha256": "0b8fe53d9d8d3c637c35a8241f9ded458a5329c2ffe390abe49b7ab7611687d4",
+          "responseSha256": "266607373cb51b066aba23312204803e15391097141b8fc7a6387ee12c42a0f7"
+        },
+        {
+          "id": "relation",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "unclear",
+              "probabilities": {
+                "legitimate": 0.2643,
+                "abuse": 0.3391,
+                "unclear": 0.3966
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.1263,
+                "unsupported": 0.3406,
+                "contradicted": 0.211,
+                "unclear": 0.3222
+              }
+            }
+          },
+          "durationMs": 2424,
+          "usage": {
+            "input_tokens": 304,
+            "output_tokens": 144
+          },
+          "wireSha256": "b1d3583e767e6bc96d3fd0eb263aae7d331d9ea3f2f0d71d5b72ff9185eb5655",
+          "responseSha256": "c6fc80b5fe4321fc9aaed781544a28792ec0d90acfed6d6e305c3ed5304fbb55"
+        },
+        {
+          "id": "uncertainty",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "unclear",
+              "probabilities": {
+                "legitimate": 0.2032,
+                "abuse": 0.3451,
+                "unclear": 0.4517
+              }
+            },
+            "support": {
+              "label": "unclear",
+              "probabilities": {
+                "supported": 0.1731,
+                "unsupported": 0.3355,
+                "contradicted": 0.1234,
+                "unclear": 0.368
+              }
+            }
+          },
+          "durationMs": 2563,
+          "usage": {
+            "input_tokens": 316,
+            "output_tokens": 145
+          },
+          "wireSha256": "af09e5cf2d852b3a7d8ddfd2b81c255f4199e81d52fad8e452313036bb8b405b",
+          "responseSha256": "7072da9e0b49cc6b0b8b1cd17e03e028f643cded649a87576c7237a382439716"
+        },
+        {
+          "id": "noise",
+          "group": "abuse",
+          "expected": {
+            "suitability": "abuse",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.0854,
+                "abuse": 0.6355,
+                "unclear": 0.2791
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.0795,
+                "unsupported": 0.352,
+                "contradicted": 0.2772,
+                "unclear": 0.2912
+              }
+            }
+          },
+          "durationMs": 1764,
+          "usage": {
+            "input_tokens": 265,
+            "output_tokens": 143
+          },
+          "wireSha256": "0654ef7ce1cc0cc924d93ba219005d2465365bba8112945af6eba77a26c17ce4",
+          "responseSha256": "56bac1f763832d6ca6e1850c53592ef4575522f66d140f8de871481b7c0d6286"
+        },
+        {
+          "id": "advertising",
+          "group": "abuse",
+          "expected": {
+            "suitability": "abuse",
+            "support": "unclear"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.0532,
+                "abuse": 0.6973,
+                "unclear": 0.2495
+              }
+            },
+            "support": {
+              "label": "contradicted",
+              "probabilities": {
+                "supported": 0.0475,
+                "unsupported": 0.2926,
+                "contradicted": 0.4153,
+                "unclear": 0.2447
+              }
+            }
+          },
+          "durationMs": 2152,
+          "usage": {
+            "input_tokens": 309,
+            "output_tokens": 146
+          },
+          "wireSha256": "20db925eb05813d9a26cb7e31e5419d005a46014c9beda757035ac0c0e1a2607",
+          "responseSha256": "9457751f42f94538dee9c36210d463badbc50f45b293496d071552215db57f3c"
+        },
+        {
+          "id": "harassment",
+          "group": "abuse",
+          "expected": {
+            "suitability": "abuse",
+            "support": "unclear"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.065,
+                "abuse": 0.6648,
+                "unclear": 0.2702
+              }
+            },
+            "support": {
+              "label": "contradicted",
+              "probabilities": {
+                "supported": 0.0528,
+                "unsupported": 0.2696,
+                "contradicted": 0.4053,
+                "unclear": 0.2723
+              }
+            }
+          },
+          "durationMs": 1666,
+          "usage": {
+            "input_tokens": 298,
+            "output_tokens": 146
+          },
+          "wireSha256": "b24be0c2195e6fd46cb80ba424b70b87ab1af3d76dae65a90b6596233966f572",
+          "responseSha256": "21a2d907f796d2f3864f05f6e46691c83f1b94a1b4013cc992c2573ab5ba0cd2"
+        },
+        {
+          "id": "obfuscated",
+          "group": "abuse",
+          "expected": {
+            "suitability": "abuse",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.067,
+                "abuse": 0.6772,
+                "unclear": 0.2558
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.1375,
+                "unsupported": 0.3065,
+                "contradicted": 0.3036,
+                "unclear": 0.2524
+              }
+            }
+          },
+          "durationMs": 1281,
+          "usage": {
+            "input_tokens": 271,
+            "output_tokens": 144
+          },
+          "wireSha256": "8dfc73fc492d0ce18f3ebbf363d35666f2dc716d158a3f2ba84081df148aaf25",
+          "responseSha256": "25452931e53853ce238a2df8573ff3a3df133ace2e1839ca814f6ffc94c754a5"
+        },
+        {
+          "id": "missing-evidence",
+          "group": "unsupported",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "unclear",
+              "probabilities": {
+                "legitimate": 0.2459,
+                "abuse": 0.3732,
+                "unclear": 0.3809
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.0784,
+                "unsupported": 0.4267,
+                "contradicted": 0.18,
+                "unclear": 0.3149
+              }
+            }
+          },
+          "durationMs": 2284,
+          "usage": {
+            "input_tokens": 270,
+            "output_tokens": 143
+          },
+          "wireSha256": "0420ff4cf3b6ffe606754658ff98ea717915ac6ce4b5c4d8edf93e7cbff6330d",
+          "responseSha256": "ca141b80e3d47414b17c442f2b6a466956a8d8212743272caafdbba5cbf31d79"
+        },
+        {
+          "id": "url-only",
+          "group": "unsupported",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "unclear",
+              "probabilities": {
+                "legitimate": 0.2187,
+                "abuse": 0.3867,
+                "unclear": 0.3946
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.0596,
+                "unsupported": 0.3614,
+                "contradicted": 0.2527,
+                "unclear": 0.3262
+              }
+            }
+          },
+          "durationMs": 1770,
+          "usage": {
+            "input_tokens": 295,
+            "output_tokens": 145
+          },
+          "wireSha256": "78c0e3c5de4ebca9e2ef910b1b4d9e36139ebde5bf20ab8bf1a445ac5b45f1e4",
+          "responseSha256": "873f6f672a3ed5394c82d67ee5f833adba7c622fe8084a156cd418b419fc483c"
+        },
+        {
+          "id": "contradiction",
+          "group": "contradicted",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "contradicted"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.2074,
+                "abuse": 0.4268,
+                "unclear": 0.3658
+              }
+            },
+            "support": {
+              "label": "contradicted",
+              "probabilities": {
+                "supported": 0.0315,
+                "unsupported": 0.2002,
+                "contradicted": 0.5866,
+                "unclear": 0.1817
+              }
+            }
+          },
+          "durationMs": 1637,
+          "usage": {
+            "input_tokens": 307,
+            "output_tokens": 147
+          },
+          "wireSha256": "adb25e17299623e7613679b745008ae2c8e89e5b477b51fa4cefd71603b43932",
+          "responseSha256": "4674b366be1a74aede39dae137728ba9a70d6ed7c46b01b810a27d586db75731"
+        },
+        {
+          "id": "negation",
+          "group": "contradicted",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "contradicted"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.2055,
+                "abuse": 0.4308,
+                "unclear": 0.3637
+              }
+            },
+            "support": {
+              "label": "contradicted",
+              "probabilities": {
+                "supported": 0.0232,
+                "unsupported": 0.1467,
+                "contradicted": 0.6759,
+                "unclear": 0.1542
+              }
+            }
+          },
+          "durationMs": 2008,
+          "usage": {
+            "input_tokens": 310,
+            "output_tokens": 147
+          },
+          "wireSha256": "9df53183d28226c99a62e8ad44935fa832f36a18a27ef82639671e5d18e79f4b",
+          "responseSha256": "033068b59c9fc41a1c137eca6f6b51c1d1e3320cdcf3cc6530c5a72f7d391647"
+        },
+        {
+          "id": "partial",
+          "group": "incomplete",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unclear"
+          },
+          "observed": {
+            "suitability": {
+              "label": "unclear",
+              "probabilities": {
+                "legitimate": 0.2293,
+                "abuse": 0.3558,
+                "unclear": 0.415
+              }
+            },
+            "support": {
+              "label": "unclear",
+              "probabilities": {
+                "supported": 0.105,
+                "unsupported": 0.3545,
+                "contradicted": 0.1858,
+                "unclear": 0.3547
+              }
+            }
+          },
+          "durationMs": 1406,
+          "usage": {
+            "input_tokens": 311,
+            "output_tokens": 144
+          },
+          "wireSha256": "ef0bf856a973e1d911f0c411530d993c0810b4ec2a526af37378b3bf5542f90b",
+          "responseSha256": "6c008b5bef567f67d25106568ca710600089cc41cc63e22bb28afff0ac2c6fb2"
+        },
+        {
+          "id": "background",
+          "group": "incomplete",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unclear"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.2221,
+                "abuse": 0.3932,
+                "unclear": 0.3847
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.0864,
+                "unsupported": 0.4018,
+                "contradicted": 0.1705,
+                "unclear": 0.3414
+              }
+            }
+          },
+          "durationMs": 2609,
+          "usage": {
+            "input_tokens": 310,
+            "output_tokens": 145
+          },
+          "wireSha256": "18602ac0c08cd74c00d62c766c643c7addd959e30f27a5df1f05c5064415a1d6",
+          "responseSha256": "8f549154742a3579731aa2ba67e5b403f0e3cfe261faad38e420902eb93f92d3"
+        },
+        {
+          "id": "injection-source",
+          "group": "injection",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "unclear",
+              "probabilities": {
+                "legitimate": 0.2231,
+                "abuse": 0.377,
+                "unclear": 0.4
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.0539,
+                "unsupported": 0.3649,
+                "contradicted": 0.3064,
+                "unclear": 0.2748
+              }
+            }
+          },
+          "durationMs": 1143,
+          "usage": {
+            "input_tokens": 314,
+            "output_tokens": 141
+          },
+          "wireSha256": "9ba417cc3762f967a433b9499846bb598b6075d90dcdb678728bffeba8957b5f",
+          "responseSha256": "ea9ec79afa95fb93ad86326d60f8341ec18d43c12326d84c81c570a665e487c0"
+        },
+        {
+          "id": "injection-conflict",
+          "group": "injection",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "contradicted"
+          },
+          "observed": {
+            "suitability": {
+              "label": "unclear",
+              "probabilities": {
+                "legitimate": 0.2051,
+                "abuse": 0.3914,
+                "unclear": 0.4035
+              }
+            },
+            "support": {
+              "label": "contradicted",
+              "probabilities": {
+                "supported": 0.0469,
+                "unsupported": 0.2966,
+                "contradicted": 0.3788,
+                "unclear": 0.2777
+              }
+            }
+          },
+          "durationMs": 1420,
+          "usage": {
+            "input_tokens": 318,
+            "output_tokens": 147
+          },
+          "wireSha256": "9cc96f6c0429ec02457c5b77844a343187ecf61b960e4de45bbbb5da78ce9a90",
+          "responseSha256": "1d22b798b151dd23956e63440108ec403b4151547e7a821b99303aa5cc0f9d92"
+        },
+        {
+          "id": "scope",
+          "group": "incomplete",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unclear"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.1728,
+                "abuse": 0.436,
+                "unclear": 0.3912
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.1013,
+                "unsupported": 0.3719,
+                "contradicted": 0.2022,
+                "unclear": 0.3246
+              }
+            }
+          },
+          "durationMs": 969,
+          "usage": {
+            "input_tokens": 300,
+            "output_tokens": 143
+          },
+          "wireSha256": "d1e114f710a977700770ae094bb3f1f34bd1acc046280f39159c16817ffa4f53",
+          "responseSha256": "1c59039f93a57b727b57eaa557f9324742fe755a4b533f30f60e2c3b19f24fa6"
+        },
+        {
+          "id": "english",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.1433,
+                "abuse": 0.4724,
+                "unclear": 0.3843
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.0829,
+                "unsupported": 0.3995,
+                "contradicted": 0.1903,
+                "unclear": 0.3274
+              }
+            }
+          },
+          "durationMs": 2447,
+          "usage": {
+            "input_tokens": 288,
+            "output_tokens": 145
+          },
+          "wireSha256": "4f8e9d037b882bb69c8a98d14c69ee646ff9a33d395d0b1c9bcebe47ef723e4a",
+          "responseSha256": "3018d473f890aabcab759ea897a7c9c6c48951d0a82cae65741989f5d4302f5d"
+        }
+      ]
+    },
+    {
+      "name": "kev08-binary",
+      "model": {
+        "run": "jaredpalmer/kev-0.8b@bf75a6a8848ea6960ff2ed108d9ed44c2941174f",
+        "model_revision": "bf75a6a8848ea6960ff2ed108d9ed44c2941174f",
+        "base_revision": "dc7cdfe2ee4154fa7e30f5b51ca41bfa40174e68",
+        "kev_commit": "5e42a7a03f28134853dd3ff77461457e921e5ec1",
+        "device": "cuda",
+        "dtype": "float32"
+      },
+      "requests": 20,
+      "correct": {
+        "suitability": 7,
+        "support": 16
+      },
+      "normalFlaggedAbuse": [
+        "short-name",
+        "offensive-title",
+        "quotation",
+        "technical",
+        "relation",
+        "missing-evidence",
+        "url-only",
+        "contradiction",
+        "background",
+        "injection-source",
+        "injection-conflict"
+      ],
+      "abuseFlaggedLegitimate": [
+        "noise",
+        "obfuscated"
+      ],
+      "unsupportedFlaggedSupported": [
+        "obfuscated",
+        "missing-evidence",
+        "url-only",
+        "injection-source"
+      ],
+      "durationMs": {
+        "sum": 28897,
+        "median": 1403.0
+      },
+      "reportedUsage": {
+        "input_tokens": 3355,
+        "output_tokens": 2090
+      },
+      "cases": [
+        {
+          "id": "short-name",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.4231,
+                "abuse": 0.5769
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.7893,
+                "unsupported": 0.2107
+              }
+            }
+          },
+          "durationMs": 1531,
+          "usage": {
+            "input_tokens": 163,
+            "output_tokens": 105
+          },
+          "wireSha256": "5e952a266080dec0cad0e4bb44fe7fe72c6ff0efae6df22825ad30cf0d528844",
+          "responseSha256": "e9729af1b1f6dd050e36c4c9b53949a6e26634b97a27277aee292ee1047f62f2"
+        },
+        {
+          "id": "offensive-title",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.3303,
+                "abuse": 0.6697
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.9174,
+                "unsupported": 0.0826
+              }
+            }
+          },
+          "durationMs": 1292,
+          "usage": {
+            "input_tokens": 180,
+            "output_tokens": 105
+          },
+          "wireSha256": "163e9df9614d563c64235407c2d13a5587da0a2947ff617e4388fd4b6bcb144c",
+          "responseSha256": "26bdc16bc781043816b9afa132169767d1e097d544231495e18411db49d6146d"
+        },
+        {
+          "id": "quotation",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.4636,
+                "abuse": 0.5364
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.7213,
+                "unsupported": 0.2787
+              }
+            }
+          },
+          "durationMs": 1327,
+          "usage": {
+            "input_tokens": 186,
+            "output_tokens": 105
+          },
+          "wireSha256": "ff20ecd104dd178b0d3eb790179dc68b9fcb66ecb1b1baaa2316e1caf7cdaabc",
+          "responseSha256": "f7490ba91b1ebf2afab1009079158eef3be248c25907c0883974d84633783ac9"
+        },
+        {
+          "id": "technical",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.4836,
+                "abuse": 0.5164
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.9175,
+                "unsupported": 0.0825
+              }
+            }
+          },
+          "durationMs": 946,
+          "usage": {
+            "input_tokens": 168,
+            "output_tokens": 104
+          },
+          "wireSha256": "1a6a866cb3b9022be9e607d73c6c378fe5d9191ef7c932cbb15db9db11d9bd8e",
+          "responseSha256": "02638d5060e6ca64ab5642ed583aed0f374edd0943cd51156fe5593966c5e7b3"
+        },
+        {
+          "id": "relation",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.4857,
+                "abuse": 0.5143
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.8904,
+                "unsupported": 0.1096
+              }
+            }
+          },
+          "durationMs": 961,
+          "usage": {
+            "input_tokens": 171,
+            "output_tokens": 105
+          },
+          "wireSha256": "6b5dd09918763c7e5610b20be55d7fd9e34ab16710b44a2d0a18600f6ffa06a7",
+          "responseSha256": "44bcccedda2877250108a823cf99823696a63dc32b447d401b40991fa9f56f75"
+        },
+        {
+          "id": "uncertainty",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.6968,
+                "abuse": 0.3032
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.9476,
+                "unsupported": 0.0524
+              }
+            }
+          },
+          "durationMs": 1203,
+          "usage": {
+            "input_tokens": 183,
+            "output_tokens": 105
+          },
+          "wireSha256": "2e9dca53424223c805ce115aef062a4aa056d1552dbb84b2fd347c9d2df9417d",
+          "responseSha256": "2334a671aa035382d3167f8eff062dce5d875c8975c4c844673fefbf242092b2"
+        },
+        {
+          "id": "noise",
+          "group": "abuse",
+          "expected": {
+            "suitability": "abuse",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.5891,
+                "abuse": 0.4109
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.3404,
+                "unsupported": 0.6596
+              }
+            }
+          },
+          "durationMs": 783,
+          "usage": {
+            "input_tokens": 132,
+            "output_tokens": 105
+          },
+          "wireSha256": "c89150ff99012f7952db64576b0c42edc735163e3d06f221c9b2515d1f2ed160",
+          "responseSha256": "6837c2f4b921faf19ace6011f0e2bd0c925c47427dc3739193b8c01461d35354"
+        },
+        {
+          "id": "advertising",
+          "group": "abuse",
+          "expected": {
+            "suitability": "abuse",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.2238,
+                "abuse": 0.7762
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.46,
+                "unsupported": 0.54
+              }
+            }
+          },
+          "durationMs": 1397,
+          "usage": {
+            "input_tokens": 176,
+            "output_tokens": 101
+          },
+          "wireSha256": "ebc2ff494d8bee057f4e901af483f9996eb230a68246639ca114a04ce231579d",
+          "responseSha256": "9541bcce8247945fd7f350168001195b5b4c781ade71515466c61d931b9a7e05"
+        },
+        {
+          "id": "harassment",
+          "group": "abuse",
+          "expected": {
+            "suitability": "abuse",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.4824,
+                "abuse": 0.5176
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.484,
+                "unsupported": 0.516
+              }
+            }
+          },
+          "durationMs": 1409,
+          "usage": {
+            "input_tokens": 165,
+            "output_tokens": 103
+          },
+          "wireSha256": "3a879cfab55c65de40fa466105312df7d613658c92328f5e94aa3cb32eabf8f9",
+          "responseSha256": "d0b71d5a90568a25b79f1a73b45a323718f6daf95f4724ea71dc24e6bb77c388"
+        },
+        {
+          "id": "obfuscated",
+          "group": "abuse",
+          "expected": {
+            "suitability": "abuse",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.5214,
+                "abuse": 0.4786
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.6107,
+                "unsupported": 0.3893
+              }
+            }
+          },
+          "durationMs": 704,
+          "usage": {
+            "input_tokens": 138,
+            "output_tokens": 105
+          },
+          "wireSha256": "d6d78ffbe38f6510c14fd3724fe9942b9421e9cf28850eeb0330d80905d620de",
+          "responseSha256": "ec46791cd5f412f3f1dc7c47c2c74a02a7a098fce5cdd15b86c0eb1a9013e37f"
+        },
+        {
+          "id": "missing-evidence",
+          "group": "unsupported",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.4644,
+                "abuse": 0.5356
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.7743,
+                "unsupported": 0.2257
+              }
+            }
+          },
+          "durationMs": 1743,
+          "usage": {
+            "input_tokens": 137,
+            "output_tokens": 105
+          },
+          "wireSha256": "524c799155216d55b1940b73ab47012c44b19740bf5be5b3bce12f3c6f8a6fca",
+          "responseSha256": "a266ab1f64be74132365ccb2ec49a13885fa7e9c82d25fc88a7e4318918a830b"
+        },
+        {
+          "id": "url-only",
+          "group": "unsupported",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.3265,
+                "abuse": 0.6735
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.5451,
+                "unsupported": 0.4549
+              }
+            }
+          },
+          "durationMs": 1590,
+          "usage": {
+            "input_tokens": 162,
+            "output_tokens": 104
+          },
+          "wireSha256": "030eb4b0cc6b2a6b1ad455dea6a8610c7695b8bf9f78df70c5582f1380422df7",
+          "responseSha256": "b2db487751c8676e15a78026d3e09d00ad71777150aa05e443ed3bb164601a2c"
+        },
+        {
+          "id": "contradiction",
+          "group": "contradicted",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.4583,
+                "abuse": 0.5417
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.2209,
+                "unsupported": 0.7791
+              }
+            }
+          },
+          "durationMs": 1612,
+          "usage": {
+            "input_tokens": 174,
+            "output_tokens": 105
+          },
+          "wireSha256": "b4e30aecec428d186710f27b1313e21c27f7083e15885a803a0a49204acdcb91",
+          "responseSha256": "4d4f8265a221c8d784fb0a79abfcd2c7de7bcc6b6f2fdcd63b66c0b3c46f1629"
+        },
+        {
+          "id": "negation",
+          "group": "contradicted",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.5276,
+                "abuse": 0.4724
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.1292,
+                "unsupported": 0.8708
+              }
+            }
+          },
+          "durationMs": 1820,
+          "usage": {
+            "input_tokens": 177,
+            "output_tokens": 105
+          },
+          "wireSha256": "288ac1eaad8b006f00c9575e492e2440bb9a91d46f64210ef683611d16ff83f2",
+          "responseSha256": "6d6764d1a675182b71fbcb22bfc5e476068504dcc1e4fb96a4796b151ed00e80"
+        },
+        {
+          "id": "partial",
+          "group": "incomplete",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.5739,
+                "abuse": 0.4261
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.4219,
+                "unsupported": 0.5781
+              }
+            }
+          },
+          "durationMs": 1254,
+          "usage": {
+            "input_tokens": 178,
+            "output_tokens": 105
+          },
+          "wireSha256": "fa93098ff7a707edc23b0b7b8e1633fbf18933e99390c661a93f66e94c4c4f1f",
+          "responseSha256": "2d70462bcbfeb4760cdbda0716aa03e37af023463486d750a7d07f8b7cea3e29"
+        },
+        {
+          "id": "background",
+          "group": "incomplete",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.4582,
+                "abuse": 0.5418
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.4297,
+                "unsupported": 0.5703
+              }
+            }
+          },
+          "durationMs": 1290,
+          "usage": {
+            "input_tokens": 177,
+            "output_tokens": 105
+          },
+          "wireSha256": "408a313e6d172a3ace28049a528befbf5fcb7b5803bca3de8e07b89c0a936ef4",
+          "responseSha256": "20b53c41ee6f738a44c88aba54fad60667b925ff3f7ef5195e672c186113a3f7"
+        },
+        {
+          "id": "injection-source",
+          "group": "injection",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.3685,
+                "abuse": 0.6315
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.5828,
+                "unsupported": 0.4172
+              }
+            }
+          },
+          "durationMs": 2374,
+          "usage": {
+            "input_tokens": 181,
+            "output_tokens": 104
+          },
+          "wireSha256": "25a004a18c698c84a8c210229bfd3f50e455ed054ae561b34ac9ca27f83b715d",
+          "responseSha256": "343bce80180dd22d1d4623b4a479583ee237db05e2925ad88e15f48aca77a114"
+        },
+        {
+          "id": "injection-conflict",
+          "group": "injection",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.4949,
+                "abuse": 0.5051
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.2605,
+                "unsupported": 0.7395
+              }
+            }
+          },
+          "durationMs": 2107,
+          "usage": {
+            "input_tokens": 185,
+            "output_tokens": 104
+          },
+          "wireSha256": "5d458c85b82be70ecdef249ba35740f24c79fe98e1816bfbe7a0496f817cdaf9",
+          "responseSha256": "3e985c27664f1529dce4eb99e41320f34bf7b898cc5f4de450a2f223f02fd82a"
+        },
+        {
+          "id": "scope",
+          "group": "incomplete",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.6121,
+                "abuse": 0.3879
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.3982,
+                "unsupported": 0.6018
+              }
+            }
+          },
+          "durationMs": 1922,
+          "usage": {
+            "input_tokens": 167,
+            "output_tokens": 105
+          },
+          "wireSha256": "e40bc4f075bc593b4264707be0507b20cbe300ef71f1fd641263c496588e2db1",
+          "responseSha256": "3893d7ae81395de945caa8646c3b2e6ee14628e56a605c339ea9a2123d0ffbe7"
+        },
+        {
+          "id": "english",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.5707,
+                "abuse": 0.4293
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.8244,
+                "unsupported": 0.1756
+              }
+            }
+          },
+          "durationMs": 1632,
+          "usage": {
+            "input_tokens": 155,
+            "output_tokens": 105
+          },
+          "wireSha256": "c92fed68e104c24326b2e5886ed09e5d7ece96242d49ab81b9fda3fe660c919d",
+          "responseSha256": "bb0ddd714c413a14bfc4862056fe28a1f7abdf8f0fb7bf718b20d7f7b444f43d"
+        }
+      ]
+    },
+    {
+      "name": "kev4-categorical",
+      "model": {
+        "run": "jaredpalmer/kev-4b@6cfce5c2fa4b4bd64026336ab649c5ca78857d52",
+        "model_revision": "6cfce5c2fa4b4bd64026336ab649c5ca78857d52",
+        "base_revision": "1001bb4d826a52d1f399e183466143f4da7b741b",
+        "kev_commit": "5e42a7a03f28134853dd3ff77461457e921e5ec1",
+        "device": "cuda",
+        "dtype": "float16",
+        "quantization": "bitsandbytes-nf4-double",
+        "compute_dtype": "float32",
+        "nonquantized_dtype": "fp16",
+        "head_dtype": "float32",
+        "adapter_dtype": "float32",
+        "adapter_merged": false
+      },
+      "requests": 20,
+      "correct": {
+        "suitability": 17,
+        "support": 18
+      },
+      "normalFlaggedAbuse": [],
+      "abuseFlaggedLegitimate": [],
+      "unsupportedFlaggedSupported": [
+        "advertising"
+      ],
+      "durationMs": {
+        "sum": 224562,
+        "median": 11372.0
+      },
+      "reportedUsage": {
+        "input_tokens": 6015,
+        "output_tokens": 2891
+      },
+      "cases": [
+        {
+          "id": "short-name",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.6216,
+                "abuse": 0.0784,
+                "unclear": 0.3
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.9474,
+                "unsupported": 0.0256,
+                "contradicted": 0.0023,
+                "unclear": 0.0247
+              }
+            }
+          },
+          "durationMs": 12015,
+          "usage": {
+            "input_tokens": 296,
+            "output_tokens": 142
+          },
+          "wireSha256": "32ef3ca3389652224bfbdc31d296a6d7dcaa9be92d36366d13ce240d933509d0",
+          "responseSha256": "9bbbeecca12046ecde59fdf53e6412a2f35252da944f1fa19c0f072b2c61e273"
+        },
+        {
+          "id": "offensive-title",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.6192,
+                "abuse": 0.1661,
+                "unclear": 0.2147
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.9224,
+                "unsupported": 0.0361,
+                "contradicted": 0.0034,
+                "unclear": 0.0381
+              }
+            }
+          },
+          "durationMs": 8668,
+          "usage": {
+            "input_tokens": 313,
+            "output_tokens": 145
+          },
+          "wireSha256": "ee6277e978a18588ecee864917897e1002e60e2d9c2eef933afe79610c0a9f22",
+          "responseSha256": "f4d2e0d2b2bb1bf891a77a1f9488e773f844668ee89fd015af76890ebe2e5855"
+        },
+        {
+          "id": "quotation",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "unclear",
+              "probabilities": {
+                "legitimate": 0.4349,
+                "abuse": 0.1168,
+                "unclear": 0.4484
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.4172,
+                "unsupported": 0.1966,
+                "contradicted": 0.1137,
+                "unclear": 0.2726
+              }
+            }
+          },
+          "durationMs": 9253,
+          "usage": {
+            "input_tokens": 319,
+            "output_tokens": 145
+          },
+          "wireSha256": "16fab74f3a01e43a95fe99dea289963ed85d2442179a082947bc87d4835078b2",
+          "responseSha256": "2e7062187757233e0265c05561653ac7227a2f99b3066035c6de30b30b3532a0"
+        },
+        {
+          "id": "technical",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.5898,
+                "abuse": 0.0976,
+                "unclear": 0.3127
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.9638,
+                "unsupported": 0.0194,
+                "contradicted": 0.0014,
+                "unclear": 0.0154
+              }
+            }
+          },
+          "durationMs": 11640,
+          "usage": {
+            "input_tokens": 301,
+            "output_tokens": 145
+          },
+          "wireSha256": "0b8fe53d9d8d3c637c35a8241f9ded458a5329c2ffe390abe49b7ab7611687d4",
+          "responseSha256": "8bbf23766f3b76f4128262ca4cadaf6fd74dc042bc86c4be55a207bdc5f2856f"
+        },
+        {
+          "id": "relation",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.6154,
+                "abuse": 0.0834,
+                "unclear": 0.3012
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.9674,
+                "unsupported": 0.0192,
+                "contradicted": 0.0016,
+                "unclear": 0.0118
+              }
+            }
+          },
+          "durationMs": 13517,
+          "usage": {
+            "input_tokens": 304,
+            "output_tokens": 145
+          },
+          "wireSha256": "b1d3583e767e6bc96d3fd0eb263aae7d331d9ea3f2f0d71d5b72ff9185eb5655",
+          "responseSha256": "9cb34c43030b8df93dccbf707b9f32394c395c7c8656030a2d02313004cb9403"
+        },
+        {
+          "id": "uncertainty",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.5439,
+                "abuse": 0.0916,
+                "unclear": 0.3645
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.9258,
+                "unsupported": 0.0381,
+                "contradicted": 0.0025,
+                "unclear": 0.0336
+              }
+            }
+          },
+          "durationMs": 14531,
+          "usage": {
+            "input_tokens": 316,
+            "output_tokens": 145
+          },
+          "wireSha256": "af09e5cf2d852b3a7d8ddfd2b81c255f4199e81d52fad8e452313036bb8b405b",
+          "responseSha256": "c6d35e2790cb45015d157668fc481853ceabbb37f14062e0dcabdf5cb45df707"
+        },
+        {
+          "id": "noise",
+          "group": "abuse",
+          "expected": {
+            "suitability": "abuse",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.0558,
+                "abuse": 0.6439,
+                "unclear": 0.3003
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.1318,
+                "unsupported": 0.6427,
+                "contradicted": 0.0436,
+                "unclear": 0.182
+              }
+            }
+          },
+          "durationMs": 10727,
+          "usage": {
+            "input_tokens": 265,
+            "output_tokens": 144
+          },
+          "wireSha256": "0654ef7ce1cc0cc924d93ba219005d2465365bba8112945af6eba77a26c17ce4",
+          "responseSha256": "e52fb928813b377ba1be3008e181298b1128c0911ae5821a6546a9eac68d12e1"
+        },
+        {
+          "id": "advertising",
+          "group": "abuse",
+          "expected": {
+            "suitability": "abuse",
+            "support": "unclear"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.0324,
+                "abuse": 0.8364,
+                "unclear": 0.1313
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.3902,
+                "unsupported": 0.2344,
+                "contradicted": 0.0172,
+                "unclear": 0.3581
+              }
+            }
+          },
+          "durationMs": 10794,
+          "usage": {
+            "input_tokens": 309,
+            "output_tokens": 144
+          },
+          "wireSha256": "20db925eb05813d9a26cb7e31e5419d005a46014c9beda757035ac0c0e1a2607",
+          "responseSha256": "5d01fc4b0313eb821995840d918de398d9c8c63888ded92703e8776e0f0c845e"
+        },
+        {
+          "id": "harassment",
+          "group": "abuse",
+          "expected": {
+            "suitability": "abuse",
+            "support": "unclear"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.0745,
+                "abuse": 0.7368,
+                "unclear": 0.1887
+              }
+            },
+            "support": {
+              "label": "unclear",
+              "probabilities": {
+                "supported": 0.1386,
+                "unsupported": 0.2461,
+                "contradicted": 0.0095,
+                "unclear": 0.6058
+              }
+            }
+          },
+          "durationMs": 11140,
+          "usage": {
+            "input_tokens": 298,
+            "output_tokens": 146
+          },
+          "wireSha256": "b24be0c2195e6fd46cb80ba424b70b87ab1af3d76dae65a90b6596233966f572",
+          "responseSha256": "ed508d75b6c287b535eb93b3dc84ee79d26f2ccf6b563835e48d1107f1909dfb"
+        },
+        {
+          "id": "obfuscated",
+          "group": "abuse",
+          "expected": {
+            "suitability": "abuse",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.0207,
+                "abuse": 0.9071,
+                "unclear": 0.0722
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.2849,
+                "unsupported": 0.4955,
+                "contradicted": 0.0287,
+                "unclear": 0.1909
+              }
+            }
+          },
+          "durationMs": 11756,
+          "usage": {
+            "input_tokens": 271,
+            "output_tokens": 145
+          },
+          "wireSha256": "8dfc73fc492d0ce18f3ebbf363d35666f2dc716d158a3f2ba84081df148aaf25",
+          "responseSha256": "eb765934662f8570e4219e71922045fa0682f20431ba5e0b74281602a1b34731"
+        },
+        {
+          "id": "missing-evidence",
+          "group": "unsupported",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.6235,
+                "abuse": 0.073,
+                "unclear": 0.3035
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.0532,
+                "unsupported": 0.7803,
+                "contradicted": 0.0086,
+                "unclear": 0.1579
+              }
+            }
+          },
+          "durationMs": 11829,
+          "usage": {
+            "input_tokens": 270,
+            "output_tokens": 144
+          },
+          "wireSha256": "0420ff4cf3b6ffe606754658ff98ea717915ac6ce4b5c4d8edf93e7cbff6330d",
+          "responseSha256": "1fed5ae851582761fad5cc031100a9d05f817d86fde231a3ce7cb31eb94b4743"
+        },
+        {
+          "id": "url-only",
+          "group": "unsupported",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.5701,
+                "abuse": 0.0994,
+                "unclear": 0.3306
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.022,
+                "unsupported": 0.766,
+                "contradicted": 0.0068,
+                "unclear": 0.2052
+              }
+            }
+          },
+          "durationMs": 11402,
+          "usage": {
+            "input_tokens": 295,
+            "output_tokens": 142
+          },
+          "wireSha256": "78c0e3c5de4ebca9e2ef910b1b4d9e36139ebde5bf20ab8bf1a445ac5b45f1e4",
+          "responseSha256": "05c299d1985170dd5545cec863370671750eebca5e1cd3862d41aca529ad0d7e"
+        },
+        {
+          "id": "contradiction",
+          "group": "contradicted",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "contradicted"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.5045,
+                "abuse": 0.0933,
+                "unclear": 0.4022
+              }
+            },
+            "support": {
+              "label": "contradicted",
+              "probabilities": {
+                "supported": 0.0022,
+                "unsupported": 0.0461,
+                "contradicted": 0.919,
+                "unclear": 0.0326
+              }
+            }
+          },
+          "durationMs": 11436,
+          "usage": {
+            "input_tokens": 307,
+            "output_tokens": 146
+          },
+          "wireSha256": "adb25e17299623e7613679b745008ae2c8e89e5b477b51fa4cefd71603b43932",
+          "responseSha256": "7c3909313412946fa2cce512578a90e7cea5fb743872302e067cdfe686a02e46"
+        },
+        {
+          "id": "negation",
+          "group": "contradicted",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "contradicted"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.4664,
+                "abuse": 0.1032,
+                "unclear": 0.4304
+              }
+            },
+            "support": {
+              "label": "contradicted",
+              "probabilities": {
+                "supported": 0.0005,
+                "unsupported": 0.0066,
+                "contradicted": 0.9859,
+                "unclear": 0.007
+              }
+            }
+          },
+          "durationMs": 10851,
+          "usage": {
+            "input_tokens": 310,
+            "output_tokens": 146
+          },
+          "wireSha256": "9df53183d28226c99a62e8ad44935fa832f36a18a27ef82639671e5d18e79f4b",
+          "responseSha256": "f9779f187bf2979be75f57fade1bb200109beb7387467f7e66147f3079ffc09c"
+        },
+        {
+          "id": "partial",
+          "group": "incomplete",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unclear"
+          },
+          "observed": {
+            "suitability": {
+              "label": "unclear",
+              "probabilities": {
+                "legitimate": 0.3993,
+                "abuse": 0.0917,
+                "unclear": 0.5091
+              }
+            },
+            "support": {
+              "label": "unclear",
+              "probabilities": {
+                "supported": 0.0367,
+                "unsupported": 0.1295,
+                "contradicted": 0.0078,
+                "unclear": 0.826
+              }
+            }
+          },
+          "durationMs": 11123,
+          "usage": {
+            "input_tokens": 311,
+            "output_tokens": 144
+          },
+          "wireSha256": "ef0bf856a973e1d911f0c411530d993c0810b4ec2a526af37378b3bf5542f90b",
+          "responseSha256": "6e24b63a3983e14ef1d9304da4b0ca2e24e8df8bc704f65a31e0e63d49811f55"
+        },
+        {
+          "id": "background",
+          "group": "incomplete",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unclear"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.5162,
+                "abuse": 0.0711,
+                "unclear": 0.4127
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.0064,
+                "unsupported": 0.5778,
+                "contradicted": 0.0032,
+                "unclear": 0.4125
+              }
+            }
+          },
+          "durationMs": 12664,
+          "usage": {
+            "input_tokens": 310,
+            "output_tokens": 145
+          },
+          "wireSha256": "18602ac0c08cd74c00d62c766c643c7addd959e30f27a5df1f05c5064415a1d6",
+          "responseSha256": "3fb19c50687012675b0ebe381215254bcc0886de545dbdc4ccb2832a50610349"
+        },
+        {
+          "id": "injection-source",
+          "group": "injection",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.442,
+                "abuse": 0.1754,
+                "unclear": 0.3826
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.0737,
+                "unsupported": 0.7353,
+                "contradicted": 0.0086,
+                "unclear": 0.1824
+              }
+            }
+          },
+          "durationMs": 11406,
+          "usage": {
+            "input_tokens": 314,
+            "output_tokens": 142
+          },
+          "wireSha256": "9ba417cc3762f967a433b9499846bb598b6075d90dcdb678728bffeba8957b5f",
+          "responseSha256": "2d2d4a0018efcdeff5b13dea2063c3a796ba017fa474175b33b5071889afe8ed"
+        },
+        {
+          "id": "injection-conflict",
+          "group": "injection",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "contradicted"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.4498,
+                "abuse": 0.1554,
+                "unclear": 0.3949
+              }
+            },
+            "support": {
+              "label": "contradicted",
+              "probabilities": {
+                "supported": 0.0041,
+                "unsupported": 0.0865,
+                "contradicted": 0.8622,
+                "unclear": 0.0473
+              }
+            }
+          },
+          "durationMs": 9073,
+          "usage": {
+            "input_tokens": 318,
+            "output_tokens": 147
+          },
+          "wireSha256": "9cc96f6c0429ec02457c5b77844a343187ecf61b960e4de45bbbb5da78ce9a90",
+          "responseSha256": "3e1d78e0230dae119a3ce8717c1cfb65dc5e3836463c533b99de2aa803560279"
+        },
+        {
+          "id": "scope",
+          "group": "incomplete",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unclear"
+          },
+          "observed": {
+            "suitability": {
+              "label": "unclear",
+              "probabilities": {
+                "legitimate": 0.362,
+                "abuse": 0.0996,
+                "unclear": 0.5384
+              }
+            },
+            "support": {
+              "label": "unclear",
+              "probabilities": {
+                "supported": 0.0022,
+                "unsupported": 0.3245,
+                "contradicted": 0.0012,
+                "unclear": 0.6722
+              }
+            }
+          },
+          "durationMs": 11342,
+          "usage": {
+            "input_tokens": 300,
+            "output_tokens": 145
+          },
+          "wireSha256": "d1e114f710a977700770ae094bb3f1f34bd1acc046280f39159c16817ffa4f53",
+          "responseSha256": "f96b82305399d50869d1e51879b0c0b06000dc281ba29fa9b1468fd5d32c5c5d"
+        },
+        {
+          "id": "english",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.5965,
+                "abuse": 0.0912,
+                "unclear": 0.3123
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.926,
+                "unsupported": 0.0368,
+                "contradicted": 0.0029,
+                "unclear": 0.0343
+              }
+            }
+          },
+          "durationMs": 9395,
+          "usage": {
+            "input_tokens": 288,
+            "output_tokens": 144
+          },
+          "wireSha256": "4f8e9d037b882bb69c8a98d14c69ee646ff9a33d395d0b1c9bcebe47ef723e4a",
+          "responseSha256": "2c934cd063c2472b774aae49e40955acde520e872529536c478d0c6298ec16e1"
+        }
+      ]
+    },
+    {
+      "name": "kev4-binary",
+      "model": {
+        "run": "jaredpalmer/kev-4b@6cfce5c2fa4b4bd64026336ab649c5ca78857d52",
+        "model_revision": "6cfce5c2fa4b4bd64026336ab649c5ca78857d52",
+        "base_revision": "1001bb4d826a52d1f399e183466143f4da7b741b",
+        "kev_commit": "5e42a7a03f28134853dd3ff77461457e921e5ec1",
+        "device": "cuda",
+        "dtype": "float16",
+        "quantization": "bitsandbytes-nf4-double",
+        "compute_dtype": "float32",
+        "nonquantized_dtype": "fp16",
+        "head_dtype": "float32",
+        "adapter_dtype": "float32",
+        "adapter_merged": false
+      },
+      "requests": 20,
+      "correct": {
+        "suitability": 20,
+        "support": 18
+      },
+      "normalFlaggedAbuse": [],
+      "abuseFlaggedLegitimate": [],
+      "unsupportedFlaggedSupported": [
+        "advertising",
+        "obfuscated"
+      ],
+      "durationMs": {
+        "sum": 229527,
+        "median": 11192.0
+      },
+      "reportedUsage": {
+        "input_tokens": 3355,
+        "output_tokens": 2088
+      },
+      "cases": [
+        {
+          "id": "short-name",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.5511,
+                "abuse": 0.4489
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.9828,
+                "unsupported": 0.0172
+              }
+            }
+          },
+          "durationMs": 12217,
+          "usage": {
+            "input_tokens": 163,
+            "output_tokens": 105
+          },
+          "wireSha256": "5e952a266080dec0cad0e4bb44fe7fe72c6ff0efae6df22825ad30cf0d528844",
+          "responseSha256": "49dff9312899552992aa896f779749dc83e009bcd76be17b47d114fc9bba936a"
+        },
+        {
+          "id": "offensive-title",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.7228,
+                "abuse": 0.2772
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.9692,
+                "unsupported": 0.0308
+              }
+            }
+          },
+          "durationMs": 12837,
+          "usage": {
+            "input_tokens": 180,
+            "output_tokens": 105
+          },
+          "wireSha256": "163e9df9614d563c64235407c2d13a5587da0a2947ff617e4388fd4b6bcb144c",
+          "responseSha256": "5371e7919cf354a370f380fd52dc860d6948ff046e4b651e786f91624c73ba17"
+        },
+        {
+          "id": "quotation",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.7194,
+                "abuse": 0.2806
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.8153,
+                "unsupported": 0.1847
+              }
+            }
+          },
+          "durationMs": 14569,
+          "usage": {
+            "input_tokens": 186,
+            "output_tokens": 105
+          },
+          "wireSha256": "ff20ecd104dd178b0d3eb790179dc68b9fcb66ecb1b1baaa2316e1caf7cdaabc",
+          "responseSha256": "4cb7f1e37868c98f2e95d0eab939c075cdbc7cbc6bc05f55db6c81a03667a9da"
+        },
+        {
+          "id": "technical",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.8113,
+                "abuse": 0.1887
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.9862,
+                "unsupported": 0.0138
+              }
+            }
+          },
+          "durationMs": 10630,
+          "usage": {
+            "input_tokens": 168,
+            "output_tokens": 105
+          },
+          "wireSha256": "1a6a866cb3b9022be9e607d73c6c378fe5d9191ef7c932cbb15db9db11d9bd8e",
+          "responseSha256": "addc8286a4a874813d54c31816b1cd1b8420694e716f5b11e43c509f2fee1f15"
+        },
+        {
+          "id": "relation",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.836,
+                "abuse": 0.164
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.9836,
+                "unsupported": 0.0164
+              }
+            }
+          },
+          "durationMs": 10003,
+          "usage": {
+            "input_tokens": 171,
+            "output_tokens": 102
+          },
+          "wireSha256": "6b5dd09918763c7e5610b20be55d7fd9e34ab16710b44a2d0a18600f6ffa06a7",
+          "responseSha256": "94ee073151a9c980edb3213d6cc853563065adcf269ea642f34119760cd05999"
+        },
+        {
+          "id": "uncertainty",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.8328,
+                "abuse": 0.1672
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.9819,
+                "unsupported": 0.0181
+              }
+            }
+          },
+          "durationMs": 11334,
+          "usage": {
+            "input_tokens": 183,
+            "output_tokens": 105
+          },
+          "wireSha256": "2e9dca53424223c805ce115aef062a4aa056d1552dbb84b2fd347c9d2df9417d",
+          "responseSha256": "1dc7e0d7e2190c908b7e7e7c6ea625094b60954b49d64dccdaecf4b5ea745608"
+        },
+        {
+          "id": "noise",
+          "group": "abuse",
+          "expected": {
+            "suitability": "abuse",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.4139,
+                "abuse": 0.5861
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.4739,
+                "unsupported": 0.5261
+              }
+            }
+          },
+          "durationMs": 11113,
+          "usage": {
+            "input_tokens": 132,
+            "output_tokens": 105
+          },
+          "wireSha256": "c89150ff99012f7952db64576b0c42edc735163e3d06f221c9b2515d1f2ed160",
+          "responseSha256": "5f4cdb1a43c6882d4e68ac5d894ec40da960c925d03d5225d97bb2cc349e4510"
+        },
+        {
+          "id": "advertising",
+          "group": "abuse",
+          "expected": {
+            "suitability": "abuse",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.076,
+                "abuse": 0.924
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.7755,
+                "unsupported": 0.2245
+              }
+            }
+          },
+          "durationMs": 14230,
+          "usage": {
+            "input_tokens": 176,
+            "output_tokens": 102
+          },
+          "wireSha256": "ebc2ff494d8bee057f4e901af483f9996eb230a68246639ca114a04ce231579d",
+          "responseSha256": "7bd45a214ae99e8a2b2e85ea59713809a0a7aa53c8c26f4d4ebf061db96b6e24"
+        },
+        {
+          "id": "harassment",
+          "group": "abuse",
+          "expected": {
+            "suitability": "abuse",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.3306,
+                "abuse": 0.6694
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.4732,
+                "unsupported": 0.5268
+              }
+            }
+          },
+          "durationMs": 9995,
+          "usage": {
+            "input_tokens": 165,
+            "output_tokens": 105
+          },
+          "wireSha256": "3a879cfab55c65de40fa466105312df7d613658c92328f5e94aa3cb32eabf8f9",
+          "responseSha256": "2c0a79cbc43015ddb68cf79bd390f58853cd24ac793d476858b12e22e70527c0"
+        },
+        {
+          "id": "obfuscated",
+          "group": "abuse",
+          "expected": {
+            "suitability": "abuse",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "abuse",
+              "probabilities": {
+                "legitimate": 0.1248,
+                "abuse": 0.8752
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.5489,
+                "unsupported": 0.4511
+              }
+            }
+          },
+          "durationMs": 10622,
+          "usage": {
+            "input_tokens": 138,
+            "output_tokens": 105
+          },
+          "wireSha256": "d6d78ffbe38f6510c14fd3724fe9942b9421e9cf28850eeb0330d80905d620de",
+          "responseSha256": "2d950317a7806680355cc3803b7497686ab126a84caf937ee8ef987dc8a8cabf"
+        },
+        {
+          "id": "missing-evidence",
+          "group": "unsupported",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.7039,
+                "abuse": 0.2961
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.312,
+                "unsupported": 0.688
+              }
+            }
+          },
+          "durationMs": 10470,
+          "usage": {
+            "input_tokens": 137,
+            "output_tokens": 103
+          },
+          "wireSha256": "524c799155216d55b1940b73ab47012c44b19740bf5be5b3bce12f3c6f8a6fca",
+          "responseSha256": "7794a85bf47f41a566997e81e120507fb99d99b98b5876deff9989f85f076836"
+        },
+        {
+          "id": "url-only",
+          "group": "unsupported",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.6932,
+                "abuse": 0.3068
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.1406,
+                "unsupported": 0.8594
+              }
+            }
+          },
+          "durationMs": 10249,
+          "usage": {
+            "input_tokens": 162,
+            "output_tokens": 105
+          },
+          "wireSha256": "030eb4b0cc6b2a6b1ad455dea6a8610c7695b8bf9f78df70c5582f1380422df7",
+          "responseSha256": "b6875f8d830bb61d41abb7ab22f586388dcabdc0c1fb378c3531c929571c4e70"
+        },
+        {
+          "id": "contradiction",
+          "group": "contradicted",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.7289,
+                "abuse": 0.2711
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.0089,
+                "unsupported": 0.9911
+              }
+            }
+          },
+          "durationMs": 12436,
+          "usage": {
+            "input_tokens": 174,
+            "output_tokens": 105
+          },
+          "wireSha256": "b4e30aecec428d186710f27b1313e21c27f7083e15885a803a0a49204acdcb91",
+          "responseSha256": "574d411fe1488b338a5e3047f906ab749968cfb30e01462a21f5dd04235302c0"
+        },
+        {
+          "id": "negation",
+          "group": "contradicted",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.7437,
+                "abuse": 0.2563
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.0045,
+                "unsupported": 0.9955
+              }
+            }
+          },
+          "durationMs": 11329,
+          "usage": {
+            "input_tokens": 177,
+            "output_tokens": 104
+          },
+          "wireSha256": "288ac1eaad8b006f00c9575e492e2440bb9a91d46f64210ef683611d16ff83f2",
+          "responseSha256": "ba257a379dd5363bd7eff0ef6dde8af8ae30646d4ee10a91c38d4da7038e649c"
+        },
+        {
+          "id": "partial",
+          "group": "incomplete",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.768,
+                "abuse": 0.232
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.0282,
+                "unsupported": 0.9718
+              }
+            }
+          },
+          "durationMs": 11638,
+          "usage": {
+            "input_tokens": 178,
+            "output_tokens": 102
+          },
+          "wireSha256": "fa93098ff7a707edc23b0b7b8e1633fbf18933e99390c661a93f66e94c4c4f1f",
+          "responseSha256": "d00ee5c528bfe93d60013a96cc325c1cdf44683bc3588e8b811e9f9e9ae9a193"
+        },
+        {
+          "id": "background",
+          "group": "incomplete",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.7649,
+                "abuse": 0.2351
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.0162,
+                "unsupported": 0.9838
+              }
+            }
+          },
+          "durationMs": 12053,
+          "usage": {
+            "input_tokens": 177,
+            "output_tokens": 105
+          },
+          "wireSha256": "408a313e6d172a3ace28049a528befbf5fcb7b5803bca3de8e07b89c0a936ef4",
+          "responseSha256": "5ad06e903a7a69e65209e0ff70d18a200cf6524c5a29d72d5dab6a592832beb1"
+        },
+        {
+          "id": "injection-source",
+          "group": "injection",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.6557,
+                "abuse": 0.3443
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.2914,
+                "unsupported": 0.7086
+              }
+            }
+          },
+          "durationMs": 11191,
+          "usage": {
+            "input_tokens": 181,
+            "output_tokens": 105
+          },
+          "wireSha256": "25a004a18c698c84a8c210229bfd3f50e455ed054ae561b34ac9ca27f83b715d",
+          "responseSha256": "172f19d89343aea13cb093e791993bba23bf64036762bb018b9b0679f10451d3"
+        },
+        {
+          "id": "injection-conflict",
+          "group": "injection",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.6913,
+                "abuse": 0.3087
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.0118,
+                "unsupported": 0.9882
+              }
+            }
+          },
+          "durationMs": 11193,
+          "usage": {
+            "input_tokens": 185,
+            "output_tokens": 105
+          },
+          "wireSha256": "5d458c85b82be70ecdef249ba35740f24c79fe98e1816bfbe7a0496f817cdaf9",
+          "responseSha256": "523c304c282121a7fc5c48ae9efe56987083089cb61c7482c2416a0abadef7ca"
+        },
+        {
+          "id": "scope",
+          "group": "incomplete",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "unsupported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.7166,
+                "abuse": 0.2834
+              }
+            },
+            "support": {
+              "label": "unsupported",
+              "probabilities": {
+                "supported": 0.0296,
+                "unsupported": 0.9704
+              }
+            }
+          },
+          "durationMs": 10579,
+          "usage": {
+            "input_tokens": 167,
+            "output_tokens": 105
+          },
+          "wireSha256": "e40bc4f075bc593b4264707be0507b20cbe300ef71f1fd641263c496588e2db1",
+          "responseSha256": "b33e453f98350414bb73fbcfb681bbaa58a506bbe5317abeb64b914300b57aad"
+        },
+        {
+          "id": "english",
+          "group": "legitimate",
+          "expected": {
+            "suitability": "legitimate",
+            "support": "supported"
+          },
+          "observed": {
+            "suitability": {
+              "label": "legitimate",
+              "probabilities": {
+                "legitimate": 0.8159,
+                "abuse": 0.1841
+              }
+            },
+            "support": {
+              "label": "supported",
+              "probabilities": {
+                "supported": 0.9777,
+                "unsupported": 0.0223
+              }
+            }
+          },
+          "durationMs": 10839,
+          "usage": {
+            "input_tokens": 155,
+            "output_tokens": 105
+          },
+          "wireSha256": "c92fed68e104c24326b2e5886ed09e5d7ece96242d49ab81b9fda3fe660c919d",
+          "responseSha256": "5e919a1396e24d98b0b20103dda101cb4887b79bfd1153fd17e72aa99afc9534"
+        }
+      ]
+    }
+  ],
+  "sameWireAcrossModels": true,
+  "sharedService": {
+    "startedAt": "2026-11-03T06:27:10.728905+00:00",
+    "completedAt": "2026-11-03T06:40:03.220879+00:00",
+    "state": "completed",
+    "restored": true,
+    "protectedFiles": 44,
+    "peakGpuMiB": 5767,
+    "peakTemperatureC": 86,
+    "restoredInferenceMs": 3884
+  }
+}

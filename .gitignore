@@ -61,3 +61,6 @@ playwright-report/
 
 # Private U4 beta connection, selected input and backups
 .local/u4-beta/
+
+# U5 private review responses, local model sessions and disposable DB dumps
+/.local/u5-*/

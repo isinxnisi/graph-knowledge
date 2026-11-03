@@ -1,3 +1,5 @@
+2026-11-03追補：U5の[実AI比較と投稿データ層](KNOWLEDGE_SUBMISSIONS_U5.md)へ着手。4Bの小さい開発評価は改善したが、自動受理・常駐運用・実会員投稿の完了ではない。今回のbranchだけの内部部品を、βの利用者機能の完成と混同しない。[検証と残件](../verification/KNOWLEDGE_SUBMISSIONS_U5_20261103.md)。
+
 # Plunode本運用初版への統合計画
 
 2026-11-03追補：U4の基本接続をmain／3200／HTTPS β／3276へ反映した。[年表Capsuleの共有・停止・OGPの検証](../verification/KNOWLEDGE_CAPSULE_U4_SHARING_20261103.md)参照。U5の一般投稿AI審査、U6の収集と利用量管理、U7/U8のデータ切替・本番公開は別の完了条件として維持する。
