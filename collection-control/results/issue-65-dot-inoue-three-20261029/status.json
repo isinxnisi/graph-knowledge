@@ -71,11 +71,11 @@
   "requestSha256": "02ff5a7fbc768f21d5259860ced63f7d673d73ba83fa2203c8783d7580fa0fef",
   "kind": "issue-prepare",
   "phase": "waiting-lock",
-  "generation": 1979,
+  "generation": 1980,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-03T07:48:57+00:00",
+  "updatedAt": "2026-11-03T08:11:59+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
