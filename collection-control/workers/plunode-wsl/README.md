@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-03 20:36:32 JST。
+確認: 2026-11-03 20:55:49 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -27,8 +27,9 @@ Issue確認結果:
     "checkedAt": "2026-11-03T05:02:45+00:00"
   },
   "collection-control/issue-sources/16.json": {
-    "status": "registered: issue-16-adachi-three-20261025",
-    "checkedAt": "2026-11-03T10:26:46+00:00"
+    "status": "held",
+    "reason": "<urlopen error _ssl.c:990: The handshake operation timed out>",
+    "checkedAt": "2026-11-03T11:50:09+00:00"
   },
   "collection-control/issue-sources/5.json": {
     "status": "registered: issue-5-dot-tezuka-adolf-20261025",
@@ -115,8 +116,9 @@ Issue確認結果:
     "checkedAt": "2026-11-03T10:45:30+00:00"
   },
   "collection-control/issue-sources/70.json": {
-    "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
-    "checkedAt": "2026-11-03T08:59:53+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T11:51:07+00:00"
   },
   "collection-control/issue-sources/71.json": {
     "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
