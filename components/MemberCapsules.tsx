@@ -1,4 +1,5 @@
 "use client";
+import {useKnowledgeSubmissionsEnabled} from "./KnowledgeSubmissionAvailability";
 import CapsuleTrashAction from "./CapsuleTrashAction";
 import PageIdentity from "./PageIdentity";
 import {useMemberSession,refreshMemberIdentity} from "../lib/client/use-member-identity";
@@ -41,7 +42,7 @@ import capsuleCss from "./CapsuleDialog.module.css";
 const authEventKey = "graph-knowledge:member-session-changed";
 const textMessages = memberLabels();
 export default function MemberCapsules({ dataset, initialImport = "" }: { dataset: DatasetMode; initialImport?: string }) {
-  const communitiesEnabled=useCommunitiesEnabled();
+  const communitiesEnabled=useCommunitiesEnabled(),submissionsEnabled=useKnowledgeSubmissionsEnabled();
   const { locale } = useUiLocale();
   const text = memberLabels(locale), captions = capsuleLabels(locale), historyText = capsuleHistoryLabels(locale);
   const identity=useMemberSession(),hash=usePersonalHash();
@@ -290,7 +291,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
         <div className={css.readingPanel} hidden={readingTab !== "content"}>
         {historical && <div role="status"><h2>{historyText.reading(selected.revision)}</h2><p>{historyText.snapshotHelp}</p><button disabled={busy} onClick={() => read(selected.id)}>{historyText.current}</button></div>}
         {historical && <CapsuleComparison key={`comparison:${selected.id}:${selected.revision}:${user.id}`} snapshot={selected} userId={user.id} disabled={busy} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
-        <CapsuleReader key={`${selected.id}:${selected.revision}`} capsule={reading} explorationLinks onEditRequest={!historical&&!busy?view=>setWorkspace({capsule:view,member:selected,ownerId:user.id}):undefined}/>
+        <CapsuleReader key={`${selected.id}:${selected.revision}`} submissionHref={submissionsEnabled&&!historical&&!busy&&reading.document?`/member/submissions?capsule=${selected.id}`:undefined} capsule={reading} explorationLinks onEditRequest={!historical&&!busy?view=>setWorkspace({capsule:view,member:selected,ownerId:user.id}):undefined}/>
         <CapsuleRevisionList key={`revisions:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} userId={user.id} disabled={busy} onRead={revision => read(selected.id, revision)} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />
 
         </div>

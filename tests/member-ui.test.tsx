@@ -4,6 +4,8 @@ import { cleanup, fireEvent, render as rtlRender, screen, waitFor, act, configur
 import {invalidateMemberIdentity} from "../lib/client/use-member-identity";
 import PersonalFrame from "../components/PersonalFrame";
 import type {ReactElement} from "react";
+import {memberItemSchema} from "../lib/client/member-api";
+import {KnowledgeSubmissionAvailability} from "../components/KnowledgeSubmissionAvailability";
 import MemberCapsules from "../components/MemberCapsules";
 import type { MemberCapsule } from "../lib/domain/member-capsule";
 import type { LocalCapsule } from "../lib/client/local-capsules";
@@ -11,7 +13,7 @@ import type { LocalCapsule } from "../lib/client/local-capsules";
 vi.mock("next/navigation",()=>({usePathname:()=>"/member"}));
 const render=(node:ReactElement)=>rtlRender(<PersonalFrame dataset="demo">{node}</PersonalFrame>);
 vi.mock("../components/CapsuleDialog", () => ({
-  CapsuleReader: ({ capsule, onEditRequest }: { capsule: LocalCapsule; onEditRequest?: (view:LocalCapsule) => void }) => <section data-testid="member-reader"><h3>{capsule.title}</h3>{onEditRequest && <button onClick={() => onEditRequest(capsule)}>このCapsuleを編集</button>}</section>,
+  CapsuleReader: ({ capsule, onEditRequest, submissionHref }: { capsule: LocalCapsule; submissionHref?: string; onEditRequest?: (view:LocalCapsule) => void }) => <section data-testid="member-reader"><h3>{capsule.title}</h3>{submissionHref&&<a href={submissionHref}>知識を投稿</a>}{onEditRequest && <button onClick={() => onEditRequest(capsule)}>このCapsuleを編集</button>}</section>,
   ClaimCaption: () => null,
 }));
 vi.mock("../components/MyCapsules",async()=>{
@@ -86,6 +88,18 @@ describe("会員編集中のprivate表示と入力保持", () => {
   });
 });
 
+describe("保存した文書からの知識投稿入口",()=>{
+ it("有効化時だけ本人の現在保存版を投稿候補へ渡す",async()=>{
+  const node=capsule.content.entityIds[0],document={schemaVersion:1,nodes:[{key:node,title:"本人の対象",description:"",badge:"",origin:{kind:"local"}}],relations:[],texts:[],evidence:[],unresolvedClaimIds:[],layout:{positions:{[node]:{x:0,y:0}},pan:{x:0,y:0},zoom:1,center:{x:0,y:0},viewport:{width:800,height:600}}};
+  memberItemSchema.parse({capsule:{...capsule,schemaVersion:2,content:{...capsule.content,entityIds:[],document}}});
+  const fallback=fetchMock.getMockImplementation() as (path:string,options?:RequestInit)=>Promise<Response>;
+  fetchMock.mockImplementation((path:string,options:RequestInit={})=>path===`/api/member/capsules/${capsule.id}`?Promise.resolve(Response.json({capsule:{...capsule,schemaVersion:2,content:{...capsule.content,entityIds:[],document}}})):fallback(path,options));
+  const view=render(<KnowledgeSubmissionAvailability enabled><MemberCapsules dataset="demo"/></KnowledgeSubmissionAvailability>);
+  const link=await screen.findByRole("link",{name:"知識を投稿"});expect(link.getAttribute("href")).toBe(`/member/submissions?capsule=${capsule.id}`);
+  view.rerender(<PersonalFrame dataset="demo"><KnowledgeSubmissionAvailability enabled={false}><MemberCapsules dataset="demo"/></KnowledgeSubmissionAvailability></PersonalFrame>);
+  expect(screen.queryByRole("link",{name:"知識を投稿"})).toBeNull();
+ });
+});
 describe("閲覧ページと編集作業面の連続性",()=>{
  it("内容はページ内で開き、明示編集だけ作業面へ移り、閉じても内容タブを保つ",async()=>{
   render(<MemberCapsules dataset="demo"/>);await screen.findByTestId("member-reader");expect(screen.queryByRole("dialog")).toBeNull();

@@ -38,8 +38,8 @@ export function ClaimCaption({ claim, nodes }: { claim: ClaimSummary & { withdra
     <small className={styles.muted}>ID: {claim.id}</small></>;
 }
 
-export function CapsuleReader(props: { capsule: LocalCapsule; byline?: import("react").ReactNode; onEditRequest?: (view:LocalCapsule)=>void; onEdit?: (resolved: ResolvedCapsule) => void; explorationLinks?: boolean; noteAttribution?: "self" | "author" }) {
-  return props.capsule.document ? <CapsuleStudio capsule={props.capsule} readOnly byline={props.byline} onEditRequest={props.onEditRequest} /> : props.onEdit ? <LegacyCapsuleReader {...props} /> : <LegacyStudioReader {...props} />;
+export function CapsuleReader(props: { submissionHref?: string; capsule: LocalCapsule; byline?: import("react").ReactNode; onEditRequest?: (view:LocalCapsule)=>void; onEdit?: (resolved: ResolvedCapsule) => void; explorationLinks?: boolean; noteAttribution?: "self" | "author" }) {
+  return props.capsule.document ? <CapsuleStudio submissionHref={props.submissionHref} capsule={props.capsule} readOnly byline={props.byline} onEditRequest={props.onEditRequest} /> : props.onEdit ? <LegacyCapsuleReader {...props} /> : <LegacyStudioReader {...props} />;
 }
 
 function LegacyStudioReader({capsule,byline,onEditRequest}:{capsule:LocalCapsule;byline?:import("react").ReactNode;onEditRequest?:(view:LocalCapsule)=>void}){
