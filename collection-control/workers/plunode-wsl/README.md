@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-03 12:12:57 JST。
+確認: 2026-11-03 12:34:52 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -24,12 +24,13 @@ Issue確認結果:
 {
   "collection-control/issue-sources/25.json": {
     "status": "held",
-    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
-    "checkedAt": "2026-11-03T02:49:07+00:00"
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-03T03:16:24+00:00"
   },
   "collection-control/issue-sources/16.json": {
-    "status": "registered: issue-16-adachi-three-20261025",
-    "checkedAt": "2026-11-03T02:29:52+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T03:16:08+00:00"
   },
   "collection-control/issue-sources/5.json": {
     "status": "registered: issue-5-dot-tezuka-adolf-20261025",
@@ -42,8 +43,8 @@ Issue確認結果:
   },
   "collection-control/issue-sources/46.json": {
     "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-03T02:49:41+00:00"
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T03:16:53+00:00"
   },
   "collection-control/issue-sources/47.json": {
     "status": "registered: issue-47-dot-yukimura-two-20261027",
@@ -58,40 +59,48 @@ Issue確認結果:
     "checkedAt": "2026-11-02T18:39:55+00:00"
   },
   "collection-control/issue-sources/50.json": {
-    "status": "registered: issue-50-dot-endo-tista-20261027",
-    "checkedAt": "2026-11-02T18:39:58+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-03T03:17:23+00:00"
   },
   "collection-control/issue-sources/51.json": {
-    "status": "registered: issue-51-dot-araki-rohan-20261027",
-    "checkedAt": "2026-11-03T02:30:39+00:00"
+    "status": "held",
+    "reason": "<urlopen error _ssl.c:990: The handshake operation timed out>",
+    "checkedAt": "2026-11-03T03:17:48+00:00"
   },
   "collection-control/issue-sources/56.json": {
-    "status": "registered: issue-56-dot-urushibara-two-20261028",
-    "checkedAt": "2026-11-03T02:30:42+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T03:18:09+00:00"
   },
   "collection-control/issue-sources/57.json": {
-    "status": "registered: issue-57-dot-oshima-two-20261028",
-    "checkedAt": "2026-11-02T18:40:03+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-03T03:18:24+00:00"
   },
   "collection-control/issue-sources/58.json": {
-    "status": "registered: issue-58-dot-takeuchi-two-20261028",
-    "checkedAt": "2026-11-02T18:40:05+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-03T03:18:40+00:00"
   },
   "collection-control/issue-sources/59.json": {
-    "status": "registered: issue-59-dot-kubo-two-20261028",
-    "checkedAt": "2026-11-03T02:30:52+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T03:18:54+00:00"
   },
   "collection-control/issue-sources/60.json": {
     "status": "registered: issue-60-dot-ichikawa-houseki-20261028",
     "checkedAt": "2026-11-03T02:30:55+00:00"
   },
   "collection-control/issue-sources/61.json": {
-    "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
-    "checkedAt": "2026-11-02T18:40:10+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-03T03:19:14+00:00"
   },
   "collection-control/issue-sources/62.json": {
-    "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
-    "checkedAt": "2026-11-03T02:31:01+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
+    "checkedAt": "2026-11-03T03:19:40+00:00"
   },
   "collection-control/issue-sources/64.json": {
     "status": "registered: issue-64-dot-oda-onepiece-20261029",
@@ -122,12 +131,14 @@ Issue確認結果:
     "checkedAt": "2026-11-02T18:40:23+00:00"
   },
   "collection-control/issue-sources/71.json": {
-    "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
-    "checkedAt": "2026-11-02T18:40:25+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T03:20:15+00:00"
   },
   "collection-control/issue-sources/73.json": {
-    "status": "registered: issue-73-dot-murata-onepunch-20261030",
-    "checkedAt": "2026-11-02T18:40:27+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-03T03:20:31+00:00"
   }
 }
 ```
@@ -138,12 +149,12 @@ Issue確認結果:
 
 旧blockedは変更しない失敗履歴。下記の新規依頼の状態を現在の復旧進捗として確認する。
 
-- [issue-25-utc-recovery-01](../../results/issue-25-utc-recovery-01/README.md): retry-wait（旧 issue-25-manga23-20261019-repair1-batch-03）
+- [issue-25-utc-recovery-01](../../results/issue-25-utc-recovery-01/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-03）
 - [issue-25-utc-recovery-02](../../results/issue-25-utc-recovery-02/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-01）
 - [issue-25-utc-recovery-03](../../results/issue-25-utc-recovery-03/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-04）
 - [issue-25-utc-recovery-04](../../results/issue-25-utc-recovery-04/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-05）
-- [issue-25-utc-recovery-05](../../results/issue-25-utc-recovery-05/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-06）
+- [issue-25-utc-recovery-05](../../results/issue-25-utc-recovery-05/README.md): retry-wait（旧 issue-25-manga23-20261019-repair1-batch-06）
 - [issue-25-utc-recovery-06](../../results/issue-25-utc-recovery-06/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-07）
 - [issue-25-utc-recovery-07](../../results/issue-25-utc-recovery-07/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-08）
-- [issue-25-utc-recovery-08](../../results/issue-25-utc-recovery-08/README.md): retry-wait（旧 issue-25-manga23-20261019-repair1-batch-09）
+- [issue-25-utc-recovery-08](../../results/issue-25-utc-recovery-08/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-09）
 - [issue-25-utc-recovery-09](../../results/issue-25-utc-recovery-09/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-10）
