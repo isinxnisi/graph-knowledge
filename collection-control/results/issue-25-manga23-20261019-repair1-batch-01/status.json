@@ -92,12 +92,12 @@
   },
   "requestSha256": "9e62bc58b8c3047940024842cc6b23c2744de2d19667d399d82fd9d6a4782baf",
   "kind": "collect-review",
-  "phase": "retry-wait",
-  "generation": 13623,
+  "phase": "waiting-control",
+  "generation": 13624,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
-  "updatedAt": "2026-11-03T09:07:34+00:00",
-  "message": "fatal: unable to access 'https://github.com/isinxnisi/graph-knowledge.git/': Could not resolve host: github.com\n",
+  "updatedAt": "2026-11-03T09:25:16+00:00",
+  "message": "Execution gate: outside-window",
   "retryAt": 1793696992.4078639
 }
