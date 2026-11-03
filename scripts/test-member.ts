@@ -36,7 +36,7 @@ try {
   if (run.status !== 0) throw new Error("Dedicated member PostgreSQL could not start");
   let ready = false;
   for (let attempt = 0; attempt < 30; attempt++) {
-    if (docker(["exec", container, "pg_isready", "-U", "gk_member", "-d", "graph_member_test"]).status === 0) { ready = true; break; }
+    if (docker(["exec", container, "pg_isready", "--host", "127.0.0.1", "-U", "gk_member", "-d", "graph_member_test"]).status === 0) { ready = true; break; }
     await new Promise(resolve => setTimeout(resolve, 500));
   }
   if (!ready) throw new Error("Dedicated member PostgreSQL did not become ready");

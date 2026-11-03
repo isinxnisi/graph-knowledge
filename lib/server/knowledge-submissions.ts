@@ -3,7 +3,7 @@ import path from "node:path";
 import { readFile } from "node:fs/promises";
 import type { Pool, PoolClient, QueryResultRow } from "pg";
 import { z } from "zod";
-import { knowledgeSubmissionCommandSchema, knowledgeSubmissionContentSchema, knowledgeSubmissionCaptureSchema, type KnowledgeSubmission } from "../domain/knowledge-submission";
+import { knowledgeSubmissionCommandSchema, knowledgeSubmissionContentSchema, knowledgeSubmissionCaptureSchema,knowledgePublicCaptureSchema, type KnowledgeSubmission } from "../domain/knowledge-submission";
 import type { DatasetMode } from "../domain/dataset";
 import { memberCapsuleSchema } from "../domain/member-capsule";
 import { captureSubmissionCapsule } from "../domain/knowledge-submission-capsule";
@@ -43,7 +43,7 @@ const dto = (row: QueryResultRow): KnowledgeSubmission => ({
   content: knowledgeSubmissionContentSchema.parse(row.content), digest: row.digest,
   createdAt: stamp(row.created_at), updatedAt: stamp(row.updated_at),
   ...(row.source_capsule?.captured?{context:{entities:row.source_capsule.captured.entities,sources:row.source_capsule.captured.sources}}:{}),
-  origin: row.source_capsule ? {capsuleId:row.source_capsule.capsuleId,capsuleRevision:row.source_capsule.capsuleRevision,title:row.source_capsule.title,keys:row.source_capsule.keys} : null,
+  origin: row.source_capsule?.capsuleId ? {capsuleId:row.source_capsule.capsuleId,capsuleRevision:row.source_capsule.capsuleRevision,title:row.source_capsule.title,keys:row.source_capsule.keys} : null,
 });
 
 /** Private repository. Member mode locks/rechecks the authenticated user in
@@ -79,6 +79,7 @@ export function createKnowledgeSubmissionService(pool: Pool, options?: { memberS
   }
   const owner = (value: string) => z.uuidv4().parse(value).toLowerCase();
   return {
+    async replay(ownerId:string,requestId:string,digest:string){return transaction(owner(ownerId),async c=>{const row=(await c.query(`SELECT digest,response FROM ${schema}.submission_requests WHERE owner_id=$1 AND request_id=$2`,[ownerId,requestId])).rows[0];if(!row)return null;if(row.digest!==digest)throw new KnowledgeError("同じ操作IDの内容が異なります",409,"REQUEST_CONFLICT");return row.response as KnowledgeSubmission;});},
     async list(ownerId: string) {
       ownerId=owner(ownerId);
       return transaction(ownerId,async c=>(await c.query(`SELECT s.id,s.state,s.state_version AS version,s.current_revision AS revision,s.created_at,s.updated_at,r.content->>'title' AS title,jsonb_array_length(r.content->'items') AS item_count,to_jsonb(r)->'source_capsule'->>'title' AS capsule_title FROM ${schema}.submissions s JOIN ${schema}.submission_revisions r ON r.submission_id=s.id AND r.revision=s.current_revision WHERE s.owner_id=$1 ORDER BY s.updated_at DESC,s.id LIMIT 200`,[ownerId])).rows.map(r=>({id:r.id,state:r.state,version:r.version,revision:r.revision,title:r.title,itemCount:r.item_count,capsuleTitle:r.capsule_title,createdAt:stamp(r.created_at),updatedAt:stamp(r.updated_at)})));
@@ -87,10 +88,10 @@ export function createKnowledgeSubmissionService(pool: Pool, options?: { memberS
       ownerId = owner(ownerId); id = z.uuidv4().parse(id);
       return transaction(ownerId, c => read(c, ownerId, id));
     },
-    async execute(ownerId: string, raw: unknown): Promise<KnowledgeSubmission> {
+    async execute(ownerId: string, raw: unknown, publicCapture?:{content:KnowledgeSubmission["content"];captured:unknown}): Promise<KnowledgeSubmission> {
       ownerId = owner(ownerId);
       if (Buffer.byteLength(JSON.stringify(raw)) > 128_000) throw new KnowledgeError("投稿が128KBを超えています", 413, "TOO_LARGE");
-      let input = knowledgeSubmissionCaptureSchema.safeParse(raw).success ? knowledgeSubmissionCaptureSchema.parse(raw) : knowledgeSubmissionCommandSchema.parse(raw);
+      let input = knowledgePublicCaptureSchema.safeParse(raw).success?knowledgePublicCaptureSchema.parse(raw):knowledgeSubmissionCaptureSchema.safeParse(raw).success ? knowledgeSubmissionCaptureSchema.parse(raw) : knowledgeSubmissionCommandSchema.parse(raw);
       const digest = knowledgeDigest(raw);
       return transaction(ownerId, async c => {
         // Serializes idempotency and each member's create/update requests.
@@ -101,6 +102,12 @@ export function createKnowledgeSubmissionService(pool: Pool, options?: { memberS
           return previous.response;
         }
         let sourceCapsule: unknown = null;
+        if(input.action === "capture-public") {
+          if(!publicCapture)throw new KnowledgeError("公開原本のサーバー確認が必要です",403,"FORBIDDEN");
+          if(Buffer.byteLength(JSON.stringify(publicCapture))>128_000)throw new KnowledgeError("取得版が大きすぎます",413,"TOO_LARGE");
+          sourceCapsule={kind:"public-record",recordId:input.recordId,recordRevision:input.recordRevision,captured:publicCapture.captured};
+          input={action:"save",id:input.id,requestId:input.requestId,expectedVersion:0,content:publicCapture.content};
+        }
         if (input.action === "capture") {
           if (!options?.memberStore) throw new KnowledgeError("会員保存が必要です",503,"UNAVAILABLE");
           const row=(await c.query("SELECT * FROM member_capsule WHERE id=$1 AND owner_user_id=$2 AND dataset=$3 AND (to_jsonb(member_capsule)->>'trashed_at') IS NULL FOR SHARE",[input.capsuleId,ownerId,options.dataset])).rows[0];

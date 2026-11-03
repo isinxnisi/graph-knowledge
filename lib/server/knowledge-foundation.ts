@@ -35,6 +35,7 @@ function expected(actual: number, requested: number) {
 }
 function actorAllowed(actor: KnowledgeActor, action: string) {
   if (!actor.id || actor.id.length > 200) throw new KnowledgeError("認証された操作主体が必要です", 403, "FORBIDDEN");
+  if (action === "accept-record") { if(actor.kind === "submission")return;throw new KnowledgeError("知識投稿の内部受理処理が必要です",403,"FORBIDDEN"); }
   if (actor.kind === "operator") return;
   if (actor.kind === "collector" && action === "create-bundle") return;
   throw new KnowledgeError(actor.kind === "user" ? "利用者の変更は知識投稿の審査経路へ提出してください" : "この操作の権限がありません", 403, "SUBMISSION_REQUIRED");
@@ -214,7 +215,7 @@ export function createKnowledgeFoundationService(pool: Pool) {
     }
     return result;
   }
-  async function execute(actor: KnowledgeActor, raw: unknown): Promise<unknown> {
+  async function execute(actor: KnowledgeActor, raw: unknown, internal?:{verify:(c:PoolClient)=>Promise<void>;prepare:()=>Promise<void>}): Promise<unknown> {
     const cmd = knowledgeCommandSchema.parse(raw);
     actorAllowed(actor, cmd.action);
     if (actor.kind === "collector" && cmd.action === "create-bundle" && (cmd.legacyLinks.length || cmd.visibility !== "public")) throw new KnowledgeError("収集実行者にはこの操作を許可していません", 403, "FORBIDDEN");
@@ -238,8 +239,23 @@ export function createKnowledgeFoundationService(pool: Pool) {
         await changed(kind, id);
         return version(c, kind, id, revision);
       }
+      if(internal)await internal.verify(c);
       let result: unknown;
-      if (cmd.action === "create-bundle") {
+      if(cmd.action === "accept-record") {
+        const entityPins=[...cmd.entityPins];
+        async function acceptedReference(kind:"entity"|"source",value:{id:string;content:unknown}){
+          const old=(await c.query("SELECT o.*,r.content FROM knowledge75.objects o JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=o.current_revision WHERE o.kind=$1 AND o.id=$2 FOR SHARE OF o",[kind,value.id])).rows[0];
+          if(old){if(old.visibility!=="public"||old.current_revision!==1||knowledgeDigest(old.content)!==knowledgeDigest(value.content))throw new KnowledgeError("投稿内の共有対象・資料が変わりました",409,"CONFLICT");return;}
+          if(kind==="entity")await put(kind,value.id,knowledgeEntityContentSchema.parse(value.content),1,cmd.reason);else await put(kind,value.id,knowledgeSourceContentSchema.parse(value.content),1,cmd.reason);
+        }
+        for(const e of cmd.entities){await acceptedReference("entity",e);entityPins.push({id:e.id,revision:1});}
+        for(const s of cmd.sources)await acceptedReference("source",s);
+        for(const pin of cmd.sourcePins){const h=await head(c,"source",pin.id,"FOR SHARE");expected(h.current_revision,pin.revision);await assertRevisionPublic(c,"source",pin.id,pin.revision);}
+        let revision=1;
+        if(cmd.expectedRevision){const h=await head(c,"record",cmd.record.id,"FOR UPDATE");expected(h.current_revision,cmd.expectedRevision);await assertPublic(c,"record",cmd.record.id);revision=h.current_revision+1;}
+        await validateRecord(c,{...cmd.record,revision,createdAt:"",reason:cmd.reason},entityPins,true);
+        result=await put("record",cmd.record.id,cmd.record.content,revision,cmd.reason);
+      } else if (cmd.action === "create-bundle") {
         for (const [rows, label] of [[cmd.entities, "対象"], [cmd.sources, "資料"], [cmd.records, "記録"]] as const) if (new Set(rows.map(r => r.id)).size !== rows.length) throw new KnowledgeError(label + "IDが重複しています");
         assertUnique(cmd.entityPins, "対象の観測版");
         const entities: KnowledgeEntityVersion[] = [], sources: KnowledgeSourceVersion[] = [], records: KnowledgeRecordVersion[] = [];
@@ -301,6 +317,7 @@ export function createKnowledgeFoundationService(pool: Pool) {
         result = await put("mapping", cmd.recordId, { recordRevision: cmd.recordRevision, concept: cmd.concept }, cmd.expectedMappingRevision + 1, cmd.reason);
       }
       await c.query("INSERT INTO knowledge75.operations(actor_id,request_id,actor_kind,digest,input,result) VALUES($1,$2,$3,$4,$5,$6)", [actor.id, cmd.requestId, actor.kind, digest, JSON.stringify(raw), JSON.stringify(result)]);
+      if(internal)await internal.prepare();
       await c.query("COMMIT"); return result;
     } catch (e) {
       await c.query("ROLLBACK");

@@ -149,6 +149,8 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false }: { ini
     if (embedded) {
       // The existing Explorer owns ordinary URLs. Only explicit Theme/common links activate this reader.
       stored.theme = null;
+      const directRecord=new URL(location.href).searchParams.get("krecord");
+      if(directRecord){stored.rootId=null;stored.recordIds=[directRecord];stored.generation=null;stored.selection={kind:"record",id:directRecord};stored.normalView=undefined;}
       const commonRoot=new URL(location.href).searchParams.get("kentity");
       if(commonRoot && stored.rootId!==commonRoot){stored.rootId=commonRoot;stored.recordIds=[];stored.generation=null;stored.selection={kind:"entity",id:commonRoot};}
     }

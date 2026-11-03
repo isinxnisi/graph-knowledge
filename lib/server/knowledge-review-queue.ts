@@ -4,7 +4,7 @@ import path from "node:path";
 import {Pool,type PoolClient,type QueryResultRow} from "pg";
 import {z} from "zod";
 import {knowledgeSubmissionContentSchema,type KnowledgeSubmission} from "../domain/knowledge-submission";
-import {knowledgeReviewCommandSchema,REVIEW_CONSENT_VERSION,type KnowledgeReviewStatus,submissionReviewInput} from "../domain/knowledge-review-job";
+import {knowledgeReviewCommandSchema,REVIEW_CONSENT_VERSION,PUBLICATION_CONSENT_VERSION,type KnowledgeReviewStatus,submissionReviewInput} from "../domain/knowledge-review-job";
 import {geminiReviewRequest,GEMINI_REVIEW_POLICY,parseGeminiReview,type callGeminiReview} from "./gemini-knowledge-review";
 import {knowledgeDigest,KnowledgeError} from "./knowledge-foundation";
 export const reviewConfigSchema=z.strictObject({
@@ -25,8 +25,12 @@ export async function ensureReviewSchema(pool:Pool){
 export async function reviewStatus(c:Pool|PoolClient,ownerId:string,id:string,revision:number):Promise<KnowledgeReviewStatus|undefined>{
  const rows=(await c.query(`SELECT j.* FROM member_knowledge.review_jobs j JOIN member_knowledge.submissions s ON s.id=j.submission_id WHERE j.submission_id=$1 AND s.owner_id=$2 AND j.revision=$3 ORDER BY j.created_at,j.item_key`,[id,ownerId,revision])).rows;
  if(!rows.length)return undefined;
+ if(process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED==='1'){
+  const decisions=(await c.query("SELECT job_id,state,reason,result,command FROM member_knowledge.publication_decisions WHERE job_id=ANY($1::uuid[])",[rows.map(r=>r.id)])).rows;
+  for(const row of rows){const d=decisions.find(d=>d.job_id===row.id);if(d)row.publication={id:d.command.record.id,revision:d.result?.revision??(d.command.expectedRevision??0)+1,state:d.state,reason:d.reason};}
+ }
  const workerAvailable=(await c.query("SELECT 1 FROM member_knowledge.review_projects WHERE heartbeat_at>clock_timestamp()-interval '45 seconds' LIMIT 1")).rowCount===1;
- return {revision,workerAvailable,items:rows.map(r=>({key:r.item_key,state:r.state,reason:r.reason,nextAttemptAt:['retry','quota'].includes(r.state)?iso(r.not_before):null,attempts:r.attempts,result:r.result}))};
+ return {revision,workerAvailable,items:rows.map(r=>({key:r.item_key,state:r.state,reason:r.reason,nextAttemptAt:['retry','quota'].includes(r.state)?iso(r.not_before):null,attempts:r.attempts,result:r.result,...(r.publication?{publication:r.publication}:{})}))};
 }
 function submission(row:QueryResultRow):KnowledgeSubmission{
  return {id:row.id,revision:row.current_revision,version:row.state_version,state:row.state,content:knowledgeSubmissionContentSchema.parse(row.content),digest:row.digest,createdAt:iso(row.created_at),updatedAt:iso(row.updated_at),origin:row.source_capsule?{capsuleId:row.source_capsule.capsuleId,capsuleRevision:row.source_capsule.capsuleRevision,title:row.source_capsule.title,keys:row.source_capsule.keys}:null,...(row.source_capsule?.captured?{context:{entities:row.source_capsule.captured.entities,sources:row.source_capsule.captured.sources}}:{})};
@@ -87,8 +91,8 @@ export function createReviewQueue(pool:Pool){
     if(n>=120)throw new KnowledgeError("少し待ってから再試行してください",429,"RATE_LIMITED");
     const value=submission(row);
     if((await c.query("SELECT 1 FROM member_knowledge.review_authorizations WHERE submission_id=$1 AND revision=$2",[value.id,value.revision])).rowCount)return {...value,review:await reviewStatus(c,ownerId,value.id,value.revision)};
-    await c.query("INSERT INTO member_knowledge.review_authorizations(submission_id,revision,consent_version) VALUES($1,$2,$3) ON CONFLICT DO NOTHING",[value.id,value.revision,REVIEW_CONSENT_VERSION]);
-    for(const item of value.content.items)await c.query(`INSERT INTO member_knowledge.review_jobs(id,submission_id,revision,item_key,submitted_digest,consent_version,state) VALUES($1,$2,$3,$4,$5,$6,'queued') ON CONFLICT(submission_id,revision,item_key) DO NOTHING`,[randomUUID(),value.id,value.revision,item.key,value.digest,REVIEW_CONSENT_VERSION]);
+    await c.query("INSERT INTO member_knowledge.review_authorizations(submission_id,revision,consent_version) VALUES($1,$2,$3) ON CONFLICT DO NOTHING",[value.id,value.revision,command.consentVersion]);
+    for(const item of value.content.items)await c.query(`INSERT INTO member_knowledge.review_jobs(id,submission_id,revision,item_key,submitted_digest,consent_version,state) VALUES($1,$2,$3,$4,$5,$6,'queued') ON CONFLICT(submission_id,revision,item_key) DO NOTHING`,[randomUUID(),value.id,value.revision,item.key,value.digest,command.consentVersion]);
     const result={...value,review:await reviewStatus(c,ownerId,value.id,value.revision)};
     await c.query("INSERT INTO member_knowledge.submission_requests(owner_id,request_id,submission_id,digest,response) VALUES($1,$2,$3,$4,$5)",[ownerId,command.requestId,value.id,digest,result]);return result;
    });
@@ -113,10 +117,10 @@ export function createReviewQueue(pool:Pool){
    for(const candidate of candidates){const lease=await jobTransaction(candidate.id,async(c,j,active)=>{
     if(!['queued','retry','quota'].includes(j.state)||new Date(j.not_before).getTime()>Date.now())return null;
     const s=j.submission;
-    if(!active||s.state!=='queued'||s.current_revision!==j.revision||s.digest!==j.submitted_digest||j.consent_version!==REVIEW_CONSENT_VERSION){await c.query("UPDATE member_knowledge.review_jobs SET state='cancelled',reason='submission-changed' WHERE id=$1",[j.id]);return null;}
+    if(!active||s.state!=='queued'||s.current_revision!==j.revision||s.digest!==j.submitted_digest||![REVIEW_CONSENT_VERSION,...(process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED==='1'?[PUBLICATION_CONSENT_VERSION]:[])].includes(j.consent_version)){await c.query("UPDATE member_knowledge.review_jobs SET state='cancelled',reason='submission-changed' WHERE id=$1",[j.id]);return null;}
     if(j.attempts>=3){await c.query("UPDATE member_knowledge.review_jobs SET state='attention',reason='送信を3回試しました。AI接続の確認を待っています。' WHERE id=$1",[j.id]);return null;}
     let wire:string;
-    try{wire=JSON.stringify(geminiReviewRequest(submissionReviewInput(submission(s),j.item_key)));}
+    try{wire=JSON.stringify(geminiReviewRequest(submissionReviewInput(submission(s),j.item_key,j.consent_version===PUBLICATION_CONSENT_VERSION)));}
     catch{await c.query("UPDATE member_knowledge.review_jobs SET state='needs-changes',reason='内容・対象・資料の取得版や入力の長さを確認してください。' WHERE id=$1",[j.id]);return null;}
     const project=(await c.query("SELECT * FROM member_knowledge.review_projects WHERE project_id=$1 FOR UPDATE",[cfg.projectId])).rows[0];if(!project)throw Error("Review project is not configured");
     const now=new Date(),day=quotaDate(now),month=day.slice(0,7),inputReserved=Buffer.byteLength(wire)+1024,outputReserved=2048;
@@ -143,6 +147,13 @@ export function createReviewQueue(pool:Pool){
   },
   async canSend(lease:ReviewLease){await ensure();return (await pool.query(`SELECT 1 FROM member_knowledge.review_jobs j JOIN member_knowledge.submissions s ON s.id=j.submission_id JOIN "user" u ON u.id=s.owner_id WHERE j.id=$1 AND j.lease_token=$2 AND j.state='running' AND j.lease_until>clock_timestamp() AND u.active AND s.state='queued' AND s.current_revision=j.revision`,[lease.jobId,lease.token])).rowCount===1;},
   finish,
+  async rejectBeforeSend(lease:ReviewLease,reason:string,retryable:boolean){
+   await finish(lease,{state:'not-sent'});
+   await jobTransaction(lease.jobId,async(c,j,active)=>{
+    if(active&&j.state==='cancelled'&&j.submission.state==='queued'&&j.submission.current_revision===j.revision&&j.submission.digest===j.submitted_digest)
+     await c.query("UPDATE member_knowledge.review_jobs SET state=$2,reason=$3,not_before=clock_timestamp()+interval '120 seconds' WHERE id=$1",[j.id,retryable?'retry':'needs-changes',reason]);
+   });
+  },
   async usage(config:ReviewConfig){
    await ensure();const day=quotaDate(new Date()),month=day.slice(0,7);
    const row=(await pool.query(`SELECT count(*)::int AS attempts,COALESCE(sum(request_charge),0)::int AS requests,

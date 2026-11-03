@@ -4,13 +4,22 @@ import {spawnSync} from "node:child_process";
 import {mkdir,writeFile} from "node:fs/promises";
 import {Pool} from "pg";
 import {createReviewQueue,quotaDate,type ReviewConfig} from "../lib/server/knowledge-review-queue";
-import {REVIEW_CONSENT_VERSION} from "../lib/domain/knowledge-review-job";
+import {buildKnowledgePublishedRecord} from "../lib/domain/knowledge-publication";
+import {captureKnowledgeCapsule} from "../lib/client/capsule-knowledge";
+import type {KnowledgeSnapshot} from "../lib/domain/knowledge-foundation";
+import {createKnowledgeAcceptance} from "../lib/server/knowledge-acceptance";
+import {createKnowledgeFoundationService} from "../lib/server/knowledge-foundation";
+import {ensureKnowledgePublicationSchema} from "../lib/server/knowledge-publication";
+import {matchSourceExcerpt,SourceCheckError} from "../lib/server/knowledge-source-verification";
+import {REVIEW_CONSENT_VERSION,PUBLICATION_CONSENT_VERSION} from "../lib/domain/knowledge-review-job";
 import {runKnowledgeReviewOnce} from "../scripts/knowledge-review-worker";
 import {migrateMemberDatabase} from "../lib/server/member/migrate";
 import {memberConfig} from "../lib/server/member/config";
 import {memberPool} from "../lib/server/member/auth";
 import {operateMember} from "../lib/server/member/operations";
 import {startMemberOidc} from "./support/member-oidc";
+const publicRead=vi.hoisted(()=>({dto:null as unknown}));
+vi.mock("../lib/server/knowledge-publication-preview",()=>({knowledgePublicationPreview:async()=>({detail:async()=>({generation:"fixture",record:publicRead.dto})})}));
 vi.mock("server-only",()=>({}));
 import {memberRuntime} from "../lib/server/member/runtime";
 import * as authRoute from "../app/api/auth/[...all]/route";
@@ -53,6 +62,7 @@ async function login(identity: string, mode = "valid") {
   return { cookies, callback };
 }
 
+let acceptanceKnowledge:Pool;
 let fixture:Awaited<ReturnType<typeof startMemberOidc>>,alice:Awaited<ReturnType<typeof login>>,bob:Awaited<ReturnType<typeof login>>,aliceId:string,bobId:string;
 const ctx=(id:string)=>({params:Promise.resolve({id})});
 const content=(assertion="架空の観測所の設立について。")=>({title:"投稿の検証",items:[{key:"record-a",record:{kind:"note",assertion,evidence:[]}}]});
@@ -61,14 +71,15 @@ const post=(body:unknown,cookie=alice.cookies.value,user=aliceId,headers:Record<
 const current=async(id:string,cookie=alice.cookies.value,user=aliceId)=>item.GET(request("/api/member/knowledge-submissions/"+id,cookie,"GET",undefined,{"x-member-user":user}),ctx(id));
 beforeAll(async()=>{
  const config=memberConfig();if(!config||config.provider.kind!=="fixture"||process.env.KNOWLEDGE_SUBMISSIONS_ENABLED!=="1")throw Error("Use the disposable --submissions harness");
+ acceptanceKnowledge=new Pool({connectionString:process.env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL});await ensureKnowledgePublicationSchema(acceptanceKnowledge);
  fixture=await startMemberOidc();const pool=memberPool(config);
- try{await migrateMemberDatabase(pool,true,true,true,true,true,true,true,true,true,true,true,true,true,true);}finally{await pool.end();}
+ try{await migrateMemberDatabase(pool,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true);}finally{await pool.end();}
  alice=await login("alice");bob=await login("bob");
  aliceId=(await (await profile.GET(request("/api/member/profile",alice.cookies.value))).json()).user.id;
  bobId=(await (await profile.GET(request("/api/member/profile",bob.cookies.value))).json()).user.id;
  process.env.KNOWLEDGE_REVIEW_ENABLED="1";process.env.KNOWLEDGE_REVIEW_ALLOWED_USERS=[aliceId,bobId].join(",");
 },30000);
-afterAll(async()=>{await memberRuntime().pool.end();await fixture?.close();});
+afterAll(async()=>{await acceptanceKnowledge?.end();await memberRuntime().pool.end();await fixture?.close();});
 describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
  it("rejects anonymous, mismatched identities, foreign origins and self-granted acceptance",async()=>{
   expect((await api.GET(request("/api/member/knowledge-submissions"))).status).toBe(401);
@@ -234,6 +245,107 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
    expect((await memberRuntime().pool.query('SELECT job_id,input_actual,request_charge FROM member_knowledge.review_attempts WHERE id=$1',[lease.attemptId])).rows[0]).toMatchObject({job_id:null,input_actual:100,request_charge:1});
   }finally{process.env.KNOWLEDGE_REVIEW_ALLOWED_USERS=old;}
  });
+
+ async function acceptedCandidate(){
+  process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='1';
+  await memberRuntime().pool.query("UPDATE member_knowledge.submission_receipts SET submitted_at=clock_timestamp()-interval '2 hours'");
+  await memberRuntime().pool.query("UPDATE member_knowledge.review_jobs SET state='cancelled' WHERE state IN('queued','running','retry','quota','reviewed','verifying','source-retry')");
+  const command=save(randomUUID(),0,reviewContent());expect((await post(command)).status).toBe(200);await post({action:'submit',id:command.id,requestId:randomUUID(),expectedVersion:1});
+  expect((await post({action:'review',id:command.id,requestId:randomUUID(),expectedVersion:2,consentVersion:REVIEW_CONSENT_VERSION})).status).toBe(409);
+  expect((await post({action:'review',id:command.id,requestId:randomUUID(),expectedVersion:2,consentVersion:PUBLICATION_CONSENT_VERSION})).status).toBe(200);
+  const cfg=reviewConfig();await runKnowledgeReviewOnce(createReviewQueue(memberRuntime().pool),cfg,async()=>reviewedResponse());
+  return {command,cfg};
+ }
+ const fixtureVerify=async(url:string,excerpt:string)=>matchSourceExcerpt({url,type:'text/html',body:Buffer.from('<article><p>'+excerpt+'</p></article>')},excerpt);
+ const knowledgeCount=async()=>Number((await acceptanceKnowledge.query("SELECT count(*) AS n FROM knowledge75.objects WHERE kind='record'")).rows[0].n);
+ it('automatically accepts verified public material and uses the same receipt on retry',async()=>{
+  const {command,cfg}=await acceptedCandidate(),before=await knowledgeCount();const engine=createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify);
+  expect(await engine.run(cfg)).toBe(true);expect(await knowledgeCount()).toBe(before+1);
+  const value=(await (await current(command.id)).json()).submission;expect(value.review.items[0]).toMatchObject({state:'accepted',publication:{state:'published',revision:1}});
+  expect(await engine.run(cfg)).toBe(false);expect(await knowledgeCount()).toBe(before+1);
+  const decision=(await memberRuntime().pool.query('SELECT command,proofs FROM member_knowledge.publication_decisions WHERE job_id=(SELECT id FROM member_knowledge.review_jobs WHERE submission_id=$1)',[command.id])).rows[0];
+  expect(JSON.stringify(decision)).not.toContain(aliceId);expect(decision.proofs.sources[0].extractor).toBe('public-text-v1');
+ });
+ it('returns source mismatch for supplementation without making any public changes',async()=>{
+  const {command,cfg}=await acceptedCandidate(),before=await knowledgeCount();
+  const engine=createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},async()=>{throw new SourceCheckError('抜粋が本文にありません。');});await engine.run(cfg);
+  expect(await knowledgeCount()).toBe(before);expect((await (await current(command.id)).json()).submission.review.items[0]).toMatchObject({state:'needs-changes',reason:'抜粋が本文にありません。'});
+ });
+ it('retains temporary source failures as retryable rather than declining content',async()=>{
+  const {command,cfg}=await acceptedCandidate();const engine=createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},async()=>{throw new SourceCheckError('サイトが混雑しています。',true,300000);});await engine.run(cfg);
+  expect((await (await current(command.id)).json()).submission.review.items[0].state).toBe('source-retry');expect(await engine.run(cfg)).toBe(false);
+ });
+ it('does not accept a cancelled receipt while the source request is in flight',async()=>{
+  const {command,cfg}=await acceptedCandidate(),before=await knowledgeCount();
+  const engine=createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},async(url,quote)=>{await post({action:'cancel',id:command.id,requestId:randomUUID(),expectedVersion:2});return fixtureVerify(url,quote);});await engine.run(cfg);
+  expect(await knowledgeCount()).toBe(before);expect((await (await current(command.id)).json()).submission.state).toBe('cancelled');
+ });
+ it('recovers a member decision committed before the knowledge transaction is committed',async()=>{
+  const {command,cfg}=await acceptedCandidate(),before=await knowledgeCount();
+  await createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{afterPrepare:async()=>{throw Error('simulated process loss');}},fixtureVerify).run(cfg);
+  expect(await knowledgeCount()).toBe(before);expect((await (await current(command.id)).json()).submission.review.items[0].state).toBe('accepted');
+  await post({action:'cancel',id:command.id,requestId:randomUUID(),expectedVersion:2});
+  await createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify).run(cfg);expect(await knowledgeCount()).toBe(before+1);
+  expect((await memberRuntime().pool.query('SELECT state FROM member_knowledge.publication_decisions WHERE job_id=(SELECT id FROM member_knowledge.review_jobs WHERE submission_id=$1)',[command.id])).rows[0].state).toBe('published');
+ });
+ it('recovers a committed knowledge operation without duplicating it after acknowledgement loss',async()=>{
+  const {cfg}=await acceptedCandidate(),before=await knowledgeCount();await createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{afterDecision:async()=>{throw Error('ack lost');}},fixtureVerify).run(cfg);expect(await knowledgeCount()).toBe(before+1);
+  await createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify).run(cfg);expect(await knowledgeCount()).toBe(before+1);process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='0';
+ });
+
+ async function correctionCandidate(){
+  process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='1';await memberRuntime().pool.query("UPDATE member_knowledge.submission_receipts SET submitted_at=clock_timestamp()-interval '2 hours'");
+  const foundation=createKnowledgeFoundationService(acceptanceKnowledge),prefix='correct:'+randomUUID(),a=prefix+':a',b=prefix+':b',src=prefix+':source',rid=prefix+':record';
+  const created=await foundation.execute({kind:'operator',id:'fixture'}, {action:'create-bundle',requestId:randomUUID(),reason:'fixture',entities:[{id:a,content:{name:'A',kind:'人物'}},{id:b,content:{name:'B',kind:'作品'}}],sources:[{id:src,content:{title:'公開資料',url:'https://example.org/source'}}],records:[{id:rid,content:{kind:'relation',subjectId:a,objectId:b,relation:'制作した',assertion:'AはBを制作した。',evidence:[{id:'quote',source:{id:src,revision:1},locator:'本文',excerpt:'Aは資料で説明された作品Bを制作した。'}]}}]}) as {entities:KnowledgeSnapshot['entities'];sources:KnowledgeSnapshot['sources'];records:KnowledgeSnapshot['records']};
+  const snapshot:KnowledgeSnapshot={schemaVersion:1,...created,mappings:[],initialView:'graph'};const local=captureKnowledgeCapsule({snapshot,title:'公開記録の訂正'});
+  const createdCap=await capsules.POST(request('/api/member/capsules',alice.cookies.value,'POST',{requestId:randomUUID(),content:{dataset:'demo',title:local.title,note:local.note,language:local.language,entityIds:local.entityIds,claimIds:local.claimIds,document:local.document}}));expect(createdCap.status).toBe(201);const cap=(await createdCap.json()).capsule;
+  const id=randomUUID();const capture=await post({action:'capture',id,requestId:randomUUID(),expectedVersion:0,capsuleId:cap.id,capsuleRevision:1,keys:[rid]});expect(capture.status).toBe(200);const v=(await capture.json()).submission;
+  const edited={...v.content,items:v.content.items.map((item:{record:object})=>({...item,record:{...item.record,assertion:'Aは作品Bを制作した。'}}))};expect((await post(save(id,1,edited))).status).toBe(200);
+  expect((await post({action:'submit',id,requestId:randomUUID(),expectedVersion:2})).status).toBe(200);expect((await post({action:'review',id,requestId:randomUUID(),expectedVersion:3,consentVersion:PUBLICATION_CONSENT_VERSION})).status).toBe(200);
+  const cfg=reviewConfig();await runKnowledgeReviewOnce(createReviewQueue(memberRuntime().pool),cfg,async()=>reviewedResponse());return {id,cfg,foundation,src,rid};
+ }
+ it('accepts a correction from the owned Capsule without replacing its original saved snapshot',async()=>{
+  const {id,cfg,foundation,rid}=await correctionCandidate();await createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify).run(cfg);
+  const record=await foundation.get({kind:'reader',id:'public'},'record',rid);expect(record.revision).toBe(2);expect(record.content.assertion).toBe('Aは作品Bを制作した。');
+  const value=(await (await current(id)).json()).submission;expect(value.review.items[0]).toMatchObject({state:'accepted',publication:{id:rid,revision:2}});
+  expect((await foundation.get({kind:'reader',id:'public'},'record',rid,1)).content.assertion).toBe('AはBを制作した。');
+ });
+ it('does not publish a correction when a referenced source becomes hidden during source checking',async()=>{
+  const {id,cfg,foundation,src,rid}=await correctionCandidate();
+  await createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},async(url,quote)=>{
+   await foundation.execute({kind:'operator',id:'fixture'},{action:'set-visibility',requestId:randomUUID(),kind:'source',id:src,expectedStatusRevision:1,visibility:'hidden',reason:'fixture boundary'});return fixtureVerify(url,quote);
+  }).run(cfg);
+  expect((await foundation.get({kind:'operator',id:'fixture'},'record',rid)).revision).toBe(1);
+  expect((await (await current(id)).json()).submission.review.items[0].state).toBe('needs-changes');process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='0';
+ });
+
+ it('captures a public record on the server for correction and rejects client snapshots or stale revisions',async()=>{
+  const {foundation,rid}=await correctionCandidate();const record=await foundation.get({kind:'reader',id:'public'},'record',rid);const all=await foundation.list({kind:'reader',id:'public'});
+  publicRead.dto=buildKnowledgePublishedRecord(record,{entities:all.entities.filter(e=>e.id===record.content.subjectId||e.id===record.content.objectId),sources:all.sources.filter(source=>record.content.evidence.some(e=>e.source.id===source.id)),mappings:[]});
+  const command={action:'capture-public',requestId:randomUUID(),id:randomUUID(),expectedVersion:0,recordId:rid,recordRevision:1};
+  expect((await post({...command,recordRevision:99})).status).toBe(409);expect((await post({...command,snapshot:{}})).status).toBe(400);
+  const captured=await post(command);expect(captured.status).toBe(200);const value=(await captured.json()).submission;expect(value.content.items[0].correction).toEqual({id:rid,revision:1});expect(value.origin).toBeNull();expect(value.context.entities).toHaveLength(2);expect((await post(command)).status).toBe(200);process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='0';
+ });
+ it('does not send a forged correction target to the external AI provider',async()=>{
+  process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='1';await memberRuntime().pool.query("UPDATE member_knowledge.submission_receipts SET submitted_at=clock_timestamp()-interval '2 hours'");
+  await memberRuntime().pool.query("UPDATE member_knowledge.review_jobs SET state='cancelled' WHERE state IN('queued','running','retry','quota','reviewed','verifying','source-retry')");
+  const v=reviewContent(),id=randomUUID();Object.assign(v.items[0],{correction:{id:'forged-target',revision:1}});await post(save(id,0,v));await post({action:'submit',id,requestId:randomUUID(),expectedVersion:1});await post({action:'review',id,requestId:randomUUID(),expectedVersion:2,consentVersion:PUBLICATION_CONSENT_VERSION});
+  const cfg=reviewConfig(),queue=createReviewQueue(memberRuntime().pool),engine=createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify),send=vi.fn(async()=>reviewedResponse());
+  await runKnowledgeReviewOnce(queue,cfg,send,lease=>engine.validateReview(lease.jobId));expect(send).not.toHaveBeenCalled();expect((await (await current(id)).json()).submission.review.items[0].state).toBe('needs-changes');
+  expect((await memberRuntime().pool.query('SELECT sum(request_charge)::int AS n FROM member_knowledge.review_attempts WHERE project_id=$1',[cfg.projectId])).rows[0].n).toBe(0);process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='0';
+ });
+ it('retains an accepted public operation after account deletion without retaining private payloads',async()=>{
+  process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='1';const user=await login('delete'),owner=(await (await profile.GET(request('/api/member/profile',user.cookies.value))).json()).user.id;
+  const old=process.env.KNOWLEDGE_REVIEW_ALLOWED_USERS;process.env.KNOWLEDGE_REVIEW_ALLOWED_USERS=old+','+owner;
+  try{
+   const command=save(randomUUID(),0,reviewContent());await post(command,user.cookies.value,owner);await post({action:'submit',id:command.id,requestId:randomUUID(),expectedVersion:1},user.cookies.value,owner);await post({action:'review',id:command.id,requestId:randomUUID(),expectedVersion:2,consentVersion:PUBLICATION_CONSENT_VERSION},user.cookies.value,owner);
+   const cfg=reviewConfig({allowedUsers:[owner]});await runKnowledgeReviewOnce(createReviewQueue(memberRuntime().pool),cfg,async()=>reviewedResponse());const before=await knowledgeCount();
+   await createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{afterPrepare:async()=>{expect((await profile.DELETE(request('/api/member/profile',user.cookies.value,'DELETE',{confirmation:'delete-account'},{'x-member-user':owner}))).status).toBe(200);throw Error('restart between commits');}},fixtureVerify).run(cfg);
+   expect(await knowledgeCount()).toBe(before);expect((await memberRuntime().pool.query('SELECT 1 FROM member_knowledge.submissions WHERE id=$1',[command.id])).rowCount).toBe(0);
+   await createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify).run(cfg);expect(await knowledgeCount()).toBe(before+1);
+   const accepted=(await memberRuntime().pool.query('SELECT command FROM member_knowledge.publication_decisions ORDER BY created_at DESC LIMIT 1')).rows[0];expect(JSON.stringify(accepted)).not.toContain(owner);
+  }finally{process.env.KNOWLEDGE_REVIEW_ALLOWED_USERS=old;process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='0';}
+ });
  it("restores the migrated database separately and reapplies checksums unchanged",async()=>{
   const container=process.env.MEMBER_TEST_CONTAINER!;expect(container).toMatch(/^gk-member-test-[a-f0-9-]+$/);
   const database="u5_restore_"+randomUUID().replaceAll("-","");const dir=".local/u5-member/"+database;await mkdir(dir,{recursive:true,mode:0o700});
@@ -244,7 +356,7 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
   const url=new URL(memberConfig()!.databaseUrl);url.pathname="/"+database;const pool=new Pool({connectionString:url.toString()});
   try{
    const fingerprint=async(p:Pool)=>{const out:Record<string,string>={};const tables=(await p.query("SELECT schemaname,tablename FROM pg_tables WHERE schemaname IN ('public','member_knowledge') ORDER BY 1,2")).rows;for(const table of tables){const name=table.schemaname+"."+table.tablename;if(!/^[a-z_]+\.[a-z_]+$/.test(name))throw Error("Unexpected test table");out[name]=(await p.query(`SELECT md5(COALESCE(string_agg(row_to_json(t)::text,chr(10) ORDER BY row_to_json(t)::text),'')) AS digest FROM ${name} t`)).rows[0].digest;}return out;};
-   const before=await fingerprint(memberRuntime().pool);expect(await fingerprint(pool)).toEqual(before);await migrateMemberDatabase(pool,true,true,true,true,true,true,true,true,true,true,true,true,true,true);expect(await fingerprint(pool)).toEqual(before);await writeFile(dir+"/result.json",JSON.stringify({restored:true,reappliedUnchanged:true,tables:Object.keys(before).length,fingerprints:before},null,2),{mode:0o600});
+   const before=await fingerprint(memberRuntime().pool);expect(await fingerprint(pool)).toEqual(before);await migrateMemberDatabase(pool,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true);expect(await fingerprint(pool)).toEqual(before);await writeFile(dir+"/result.json",JSON.stringify({restored:true,reappliedUnchanged:true,tables:Object.keys(before).length,fingerprints:before},null,2),{mode:0o600});
   }finally{await pool.end();docker(["exec",container,"dropdb","-U","gk_member",database]);}
  },60000);
 });

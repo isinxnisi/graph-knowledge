@@ -68,7 +68,7 @@ export type KnowledgeMappingVersion = KnowledgeVersion<KnowledgeMappingContent>;
 export type KnowledgeThemeVersion = KnowledgeVersion<KnowledgeThemeContent>;
 export type KnowledgeContentByKind = { entity: KnowledgeEntityContent; source: KnowledgeSourceContent; record: KnowledgeRecordContent; theme: KnowledgeThemeContent; mapping: KnowledgeMappingContent };
 export type KnowledgeStatus = { kind: KnowledgeKind; id: string; revision: number; visibility: "private" | "public" | "hidden"; confirmation: "unreviewed" | "checked" | "disputed" };
-export type KnowledgeActor = { kind: "operator" | "collector" | "user" | "reader"; id: string };
+export type KnowledgeActor = { kind: "operator" | "collector" | "submission" | "user" | "reader"; id: string };
 export type KnowledgeList = { entities: KnowledgeEntityVersion[]; sources: KnowledgeSourceVersion[]; records: KnowledgeRecordVersion[]; themes: KnowledgeThemeVersion[]; statuses: KnowledgeStatus[] };
 export type KnowledgeSnapshot = { schemaVersion: 1; entities: KnowledgeEntityVersion[]; sources: KnowledgeSourceVersion[]; records: KnowledgeRecordVersion[]; mappings: KnowledgeMappingVersion[]; timeline?: KnowledgeTimeline; initialView: "graph" | "timeline" | "split" };
 export type KnowledgeThemeResolved = { theme: KnowledgeThemeVersion; snapshot: KnowledgeSnapshot };
@@ -81,6 +81,7 @@ const entityNew = z.strictObject({ id: knowledgeIdSchema, content: knowledgeEnti
 const sourceNew = z.strictObject({ id: knowledgeIdSchema, content: knowledgeSourceContentSchema });
 const recordNew = z.strictObject({ id: knowledgeIdSchema, content: knowledgeRecordContentSchema });
 export const knowledgeCommandSchema = z.discriminatedUnion("action", [
+  z.strictObject({...base,action:z.literal("accept-record"),entities:z.array(entityNew).max(40),sources:z.array(sourceNew).max(40),entityPins:z.array(knowledgePinSchema).max(40),sourcePins:z.array(knowledgePinSchema).max(40),record:recordNew,expectedRevision:knowledgeRevisionSchema.optional(),reason}),
   z.strictObject({ ...base, action: z.literal("create-bundle"), entities: z.array(entityNew).max(200).default([]), sources: z.array(sourceNew).max(400).default([]), records: z.array(recordNew).min(1).max(400), entityPins: z.array(knowledgePinSchema).max(400).default([]), visibility: z.enum(["private", "public"]).default("public"), reason,
     legacyLinks: z.array(z.strictObject({ dataset: text.max(100), legacyClaimId: knowledgeIdSchema, recordId: knowledgeIdSchema, importedRevision: z.literal(1), payload: z.json(), sha256: z.string().regex(/^[a-f0-9]{64}$/) })).max(400).default([]),
   }),

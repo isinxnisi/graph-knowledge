@@ -8,23 +8,25 @@ vi.mock("../components/PersonalFrame",()=>({PersonalMemberControls:()=>null}));
 vi.mock("../lib/client/ui-locale",()=>({useUiLocale:()=>({locale:"ja"})}));
 import KnowledgeSubmissions from "../components/KnowledgeSubmissions";
 const stored=new Map<string,KnowledgeSubmission>(),sent:Record<string,unknown>[]=[];
-let failNext=false,loadFailure=false,postGate:Promise<void>|null=null,reviewAvailable=false,finishReview=false;
+let failNext=false,loadFailure=false,postGate:Promise<void>|null=null,reviewAvailable=false,finishReview=false,publishing=false;
 const stamp="2026-11-03T09:00:00Z";
 const summary=()=>[...stored.values()].map(s=>({id:s.id,state:s.state,title:s.content.title,revision:s.revision,version:s.version,itemCount:s.content.items.length,updatedAt:s.updatedAt}));
 beforeEach(()=>{
- history.replaceState({},"","/member/submissions");stored.clear();sent.length=0;failNext=false;loadFailure=false;postGate=null;reviewAvailable=false;finishReview=false;mocked.identity={status:"authenticated",user:{id:"10000000-0000-4000-8000-000000000001"},error:false,version:1,rechecking:false};
+ history.replaceState({},"","/member/submissions");stored.clear();sent.length=0;failNext=false;loadFailure=false;postGate=null;reviewAvailable=false;finishReview=false;publishing=false;mocked.identity={status:"authenticated",user:{id:"10000000-0000-4000-8000-000000000001"},error:false,version:1,rechecking:false};
  vi.stubGlobal("fetch",vi.fn(async(path:string,init?:RequestInit)=>{
+  if(path.startsWith('/api/knowledge/public'))return Response.json({generation:'published',record:{record:{id:'public-record',revision:1,content:{assertion:'公開済みの知識'}}}});
   if(path.endsWith('/advice'))return Response.json({error:{code:'UNAVAILABLE'}},{status:503});
   if(init?.method==="POST"){
 
    if(postGate)await postGate;
    const body=JSON.parse(String(init.body));sent.push(body);if(failNext){failNext=false;throw Error("delivery unknown");}
+   if(body.action==='capture-public'){const value:KnowledgeSubmission={id:body.id,revision:1,version:1,state:'draft',digest:'a'.repeat(64),createdAt:stamp,updatedAt:stamp,origin:null,content:knowledgeSubmissionContentSchema.parse({title:'公開済みの知識',items:[{key:'public-record',correction:{id:'public-record',revision:1},record:{kind:'note',assertion:'公開済みの知識',evidence:[]}}]})};stored.set(body.id,value);return Response.json({submission:value});}
    if(body.action==='review'){const old=stored.get(body.id)!;old.review={revision:old.revision,workerAvailable:true,items:old.content.items.map(item=>({key:item.key,state:'queued',reason:'',attempts:0,nextAttemptAt:null,result:null}))};return Response.json({submission:old});}
    const old=stored.get(body.id);const content=body.content?knowledgeSubmissionContentSchema.parse(body.content):old!.content;
    const submission:KnowledgeSubmission={id:body.id,revision:body.action==="save"?(old?.revision??0)+1:old!.revision,version:(old?.version??0)+1,state:body.action==="save"?"draft":body.action==="submit"?"queued":"cancelled",content,digest:"a".repeat(64),createdAt:stamp,updatedAt:stamp,origin:null};stored.set(body.id,submission);return Response.json({submission});
   }
   if(path==="/api/member/knowledge-submissions"&&loadFailure)return Response.json({error:{code:"INTERNAL_ERROR"}},{status:500});
-  if(path==="/api/member/knowledge-submissions")return Response.json({submissions:summary(),processing:reviewAvailable?"gemini-beta":"not-connected"});
+  if(path==="/api/member/knowledge-submissions")return Response.json({submissions:summary(),processing:publishing?"publishing-beta":reviewAvailable?"gemini-beta":"not-connected",consentVersion:publishing?"gemini-publication-beta-v1":"gemini-public-beta-v1"});
   const id=path.split("/").at(-1)!;
   if(finishReview&&stored.get(id)?.review)stored.get(id)!.review!.items=stored.get(id)!.review!.items.map(item=>({...item,state:'reviewed',reason:'根拠と一致',result:{suitability:'legitimate',support:'supported',reason:'根拠と一致'}}));
 return stored.has(id)?Response.json({submission:stored.get(id)}):Response.json({error:{code:"NOT_FOUND"}},{status:404});
@@ -70,6 +72,20 @@ describe("member knowledge submission workflow",()=>{
   expect(screen.getByText('AI確認を依頼しました。画面を閉じても受付は残ります。')).toBeTruthy();
   fireEvent.change(screen.getByLabelText('内容',{exact:true}),{target:{value:'途中の編集を保持する。'}});finishReview=true;
   await act(async()=>{await vi.advanceTimersByTimeAsync(5000);});expect((screen.getByLabelText('内容',{exact:true}) as HTMLTextAreaElement).value).toBe('途中の編集を保持する。');expect(screen.getByText('変更前の受付内容への結果です。保存して受付し直すと、新しい内容で確認します。')).toBeTruthy();
+ });
+
+ it('requires the publication-specific intent and sends the server selected consent version',async()=>{
+  publishing=true;await write();expect(screen.getByRole('checkbox').textContent).not.toContain('まだ');
+  fireEvent.click(screen.getByRole('button',{name:'保存して知識を届ける'}));expect(sent).toHaveLength(0);
+  fireEvent.click(screen.getByRole('checkbox'));fireEvent.click(screen.getByRole('button',{name:'保存して知識を届ける'}));await screen.findByText('受け付けました。確認結果と公開先をここにお知らせします。');
+  expect(sent.at(-1)).toMatchObject({action:'review',consentVersion:'gemini-publication-beta-v1'});
+ });
+
+ it('previews a public correction without writing and captures the source edition only on explicit action',async()=>{
+  publishing=true;history.replaceState({},'', '/member/submissions?record=public-record&revision=1');render(<KnowledgeSubmissions/>);
+  await screen.findByRole('button',{name:'訂正の草稿を作る'});expect(sent).toHaveLength(0);
+  fireEvent.click(screen.getByRole('button',{name:'訂正の草稿を作る'}));await screen.findByLabelText('内容',{exact:true});
+  expect(sent[0]).toMatchObject({action:'capture-public',recordId:'public-record',recordRevision:1});expect(sent[0]).not.toHaveProperty('snapshot');expect(screen.getByRole('checkbox').getAttribute('checked')).toBeNull();
  });
  it("removes private input when the account changes",async()=>{
   await write();const view=screen.getByLabelText("内容",{exact:true});expect(view).not.toBeNull();mocked.identity={...mocked.identity,status:"guest",user:null as unknown as {id:string},version:2};

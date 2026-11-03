@@ -24,6 +24,7 @@ export const knowledgeSubmissionContentSchema = z.strictObject({
 });
 export type KnowledgeSubmissionContent = z.infer<typeof knowledgeSubmissionContentSchema>;
 export const knowledgeSubmissionCaptureSchema = z.strictObject({ action: z.literal("capture"), requestId: z.uuidv4(), id: z.uuidv4(), expectedVersion: z.literal(0), capsuleId: z.uuidv4(), capsuleRevision: z.number().int().positive(), keys: z.array(knowledgeIdSchema).min(1).max(20).refine(keys => new Set(keys).size === keys.length) });
+export const knowledgePublicCaptureSchema=z.strictObject({action:z.literal("capture-public"),requestId:z.uuidv4(),id:z.uuidv4(),expectedVersion:z.literal(0),recordId:knowledgeIdSchema,recordRevision:z.number().int().positive()});
 export const knowledgeSubmissionCommandSchema = z.discriminatedUnion("action", [
   z.strictObject({ action: z.literal("save"), requestId: z.uuidv4(), id: z.uuidv4(), expectedVersion: z.number().int().nonnegative(), content: knowledgeSubmissionContentSchema }),
   z.strictObject({ action: z.literal("submit"), requestId: z.uuidv4(), id: z.uuidv4(), expectedVersion: z.number().int().positive() }),
