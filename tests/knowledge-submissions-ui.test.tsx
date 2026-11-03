@@ -21,7 +21,7 @@ beforeEach(()=>{
    if(postGate)await postGate;
    const body=JSON.parse(String(init.body));sent.push(body);if(failNext){failNext=false;throw Error("delivery unknown");}
    if(body.action==='capture-public'){const value:KnowledgeSubmission={id:body.id,revision:1,version:1,state:'draft',digest:'a'.repeat(64),createdAt:stamp,updatedAt:stamp,origin:null,content:knowledgeSubmissionContentSchema.parse({title:'公開済みの知識',items:[{key:'public-record',correction:{id:'public-record',revision:1},record:{kind:'note',assertion:'公開済みの知識',evidence:[]}}]})};stored.set(body.id,value);return Response.json({submission:value});}
-   if(body.action==='review'){const old=stored.get(body.id)!;old.review={revision:old.revision,workerAvailable:true,items:old.content.items.map(item=>({key:item.key,state:'queued',reason:'',attempts:0,nextAttemptAt:null,result:null})).reverse()};return Response.json({submission:old});}
+   if(body.action==='review'){const old=stored.get(body.id)!;old.review={revision:old.revision,workerAvailable:true,items:old.content.items.map(item=>({key:item.key,state:'queued' as const,reason:'',attempts:0,nextAttemptAt:null,result:null})).reverse()};return Response.json({submission:old});}
    const old=stored.get(body.id);const content=body.content?knowledgeSubmissionContentSchema.parse(body.content):old!.content;
    const submission:KnowledgeSubmission={id:body.id,revision:body.action==="save"?(old?.revision??0)+1:old!.revision,version:(old?.version??0)+1,state:body.action==="save"?"draft":body.action==="submit"?"queued":"cancelled",content,digest:"a".repeat(64),createdAt:stamp,updatedAt:stamp,origin:null};stored.set(body.id,submission);return Response.json({submission});
   }
