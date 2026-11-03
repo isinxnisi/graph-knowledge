@@ -21,7 +21,8 @@ export type DisplayRelation = {
   claimIds: string[]; polarity: "affirmed" | "denied" | "mixed"; label: string;
   badge: string; canvasLabel: string;
 };
-export type CanvasRelation = Omit<DisplayRelation, "predicate" | "polarity"> & { predicate?: ClaimSummary["predicate"]; polarity: DisplayRelation["polarity"] | "uncertain" };
+export type ProposalState = "create" | "change" | "evidence";
+export type CanvasRelation = Omit<DisplayRelation, "predicate" | "polarity"> & { predicate?: ClaimSummary["predicate"]; polarity: DisplayRelation["polarity"] | "uncertain"; proposalState?: ProposalState };
 export function displayRelations(claims: Record<string, ClaimSummary>, locale = "ja"): Record<string, DisplayRelation> {
   const groups = new Map<string, ClaimSummary[]>();
   Object.values(claims).forEach((claim) => {

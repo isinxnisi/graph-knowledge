@@ -75,3 +75,12 @@ buildは検証対象の固定SHAをexportした別directoryで作り、稼働Web
 公開前の`reviewed`、原資料の`verifying/source-retry`、受理済み`accepted`、公開generation反映済み`published`は別。結果linkは反映を確認したrecord版だけへ出す。原資料の取得は匿名HTTPS HTML/textに限定し、内部IP・redirect先を再検査する。取得失敗は時間・回数を限定して待機し、引用不一致・非対応資料は補足へ戻す。
 
 復旧は同じdecision IDで再送し、公開正本のreceiptから結果を回復する。022と新しい受理decisionを読めるWeb／workerを使う。受理済みdecisionがある状態で旧AI-only Webへ機械的に戻さず、DBを旧dumpで上書きしない。私有草稿の取消・退会後も受理済みの公開向け断面は残り得る。公開知識の停止は別の訂正／運営操作で行う。現在の受理対応buildと両DB backupは[今回の記録](../verification/KNOWLEDGE_ACCEPTANCE_U5_20261103.md)を参照する。
+
+
+## 投稿対象・通知・投稿者の追加023〜025／知識004（2026-11-04）
+
+現在の両DBとprivate runtimeを照合し、fresh custom dumpを別DBへ復元して既存行・既存checksumを確認する。知識の復元先も既存の安全境界 `plunode_knowledge75_` で始まる別名を使う。Node24から専用知識DBの `ensureKnowledgeFoundationSchema` を明示実行すると001＋追加004を照合・適用する（既存002は保持、先行prototype用003は適用しない）。会員側は `scripts/member-migrate.ts --knowledge-repair --confirm-origin https://graph-beta.isinxnisi.com` を使い、000〜025の26件になる。旧行は新列追加と既知の同意版に対するprovider profile IDの補完以外は保持する。既存の終了結果から未読通知を作るが、旧投稿のAI送信や再公開は起こさない。
+
+新しい023 reference_context、024 receipt結果・既読cursor・同意profile、025公開貢献帰属を使う。これらを読めない旧Web／workerへ機械的に戻さない。停止するときは既存の受入済みmainのWeb／review worker／publisherだけをcwdとcmdlineで確認する。新sourceのbuildを事前作成し、切替直前のbackup、明示migration、再実行不変、対応Webとworkerの再開を行う。会員・コミュニティ・旧Capsule・通常KGをresetしない。
+
+新規対象／既存対象への関係／テーマへの出来事／根拠追加／訂正、明示のプロフィール・匿名選択、上部の結果カードと未読、公開活動を確認する。固定receipt linkは本人用であり共有URLではない。公開貢献APIは現在閲覧できる原記録からだけ作者を返し、匿名の内部owner／投稿IDを公開しない。private profile活動の追読時も既存表示を消すことを確認する。

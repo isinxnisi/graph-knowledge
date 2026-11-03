@@ -220,3 +220,22 @@ it("失効した対象探索は成功扱いせず、呼出側のURLを付け替�
  act(()=>result.current.closeTheme("replace"));await pending.finish();await flush();
  expect(outcome).toBe(false);expect(result.current.normal.rootId).toBeNull();
 });
+
+it("opens an explicitly linked record from the latest publication without mixing the retained generation",async()=>{
+ const {api,...hook}=await setup();
+ await act(async()=>{await hook.result.current.startFrom(a);});expect(hook.result.current.normal.generation).toBe(g1);
+ api.change("new-published-record",g2);expect(hook.result.current.normal.generation).toBe(g1);
+ await act(async()=>{await hook.result.current.selectRecord("r1");});
+ expect(api.requests.filter(q=>q.get("mode")==="record").at(-1)?.get("generation")).toBe(g1);
+ await act(async()=>{await hook.result.current.selectRecord("r2",{latest:true});});
+ expect(api.requests.filter(q=>q.get("mode")==="record").at(-1)?.has("generation")).toBe(false);
+ expect(hook.result.current.normal.generation).toBe(g2);expect(hook.result.current.normal.records.map(r=>r.record.id)).toEqual(["r2"]);
+ expect(hook.result.current.normal.rootId).toBeNull();
+});
+it("starts from an explicit new search result in the latest generation while ordinary expansion stays pinned",async()=>{
+ const {api,...hook}=await setup();await act(async()=>{await hook.result.current.startFrom(a);});api.change("new-subject",g2);
+ await act(async()=>{await hook.result.current.expandEntity(b.id);});expect(api.requests.filter(q=>q.get("mode")==="neighbors").at(-1)?.get("generation")).toBe(g1);
+ await act(async()=>{await hook.result.current.startFrom(c,{latest:true});});
+ expect(api.requests.filter(q=>q.get("mode")==="neighbors").at(-1)?.has("generation")).toBe(false);
+ expect(hook.result.current.normal).toMatchObject({generation:g2,rootId:c.id});
+});

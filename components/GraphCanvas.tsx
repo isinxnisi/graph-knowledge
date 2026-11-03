@@ -14,10 +14,10 @@ import { CAPSULE_TEXT_FONT, capsuleTextFormat, capsuleTextLayout, type CanvasTex
 import { capsuleNodeShapeLayout } from "../lib/client/capsule-node-layout";
 import type { CapsuleNodeShape } from "../lib/domain/capsule-document";
 import type { GraphView, ViewRestoration } from "../lib/client/graph-view";
-export type GraphCanvasHandle = { capture: () => GraphView | null; focusEntity: (id: string) => void; focusElements?: (id: string) => void; ensureVisible?: (id: string) => void; focus?: () => void };
+export type GraphCanvasHandle = { capture: () => GraphView | null; selectedKeys?: () => string[]; focusEntity: (id: string) => void; focusElements?: (id: string) => void; ensureVisible?: (id: string) => void; focus?: () => void };
 import type { GraphState, Selection } from "../lib/client/graph-state";
 import { graphRootReady } from "../lib/client/graph-state";
-import { entityLabel, edgeRoutes, displayRelations, relationId, type CanvasRelation } from "../lib/client/graph-presentation";
+import { entityLabel, edgeRoutes, displayRelations, relationId, type CanvasRelation, type ProposalState } from "../lib/client/graph-presentation";
 import { initialPositions, additionalPositions, contentPositions } from "../lib/client/graph-layout";
 import { attachGraphTouchInput, createNodeClickHandler, createRelationClickHandler, GRAPH_INTERACTION_DEFAULTS, isGraphTouchEvent } from "../lib/client/graph-interaction";
 import { attachGraphBadges } from "../lib/client/graph-badges";
@@ -26,7 +26,7 @@ import styles from "./Explorer.module.css";
 import AnimatedDetails from "./AnimatedDetails";
 import NeighborLoading from "./NeighborLoading";
 
-export type CanvasContent = { nodes: { id: string; label: string; kind: string; badge?: string; shape?: CapsuleNodeShape; textStyle?: string; textFormat?: CanvasTextFormat }[]; relations: Record<string, CanvasRelation> };
+export type CanvasContent = { nodes: { id: string; label: string; kind: string; badge?: string; shape?: CapsuleNodeShape; textStyle?: string; textFormat?: CanvasTextFormat; proposalState?: ProposalState }[]; relations: Record<string, CanvasRelation> };
 export type GraphContextMenuRequest = {
   kind: "node" | "edge" | "background"; id?: string; selectedKeys: string[];
   clientX: number; clientY: number; position: { x: number; y: number }; source: "pointer" | "keyboard";
@@ -136,7 +136,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       fitElementsInViewport(cy, selected);
     }
   }
-  useImperativeHandle(ref, () => ({ capture: () => {
+  useImperativeHandle(ref, () => ({ selectedKeys: () => [...canvasOptions.current.currentKeys], capture: () => {
     const cy = core.current;
     if (!cy) return null;
     const positions = { ...savedPositions.current };
@@ -186,6 +186,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     const themeStyles = (): cytoscape.StylesheetStyle[] => {
       const theme = getComputedStyle(container.current!);
       const color = (name: string) => theme.getPropertyValue(`--color-${name}`).trim();
+      const proposal = theme.getPropertyValue("--color-proposal").trim() || "#2874b8";
       return [
         { selector: "node", style: { label: "data(label)", "background-color": color("person"), color: color("text"), "border-width": 1.3, "border-color": color("node-border"), width: 116, height: "data(nodeHeight)", "font-size": 15, "font-weight": 600, "font-family": "system-ui, sans-serif", "text-valign": "center", "text-halign": "center", "text-wrap": "wrap", "text-max-width": "108px", "text-overflow-wrap": "anywhere" } },
         { selector: 'node[kind="work"]', style: { shape: "round-rectangle", "background-color": color("work") } },
@@ -193,6 +194,8 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
         { selector: 'node[kind="local"]', style: { shape: "round-rectangle", "background-color": color("panel"), "border-style": "solid" } },
         { selector: 'node[kind="text"]', style: { shape: "round-rectangle", "background-opacity": 0, "border-width": 0, width: "data(textWidth)", height: "data(textHeight)", "text-max-width": "data(textWidth)", "font-size": "data(textFontSize)", "font-weight": (node: cytoscape.NodeSingular) => node.data("textFontWeight") as 400 | 700, "text-justification": (node: cytoscape.NodeSingular) => node.data("textAlign") as "left" | "center" | "right", "text-margin-x": (node: cytoscape.NodeSingular) => Number(node.data("textMarginX")), "line-height": 1.35, "text-overflow-wrap": "whitespace" } },
         { selector: 'node[textStyle="muted"]', style: { "text-opacity": 0.65 } },
+        { selector: 'node[proposalState = "create"], node[proposalState = "change"], node[proposalState = "evidence"]', style: { "border-color": proposal, "border-width": 2.4 } },
+        { selector: 'edge[proposalState = "create"], edge[proposalState = "change"], edge[proposalState = "evidence"]', style: { "line-color": proposal, "target-arrow-color": proposal, width: 2.6 } },
         { selector: "node.hovered", style: { "border-color": color("accent"), "underlay-color": color("accent"), "underlay-opacity": 0.08, "underlay-padding": 5 } },
         { selector: "node.center", style: { "border-width": 3, "border-color": color("accent") } },
         { selector: 'node[kind="event"]', style: { shape: "diamond", "background-color": color("work") } },
@@ -358,14 +361,14 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
         const format = capsuleTextFormat(node.textStyle, node.textFormat);
         if (context) context.font = `${format.fontWeight === "bold" ? 700 : 400} ${format.fontSize}px ${CAPSULE_TEXT_FONT}`;
         const geometry = capsuleTextLayout(node.label, node.textStyle, node.textFormat, context ? text => context.measureText(text).width : undefined);
-        return { ...node, hasPresentationShape: 0, fullLabel: node.label, label: geometry.label, nodeHeight: geometry.height, textWidth: geometry.width, textHeight: geometry.height,
+        return { ...node, proposalState: node.proposalState ?? "", hasPresentationShape: 0, fullLabel: node.label, label: geometry.label, nodeHeight: geometry.height, textWidth: geometry.width, textHeight: geometry.height,
           textFontSize: geometry.fontSize, textFontWeight: geometry.fontWeight === "bold" ? 700 : 400, textAlign: geometry.align, textMarginX: geometry.textMarginX };
       }
       if (context) context.font = `600 15px ${CAPSULE_TEXT_FONT}`;
       const geometry = capsuleTextLayout(node.label, "note", { width: 128, fontSize: 15 }, context ? text => context.measureText(text).width : undefined);
       const lines = geometry.lines.slice(0, 4);
       if (geometry.lines.length > 4) lines[3] = lines[3].slice(0, -1) + "…";
-      return { ...node, ...capsuleNodeShapeLayout(node.shape, geometry.labelWidth, lines.length), fullLabel: node.label, label: content ? lines.join("\n") : node.label, nodeHeight: content ? Math.max(64, lines.length * 20 + 20) : 64 };
+      return { ...node, proposalState: node.proposalState ?? "", ...capsuleNodeShapeLayout(node.shape, geometry.labelWidth, lines.length), fullLabel: node.label, label: content ? lines.join("\n") : node.label, nodeHeight: content ? Math.max(64, lines.length * 20 + 20) : 64 };
     });
     const nodeIds = new Set(renderedNodes.map(n => n.id));
     const newNodes = renderedNodes.filter(node => !cy.getElementById(node.id).length);
@@ -377,12 +380,12 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     const routes = edgeRoutes(relations);
     const elements: ElementDefinition[] = newNodes.map((node) => ({ group: "nodes", data: node, position: { x: 0, y: 0 } }));
     Object.values(relations).forEach((claim) => {
-      if (!cy.getElementById(claim.id).length) elements.push({ group: "edges", data: { id: claim.id, source: claim.subjectId, target: claim.objectId, polarity: claim.polarity, claimIds: claim.claimIds, badge: claim.badge, canvasLabel: claim.canvasLabel, ...routes[claim.id] } });
+      if (!cy.getElementById(claim.id).length) elements.push({ group: "edges", data: { id: claim.id, source: claim.subjectId, target: claim.objectId, polarity: claim.polarity, proposalState: claim.proposalState ?? "", claimIds: claim.claimIds, badge: claim.badge, canvasLabel: claim.canvasLabel, ...routes[claim.id] } });
     });
     cy.batch(() => {
       cy.add(elements);
       Object.values(graph.nodes).forEach((node) => cy.getElementById(node.id).data({ expanded: graph.expansions[node.id]?.expanded ? 1 : 0 }));
-      Object.entries(relations).forEach(([id, relation]) => cy.getElementById(id).data({ polarity: relation.polarity, claimIds: relation.claimIds, badge: relation.badge, canvasLabel: relation.canvasLabel, ...routes[id] }));
+      Object.entries(relations).forEach(([id, relation]) => cy.getElementById(id).data({ polarity: relation.polarity, proposalState: relation.proposalState ?? "", claimIds: relation.claimIds, badge: relation.badge, canvasLabel: relation.canvasLabel, ...routes[id] }));
       if (newNodes.length) { cy.nodes().removeClass("added"); if (!reset && initialLayoutDone.current) newNodes.forEach((node) => cy.getElementById(node.id).addClass("added")); }
       renderedNodes.forEach(node => cy.getElementById(node.id).data(node));
       cy.nodes().removeClass("center");

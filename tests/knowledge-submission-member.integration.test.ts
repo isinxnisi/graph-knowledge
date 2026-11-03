@@ -19,8 +19,8 @@ import {memberConfig} from "../lib/server/member/config";
 import {memberPool} from "../lib/server/member/auth";
 import {operateMember} from "../lib/server/member/operations";
 import {startMemberOidc} from "./support/member-oidc";
-const publicRead=vi.hoisted(()=>({dto:null as unknown}));
-vi.mock("../lib/server/knowledge-publication-preview",()=>({knowledgePublicationPreview:async()=>({detail:async()=>({generation:"fixture",record:publicRead.dto})})}));
+const publicRead=vi.hoisted(()=>({dto:null as unknown,detail:null as null|((id:string)=>Promise<unknown>),entities:null as null|((id:string)=>Promise<unknown>)}));
+vi.mock("../lib/server/knowledge-publication-preview",()=>({knowledgePublicationPreview:async()=>({detail:async(q:{recordId:string})=>(publicRead.dto as {record?:{id:string}}|null)?.record?.id===q.recordId?({generation:"fixture",record:publicRead.dto}):publicRead.detail!(q.recordId),entities:async(q:{entityId:string})=>publicRead.entities!(q.entityId)})}));
 vi.mock("server-only",()=>({}));
 import {memberRuntime} from "../lib/server/member/runtime";
 import * as authRoute from "../app/api/auth/[...all]/route";
@@ -66,7 +66,7 @@ async function login(identity: string, mode = "valid") {
 let acceptanceKnowledge:Pool;
 let fixture:Awaited<ReturnType<typeof startMemberOidc>>,alice:Awaited<ReturnType<typeof login>>,bob:Awaited<ReturnType<typeof login>>,aliceId:string,bobId:string;
 const ctx=(id:string)=>({params:Promise.resolve({id})});
-const content=(assertion="架空の観測所の設立について。")=>({title:"投稿の検証",items:[{key:"record-a",record:{kind:"note",assertion,evidence:[]}}]});
+const content=(assertion="架空の観測所の設立について。")=>({schemaVersion:2,attribution:"anonymous",title:"投稿の検証",entities:[{id:"new-observatory",content:{name:"架空の観測所",kind:"organization"}}],sources:[{id:"source-a",content:{title:"検証用資料",url:"https://example.invalid/public"}}],items:[{key:"record-a",operation:"create-entity",record:{kind:"note",subjectId:"new-observatory",assertion,evidence:[{id:"evidence-a",source:{id:"source-a",revision:1},locator:"冒頭",excerpt:"架空の観測所は2003年に設立された。",stance:"support"}]}}]});
 const save=(id=randomUUID(),expectedVersion=0,value:unknown=content())=>({action:"save",requestId:randomUUID(),id,expectedVersion,content:value});
 const post=(body:unknown,cookie=alice.cookies.value,user=aliceId,headers:Record<string,string>={})=>api.POST(request("/api/member/knowledge-submissions",cookie,"POST",body,{"x-member-user":user,...headers}));
 const current=async(id:string,cookie=alice.cookies.value,user=aliceId)=>item.GET(request("/api/member/knowledge-submissions/"+id,cookie,"GET",undefined,{"x-member-user":user}),ctx(id));
@@ -74,7 +74,10 @@ beforeAll(async()=>{
  const config=memberConfig();if(!config||config.provider.kind!=="fixture"||process.env.KNOWLEDGE_SUBMISSIONS_ENABLED!=="1")throw Error("Use the disposable --submissions harness");
  acceptanceKnowledge=new Pool({connectionString:process.env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL});await ensureKnowledgePublicationSchema(acceptanceKnowledge);
  fixture=await startMemberOidc();const pool=memberPool(config);
- try{await migrateMemberDatabase(pool,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true);}finally{await pool.end();}
+ const foundation=createKnowledgeFoundationService(acceptanceKnowledge);
+ publicRead.detail=async id=>{const record=await foundation.get({kind:'reader',id:'public'},'record',id),all=await foundation.list({kind:'reader',id:'public'});return {generation:'fixture',record:buildKnowledgePublishedRecord(record,{entities:all.entities.filter(e=>e.id===record.content.subjectId||e.id===record.content.objectId),sources:all.sources.filter(source=>record.content.evidence.some(e=>e.source.id===source.id)),mappings:[]})};};
+ publicRead.entities=async id=>({generation:'fixture',entities:[await foundation.get({kind:'reader',id:'public'},'entity',id)]});
+ try{await migrateMemberDatabase(pool,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true);}finally{await pool.end();}
  alice=await login("alice");bob=await login("bob");
  aliceId=(await (await profile.GET(request("/api/member/profile",alice.cookies.value))).json()).user.id;
  bobId=(await (await profile.GET(request("/api/member/profile",bob.cookies.value))).json()).user.id;
@@ -157,7 +160,7 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
   expect((await current(command.id,user.cookies.value,id)).status).toBe(401);
  });
  const reviewConfig=(overrides:Partial<ReviewConfig>={}):ReviewConfig=>({projectId:'test-'+randomUUID(),billingTier:'free',verifiedAt:new Date().toISOString(),model:'gemini-3.5-flash-lite',rpm:15,tokensPerMinute:100000,requestsPerDay:80,requestsPerMonth:100,inputTokensPerDay:250000,outputTokensPerDay:160000,inputTokensPerMonth:1000000,outputTokensPerMonth:1000000,apiKeyFile:'/not-used-in-fixture',allowedUsers:[aliceId,bobId],...overrides});
- const reviewContent=()=>({title:'公開知識の確認',sources:[{id:'source-a',content:{title:'検証用資料',url:'https://example.invalid/public',bibliography:'',language:'ja'}}],items:[{key:'record-a',record:{kind:'note',assertion:'架空の観測所は2003年に設立された。',evidence:[{id:'evidence-a',source:{id:'source-a',revision:1},locator:'冒頭',excerpt:'架空の観測所は2003年に設立された。',stance:'support'}]}}]});
+ const reviewContent=()=>({schemaVersion:2,attribution:'anonymous',title:'公開知識の確認',entities:[{id:'new-observatory',content:{name:'架空の観測所',kind:'organization',description:'',aliases:[],language:'ja'}}],sources:[{id:'source-a',content:{title:'検証用資料',url:'https://example.invalid/public',bibliography:'',language:'ja'}}],items:[{key:'record-a',operation:'create-entity',record:{kind:'note',subjectId:'new-observatory',assertion:'架空の観測所は2003年に設立された。',evidence:[{id:'evidence-a',source:{id:'source-a',revision:1},locator:'冒頭',excerpt:'架空の観測所は2003年に設立された。',stance:'support'}]}}]});
  const reviewedResponse=(support='supported')=>({state:'received' as const,status:200,raw:{responseId:'fixture-response',modelVersion:'gemini-3.5-flash-lite',usageMetadata:{promptTokenCount:100,candidatesTokenCount:30,totalTokenCount:130},candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify({suitability:'legitimate',support,reason:'資料の記述と一致しています。'})}]}}]}});
  async function enqueueReview(value:unknown=reviewContent()){
   await memberRuntime().pool.query("UPDATE member_knowledge.review_jobs SET state='cancelled',lease_token=NULL WHERE state IN('queued','running','retry','quota')");
@@ -309,7 +312,7 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
   const snapshot:KnowledgeSnapshot={schemaVersion:1,...created,mappings:[],initialView:'graph'};const local=captureKnowledgeCapsule({snapshot,title:'公開記録の訂正'});
   const createdCap=await capsules.POST(request('/api/member/capsules',alice.cookies.value,'POST',{requestId:randomUUID(),content:{dataset:'demo',title:local.title,note:local.note,language:local.language,entityIds:local.entityIds,claimIds:local.claimIds,document:local.document}}));expect(createdCap.status).toBe(201);const cap=(await createdCap.json()).capsule;
   const id=randomUUID();const capture=await post({action:'capture',id,requestId:randomUUID(),expectedVersion:0,capsuleId:cap.id,capsuleRevision:1,keys:[rid]});expect(capture.status).toBe(200);const v=(await capture.json()).submission;
-  const edited={...v.content,items:v.content.items.map((item:{record:object})=>({...item,record:{...item.record,assertion:'Aは作品Bを制作した。'}}))};expect((await post(save(id,1,edited))).status).toBe(200);
+  const edited={...v.content,schemaVersion:2,items:v.content.items.map((item:{record:object;correction:{id:string;revision:number}})=>({...item,operation:'correct-record',about:{kind:'record',...item.correction},record:{...item.record,assertion:'Aは作品Bを制作した。'}}))};expect((await post(save(id,1,edited))).status).toBe(200);
   expect((await post({action:'submit',id,requestId:randomUUID(),expectedVersion:2})).status).toBe(200);expect((await post({action:'review',id,requestId:randomUUID(),expectedVersion:3,consentVersion:PUBLICATION_CONSENT_VERSION})).status).toBe(200);
   const cfg=reviewConfig();await runKnowledgeReviewOnce(createReviewQueue(memberRuntime().pool),cfg,async()=>reviewedResponse());return {id,cfg,foundation,src,rid};
  }
@@ -342,10 +345,11 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
  it('does not send a forged correction target to the external AI provider',async()=>{
   process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='1';await memberRuntime().pool.query("UPDATE member_knowledge.submission_receipts SET submitted_at=clock_timestamp()-interval '2 hours'");
   await memberRuntime().pool.query("UPDATE member_knowledge.review_jobs SET state='cancelled' WHERE state IN('queued','running','retry','quota','reviewed','verifying','source-retry')");
-  const v=reviewContent(),id=randomUUID();Object.assign(v.items[0],{correction:{id:'forged-target',revision:1}});await post(save(id,0,v));await post({action:'submit',id,requestId:randomUUID(),expectedVersion:1});await post({action:'review',id,requestId:randomUUID(),expectedVersion:2,consentVersion:PUBLICATION_CONSENT_VERSION});
+  const v=reviewContent(),id=randomUUID();Object.assign(v.items[0],{operation:'correct-record',correction:{id:'forged-target',revision:1},about:{kind:'record',id:'forged-target',revision:1}});
+  const saved=await post(save(id,0,v));expect([400,404,409]).toContain(saved.status);
   const cfg=reviewConfig(),queue=createReviewQueue(memberRuntime().pool),engine=createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify),send=vi.fn(async()=>reviewedResponse());
-  await runKnowledgeReviewOnce(queue,cfg,send,lease=>engine.validateReview(lease.jobId));expect(send).not.toHaveBeenCalled();expect((await (await current(id)).json()).submission.review.items[0].state).toBe('needs-changes');
-  expect((await memberRuntime().pool.query('SELECT sum(request_charge)::int AS n FROM member_knowledge.review_attempts WHERE project_id=$1',[cfg.projectId])).rows[0].n).toBe(0);process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='0';
+  await runKnowledgeReviewOnce(queue,cfg,send,lease=>engine.validateReview(lease.jobId));expect(send).not.toHaveBeenCalled();
+  expect((await memberRuntime().pool.query('SELECT count(*)::int AS n FROM member_knowledge.review_jobs WHERE submission_id=$1',[id])).rows[0].n).toBe(0);process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='0';
  });
  it('retains an accepted public operation after account deletion without retaining private payloads',async()=>{
   process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='1';const user=await login('delete'),owner=(await (await profile.GET(request('/api/member/profile',user.cookies.value))).json()).user.id;
@@ -369,7 +373,7 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
   const url=new URL(memberConfig()!.databaseUrl);url.pathname="/"+database;const pool=new Pool({connectionString:url.toString()});
   try{
    const fingerprint=async(p:Pool)=>{const out:Record<string,string>={};const tables=(await p.query("SELECT schemaname,tablename FROM pg_tables WHERE schemaname IN ('public','member_knowledge') ORDER BY 1,2")).rows;for(const table of tables){const name=table.schemaname+"."+table.tablename;if(!/^[a-z_]+\.[a-z_]+$/.test(name))throw Error("Unexpected test table");out[name]=(await p.query(`SELECT md5(COALESCE(string_agg(row_to_json(t)::text,chr(10) ORDER BY row_to_json(t)::text),'')) AS digest FROM ${name} t`)).rows[0].digest;}return out;};
-   const before=await fingerprint(memberRuntime().pool);expect(await fingerprint(pool)).toEqual(before);await migrateMemberDatabase(pool,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true);expect(await fingerprint(pool)).toEqual(before);await writeFile(dir+"/result.json",JSON.stringify({restored:true,reappliedUnchanged:true,tables:Object.keys(before).length,fingerprints:before},null,2),{mode:0o600});
+   const before=await fingerprint(memberRuntime().pool);expect(await fingerprint(pool)).toEqual(before);await migrateMemberDatabase(pool,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true);expect(await fingerprint(pool)).toEqual(before);await writeFile(dir+"/result.json",JSON.stringify({restored:true,reappliedUnchanged:true,tables:Object.keys(before).length,fingerprints:before},null,2),{mode:0o600});
   }finally{await pool.end();docker(["exec",container,"dropdb","-U","gk_member",database]);}
  },60000);
 });

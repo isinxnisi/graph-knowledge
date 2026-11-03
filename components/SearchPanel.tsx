@@ -1,4 +1,5 @@
 "use client";
+import KnowledgeEntitySearchResults from "./KnowledgeEntitySearchResults";
 import Icon from "./Icon";
 import { trackPublicEvent } from "../lib/client/public-events";
 import { useUiLocale } from "../lib/client/ui-locale";
@@ -51,6 +52,7 @@ export default function SearchPanel({ onChoose, onDiscover, placeholder = "ä¾‹ï¼
       </div></div>
       <button type="submit" disabled={loading} aria-haspopup={discoverMode ? "dialog" : undefined} data-discovery-launch="search"><Icon name={discoverMode ? "graph" : "search"} />{loading ? text.submitting : discoverMode ? text.discoverConnections : text.searchByName}</button>
     </form>
+    <KnowledgeEntitySearchResults q={q} kind={kind} excludeIds={result?.items.map(e=>e.id)}/>
     {error && <p role="alert" className={styles.error}>{explorerMessage(error, locale)}</p>}
     {loading && <p role="status">{text.loading}</p>}
     {!result && !loading && !error && <p className={styles.muted}>{text.help}</p>}

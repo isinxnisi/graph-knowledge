@@ -2,14 +2,18 @@
 import { themeTimeLabel } from "../lib/domain/theme-time";
 import type { KnowledgePublishedRecord } from "../lib/domain/knowledge-publication";
 import { useUiLocale } from "../lib/client/ui-locale";
+import KnowledgeContributors from "./KnowledgeContributors";
 import css from "./KnowledgeExplorer.module.css";
 
-export default function KnowledgeRecordDetail({ dto, onEntity }: { dto: KnowledgePublishedRecord; onEntity: (id: string) => void }) {
+export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme }: {onRecord?:(id:string)=>void;onTheme?:(id:string)=>void; dto: KnowledgePublishedRecord; onEntity: (id: string) => void }) {
   const { locale } = useUiLocale(), en = locale === "en";
   const r = dto.record.content, typed = dto.legacyTyped;
   const name = (id: string | null) => dto.entities.find((e) => e.id === id)?.content.name ?? (en ? "No subject" : "対象なし");
   return <article>
+    <KnowledgeContributors id={dto.record.id} revision={dto.record.revision}/>
     <h2>{r.kind === "relation" ? `${name(r.subjectId)} → ${name(r.objectId)}` : en ? "Event / context" : "出来事・説明"}</h2>
+    {r.aboutRecord&&<p className={css.meta}>{en?"About this knowledge: ":"この知識・関係について："}{onRecord?<button onClick={()=>onRecord(r.aboutRecord!.id)}>{en?"Read the original":"元の知識を読む"}</button>:<a href={"/?krecord="+encodeURIComponent(r.aboutRecord.id)}>{en?"Read the original":"元の知識を読む"}</a>} · {en?"Revision":"内容版"} {r.aboutRecord.revision}</p>}
+    {r.aboutTheme&&<p className={css.meta}>{en?"About this theme: ":"このテーマについて："}{onTheme?<button onClick={()=>onTheme(r.aboutTheme!)}>{en?"Open theme":"テーマを読む"}</button>:<a href={"/?ktheme="+encodeURIComponent(r.aboutTheme)}>{en?"Open theme":"テーマを読む"}</a>}</p>}
     {dto.entities.length > 0 && <div className={css.actions} aria-label={en ? "Follow a subject" : "図の対象から辿る"}>{dto.entities.map((e) => <button key={e.id} onClick={() => onEntity(e.id)}>{e.content.name}</button>)}</div>}
     <div className={css.meta}>{en ? "Content revision" : "内容版"} {dto.record.revision} · {r.polarity === "affirmed" ? en ? "Affirmed" : "肯定" : r.polarity === "denied" ? en ? "Denied" : "否定" : en ? "Uncertain" : "不確実"}</div>
     {r.relation && <p><strong>{r.relation}</strong></p>}<p>{r.assertion}</p>

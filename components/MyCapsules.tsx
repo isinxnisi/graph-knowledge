@@ -138,7 +138,7 @@ export function CapsuleWorkspace({ initial, member, ownerId, isNew = false, star
   </section> : !ready ? <section className={`${css.library} ${css.opening}`}>
     <h2>{initial.title}</h2><p role={error ? "alert" : "status"}>{error ?? t("Capsuleを開いています…", "Opening Capsule…")}</p>
     <div className={css.actions}>{error && <button onClick={() => { setError(null); setAttempt(v => v + 1); }}>{t("再試行", "Retry")}</button>}<button onClick={onClose}>{t("閉じる", "Close")}</button></div>
-  </section> : <CapsuleStudio submissionHref={submissionsEnabled&&server&&owner?`/member/submissions?capsule=${server.id}`:undefined} capsule={ready} isNew={isNew} startEditing={startEditing} onClose={onClose} onSave={save} locked={locked} capacity={capacity} commentDraft={commentDraft} destination={owner ? t("アカウント", "Account") : t("このブラウザ", "This browser")}
+  </section> : <CapsuleStudio submissionHref={submissionsEnabled&&owner?`/member/submissions${server?`?capsule=${server.id}`:""}`:undefined} capsule={ready} isNew={isNew} startEditing={startEditing} onClose={onClose} onSave={save} locked={locked} capacity={capacity} commentDraft={commentDraft} destination={owner ? t("アカウント", "Account") : t("このブラウザ", "This browser")}
     sharing={server && owner ? <CapsuleShareControls key={`${server.id}:${server.revision}`} capsule={server} userId={owner} disabled={locked} draftCache={commentDraft} onUnauthorized={() => void refreshMemberIdentity(true).catch(() => {})} /> : undefined} />}</CapsuleSurface>;
 }
 

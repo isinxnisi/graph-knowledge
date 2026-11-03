@@ -27,6 +27,7 @@ import KnowledgeRecordDetail from "./KnowledgeRecordDetail";
 import { capsuleKnowledgeProjection, capsuleRelationTimes, capsuleRelationRecordId, withCapsuleTimeline } from "../lib/client/capsule-knowledge";
 import { themeTimeLabel } from "../lib/domain/theme-time";
 import { buildKnowledgePublishedRecord } from "../lib/domain/knowledge-publication";
+import {capsuleSubmissionSelection,createSelectionSubmission,submissionHandoffError} from "../lib/client/knowledge-submission-handoff";
 import css from "./CapsuleStudio.module.css";
 
 type Props = { submissionHref?: string; externalFocus?: Selection; onFocusKey?: (key: string) => void; allowKgSearch?: boolean; allowCopySave?: boolean; onEditingChange?: (editing: boolean) => void; capsule: LocalCapsule; isNew?: boolean; startEditing?: boolean; byline?: ReactNode; onEditRequest?: (view:LocalCapsule)=>void; readOnly?: boolean; destination?: string; onClose?: () => void; onSave?: (value: LocalCapsule, asCopy: boolean) => Promise<LocalCapsule>; sharing?: ReactNode; commentDraft?: { hasDraft: () => boolean; hasPending: () => boolean; clear: () => void }; locked?: boolean; capacity?: { documents: boolean; storageBytes: number; totalBytes: number } | null };
@@ -132,6 +133,17 @@ export default function CapsuleStudio({ submissionHref, externalFocus, onFocusKe
   const graph = useMemo(() => emptyGraph(generation), [generation]);
   const view = useMemo(() => ({ generation, view: suspendedView?.generation === generation ? suspendedView.view : capsuleGraphView(contentDocument.layout) }), [generation, contentDocument.layout, suspendedView]);
   const current = () => withCapsuleView(historyRef.current.present, canvas.current?.capture() ?? null);
+  async function submitSelection(){
+    if(editor){setError(t("開いている編集を適用してから投稿できます。", "Apply the open edit before submitting."));return;}
+    const keys=[...new Set(selected.flatMap(key=>presentation.members[key]??[key]))];
+    if(!keys.length){setError(t("投稿する対象・関係を図で選んでください。", "Select the subjects or relations to submit."));return;}
+    const tab=window.open("about:blank","_blank");
+    if(!tab){setError(t("投稿を別タブで開くため、ポップアップを許可してください。", "Allow a new tab to open the submission draft."));return;}
+    tab.opener=null;setBusy(true);setError(null);
+    try{const value=current(),material=capsuleSubmissionSelection(value.document!,keys,value.title);const href=await createSelectionSubmission(material);tab.location.replace(href);}
+    catch(error){tab.close();setError(submissionHandoffError(error,locale==="en"));}
+    finally{setBusy(false);}
+  }
   const formChanged = !!editor && (!sameCapsuleValue(editor,editorBaseline)
     || editor.kind === "relation" && relationFormsChanged);
   const dirty = editing && (!saved || viewChanged || formChanged || titleDraft !== null && titleDraft !== value.title || !sameEditingValue(value, saved));
@@ -511,7 +523,7 @@ export default function CapsuleStudio({ submissionHref, externalFocus, onFocusKe
 
       </aside>}
     </div>
-    <footer className={css.footer} inert={saving}><span>{destination}{saved && ` · ${t("保存版", "Revision")} ${saved.revision}`}</span><span>{contentDocument.nodes.length} Entity · {contentDocument.relations.length} {t("関係", "relations")}</span><span className={css.footerSpace}/>{!readOnly && !!contentDocument.knowledge?.snapshot.records.length && <button className={css.quietButton} disabled={busy || !!editor} title={t("取得元の更新", "Source updates")} aria-label={t("取得元の更新", "Source updates")} onClick={()=>setUpdatesOpen(true)}><Icon name="refresh"/><span className={css.optionalLabel}>{t("取得元の更新", "Source updates")}</span></button>}{editing ? <button className={css.quietButton} onClick={() => openEditor("capsule")}><Icon name="settings"/>{t("説明", "Description")}</button> : <button className={css.quietButton} title={t("閲覧中の移動は一時的です。編集は今の配置から始まります。", "Viewing moves are temporary. Editing starts from this view.")} onClick={() => { if (saved) { setHistory(capsuleHistory(saved)); setGeneration(v => v + 1); } }}><Icon name="history"/>{t("保存位置", "Saved view")}</button>}<span className={submissionHref&&!editing?css.submission:css.future}>{submissionHref&&!editing?<a aria-label={t("保存したCapsuleから知識を投稿・別タブ", "Submit saved Capsule material · new tab")} href={submissionHref} target="_blank" rel="noopener noreferrer" title={t("保存した版から投稿する項目を選ぶ・別タブ", "Choose saved material to submit · new tab")}><Icon name="edit"/>{t("知識を投稿", "Submit knowledge")} <Icon name="external"/></a>:t("知識申請：準備中", "Knowledge submission: coming later")}</span></footer>
+    <footer className={css.footer} inert={saving}><span>{destination}{saved && ` · ${t("保存版", "Revision")} ${saved.revision}`}</span><span>{contentDocument.nodes.length} Entity · {contentDocument.relations.length} {t("関係", "relations")}</span><span className={css.footerSpace}/>{!readOnly && !!contentDocument.knowledge?.snapshot.records.length && <button className={css.quietButton} disabled={busy || !!editor} title={t("取得元の更新", "Source updates")} aria-label={t("取得元の更新", "Source updates")} onClick={()=>setUpdatesOpen(true)}><Icon name="refresh"/><span className={css.optionalLabel}>{t("取得元の更新", "Source updates")}</span></button>}{editing ? <button className={css.quietButton} onClick={() => openEditor("capsule")}><Icon name="settings"/>{t("説明", "Description")}</button> : <button className={css.quietButton} title={t("閲覧中の移動は一時的です。編集は今の配置から始まります。", "Viewing moves are temporary. Editing starts from this view.")} onClick={() => { if (saved) { setHistory(capsuleHistory(saved)); setGeneration(v => v + 1); } }}><Icon name="history"/>{t("保存位置", "Saved view")}</button>}<span className={submissionHref?css.submission:css.future}>{submissionHref?<button className={css.quietButton} disabled={busy||!selected.length||!!editor} title={t("選択した対象・関係を投稿草稿へ引き継ぐ・別タブ。未保存の編集も提案として引き継ぎます。", "Create a submission draft from the selection in a new tab, including unsaved proposals.")} onClick={()=>void submitSelection()}><Icon name="edit"/>{t("選択範囲を投稿", "Submit selection")}<Icon name="external"/></button>:t("知識申請：準備中", "Knowledge submission: coming later")}</span></footer>
     {updatesOpen && <CapsuleKnowledgeUpdates document={contentDocument} onClose={()=>setUpdatesOpen(false)} onApply={(response,includeTheme)=>{
       try{
         const starting=current(),plan=planCapsuleKnowledgeUpdate(starting.document!,response,includeTheme),next=withDocument(starting,plan.document);

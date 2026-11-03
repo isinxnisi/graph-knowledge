@@ -3,7 +3,8 @@ import { randomBytes, randomUUID } from "node:crypto";
 
 // Disposable dedicated PostgreSQL. Never targets a configured product DB, and
 // cleanup only removes the uniquely named container created by this invocation.
-const submissionTests=process.argv.includes("--submissions");
+const feedbackTests=process.argv.includes("--feedback");
+const submissionTests=process.argv.includes("--submissions")||feedbackTests;
 const capsuleTests=process.argv.includes("--capsules")||submissionTests;
 const accountTests=process.argv.includes("--accounts");
 const operationsTests=process.argv.includes("--operations")||accountTests;
@@ -48,7 +49,7 @@ try {
 
   child = spawn(process.execPath, browserTests
     ? ["--import", "tsx", "scripts/test-member-browser.ts", ...process.argv.slice(2).filter(arg => arg !== "--capsules" && arg !== "--e2e" && arg !== "--community" && arg !== "--safety" && arg !== "--operations" && arg !== "--accounts")]
-    : ["node_modules/vitest/vitest.mjs", "run", ...(submissionTests ? ["tests/knowledge-submission-member.integration.test.ts"] : capsuleTests ? ["tests/capsule-document.integration.test.ts"] : communityTests ? [accountTests ? "tests/public-profiles.integration.test.ts" : operationsTests ? "tests/site-operations.integration.test.ts" : safetyTests ? "tests/community-safety.integration.test.ts" : "tests/community.integration.test.ts"] : ["tests/member.integration.test.ts", "tests/member-cold.integration.test.ts"]), "--maxWorkers=1", "--no-file-parallelism", "--exclude", "backups/**", "--exclude", ".local/**"], { env, stdio: "inherit" });
+    : ["node_modules/vitest/vitest.mjs", "run", ...(submissionTests ? (feedbackTests?["tests/knowledge-submission-feedback.integration.test.ts"]:["tests/knowledge-submission-member.integration.test.ts","tests/knowledge-submission-references.integration.test.ts"]) : capsuleTests ? ["tests/capsule-document.integration.test.ts"] : communityTests ? [accountTests ? "tests/public-profiles.integration.test.ts" : operationsTests ? "tests/site-operations.integration.test.ts" : safetyTests ? "tests/community-safety.integration.test.ts" : "tests/community.integration.test.ts"] : ["tests/member.integration.test.ts", "tests/member-cold.integration.test.ts"]), "--maxWorkers=1", "--no-file-parallelism", "--exclude", "backups/**", "--exclude", ".local/**"], { env, stdio: "inherit" });
   const timer = setTimeout(() => child?.kill("SIGTERM"), browserTests ? 960_000 : 180_000);
   const code = await new Promise<number>((resolve, reject) => { child!.once("error", reject); child!.once("exit", code => resolve(code ?? 1)); });
   clearTimeout(timer);

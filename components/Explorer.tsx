@@ -7,6 +7,7 @@ import type { KnowledgeThemeHome } from "../lib/domain/knowledge-theme-reader";
 import type { DiscoveryHomeData } from "../lib/domain/discovery-home";
 import { discoveryHomeLabels } from "../lib/i18n/discovery-home";
 import Icon from "./Icon";
+import {createSelectionSubmission,graphSubmissionSelection,submissionHandoffError} from "../lib/client/knowledge-submission-handoff";
 import PublicServices, { type PublicServicesHandle } from "./PublicServices";
 import type { PublicServicesPolicy } from "../lib/domain/publication";
 import { trackPublicEvent } from "../lib/client/public-events";
@@ -62,6 +63,8 @@ import { workspaceLabels } from "../lib/i18n/workspace";
 import SavedViews from "./SavedViews";
 import { savedViewLabels } from "../lib/i18n/saved-views";
 import KnowledgeReading, {useKnowledgeReading} from "./KnowledgeReading";
+import {useKnowledgeSubmissionsEnabled} from "./KnowledgeSubmissionAvailability";
+import KnowledgeRelatedInformation from "./KnowledgeRelatedInformation";
 import RelatedThemes from "./RelatedThemes";
 
 type ExplorerProps = { dataset?: DatasetMode; initialRoot?: string; services?: PublicServicesPolicy; publicOverview?: import("react").ReactNode; discoveryHome?: DiscoveryHomeData; knowledgeEnabled?: boolean; knowledgeOperatorEnabled?: boolean; initialThemes?: KnowledgeThemeHome | null };
@@ -69,7 +72,7 @@ export default function Explorer(props: ExplorerProps) {
   return props.knowledgeEnabled ? <KnowledgeReading operatorEnabled={props.knowledgeOperatorEnabled}><ExplorerBody {...props}/></KnowledgeReading> : <ExplorerBody {...props} />;
 }
 function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview, discoveryHome, knowledgeOperatorEnabled, initialThemes }: ExplorerProps) {
-  const knowledge=useKnowledgeReading();
+  const knowledge=useKnowledgeReading(),submissionsEnabled=useKnowledgeSubmissionsEnabled();
   const searchParams = useSearchParams();
   const router = useRouter();
   const { locale } = useUiLocale();
@@ -127,6 +130,14 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
   const [discoveryRoute, setDiscoveryRoute] = useState<{path: PathWitness; conditionKey: string} | null>(null);
   const urlState = useExplorationUrl({ suspended:knowledge?.active||knowledge?.restoring, dataset, initialRoot, graph, locale, capture: () => canvas.current?.capture() ?? null, apply: value => { setDiscoveryRoute(value.discoveryPath ? { path: value.discoveryPath, conditionKey: value.graph.conditionKey } : null); openWorkspace(value, canvas.current?.capture() ?? null); setActivePane("graph"); } });
   const [navigationError, setNavigationError] = useState(false);
+  const [submissionBusy,setSubmissionBusy]=useState(false),[submissionError,setSubmissionError]=useState("");
+  const [graphSelected,setGraphSelected]=useState<string[]>([]);
+  async function submitGraphSelection(){
+    setSubmissionBusy(true);setSubmissionError("");
+    try { const requested=graphSubmissionSelection(graph,canvas.current?.selectedKeys?.()??graphSelected);if(!beforeAccountNavigation())return;const href=await createSelectionSubmission({context:requested});router.push(href); }
+    catch(error){setSubmissionError(submissionHandoffError(error,locale==="en"));}
+    finally{setSubmissionBusy(false);}
+  }
   function createGraphCapsule() {
     try { setCapsuleSession(captureCapsule(graph, canvas.current?.capture() ?? null, dataset, graph.nodes[graph.centerId ?? ""]?.name ?? (locale === "en" ? "New Capsule" : "新しいCapsule"))); }
     catch { setNavigationError(true); }
@@ -224,15 +235,17 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
         {urlState.notice && <p role="status" className={styles.muted}>{urlState.notice}</p>}
         {urlState.searchOrigin&&<p className={styles.muted}>{locale==="en"?`Search matched ${urlState.searchOrigin.target==="contributor"?"contributor":"subject"} name “${urlState.searchOrigin.q}”. Graph follows the relation settings; this name does not limit further exploration.`:`対象検索では${urlState.searchOrigin.target==="contributor"?"制作担当者":"対象自身"}の名前「${urlState.searchOrigin.q}」で一致しました。Graphでは名前に限定せず、見る関係の設定に従って広げられます。`}</p>}
         {dataChanged && <div role="alert" className={styles.error}><p>{dataReleaseLabels(locale).changed}</p><button onClick={reloadData}>{dataReleaseLabels(locale).reload}</button></div>}
-        <RelationFilter leadingAction={<button disabled={!Object.keys(graph.nodes).length} onClick={createGraphCapsule}><Icon name="capsule" />{locale === "en" ? "Create Capsule" : "Capsule作成"}</button>} relation={graph.relation} patternAllowed={dataset === "public-kg" && !!graph.centerId && ["work","person"].includes(graph.cacheNodes[graph.centerId]?.kind)}
+        <RelationFilter leadingAction={<><button disabled={!Object.keys(graph.nodes).length} onClick={createGraphCapsule}><Icon name="capsule" />{locale === "en" ? "Create Capsule" : "Capsule作成"}</button>{dataset==="public-kg"&&submissionsEnabled&&<button disabled={!graphSelected.length||submissionBusy} onClick={()=>void submitGraphSelection()} title={locale==="en"?"Submit only selected subjects and relations":"選択した対象・関係だけを草稿に引き継ぎます"}><Icon name="edit"/>{locale==="en"?"Submit selection":"選択範囲を投稿"}</button>}</>} relation={graph.relation} patternAllowed={dataset === "public-kg" && !!graph.centerId && ["work","person"].includes(graph.cacheNodes[graph.centerId]?.kind)}
           onCancelRelation={cancelRelation} onApplyRelation={graph.centerId ? relation => applyRelation(graph.cacheNodes[graph.centerId!], relation, null, canvas.current?.capture() ?? null) : undefined} eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} value={graph.predicates} onApply={(predicates, roles, positions, eventRoles) => changePredicates(predicates, roles, positions, eventRoles, canvas.current?.capture() ?? null)} />
+        {submissionError&&<p role="alert" className={styles.error}>{submissionError}</p>}
+        {submissionBusy&&<p role="status">{locale==="en"?"Creating a private draft…":"非公開の投稿草稿を作成しています…"}</p>}
         {patternExecution && <div className={styles.patternModeAction}><button disabled={relationLoading || patternExecution.loading} onClick={() => { if (graph.centerId) void applyRelation(graph.cacheNodes[graph.centerId], freeRelation(graphRelation(graph)), null, canvas.current?.capture() ?? null); }}>{relationText(locale).free}</button><span className={styles.muted}>{relationText(locale).freeHelp}</span></div>}
         {relationLoading && <p role="status">{relationText(locale).applying} <button onClick={cancelRelation}>{entry.cancel}</button></p>}
         {!graph.centerId && <div className={styles.empty}><h3>{entry.initialTitle}</h3><p>{entry.initialHelp}</p></div>}
         {Object.values(graph.expansions).some((meta) => meta.active && meta.hasMore) && <p className={styles.muted}>{explorationLabels(locale).neighborsPageHelp}</p>}
         {blocked && <p role="alert" className={styles.error}>{explorerMessage(blocked.error!, locale)}</p>}
         {notice?.kind === "warning" && <GraphNotice notice={notice} />}
-        <GraphCanvas notification={notice?.kind === "info" ? <GraphNotice key={`${graph.generation}:${graph.notice}`} notice={notice} /> : null} compactGuide footerAction={<button className={styles.adjacentJump} disabled={!selection} onClick={() => {
+        <GraphCanvas onSelectionChange={setGraphSelected} notification={notice?.kind === "info" ? <GraphNotice key={`${graph.generation}:${graph.notice}`} notice={notice} /> : null} compactGuide footerAction={<button className={styles.adjacentJump} disabled={!selection} onClick={() => {
           document.getElementById("explorer-relations")?.scrollIntoView({ block: "start" });
           focusDestination(document.getElementById("explorer-relations"));
         }}>{panes.toRelations}<Icon name="chevron" /></button>} onViewChange={urlState.schedule} navigation={<GraphNavigator compact key={graph.generation} nodes={graph.nodes} selection={selection} onNavigate={(id) => {
@@ -244,6 +257,8 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
       {services && (services.ads || services.analytics) && <PublicServices ref={publicServices} inline active={activePane === "graph" && !atHome} policy={services} beforeNavigation={beforeAccountNavigation} />}
       <section hidden={atHome || knowledge?.active} className={`${styles.panel} ${styles.adjacencyPanel}`} data-testid="adjacency-card">
         <RelationsList dataset={dataset} graph={graph} selection={selection} onEntity={selectEntity} onClaim={id => { selectClaim(id); moveToPane("detail"); }} onExpand={(id, more) => void expand(id, more)} onClose={close} />
+        {submissionError&&<p role="alert" className={styles.error}>{submissionError}</p>}
+        {submissionBusy&&<p role="status">{locale==="en"?"Creating a private draft…":"非公開の投稿草稿を作成しています…"}</p>}
         {patternExecution && <PatternRoutes graph={graph} />}
 
       </section>
@@ -255,6 +270,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
         {!selection && <p className={styles.muted}>{entry.detailHelp}</p>}
         {discoveryRoute && discoveryRoute.conditionKey === graph.conditionKey && <DiscoveryGraphRoute path={discoveryRoute.path} graph={graph} onClear={() => setDiscoveryRoute(null)} onClaim={id => { selectClaim(id); moveToPane("detail"); }} />}
         {selectedEntity && <EntityDetails dataset={dataset} key={key} entity={selectedEntity} expansion={graph.expansions[selectedEntity.id]} onExpand={(more) => void expand(selectedEntity.id, more)} onClose={() => close(selectedEntity.id)} restricted={restricted} onOverview={() => setOverview(selectedEntity)} onSwitch={(mode) => switchFrom(selectedEntity, mode)} />}
+        {selectedEntity && knowledge && <KnowledgeRelatedInformation key={selectedEntity.id} entityId={selectedEntity.id} onOpen={knowledge.openRecord}/> }
         {selectedEntity && knowledge && <RelatedThemes entityId={selectedEntity.id} onOpen={knowledge.openTheme} />}
         {selectedEntity && graph.centerId && <GraphPath key={`path:${key}`} nodes={graph.nodes} relations={relations} rootId={graph.centerId} targetId={selectedEntity.id} onRelation={(id) => {
           selectRelation(id); moveToPane("detail");

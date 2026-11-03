@@ -1,121 +1,63 @@
 // @vitest-environment jsdom
-import {afterEach,beforeEach,describe,expect,it,vi} from "vitest";
 import {act,cleanup,fireEvent,render,screen,waitFor,within} from "@testing-library/react";
-import {knowledgeSubmissionContentSchema,type KnowledgeSubmission} from "../lib/domain/knowledge-submission";
-const mocked=vi.hoisted(()=>({identity:{status:"authenticated",user:{id:"10000000-0000-4000-8000-000000000001"},error:false,version:1,rechecking:false,refreshError:false}}));
+import {afterEach,beforeEach,expect,it,vi} from "vitest";
+import {knowledgeSubmissionContentSchema,type KnowledgeSubmission,type KnowledgeSubmissionContext} from "../lib/domain/knowledge-submission";
+import {knowledgeRecordContentSchema} from "../lib/domain/knowledge-foundation";
+import {submissionIntentIssues} from "../lib/domain/knowledge-submission-intent";
+import {reviewDisclosureForConsent} from "../lib/domain/knowledge-submission-feedback";
+import {PUBLICATION_CONSENT_VERSION} from "../lib/domain/knowledge-review-job";
+const mocked=vi.hoisted(()=>({identity:{status:"authenticated",user:{id:"10000000-0000-4000-8000-000000000001"},error:false,version:1,rechecking:false,refreshError:false},unread:[] as string[]}));
 vi.mock("../lib/client/use-member-identity",()=>({useMemberSession:()=>mocked.identity,getMemberIdentitySnapshot:()=>mocked.identity,refreshMemberIdentity:vi.fn(async()=>mocked.identity.user),invalidateMemberIdentity:vi.fn()}));
+vi.mock("../lib/client/use-submission-notifications",()=>({useSubmissionNotifications:()=>({data:{unreadCount:mocked.unread.length,submissionIds:mocked.unread}})}));
 vi.mock("../components/PersonalFrame",()=>({PersonalMemberControls:()=>null}));
+vi.mock("../components/KnowledgeSubmissionGraph",()=>({default:()=> <div aria-label="投稿範囲のプレビュー"/>}));
+vi.mock("../components/KnowledgeSubmissionFeedbackCard",()=>({default:()=> <div aria-label="確認結果"/>}));
 vi.mock("../lib/client/ui-locale",()=>({useUiLocale:()=>({locale:"ja"})}));
-import {refreshMemberIdentity} from "../lib/client/use-member-identity";
 import KnowledgeSubmissions from "../components/KnowledgeSubmissions";
-const stored=new Map<string,KnowledgeSubmission>(),sent:Record<string,unknown>[]=[];
-let failNext=false,loadFailure=false,postGate:Promise<void>|null=null,reviewAvailable=false,finishReview=false,publishing=false;
-const stamp="2026-11-03T09:00:00Z";
-const summary=()=>[...stored.values()].map(s=>({id:s.id,state:s.state,title:s.content.title,revision:s.revision,version:s.version,itemCount:s.content.items.length,updatedAt:s.updatedAt}));
+import KnowledgeSubmissionTarget from "../components/KnowledgeSubmissionTarget";
+const stamp="2026-11-04T01:00:00Z",stored=new Map<string,KnowledgeSubmission>(),sent:Record<string,unknown>[]=[];
+const a={id:"existing-a",revision:2,createdAt:stamp,reason:"公開",content:{name:"既存の人物A",kind:"person",aliases:[],description:"",language:"ja"}},b={...a,id:"existing-b",content:{...a.content,name:"既存の作品B",kind:"work"}};
+const source={id:"existing-source",revision:1,createdAt:stamp,reason:"公開",content:{title:"以前の資料",url:"https://example.test/original",bibliography:"",language:"ja"}};
+const original={id:"existing-record",revision:3,createdAt:stamp,reason:"公開",content:knowledgeRecordContentSchema.parse({kind:"relation",subjectId:a.id,objectId:b.id,relation:"描いた",assertion:"公開された元の事実。",evidence:[{id:"old-quote",source:{id:source.id,revision:1},locator:"元の場所",excerpt:""}]})};
+const theme={id:"theme-a",revision:1,content:{title:"ある主題の年表",description:"",recordPins:[{id:original.id,revision:original.revision}],entityPins:[{id:a.id,revision:a.revision},{id:b.id,revision:b.revision}],sourcePins:[{id:source.id,revision:1}],mappingPins:[],initialView:"timeline" as const}};
+const context:KnowledgeSubmissionContext={entities:[a,b],sources:[source],records:[original],themes:[theme]};
+let loadFailure=false,failNext=false;
 beforeEach(()=>{
- vi.clearAllMocks();history.replaceState({},"","/member/submissions");stored.clear();sent.length=0;failNext=false;loadFailure=false;postGate=null;reviewAvailable=false;finishReview=false;publishing=false;mocked.identity={status:"authenticated",user:{id:"10000000-0000-4000-8000-000000000001"},error:false,version:1,rechecking:false,refreshError:false};
+ vi.clearAllMocks();history.replaceState({},"","/member/submissions");stored.clear();sent.length=0;loadFailure=false;failNext=false;mocked.unread=[];mocked.identity={status:"authenticated",user:{id:"10000000-0000-4000-8000-000000000001"},error:false,version:1,rechecking:false,refreshError:false};
  vi.stubGlobal("fetch",vi.fn(async(path:string,init?:RequestInit)=>{
-  if(path.startsWith('/api/knowledge/public'))return Response.json({generation:'published',record:{record:{id:'public-record',revision:1,content:{assertion:'公開済みの知識'}}}});
-  if(path.endsWith('/advice'))return Response.json({error:{code:'UNAVAILABLE'}},{status:503});
-  if(init?.method==="POST"){
-
-   if(postGate)await postGate;
-   const body=JSON.parse(String(init.body));sent.push(body);if(failNext){failNext=false;throw Error("delivery unknown");}
-   if(body.action==='capture-public'){const value:KnowledgeSubmission={id:body.id,revision:1,version:1,state:'draft',digest:'a'.repeat(64),createdAt:stamp,updatedAt:stamp,origin:null,content:knowledgeSubmissionContentSchema.parse({title:'公開済みの知識',items:[{key:'public-record',correction:{id:'public-record',revision:1},record:{kind:'note',assertion:'公開済みの知識',evidence:[]}}]})};stored.set(body.id,value);return Response.json({submission:value});}
-   if(body.action==='review'){const old=stored.get(body.id)!;old.review={revision:old.revision,workerAvailable:true,items:old.content.items.map(item=>({key:item.key,state:'queued' as const,reason:'',attempts:0,nextAttemptAt:null,result:null})).reverse()};return Response.json({submission:old});}
-   const old=stored.get(body.id);const content=body.content?knowledgeSubmissionContentSchema.parse(body.content):old!.content;
-   const submission:KnowledgeSubmission={id:body.id,revision:body.action==="save"?(old?.revision??0)+1:old!.revision,version:(old?.version??0)+1,state:body.action==="save"?"draft":body.action==="submit"?"queued":"cancelled",content,digest:"a".repeat(64),createdAt:stamp,updatedAt:stamp,origin:null};stored.set(body.id,submission);return Response.json({submission});
+  if(path.startsWith('/api/knowledge/public')){const q=new URL(path,'https://test').searchParams;return Response.json(q.get('mode')==='entities'?{entities:[a,b]}:q.get('mode')==='themes'?{themes:[{id:theme.id,revision:theme.revision,title:theme.content.title}]}:{records:[{record:original,entities:[a,b],sources:[source]}]});}
+  if(path.startsWith('/api/entities'))return Response.json({revision:'kg-release',items:[]});
+  if(path.startsWith('/api/discovery/claims'))return Response.json({revision:'kg-release',claims:[],nodes:[]});
+  if(path.endsWith('/targets'))return Response.json({context});
+  if(init?.method==='POST'){
+   const body=JSON.parse(String(init.body));sent.push(body);if(failNext){failNext=false;throw Error('delivery unknown');}
+   const old=stored.get(body.id);if(body.action==='review'){return Response.json({submission:old});}
+   const content=body.content?knowledgeSubmissionContentSchema.parse(body.content):old!.content;
+   if(body.action==='submit'&&submissionIntentIssues(content,context).length)return Response.json({error:{code:'SUBMISSION_TARGET_REQUIRED'}},{status:400});
+   const value:KnowledgeSubmission={id:body.id,revision:body.action==='save'?(old?.revision??0)+1:old!.revision,version:(old?.version??0)+1,state:body.action==='save'?'draft':body.action==='submit'?'queued':'cancelled',content,context,digest:'a'.repeat(64),createdAt:stamp,updatedAt:stamp};stored.set(value.id,value);return Response.json({submission:value});
   }
-  if(path==="/api/member/knowledge-submissions"&&loadFailure)return Response.json({error:{code:"INTERNAL_ERROR"}},{status:500});
-  if(path==="/api/member/knowledge-submissions")return Response.json({submissions:summary(),processing:publishing?"publishing-beta":reviewAvailable?"gemini-beta":"not-connected",consentVersion:publishing?"gemini-publication-beta-v1":"gemini-public-beta-v1"});
-  const id=path.split("/").at(-1)!;
-  if(finishReview&&stored.get(id)?.review)stored.get(id)!.review!.items=stored.get(id)!.review!.items.map(item=>({...item,state:'reviewed',reason:'根拠と一致',result:{suitability:'legitimate',support:'supported',reason:'根拠と一致'}}));
-return stored.has(id)?Response.json({submission:stored.get(id)}):Response.json({error:{code:"NOT_FOUND"}},{status:404});
+  if(path==='/api/member/knowledge-submissions')return loadFailure?Response.json({error:{code:'INTERNAL_ERROR'}},{status:500}):Response.json({submissions:[...stored.values()].map(s=>({id:s.id,revision:s.revision,version:s.version,state:s.state,title:s.content.title,itemCount:s.content.items.length,updatedAt:s.updatedAt})),processing:'publishing-beta',consentVersion:PUBLICATION_CONSENT_VERSION,reviewDisclosure:reviewDisclosureForConsent(PUBLICATION_CONSENT_VERSION)});
+  const id=path.split('/').at(-1)!;return stored.has(id)?Response.json({submission:stored.get(id)}):Response.json({error:{code:'NOT_FOUND'}},{status:404});
  }));
 });
-afterEach(()=>{cleanup();vi.useRealTimers();vi.restoreAllMocks();vi.unstubAllGlobals();});
-async function completeSource(index=0){
- const group=screen.getByRole('region',{name:`項目${index+1}の根拠`});fireEvent.click(within(group).getByRole('button',{name:'資料を追加'}));
- fireEvent.change(within(group).getByRole('textbox',{name:'記事・本の名前'}),{target:{value:'架空の観測所の沿革'}});fireEvent.change(within(group).getByRole('textbox',{name:'資料のURL'}),{target:{value:'https://example.test/history'}});fireEvent.change(within(group).getByRole('textbox',{name:'書かれている場所'}),{target:{value:'設立の項目'}});fireEvent.change(within(group).getByRole('textbox',{name:'その部分の原文'}),{target:{value:'架空の観測所は2003年に設立された。'}});
-}
-async function write(){const view=render(<KnowledgeSubmissions/>);await screen.findByText("まだ投稿はありません。知識を書くか、保存済みCapsuleの一部から始められます。");fireEvent.click(screen.getByRole("button",{name:"知識を書く"}));fireEvent.click(screen.getByText('一覧で見分ける名前（任意）',{exact:true}));fireEvent.change(screen.getByLabelText("一覧で見分ける名前"),{target:{value:"投稿のテスト"}});fireEvent.change(screen.getByLabelText("登録する事実",{exact:true}),{target:{value:"架空の観測所は2003年に設立された。"}});if(publishing)await completeSource();return view;}
+afterEach(()=>{cleanup();vi.restoreAllMocks();vi.unstubAllGlobals();});
+async function start(){const view=render(<KnowledgeSubmissions/>);const button=await screen.findByRole('button',{name:'知識を書く'});await waitFor(()=>expect(button).toHaveProperty('disabled',false));fireEvent.click(button);return view;}
+async function completeSource(index=0){const area=screen.getByRole('region',{name:`項目${index+1}の根拠`});fireEvent.click(within(area).getByRole('button',{name:'資料を追加'}));fireEvent.change(within(area).getByRole('textbox',{name:'記事・本の名前'}),{target:{value:'資料の名前'}});fireEvent.change(within(area).getByRole('textbox',{name:'資料のURL'}),{target:{value:'https://example.test/source'}});fireEvent.change(within(area).getAllByRole('textbox',{name:'書かれている場所'}).at(-1)!,{target:{value:'該当する段落'}});fireEvent.change(within(area).getAllByRole('textbox',{name:'その部分の原文'}).at(-1)!,{target:{value:'根拠となる原文。'}});}
+function operation(value:string,index=0){fireEvent.change(screen.getAllByRole('combobox',{name:'何を届けますか'})[index],{target:{value}});}
+function fact(text:string,index=0){fireEvent.change(screen.getAllByRole('textbox',{name:'登録する事実'})[index],{target:{value:text}});}
+function consent(){fireEvent.click(screen.getByRole('checkbox'));}
+async function submit(){consent();fireEvent.click(screen.getByRole('button',{name:'保存して知識を届ける'}));await screen.findByText('受け付けました。確認結果と公開先をここにお知らせします。');}
+it('registers a source-backed person with profile attribution, using generic intent plus the actual recipient disclosure',async()=>{await start();fireEvent.change(screen.getByRole('textbox',{name:'人物・作品の名前'}),{target:{value:'架空の人物'}});fact('架空の人物はこの観測所の設立者。');await completeSource();expect(screen.getByRole('checkbox').parentElement?.textContent).not.toContain('Gemini');expect(screen.getByText(/今回の送信先：/).textContent).toContain('Google Gemini');await submit();const saved=[...stored.values()][0];expect(saved.content.attribution).toBe('profile');expect(saved.content.items[0]).toMatchObject({operation:'create-entity',record:{subjectId:saved.content.entities[0].id}});expect(sent.at(-1)).toMatchObject({action:'review',profileId:'google-gemini-free-publish-v1'});});
+it('blocks an event with no destination before sending while preserving the fact',async()=>{await start();operation('add-information');fact('ある出来事が起きた。');await completeSource();consent();fireEvent.click(screen.getByRole('button',{name:'保存して知識を届ける'}));expect(await screen.findByRole('alert')).toHaveProperty('textContent',expect.stringContaining('何について'));expect(sent).toHaveLength(0);expect(screen.getByRole('textbox',{name:'登録する事実'})).toHaveProperty('value','ある出来事が起きた。');});
+it('selects an existing entity without replacing the authored fact or source fields',async()=>{await start();operation('add-information');fact('書きかけの背景。');await completeSource();fireEvent.click(await screen.findByRole('button',{name:/既存の人物A/}));await waitFor(()=>expect(screen.queryByText('探しています…')).toBeNull());expect(screen.getByRole('textbox',{name:'登録する事実'})).toHaveProperty('value','書きかけの背景。');expect(screen.getByRole('textbox',{name:'記事・本の名前'})).toHaveProperty('value','資料の名前');await submit();expect([...stored.values()][0].content.items[0]).toMatchObject({about:{kind:'entity',id:a.id,revision:a.revision},record:{subjectId:a.id}});});
+it('keeps a written correction and newly added source when choosing its canonical target',async()=>{await start();operation('correct-record');fact('自分が書いた訂正案。');await completeSource();fireEvent.click(await screen.findByRole('button',{name:/公開された元の事実/}));await waitFor(()=>expect(screen.getByText('以前の資料',{exact:false})).toBeTruthy());expect(screen.getByRole('textbox',{name:'登録する事実'})).toHaveProperty('value','自分が書いた訂正案。');expect(screen.getByRole('textbox',{name:'記事・本の名前'})).toHaveProperty('value','資料の名前');fireEvent.click(screen.getByRole('button',{name:'草稿を保存'}));await screen.findByText('草稿を保存しました。');const item=[...stored.values()][0].content.items[0];expect(item.correction).toEqual({id:original.id,revision:original.revision});expect(item.record.evidence).toHaveLength(2);});
+it('protects old evidence and permits checking only the new quotation when adding evidence',async()=>{await start();operation('add-evidence');fireEvent.click(await screen.findByRole('button',{name:/公開された元の事実/}));await screen.findByText(/以前の資料/);expect(screen.getByRole('textbox',{name:'登録する事実'})).toHaveProperty('readOnly',true);expect(screen.getByRole('textbox',{name:'その部分の原文'})).toHaveProperty('readOnly',true);expect(screen.getByRole('button',{name:'この根拠を外す'})).toHaveProperty('disabled',true);await completeSource();await submit();const item=[...stored.values()][0].content.items[0];expect(item.operation).toBe('add-evidence');expect(item.record.evidence[0]).toEqual(original.content.evidence[0]);expect(item.record.evidence).toHaveLength(2);});
+it('attaches theme background explicitly and explains the automatic append without changing snapshots',async()=>{await start();operation('add-information');fact('この主題の背景。');await completeSource();const destination=within(screen.getByRole('group',{name:'何についての情報ですか（必須）'}));fireEvent.click(destination.getByRole('button',{name:'テーマ'}));fireEvent.click(await destination.findByRole('button',{name:/ある主題の年表/}));await waitFor(()=>expect(screen.getByText('ある主題の年表',{exact:true})).toBeTruthy());await submit();expect([...stored.values()][0].content.items[0]).toMatchObject({about:{kind:'theme',id:theme.id},themes:[{id:theme.id,revision:theme.revision}],record:{aboutTheme:theme.id,subjectId:null}});expect(screen.getByText(/以前に保存・共有した図は変わりません/)).toBeTruthy();});
+it('does not replace the current common revision with a same-ID legacy search result',async()=>{const fetcher=vi.mocked(fetch);fetcher.mockImplementation(async(path)=>String(path).startsWith('/api/knowledge')?Response.json({entities:[a]}):Response.json({revision:'legacy',items:[{id:a.id,name:'古い名前',kind:'person',aliases:[]}]}));const choose=vi.fn();render(<KnowledgeSubmissionTarget kinds={['entity']} label='選択' locale='ja' onChoose={choose}/>);fireEvent.click(await screen.findByRole('button',{name:/既存の人物A/}));expect(screen.queryByText('古い名前')).toBeNull();expect(choose).toHaveBeenCalledWith(expect.objectContaining({id:a.id,revision:2}));});
+it('retains a draft and reuses the mutation ID after an ambiguous connection failure',async()=>{await start();fireEvent.change(screen.getByRole('textbox',{name:'人物・作品の名前'}),{target:{value:'書きかけ'}});fact('入力中の事実。');failNext=true;fireEvent.click(screen.getByRole('button',{name:'草稿を保存'}));await screen.findByRole('button',{name:'同じ操作を再試行'});expect(screen.getByRole('textbox',{name:'登録する事実'})).toHaveProperty('value','入力中の事実。');fireEvent.click(screen.getByRole('button',{name:'同じ操作を再試行'}));await waitFor(()=>expect(stored.size).toBe(1));expect(sent[0]).toEqual(sent[1]);});
+it('never treats an initial load failure as empty history',async()=>{loadFailure=true;render(<KnowledgeSubmissions/>);await screen.findByRole('alert');expect(screen.queryByText(/まだ投稿はありません/)).toBeNull();loadFailure=false;fireEvent.click(screen.getByRole('button',{name:'一覧を更新'}));await screen.findByText(/まだ投稿はありません/);});
+it('keeps unsaved input mounted during an offline identity refresh, and removes it after a real account change',async()=>{const view=await start();fact('まだ送っていない内容。');const input=screen.getByRole('textbox',{name:'登録する事実'});mocked.identity={...mocked.identity,error:true,refreshError:true};view.rerender(<KnowledgeSubmissions/>);expect(screen.getByRole('textbox',{name:'登録する事実'})).toBe(input);mocked.identity={...mocked.identity,status:'guest',user:null as unknown as {id:string},version:2};await act(async()=>view.rerender(<KnowledgeSubmissions/>));expect(screen.queryByRole('textbox',{name:'登録する事実'})).toBeNull();});
 
-describe("member knowledge submission workflow",()=>{
- it("does not turn a failed initial fetch into an empty submission history",async()=>{
-  loadFailure=true;render(<KnowledgeSubmissions/>);await screen.findByRole("alert");expect(screen.queryByText("まだ投稿はありません。知識を書くか、保存済みCapsuleの一部から始められます。")).toBeNull();loadFailure=false;fireEvent.click(screen.getByRole("button",{name:"一覧を更新"}));await screen.findByText("まだ投稿はありません。知識を書くか、保存済みCapsuleの一部から始められます。");
- });
- it("saves and submits with one explicit intent and shows the unconnected processing state honestly",async()=>{
-  await write();fireEvent.click(screen.getByRole("button",{name:"保存して受付"}));await screen.findByText("受付を保存しました。AI処理と公開の接続は準備中です。");
-  expect(sent.map(c=>c.action)).toEqual(["save","submit"]);expect(sent[1].expectedVersion).toBe(1);expect(stored.size).toBe(1);
-  expect(screen.getByRole("button",{name:"この版を受付"}).hasAttribute("disabled")).toBe(true);
- });
- it("distinguishes a running save from an ambiguous failure",async()=>{
-  await write();let release!:()=>void;postGate=new Promise<void>(resolve=>{release=resolve;});fireEvent.click(screen.getByRole("button",{name:"草稿を保存"}));
-  await screen.findByText("操作を保存しています…");expect(screen.queryByRole("button",{name:"同じ操作を再試行"})).toBeNull();
-  await act(async()=>{release();});await screen.findByText("草稿を保存しました。");
- });
- it("retains input and reuses the operation ID after an ambiguous failure",async()=>{
-  await write();failNext=true;fireEvent.click(screen.getByRole("button",{name:"草稿を保存"}));await screen.findByRole("button",{name:"同じ操作を再試行"});
-  expect((screen.getByLabelText("登録する事実",{exact:true}) as HTMLTextAreaElement).value).toContain("架空の観測所");
-  fireEvent.click(screen.getByRole("button",{name:"同じ操作を再試行"}));await waitFor(()=>expect(stored.size).toBe(1));await waitFor(()=>expect(screen.queryByRole("button",{name:"同じ操作を再試行"})).toBeNull());expect(sent).toHaveLength(2);expect(sent[0]).toEqual(sent[1]);
- });
- it("lets users remove an unfinished source and save a source-less draft",async()=>{
-  await write();fireEvent.click(screen.getByRole("button",{name:"資料を追加"}));fireEvent.click(screen.getByRole("button",{name:"この根拠を外す"}));fireEvent.click(screen.getByRole("button",{name:"草稿を保存"}));await screen.findByText("草稿を保存しました。");expect([...stored.values()][0].content.sources).toEqual([]);
- });
- it("cancels only after an inline confirmation, leaving the source draft readable",async()=>{
-  await write();fireEvent.click(screen.getByRole("button",{name:"保存して受付"}));await screen.findByText("受付を保存しました。AI処理と公開の接続は準備中です。");fireEvent.click(screen.getByRole("button",{name:"投稿を取り消す"}));expect(sent).toHaveLength(2);
-  fireEvent.click(screen.getByRole("button",{name:"取り消す"}));await screen.findByText("取り消されています。再提出は新しい草稿から行ってください。");expect(sent.at(-1)).toMatchObject({action:"cancel",expectedVersion:2});
- });
- it('requires explicit transmission intent and does not block submission when local hints fail',async()=>{
-  reviewAvailable=true;await write();fireEvent.click(screen.getByRole('button',{name:'保存してAI確認へ'}));expect(sent).toHaveLength(0);expect(await screen.findByRole('alert')).toBeTruthy();
-  fireEvent.click(screen.getByRole('button',{name:'草稿を保存'}));await screen.findByText('草稿を保存しました。');
-  fireEvent.click(screen.getByRole('button',{name:'入力のヒント（任意）'}));await screen.findByText('今はヒントを確認できません。そのまま投稿できます。');
-  fireEvent.click(screen.getByRole('checkbox'));fireEvent.click(screen.getByRole('button',{name:'AI確認へ進む'}));await screen.findByText('AI確認を依頼しました。画面を閉じても受付は残ります。');
-  expect(sent.map(c=>c.action)).toEqual(['save','submit','review']);
- });
- it('refreshes review results without replacing unsaved edits',async()=>{
-  reviewAvailable=true;await write();vi.useFakeTimers();fireEvent.click(screen.getByRole('checkbox'));fireEvent.click(screen.getByRole('button',{name:'保存してAI確認へ'}));await act(async()=>{});
-  expect(screen.getByText('AI確認を依頼しました。画面を閉じても受付は残ります。')).toBeTruthy();
-  fireEvent.change(screen.getByLabelText('登録する事実',{exact:true}),{target:{value:'途中の編集を保持する。'}});finishReview=true;
-  await act(async()=>{await vi.advanceTimersByTimeAsync(5000);});expect((screen.getByLabelText('登録する事実',{exact:true}) as HTMLTextAreaElement).value).toBe('途中の編集を保持する。');expect(screen.getByText('変更前の受付内容への結果です。保存して受付し直すと、新しい内容で確認します。')).toBeTruthy();
- });
+it('saves an unfinished name/source row privately but rejects it for publication',async()=>{await start();fireEvent.change(screen.getByRole('textbox',{name:'人物・作品の名前'}),{target:{value:'名前だけの草稿'}});fireEvent.click(screen.getByRole('button',{name:'資料を追加'}));fireEvent.change(screen.getByRole('textbox',{name:'資料のURL'}),{target:{value:'https://入力途中'}});fireEvent.click(screen.getByRole('button',{name:'草稿を保存'}));await screen.findByText('草稿を保存しました。');const saved=[...stored.values()][0];expect(saved.content.title).toBe('名前だけの草稿');expect(saved.content.items[0].record.evidence[0].locator).toBe('');consent();fireEvent.click(screen.getByRole('button',{name:'知識を届ける'}));await screen.findByRole('alert');expect(sent.map(v=>v.action)).toEqual(['save']);});
 
- it('requires the publication-specific intent and sends the server selected consent version',async()=>{
-  publishing=true;await write();expect(screen.getByRole('checkbox').textContent).not.toContain('まだ');
-  fireEvent.click(screen.getByRole('button',{name:'保存して知識を届ける'}));expect(sent).toHaveLength(0);
-  fireEvent.click(screen.getByRole('checkbox'));fireEvent.click(screen.getByRole('button',{name:'保存して知識を届ける'}));await screen.findByText('受け付けました。確認結果と公開先をここにお知らせします。');
-  expect(sent.at(-1)).toMatchObject({action:'review',consentVersion:'gemini-publication-beta-v1'});
- });
-
- it('keeps results in submitted item order when jobs arrive in another order',async()=>{
-  publishing=true;await write();fireEvent.click(screen.getByRole('button',{name:'項目を追加'}));fireEvent.change(screen.getAllByLabelText('登録する事実',{exact:true})[1],{target:{value:'二つ目の知識。'}});await completeSource(1);
-  fireEvent.click(screen.getByRole('checkbox'));fireEvent.click(screen.getByRole('button',{name:'保存して知識を届ける'}));await screen.findByText('受け付けました。確認結果と公開先をここにお知らせします。');
-  const rows=within(screen.getByRole('region',{name:'受付版のAI確認'})).getAllByRole('listitem');expect(rows[0].textContent).toContain('項目 1');expect(rows[1].textContent).toContain('項目 2');
- });
-
- it('previews a public correction without writing and captures the source edition only on explicit action',async()=>{
-  publishing=true;history.replaceState({},'', '/member/submissions?record=public-record&revision=1');render(<KnowledgeSubmissions/>);
-  await screen.findByRole('button',{name:'訂正の草稿を作る'});expect(sent).toHaveLength(0);
-  fireEvent.click(screen.getByRole('button',{name:'訂正の草稿を作る'}));await screen.findByLabelText('登録する事実',{exact:true});
-  expect(sent[0]).toMatchObject({action:'capture-public',recordId:'public-record',recordRevision:1});expect(sent[0]).not.toHaveProperty('snapshot');expect(screen.getByRole('checkbox').getAttribute('checked')).toBeNull();
- });
- it("removes private input when the account changes",async()=>{
-  await write();const view=screen.getByLabelText("登録する事実",{exact:true});expect(view).not.toBeNull();mocked.identity={...mocked.identity,status:"guest",user:null as unknown as {id:string},version:2};
-  await act(async()=>{cleanup();render(<KnowledgeSubmissions/>);});expect(screen.queryByLabelText("登録する事実",{exact:true})).toBeNull();expect(screen.getByRole("button",{name:"Googleでログイン"})).not.toBeNull();
- });
- it('registers a person and their source-backed fact through the same data contract',async()=>{
-  await write();fireEvent.change(screen.getByLabelText('登録する情報'),{target:{value:'entity'}});fireEvent.change(screen.getByRole('textbox',{name:'人物・作品の名前'}),{target:{value:'架空の人物'}});fireEvent.change(screen.getByRole('textbox',{name:'登録する事実'}),{target:{value:'架空の人物はこの観測所の設立者。'}});fireEvent.click(screen.getByRole('button',{name:'草稿を保存'}));await screen.findByText('草稿を保存しました。');
-  const value=[...stored.values()][0];expect(value.content.entities[0].content).toMatchObject({name:'架空の人物',kind:'人物'});expect(value.content.items[0].record).toMatchObject({kind:'note',subjectId:value.content.entities[0].id});
- });
- it('keeps unsaved input mounted across a failed identity refresh and tab visibility changes',async()=>{
-  const view=await write(),input=screen.getByRole('textbox',{name:'登録する事実'});mocked.identity={...mocked.identity,error:true,refreshError:true};view.rerender(<KnowledgeSubmissions/>);
-  expect(screen.getByRole('textbox',{name:'登録する事実'})).toBe(input);expect(screen.getByText('接続を確認できません。入力はこの画面に残っています。')).toBeTruthy();
-  const hidden=vi.spyOn(document,'hidden','get');hidden.mockReturnValue(true);fireEvent(document,new Event('visibilitychange'));hidden.mockReturnValue(false);fireEvent(document,new Event('visibilitychange'));
-  expect(screen.getByRole('textbox',{name:'登録する事実'})).toBe(input);expect((input as HTMLTextAreaElement).value).toContain('架空の観測所');expect(refreshMemberIdentity).not.toHaveBeenCalled();
- });
- it('explains missing publication evidence before sending and leaves the input intact',async()=>{
-  publishing=true;await write();fireEvent.change(screen.getByRole('textbox',{name:'その部分の原文'}),{target:{value:''}});fireEvent.click(screen.getByRole('checkbox'));fireEvent.click(screen.getByRole('button',{name:'保存して知識を届ける'}));
-  expect(await screen.findByRole('alert')).toHaveProperty('textContent',expect.stringContaining('原文の引用'));expect(sent).toHaveLength(0);expect((screen.getByRole('textbox',{name:'登録する事実'}) as HTMLTextAreaElement).value).toContain('架空の観測所');
- });
-
-});
+it('locks captured typed KG qualifiers while keeping correction prose and quotations editable',async()=>{const id=crypto.randomUUID();const content=knowledgeSubmissionContentSchema.parse({schemaVersion:2,attribution:'profile',title:'型付き記録',entityPins:[{id:a.id,revision:a.revision},{id:b.id,revision:b.revision}],sourcePins:[{id:source.id,revision:1}],legacy:{revision:'kg-release',entityIds:[],claimIds:[original.id]},items:[{key:'typed',operation:'correct-record',about:{kind:'record',id:original.id,revision:original.revision},correction:{id:original.id,revision:original.revision},record:original.content}]});stored.set(id,{id,revision:1,version:1,state:'draft',content,context,digest:'a'.repeat(64),createdAt:stamp,updatedAt:stamp});history.replaceState({},'', '/member/submissions?id='+id);render(<KnowledgeSubmissions/>);const assertion=await screen.findByRole('textbox',{name:'登録する事実'});expect(assertion).toHaveProperty('readOnly',false);expect(screen.getByRole('textbox',{name:'矢印に表示する言葉'})).toHaveProperty('readOnly',true);fireEvent.click(screen.getByText('補足・時期（任意）',{exact:false}));expect(screen.getByRole('textbox',{name:'事実の補足（任意）'}).closest('fieldset')).toHaveProperty('disabled',true);expect(screen.getByRole('textbox',{name:'その部分の原文'})).toHaveProperty('readOnly',false);});

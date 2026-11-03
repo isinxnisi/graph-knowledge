@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Icon from './Icon';
 import {usePublicProfilesEnabled} from './PublicProfileAvailability';
 import InvitationBadge from './InvitationBadge';
+import SubmissionFeedbackBadge from './SubmissionFeedbackBadge';
 import {useMemberSession} from '../lib/client/use-member-identity';
 import {useUiLocale} from '../lib/client/ui-locale';
 import css from './PersonalNavigation.module.css';
@@ -14,5 +15,5 @@ export default function PersonalNavigation({selected,onNavigate}:{selected?:Pers
  const identity=useMemberSession(),{locale}=useUiLocale();
  const profiles=usePublicProfilesEnabled(),submissions=useKnowledgeSubmissionsEnabled();const groups=personalNavigation(locale,identity.status!=='guest',true,profiles,identity.user?.profile?.handle,submissions);
  const go=(event:React.MouseEvent<HTMLAnchorElement>)=>{if(onNavigate&&!onNavigate()){event.preventDefault();return;}const target=new URL(event.currentTarget.href,location.href);if(target.pathname===location.pathname&&target.search===location.search&&(target.hash||location.hash)){event.preventDefault();navigatePersonalHash(target.hash);}};
- return <nav className={css.navigation} aria-label={locale==='en'?'Account and communities':'アカウントとコミュニティ'}>{groups.map(g=><section key={g.label}><h2>{g.label}</h2><div>{g.items.map(i=><Link key={i.id} href={i.href} aria-label={i.label} scroll={false} onClick={go} aria-current={selected===i.id?'page':undefined}><Icon name={i.icon}/>{i.label}{i.id==='invitations'&&<InvitationBadge/>}</Link>)}</div></section>)}</nav>;
+ return <nav className={css.navigation} aria-label={locale==='en'?'Account and communities':'アカウントとコミュニティ'}>{groups.map(g=><section key={g.label}><h2>{g.label}</h2><div>{g.items.map(i=><Link key={i.id} href={i.href} aria-label={i.label} scroll={false} onClick={go} aria-current={selected===i.id?'page':undefined}><Icon name={i.icon}/>{i.label}{i.id==='invitations'&&<InvitationBadge/>}{i.id==='knowledge-submissions'&&<SubmissionFeedbackBadge/>}</Link>)}</div></section>)}</nav>;
 }

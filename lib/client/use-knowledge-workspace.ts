@@ -257,19 +257,23 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false }: { ini
       return true;
     } catch (e) { if (live(token)) setError(messageOf(e)); return false; } finally { finish(token); }
   }
-  async function startFrom(entity: KnowledgeEntityVersion) { return loadNeighbors(entity.id, undefined, true, Boolean(current.current.activeTheme)); }
+  async function startFrom(entity: KnowledgeEntityVersion,options:{latest?:boolean}={}) { return loadNeighbors(entity.id, undefined, true, options.latest??Boolean(current.current.activeTheme)); }
   async function expandEntity(id: string, cursor?: string | null) { await loadNeighbors(id, cursor); }
   function selectEntity(id: string) {
     epoch.current++; setBusy(false);
     update(s => s.normal.entities.some(e => e.id === id) ? { ...s, normal: { ...s.normal, selection: { kind: "entity", id } } } : s);
   }
-  async function selectRecord(id: string) {
-    const token = begin(), generation = current.current.normal.generation;
+  async function selectRecord(id: string,options:{latest?:boolean}={}) {
+    const token = begin(), generation = options.latest?null:current.current.normal.generation;
     try {
       const result = await readKnowledge<{ generation: string; record: KnowledgePublishedRecord }>("record", { generation: generation ?? undefined, recordId: id });
       if (!live(token)) return;
       if (generation && result.generation !== generation) throw new Error("公開版が一致しません。");
-      update(s => { const records = mergeRecords(s.normal.records, [result.record]); return { ...s, activeTheme: null, normal: { ...s.normal, generation: result.generation, records, entities: mergeEntities(s.normal.entities, recordEntities(records)), selection: { kind: "record", id } } }; }, current.current.activeTheme ? "push" : "replace");
+      update(s => {
+        const fresh=options.latest&&s.normal.generation!==result.generation;
+        const records=mergeRecords(fresh?[]:s.normal.records,[result.record]);
+        return {...s,activeTheme:null,...(fresh?{normalView:undefined,normalRestoration:null,neighborPages:{}}:{}),normal:{...s.normal,...(fresh?{rootId:null,epoch:s.normal.epoch+1}:{}),generation:result.generation,records,entities:mergeEntities(fresh?[]:s.normal.entities,recordEntities(records)),selection:{kind:"record",id}}};
+      }, options.latest||current.current.activeTheme ? "push" : "replace");
     } catch (e) { if (live(token)) setError(messageOf(e)); } finally { finish(token); }
   }
   async function openTheme(ref: { id: string; revision?: number }) {

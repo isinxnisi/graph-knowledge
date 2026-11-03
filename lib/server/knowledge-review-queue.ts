@@ -1,3 +1,6 @@
+import {submissionIntentIssues} from "../domain/knowledge-submission-intent";
+import {reviewDisclosureForConsent} from "../domain/knowledge-submission-feedback";
+import {ensureSubmissionFeedbackSchema} from "./member/knowledge-submission-feedback";
 import {createHash,randomUUID} from "node:crypto";
 import {readFile} from "node:fs/promises";
 import path from "node:path";
@@ -20,7 +23,8 @@ export const reviewEnabledFor=(id:string)=>(process.env.MEMBER_ORIGIN==="https:/
 const iso=(v:unknown)=>v instanceof Date?v.toISOString():String(v);
 export async function ensureReviewSchema(pool:Pool){
  const checksum=createHash("sha256").update(await readFile(path.join(process.cwd(),"db/member/021-knowledge-review-jobs.sql"))).digest("hex");
- if((await pool.query("SELECT checksum FROM member_migration WHERE name='021-knowledge-review-jobs.sql'")).rows[0]?.checksum!==checksum)throw new KnowledgeError("AI確認用の明示migrationが必要です",503,"MIGRATION_REQUIRED");
+ if((await pool.query("SELECT checksum FROM member_migration WHERE name='021-knowledge-review-jobs.sql'")).rows[0]?.checksum!==checksum)throw new KnowledgeError("確認用の明示migrationが必要です",503,"MIGRATION_REQUIRED");
+ await ensureSubmissionFeedbackSchema(pool);
 }
 export async function reviewStatus(c:Pool|PoolClient,ownerId:string,id:string,revision:number):Promise<KnowledgeReviewStatus|undefined>{
  const rows=(await c.query(`SELECT j.* FROM member_knowledge.review_jobs j JOIN member_knowledge.submissions s ON s.id=j.submission_id WHERE j.submission_id=$1 AND s.owner_id=$2 AND j.revision=$3 ORDER BY j.created_at,j.item_key`,[id,ownerId,revision])).rows;
@@ -33,20 +37,20 @@ export async function reviewStatus(c:Pool|PoolClient,ownerId:string,id:string,re
  return {revision,workerAvailable,items:rows.map(r=>({key:r.item_key,state:r.state,reason:r.reason,nextAttemptAt:['retry','quota'].includes(r.state)?iso(r.not_before):null,attempts:r.attempts,result:r.result,...(r.publication?{publication:r.publication}:{})}))};
 }
 function submission(row:QueryResultRow):KnowledgeSubmission{
- return {id:row.id,revision:row.current_revision,version:row.state_version,state:row.state,content:knowledgeSubmissionContentSchema.parse(row.content),digest:row.digest,createdAt:iso(row.created_at),updatedAt:iso(row.updated_at),origin:row.source_capsule?.capsuleId?{capsuleId:row.source_capsule.capsuleId,capsuleRevision:row.source_capsule.capsuleRevision,title:row.source_capsule.title,keys:row.source_capsule.keys}:null,...(row.source_capsule?.captured?{context:{entities:row.source_capsule.captured.entities,sources:row.source_capsule.captured.sources}}:{})};
+ return {id:row.id,revision:row.current_revision,version:row.state_version,state:row.state,content:knowledgeSubmissionContentSchema.parse(row.content),digest:row.digest,createdAt:iso(row.created_at),updatedAt:iso(row.updated_at),origin:row.source_capsule?.capsuleId?{capsuleId:row.source_capsule.capsuleId,capsuleRevision:row.source_capsule.capsuleRevision,title:row.source_capsule.title,keys:row.source_capsule.keys}:null,...((row.reference_context??row.source_capsule?.captured)?{context:row.reference_context??row.source_capsule.captured}:{})};
 }
 const quotaFormatter=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Los_Angeles",year:"numeric",month:"2-digit",day:"2-digit"});
 export function quotaDate(now:Date){return quotaFormatter.format(now);}
 export function nextQuotaDay(now:Date){const today=quotaDate(now),[y,m,d]=today.split('-').map(Number);let next=new Date(Date.UTC(y,m-1,d+1));while(quotaDate(next)===today)next=new Date(next.getTime()+3600000);return next;}
 export function nextQuotaMonth(now:Date){const month=quotaDate(now).slice(0,7),[y,m]=month.split('-').map(Number);let next=new Date(Date.UTC(y,m,1));while(quotaDate(next).slice(0,7)===month)next=new Date(next.getTime()+3600000);return next;}
-export type ReviewLease={jobId:string;attemptId:string;token:string;wire:string;wireDigest:string;model:string};
+export type ReviewLease={jobId:string;attemptId:string;token:string;wire:string;wireDigest:string;model:string;consentProfileId:string};
 type WireResult=Awaited<ReturnType<typeof callGeminiReview>>;
 export function createReviewQueue(pool:Pool){
  let ready:Promise<void>|undefined;
  const ensure=async()=>{ready??=ensureReviewSchema(pool).catch(e=>{ready=undefined;throw e;});await ready;};
  async function tx<T>(run:(c:PoolClient)=>Promise<T>){await ensure();const c=await pool.connect();try{await c.query("BEGIN");const result=await run(c);await c.query("COMMIT");return result;}catch(e){await c.query("ROLLBACK");throw e;}finally{c.release();}}
  async function ownerLock(c:PoolClient,id:string){return (await c.query('SELECT active FROM "user" WHERE id=$1 FOR UPDATE',[id])).rows[0]?.active===true;}
- async function current(c:PoolClient,id:string){return (await c.query(`SELECT s.*,v.content,v.digest,v.source_capsule FROM member_knowledge.submissions s JOIN member_knowledge.submission_revisions v ON v.submission_id=s.id AND v.revision=s.current_revision WHERE s.id=$1 FOR UPDATE OF s`,[id])).rows[0];}
+ async function current(c:PoolClient,id:string){return (await c.query(`SELECT s.*,v.content,v.digest,v.source_capsule,v.reference_context FROM member_knowledge.submissions s JOIN member_knowledge.submission_revisions v ON v.submission_id=s.id AND v.revision=s.current_revision WHERE s.id=$1 FOR UPDATE OF s`,[id])).rows[0];}
  async function jobTransaction<T>(id:string,run:(c:PoolClient,row:QueryResultRow,active:boolean)=>Promise<T>){
   const seed=(await pool.query("SELECT s.owner_id,s.id FROM member_knowledge.review_jobs j JOIN member_knowledge.submissions s ON s.id=j.submission_id WHERE j.id=$1",[id])).rows[0];
   if(!seed)return null;
@@ -59,7 +63,7 @@ export function createReviewQueue(pool:Pool){
    // The payload row is absent after account deletion; never recreate it.
    if(result.state==='received')await pool.query("UPDATE member_knowledge.review_payloads SET response=$2 WHERE attempt_id=$1",[lease.attemptId,result.raw]);
    return jobTransaction(lease.jobId,async(c,j,active)=>{
-    if(j.state!=='running'||j.lease_token!==lease.token||!active||j.submission.state!=='queued'||j.submission.current_revision!==j.revision||j.submission.digest!==j.submitted_digest)return false;
+    if(j.state!=='running'||j.consent_profile_id!==lease.consentProfileId||j.lease_token!==lease.token||!active||j.submission.state!=='queued'||j.submission.current_revision!==j.revision||j.submission.digest!==j.submitted_digest)return false;
     let state='retry',reason='AIとの接続を再確認しています。',notBefore=new Date(Date.now()+120000),advice:unknown=null;
     if(result.state==='not-sent'){state='cancelled';reason='submission-changed';}
     else if(parsed?.state==='reviewed'){
@@ -79,7 +83,8 @@ export function createReviewQueue(pool:Pool){
 
  return {
   async authorize(ownerId:string,raw:unknown){
-   const command=knowledgeReviewCommandSchema.parse(raw),digest=knowledgeDigest(raw);
+   const command=knowledgeReviewCommandSchema.parse(raw),digest=knowledgeDigest(raw),disclosure=reviewDisclosureForConsent(command.consentVersion);
+    if(!disclosure||command.profileId!==undefined&&command.profileId!==disclosure.profileId)throw new KnowledgeError("送信先への確認内容が変わりました",409,"CONSENT_CHANGED");
    return tx(async c=>{
     if(!await ownerLock(c,ownerId))throw new KnowledgeError("本人を確認してください",401,"UNAUTHENTICATED");
     await c.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))",['submission-owner:'+ownerId]);
@@ -90,9 +95,10 @@ export function createReviewQueue(pool:Pool){
     const n=Number((await c.query("SELECT count(*) AS n FROM member_knowledge.submission_requests WHERE owner_id=$1 AND created_at>clock_timestamp()-interval '10 minutes'",[ownerId])).rows[0].n);
     if(n>=120)throw new KnowledgeError("少し待ってから再試行してください",429,"RATE_LIMITED");
     const value=submission(row);
-    if((await c.query("SELECT 1 FROM member_knowledge.review_authorizations WHERE submission_id=$1 AND revision=$2",[value.id,value.revision])).rowCount)return {...value,review:await reviewStatus(c,ownerId,value.id,value.revision)};
-    await c.query("INSERT INTO member_knowledge.review_authorizations(submission_id,revision,consent_version) VALUES($1,$2,$3) ON CONFLICT DO NOTHING",[value.id,value.revision,command.consentVersion]);
-    for(const item of value.content.items)await c.query(`INSERT INTO member_knowledge.review_jobs(id,submission_id,revision,item_key,submitted_digest,consent_version,state) VALUES($1,$2,$3,$4,$5,$6,'queued') ON CONFLICT(submission_id,revision,item_key) DO NOTHING`,[randomUUID(),value.id,value.revision,item.key,value.digest,command.consentVersion]);
+    const priorAuthorization=(await c.query("SELECT consent_version,consent_profile_id FROM member_knowledge.review_authorizations WHERE submission_id=$1 AND revision=$2",[value.id,value.revision])).rows[0];
+     if(priorAuthorization){if(priorAuthorization.consent_version!==command.consentVersion||priorAuthorization.consent_profile_id!==disclosure.profileId)throw new KnowledgeError("受付版の送信先や目的を変更できません。新しい草稿から依頼してください",409,"CONSENT_CHANGED");return {...value,review:await reviewStatus(c,ownerId,value.id,value.revision)};}
+    await c.query("INSERT INTO member_knowledge.review_authorizations(submission_id,revision,consent_version,consent_profile_id) VALUES($1,$2,$3,$4) ON CONFLICT DO NOTHING",[value.id,value.revision,command.consentVersion,disclosure.profileId]);
+    for(const item of value.content.items)await c.query(`INSERT INTO member_knowledge.review_jobs(id,submission_id,revision,item_key,submitted_digest,consent_version,consent_profile_id,state) VALUES($1,$2,$3,$4,$5,$6,$7,'queued') ON CONFLICT(submission_id,revision,item_key) DO NOTHING`,[randomUUID(),value.id,value.revision,item.key,value.digest,command.consentVersion,disclosure.profileId]);
     const result={...value,review:await reviewStatus(c,ownerId,value.id,value.revision)};
     await c.query("INSERT INTO member_knowledge.submission_requests(owner_id,request_id,submission_id,digest,response) VALUES($1,$2,$3,$4,$5)",[ownerId,command.requestId,value.id,digest,result]);return result;
    });
@@ -102,8 +108,8 @@ export function createReviewQueue(pool:Pool){
   async recoverExpired(){
    await ensure();const rows=(await pool.query("SELECT id FROM member_knowledge.review_jobs WHERE state='running' AND lease_until<clock_timestamp() LIMIT 20")).rows;
    for(const r of rows){
-    const completed=(await pool.query(`SELECT j.lease_token,a.id AS attempt_id,a.model,p.wire,p.wire_digest,p.response FROM member_knowledge.review_jobs j JOIN member_knowledge.review_attempts a ON a.job_id=j.id JOIN member_knowledge.review_payloads p ON p.attempt_id=a.id WHERE j.id=$1 AND a.state='received' AND p.response IS NOT NULL ORDER BY a.started_at DESC LIMIT 1`,[r.id])).rows[0];
-    if(completed){await finish({jobId:r.id,attemptId:completed.attempt_id,token:completed.lease_token,model:completed.model,wire:completed.wire,wireDigest:completed.wire_digest},{state:'received',status:200,raw:completed.response});continue;}
+    const completed=(await pool.query(`SELECT j.lease_token,j.consent_profile_id,a.id AS attempt_id,a.model,p.wire,p.wire_digest,p.response FROM member_knowledge.review_jobs j JOIN member_knowledge.review_attempts a ON a.job_id=j.id JOIN member_knowledge.review_payloads p ON p.attempt_id=a.id WHERE j.id=$1 AND a.state='received' AND p.response IS NOT NULL ORDER BY a.started_at DESC LIMIT 1`,[r.id])).rows[0];
+    if(completed){await finish({jobId:r.id,attemptId:completed.attempt_id,token:completed.lease_token,model:completed.model,wire:completed.wire,wireDigest:completed.wire_digest,consentProfileId:completed.consent_profile_id},{state:'received',status:200,raw:completed.response});continue;}
     await jobTransaction(r.id,async(c,j,active)=>{
     if(j.state!=='running'||new Date(j.lease_until).getTime()>=Date.now())return;
     await c.query("UPDATE member_knowledge.review_attempts SET state='delivery-unknown',finished_at=clock_timestamp() WHERE job_id=$1 AND state='sending'",[j.id]);
@@ -118,9 +124,16 @@ export function createReviewQueue(pool:Pool){
     if(!['queued','retry','quota'].includes(j.state)||new Date(j.not_before).getTime()>Date.now())return null;
     const s=j.submission;
     if(!active||s.state!=='queued'||s.current_revision!==j.revision||s.digest!==j.submitted_digest||![REVIEW_CONSENT_VERSION,...(process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED==='1'?[PUBLICATION_CONSENT_VERSION]:[])].includes(j.consent_version)){await c.query("UPDATE member_knowledge.review_jobs SET state='cancelled',reason='submission-changed' WHERE id=$1",[j.id]);return null;}
+    const disclosure=reviewDisclosureForConsent(j.consent_version);
+    const authorization=(await c.query('SELECT consent_profile_id FROM member_knowledge.review_authorizations WHERE submission_id=$1 AND revision=$2',[j.submission_id,j.revision])).rows[0];
+    if(!disclosure||disclosure.providerId!=='google-gemini'||j.consent_profile_id!==disclosure.profileId||authorization?.consent_profile_id!==disclosure.profileId){await c.query("UPDATE member_knowledge.review_jobs SET state='attention',reason='送信先の確認内容が変わりました。内容を確認して依頼し直してください。' WHERE id=$1",[j.id]);return null;}
     if(j.attempts>=3){await c.query("UPDATE member_knowledge.review_jobs SET state='attention',reason='送信を3回試しました。AI接続の確認を待っています。' WHERE id=$1",[j.id]);return null;}
     let wire:string;
-    try{wire=JSON.stringify(geminiReviewRequest(submissionReviewInput(submission(s),j.item_key,j.consent_version===PUBLICATION_CONSENT_VERSION)));}
+    try{
+     const value=submission(s),issues=submissionIntentIssues(value.content,value.context);
+     if(issues.length){await c.query("UPDATE member_knowledge.review_jobs SET state='needs-changes',reason=$2 WHERE id=$1",[j.id,issues.slice(0,3).join(' ')+' 受付時の内容は保持しています。新しい草稿で投稿先と操作を確認してから依頼し直してください。']);return null;}
+     wire=JSON.stringify(geminiReviewRequest(submissionReviewInput(value,j.item_key,j.consent_version===PUBLICATION_CONSENT_VERSION)));
+    }
     catch{await c.query("UPDATE member_knowledge.review_jobs SET state='needs-changes',reason='内容・対象・資料の取得版や入力の長さを確認してください。' WHERE id=$1",[j.id]);return null;}
     const project=(await c.query("SELECT * FROM member_knowledge.review_projects WHERE project_id=$1 FOR UPDATE",[cfg.projectId])).rows[0];if(!project)throw Error("Review project is not configured");
     const now=new Date(),day=quotaDate(now),month=day.slice(0,7),inputReserved=Buffer.byteLength(wire)+1024,outputReserved=2048;
@@ -141,11 +154,11 @@ export function createReviewQueue(pool:Pool){
     await c.query(`INSERT INTO member_knowledge.review_attempts(id,job_id,project_id,provider,model,policy,purpose,state,quota_day,quota_month,input_reserved,output_reserved) VALUES($1,$2,$3,'gemini',$4,$5,'submission','sending',$6,$7,$8,$9)`,[attemptId,j.id,cfg.projectId,cfg.model,GEMINI_REVIEW_POLICY,day,month,inputReserved,outputReserved]);
     await c.query("INSERT INTO member_knowledge.review_payloads(attempt_id,job_id,wire,wire_digest) VALUES($1,$2,$3,$4)",[attemptId,j.id,wire,wireDigest]);
     await c.query("UPDATE member_knowledge.review_jobs SET state='running',reason='',attempts=attempts+1,lease_token=$2,lease_until=clock_timestamp()+interval '180 seconds',updated_at=clock_timestamp() WHERE id=$1",[j.id,token]);
-    return {jobId:j.id,attemptId,token,wire,wireDigest,model:cfg.model};
+    return {jobId:j.id,attemptId,token,wire,wireDigest,model:cfg.model,consentProfileId:disclosure.profileId};
    });if(lease)return lease;}
    return null;
   },
-  async canSend(lease:ReviewLease){await ensure();return (await pool.query(`SELECT 1 FROM member_knowledge.review_jobs j JOIN member_knowledge.submissions s ON s.id=j.submission_id JOIN "user" u ON u.id=s.owner_id WHERE j.id=$1 AND j.lease_token=$2 AND j.state='running' AND j.lease_until>clock_timestamp() AND u.active AND s.state='queued' AND s.current_revision=j.revision`,[lease.jobId,lease.token])).rowCount===1;},
+  async canSend(lease:ReviewLease){await ensure();return (await pool.query(`SELECT 1 FROM member_knowledge.review_jobs j JOIN member_knowledge.submissions s ON s.id=j.submission_id JOIN "user" u ON u.id=s.owner_id JOIN member_knowledge.review_authorizations a ON a.submission_id=j.submission_id AND a.revision=j.revision WHERE j.id=$1 AND j.lease_token=$2 AND j.consent_profile_id=$3 AND a.consent_profile_id=$3 AND j.state='running' AND j.lease_until>clock_timestamp() AND u.active AND s.state='queued' AND s.current_revision=j.revision`,[lease.jobId,lease.token,lease.consentProfileId])).rowCount===1;},
   finish,
   async rejectBeforeSend(lease:ReviewLease,reason:string,retryable:boolean){
    await finish(lease,{state:'not-sent'});

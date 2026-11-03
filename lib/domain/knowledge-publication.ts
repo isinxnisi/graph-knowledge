@@ -88,7 +88,7 @@ function selectLegacyTyped(record: KnowledgeRecordVersion, link?: KnowledgeLegac
   if (link.recordId !== record.id)
     throw new Error("Legacy link does not identify this imported record");
   // Even a correction with an unchanged display label needs a fresh meaning decision.
-  if (link.importedRevision !== record.revision) return null;
+  if (link.importedRevision !== record.revision && !(record.content.legacySemantics?.recordRevision===link.importedRevision&&record.content.legacySemantics.sha256===link.sha256)) return null;
   if (!/^[a-f0-9]{64}$/.test(link.sha256) || link.importedRevision !== 1)
     throw new Error("Legacy link is not an immutable import reference");
   // An observed Theme source also uses the immutable provenance registry, but

@@ -41,7 +41,7 @@ const readableSql = (alias="r") => `NOT EXISTS (
  LEFT JOIN knowledge75.published_revisions p ON p.kind=o.kind AND p.id=o.id AND p.revision=(d->>'revision')::integer
  WHERE o.visibility IS DISTINCT FROM 'public' OR p.id IS NULL
 )`;
-type Dependency = {kind:"record"|"entity"|"source";id:string;revision:number};
+type Dependency = {kind:"record"|"entity"|"source"|"theme";id:string;revision:number};
 type Generation = {id:string;sourceSequence:string;digest:string;recordCount:number;createdAt:string;publishedAt:string|null};
 const generationRow=(r:QueryResultRow):Generation=>({id:r.id,sourceSequence:String(r.source_sequence),digest:r.digest,recordCount:Number(r.record_count),createdAt:iso(r.created_at),publishedAt:r.published_at?iso(r.published_at):null});
 export type KnowledgePublicationPage = {generation:string;records:KnowledgePublishedRecord[];entities:KnowledgeEntityVersion[];nextCursor:string|null;hasMore:boolean};
@@ -88,7 +88,10 @@ async function capturePublication(c:PoolClient) {
     const link=legacy.find(l=>l.record_id===r.id);
     if(link && knowledgeDigest(link.payload)!==link.sha256)throw new KnowledgeError("旧原本のhashが一致しません",503,"LEGACY_HASH_MISMATCH");
     const dto=buildKnowledgePublishedRecord(r,{entities:usedEntities,sources:usedSources,mappings:mappings.has(r.id)&&publishedKeys.has(pinKey("record",r.id,mappings.get(r.id)!.content.recordRevision))?[mappings.get(r.id)!]:[],...(link?{legacyLink:{dataset:link.dataset,legacyClaimId:link.legacy_claim_id,recordId:link.record_id,importedRevision:Number(link.imported_revision),payload:link.payload,sha256:link.sha256}}:{})});
-    result.push({dto,dependencies:[{kind:"record",id:r.id,revision:r.revision},...usedEntities.map(e=>({kind:"entity" as const,id:e.id,revision:e.revision})),...usedSources.map(s=>({kind:"source" as const,id:s.id,revision:s.revision}))]});
+    const aboutDependencies:Dependency[]=[];
+    if(r.content.aboutRecord){if(!isReadable('record',r.content.aboutRecord.id,r.content.aboutRecord.revision))continue;aboutDependencies.push({kind:'record',...r.content.aboutRecord});}
+    if(r.content.aboutTheme){const themeHead=byHead.get(JSON.stringify(['theme',r.content.aboutTheme]));if(!themeHead||!isReadable('theme',r.content.aboutTheme,themeHead.current_revision))continue;aboutDependencies.push({kind:'theme',id:r.content.aboutTheme,revision:themeHead.current_revision});}
+    result.push({dto,dependencies:[...aboutDependencies,{kind:"record",id:r.id,revision:r.revision},...usedEntities.map(e=>({kind:"entity" as const,id:e.id,revision:e.revision})),...usedSources.map(s=>({kind:"source" as const,id:s.id,revision:s.revision}))]});
   }
   const digest=knowledgeDigest({db,changeIds,records:result});
   return {sequence,changeIds,digest,id:"k75-"+digest.slice(0,32),records:result,entities:distinctEntities(result.map(r=>r.dto))};

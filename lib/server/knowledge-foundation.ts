@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import {appendKnowledgeTimelineRecord} from "../domain/knowledge-timeline-append";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { Pool, PoolClient, QueryResultRow } from "pg";
@@ -58,6 +59,12 @@ export async function ensureKnowledgeFoundationSchema(pool: Pool) {
       await c.query(sql);
       await c.query("INSERT INTO knowledge75.migrations(name,checksum) VALUES($1,$2)", ["001-records.sql", checksum]);
     }
+    const referenceName="004-submission-references.sql";
+    const referenceSql=await readFile(path.join(process.cwd(),"migrations/knowledge-foundation",referenceName),"utf8");
+    const referenceChecksum=createHash("sha256").update(referenceSql).digest("hex");
+    const referenceOld=(await c.query("SELECT checksum FROM knowledge75.migrations WHERE name=$1",[referenceName])).rows[0];
+    if(referenceOld&&referenceOld.checksum!==referenceChecksum)throw new KnowledgeError("参照migrationのchecksumが変わっています",503,"MIGRATION_CHANGED");
+    if(!referenceOld){await c.query(referenceSql);await c.query("INSERT INTO knowledge75.migrations(name,checksum) VALUES($1,$2)",[referenceName,referenceChecksum]);}
     await c.query("COMMIT");
     return { name: "001-records.sql", checksum, applied: !old };
   } catch (e) { await c.query("ROLLBACK"); throw e; } finally { c.release(); }
@@ -95,6 +102,8 @@ async function recordReadable(c: PoolClient, r: KnowledgeRecordVersion) {
   if (!await revisionPublic(c, "record", r.id, r.revision)) return false;
   for (const id of references(r)) if (!await visible(c, "entity", id)) return false;
   for (const e of r.content.evidence) if (!await revisionPublic(c, "source", e.source.id, e.source.revision)) return false;
+  if(r.content.aboutRecord&& !await revisionPublic(c,"record",r.content.aboutRecord.id,r.content.aboutRecord.revision))return false;
+  if(r.content.aboutTheme&& !await visible(c,"theme",r.content.aboutTheme))return false;
   return true;
 }
 async function validateRecord(c: PoolClient, r: KnowledgeRecordVersion, entityPins: KnowledgePin[] | undefined, publicRecord: boolean) {
@@ -108,6 +117,12 @@ async function validateRecord(c: PoolClient, r: KnowledgeRecordVersion, entityPi
     }
     if (publicRecord) await assertPublic(c, "entity", id);
   }
+  if(r.content.aboutRecord){
+    if(r.content.aboutRecord.id===r.id)throw new KnowledgeError("自分自身を補足先にはできません");
+    await version(c,"record",r.content.aboutRecord.id,r.content.aboutRecord.revision);
+    if(publicRecord)await assertRevisionPublic(c,"record",r.content.aboutRecord.id,r.content.aboutRecord.revision);
+  }
+  if(r.content.aboutTheme){await head(c,"theme",r.content.aboutTheme,"FOR SHARE");if(publicRecord)await assertPublic(c,"theme",r.content.aboutTheme);}
   for (const e of r.content.evidence) {
     await head(c, "source", e.source.id, "FOR SHARE");
     await version(c, "source", e.source.id, e.source.revision);
@@ -244,17 +259,66 @@ export function createKnowledgeFoundationService(pool: Pool) {
       if(cmd.action === "accept-record") {
         const entityPins=[...cmd.entityPins];
         async function acceptedReference(kind:"entity"|"source",value:{id:string;content:unknown}){
-          const old=(await c.query("SELECT o.*,r.content FROM knowledge75.objects o JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=o.current_revision WHERE o.kind=$1 AND o.id=$2 FOR SHARE OF o",[kind,value.id])).rows[0];
-          if(old){if(old.visibility!=="public"||old.current_revision!==1||knowledgeDigest(old.content)!==knowledgeDigest(value.content))throw new KnowledgeError("投稿内の共有対象・資料が変わりました",409,"CONFLICT");return;}
+          const old=(await c.query("SELECT o.*,r.content FROM knowledge75.objects o JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=1 WHERE o.kind=$1 AND o.id=$2 FOR SHARE OF o",[kind,value.id])).rows[0];
+          if(old){if(old.visibility!=="public"||(kind==="entity"&&old.current_revision!==1)||knowledgeDigest(old.content)!==knowledgeDigest(value.content))throw new KnowledgeError("投稿内の共有対象・資料が変わりました",409,"CONFLICT");return;}
           if(kind==="entity")await put(kind,value.id,knowledgeEntityContentSchema.parse(value.content),1,cmd.reason);else await put(kind,value.id,knowledgeSourceContentSchema.parse(value.content),1,cmd.reason);
         }
+        // Serialize identical KG bridges across independently accepted submissions.
+        for(const e of [...(cmd.legacyEntities??[])].sort((a,b)=>a.id.localeCompare(b.id))){
+          await c.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))",['legacy-entity:'+e.id]);
+          if(knowledgeDigest(e.payload)!==e.sha256)throw new KnowledgeError("旧KG原本のhashが一致しません");
+          await acceptedReference("entity",e);
+          const prior=(await c.query("SELECT * FROM knowledge75.legacy_identity WHERE kind='entity' AND id=$1",[e.id])).rows[0];
+          if(prior&&(prior.legacy_id!==e.id||prior.dataset!=='public-kg'||knowledgeDigest(prior.payload?.entity)!==knowledgeDigest((e.payload as {entity?:unknown})?.entity)))throw new KnowledgeError("既存KG対象の原本が変わりました。取得し直してください",409,"CONFLICT");
+          if(!prior)await c.query("INSERT INTO knowledge75.legacy_identity(kind,id,dataset,legacy_id,publication_revision,payload,sha256) VALUES('entity',$1,'public-kg',$1,$2,$3,$4)",[e.id,e.revision,JSON.stringify(e.payload),e.sha256]);
+          if(!entityPins.some(p=>p.id===e.id))entityPins.push({id:e.id,revision:1});
+        }
         for(const e of cmd.entities){await acceptedReference("entity",e);entityPins.push({id:e.id,revision:1});}
-        for(const s of cmd.sources)await acceptedReference("source",s);
-        for(const pin of cmd.sourcePins){const h=await head(c,"source",pin.id,"FOR SHARE");expected(h.current_revision,pin.revision);await assertRevisionPublic(c,"source",pin.id,pin.revision);}
+        for(const s of [...(cmd.legacySources??[]),...cmd.sources])await acceptedReference("source",s);
+        for(const original of [...(cmd.legacyRecords??[])].sort((a,b)=>a.id.localeCompare(b.id))){
+          await c.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))",['legacy-record:'+original.id]);
+          if(knowledgeDigest(original.payload)!==original.sha256)throw new KnowledgeError("旧KG関係のhashが一致しません");
+          const old=(await c.query("SELECT o.*,r.content FROM knowledge75.objects o JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=1 WHERE o.kind='record' AND o.id=$1 FOR SHARE OF o",[original.id])).rows[0];
+          if(old){if(old.visibility!=='public'||knowledgeDigest(old.content)!==knowledgeDigest(original.content))throw new KnowledgeError("既存の関係と旧KG原本が異なります",409,"CONFLICT");}
+          else {await validateRecord(c,{id:original.id,revision:1,content:original.content,createdAt:'',reason:cmd.reason},entityPins,true);await put('record',original.id,original.content,1,'既存KGの公開原本を同一IDで参照');}
+          const identity=(await c.query("SELECT * FROM knowledge75.legacy_identity WHERE kind='record' AND id=$1",[original.id])).rows[0];
+          const originalCanonical=(original.payload as {canonical?:Record<string,unknown>}).canonical;const previousCanonical=identity?.payload?.canonical;
+          const rawWithoutRelease=(value:Record<string,unknown>|undefined)=>{if(!value)return null;const {revision:_release,...raw}=value;void _release;return raw;};
+          if(identity&&knowledgeDigest(rawWithoutRelease(previousCanonical))!==knowledgeDigest(rawWithoutRelease(originalCanonical)))throw new KnowledgeError("旧KG関係の原本が変わりました",409,"CONFLICT");
+          if(!identity)await c.query("INSERT INTO knowledge75.legacy_identity(kind,id,dataset,legacy_id,publication_revision,payload,sha256) VALUES('record',$1,'public-kg',$1,$2,$3,$4)",[original.id,original.revision,JSON.stringify(original.payload),original.sha256]);
+          const link=(await c.query("SELECT * FROM knowledge75.legacy_links WHERE record_id=$1",[original.id])).rows[0];
+          if(!link)await c.query("INSERT INTO knowledge75.legacy_links(dataset,legacy_claim_id,record_id,imported_revision,payload,sha256) VALUES('public-kg',$1,$1,1,$2,$3)",[original.id,JSON.stringify(original.payload),original.sha256]);
+        }
+        for(const pin of cmd.sourcePins){await head(c,"source",pin.id,"FOR SHARE");await version(c,"source",pin.id,pin.revision);await assertRevisionPublic(c,"source",pin.id,pin.revision);}
+        const r=structuredClone(cmd.record.content);
+        if(cmd.expectedRevision&&cmd.preserveLegacySemantics){
+          const link=(await c.query("SELECT * FROM knowledge75.legacy_links WHERE record_id=$1",[cmd.record.id])).rows[0];
+          if(link?.payload?.claim){
+            const old=await version(c,'record',cmd.record.id,cmd.expectedRevision);
+            if(['kind','subjectId','objectId','relation','polarity','scope','times','aboutRecord','aboutTheme'].some(k=>knowledgeDigest((old.content as Record<string,unknown>)[k]??null)!==knowledgeDigest((r as Record<string,unknown>)[k]??null)))throw new KnowledgeError("旧KGの型付き限定を変更する場合は、対象の関係を保って別の情報として投稿してください",409,"TYPED_SEMANTICS_CONFLICT");
+            if(knowledgeDigest(link.payload)!==link.sha256)throw new KnowledgeError("旧KG原本のhashが一致しません");
+            r.legacySemantics={recordRevision:Number(link.imported_revision),sha256:link.sha256};
+          }
+        }
+        if(!r.subjectId&&!r.objectId&&!r.aboutRecord&&!r.aboutTheme)throw new KnowledgeError("公開後に辿れる対象・関係・テーマが必要です");
+        if(r.aboutTheme&&!cmd.themes?.some(t=>t.id===r.aboutTheme))throw new KnowledgeError("テーマへの追加と情報の公開を同時に行ってください");
         let revision=1;
         if(cmd.expectedRevision){const h=await head(c,"record",cmd.record.id,"FOR UPDATE");expected(h.current_revision,cmd.expectedRevision);await assertPublic(c,"record",cmd.record.id);revision=h.current_revision+1;}
         await validateRecord(c,{...cmd.record,revision,createdAt:"",reason:cmd.reason},entityPins,true);
-        result=await put("record",cmd.record.id,cmd.record.content,revision,cmd.reason);
+        result=await put("record",cmd.record.id,r,revision,cmd.reason);
+        for(const p of [...(cmd.themes??[])].sort((a,b)=>a.id.localeCompare(b.id))){
+          const h=await head(c,'theme',p.id,'FOR UPDATE');if(!internal)expected(h.current_revision,p.revision);await assertRevisionPublic(c,'theme',p.id,p.revision);
+          const old=await version(c,'theme',p.id,h.current_revision);
+          const recordPins=old.content.recordPins.some(v=>v.id===cmd.record.id)?old.content.recordPins.map(v=>v.id===cmd.record.id?{id:v.id,revision}:v):[...old.content.recordPins,{id:cmd.record.id,revision}];
+          let timeline=old.content.timeline?structuredClone(old.content.timeline):undefined;
+          if(timeline){
+            const previous=new Map(old.content.recordPins.map(p=>[p.id,p.revision]));
+            const definitions=(await c.query("SELECT id,revision,content->'times' AS times FROM knowledge75.revisions WHERE kind='record' AND id=ANY($1::text[])",[[...previous.keys()]])).rows.filter(v=>previous.get(v.id)===v.revision).map(v=>({id:v.id,content:{times:v.times}}));
+            timeline=appendKnowledgeTimelineRecord(timeline,cmd.record.id,r.times,definitions,knowledgeDigest);
+          }
+          const snapshot=await capture(c,recordPins,{timeline,initialView:old.content.initialView,publicOnly:true});
+          await put('theme',p.id,{...old.content,...snapshotPins(snapshot),...(timeline?{timeline}:{})},h.current_revision+1,'確認済みの投稿をテーマへ追加');
+        }
       } else if (cmd.action === "create-bundle") {
         for (const [rows, label] of [[cmd.entities, "対象"], [cmd.sources, "資料"], [cmd.records, "記録"]] as const) if (new Set(rows.map(r => r.id)).size !== rows.length) throw new KnowledgeError(label + "IDが重複しています");
         assertUnique(cmd.entityPins, "対象の観測版");

@@ -6,6 +6,8 @@ import {useCommunitiesEnabled} from "./CommunityAvailability";
 import Link from "next/link";
 import {personalNavigation,personalSection} from "../lib/client/personal-navigation";
 import InvitationBadge from "./InvitationBadge";
+import SubmissionFeedbackBadge,{AccountUpdatesBadge} from "./SubmissionFeedbackBadge";
+import {useKnowledgeSubmissionsEnabled} from "./KnowledgeSubmissionAvailability";
 import Icon from "./Icon";
 import { useMemberSession, refreshMemberIdentity, useOperationsSummary } from "../lib/client/use-member-identity";
 import { memberRequest, type MemberUser } from "../lib/client/member-api";
@@ -25,7 +27,7 @@ import MyCapsules from "./MyCapsules";
 import ProfileAvatar from './ProfileAvatar';
 import {usePublicProfilesEnabled} from './PublicProfileAvailability';
 export default function SiteHeader({ dataset, datasetNotice, memberTools = true, page = "explore", onBeforeAccountNavigation, onPrivacySettings, onLogout, accountBusy = false }: { memberTools?: boolean; datasetNotice?: { badge: string; description: string }; onBeforeAccountNavigation?: () => boolean; onPrivacySettings?: () => void; onLogout?: () => void; accountBusy?: boolean; user?: MemberUser | null; dataset: DatasetMode; page?: "explore" | "member" | "community" | "shared" | "support" | "ai-lab" }) {
-  const communitiesEnabled=useCommunitiesEnabled(),profiles=usePublicProfilesEnabled();
+  const communitiesEnabled=useCommunitiesEnabled(),profiles=usePublicProfilesEnabled(),submissions=useKnowledgeSubmissionsEnabled();
   const { locale, setLocale, storageError: languageError } = useUiLocale();
   const ui = explorerLabels(locale), text = siteLabels(locale), data = { ...datasetLabels(dataset, locale), ...datasetNotice };
   const identity = useMemberSession();
@@ -43,7 +45,7 @@ export default function SiteHeader({ dataset, datasetNotice, memberTools = true,
   const accountMenu = useRef<HTMLDetailsElement>(null);
   const siteMenu = useRef<HTMLDetailsElement>(null);
   const hash=usePersonalHash();const selected=page==="member"||page==="community"?personalSection(page==="member",hash):undefined;
-  const groups=personalNavigation(locale,identity.status!=="guest",communitiesEnabled,profiles,currentUser?.profile?.handle).sort((a,b)=>Number(b.items.some(i=>i.id==="capsules"))-Number(a.items.some(i=>i.id==="capsules")));
+  const groups=personalNavigation(locale,identity.status!=="guest",communitiesEnabled,profiles,currentUser?.profile?.handle,submissions).sort((a,b)=>Number(b.items.some(i=>i.id==="capsules"))-Number(a.items.some(i=>i.id==="capsules")));
   const [returnHref, setReturnHref] = useState("/");
   // Lab returns use a document navigation so URL/revision-bound Graph pan can
   // verify the lab referrer, just as the former dedicated return link did.
@@ -111,12 +113,12 @@ export default function SiteHeader({ dataset, datasetNotice, memberTools = true,
       <details hidden={!memberTools} className={`${styles.settings} ${styles.accountMenu}`} data-floating-menu ref={accountMenu} onToggle={event=>{if(event.currentTarget.open){if(menu.current)menu.current.open=false;if(siteMenu.current)siteMenu.current.open=false;}}}>
         <summary aria-label={locale==='en'?'Account menu':'アカウントメニュー'} aria-description={currentUser?text.signedInAs(displayName):undefined} title={currentUser?text.signedInAs(displayName):text.accountLink} data-signed-in={currentUser?'true':identity.status==='guest'?'false':undefined}>
           {currentUser?mark:<Icon name="person"/>}<span className={styles.accountLabel}>{currentUser?displayName:identity.status==='guest'?(locale==='en'?'Account':'アカウント'):identity.error?(locale==='en'?'Unavailable':'確認失敗'):(locale==='en'?'Checking…':'確認中…')}</span>
-          {currentUser&&communitiesEnabled&&<InvitationBadge/>}<Icon name="chevron"/>
+          {currentUser&&<AccountUpdatesBadge invitationsEnabled={communitiesEnabled}/>}<Icon name="chevron"/>
           {!currentUser&&identity.status!=='guest'&&<span className={styles.srOnly} role="status">{identity.error?(locale==='en'?'Account unavailable':'認証確認に失敗'):(locale==='en'?'Checking account…':'認証を確認中…')}</span>}
         </summary>
         <div className={styles.settingsPanel}>
           {currentUser?<><p className={styles.accountIdentity}><strong>{displayName}</strong><span>{text.signedIn}</span></p>
-          <nav aria-label={text.accountNavigation} className={styles.accountLinks}>{groups.map(g=><section key={g.label}><h2>{g.label}</h2>{g.items.map(i=><Link key={i.id} href={i.href} aria-label={i.label} aria-current={selected===i.id?'page':undefined} onClick={closeAccount}><Icon name={i.icon}/>{i.label}{i.id==='invitations'&&<InvitationBadge/>}</Link>)}</section>)}</nav>
+          <nav aria-label={text.accountNavigation} className={styles.accountLinks}>{groups.map(g=><section key={g.label}><h2>{g.label}</h2>{g.items.map(i=><Link key={i.id} href={i.href} aria-label={i.label} aria-current={selected===i.id?'page':undefined} onClick={closeAccount}><Icon name={i.icon}/>{i.label}{i.id==='invitations'&&<InvitationBadge/>}{i.id==='knowledge-submissions'&&<SubmissionFeedbackBadge/>}</Link>)}</section>)}</nav>
           {currentUser.siteOperator&&<Link href="/operations" onClick={closeAccount}>{operationsLabel}{operationsBadge}</Link>}
           <button className={styles.logout} disabled={accountBusy||signingOut} onClick={()=>void signOut()}>{text.logout}</button>{logoutError&&<p role="alert">{text.logoutFailed}</p>}
           </>:identity.status==='guest'?<Link href="/member" onClick={closeAccount}><Icon name="person"/>{locale==='en'?'Sign in / Account':'ログイン・アカウント'}</Link>:<p role="status">{identity.error?(locale==='en'?'Account verification failed.':'認証を確認できませんでした。'):(locale==='en'?'Checking your account…':'アカウントを確認しています…')}{identity.error&&<button onClick={()=>void refreshMemberIdentity(true).catch(()=>{})}>{locale==='en'?'Retry':'再試行'}</button>}</p>}

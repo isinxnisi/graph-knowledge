@@ -3,7 +3,7 @@ import path from "node:path";
 import { readFile } from "node:fs/promises";
 import type { Pool, PoolClient, QueryResultRow } from "pg";
 import { z } from "zod";
-import { knowledgeSubmissionCommandSchema, knowledgeSubmissionContentSchema, knowledgeSubmissionCaptureSchema,knowledgePublicCaptureSchema, type KnowledgeSubmission } from "../domain/knowledge-submission";
+import { knowledgeSubmissionCommandSchema, knowledgeSubmissionContentSchema, knowledgeSubmissionCaptureSchema,knowledgePublicCaptureSchema,knowledgeSelectionCaptureSchema, type KnowledgeSubmission } from "../domain/knowledge-submission";
 import type { DatasetMode } from "../domain/dataset";
 import { memberCapsuleSchema } from "../domain/member-capsule";
 import { captureSubmissionCapsule } from "../domain/knowledge-submission-capsule";
@@ -42,7 +42,7 @@ const dto = (row: QueryResultRow): KnowledgeSubmission => ({
   id: row.id, revision: row.current_revision, version: row.state_version, state: row.state,
   content: knowledgeSubmissionContentSchema.parse(row.content), digest: row.digest,
   createdAt: stamp(row.created_at), updatedAt: stamp(row.updated_at),
-  ...(row.source_capsule?.captured?{context:{entities:row.source_capsule.captured.entities,sources:row.source_capsule.captured.sources}}:{}),
+  ...((row.reference_context??row.source_capsule?.captured)?{context:row.reference_context??row.source_capsule.captured}:{}),
   origin: row.source_capsule?.capsuleId ? {capsuleId:row.source_capsule.capsuleId,capsuleRevision:row.source_capsule.capsuleRevision,title:row.source_capsule.title,keys:row.source_capsule.keys} : null,
 });
 
@@ -69,7 +69,7 @@ export function createKnowledgeSubmissionService(pool: Pool, options?: { memberS
     catch (error) { await c.query("ROLLBACK"); throw error; } finally { c.release(); }
   }
   async function read(c: PoolClient, ownerId: string, id: string) {
-    const row = (await c.query(`SELECT s.*,r.content,r.digest,to_jsonb(r)->'source_capsule' AS source_capsule FROM ${schema}.submissions s
+    const row = (await c.query(`SELECT s.*,r.content,r.digest,to_jsonb(r)->'source_capsule' AS source_capsule,to_jsonb(r)->'reference_context' AS reference_context FROM ${schema}.submissions s
       JOIN ${schema}.submission_revisions r ON r.submission_id=s.id AND r.revision=s.current_revision
       WHERE s.owner_id=$1 AND s.id=$2`, [ownerId, id])).rows[0];
     if (!row) throw new KnowledgeError("投稿がありません", 404, "NOT_FOUND");
@@ -91,7 +91,7 @@ export function createKnowledgeSubmissionService(pool: Pool, options?: { memberS
     async execute(ownerId: string, raw: unknown, publicCapture?:{content:KnowledgeSubmission["content"];captured:unknown}): Promise<KnowledgeSubmission> {
       ownerId = owner(ownerId);
       if (Buffer.byteLength(JSON.stringify(raw)) > 128_000) throw new KnowledgeError("投稿が128KBを超えています", 413, "TOO_LARGE");
-      let input = knowledgePublicCaptureSchema.safeParse(raw).success?knowledgePublicCaptureSchema.parse(raw):knowledgeSubmissionCaptureSchema.safeParse(raw).success ? knowledgeSubmissionCaptureSchema.parse(raw) : knowledgeSubmissionCommandSchema.parse(raw);
+      let input = knowledgeSelectionCaptureSchema.safeParse(raw).success?knowledgeSelectionCaptureSchema.parse(raw):knowledgePublicCaptureSchema.safeParse(raw).success?knowledgePublicCaptureSchema.parse(raw):knowledgeSubmissionCaptureSchema.safeParse(raw).success ? knowledgeSubmissionCaptureSchema.parse(raw) : knowledgeSubmissionCommandSchema.parse(raw);
       const digest = knowledgeDigest(raw);
       return transaction(ownerId, async c => {
         // Serializes idempotency and each member's create/update requests.
@@ -102,10 +102,10 @@ export function createKnowledgeSubmissionService(pool: Pool, options?: { memberS
           return previous.response;
         }
         let sourceCapsule: unknown = null;
-        if(input.action === "capture-public") {
+        if(input.action === "capture-public" || input.action === "capture-selection") {
           if(!publicCapture)throw new KnowledgeError("公開原本のサーバー確認が必要です",403,"FORBIDDEN");
           if(Buffer.byteLength(JSON.stringify(publicCapture))>128_000)throw new KnowledgeError("取得版が大きすぎます",413,"TOO_LARGE");
-          sourceCapsule={kind:"public-record",recordId:input.recordId,recordRevision:input.recordRevision,captured:publicCapture.captured};
+          sourceCapsule={kind:input.action==='capture-public'?"public-record":"selection",...(input.action==='capture-public'?{recordId:input.recordId,recordRevision:input.recordRevision}:{}),captured:publicCapture.captured};
           input={action:"save",id:input.id,requestId:input.requestId,expectedVersion:0,content:publicCapture.content};
         }
         if (input.action === "capture") {
@@ -116,6 +116,7 @@ export function createKnowledgeSubmissionService(pool: Pool, options?: { memberS
           const capsule=memberCapsuleSchema.parse({id:row.id,schemaVersion:row.schema_version,revision:Number(row.revision),createdAt:stamp(row.created_at),updatedAt:stamp(row.updated_at),content:row.content});
           let captured;
           try {captured=captureSubmissionCapsule(capsule,input.keys);}catch(e){if(e instanceof z.ZodError&&e.issues.some(i=>i.code==="too_big"))throw new KnowledgeError("選択を少なくしてください",413,"TOO_LARGE");throw new KnowledgeError("選択内容を確認してください",400,"INVALID_SELECTION");}
+          if(publicCapture)captured={...captured,content:publicCapture.content,sourceCapsule:{...captured.sourceCapsule,captured:publicCapture.captured as typeof captured.sourceCapsule.captured}};
           sourceCapsule=captured.sourceCapsule;
           if(Buffer.byteLength(JSON.stringify(captured))>128_000)throw new KnowledgeError("選択を少なくしてください",413,"TOO_LARGE");
           input={action:"save",id:input.id,requestId:input.requestId,expectedVersion:0,content:captured.content};
@@ -126,6 +127,7 @@ export function createKnowledgeSubmissionService(pool: Pool, options?: { memberS
         if (seed && seed.state_version !== input.expectedVersion) throw new KnowledgeError("投稿が更新されています", 409, "VERSION_CONFLICT");
         if (seed?.state === "cancelled") throw new KnowledgeError("取消済みの投稿です", 409, "CANCELLED");
         if(options?.memberStore && !sourceCapsule && seed)sourceCapsule=(await c.query(`SELECT source_capsule FROM ${schema}.submission_revisions WHERE submission_id=$1 AND revision=$2`,[input.id,seed.current_revision])).rows[0]?.source_capsule??null;
+        if(input.action==='save'&&publicCapture)sourceCapsule={...((sourceCapsule as object|null)??{kind:"references"}),captured:publicCapture.captured};
         if(options?.memberStore){
           const n=Number((await c.query(`SELECT count(*) AS n FROM ${schema}.submission_requests WHERE owner_id=$1 AND created_at>clock_timestamp()-interval '10 minutes'`,[ownerId])).rows[0].n);
           if(n>=120&&input.action!=="cancel")throw new KnowledgeError("少し待ってから操作してください",429,"RATE_LIMITED");
@@ -143,7 +145,7 @@ export function createKnowledgeSubmissionService(pool: Pool, options?: { memberS
             await c.query(`INSERT INTO ${schema}.submissions(id,owner_id,current_revision,state_version,state) VALUES($1,$2,1,1,'draft')`, [input.id, ownerId]);
           } else await c.query(`UPDATE ${schema}.submissions SET current_revision=$2,state_version=state_version+1,state='draft',updated_at=clock_timestamp() WHERE id=$1`, [input.id, revision]);
           if(options?.memberStore){
-            await c.query(`INSERT INTO ${schema}.submission_revisions(submission_id,revision,raw_input,content,digest,source_capsule) VALUES($1,$2,$3,$4,$5,$6)`,[input.id,revision,input.action==="save" && "content" in (raw as object) ? (raw as {content:unknown}).content : input.content,input.content,knowledgeDigest(input.content),sourceCapsule]);
+            await c.query(`INSERT INTO ${schema}.submission_revisions(submission_id,revision,raw_input,content,digest,source_capsule,reference_context) VALUES($1,$2,$3,$4,$5,$6,$7)`,[input.id,revision,input.action==="save" && "content" in (raw as object) ? (raw as {content:unknown}).content : input.content,input.content,knowledgeDigest(input.content),sourceCapsule,publicCapture?.captured??(sourceCapsule as {captured?:unknown}|null)?.captured??null]);
           }else await c.query(`INSERT INTO ${schema}.submission_revisions(submission_id,revision,raw_input,content,digest) VALUES($1,$2,$3,$4,$5)`,[input.id,revision,(raw as {content:unknown}).content,input.content,knowledgeDigest(input.content)]);
         } else {
           if (input.action === "submit") {
