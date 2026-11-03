@@ -22,6 +22,8 @@
 
 ## Capsule文書と編集の現行契約（2026-10-29）
 
+2026-11-03の現行追加：新しい原記録／Themeの不変baselineと作者文書を分け、年表・関係図・時期なし情報を会員Capsuleへ保存する。共有時は公開原本の指定版と照合し、閲覧ごとに現在停止を確認する。共有HTML・JSON・画像・版付き会話・固定掲載・通報内容確認を同じ認可へ接続する。[U4契約](design/KNOWLEDGE_CAPSULE_U4.md)／[β検証・配置](verification/KNOWLEDGE_CAPSULE_U4_SHARING_20261103.md)。main／3200／HTTPS β／3276へ反映済み、この追加分の本番切替はU8。以下は前段の履歴。
+
 Issue #63 / `capsule-contribution-001 / r02`。[Capsule文書・Graph上の編集](design/CAPSULE_EDITOR.md)を、今回の内容・作成・編集・保存・固定版共有の正本とする。実装・クラウド検証を完了し、既存3200／HTTPS beta／本番VPSは未反映。検証結果と反映状態は[専用記録](verification/CAPSULE_EDITOR_20261029.md)、既存配置への接続は[runbook](runbooks/CAPSULE_EDITOR_RELEASE.md)を参照する。
 
 新documentにはKG由来／独自の対象と関係、自由テキスト、根拠、配置を保存する。KG参照ID、図の要素キー、利用者の編集値、取り込み時の元断面を分ける。作成時に取得済みだった範囲を固定し、未取得・部分取得・記録した条件内での取得完了を区別する。保存した文書・配置を再閲覧し、現在KGとの比較は明示操作とする。本文・根拠を含む断面があってもKG全体や任意時点の完全な履歴を保証するものではない。

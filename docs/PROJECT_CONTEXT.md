@@ -1,3 +1,5 @@
+2026-11-03、U4の基本接続を完了。年表付きCapsuleの明示保存・編集・取得元比較に、同じURLへの共有反映・旧版コメント・固定コミュニティ掲載・年表OGP・現在の取得元停止を接続し、main／3200／HTTPS β／3276へ反映。[現在の実装・検証・配置・制約](verification/KNOWLEDGE_CAPSULE_U4_SHARING_20261103.md)を優先する。一般投稿AI審査はU5、収集はU6、本番切替はU8に残す。以下は各段階の履歴。
+
 2026-11-03、U4の年表付きCapsule・時期フォーム・任意年表追加をmain／3200／HTTPS βへ段階反映。知識は専用PG／Neo4jへ実テーマ3件のみ、既存会員・Capsule・コミュニティ・通常KG・認証・AI artifactを保持。既存実Googleセッションで本人保存・再訪・時期編集を確認。新形式共有・訂正の明示取込は未完了、本番VPS未変更。[現在の配置・保全・残件](verification/KNOWLEDGE_CAPSULE_U4_BETA_20261103.md)。以下は各時点の履歴。
 
 2026-11-02、[通常探索・テーマ・年表U3](design/KNOWLEDGE_EXPLORER_U3.md)を独立branch／3276へ実装。年表を通常Explorer中央の表示方式とし、年表Themeでは同じ場所で年表を主役にし、枠内アイコンで関係図を開閉する。時期なし情報もテーマの主内容として共通欄で読み、元探索の状態とTheme固定版を分けて保持する。Record入力・訂正の再開と資料再利用、現行Webbテーマの汎用観測移入を接続し、旧16テーマ・18Capsule・9共有を保持。確認結果・配置資材・制約は[U3検証記録](verification/KNOWLEDGE_EXPLORER_U3_20261102.md)を参照。次はU4の既存会員Capsule接続。main／3200／HTTPS β／本番・既存Workerは未更新。以下は各工程の履歴。

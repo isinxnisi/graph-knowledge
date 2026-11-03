@@ -1,5 +1,7 @@
 # Capsuleを編集する体験と保存の契約
 
+2026-11-03追記：新しい原記録／Themeと年表付きCapsuleの会員保存・編集・明示取込・同URL共有・固定掲載・現在停止・年表OGPをβへ統合した。[U4の契約](KNOWLEDGE_CAPSULE_U4.md)と[検証・現配置](../verification/KNOWLEDGE_CAPSULE_U4_SHARING_20261103.md)を参照。この追加分の本番VPS反映はU8に残り、下記の正式公開済みという記録は従来Capsuleの範囲。
+
 更新日: 2026-10-30 / Issue #63 / `capsule-contribution-001 / r03`
 
 状態: 初期実装を基礎に、作成・閲覧・再編集を共通の広い作業面へ統一する現行契約。以下のUI・保存形式・コメント既定値は実装対象として反映した内容であり、それだけで実環境での検証やユーザーによる体験の受入を意味しない。今回の配置・実操作・未確認事項は[2026-10-30のUX・beta検証記録](../verification/CAPSULE_EDITOR_UX_BETA_20261030.md)に分けて記録する。過去の[2026-10-29の反映](../verification/CAPSULE_EDITOR_BETA_20261029.md)は今回のUI品質の受入証拠にしない。

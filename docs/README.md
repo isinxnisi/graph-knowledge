@@ -1,3 +1,4 @@
+- U4基本接続完了（2026-11-03）：[年表Capsuleの同URL共有・版付き会話・固定掲載・現在停止・OGP・配置検証](verification/KNOWLEDGE_CAPSULE_U4_SHARING_20261103.md)。main／3200／HTTPS β／3276へ反映。現行状態はこちらを優先。一般投稿AI審査・収集切替・本番公開は後続。
 - U4訂正接続（2026-11-03）：[原記録／テーマ構成の明示取込・β検証・配置と復旧](verification/KNOWLEDGE_CAPSULE_U4_UPDATES_20261103.md)。独自名・注記・時期・配置・除外を保持する。共有／停止／年表OGPの総合接続は残る。
 - U4着手時の記録：[Capsuleの新断面・編集連動・早期β統合](design/KNOWLEDGE_CAPSULE_U4.md)／[保存・編集の中間検証](verification/KNOWLEDGE_CAPSULE_U4_SAVE_20261103.md)。現在の進捗は上記の訂正接続記録を優先する。
 - U3のTOP調整（2026-11-02）：[既存デザイン・配置順・初期HTML読取](verification/KNOWLEDGE_EXPLORER_U3_TOP_20261102.md)。既存「ほかの対象から探す」を保持し、テーマ検索も既存の一覧表現を共有する。
