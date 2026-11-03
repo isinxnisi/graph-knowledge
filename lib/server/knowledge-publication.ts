@@ -287,6 +287,12 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
       const q=z.strictObject({generation:generationSchema.optional(),entityId:z.string().min(1).max(120),direction:z.enum(["both","out","in"]).default("both"),limit:z.number().int().min(1).max(50).default(20),cursor:z.string().max(2048).optional()}).parse(raw);
       const cursor=decodeCursor(q.cursor);const actual=await generation(c,q.generation??cursor?.generation);const center=await entity(c,actual.id,q.entityId);
       const filter=knowledgeDigest({kind:"neighbors",entityId:q.entityId,direction:q.direction,limit:q.limit});if(cursor&&(cursor.generation!==actual.id||cursor.filter!==filter))throw new KnowledgeError("近傍条件と続きの取得条件が一致しません",400,"CURSOR_MISMATCH");
+      // A zero degree is authoritative in the immutable public Record index.
+      // Note-only subjects must not wait for a graph connection that cannot add
+      // any result. Positive relation reads still verify their Neo4j generation.
+      const endpoint=q.direction==='out'?'r.subject_id=$2':q.direction==='in'?'r.object_id=$2':'(r.subject_id=$2 OR r.object_id=$2)';
+      const hasIndexedRelation=Boolean((await c.query(`SELECT 1 FROM knowledge75.publication_records r WHERE r.generation=$1 AND ${endpoint} AND r.id>$3 AND r.body#>>'{record,content,kind}'='relation' AND ${readableSql()} LIMIT 1`,[actual.id,q.entityId,cursor?.after??''])).rowCount);
+      if(!hasIndexedRelation)return {generation:actual.id,records:[],entities:[],center,hasMore:false,nextCursor:null};
       const denied=await deniedIds(c,actual.id);
       const ids=await graphRead(actual,async tx=>{const arrow=q.direction==="out"?"-[r:K75U2_REL]->":q.direction==="in"?"<-[r:K75U2_REL]-":"-[r:K75U2_REL]-";return (await tx.run(`MATCH (a:K75U2Entity {generation:$generation,id:$id})${arrow}(b:K75U2Entity {generation:$generation}) WHERE r.generation=$generation AND r.recordId>$after AND NOT r.recordId IN $denied RETURN DISTINCT r.recordId AS id ORDER BY id LIMIT $limit`,{generation:actual.id,id:q.entityId,after:cursor?.after??"",denied,limit:neo4j.int(q.limit+1)})).records.map(r=>String(r.get("id")));});
       const hasMore=ids.length>q.limit;const selected=ids.slice(0,q.limit);const records=await allowedRows(c,actual.id,selected);

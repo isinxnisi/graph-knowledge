@@ -19,3 +19,10 @@ it("opens captured context initially and retains the user disclosure choice on f
  expect(details.open).toBe(true);fireEvent.click(screen.getByText("投稿する箇所"));await waitFor(()=>expect(details.open).toBe(false));
  view.rerender(<KnowledgeSubmissionGraph content={{...content,title:"改訂"}} context={context}/>);expect(details.open).toBe(false);
 });
+
+it("keeps a theme-only contribution compact without a blank graph or a fabricated subject",async()=>{
+ const c={...content,items:[{...content.items[0],operation:"add-information" as const,about:{kind:"theme" as const,id:"theme",revision:1},record:{...content.items[0].record,subjectId:null,aboutTheme:"theme",assertion:"このテーマの背景"}}]};
+ render(<KnowledgeSubmissionGraph content={c} context={{entities:[],sources:[],themes:[{id:"theme",revision:1,content:{title:"テーマ",description:"",recordPins:[{id:"old",revision:1}],entityPins:[],sourcePins:[],mappingPins:[],initialView:"timeline"}}]}}/>);
+ const details=screen.getByLabelText("投稿する内容と既存の知識") as HTMLDetailsElement;expect(details.open).toBe(false);
+ fireEvent.click(screen.getByText("投稿する箇所"));await waitFor(()=>expect(details.open).toBe(true));expect(screen.getByText("このテーマの背景")).toBeTruthy();expect(screen.queryByTestId("proposal-canvas")).toBeNull();
+});

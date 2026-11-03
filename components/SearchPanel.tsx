@@ -1,5 +1,5 @@
 "use client";
-import KnowledgeEntitySearchResults from "./KnowledgeEntitySearchResults";
+import KnowledgeEntitySearchResults,{type KnowledgeEntitySearchMatches} from "./KnowledgeEntitySearchResults";
 import Icon from "./Icon";
 import { trackPublicEvent } from "../lib/client/public-events";
 import { useUiLocale } from "../lib/client/ui-locale";
@@ -18,6 +18,8 @@ import panelStyles from "./SearchPanel.module.css";
 
 export default function SearchPanel({ onChoose, onDiscover, placeholder = "例：青葉ハル" }: { placeholder?: string; onChoose: (entity: EntitySummary) => void; onDiscover?: (criteria: DiscoveryCriteria) => void }) {
   const { locale } = useUiLocale(), text = searchLabels(locale), discovery = discoverySearchLabels(locale);
+  const [commonMatches,setCommonMatches]=useState<KnowledgeEntitySearchMatches|null>(null);
+  const onCommonMatches=useCallback((value:KnowledgeEntitySearchMatches)=>setCommonMatches(value),[]);
   const [kind, setKind] = useState<SearchKind | null>(null), [q, setQ] = useState("");
   const [result, setResult] = useState<EntitySearchResponse | null>(null), [loading, setLoading] = useState(false), [error, setError] = useState<string | null>(null), [composing, setComposing] = useState(false);
   const hasKeyword = !!q.trim(), discoverMode = !hasKeyword && !!onDiscover;
@@ -25,7 +27,7 @@ export default function SearchPanel({ onChoose, onDiscover, placeholder = "例�
   function clearSearch() {
     if (timer.current) clearTimeout(timer.current);
     pending.current?.abort(); pending.current = null;
-    setLoading(false); setResult(null); setError(null);
+    setLoading(false); setResult(null); setCommonMatches(null); setError(null);
   }
   const runSearch = useCallback(async () => {
     if (timer.current) clearTimeout(timer.current);
@@ -40,6 +42,9 @@ export default function SearchPanel({ onChoose, onDiscover, placeholder = "例�
     if (q.trim() && !composing) timer.current = setTimeout(() => void runSearch(), 250);
     return () => { if (timer.current) clearTimeout(timer.current); pending.current?.abort(); };
   }, [q, kind, composing, runSearch]);
+  const visibleLegacy=result?.items.slice(0,onDiscover?5:10)??[];
+  const commonIds=commonMatches?.q===q&&commonMatches.kind===kind?commonMatches.ids:[];
+  const candidateCount=new Set([...visibleLegacy.map(v=>v.id),...commonIds]).size;
   function submit(event: FormEvent) { event.preventDefault(); if (composing) return; if (!q.trim() && onDiscover) onDiscover({ q: "", kind: null, presentation: "explore" }); else void runSearch(); }
   return <section className={styles.panel} aria-labelledby="search-title">
     <h2 id="search-title"><Icon name="search" />{text.title}</h2>
@@ -52,11 +57,12 @@ export default function SearchPanel({ onChoose, onDiscover, placeholder = "例�
       </div></div>
       <button type="submit" disabled={loading} aria-haspopup={discoverMode ? "dialog" : undefined} data-discovery-launch="search"><Icon name={discoverMode ? "graph" : "search"} />{loading ? text.submitting : discoverMode ? text.discoverConnections : text.searchByName}</button>
     </form>
-    <KnowledgeEntitySearchResults q={q} kind={kind} excludeIds={result?.items.map(e=>e.id)}/>
+    <KnowledgeEntitySearchResults q={q} kind={kind} excludeIds={result?.items.map(e=>e.id)} onMatches={onCommonMatches}/>
     {error && <p role="alert" className={styles.error}>{explorerMessage(error, locale)}</p>}
     {loading && <p role="status">{text.loading}</p>}
     {!result && !loading && !error && <p className={styles.muted}>{text.help}</p>}
-    {result && <><p role="status">{text.count(Math.min(result.items.length, onDiscover ? 5 : 10))}</p>
+    {(result||commonIds.length>0)&&<p role="status">{text.count(candidateCount)}</p>}
+    {result && <>
       <EntitySearchResults id="entity-suggestions" items={result.items.slice(0, onDiscover ? 5 : 10)} locale={locale} onChoose={onChoose} />
       {onDiscover ? <button data-discovery-launch="more" className={searchStyles.entry} onClick={() => onDiscover({ q, kind })}>{discovery.more}<Icon name="chevron" /></button> : result.hasMore && <p className={styles.muted}>{text.more}</p>}
     </>}
