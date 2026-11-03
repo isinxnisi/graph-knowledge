@@ -1,16 +1,18 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-03 15:55:57 JST。
+確認: 2026-11-03 15:58:18 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
-**ready**／停止モード: なし
+**interval**／停止モード: なし
 
 日本時間: 03:00〜07:00、09:00〜12:00、15:00〜18:00。ジョブ間10分休憩。
 
-次の開始候補: 開始可能
+次の開始候補: 2026-11-03 17:03:11 JST
 
 最後の操作SHA-256: 1cef6cdd4cb0e4eca8b60a3ae51c6b25a96271b01ffcac788f41f36a5439bf79
+
+処理中: issue-25-manga23-20261019-repair1
 
 ChatGPTは[未承認の操作雛形](control-template.json)を読み、運営者が明示した操作だけを controls/plunode-wsl/ID.json に新規登録する。
 
@@ -27,9 +29,8 @@ Issue確認結果:
     "checkedAt": "2026-11-03T05:02:45+00:00"
   },
   "collection-control/issue-sources/16.json": {
-    "status": "held",
-    "reason": "<3>WSL (3229005 - ) ERROR: UtilAcceptVsock:273: accept4 failed 110\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-03T06:28:51+00:00"
+    "status": "registered: issue-16-adachi-three-20261025",
+    "checkedAt": "2026-11-03T06:56:45+00:00"
   },
   "collection-control/issue-sources/5.json": {
     "status": "registered: issue-5-dot-tezuka-adolf-20261025",
