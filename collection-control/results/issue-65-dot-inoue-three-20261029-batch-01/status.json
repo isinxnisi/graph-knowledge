@@ -82,12 +82,12 @@
   },
   "requestSha256": "a2c1fede389c9278c85264f5fa923d8971101ed8f1477ff3bcd08907e14c939e",
   "kind": "collect-review",
-  "phase": "retry-wait",
-  "generation": 1976,
+  "phase": "waiting-lock",
+  "generation": 1977,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-03T07:59:24+00:00",
+  "updatedAt": "2026-11-03T08:31:09+00:00",
   "result": {
     "jobId": "issue-65-dot-inoue-three-20261029-r0001-3cd6a6374d327ea4",
     "collectionUnchanged": false,
@@ -114,5 +114,5 @@
     "datasets/collection-decision-drafts/issue-65-dot-inoue-three-20261029-batch-01/96e87fc9f5241666aa1c367f5c63eebaa3bacc668b0e7a237ed1e90eb5328967/issue-65-dot-inoue-three-20261029-batch-01-normal-draft.json"
   ],
   "retryAt": 1793693017.4037738,
-  "message": "Command '['git', '-c', 'http.version=HTTP/2', '-c', 'http.lowSpeedLimit=1', '-c', 'http.lowSpeedTime=20', '-c', 'credential.helper=!\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\"', '-c', 'credential.interactive=never', '--git-dir=/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/control.git', 'push', 'origin', 'bc4f2326e48cad5daee93dbeedd7fb83b89c0e9c:refs/heads/codex/collection-control']' timed out after 90 seconds"
+  "message": "共通ロック使用中。次回に再確認する。"
 }
