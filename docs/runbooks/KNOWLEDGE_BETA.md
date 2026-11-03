@@ -1,3 +1,5 @@
+2026-11-04 現在：U5相談・運営例外まで反映。source `d739bf15`、build `Grzh6GQvdhq0j0nBArhr2`、会員000〜026（27件）、知識001/002/004。[最新の実操作・backup・制約](../verification/KNOWLEDGE_APPEALS_U5_20261104.md)。以下の配置番号・残件は各段階時点の記録。
+
 2026-11-03 投稿フォーム追補：現在のWeb sourceは `b204e2b8`、buildは `uZweEcFz-KDdbAVln1V3N`。入力案内・人物の草稿経路・2列表示・通常本人取得5分／通信失敗時の入力保持を3200とHTTPS βへ反映。DB追加なし、ledger23件。復旧互換buildは `rbLDeOtrWsJT7AL8c8eLV`。実操作・トンネル復旧・GitHub認証の記録は[フォームUX修正](../verification/KNOWLEDGE_SUBMISSION_FORM_UX_20261103.md)を優先する。以下のsource／buildは各工程時点の記録。
 
 2026-11-03 U5：本人の新しい公開依頼から、Gemini・原資料の引用照合・現在参照確認・自動受理・公開先表示・元の公開版からの訂正を接続。旧AI確認のみの依頼を自動公開しない。U5全体は未完了で、次は異議・運営例外対応と総合確認。指定β本人のみ、3276はU4、本番VPS・共通Kevは変更しない。[現行契約](../design/KNOWLEDGE_SUBMISSIONS_U5.md)／[最新の実装・検証・配置](../verification/KNOWLEDGE_ACCEPTANCE_U5_20261103.md)。以下は各時点の履歴。
