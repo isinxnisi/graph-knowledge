@@ -56,9 +56,14 @@ it("年表カードは点と期間を区別し、未定時期・別軸を混同�
  if(process.env.CAPSULE_TIMELINE_PREVIEW_PROOF)await writeFile(process.env.CAPSULE_TIMELINE_PREVIEW_PROOF,bytes);
  const period=value.document!.knowledge!.snapshot.records.find(r=>r.id==="period")!;
  period.content.times[0].time={kind:"calendar",from:"2021-12-28",startLatest:"2021-12-31",endEarliest:"2022-01-03",to:"2022-01-04",meaning:"duration",label:"境界が不確か"};
- const uncertain=capsulePreviewModel(cap).timeline!;const interval=uncertain.items.find(i=>i.id==="period:t")!;
+ const uncertain=capsulePreviewModel(cap).timeline!;const interval=uncertain.items.find(i=>i.id===JSON.stringify(["period","t"]))!;
  expect(interval.startLatest).toBeGreaterThan(interval.y);expect(interval.endEarliest).toBeLessThan(interval.end);
  expect((await(await capsuleShareImage(cap)).arrayBuffer()).byteLength).toBeGreaterThan(10000);
+ // Overlapping boundary windows promise no definite interior; same-year
+ // durations still have extent rather than masquerading as an occurrence.
+ period.content.times[0].time={kind:"calendar",from:"1991",to:"1991",meaning:"duration",startLatest:"1991-09",endEarliest:"1991-03",label:"境界の幅が重なる期間"};
+ expect((await(await capsuleShareImage(cap)).arrayBuffer()).byteLength).toBeGreaterThan(10000);
+
  const cycle=structuredClone(cap),k=cycle.content.document!.knowledge!;
  k.snapshot.records=[{...k.snapshot.records[0],content:{...k.snapshot.records[0].content,times:[{id:"cycle",time:{kind:"cycle",axis:"一日",period:24,unit:"時",from:20,to:4,wrap:true,label:"夜間"}}]}}];
  k.snapshot.timeline={version:1,axes:[{id:"day",kind:"cycle",label:"一日"}],placements:[{axisId:"day",recordId:"point",timeId:"cycle"}],insets:[]};

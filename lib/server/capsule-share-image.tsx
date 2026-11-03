@@ -22,16 +22,16 @@ export async function capsuleShareImage(capsule:MemberCapsule){
           <line x1="140" x2="140" y1="64" y2="440" stroke="#cedbe1" strokeWidth="1"/>
           {model.timeline.ticks.map(t=><circle key={t.label} cx="140" cy={t.y} r="3" fill="#6b8295"/>)}
           {model.timeline.items.map((item,i)=>{
-            const point=item.y===item.end,uncertain=item.meaning==="occurrence-window"||item.meaning==="unclassified-range",color=point?"#ac7339":uncertain?"#81989d":"#397e89";
+            const point=item.y===item.end&&item.meaning!=="duration",end=!point&&!item.wrap&&item.y===item.end?item.end+12:item.end,start=item.startLatest??item.y,finish=item.endEarliest??end,noInterior=start>finish,uncertain=item.meaning==="occurrence-window"||item.meaning==="unclassified-range",color=point?"#ac7339":uncertain?"#81989d":"#397e89";
             return <g key={item.id}>
               {!point&&<g>
-                <line x1={item.x} x2={item.x} y1={item.startLatest??item.y} y2={item.wrap?416:item.endEarliest??item.end} stroke={color} strokeWidth="3" strokeDasharray={uncertain?"3 4":undefined}/>
+                <line x1={item.x} x2={item.x} y1={noInterior?item.y:start} y2={item.wrap?416:noInterior?end:finish} stroke={color} strokeWidth="3" strokeDasharray={uncertain||noInterior?"3 4":undefined}/>
                 {item.wrap&&<line x1={item.x} x2={item.x} y1="76" y2={item.end} stroke={color} strokeWidth="3"/>}
-                {item.startLatest!==undefined&&<line x1={item.x} x2={item.x} y1={item.y} y2={item.startLatest} stroke={color} strokeWidth="2" strokeDasharray="2 3"/>}
-                {item.endEarliest!==undefined&&<line x1={item.x} x2={item.x} y1={item.endEarliest} y2={item.end} stroke={color} strokeWidth="2" strokeDasharray="2 3"/>}
+                {!noInterior&&item.startLatest!==undefined&&<line x1={item.x} x2={item.x} y1={item.y} y2={item.startLatest} stroke={color} strokeWidth="2" strokeDasharray="2 3"/>}
+                {!noInterior&&item.endEarliest!==undefined&&<line x1={item.x} x2={item.x} y1={item.endEarliest} y2={end} stroke={color} strokeWidth="2" strokeDasharray="2 3"/>}
               </g>}
               <circle cx={item.x} cy={item.y} r={point?5:3} fill={point?color:"#fbfcfa"} stroke={color} strokeWidth="2"/>
-              {!point&&<line x1={item.x-4} x2={item.x+4} y1={item.end} y2={item.end} stroke={color} strokeWidth="2"/>}
+              {!point&&<line x1={item.x-4} x2={item.x+4} y1={end} y2={end} stroke={color} strokeWidth="2"/>}
               <path d={`M ${item.x+6} ${item.y} L 226 ${76+i*100} L 238 ${76+i*100}`} fill="none" stroke={color} strokeWidth="1"/>
             </g>;
           })}

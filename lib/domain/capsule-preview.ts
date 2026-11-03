@@ -1,6 +1,7 @@
 import type { MemberCapsule } from "./member-capsule";
 import { capsuleKnowledgeProjection } from "../client/capsule-knowledge";
 import { calendarMeaning, themeTimeLabel } from "./theme-time";
+import {calendarGraph} from "./calendar-graph";
 
 /** A small, faithful excerpt of one axis. Separate calendars/cycles are never
  * flattened into a fictitious common clock. Endpoints remain visible. */
@@ -16,16 +17,24 @@ function timelinePreview(capsule:MemberCapsule) {
   const order=main?.kind==="qualitative"?main.order:undefined;
   const compare=(a:string,b:string)=>order?order.indexOf(a)-order.indexOf(b):main?.kind==="cycle"?Number(a)-Number(b):a.localeCompare(b);
   const selected=candidates.slice().sort((a,b)=>compare(String(a.time.from),String(b.time.from))).slice(0,4);
-  const keys=[...new Set(selected.flatMap(r=>[String(r.time.from),String(r.time.to??r.time.from),...(r.time.kind==="calendar"?[r.time.startLatest,r.time.endEarliest].filter((s):s is string=>!!s):r.time.kind==="cycle"&&r.time.wrap?["0",String(r.time.period)]:[])]))].sort(compare);
-  const y=(key:string)=>76+(keys.indexOf(key)/Math.max(1,keys.length-1))*340;
-  return {axis:main?.label??"年月日・期間",total:rows.length,untimed:snapshot.records.filter(r=>!r.content.times.length).length,
-    ticks:keys.map(key=>({label:key,y:y(key)})),
-    items:selected.map((row,i)=>({id:row.record.id+":"+row.timeId,title:row.record.content.assertion,label:themeTimeLabel(row.time),
-      meaning:row.time.kind==="calendar"?calendarMeaning(row.time):row.time.to!==undefined?"duration":"point",
-      x:154+i*16,y:y(String(row.time.from)),end:y(String(row.time.to??row.time.from)),
-      startLatest:row.time.kind==="calendar"&&row.time.startLatest?y(row.time.startLatest):undefined,
-      endEarliest:row.time.kind==="calendar"&&row.time.endEarliest?y(row.time.endEarliest):undefined,
-      wrap:row.time.kind==="cycle"&&row.time.wrap})),
+
+  const rowId=(row:typeof selected[number])=>JSON.stringify([row.record.id,row.timeId]);
+  const calendar=(!main||main.kind==="calendar")?calendarGraph(selected.map(row=>({id:rowId(row),time:row.time}))):null;
+  const keys=[...new Set(selected.flatMap(r=>[String(r.time.from),String(r.time.to??r.time.from),...(r.time.kind==="cycle"&&r.time.wrap?["0",String(r.time.period)]:[])]))].sort(compare);
+  const y=(index:number,count:number)=>76+index/Math.max(1,count-1)*340;
+  const ranges=new Map(calendar?.ranges.map(r=>[r.record.id,r]));
+  const ticks=calendar?calendar.slices.map((s,i)=>({label:s.label,y:y(i,calendar.slices.length)})):keys.map((key,i)=>({label:key,y:y(i,keys.length)}));
+  return {axis:main?.label??"年月日・期間",total:rows.length,untimed:snapshot.records.filter(r=>!r.content.times.length).length,ticks,
+    items:selected.map((row,i)=>{
+      const range=ranges.get(rowId(row)),position=(key:string)=>y(keys.indexOf(key),keys.length);
+      const start=range?y(range.startRow,calendar!.slices.length):position(String(row.time.from));
+      const end=range?y(range.endRow,calendar!.slices.length):position(String(row.time.to??row.time.from));
+      return {id:rowId(row),title:row.record.content.assertion,label:themeTimeLabel(row.time),
+        meaning:row.time.kind==="calendar"?calendarMeaning(row.time):row.time.to!==undefined?"duration":"point",x:154+i*16,y:start,end,
+        startLatest:range&&range.startEnd!==range.start?y(range.startEndRow,calendar!.slices.length):undefined,
+        endEarliest:range&&range.endStart!==range.end?y(range.endStartRow,calendar!.slices.length):undefined,
+        wrap:row.time.kind==="cycle"&&row.time.wrap};
+    }),
   };
 }
 export function capsulePreviewModel(capsule:MemberCapsule) {
