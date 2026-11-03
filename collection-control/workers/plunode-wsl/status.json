@@ -51,9 +51,8 @@
       "checkedAt": "2026-11-03T14:40:46+00:00"
     },
     "collection-control/issue-sources/16.json": {
-      "status": "held",
-      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-      "checkedAt": "2026-11-03T15:02:16+00:00"
+      "status": "registered: issue-16-adachi-three-20261025",
+      "checkedAt": "2026-11-03T15:04:47+00:00"
     },
     "collection-control/issue-sources/5.json": {
       "status": "registered: issue-5-dot-tezuka-adolf-20261025",
@@ -191,5 +190,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-03T15:04:03.480462+00:00"
+  "checkedAt": "2026-11-03T15:06:22.601378+00:00"
 }
