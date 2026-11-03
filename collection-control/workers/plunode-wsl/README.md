@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-04 01:08:30 JST。
+確認: 2026-11-04 01:31:19 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -28,7 +28,7 @@ Issue確認結果:
   },
   "collection-control/issue-sources/16.json": {
     "status": "registered: issue-16-adachi-three-20261025",
-    "checkedAt": "2026-11-03T15:32:45+00:00"
+    "checkedAt": "2026-11-03T16:21:10+00:00"
   },
   "collection-control/issue-sources/5.json": {
     "status": "registered: issue-5-dot-tezuka-adolf-20261025",
@@ -36,7 +36,7 @@ Issue確認結果:
   },
   "collection-control/issue-sources/42.json": {
     "status": "registered: issue-42-dot-matsumoto-three-20261026",
-    "checkedAt": "2026-11-03T15:32:47+00:00"
+    "checkedAt": "2026-11-03T16:21:14+00:00"
   },
   "collection-control/issue-sources/46.json": {
     "status": "registered: issue-46-dot-aoyama-three-20261027",
@@ -75,28 +75,33 @@ Issue確認結果:
     "checkedAt": "2026-11-03T05:03:03+00:00"
   },
   "collection-control/issue-sources/59.json": {
-    "status": "registered: issue-59-dot-kubo-two-20261028",
-    "checkedAt": "2026-11-03T15:59:38+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
+    "checkedAt": "2026-11-03T16:21:52+00:00"
   },
   "collection-control/issue-sources/60.json": {
     "status": "registered: issue-60-dot-ichikawa-houseki-20261028",
     "checkedAt": "2026-11-03T10:34:20+00:00"
   },
   "collection-control/issue-sources/61.json": {
-    "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
-    "checkedAt": "2026-11-03T14:59:00+00:00"
+    "status": "held",
+    "reason": "Remote end closed connection without response",
+    "checkedAt": "2026-11-03T16:22:06+00:00"
   },
   "collection-control/issue-sources/62.json": {
-    "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
-    "checkedAt": "2026-11-03T12:51:21+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
+    "checkedAt": "2026-11-03T16:22:22+00:00"
   },
   "collection-control/issue-sources/64.json": {
-    "status": "registered: issue-64-dot-oda-onepiece-20261029",
-    "checkedAt": "2026-11-03T10:34:27+00:00"
+    "status": "held",
+    "reason": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1007)>",
+    "checkedAt": "2026-11-03T16:22:51+00:00"
   },
   "collection-control/issue-sources/65.json": {
-    "status": "registered: issue-65-dot-inoue-three-20261029",
-    "checkedAt": "2026-11-03T14:59:02+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T16:23:01+00:00"
   },
   "collection-control/issue-sources/66.json": {
     "status": "registered: issue-66-dot-togashi-two-20261029",
@@ -107,12 +112,13 @@ Issue確認結果:
     "checkedAt": "2026-11-03T14:59:04+00:00"
   },
   "collection-control/issue-sources/68.json": {
-    "status": "registered: issue-68-dot-fujikoa-two-20261029",
-    "checkedAt": "2026-11-03T09:47:31+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T16:23:40+00:00"
   },
   "collection-control/issue-sources/69.json": {
     "status": "registered: issue-69-dot-ishinomori-three-20261029",
-    "checkedAt": "2026-11-03T10:45:30+00:00"
+    "checkedAt": "2026-11-03T16:23:44+00:00"
   },
   "collection-control/issue-sources/70.json": {
     "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
@@ -124,7 +130,7 @@ Issue確認結果:
   },
   "collection-control/issue-sources/73.json": {
     "status": "registered: issue-73-dot-murata-onepunch-20261030",
-    "checkedAt": "2026-11-03T14:51:09+00:00"
+    "checkedAt": "2026-11-03T16:23:50+00:00"
   }
 }
 ```
@@ -142,5 +148,5 @@ Issue確認結果:
 - [issue-25-utc-recovery-05](../../results/issue-25-utc-recovery-05/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-06）
 - [issue-25-utc-recovery-06](../../results/issue-25-utc-recovery-06/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-07）
 - [issue-25-utc-recovery-07](../../results/issue-25-utc-recovery-07/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-08）
-- [issue-25-utc-recovery-08](../../results/issue-25-utc-recovery-08/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-09）
+- [issue-25-utc-recovery-08](../../results/issue-25-utc-recovery-08/README.md): retry-wait（旧 issue-25-manga23-20261019-repair1-batch-09）
 - [issue-25-utc-recovery-09](../../results/issue-25-utc-recovery-09/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-10）
