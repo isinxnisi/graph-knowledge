@@ -4,7 +4,8 @@ issue-56-dot-urushibara-two-20261028：**retry-wait**
 
 公開apply・restore・本番配置は行わない。承認者名は本人認証の証明ではない。
 
-<urlopen error _ssl.c:990: The handshake operation timed out>
+fatal: unable to access 'https://github.com/isinxnisi/graph-knowledge.git/': Could not resolve host: github.com
+
 
 ```json
 {
