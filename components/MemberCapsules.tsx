@@ -2,7 +2,7 @@
 import {useKnowledgeSubmissionsEnabled} from "./KnowledgeSubmissionAvailability";
 import CapsuleTrashAction from "./CapsuleTrashAction";
 import PageIdentity from "./PageIdentity";
-import {useMemberSession,refreshMemberIdentity} from "../lib/client/use-member-identity";
+import {useMemberSession,refreshMemberIdentity,getMemberIdentitySnapshot} from "../lib/client/use-member-identity";
 import {usePersonalHash} from "../lib/client/personal-location";
 import {PersonalMemberControls} from "./PersonalFrame";
 
@@ -141,10 +141,13 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       if (event.key === null || event.key === capsulesKey(dataset)) readLocal();
       if (event.key === authEventKey || event.key === null) refresh();
     };
-    // Hide private content on leaving the tab. Reauthorize on return, including
-    // bfcache restoration and account changes made by another tab.
+    // Ordinary tab returns reuse the shared identity freshness window. Explicit
+    // account changes and bfcache restoration still force reauthorization.
     const visibility = () => {
-      if (document.visibilityState !== "hidden") void refreshMemberIdentity(true).catch(()=>{});
+      if (document.visibilityState !== "hidden") {
+        if (getMemberIdentitySnapshot().user?.id !== loadedOwner.current) refresh(false);
+        else void refreshMemberIdentity().catch(()=>{});
+      }
     };
     const restored = (event: PageTransitionEvent) => { if (event.persisted) refresh(); };
     window.addEventListener("storage", changed); document.addEventListener("visibilitychange", visibility); window.addEventListener("pageshow", restored);

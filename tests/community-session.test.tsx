@@ -17,9 +17,9 @@ it('同一ユーザーのfocus、pageshow、定期再取得でフォーム世代
  act(()=>window.dispatchEvent(new Event('focus')));await tick();act(()=>window.dispatchEvent(new PageTransitionEvent('pageshow')));await tick();await act(()=>vi.advanceTimersByTimeAsync(30000));
  expect(result.current.epoch).toBe(epoch);expect(reset).toHaveBeenCalledTimes(1);expect(result.current.blocked).toBe(false);
 });
-it('非表示中は隠して保持し、同じ認可なら再表示、別Userなら破棄する',async()=>{
+it('タブを切り替えても保持し、明示的な別User通知では破棄する',async()=>{
  const {result}=renderHook(()=>useCommunitySession('',reset));await tick();const epoch=result.current.epoch;
- act(()=>{Object.defineProperty(document,'hidden',{value:true});document.dispatchEvent(new Event('visibilitychange'));});expect(result.current.blocked).toBe(true);expect(result.current.data).not.toBeNull();
+ act(()=>{Object.defineProperty(document,'hidden',{value:true});document.dispatchEvent(new Event('visibilitychange'));});expect(result.current.blocked).toBe(false);expect(result.current.data).not.toBeNull();
  act(()=>{Object.defineProperty(document,'hidden',{value:false});document.dispatchEvent(new Event('visibilitychange'));});await tick();expect(result.current.epoch).toBe(epoch);expect(result.current.blocked).toBe(false);
  identity={...user,id:'b'};act(()=>window.dispatchEvent(new Event(memberSessionEvent)));expect(result.current.blocked).toBe(true);await tick();expect(result.current.epoch).toBeGreaterThan(epoch);expect(result.current.user?.id).toBe('b');
 });
@@ -28,7 +28,7 @@ it('権限失効は内容と入力を破棄する',async()=>{
 });
 it('遅着した旧認証応答を採用しない',async()=>{
  const {result}=renderHook(()=>useCommunitySession('',reset));await tick();let resolve!:(v:unknown)=>void;
- api.request.mockImplementationOnce(()=>new Promise(r=>{resolve=r;}));act(()=>document.dispatchEvent(new Event('visibilitychange')));await tick();identity=null;act(()=>invalidateMemberIdentity());act(()=>window.dispatchEvent(new Event(memberSessionEvent)));await tick();await act(async()=>resolve({user}));await tick();expect(result.current.user).toBeNull();
+ api.request.mockImplementationOnce(()=>new Promise(r=>{resolve=r;}));act(()=>{void result.current.load(true);});await tick();identity=null;act(()=>invalidateMemberIdentity());act(()=>window.dispatchEvent(new Event(memberSessionEvent)));await tick();await act(async()=>resolve({user}));await tick();expect(result.current.user).toBeNull();
 });
 it('送信中のfocusはPOSTを中断せず、不明結果の再送IDを保持する',async()=>{
  const {result}=renderHook(()=>useCommunitySession('',reset));await tick();let reject!:(e:Error)=>void;api.request.mockImplementationOnce(()=>new Promise((_,r)=>{reject=r;}));let sending!:ReturnType<typeof result.current.mutate>;
@@ -48,4 +48,10 @@ it('送信中の画面移動は遅着した送信元を再取得せず、現在�
  rerender({route:'/my-posts'});await tick();expect(result.current.blocked).toBe(true);
  await act(async()=>{resolve({id:'accepted'});await sending;});await tick();
  expect(result.current.blocked).toBe(false);expect(api.request.mock.calls.at(-1)![0]).toBe('/api/communities/my-posts');
+});
+
+it('同じ本人の通信失敗では会話を隠さず、確認済み401では取り下げる',async()=>{
+ const {result}=renderHook(()=>useCommunitySession('/my-posts',reset));await tick();const before=result.current.data,epoch=result.current.epoch;
+ api.request.mockRejectedValueOnce(new Error('offline'));await act(()=>vi.advanceTimersByTimeAsync(30000));expect(result.current.blocked).toBe(false);expect(result.current.data).toBe(before);expect(result.current.epoch).toBe(epoch);
+ identity=null;await act(async()=>{await result.current.load(true);});expect(result.current.user).toBeNull();expect(result.current.blocked).toBe(true);await tick();expect(result.current.data).not.toBe(before);
 });

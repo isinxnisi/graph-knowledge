@@ -20,7 +20,7 @@ export function useCommunitySession(route:string,onReset:()=>void,ready=true){
  const load=useCallback(async(hard=false,fresh=false)=>{
   if(!ready)return;
   if(hard)setBlocked(true);
-  if(document.hidden){generation.current++;read.current?.abort();pendingLoad.current=false;setBlocked(true);return;}
+  if(document.hidden){generation.current++;read.current?.abort();pendingLoad.current=false;setBusy(false);return;}
   if(writing.current){queued.current=true;return;}
   if(pendingLoad.current&&!hard&&!fresh)return;
   const g=++generation.current;read.current?.abort();const controller=new AbortController();read.current=controller;pendingLoad.current=true;setBusy(true);
@@ -39,14 +39,14 @@ export function useCommunitySession(route:string,onReset:()=>void,ready=true){
   }catch(e){if(g!==generation.current||controller.signal.aborted)return;
    const code=e instanceof MemberClientError?e.code:'UNAVAILABLE';setError(code);
    if(e instanceof MemberClientError&&[401,403,404].includes(e.status)){reset();setBlocked(true);if(e.status===401){owner.current=null;setUser(null);void refreshMemberIdentity(true).catch(()=>{});}}
-   // On a failed hard revalidation the retained subtree stays hidden. No private
-   // draft or content is persisted to storage/history, nor shown to a new user.
+   // Explicit access changes remain blocking. Ordinary visibility/focus refreshes
+   // retain the current view on transport errors; no private content is persisted.
   }finally{if(g===generation.current){pendingLoad.current=false;setBusy(false);}}
  },[route,reset,ready]);
  useLayoutEffect(()=>{latestLoad.current=load;},[load]);
  useEffect(()=>{mounted.current=true;const initial=setTimeout(()=>{setNotice('');void load(false,true);},0);
-  const focus=()=>{if(Date.now()-lastRead.current>500)void load(false);};
-  const visibility=()=>void load(true);
+  const focus=()=>{if(Date.now()-lastRead.current>30000)void load(false);};
+  const visibility=()=>{if(document.hidden)void load(false);else if(Date.now()-lastRead.current>30000)void load(false);};
   const page=(e:PageTransitionEvent)=>void load(e.persisted);
   const auth=()=>{generation.current++;read.current?.abort();pendingLoad.current=false;setBlocked(true);void load(true);};
   const storage=(e:StorageEvent)=>{if(e.key===null||e.key==='graph-knowledge:member-session-changed')auth();};
@@ -63,7 +63,7 @@ export function useCommunitySession(route:string,onReset:()=>void,ready=true){
   try{
    const result=await memberRequest('/api/communities'+path,z.object({id:z.string().optional()}),{method:'POST',body:idempotent?{...intents.current.get(key)!.input,requestId:intents.current.get(key)!.id}:input,user:uid});
    if(!mounted.current||owner.current!==uid||g!==generation.current)return {ok:false,code:'RESULT_UNKNOWN',unknown:true};
-   void refreshPendingInvitations();
+   void refreshPendingInvitations(true);
    intents.current.delete(key);setNotice(path==='/reports'?'REPORT_RECEIVED':'SAVED');
    return {ok:true,receipt:result.id};
   }catch(e){

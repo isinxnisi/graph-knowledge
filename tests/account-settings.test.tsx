@@ -79,7 +79,7 @@ describe("最小アカウント設定", () => {
     const user={id:"10000000-0000-4000-8000-000000000001",name:"前の本人",locale:"ja"};let finish!:(response:Response)=>void;
     const fetch=vi.fn().mockResolvedValueOnce(Response.json({user})).mockImplementationOnce(()=>new Promise<Response>(resolve=>{finish=resolve;})).mockResolvedValue(Response.json({error:{code:"UNAUTHENTICATED"}},{status:401}));vi.stubGlobal("fetch",fetch);
     render(<Header dataset="demo"/>);await screen.findByTitle("前の本人でログイン中");
-    fireEvent(window,new Event("focus"));await waitFor(()=>expect(fetch).toHaveBeenCalledTimes(2));expect(screen.getByTitle("前の本人でログイン中")).toBeDefined();
+    await act(async()=>{void refreshMemberIdentity(true).catch(()=>{});});await waitFor(()=>expect(fetch).toHaveBeenCalledTimes(2));expect(screen.getByTitle("前の本人でログイン中")).toBeDefined();
     fireEvent(window,new StorageEvent("storage",{key:"graph-knowledge:member-session-changed",newValue:"changed"}));
     await screen.findByRole("link",{name:"ログイン・アカウント"});await act(async()=>finish(Response.json({user})));
     expect(fetch).toHaveBeenCalledTimes(3);expect(screen.queryByTitle("前の本人でログイン中")).toBeNull();

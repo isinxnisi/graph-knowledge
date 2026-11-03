@@ -49,6 +49,7 @@
   "exclude": [
     "node_modules",
     "backups",
+    ".local",
     "docs/research/film-discovery-pilot-20261026/check-current.ts"
   ]
 }

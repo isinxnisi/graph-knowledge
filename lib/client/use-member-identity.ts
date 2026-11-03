@@ -3,9 +3,10 @@ import {useEffect,useSyncExternalStore,type ReactNode} from 'react';
 import {z} from 'zod';
 import {memberProfileSchema,memberRequest,MemberClientError,type MemberUser} from './member-api';
 import {memberSessionEvent} from './account-navigation';
-export type IdentityState={status:'checking'|'authenticated'|'guest'|'error';user:MemberUser|null;rechecking:boolean;error:boolean;version:number};
+export type IdentityState={status:'checking'|'authenticated'|'guest'|'error';user:MemberUser|null;rechecking:boolean;error:boolean;refreshError?:boolean;version:number};
 const initial:IdentityState={status:'checking',user:null,rechecking:false,error:false,version:0};
-let state=initial,checkedAt=0,sequence=0,pending:Promise<MemberUser|null>|null=null;
+const identityFreshFor=5*60_000,retryDelay=60_000;
+let state=initial,checkedAt=0,lastAttempt=0,sequence=0,pending:Promise<MemberUser|null>|null=null;
 const listeners=new Set<()=>void>();
 const publish=(next:IdentityState)=>{state=next;listeners.forEach(fn=>fn());};
 const subscribe=(fn:()=>void)=>{listeners.add(fn);return()=>{listeners.delete(fn);};};
@@ -18,43 +19,49 @@ export function getMemberIdentitySnapshot(){return state;}
 // validates the session, active user, expected user and resource permissions.
 export function refreshMemberIdentity(force=false):Promise<MemberUser|null>{
  if(pending)return pending;
- if(!force&&state.status!=='checking'&&!state.error&&Date.now()-checkedAt<30000)return Promise.resolve(state.user);
- const seq=sequence;publish({...state,rechecking:state.status!=='checking',error:false});
+ if(!force&&state.status!=='checking'&&!state.error&&!state.refreshError&&Date.now()-checkedAt<identityFreshFor)return Promise.resolve(state.user);
+ if(!force&&state.refreshError&&Date.now()-lastAttempt<retryDelay)return state.user?Promise.resolve(state.user):Promise.reject(new Error('IDENTITY_RETRY_LATER'));
+ lastAttempt=Date.now();
+ const seq=sequence;publish({...state,rechecking:state.status!=='checking',error:false,refreshError:false});
  pending=(async()=>{try{
   const {user}=await memberRequest('/api/member/profile',memberProfileSchema);
   if(seq!==sequence)throw new Error('IDENTITY_CHANGED');
   if(state.user?.id!==user.id){clearInvitations();clearOperationsSummary();}
   else if(!user.siteOperator)clearOperationsSummary();
-  checkedAt=Date.now();publish({status:'authenticated',user,rechecking:false,error:false,version:state.version+(state.user?.id!==user.id?1:0)});return user;
+  const display=JSON.stringify(state.user)===JSON.stringify(user)?state.user!:user;
+  checkedAt=Date.now();publish({status:'authenticated',user:display,rechecking:false,error:false,refreshError:false,version:state.version+(state.user?.id!==user.id?1:0)});return user;
  }catch(e){if(seq!==sequence)throw e;
   if(e instanceof MemberClientError&&e.status===401){clearInvitations();clearOperationsSummary();checkedAt=Date.now();publish({status:'guest',user:null,rechecking:false,error:false,version:state.version+(state.user?1:0)});return null;}
-  publish({...state,status:state.user?'authenticated':'error',rechecking:false,error:true});throw e;
+  // A failed refresh cannot revoke an already-known identity or its in-memory UI.
+  // Only a confirmed 401 or an explicit account-change event clears it.
+  publish({...state,status:state.user?'authenticated':'error',rechecking:false,error:!state.user,refreshError:true});throw e;
  }finally{if(seq===sequence)pending=null;}})();return pending;
 }
-export function invalidateMemberIdentity(){sequence++;pending=null;checkedAt=0;publish({...initial,version:state.version+1});clearInvitations();clearOperationsSummary();}
+export function invalidateMemberIdentity(){sequence++;pending=null;checkedAt=0;lastAttempt=0;publish({...initial,version:state.version+1});clearInvitations();clearOperationsSummary();}
 // A successful profile save updates the shared header immediately. An older
 // identity request must not restore the previous name/icon after that save.
 export function updateMemberProfileDisplay(userId:string,profile:{displayName:string;handle:string;icon:string;official?:boolean;imageUrl?:string|null}){
  if(state.user?.id!==userId)return;
- sequence++;pending=null;checkedAt=0;
- publish({...state,rechecking:false,user:{...state.user,name:profile.displayName,profile:{handle:profile.handle,icon:profile.icon,official:profile.official,imageUrl:profile.imageUrl}}});
+ sequence++;pending=null;checkedAt=Date.now();
+ publish({...state,rechecking:false,refreshError:false,user:{...state.user,name:profile.displayName,profile:{handle:profile.handle,icon:profile.icon,official:profile.official,imageUrl:profile.imageUrl}}});
 }
 export function useMemberIdentity(enabled=true){const value=useMemberSession();return enabled?value.user:null;}
 type Invitations={owner:string|null;status:'checking'|'ready'|'error';count:number|null};
 const initialInvites:Invitations={owner:null,status:'checking',count:null};
-let invitations=initialInvites,invitePending:Promise<void>|null=null,inviteGeneration=0;
+let invitations=initialInvites,invitePending:Promise<void>|null=null,inviteGeneration=0,invitesCheckedAt=0;
 const inviteListeners=new Set<()=>void>();
 function publishInvitations(value:Invitations){invitations=value;inviteListeners.forEach(fn=>fn());}
-function clearInvitations(){inviteGeneration++;invitePending=null;publishInvitations(initialInvites);}
+function clearInvitations(){inviteGeneration++;invitePending=null;invitesCheckedAt=0;publishInvitations(initialInvites);}
 export function usePendingInvitations(){const identity=useMemberSession();const value=useSyncExternalStore(fn=>{inviteListeners.add(fn);return()=>{inviteListeners.delete(fn);};},()=>invitations,()=>initialInvites);return identity.error?{...initialInvites,status:'error' as const}:identity.user&&identity.user.id===value.owner?value:initialInvites;}
-export function refreshPendingInvitations(){
+export function refreshPendingInvitations(force=false){
  const user=state.user;if(!user||state.status!=='authenticated')return Promise.resolve();
  if(invitePending&&invitations.owner===user.id)return invitePending;
+ if(!force&&invitations.owner===user.id&&invitations.status==='ready'&&Date.now()-invitesCheckedAt<60_000)return Promise.resolve();
  if(invitations.owner!==user.id){clearInvitations();publishInvitations({owner:user.id,status:'checking',count:null});}
  const generation=inviteGeneration;
  invitePending=(async()=>{try{
   const result=await memberRequest('/api/communities/invitations/summary',z.object({pendingCount:z.number().int().nonnegative()}),{user:user.id});
-  if(generation===inviteGeneration&&state.user?.id===user.id)publishInvitations({owner:user.id,status:'ready',count:result.pendingCount});
+  if(generation===inviteGeneration&&state.user?.id===user.id){invitesCheckedAt=Date.now();publishInvitations({owner:user.id,status:'ready',count:result.pendingCount});}
  }catch{if(generation===inviteGeneration&&state.user?.id===user.id)publishInvitations({owner:user.id,status:'error',count:null});}
  finally{if(generation===inviteGeneration)invitePending=null;}})();return invitePending;
 }
@@ -84,12 +91,12 @@ export function refreshOperationsSummary(force=false){
 export function MemberIdentityProvider({children,communityEnabled}:{children:ReactNode;communityEnabled:boolean}){
  useEffect(()=>{
   let lastFocus=0;
-  const update=()=>{if(document.hidden)return;void refreshMemberIdentity(true).then(()=>{if(communityEnabled)void refreshPendingInvitations();void refreshOperationsSummary();}).catch(()=>{});};
+  const update=(force=false)=>{if(document.hidden)return;void refreshMemberIdentity(force).then(()=>{if(communityEnabled)void refreshPendingInvitations();void refreshOperationsSummary();}).catch(()=>{});};
   const focus=()=>{if(Date.now()-lastFocus<1000)return;lastFocus=Date.now();update();};
-  const auth=()=>{invalidateMemberIdentity();update();};
+  const auth=()=>{invalidateMemberIdentity();update(true);};
   const storage=(e:StorageEvent)=>{if(e.key===null||e.key==='graph-knowledge:member-session-changed')auth();};
   const restored=(e:PageTransitionEvent)=>{if(e.persisted)focus();};
-  update();const timer=setInterval(update,30000);
+  update();const timer=setInterval(()=>update(),identityFreshFor);
   addEventListener('focus',focus);addEventListener('storage',storage);addEventListener(memberSessionEvent,auth);addEventListener('pageshow',restored);document.addEventListener('visibilitychange',focus);
   return()=>{clearInterval(timer);removeEventListener('focus',focus);removeEventListener('storage',storage);removeEventListener(memberSessionEvent,auth);removeEventListener('pageshow',restored);document.removeEventListener('visibilitychange',focus);};
  },[communityEnabled]);return children;

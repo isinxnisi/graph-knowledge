@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render as rtlRender, screen, waitFor, act, configure } from "@testing-library/react";
-import {invalidateMemberIdentity} from "../lib/client/use-member-identity";
+import {invalidateMemberIdentity,refreshMemberIdentity} from "../lib/client/use-member-identity";
 import PersonalFrame from "../components/PersonalFrame";
 import type {ReactElement} from "react";
 import {memberItemSchema} from "../lib/client/member-api";
@@ -79,10 +79,10 @@ describe("会員編集中のprivate表示と入力保持", () => {
     history.replaceState(null, "", "/member#account-settings");
     render(<MemberCapsules dataset="demo" />);
     fireEvent.change(await screen.findByLabelText("表示名", { exact: true }), { target: { value: "未保存の自分の名前" } });
-    await visibility("hidden"); identity = other; await visibility("visible");
+    await visibility("hidden"); identity = other; await act(async()=>{await refreshMemberIdentity(true);}); await visibility("visible");
     await waitFor(() => expect((screen.getByLabelText("表示名") as HTMLInputElement).value).toBe("別人"));
     expect(document.body.textContent).not.toContain("未保存の自分の名前");
-    await visibility("hidden"); identity = owner; await visibility("visible");
+    await visibility("hidden"); identity = owner; await act(async()=>{await refreshMemberIdentity(true);}); await visibility("visible");
     await waitFor(() => expect((screen.getByLabelText("表示名") as HTMLInputElement).value).toBe("未保存の自分の名前"));
     expect(localStorage.length).toBe(0); expect(sessionStorage.length).toBe(0);
   });
@@ -111,8 +111,8 @@ describe("閲覧ページと編集作業面の連続性",()=>{
  it("通常の本人再確認では草稿を作り直さず、本人変更時だけ隠して元の本人に戻す",async()=>{
   render(<MemberCapsules dataset="demo"/>);fireEvent.click(await screen.findByRole("button",{name:"このCapsuleを編集"}));fireEvent.change(screen.getByLabelText("草稿"),{target:{value:"試している入力"}});
   const field=screen.getByLabelText("草稿");await visibility("hidden");await visibility("visible");await waitFor(()=>expect(screen.getByLabelText("草稿")).toBe(field));
-  await visibility("hidden");identity=other;await visibility("visible");await screen.findByText("元のアカウントで再開");expect(screen.queryByLabelText("草稿")).toBeNull();
-  await visibility("hidden");identity=owner;await visibility("visible");await waitFor(()=>expect((screen.getByLabelText("草稿") as HTMLInputElement).value).toBe("試している入力"));
+  await visibility("hidden");identity=other;await act(async()=>{await refreshMemberIdentity(true);});await visibility("visible");await screen.findByText("元のアカウントで再開");expect(screen.queryByLabelText("草稿")).toBeNull();
+  await visibility("hidden");identity=owner;await act(async()=>{await refreshMemberIdentity(true);});await visibility("visible");await waitFor(()=>expect((screen.getByLabelText("草稿") as HTMLInputElement).value).toBe("試している入力"));
  });
 });
 

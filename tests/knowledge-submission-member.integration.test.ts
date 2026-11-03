@@ -247,11 +247,11 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
   }finally{process.env.KNOWLEDGE_REVIEW_ALLOWED_USERS=old;}
  });
 
- async function acceptedCandidate(){
+ async function acceptedCandidate(value:unknown=reviewContent()){
   process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='1';
   await memberRuntime().pool.query("UPDATE member_knowledge.submission_receipts SET submitted_at=clock_timestamp()-interval '2 hours'");
   await memberRuntime().pool.query("UPDATE member_knowledge.review_jobs SET state='cancelled' WHERE state IN('queued','running','retry','quota','reviewed','verifying','source-retry')");
-  const command=save(randomUUID(),0,reviewContent());expect((await post(command)).status).toBe(200);await post({action:'submit',id:command.id,requestId:randomUUID(),expectedVersion:1});
+  const command=save(randomUUID(),0,value);expect((await post(command)).status).toBe(200);await post({action:'submit',id:command.id,requestId:randomUUID(),expectedVersion:1});
   expect((await post({action:'review',id:command.id,requestId:randomUUID(),expectedVersion:2,consentVersion:REVIEW_CONSENT_VERSION})).status).toBe(409);
   expect((await post({action:'review',id:command.id,requestId:randomUUID(),expectedVersion:2,consentVersion:PUBLICATION_CONSENT_VERSION})).status).toBe(200);
   const cfg=reviewConfig();await runKnowledgeReviewOnce(createReviewQueue(memberRuntime().pool),cfg,async()=>reviewedResponse());
@@ -267,6 +267,14 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
   const decision=(await memberRuntime().pool.query('SELECT command,proofs FROM member_knowledge.publication_decisions WHERE job_id=(SELECT id FROM member_knowledge.review_jobs WHERE submission_id=$1)',[command.id])).rows[0];
   expect(JSON.stringify(decision)).not.toContain(aliceId);expect(decision.proofs.sources[0].extractor).toBe('public-text-v1');
  });
+ it('publishes a new person with the submitted classification and a source-backed note',async()=>{
+  const v=reviewContent();Object.assign(v,{entities:[{id:'new-person',content:{name:'架空の人物',kind:'人物',description:'',aliases:[],language:'ja'}}]});Object.assign(v.items[0].record,{subjectId:'new-person',assertion:'架空の人物はこの観測所の設立者。'});v.items[0].record.evidence[0].excerpt='架空の人物はこの観測所の設立者。';
+  const {command,cfg}=await acceptedCandidate(v);expect(await createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify).run(cfg)).toBe(true);
+  const d=(await memberRuntime().pool.query('SELECT command FROM member_knowledge.publication_decisions WHERE job_id=(SELECT id FROM member_knowledge.review_jobs WHERE submission_id=$1)',[command.id])).rows[0].command;
+  const foundation=createKnowledgeFoundationService(acceptanceKnowledge),person=await foundation.get({kind:'reader',id:'public'},'entity',d.record.content.subjectId);
+  expect(person.content).toMatchObject({name:'架空の人物',kind:'人物'});expect(d.record.content.kind).toBe('note');expect(d.record.content.evidence).toHaveLength(1);
+ });
+
  it('returns source mismatch for supplementation without making any public changes',async()=>{
   const {command,cfg}=await acceptedCandidate(),before=await knowledgeCount();
   const engine=createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},async()=>{throw new SourceCheckError('抜粋が本文にありません。');});await engine.run(cfg);
