@@ -42,39 +42,45 @@
   },
   "controlError": null,
   "requestsByPhase": {
-    "retry-wait": 2,
+    "waiting-control": 54,
     "blocked": 1,
-    "waiting-control": 53,
-    "completed": 6
+    "retry-wait": 2,
+    "completed": 5
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
-      "status": "registered: issue-25-manga23-20261019",
-      "checkedAt": "2026-11-03T12:24:46+00:00"
+      "status": "held",
+      "reason": "Logon failed, use ctrl+c to cancel basic credential prompt.\r\nfatal: unable to get password from user\n",
+      "checkedAt": "2026-11-03T14:32:13+00:00"
     },
     "collection-control/issue-sources/16.json": {
-      "status": "registered: issue-16-adachi-three-20261025",
-      "checkedAt": "2026-11-03T11:56:48+00:00"
+      "status": "held",
+      "reason": "Logon failed, use ctrl+c to cancel basic credential prompt.\r\nfatal: unable to get password from user\n",
+      "checkedAt": "2026-11-03T14:31:18+00:00"
     },
     "collection-control/issue-sources/5.json": {
       "status": "registered: issue-5-dot-tezuka-adolf-20261025",
       "checkedAt": "2026-11-03T11:33:10+00:00"
     },
     "collection-control/issue-sources/42.json": {
-      "status": "registered: issue-42-dot-matsumoto-three-20261026",
-      "checkedAt": "2026-11-03T09:46:54+00:00"
+      "status": "held",
+      "reason": "Logon failed, use ctrl+c to cancel basic credential prompt.\r\nfatal: unable to get password from user\n",
+      "checkedAt": "2026-11-03T13:20:35+00:00"
     },
     "collection-control/issue-sources/46.json": {
-      "status": "registered: issue-46-dot-aoyama-three-20261027",
-      "checkedAt": "2026-11-03T09:46:55+00:00"
+      "status": "held",
+      "reason": "Logon failed, use ctrl+c to cancel basic credential prompt.\r\nfatal: unable to get password from user\n",
+      "checkedAt": "2026-11-03T14:34:07+00:00"
     },
     "collection-control/issue-sources/47.json": {
-      "status": "registered: issue-47-dot-yukimura-two-20261027",
-      "checkedAt": "2026-11-03T12:50:55+00:00"
+      "status": "held",
+      "reason": "Logon failed, use ctrl+c to cancel basic credential prompt.\r\nfatal: unable to get password from user\n",
+      "checkedAt": "2026-11-03T14:35:31+00:00"
     },
     "collection-control/issue-sources/48.json": {
-      "status": "registered: issue-48-dot-toriyama-three-20261027",
-      "checkedAt": "2026-11-03T12:50:58+00:00"
+      "status": "held",
+      "reason": "Logon failed, use ctrl+c to cancel basic credential prompt.\r\nfatal: unable to get password from user\n",
+      "checkedAt": "2026-11-03T14:35:44+00:00"
     },
     "collection-control/issue-sources/49.json": {
       "status": "registered: issue-49-dot-hara-souten-20261027",
@@ -169,7 +175,7 @@
     },
     "issue-25-utc-recovery-04": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-05",
-      "phase": "completed"
+      "phase": "retry-wait"
     },
     "issue-25-utc-recovery-05": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-06",
@@ -192,5 +198,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-03T13:12:37.640193+00:00"
+  "checkedAt": "2026-11-03T14:39:53.983558+00:00"
 }
