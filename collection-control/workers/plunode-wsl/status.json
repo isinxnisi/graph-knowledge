@@ -27,11 +27,11 @@
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
   "nextStartAt": "2026-11-03T01:45:25.092687+00:00",
-  "phase": "closing-window",
+  "phase": "outside-window",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
-    "reason": "closing-window",
+    "reason": "outside-window",
     "eligibleAt": "2026-11-03T06:00:00+00:00",
     "windowEndAt": "2026-11-03T09:00:00+00:00"
   },
@@ -42,34 +42,35 @@
   },
   "controlError": null,
   "requestsByPhase": {
-    "blocked": 7,
-    "waiting-lock": 23,
-    "retry-wait": 7,
-    "completed": 20,
-    "awaiting-recovery": 2,
-    "waiting-control": 3
+    "blocked": 5,
+    "retry-wait": 19,
+    "waiting-control": 17,
+    "completed": 19,
+    "awaiting-recovery": 2
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
-      "status": "registered: issue-25-manga23-20261019",
-      "checkedAt": "2026-11-02T18:39:46+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno 104] Connection reset by peer>",
+      "checkedAt": "2026-11-03T02:49:07+00:00"
     },
     "collection-control/issue-sources/16.json": {
       "status": "registered: issue-16-adachi-three-20261025",
       "checkedAt": "2026-11-03T02:29:52+00:00"
     },
     "collection-control/issue-sources/5.json": {
-      "status": "held",
-      "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-      "checkedAt": "2026-11-03T02:30:31+00:00"
+      "status": "registered: issue-5-dot-tezuka-adolf-20261025",
+      "checkedAt": "2026-11-03T02:49:55+00:00"
     },
     "collection-control/issue-sources/42.json": {
-      "status": "registered: issue-42-dot-matsumoto-three-20261026",
-      "checkedAt": "2026-11-02T18:39:48+00:00"
+      "status": "held",
+      "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+      "checkedAt": "2026-11-03T02:49:24+00:00"
     },
     "collection-control/issue-sources/46.json": {
-      "status": "registered: issue-46-dot-aoyama-three-20261027",
-      "checkedAt": "2026-11-02T18:39:50+00:00"
+      "status": "held",
+      "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+      "checkedAt": "2026-11-03T02:49:41+00:00"
     },
     "collection-control/issue-sources/47.json": {
       "status": "registered: issue-47-dot-yukimura-two-20261027",
@@ -160,7 +161,7 @@
   "recoveryRequests": {
     "issue-25-utc-recovery-01": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-03",
-      "phase": "waiting-lock"
+      "phase": "retry-wait"
     },
     "issue-25-utc-recovery-02": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-01",
@@ -180,7 +181,7 @@
     },
     "issue-25-utc-recovery-06": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-07",
-      "phase": "waiting-lock"
+      "phase": "waiting-control"
     },
     "issue-25-utc-recovery-07": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-08",
@@ -188,12 +189,12 @@
     },
     "issue-25-utc-recovery-08": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-09",
-      "phase": "waiting-lock"
+      "phase": "retry-wait"
     },
     "issue-25-utc-recovery-09": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-10",
-      "phase": "waiting-lock"
+      "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-03T02:46:56.074804+00:00"
+  "checkedAt": "2026-11-03T03:12:57.304901+00:00"
 }
