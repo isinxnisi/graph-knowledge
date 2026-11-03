@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-03T01:18:39.652167+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-03T00:24:21.786127+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-03T01:18:39.652167+00:00",
+    "eligibleAt": "2026-11-03T00:24:21.786127+00:00",
     "windowEndAt": "2026-11-03T03:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-46-dot-aoyama-three-20261027",
-    "startedAt": "2026-11-03T00:13:39.652170+00:00",
-    "limitAt": "2026-11-03T01:08:39.652167+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-42-matsumoto-recovery-20261026",
-    "endedAt": "2026-11-03T00:01:23.634136+00:00"
+    "requestId": "issue-46-dot-aoyama-three-20261027",
+    "endedAt": "2026-11-03T00:14:21.786129+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 8,
-    "waiting-control": 38,
-    "completed": 15,
+    "waiting-control": 37,
+    "completed": 16,
     "awaiting-recovery": 1
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-03T00:13:46.752167+00:00"
+  "checkedAt": "2026-11-03T00:16:09.418731+00:00"
 }
