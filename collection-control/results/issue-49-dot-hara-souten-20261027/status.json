@@ -62,12 +62,12 @@
   },
   "requestSha256": "6f99836b9eb7221d5176dd9c536d2720d4192f5adc9f5ae010bca6bd6be3baa5",
   "kind": "issue-prepare",
-  "phase": "waiting-lock",
-  "generation": 3002,
+  "phase": "waiting-control",
+  "generation": 3003,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-03T08:37:11+00:00",
+  "updatedAt": "2026-11-03T09:01:29+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -186,5 +186,5 @@
   },
   "executionComplete": true,
   "retryAt": 1793685927.2671578,
-  "message": "共通ロック使用中。次回に再確認する。"
+  "message": "Execution gate: outside-window"
 }
