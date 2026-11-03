@@ -83,11 +83,11 @@
   "requestSha256": "cc77e6c3adbb23a9cf2cc491368fbd39afce7cbdd8b9c8ec2dc9e851678ad95d",
   "kind": "collect-review",
   "phase": "waiting-lock",
-  "generation": 2233,
+  "generation": 2234,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-03T18:48:07+00:00",
+  "updatedAt": "2026-11-03T19:03:26+00:00",
   "result": {
     "jobId": "issue-62-dot-akutami-jujutsu-20261028-r0001-9316236b1f6d5eb9",
     "collectionUnchanged": false,
