@@ -1,4 +1,5 @@
 import { z } from "zod";
+import {knowledgeReviewStatusSchema,type KnowledgeReviewStatus} from "./knowledge-review-job";
 import { knowledgeEntityContentSchema, knowledgeEvidenceSchema, knowledgeIdSchema, knowledgePinSchema, knowledgeRecordContentSchema, knowledgeSourceContentSchema } from "./knowledge-foundation";
 
 // Drafts may be incomplete in evidence. This does not weaken the public Record
@@ -30,10 +31,10 @@ export const knowledgeSubmissionCommandSchema = z.discriminatedUnion("action", [
 ]);
 export type KnowledgeSubmissionCommand = z.infer<typeof knowledgeSubmissionCommandSchema>;
 export const knowledgeSubmissionSchema = z.object({
- id: z.uuidv4(), revision: z.number().int().positive(), version: z.number().int().positive(), state: z.enum(["draft","queued","cancelled"]), content: knowledgeSubmissionContentSchema, digest: z.string(), createdAt: z.string(), updatedAt: z.string(), context: z.object({entities:z.array(z.object({id:z.string(),content:knowledgeEntityContentSchema})),sources:z.array(z.object({id:z.string(),revision:z.number(),content:knowledgeSourceContentSchema}))}).optional(), origin: z.object({ capsuleId: z.uuidv4(), capsuleRevision: z.number().int().positive(), title: z.string(), keys: z.array(z.string()) }).nullable().optional(),
+ review:knowledgeReviewStatusSchema.optional(), id: z.uuidv4(), revision: z.number().int().positive(), version: z.number().int().positive(), state: z.enum(["draft","queued","cancelled"]), content: knowledgeSubmissionContentSchema, digest: z.string(), createdAt: z.string(), updatedAt: z.string(), context: z.object({entities:z.array(z.object({id:z.string(),content:knowledgeEntityContentSchema})),sources:z.array(z.object({id:z.string(),revision:z.number(),content:knowledgeSourceContentSchema}))}).optional(), origin: z.object({ capsuleId: z.uuidv4(), capsuleRevision: z.number().int().positive(), title: z.string(), keys: z.array(z.string()) }).nullable().optional(),
 });
 export type KnowledgeSubmission = {
-  id: string; revision: number; version: number; state: "draft" | "queued" | "cancelled";
+  review?:KnowledgeReviewStatus; id: string; revision: number; version: number; state: "draft" | "queued" | "cancelled";
   context?: {entities:{id:string;content:z.infer<typeof knowledgeEntityContentSchema>}[];sources:{id:string;revision:number;content:z.infer<typeof knowledgeSourceContentSchema>}[]};
   origin?: { capsuleId: string; capsuleRevision: number; title: string; keys: string[] } | null;
   content: KnowledgeSubmissionContent; digest: string; createdAt: string; updatedAt: string;

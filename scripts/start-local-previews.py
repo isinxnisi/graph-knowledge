@@ -42,6 +42,17 @@ def beta_knowledge():
     url = urlsplit(values['KNOWLEDGE_DATABASE_URL'])
     if (url.scheme,url.hostname,url.port,url.path) != ('postgresql','127.0.0.1',55476,'/plunode_knowledge75_beta') or not values['KNOWLEDGE_NEO4J_PASSWORD']:
         raise ValueError('Dedicated knowledge beta databases required')
+    review = STATE / 'beta-review.json'
+    if review.exists():
+        info = review.lstat()
+        if review.is_symlink() or info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) != 0o600:
+            raise ValueError('Private review configuration ownership mismatch')
+        config = json.loads(review.read_text())
+        import re
+        users = config.get('allowedUsers', [])
+        if config.get('billingTier') != 'free' or config.get('model') != 'gemini-3.5-flash-lite' or not users or any(not isinstance(u,str) or not re.fullmatch(r'[a-f0-9-]{36}',u) for u in users):
+            raise ValueError('Unexpected beta review profile')
+        values.update(KNOWLEDGE_REVIEW_ENABLED='1', KNOWLEDGE_REVIEW_ALLOWED_USERS=','.join(users), KNOWLEDGE_REVIEW_CONFIG=str(review))
     return {**values,'THEME_WORKBENCH_ENABLED':'0'}
 
 
@@ -62,6 +73,22 @@ def start_knowledge_publisher(node, env):
     with (STATE/'knowledge-beta-worker.log').open('ab') as log:
         os.chmod(STATE/'knowledge-beta-worker.log',0o600)
         child = subprocess.Popen([node,'--import','tsx','scripts/knowledge-publication-worker.ts'],cwd=ROOT,env=env,stdin=subprocess.DEVNULL,stdout=log,stderr=log,start_new_session=True)
+    pidfile.write_text(str(child.pid)); pidfile.chmod(0o600)
+
+
+
+def start_knowledge_reviewer(node, env):
+    if env.get('KNOWLEDGE_REVIEW_ENABLED') != '1': return
+    pidfile = STATE / 'knowledge-review-worker.pid'
+    if pidfile.exists():
+        proc = Path('/proc') / pidfile.read_text().strip()
+        if (proc/'cmdline').exists() and (proc/'cmdline').read_bytes():
+            if (proc/'cwd').resolve() != ROOT or b'scripts/knowledge-review-worker.ts' not in (proc/'cmdline').read_bytes():
+                raise ValueError('Review PID belongs to another process')
+            return
+    with (STATE/'knowledge-review-worker.log').open('ab') as log:
+        os.chmod(STATE/'knowledge-review-worker.log',0o600)
+        child = subprocess.Popen([node,'--import','tsx','scripts/knowledge-review-worker.ts'],cwd=ROOT,env=env,stdin=subprocess.DEVNULL,stdout=log,stderr=log,start_new_session=True)
     pidfile.write_text(str(child.pid)); pidfile.chmod(0o600)
 
 
@@ -95,6 +122,7 @@ def start(name, node):
     if knowledge:
         publisher_env = dict(os.environ); publisher_env.update(knowledge)
         start_knowledge_publisher(node, publisher_env)
+        start_knowledge_reviewer(node, publisher_env)
     log = STATE / f'{name}.log'
     pidfile = STATE / f'{name}.pid'
     pid = os.fork()

@@ -1,3 +1,5 @@
+2026-11-03 U5追補：本人の明示依頼から永続job・project利用枠・Geminiの項目別結果までを追加021へ接続する段階。0.8Bは任意助言。原資料照合・自動受理／公開・通知は次工程。[現行契約](KNOWLEDGE_SUBMISSIONS_U5.md)／[実操作・配置](../verification/KNOWLEDGE_REVIEW_QUEUE_U5_20261103.md)。以下の未接続記述は前段時点を含む。
+
 # AI処理：接続・責務と検証方針
 
 2026-11-03更新。2026-10-08／09のKev第一候補の検証を経て、U5ではユーザーの補足と実評価に基づき、**0.8Bの任意助言と、Geminiによる通常分の自動受理を分ける**。[U5の現行契約](KNOWLEDGE_SUBMISSIONS_U5.md)と[実Gemini評価](../verification/KNOWLEDGE_GEMINI_U5_20261103.md)を参照する。

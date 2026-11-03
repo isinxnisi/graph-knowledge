@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile, rename, rmdir, access } from "node:fs/promises";
 import { resolve } from "node:path";
+import {homedir} from "node:os";
 import { z } from "zod";
 import { callGeminiReview, geminiReviewRequest, parseGeminiReview, GEMINI_REVIEW_POLICY } from "../lib/server/gemini-knowledge-review";
 import { knowledgeReviewInputSchema } from "../lib/domain/knowledge-review";
@@ -15,6 +16,10 @@ const privateRoot = resolve(".local/u5-gemini");
 const output = resolve(option("--output") ?? ".local/u5-gemini/baseline");
 if (!output.startsWith(privateRoot + "/")) throw new Error("Keep evaluation responses under the private Gemini directory");
 const config = z.strictObject({ projectId: z.string().min(1), billingTier: z.literal("free"), verifiedAt: z.string(), model: z.string().regex(/^gemini-[a-z0-9.-]+$/), rpm: z.number().int().positive().max(15), requestsPerDay: z.number().int().positive().max(100), inputTokensPerDay: z.number().int().positive(), outputTokensPerDay: z.number().int().positive() }).parse(JSON.parse(await readFile(resolve(privateRoot, "config.json"), "utf8")));
+if(!offline){
+ try{const active=JSON.parse(await readFile(resolve(homedir(),".local/state/plunode-previews/beta-review.json"),"utf8"));if(active.projectId===config.projectId)throw new Error("The project now uses the durable review budget. Legacy live evaluation is disabled; offline replay remains available.");}
+ catch(error){if((error as NodeJS.ErrnoException).code!=="ENOENT")throw error;}
+}
 const text = await readFile(corpus, "utf8");
 const cases = z.array(z.object({ id: z.string().regex(/^[a-z0-9-]+$/), group: z.string(), input: knowledgeReviewInputSchema, expected: z.object({ suitability: z.string(), support: z.string() }) })).min(1).max(60).parse(JSON.parse(text));
 if (new Set(cases.map(c => c.id)).size !== cases.length) throw new Error("Duplicate case IDs");

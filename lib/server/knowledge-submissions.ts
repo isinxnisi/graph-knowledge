@@ -7,6 +7,7 @@ import { knowledgeSubmissionCommandSchema, knowledgeSubmissionContentSchema, kno
 import type { DatasetMode } from "../domain/dataset";
 import { memberCapsuleSchema } from "../domain/member-capsule";
 import { captureSubmissionCapsule } from "../domain/knowledge-submission-capsule";
+import {reviewStatus,reviewEnabledFor,ensureReviewSchema} from "./knowledge-review-queue";
 import { MemberError } from "./member/http";
 import { KnowledgeError, knowledgeDigest, ensureKnowledgeFoundationSchema } from "./knowledge-foundation";
 
@@ -50,6 +51,7 @@ const dto = (row: QueryResultRow): KnowledgeSubmission => ({
 export function createKnowledgeSubmissionService(pool: Pool, options?: { memberStore: true; dataset: DatasetMode }) {
   const schema=options?.memberStore ? "member_knowledge" : "knowledge75";
   let verified: Promise<void> | undefined;
+  let reviewVerified:Promise<void>|undefined;
   async function ready() {
     verified ??= (async () => {
       const name=options?.memberStore ? "020-knowledge-submissions.sql" : migration;
@@ -71,7 +73,9 @@ export function createKnowledgeSubmissionService(pool: Pool, options?: { memberS
       JOIN ${schema}.submission_revisions r ON r.submission_id=s.id AND r.revision=s.current_revision
       WHERE s.owner_id=$1 AND s.id=$2`, [ownerId, id])).rows[0];
     if (!row) throw new KnowledgeError("投稿がありません", 404, "NOT_FOUND");
-    return dto(row);
+    const value=dto(row);
+    if(options?.memberStore&&reviewEnabledFor(ownerId)){reviewVerified??=ensureReviewSchema(pool).catch(e=>{reviewVerified=undefined;throw e;});await reviewVerified;value.review=await reviewStatus(c,ownerId,id,value.revision);}
+    return value;
   }
   const owner = (value: string) => z.uuidv4().parse(value).toLowerCase();
   return {

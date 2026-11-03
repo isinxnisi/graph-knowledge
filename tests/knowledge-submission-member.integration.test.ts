@@ -3,6 +3,9 @@ import {randomUUID} from "node:crypto";
 import {spawnSync} from "node:child_process";
 import {mkdir,writeFile} from "node:fs/promises";
 import {Pool} from "pg";
+import {createReviewQueue,quotaDate,type ReviewConfig} from "../lib/server/knowledge-review-queue";
+import {REVIEW_CONSENT_VERSION} from "../lib/domain/knowledge-review-job";
+import {runKnowledgeReviewOnce} from "../scripts/knowledge-review-worker";
 import {migrateMemberDatabase} from "../lib/server/member/migrate";
 import {memberConfig} from "../lib/server/member/config";
 import {memberPool} from "../lib/server/member/auth";
@@ -14,6 +17,7 @@ import * as authRoute from "../app/api/auth/[...all]/route";
 import * as api from "../app/api/member/knowledge-submissions/route";
 import * as item from "../app/api/member/knowledge-submissions/[id]/route";
 import * as candidates from "../app/api/member/knowledge-submissions/capsule/route";
+import * as adviceApi from "../app/api/member/knowledge-submissions/advice/route";
 import * as profile from "../app/api/member/profile/route";
 import * as capsules from "../app/api/member/capsules/route";
 import * as capsuleItem from "../app/api/member/capsules/[id]/route";
@@ -52,16 +56,17 @@ async function login(identity: string, mode = "valid") {
 let fixture:Awaited<ReturnType<typeof startMemberOidc>>,alice:Awaited<ReturnType<typeof login>>,bob:Awaited<ReturnType<typeof login>>,aliceId:string,bobId:string;
 const ctx=(id:string)=>({params:Promise.resolve({id})});
 const content=(assertion="架空の観測所の設立について。")=>({title:"投稿の検証",items:[{key:"record-a",record:{kind:"note",assertion,evidence:[]}}]});
-const save=(id=randomUUID(),expectedVersion=0,value=content())=>({action:"save",requestId:randomUUID(),id,expectedVersion,content:value});
+const save=(id=randomUUID(),expectedVersion=0,value:unknown=content())=>({action:"save",requestId:randomUUID(),id,expectedVersion,content:value});
 const post=(body:unknown,cookie=alice.cookies.value,user=aliceId,headers:Record<string,string>={})=>api.POST(request("/api/member/knowledge-submissions",cookie,"POST",body,{"x-member-user":user,...headers}));
 const current=async(id:string,cookie=alice.cookies.value,user=aliceId)=>item.GET(request("/api/member/knowledge-submissions/"+id,cookie,"GET",undefined,{"x-member-user":user}),ctx(id));
 beforeAll(async()=>{
  const config=memberConfig();if(!config||config.provider.kind!=="fixture"||process.env.KNOWLEDGE_SUBMISSIONS_ENABLED!=="1")throw Error("Use the disposable --submissions harness");
  fixture=await startMemberOidc();const pool=memberPool(config);
- try{await migrateMemberDatabase(pool,true,true,true,true,true,true,true,true,true,true,true,true,true);}finally{await pool.end();}
+ try{await migrateMemberDatabase(pool,true,true,true,true,true,true,true,true,true,true,true,true,true,true);}finally{await pool.end();}
  alice=await login("alice");bob=await login("bob");
  aliceId=(await (await profile.GET(request("/api/member/profile",alice.cookies.value))).json()).user.id;
  bobId=(await (await profile.GET(request("/api/member/profile",bob.cookies.value))).json()).user.id;
+ process.env.KNOWLEDGE_REVIEW_ENABLED="1";process.env.KNOWLEDGE_REVIEW_ALLOWED_USERS=[aliceId,bobId].join(",");
 },30000);
 afterAll(async()=>{await memberRuntime().pool.end();await fixture?.close();});
 describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
@@ -139,6 +144,96 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
   for(const table of ["submissions","submission_revisions","submission_receipts","submission_requests"]){const field=table==="submissions"?"id":"submission_id";expect((await memberRuntime().pool.query(`SELECT count(*)::int AS n FROM member_knowledge.${table} WHERE ${field}=$1`,[command.id])).rows[0].n).toBe(0);}
   expect((await current(command.id,user.cookies.value,id)).status).toBe(401);
  });
+ const reviewConfig=(overrides:Partial<ReviewConfig>={}):ReviewConfig=>({projectId:'test-'+randomUUID(),billingTier:'free',verifiedAt:new Date().toISOString(),model:'gemini-3.5-flash-lite',rpm:15,tokensPerMinute:100000,requestsPerDay:80,requestsPerMonth:100,inputTokensPerDay:250000,outputTokensPerDay:160000,inputTokensPerMonth:1000000,outputTokensPerMonth:1000000,apiKeyFile:'/not-used-in-fixture',allowedUsers:[aliceId,bobId],...overrides});
+ const reviewContent=()=>({title:'公開知識の確認',sources:[{id:'source-a',content:{title:'検証用資料',url:'https://example.invalid/public',bibliography:'',language:'ja'}}],items:[{key:'record-a',record:{kind:'note',assertion:'架空の観測所は2003年に設立された。',evidence:[{id:'evidence-a',source:{id:'source-a',revision:1},locator:'冒頭',excerpt:'架空の観測所は2003年に設立された。',stance:'support'}]}}]});
+ const reviewedResponse=(support='supported')=>({state:'received' as const,status:200,raw:{responseId:'fixture-response',modelVersion:'gemini-3.5-flash-lite',usageMetadata:{promptTokenCount:100,candidatesTokenCount:30,totalTokenCount:130},candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify({suitability:'legitimate',support,reason:'資料の記述と一致しています。'})}]}}]}});
+ async function enqueueReview(value:unknown=reviewContent()){
+  await memberRuntime().pool.query("UPDATE member_knowledge.review_jobs SET state='cancelled',lease_token=NULL WHERE state IN('queued','running','retry','quota')");
+  const command=save(randomUUID(),0,value);expect((await post(command)).status).toBe(200);expect((await post({action:'submit',id:command.id,requestId:randomUUID(),expectedVersion:1})).status).toBe(200);
+  const authorize={action:'review',id:command.id,requestId:randomUUID(),expectedVersion:2,consentVersion:REVIEW_CONSENT_VERSION};expect((await post(authorize)).status).toBe(200);return {command,authorize};
+ }
+ it('keeps local advice private and optional when Kev is unavailable',async()=>{
+  const command=save();await post(command);const body={id:command.id,revision:1,key:'record-a'};
+  expect((await adviceApi.POST(request('/api/member/knowledge-submissions/advice','','POST',body))).status).toBe(400);
+  expect((await adviceApi.POST(request('/api/member/knowledge-submissions/advice',alice.cookies.value,'POST',body,{'x-member-user':aliceId,origin:'https://foreign.invalid'}))).status).toBe(403);
+  expect((await adviceApi.POST(request('/api/member/knowledge-submissions/advice',bob.cookies.value,'POST',body,{'x-member-user':bobId}))).status).toBe(404);
+  const real=globalThis.fetch,spy=vi.spyOn(globalThis,'fetch').mockImplementation(async(input,init)=>String(input)==='http://127.0.0.1:8009/v1/systemone'?Promise.reject(Error('fixture offline')):real(input,init));
+  try{const r=await adviceApi.POST(request('/api/member/knowledge-submissions/advice',alice.cookies.value,'POST',body,{'x-member-user':aliceId}));expect(r.status).toBe(200);expect(await r.json()).toMatchObject({available:false,blocking:false,hints:[]});expect((await post({action:'submit',id:command.id,requestId:randomUUID(),expectedVersion:1})).status).toBe(200);}finally{spy.mockRestore();}
+ });
+ it('creates jobs only after explicit authorization and deduplicates authorization',async()=>{
+  const command=save(randomUUID(),0,reviewContent());await post(command);await post({action:'submit',id:command.id,requestId:randomUUID(),expectedVersion:1});
+  expect((await memberRuntime().pool.query('SELECT count(*)::int AS n FROM member_knowledge.review_jobs WHERE submission_id=$1',[command.id])).rows[0].n).toBe(0);
+  const authorize={action:'review',id:command.id,requestId:randomUUID(),expectedVersion:2,consentVersion:REVIEW_CONSENT_VERSION};
+  expect((await post({...authorize,consentVersion:'old'})).status).toBe(400);expect((await post(authorize,bob.cookies.value,bobId)).status).toBe(404);
+  const responses=await Promise.all([post(authorize),post(authorize)]);expect(await responses[0].json()).toEqual(await responses[1].json());
+  expect((await memberRuntime().pool.query('SELECT count(*)::int AS n FROM member_knowledge.review_jobs WHERE submission_id=$1',[command.id])).rows[0].n).toBe(1);
+ });
+ it('runs the authenticated receipt through a durable worker and exposes the pinned result',async()=>{
+  const {command}=await enqueueReview(),cfg=reviewConfig(),queue=createReviewQueue(memberRuntime().pool);let sent=0;
+  expect(await runKnowledgeReviewOnce(queue,cfg,async lease=>{sent++;expect(lease.wire).toContain('2003');return reviewedResponse();})).toBe(true);expect(sent).toBe(1);
+  const value=(await (await current(command.id)).json()).submission;expect(value.state).toBe('queued');expect(value.review.items[0]).toMatchObject({state:'reviewed',attempts:1,result:{support:'supported'}});
+  const usage=(await memberRuntime().pool.query("SELECT input_actual,output_actual,output_reserved,thoughts_actual,candidates_actual FROM member_knowledge.review_attempts WHERE project_id=$1",[cfg.projectId])).rows[0];expect(usage).toMatchObject({input_actual:100,output_actual:null,output_reserved:2048,thoughts_actual:null,candidates_actual:30});
+  expect(await queue.claim(cfg)).toBeNull();
+ });
+ it('does not lease twice and discards a result after the author edits the receipt',async()=>{
+  const {command}=await enqueueReview(),cfg=reviewConfig(),queue=createReviewQueue(memberRuntime().pool);await queue.heartbeat(cfg);
+  const leases=await Promise.all([queue.claim(cfg),queue.claim(cfg)]);expect(leases.filter(Boolean)).toHaveLength(1);const lease=leases.find(Boolean)!;
+  expect((await post(save(command.id,2,content('編集した別の内容')))).status).toBe(200);expect(await queue.canSend(lease)).toBe(false);expect(await queue.finish(lease,reviewedResponse())).toBe(false);
+  expect((await (await current(command.id)).json()).submission).toMatchObject({state:'draft',revision:2});expect((await (await current(command.id)).json()).submission.review).toBeUndefined();
+  expect((await memberRuntime().pool.query('SELECT state FROM member_knowledge.review_jobs WHERE id=$1',[lease.jobId])).rows[0].state).toBe('cancelled');
+ });
+ it('retains uncertain consumption across a crash and observes Retry-After without approving',async()=>{
+  await enqueueReview();const cfg=reviewConfig(),queue=createReviewQueue(memberRuntime().pool);await queue.heartbeat(cfg);const first=(await queue.claim(cfg))!;
+  await memberRuntime().pool.query("UPDATE member_knowledge.review_jobs SET lease_until=clock_timestamp()-interval '1 second' WHERE id=$1",[first.jobId]);
+  const restarted=createReviewQueue(memberRuntime().pool);await restarted.recoverExpired();expect(await restarted.claim(cfg)).toBeNull();
+  expect((await memberRuntime().pool.query('SELECT state,input_actual,output_actual,request_charge FROM member_knowledge.review_attempts WHERE id=$1',[first.attemptId])).rows[0]).toMatchObject({state:'delivery-unknown',input_actual:null,output_actual:null,request_charge:1});
+  await memberRuntime().pool.query("UPDATE member_knowledge.review_jobs SET not_before=clock_timestamp()-interval '1 second' WHERE id=$1",[first.jobId]);await memberRuntime().pool.query("UPDATE member_knowledge.review_attempts SET started_at=clock_timestamp()-interval '2 minutes' WHERE id=$1",[first.attemptId]);
+  const second=(await restarted.claim(cfg))!;expect(second.attemptId).not.toBe(first.attemptId);await restarted.finish(second,{state:'http-error',status:429,raw:{},retryAfter:'90',category:'rate-limit'});
+  const job=(await memberRuntime().pool.query('SELECT state,not_before FROM member_knowledge.review_jobs WHERE id=$1',[first.jobId])).rows[0];expect(job.state).toBe('quota');expect(new Date(job.not_before).getTime()-Date.now()).toBeGreaterThan(85000);expect(await restarted.claim(cfg)).toBeNull();
+ });
+ it('replays a retained response after a crash without sending another inference',async()=>{
+  const {command}=await enqueueReview(),cfg=reviewConfig(),queue=createReviewQueue(memberRuntime().pool);await queue.heartbeat(cfg);const lease=(await queue.claim(cfg))!;
+  await memberRuntime().pool.query("UPDATE member_knowledge.review_attempts SET state='received' WHERE id=$1",[lease.attemptId]);await memberRuntime().pool.query("UPDATE member_knowledge.review_payloads SET response=$2 WHERE attempt_id=$1",[lease.attemptId,reviewedResponse().raw]);await memberRuntime().pool.query("UPDATE member_knowledge.review_jobs SET lease_until=clock_timestamp()-interval '1 second' WHERE id=$1",[lease.jobId]);
+  const restarted=createReviewQueue(memberRuntime().pool);await restarted.recoverExpired();expect(await restarted.claim(cfg)).toBeNull();expect((await (await current(command.id)).json()).submission.review.items[0].state).toBe('reviewed');expect((await memberRuntime().pool.query('SELECT count(*)::int AS n FROM member_knowledge.review_attempts WHERE job_id=$1',[lease.jobId])).rows[0].n).toBe(1);
+ });
+ it('imports earlier evaluation usage once and enforces the project allowance atomically',async()=>{
+  const {command}=await enqueueReview(),cfg=reviewConfig({requestsPerDay:1}),queue=createReviewQueue(memberRuntime().pool);await queue.heartbeat(cfg);
+  const ledger={projectId:cfg.projectId,attempts:{previous:{day:quotaDate(new Date()),state:'delivery-unknown',startedAt:new Date().toISOString(),inputReserved:300,outputReserved:2048,inputActual:null,outputActual:null}}};
+  expect(await queue.importEvaluation(ledger,'a'.repeat(64),cfg)).toBe(1);expect(await queue.importEvaluation(ledger,'a'.repeat(64),cfg)).toBe(0);
+  expect(await queue.claim(cfg)).toBeNull();expect((await (await current(command.id)).json()).submission.review.items[0].state).toBe('quota');
+  expect((await memberRuntime().pool.query("SELECT count(*)::int AS n FROM member_knowledge.review_attempts WHERE project_id=$1",[cfg.projectId])).rows[0].n).toBe(1);
+ });
+ it('keeps independent item results and never calls a partially supported item accepted',async()=>{
+  const value=reviewContent();value.items.push({...value.items[0],key:'record-b',record:{...value.items[0].record,assertion:'根拠が一部しかない別の主張。'}});
+  const {command}=await enqueueReview(value),cfg=reviewConfig(),queue=createReviewQueue(memberRuntime().pool);
+  await runKnowledgeReviewOnce(queue,cfg,async()=>reviewedResponse());await memberRuntime().pool.query("UPDATE member_knowledge.review_attempts SET started_at=clock_timestamp()-interval '2 minutes' WHERE project_id=$1",[cfg.projectId]);
+  await runKnowledgeReviewOnce(queue,cfg,async()=>reviewedResponse('unclear'));
+  const results=(await (await current(command.id)).json()).submission.review.items;expect(results.map((r:{state:string})=>r.state).sort()).toEqual(['needs-changes','reviewed']);
+ });
+ it('stops after three uncertain attempts without changing the content outcome',async()=>{
+  await enqueueReview();const cfg=reviewConfig(),queue=createReviewQueue(memberRuntime().pool);await queue.heartbeat(cfg);let jobId='';
+  for(let i=0;i<3;i++){const lease=(await queue.claim(cfg))!;expect(lease).not.toBeNull();jobId=lease.jobId;await queue.finish(lease,{state:'delivery-unknown'});await memberRuntime().pool.query("UPDATE member_knowledge.review_jobs SET not_before=clock_timestamp()-interval '1 second' WHERE id=$1",[jobId]);await memberRuntime().pool.query("UPDATE member_knowledge.review_attempts SET started_at=clock_timestamp()-interval '2 minutes' WHERE project_id=$1",[cfg.projectId]);}
+  expect(await queue.claim(cfg)).toBeNull();expect((await memberRuntime().pool.query('SELECT state,result,attempts FROM member_knowledge.review_jobs WHERE id=$1',[jobId])).rows[0]).toMatchObject({state:'attention',result:null,attempts:3});
+ });
+ it('invalidates an in-flight review on suspension and does not revive it on resume',async()=>{
+  await memberRuntime().pool.query("UPDATE member_knowledge.review_jobs SET state='cancelled',lease_token=NULL WHERE state IN('queued','running','retry','quota')");
+  const command=save(randomUUID(),0,reviewContent());await post(command,bob.cookies.value,bobId);await post({action:'submit',id:command.id,requestId:randomUUID(),expectedVersion:1},bob.cookies.value,bobId);await post({action:'review',id:command.id,requestId:randomUUID(),expectedVersion:2,consentVersion:REVIEW_CONSENT_VERSION},bob.cookies.value,bobId);
+  const cfg=reviewConfig({allowedUsers:[bobId]}),queue=createReviewQueue(memberRuntime().pool);await queue.heartbeat(cfg);const lease=(await queue.claim(cfg))!;
+  await operateMember(memberRuntime().pool,{action:'suspend-user',target:bobId,actor:'test',reason:'security'},true);expect(await queue.canSend(lease)).toBe(false);expect(await queue.finish(lease,reviewedResponse())).toBe(false);
+  await operateMember(memberRuntime().pool,{action:'resume-user',target:bobId,actor:'test',reason:'correction'},true);bob=await login('bob');expect((await (await current(command.id,bob.cookies.value,bobId)).json()).submission.state).toBe('cancelled');expect(await queue.claim(cfg)).toBeNull();
+ });
+ it('removes payloads on account deletion while preserving anonymous quota consumption',async()=>{
+  await memberRuntime().pool.query("UPDATE member_knowledge.review_jobs SET state='cancelled',lease_token=NULL WHERE state IN('queued','running','retry','quota')");
+  const user=await login('delete'),owner=(await (await profile.GET(request('/api/member/profile',user.cookies.value))).json()).user.id;
+  const old=process.env.KNOWLEDGE_REVIEW_ALLOWED_USERS;process.env.KNOWLEDGE_REVIEW_ALLOWED_USERS=old+','+owner;
+  try{
+   const command=save(randomUUID(),0,reviewContent());await post(command,user.cookies.value,owner);await post({action:'submit',id:command.id,requestId:randomUUID(),expectedVersion:1},user.cookies.value,owner);await post({action:'review',id:command.id,requestId:randomUUID(),expectedVersion:2,consentVersion:REVIEW_CONSENT_VERSION},user.cookies.value,owner);
+   const cfg=reviewConfig({allowedUsers:[owner]}),queue=createReviewQueue(memberRuntime().pool);await queue.heartbeat(cfg);const lease=(await queue.claim(cfg))!;
+   expect((await profile.DELETE(request('/api/member/profile',user.cookies.value,'DELETE',{confirmation:'delete-account'},{'x-member-user':owner}))).status).toBe(200);
+   await queue.finish(lease,reviewedResponse());expect((await memberRuntime().pool.query('SELECT count(*)::int AS n FROM member_knowledge.review_payloads WHERE attempt_id=$1',[lease.attemptId])).rows[0].n).toBe(0);
+   expect((await memberRuntime().pool.query('SELECT job_id,input_actual,request_charge FROM member_knowledge.review_attempts WHERE id=$1',[lease.attemptId])).rows[0]).toMatchObject({job_id:null,input_actual:100,request_charge:1});
+  }finally{process.env.KNOWLEDGE_REVIEW_ALLOWED_USERS=old;}
+ });
  it("restores the migrated database separately and reapplies checksums unchanged",async()=>{
   const container=process.env.MEMBER_TEST_CONTAINER!;expect(container).toMatch(/^gk-member-test-[a-f0-9-]+$/);
   const database="u5_restore_"+randomUUID().replaceAll("-","");const dir=".local/u5-member/"+database;await mkdir(dir,{recursive:true,mode:0o700});
@@ -149,7 +244,7 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
   const url=new URL(memberConfig()!.databaseUrl);url.pathname="/"+database;const pool=new Pool({connectionString:url.toString()});
   try{
    const fingerprint=async(p:Pool)=>{const out:Record<string,string>={};const tables=(await p.query("SELECT schemaname,tablename FROM pg_tables WHERE schemaname IN ('public','member_knowledge') ORDER BY 1,2")).rows;for(const table of tables){const name=table.schemaname+"."+table.tablename;if(!/^[a-z_]+\.[a-z_]+$/.test(name))throw Error("Unexpected test table");out[name]=(await p.query(`SELECT md5(COALESCE(string_agg(row_to_json(t)::text,chr(10) ORDER BY row_to_json(t)::text),'')) AS digest FROM ${name} t`)).rows[0].digest;}return out;};
-   const before=await fingerprint(memberRuntime().pool);expect(await fingerprint(pool)).toEqual(before);await migrateMemberDatabase(pool,true,true,true,true,true,true,true,true,true,true,true,true,true);expect(await fingerprint(pool)).toEqual(before);await writeFile(dir+"/result.json",JSON.stringify({restored:true,reappliedUnchanged:true,tables:Object.keys(before).length,fingerprints:before},null,2),{mode:0o600});
+   const before=await fingerprint(memberRuntime().pool);expect(await fingerprint(pool)).toEqual(before);await migrateMemberDatabase(pool,true,true,true,true,true,true,true,true,true,true,true,true,true,true);expect(await fingerprint(pool)).toEqual(before);await writeFile(dir+"/result.json",JSON.stringify({restored:true,reappliedUnchanged:true,tables:Object.keys(before).length,fingerprints:before},null,2),{mode:0o600});
   }finally{await pool.end();docker(["exec",container,"dropdb","-U","gk_member",database]);}
  },60000);
 });

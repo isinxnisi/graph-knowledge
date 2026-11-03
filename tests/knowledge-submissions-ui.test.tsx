@@ -8,24 +8,29 @@ vi.mock("../components/PersonalFrame",()=>({PersonalMemberControls:()=>null}));
 vi.mock("../lib/client/ui-locale",()=>({useUiLocale:()=>({locale:"ja"})}));
 import KnowledgeSubmissions from "../components/KnowledgeSubmissions";
 const stored=new Map<string,KnowledgeSubmission>(),sent:Record<string,unknown>[]=[];
-let failNext=false,loadFailure=false,postGate:Promise<void>|null=null;
+let failNext=false,loadFailure=false,postGate:Promise<void>|null=null,reviewAvailable=false,finishReview=false;
 const stamp="2026-11-03T09:00:00Z";
 const summary=()=>[...stored.values()].map(s=>({id:s.id,state:s.state,title:s.content.title,revision:s.revision,version:s.version,itemCount:s.content.items.length,updatedAt:s.updatedAt}));
 beforeEach(()=>{
- history.replaceState({},"","/member/submissions");stored.clear();sent.length=0;failNext=false;loadFailure=false;postGate=null;mocked.identity={status:"authenticated",user:{id:"10000000-0000-4000-8000-000000000001"},error:false,version:1,rechecking:false};
+ history.replaceState({},"","/member/submissions");stored.clear();sent.length=0;failNext=false;loadFailure=false;postGate=null;reviewAvailable=false;finishReview=false;mocked.identity={status:"authenticated",user:{id:"10000000-0000-4000-8000-000000000001"},error:false,version:1,rechecking:false};
  vi.stubGlobal("fetch",vi.fn(async(path:string,init?:RequestInit)=>{
+  if(path.endsWith('/advice'))return Response.json({error:{code:'UNAVAILABLE'}},{status:503});
   if(init?.method==="POST"){
+
    if(postGate)await postGate;
    const body=JSON.parse(String(init.body));sent.push(body);if(failNext){failNext=false;throw Error("delivery unknown");}
+   if(body.action==='review'){const old=stored.get(body.id)!;old.review={revision:old.revision,workerAvailable:true,items:old.content.items.map(item=>({key:item.key,state:'queued',reason:'',attempts:0,nextAttemptAt:null,result:null}))};return Response.json({submission:old});}
    const old=stored.get(body.id);const content=body.content?knowledgeSubmissionContentSchema.parse(body.content):old!.content;
    const submission:KnowledgeSubmission={id:body.id,revision:body.action==="save"?(old?.revision??0)+1:old!.revision,version:(old?.version??0)+1,state:body.action==="save"?"draft":body.action==="submit"?"queued":"cancelled",content,digest:"a".repeat(64),createdAt:stamp,updatedAt:stamp,origin:null};stored.set(body.id,submission);return Response.json({submission});
   }
   if(path==="/api/member/knowledge-submissions"&&loadFailure)return Response.json({error:{code:"INTERNAL_ERROR"}},{status:500});
-  if(path==="/api/member/knowledge-submissions")return Response.json({submissions:summary(),processing:"not-connected"});
-  const id=path.split("/").at(-1)!;return stored.has(id)?Response.json({submission:stored.get(id)}):Response.json({error:{code:"NOT_FOUND"}},{status:404});
+  if(path==="/api/member/knowledge-submissions")return Response.json({submissions:summary(),processing:reviewAvailable?"gemini-beta":"not-connected"});
+  const id=path.split("/").at(-1)!;
+  if(finishReview&&stored.get(id)?.review)stored.get(id)!.review!.items=stored.get(id)!.review!.items.map(item=>({...item,state:'reviewed',reason:'根拠と一致',result:{suitability:'legitimate',support:'supported',reason:'根拠と一致'}}));
+return stored.has(id)?Response.json({submission:stored.get(id)}):Response.json({error:{code:"NOT_FOUND"}},{status:404});
  }));
 });
-afterEach(()=>{cleanup();vi.unstubAllGlobals();});
+afterEach(()=>{cleanup();vi.useRealTimers();vi.unstubAllGlobals();});
 async function write(){render(<KnowledgeSubmissions/>);await screen.findByText("まだ投稿はありません。知識を書くか、保存済みCapsuleの一部から始められます。");fireEvent.click(screen.getByRole("button",{name:"知識を書く"}));fireEvent.change(screen.getByLabelText("投稿のタイトル"),{target:{value:"投稿のテスト"}});fireEvent.change(screen.getByLabelText("内容",{exact:true}),{target:{value:"架空の観測所は2003年に設立された。"}});}
 describe("member knowledge submission workflow",()=>{
  it("does not turn a failed initial fetch into an empty submission history",async()=>{
@@ -52,6 +57,19 @@ describe("member knowledge submission workflow",()=>{
  it("cancels only after an inline confirmation, leaving the source draft readable",async()=>{
   await write();fireEvent.click(screen.getByRole("button",{name:"保存して受付"}));await screen.findByText("受付を保存しました。AI処理と公開の接続は準備中です。");fireEvent.click(screen.getByRole("button",{name:"投稿を取り消す"}));expect(sent).toHaveLength(2);
   fireEvent.click(screen.getByRole("button",{name:"取り消す"}));await screen.findByText("取り消されています。再提出は新しい草稿から行ってください。");expect(sent.at(-1)).toMatchObject({action:"cancel",expectedVersion:2});
+ });
+ it('requires explicit transmission intent and does not block submission when local hints fail',async()=>{
+  reviewAvailable=true;await write();fireEvent.click(screen.getByRole('button',{name:'保存してAI確認へ'}));expect(sent).toHaveLength(0);expect(await screen.findByRole('alert')).toBeTruthy();
+  fireEvent.click(screen.getByRole('button',{name:'草稿を保存'}));await screen.findByText('草稿を保存しました。');
+  fireEvent.click(screen.getByRole('button',{name:'送信前のヒント（任意）'}));await screen.findByText('今はヒントを確認できません。そのまま投稿できます。');
+  fireEvent.click(screen.getByRole('checkbox'));fireEvent.click(screen.getByRole('button',{name:'AI確認へ進む'}));await screen.findByText('AI確認を依頼しました。画面を閉じても受付は残ります。');
+  expect(sent.map(c=>c.action)).toEqual(['save','submit','review']);
+ });
+ it('refreshes review results without replacing unsaved edits',async()=>{
+  reviewAvailable=true;await write();vi.useFakeTimers();fireEvent.click(screen.getByRole('checkbox'));fireEvent.click(screen.getByRole('button',{name:'保存してAI確認へ'}));await act(async()=>{});
+  expect(screen.getByText('AI確認を依頼しました。画面を閉じても受付は残ります。')).toBeTruthy();
+  fireEvent.change(screen.getByLabelText('内容',{exact:true}),{target:{value:'途中の編集を保持する。'}});finishReview=true;
+  await act(async()=>{await vi.advanceTimersByTimeAsync(5000);});expect((screen.getByLabelText('内容',{exact:true}) as HTMLTextAreaElement).value).toBe('途中の編集を保持する。');expect(screen.getByText('変更前の受付内容への結果です。保存して受付し直すと、新しい内容で確認します。')).toBeTruthy();
  });
  it("removes private input when the account changes",async()=>{
   await write();const view=screen.getByLabelText("内容",{exact:true});expect(view).not.toBeNull();mocked.identity={...mocked.identity,status:"guest",user:null as unknown as {id:string},version:2};

@@ -46,7 +46,7 @@ try {
     env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL=`postgresql://gk_member:${password}@127.0.0.1:55432/${name}`;
   }
 
-  child = spawn("node", browserTests
+  child = spawn(process.execPath, browserTests
     ? ["--import", "tsx", "scripts/test-member-browser.ts", ...process.argv.slice(2).filter(arg => arg !== "--capsules" && arg !== "--e2e" && arg !== "--community" && arg !== "--safety" && arg !== "--operations" && arg !== "--accounts")]
     : ["node_modules/vitest/vitest.mjs", "run", ...(submissionTests ? ["tests/knowledge-submission-member.integration.test.ts"] : capsuleTests ? ["tests/capsule-document.integration.test.ts"] : communityTests ? [accountTests ? "tests/public-profiles.integration.test.ts" : operationsTests ? "tests/site-operations.integration.test.ts" : safetyTests ? "tests/community-safety.integration.test.ts" : "tests/community.integration.test.ts"] : ["tests/member.integration.test.ts", "tests/member-cold.integration.test.ts"]), "--maxWorkers=1", "--no-file-parallelism", "--exclude", "backups/**", "--exclude", ".local/**"], { env, stdio: "inherit" });
   const timer = setTimeout(() => child?.kill("SIGTERM"), browserTests ? 960_000 : 180_000);
