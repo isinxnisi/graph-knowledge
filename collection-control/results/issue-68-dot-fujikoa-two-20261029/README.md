@@ -1,10 +1,10 @@
 # 収集Workerの処理結果
 
-issue-68-dot-fujikoa-two-20261029：**retry-wait**
+issue-68-dot-fujikoa-two-20261029：**waiting-control**
 
 公開apply・restore・本番配置は行わない。承認者名は本人認証の証明ではない。
 
-<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1007)>
+Execution gate: outside-window
 
 ```json
 {
