@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-03T19:43:38.624264+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-03T20:48:45.617373+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-03T19:43:38.624264+00:00",
+    "eligibleAt": "2026-11-03T20:48:45.617373+00:00",
     "windowEndAt": "2026-11-03T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-25-utc-recovery-07",
+    "startedAt": "2026-11-03T19:43:45.617375+00:00",
+    "limitAt": "2026-11-03T20:38:45.617373+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-59-dot-kubo-two-20261028-batch-01",
     "endedAt": "2026-11-03T19:33:38.624266+00:00"
@@ -190,5 +194,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-03T19:33:42.052152+00:00"
+  "checkedAt": "2026-11-03T19:43:52.038495+00:00"
 }
