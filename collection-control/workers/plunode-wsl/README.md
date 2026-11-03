@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-04 02:13:44 JST。
+確認: 2026-11-04 02:21:34 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -39,8 +39,9 @@ Issue確認結果:
     "checkedAt": "2026-11-03T16:21:14+00:00"
   },
   "collection-control/issue-sources/46.json": {
-    "status": "registered: issue-46-dot-aoyama-three-20261027",
-    "checkedAt": "2026-11-03T15:32:47+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T17:14:57+00:00"
   },
   "collection-control/issue-sources/47.json": {
     "status": "registered: issue-47-dot-yukimura-two-20261027",
@@ -51,8 +52,9 @@ Issue確認結果:
     "checkedAt": "2026-11-03T17:10:51+00:00"
   },
   "collection-control/issue-sources/49.json": {
-    "status": "registered: issue-49-dot-hara-souten-20261027",
-    "checkedAt": "2026-11-03T16:01:49+00:00"
+    "status": "held",
+    "reason": "Remote end closed connection without response",
+    "checkedAt": "2026-11-03T17:15:27+00:00"
   },
   "collection-control/issue-sources/50.json": {
     "status": "registered: issue-50-dot-endo-tista-20261027",
@@ -63,32 +65,38 @@ Issue確認結果:
     "checkedAt": "2026-11-03T15:47:52+00:00"
   },
   "collection-control/issue-sources/56.json": {
-    "status": "registered: issue-56-dot-urushibara-two-20261028",
-    "checkedAt": "2026-11-03T15:46:04+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T17:16:10+00:00"
   },
   "collection-control/issue-sources/57.json": {
-    "status": "registered: issue-57-dot-oshima-two-20261028",
-    "checkedAt": "2026-11-03T09:47:11+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T17:16:26+00:00"
   },
   "collection-control/issue-sources/58.json": {
-    "status": "registered: issue-58-dot-takeuchi-two-20261028",
-    "checkedAt": "2026-11-03T05:03:03+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T17:16:37+00:00"
   },
   "collection-control/issue-sources/59.json": {
-    "status": "registered: issue-59-dot-kubo-two-20261028",
-    "checkedAt": "2026-11-03T16:32:58+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
+    "checkedAt": "2026-11-03T17:16:57+00:00"
   },
   "collection-control/issue-sources/60.json": {
     "status": "registered: issue-60-dot-ichikawa-houseki-20261028",
     "checkedAt": "2026-11-03T10:34:20+00:00"
   },
   "collection-control/issue-sources/61.json": {
-    "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
-    "checkedAt": "2026-11-03T16:33:01+00:00"
+    "status": "held",
+    "reason": "<urlopen error _ssl.c:990: The handshake operation timed out>",
+    "checkedAt": "2026-11-03T17:17:21+00:00"
   },
   "collection-control/issue-sources/62.json": {
-    "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
-    "checkedAt": "2026-11-03T16:33:02+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T17:17:32+00:00"
   },
   "collection-control/issue-sources/64.json": {
     "status": "registered: issue-64-dot-oda-onepiece-20261029",
@@ -99,8 +107,9 @@ Issue確認結果:
     "checkedAt": "2026-11-03T16:33:05+00:00"
   },
   "collection-control/issue-sources/66.json": {
-    "status": "registered: issue-66-dot-togashi-two-20261029",
-    "checkedAt": "2026-11-03T09:47:27+00:00"
+    "status": "held",
+    "reason": "Remote end closed connection without response",
+    "checkedAt": "2026-11-03T17:17:51+00:00"
   },
   "collection-control/issue-sources/67.json": {
     "status": "registered: issue-67-dot-mizuki-two-20261029",
@@ -115,12 +124,14 @@ Issue確認結果:
     "checkedAt": "2026-11-03T16:23:44+00:00"
   },
   "collection-control/issue-sources/70.json": {
-    "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
-    "checkedAt": "2026-11-03T11:57:31+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
+    "checkedAt": "2026-11-03T17:18:07+00:00"
   },
   "collection-control/issue-sources/71.json": {
-    "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
-    "checkedAt": "2026-11-03T04:57:49+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
+    "checkedAt": "2026-11-03T17:18:27+00:00"
   },
   "collection-control/issue-sources/73.json": {
     "status": "registered: issue-73-dot-murata-onepunch-20261030",
