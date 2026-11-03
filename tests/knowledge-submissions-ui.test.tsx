@@ -8,13 +8,14 @@ vi.mock("../components/PersonalFrame",()=>({PersonalMemberControls:()=>null}));
 vi.mock("../lib/client/ui-locale",()=>({useUiLocale:()=>({locale:"ja"})}));
 import KnowledgeSubmissions from "../components/KnowledgeSubmissions";
 const stored=new Map<string,KnowledgeSubmission>(),sent:Record<string,unknown>[]=[];
-let failNext=false,loadFailure=false;
+let failNext=false,loadFailure=false,postGate:Promise<void>|null=null;
 const stamp="2026-11-03T09:00:00Z";
 const summary=()=>[...stored.values()].map(s=>({id:s.id,state:s.state,title:s.content.title,revision:s.revision,version:s.version,itemCount:s.content.items.length,updatedAt:s.updatedAt}));
 beforeEach(()=>{
- history.replaceState({},"","/member/submissions");stored.clear();sent.length=0;failNext=false;loadFailure=false;mocked.identity={status:"authenticated",user:{id:"10000000-0000-4000-8000-000000000001"},error:false,version:1,rechecking:false};
+ history.replaceState({},"","/member/submissions");stored.clear();sent.length=0;failNext=false;loadFailure=false;postGate=null;mocked.identity={status:"authenticated",user:{id:"10000000-0000-4000-8000-000000000001"},error:false,version:1,rechecking:false};
  vi.stubGlobal("fetch",vi.fn(async(path:string,init?:RequestInit)=>{
   if(init?.method==="POST"){
+   if(postGate)await postGate;
    const body=JSON.parse(String(init.body));sent.push(body);if(failNext){failNext=false;throw Error("delivery unknown");}
    const old=stored.get(body.id);const content=body.content?knowledgeSubmissionContentSchema.parse(body.content):old!.content;
    const submission:KnowledgeSubmission={id:body.id,revision:body.action==="save"?(old?.revision??0)+1:old!.revision,version:(old?.version??0)+1,state:body.action==="save"?"draft":body.action==="submit"?"queued":"cancelled",content,digest:"a".repeat(64),createdAt:stamp,updatedAt:stamp,origin:null};stored.set(body.id,submission);return Response.json({submission});
@@ -34,6 +35,11 @@ describe("member knowledge submission workflow",()=>{
   await write();fireEvent.click(screen.getByRole("button",{name:"保存して受付"}));await screen.findByText("受付を保存しました。AI処理と公開の接続は準備中です。");
   expect(sent.map(c=>c.action)).toEqual(["save","submit"]);expect(sent[1].expectedVersion).toBe(1);expect(stored.size).toBe(1);
   expect(screen.getByRole("button",{name:"この版を受付"}).hasAttribute("disabled")).toBe(true);
+ });
+ it("distinguishes a running save from an ambiguous failure",async()=>{
+  await write();let release!:()=>void;postGate=new Promise<void>(resolve=>{release=resolve;});fireEvent.click(screen.getByRole("button",{name:"草稿を保存"}));
+  await screen.findByText("操作を保存しています…");expect(screen.queryByRole("button",{name:"同じ操作を再試行"})).toBeNull();
+  await act(async()=>{release();});await screen.findByText("草稿を保存しました。");
  });
  it("retains input and reuses the operation ID after an ambiguous failure",async()=>{
   await write();failNext=true;fireEvent.click(screen.getByRole("button",{name:"草稿を保存"}));await screen.findByRole("button",{name:"同じ操作を再試行"});
