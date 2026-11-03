@@ -1,16 +1,18 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-03 14:55:52 JST。
+確認: 2026-11-03 15:04:47 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
-**outside-window**／停止モード: なし
+**interval**／停止モード: なし
 
 日本時間: 03:00〜07:00、09:00〜12:00、15:00〜18:00。ジョブ間10分休憩。
 
-次の開始候補: 2026-11-03 15:00:00 JST
+次の開始候補: 2026-11-03 16:09:39 JST
 
 最後の操作SHA-256: 1cef6cdd4cb0e4eca8b60a3ae51c6b25a96271b01ffcac788f41f36a5439bf79
+
+処理中: issue-5-dot-tezuka-adolf-20261025
 
 ChatGPTは[未承認の操作雛形](control-template.json)を読み、運営者が明示した操作だけを controls/plunode-wsl/ID.json に新規登録する。
 
@@ -79,14 +81,12 @@ Issue確認結果:
     "checkedAt": "2026-11-03T05:03:05+00:00"
   },
   "collection-control/issue-sources/60.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-    "checkedAt": "2026-11-03T05:47:34+00:00"
+    "status": "registered: issue-60-dot-ichikawa-houseki-20261028",
+    "checkedAt": "2026-11-03T05:58:11+00:00"
   },
   "collection-control/issue-sources/61.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-03T05:47:49+00:00"
+    "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
+    "checkedAt": "2026-11-03T05:58:13+00:00"
   },
   "collection-control/issue-sources/62.json": {
     "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
@@ -125,9 +125,8 @@ Issue確認結果:
     "checkedAt": "2026-11-03T04:57:49+00:00"
   },
   "collection-control/issue-sources/73.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-03T05:48:44+00:00"
+    "status": "registered: issue-73-dot-murata-onepunch-20261030",
+    "checkedAt": "2026-11-03T05:58:30+00:00"
   }
 }
 ```
