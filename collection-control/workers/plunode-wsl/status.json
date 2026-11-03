@@ -26,30 +26,27 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-03T09:20:00+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-03T08:50:02.734796+00:00",
+  "phase": "closing-window",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
-    "reason": "interval",
+    "reason": "closing-window",
     "eligibleAt": "2026-11-03T18:00:00+00:00",
     "windowEndAt": "2026-11-03T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-56-dot-urushibara-two-20261028",
-    "startedAt": "2026-11-03T08:39:12.328251+00:00",
-    "limitAt": "2026-11-03T09:10:00+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-manga23-20261019",
-    "endedAt": "2026-11-03T07:31:35.529840+00:00"
+    "requestId": "issue-56-dot-urushibara-two-20261028",
+    "endedAt": "2026-11-03T08:40:02.734801+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 3,
-    "waiting-lock": 41,
-    "retry-wait": 10,
-    "completed": 8
+    "retry-wait": 15,
+    "waiting-control": 31,
+    "completed": 9,
+    "waiting-lock": 4
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -168,11 +165,11 @@
     },
     "issue-25-utc-recovery-02": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-01",
-      "phase": "waiting-lock"
+      "phase": "retry-wait"
     },
     "issue-25-utc-recovery-03": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-04",
-      "phase": "waiting-lock"
+      "phase": "waiting-control"
     },
     "issue-25-utc-recovery-04": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-05",
@@ -180,24 +177,24 @@
     },
     "issue-25-utc-recovery-05": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-06",
-      "phase": "waiting-lock"
+      "phase": "waiting-control"
     },
     "issue-25-utc-recovery-06": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-07",
-      "phase": "waiting-lock"
+      "phase": "waiting-control"
     },
     "issue-25-utc-recovery-07": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-08",
-      "phase": "waiting-lock"
+      "phase": "waiting-control"
     },
     "issue-25-utc-recovery-08": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-09",
-      "phase": "retry-wait"
+      "phase": "waiting-control"
     },
     "issue-25-utc-recovery-09": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-10",
-      "phase": "waiting-lock"
+      "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-03T08:39:24.494271+00:00"
+  "checkedAt": "2026-11-03T08:57:45.728416+00:00"
 }
