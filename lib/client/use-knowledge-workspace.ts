@@ -37,11 +37,14 @@ export async function readKnowledge<T>(mode: string, args: Record<string, unknow
       (async () => {
         const response = await fetch("/api/knowledge/public?" + params, { cache: "no-store", signal: controller.signal });
         const data = await response.json();
-        if (!response.ok) throw new ReadError(data.error ?? "読めませんでした。再試行できます。", response.status);
+        if (!response.ok) throw new ReadError(typeof data?.error === "string" ? data.error : typeof data?.error?.message === "string" ? data.error.message : "読めませんでした。再試行できます。", response.status);
         return data as T;
       })(),
       new Promise<never>((_, reject) => { timer = setTimeout(() => { reject(new ReadError("取得に時間がかかっています。再試行できます。", 408)); controller.abort(); }, 15_000); }),
     ]);
+  } catch (error) {
+    if (error instanceof ReadError) throw error;
+    throw new ReadError("接続を確認できませんでした。表示を残したまま再試行できます。", 0);
   } finally { clearTimeout(timer); }
 }
 const blankNormal = (): KnowledgeWorkspaceNormal => ({ generation: null, rootId: null, records: [], entities: [], selection: null, epoch: 0 });
