@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-04 00:43:56 JST。
+確認: 2026-11-04 00:47:15 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -31,8 +31,9 @@ Issue確認結果:
     "checkedAt": "2026-11-03T15:32:45+00:00"
   },
   "collection-control/issue-sources/5.json": {
-    "status": "registered: issue-5-dot-tezuka-adolf-20261025",
-    "checkedAt": "2026-11-03T11:33:10+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T15:45:43+00:00"
   },
   "collection-control/issue-sources/42.json": {
     "status": "registered: issue-42-dot-matsumoto-three-20261026",
@@ -43,8 +44,9 @@ Issue確認結果:
     "checkedAt": "2026-11-03T15:32:47+00:00"
   },
   "collection-control/issue-sources/47.json": {
-    "status": "registered: issue-47-dot-yukimura-two-20261027",
-    "checkedAt": "2026-11-03T14:40:49+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
+    "checkedAt": "2026-11-03T15:45:07+00:00"
   },
   "collection-control/issue-sources/48.json": {
     "status": "held",
@@ -52,13 +54,13 @@ Issue確認結果:
     "checkedAt": "2026-11-03T15:41:02+00:00"
   },
   "collection-control/issue-sources/49.json": {
-    "status": "registered: issue-49-dot-hara-souten-20261027",
-    "checkedAt": "2026-11-03T09:47:00+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T15:45:33+00:00"
   },
   "collection-control/issue-sources/50.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
-    "checkedAt": "2026-11-03T15:41:18+00:00"
+    "status": "registered: issue-50-dot-endo-tista-20261027",
+    "checkedAt": "2026-11-03T15:45:44+00:00"
   },
   "collection-control/issue-sources/51.json": {
     "status": "held",
@@ -66,9 +68,8 @@ Issue確認結果:
     "checkedAt": "2026-11-03T15:41:26+00:00"
   },
   "collection-control/issue-sources/56.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-    "checkedAt": "2026-11-03T15:41:41+00:00"
+    "status": "registered: issue-56-dot-urushibara-two-20261028",
+    "checkedAt": "2026-11-03T15:46:04+00:00"
   },
   "collection-control/issue-sources/57.json": {
     "status": "registered: issue-57-dot-oshima-two-20261028",
