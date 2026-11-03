@@ -1,3 +1,5 @@
+U6の現行範囲：[有限収集と後追い整理](design/KNOWLEDGE_COLLECTION_U6.md)。まず資料取得・配送再開を接続し、読解・登録・意味整理を残件として管理する。
+
 2026-11-04 U5：受付項目への相談・取消、運営回答／再確認／例外確認、公開停止・元案件からの解除、本人通知をmain／3200／HTTPS βへ接続。限定βでのU5基本接続まで完了。一般提供条件と今回の会員新規Capsule保存再確認は残る（保存枠20件が満杯）。U6収集・U7統合受入・U8正式公開は別工程。 [検証・配置・制約](verification/KNOWLEDGE_APPEALS_U5_20261104.md)。以下は各時点の履歴。
 
 2026-11-04 U5修正：投稿の操作・到達先・実選択の契約、上部結果カード／永続未読、提供元を分けた同意、プロフィール・匿名の投稿者帰属と公開活動を接続。[修正契約](design/KNOWLEDGE_SUBMISSION_REPAIR_20261104.md)／[通知・帰属の検証](verification/KNOWLEDGE_SUBMISSION_FEEDBACK_20261104.md)。U5全体は未完了、異議・運営例外は後続。配置結果は[β実操作・移行・配置の総合記録](verification/KNOWLEDGE_SUBMISSION_REPAIR_BETA_20261104.md)を参照。

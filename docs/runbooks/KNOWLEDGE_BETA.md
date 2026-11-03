@@ -97,3 +97,14 @@ fresh dumpを別名DBへ復元し、全既存tableの旧列fingerprintと、追�
 Webは既存運営許可リストで私有相談だけへアクセスする。共通知識の公開状態変更は、会員側の確定outboxをreview workerが既存foundationへ配達する。処置がpendingなら通知まで再開する。同じrequest IDのまま配達し、公開側commit後に停止した場合も内容変更を繰返さず通知を再開する。blockedは状態競合として運営画面で再確認する。解除は元案件と現在の状態版を照合する。
 
 復旧時は026対応の資材を保持する。旧dumpで公開状態や相談を上書きしない。緊急に相談APIを止める場合も既存の私有DBと、確定したpublic commandを消さない。全件の手動承認化・無料枠のリセット・既存収集Workerの停止によって回避しない。
+
+
+## U6a：資料取得Worker
+
+既存会員DB000〜026と知識001/002/004を保ち、追加027を明示適用する。Node24から `scripts/member-migrate.ts --knowledge-collection --confirm-origin https://graph-beta.isinxnisi.com`。別DB復元で旧列fingerprint・migration再実行不変を確認してからliveへ適用する。追加後のledgerは28件。公開DBのmigrationは増やさない。
+
+profileの初回準備は `python3 scripts/knowledge-collection-config.py --directory ~/.local/state/plunode-previews`。既存profileがあれば生成し直さない。serverのbeta-collection.json、clientのbeta-collection-client.jsonを0600、state directoryを0700で保持する。tokenをチャットやGitへ出さない。資格を失効する場合はcapture Workerを止めてserver profileを取り外す。pending commandと取得artifactは削除せず、再発行した資格での再開は現在job・leaseを照合する。
+
+既存起動入口 `python3 scripts/start-local-previews.py beta --node <Node24絶対パス>` はprofileがあると収集Workerも起動する。Webが既に3200を使用中なら重複起動しない。Worker単独の再開は同じNodeで `--import tsx scripts/knowledge-collection-worker.ts --config ~/.local/state/plunode-previews/beta-collection-client.json`。一回だけの確認は `--once`。自動起動は既存beta launcherの範囲だけで、Windows予定を新設しない。
+
+運営確認先は `/operations#collection`。現在の段階は資料取得までであり、「取得済み」を知識の公開成功と呼ばない。raw artifactはprivate DB、PC checkpointはprivate collection-state。復旧は027対応のWeb・Workerを使い、古いdumpでliveを上書きしない。VPSへの接続はU8の別工程。
