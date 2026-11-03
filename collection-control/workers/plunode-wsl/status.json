@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-03T19:18:47.873755+00:00",
-  "phase": "ready",
+  "nextStartAt": "2026-11-03T20:27:11.681376+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
-    "ready": true,
-    "reason": "ready",
-    "eligibleAt": null,
+    "ready": false,
+    "reason": "interval",
+    "eligibleAt": "2026-11-03T20:27:11.681376+00:00",
     "windowEndAt": "2026-11-03T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-16-adachi-three-20261025",
+    "startedAt": "2026-11-03T19:22:11.681378+00:00",
+    "limitAt": "2026-11-03T20:17:11.681376+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-49-dot-hara-souten-20261027",
     "endedAt": "2026-11-03T19:08:47.873758+00:00"
@@ -191,5 +195,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-03T19:20:33.890755+00:00"
+  "checkedAt": "2026-11-03T19:22:18.147000+00:00"
 }
