@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import path from "node:path";
 import { readFile } from "node:fs/promises";
 import type { Pool, PoolClient, QueryResultRow } from "pg";
 import { z } from "zod";
@@ -52,7 +53,7 @@ export function createKnowledgeSubmissionService(pool: Pool, options?: { memberS
   async function ready() {
     verified ??= (async () => {
       const name=options?.memberStore ? "020-knowledge-submissions.sql" : migration;
-      const checksum=options?.memberStore ? createHash("sha256").update(await readFile(new URL("../../db/member/020-knowledge-submissions.sql",import.meta.url),"utf8")).digest("hex") : (await migrationFile()).checksum;
+      const checksum=options?.memberStore ? createHash("sha256").update(await readFile(path.join(process.cwd(),"db/member/020-knowledge-submissions.sql"),"utf8")).digest("hex") : (await migrationFile()).checksum;
       const row = (await pool.query(`SELECT checksum FROM ${options?.memberStore ? "member_migration" : "knowledge75.migrations"} WHERE name=$1`, [name])).rows[0];
       if (row?.checksum !== checksum) throw new KnowledgeError("投稿用の明示migrationが必要です", 503, "MIGRATION_REQUIRED");
     })().catch(error => { verified = undefined; throw error; });
