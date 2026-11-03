@@ -148,9 +148,8 @@
       "checkedAt": "2026-11-03T04:57:49+00:00"
     },
     "collection-control/issue-sources/73.json": {
-      "status": "held",
-      "reason": "<urlopen error _ssl.c:990: The handshake operation timed out>",
-      "checkedAt": "2026-11-03T14:47:48+00:00"
+      "status": "registered: issue-73-dot-murata-onepunch-20261030",
+      "checkedAt": "2026-11-03T14:51:09+00:00"
     }
   },
   "publicApply": false,
@@ -192,5 +191,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-03T14:50:13.903191+00:00"
+  "checkedAt": "2026-11-03T14:53:20.561519+00:00"
 }

@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-03 23:50:13 JST。
+確認: 2026-11-03 23:53:20 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -123,9 +123,8 @@ Issue確認結果:
     "checkedAt": "2026-11-03T04:57:49+00:00"
   },
   "collection-control/issue-sources/73.json": {
-    "status": "held",
-    "reason": "<urlopen error _ssl.c:990: The handshake operation timed out>",
-    "checkedAt": "2026-11-03T14:47:48+00:00"
+    "status": "registered: issue-73-dot-murata-onepunch-20261030",
+    "checkedAt": "2026-11-03T14:51:09+00:00"
   }
 }
 ```
