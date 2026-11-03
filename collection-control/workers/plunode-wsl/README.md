@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-04 01:01:00 JST。
+確認: 2026-11-04 01:08:30 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -51,14 +51,12 @@ Issue確認結果:
     "checkedAt": "2026-11-03T15:47:48+00:00"
   },
   "collection-control/issue-sources/49.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
-    "checkedAt": "2026-11-03T15:59:04+00:00"
+    "status": "registered: issue-49-dot-hara-souten-20261027",
+    "checkedAt": "2026-11-03T16:01:49+00:00"
   },
   "collection-control/issue-sources/50.json": {
-    "status": "held",
-    "reason": "Remote end closed connection without response",
-    "checkedAt": "2026-11-03T15:59:32+00:00"
+    "status": "registered: issue-50-dot-endo-tista-20261027",
+    "checkedAt": "2026-11-03T16:01:50+00:00"
   },
   "collection-control/issue-sources/51.json": {
     "status": "registered: issue-51-dot-araki-rohan-20261027",
