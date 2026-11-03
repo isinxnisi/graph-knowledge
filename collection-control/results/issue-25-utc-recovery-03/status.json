@@ -97,11 +97,11 @@
   "requestSha256": "67aa46a50204029b93086cb11c41b6251061d0fa3fc2ed6f131aaadc0e078a56",
   "kind": "collect-review",
   "phase": "waiting-control",
-  "generation": 13340,
+  "generation": 13341,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
-  "updatedAt": "2026-11-03T07:10:42+00:00",
+  "updatedAt": "2026-11-03T07:21:58+00:00",
   "result": {
     "jobId": "issue-25-utc-recovery-r0003-4e7b3edf51e9545b",
     "collectionUnchanged": false,
@@ -128,5 +128,5 @@
     "datasets/collection-decision-drafts/issue-25-utc-recovery-03/ccb73e2f413433913cd3338750b53428ed346165db8363a62dba44f004f0a9f0/issue-25-utc-recovery-03-normal-draft.json"
   ],
   "retryAt": 1793687059.27456,
-  "message": "Execution gate: one-job-per-cycle"
+  "message": "Execution gate: interval"
 }
