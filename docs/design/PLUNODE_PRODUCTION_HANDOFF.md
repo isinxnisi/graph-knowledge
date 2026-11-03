@@ -1,3 +1,5 @@
+2026-11-03 U5受付：本人画面・認証API・草稿／受付／取消・保存Capsuleの選択捕捉を会員DBへ接続。追加020はuser FKと停止triggerを備える。[確認先・検証・配置・残件](../verification/KNOWLEDGE_SUBMISSION_INTAKE_U5_20261103.md)。AI job・原資料照合・自動受理／公開・通知は未接続。基本あと2回程度。以下の未接続・回数は各段階時点の履歴。
+
 2026-11-03 U5更新：0.8Bは任意の助言、Geminiは通常分の自動受理へ接続する方針を採用。先行20件＋独立40件で誤自動受理0/40、正常自動受理候補18/20、有効回答59/60。[採用する処理と残件](KNOWLEDGE_SUBMISSIONS_U5.md)／[Gemini実測](../verification/KNOWLEDGE_GEMINI_U5_20261103.md)。接続部品と結果ルールまで作業branchへ実装し、投稿UI・認証API・永続job・公開transaction・通知は未接続。基本追加2〜3回以上の推定。共有Kevの追加停止・変更はせず、既存U4の実行物を保持。
 
 # 本運用統合の実装引継ぎ

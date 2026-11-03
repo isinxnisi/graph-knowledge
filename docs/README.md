@@ -1,3 +1,5 @@
+- U5本人受付（2026-11-03）：[投稿画面・会員DB・Capsule選択・停止／退会](design/KNOWLEDGE_SUBMISSIONS_U5.md)／[実OIDC・復元・βの確認記録](verification/KNOWLEDGE_SUBMISSION_INTAKE_U5_20261103.md)。受付までの段階実装で、AI処理・公開・通知は次工程。
+
 - U5自動化方針・Gemini実評価（2026-11-03）：[0.8B任意助言／Gemini通常自動受理と残件](design/KNOWLEDGE_SUBMISSIONS_U5.md)／[60件の結果・無料枠・再試行・未接続範囲](verification/KNOWLEDGE_GEMINI_U5_20261103.md)。接続部品まで作業branchへ実装。利用者の投稿から公開までは未完了。
 
 - U5着手・未完了（2026-11-03）：[投稿データ層・審査の境界と次の工程](design/KNOWLEDGE_SUBMISSIONS_U5.md)／[先行Kev比較・復帰・PG検証](verification/KNOWLEDGE_SUBMISSIONS_U5_20261103.md)。作業branchの内部部品と評価のみ。利用者向け投稿画面・審査・受理・通知は未接続。main／3200／β／3276はU4の実行物を維持。

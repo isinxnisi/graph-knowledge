@@ -36,7 +36,8 @@ def beta_knowledge():
     values = json.loads(private.read_text())
     from urllib.parse import urlsplit
     expected = {'KNOWLEDGE_RUNTIME':'beta','KNOWLEDGE_PUBLICATION_ENABLED':'1','KNOWLEDGE_WORKSPACE_ENABLED':'1','KNOWLEDGE_PUBLIC_ORIGIN':'https://graph-beta.isinxnisi.com','KNOWLEDGE_NEO4J_URL':'bolt://127.0.0.1:7699'}
-    if set(values) != set(expected) | {'KNOWLEDGE_DATABASE_URL','KNOWLEDGE_NEO4J_PASSWORD'} or any(values.get(k) != v for k,v in expected.items()):
+    optional = {'KNOWLEDGE_SUBMISSIONS_ENABLED'} if 'KNOWLEDGE_SUBMISSIONS_ENABLED' in values else set()
+    if set(values) != set(expected) | {'KNOWLEDGE_DATABASE_URL','KNOWLEDGE_NEO4J_PASSWORD'} | optional or any(values.get(k) != v for k,v in expected.items()) or values.get('KNOWLEDGE_SUBMISSIONS_ENABLED','0') not in ('0','1'):
         raise ValueError('Unexpected knowledge beta configuration')
     url = urlsplit(values['KNOWLEDGE_DATABASE_URL'])
     if (url.scheme,url.hostname,url.port,url.path) != ('postgresql','127.0.0.1',55476,'/plunode_knowledge75_beta') or not values['KNOWLEDGE_NEO4J_PASSWORD']:

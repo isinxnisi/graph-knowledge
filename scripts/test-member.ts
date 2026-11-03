@@ -3,7 +3,8 @@ import { randomBytes, randomUUID } from "node:crypto";
 
 // Disposable dedicated PostgreSQL. Never targets a configured product DB, and
 // cleanup only removes the uniquely named container created by this invocation.
-const capsuleTests=process.argv.includes("--capsules");
+const submissionTests=process.argv.includes("--submissions");
+const capsuleTests=process.argv.includes("--capsules")||submissionTests;
 const accountTests=process.argv.includes("--accounts");
 const operationsTests=process.argv.includes("--operations")||accountTests;
 const communityTests = process.argv.includes("--community")||operationsTests||capsuleTests;
@@ -16,6 +17,7 @@ const env: NodeJS.ProcessEnv = { ...process.env, NODE_ENV: "test", GRAPH_DATASET
   MEMBER_AUTH_SECRET: randomBytes(32).toString("hex"),
   MEMBER_DATABASE_URL: `postgresql://gk_member:${password}@127.0.0.1:55432/graph_member_test`,
   POSTGRES_USER: "gk_member", POSTGRES_PASSWORD: password, POSTGRES_DB: "graph_member_test" };
+if(submissionTests){env.KNOWLEDGE_SUBMISSIONS_ENABLED="1";env.MEMBER_TEST_CONTAINER=container;}
 if (communityTests) env.COMMUNITY_ENABLED = "1";
 if(capsuleTests)env.MEMBER_CAPSULE_TESTS="1";
 if(operationsTests)env.SITE_OPERATIONS_ENABLED="1";
@@ -46,7 +48,7 @@ try {
 
   child = spawn("node", browserTests
     ? ["--import", "tsx", "scripts/test-member-browser.ts", ...process.argv.slice(2).filter(arg => arg !== "--capsules" && arg !== "--e2e" && arg !== "--community" && arg !== "--safety" && arg !== "--operations" && arg !== "--accounts")]
-    : ["node_modules/vitest/vitest.mjs", "run", ...(capsuleTests ? ["tests/capsule-document.integration.test.ts"] : communityTests ? [accountTests ? "tests/public-profiles.integration.test.ts" : operationsTests ? "tests/site-operations.integration.test.ts" : safetyTests ? "tests/community-safety.integration.test.ts" : "tests/community.integration.test.ts"] : ["tests/member.integration.test.ts", "tests/member-cold.integration.test.ts"]), "--maxWorkers=1", "--no-file-parallelism", "--exclude", "backups/**", "--exclude", ".local/**"], { env, stdio: "inherit" });
+    : ["node_modules/vitest/vitest.mjs", "run", ...(submissionTests ? ["tests/knowledge-submission-member.integration.test.ts"] : capsuleTests ? ["tests/capsule-document.integration.test.ts"] : communityTests ? [accountTests ? "tests/public-profiles.integration.test.ts" : operationsTests ? "tests/site-operations.integration.test.ts" : safetyTests ? "tests/community-safety.integration.test.ts" : "tests/community.integration.test.ts"] : ["tests/member.integration.test.ts", "tests/member-cold.integration.test.ts"]), "--maxWorkers=1", "--no-file-parallelism", "--exclude", "backups/**", "--exclude", ".local/**"], { env, stdio: "inherit" });
   const timer = setTimeout(() => child?.kill("SIGTERM"), browserTests ? 960_000 : 180_000);
   const code = await new Promise<number>((resolve, reject) => { child!.once("error", reject); child!.once("exit", code => resolve(code ?? 1)); });
   clearTimeout(timer);

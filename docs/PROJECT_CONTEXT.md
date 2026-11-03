@@ -1,3 +1,5 @@
+2026-11-03、U5の本人受付を接続。投稿画面・認証付きAPI・保存済みCapsuleの選択取込・版固定受付・編集／取消と停止／退会に対応。私有投稿は会員DBのmember_knowledge、公開正本と分離する。AI処理／自動公開は次工程。[現行契約](design/KNOWLEDGE_SUBMISSIONS_U5.md)／[検証・配置](verification/KNOWLEDGE_SUBMISSION_INTAKE_U5_20261103.md)。以下は各時点の履歴。
+
 2026-11-03、U5のGemini無料API実評価と接続部品・自動結果ルールを作業branchへ追加。0.8Bは任意助言、通常分はGeminiから自動受理へ進める。[現在の処理・残件](design/KNOWLEDGE_SUBMISSIONS_U5.md)／[実測・利用量・失敗](verification/KNOWLEDGE_GEMINI_U5_20261103.md)。投稿UI・認証API・永続job・公開・通知は未接続。main／3200／β／3276はU4を保持し、本番・共通Kevを変更していない。以下は各時点の履歴。
 
 2026-11-03、U5の着手として実Kev 0.8B／4B評価と、公開原記録から分離した投稿版・提出receipt・取消の内部データ層を作業branchへ追加。[現在の範囲・残件](design/KNOWLEDGE_SUBMISSIONS_U5.md)。利用者向け投稿画面・実会員認証・非同期審査・受理・通知は未接続。main／3200／β／3276はU4を維持し、共有Kevは元の0.8Bへ復帰した。

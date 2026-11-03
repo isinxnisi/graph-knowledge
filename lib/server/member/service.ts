@@ -1,3 +1,4 @@
+import {createMemberKnowledgeSubmissions} from "./knowledge-submissions";
 import {createCapsulePostReports} from "./capsule-post-reports";
 import {publicProfileImage} from "../../domain/profile-image";
 import { createHash, randomUUID } from "node:crypto";
@@ -40,6 +41,7 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
     if (content.dataset !== dataset) throw new MemberError(400, "DATASET_MISMATCH");
   }
   return {
+    submissions: createMemberKnowledgeSubmissions(pool,config.origin,owner,dataset),
     accounts: createPublicProfiles(pool, config.origin, owner, config.secret),
     community: createCommunityService(pool, config.origin, owner, config.secret, dataset),
     operator: createSiteOperationsService(pool, config.origin, owner, config.secret),

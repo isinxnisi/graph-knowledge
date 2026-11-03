@@ -1,3 +1,5 @@
+2026-11-03 U5追補：本人受付を有効にする場合は会員DBへ追加020を明示適用する。知識DBの003は適用しない。private beta-knowledge.jsonの任意 `KNOWLEDGE_SUBMISSIONS_ENABLED=1` とWebで有効化する。AI処理はまだ接続しない。[受付の配置・復旧・残件](../verification/KNOWLEDGE_SUBMISSION_INTAKE_U5_20261103.md)を参照。
+
 # 知識読取・年表付きCapsuleの段階β
 
 U4の基本接続まで反映。正式VPSへの配置手順ではない。既存3200とHTTPS βのGoogle認証・会員DB・Capsule・コミュニティ・通常KG・AI artifactを保持する。
