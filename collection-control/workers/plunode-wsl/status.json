@@ -47,8 +47,9 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 8,
-    "waiting-control": 36,
+    "waiting-control": 35,
     "completed": 17,
+    "running": 1,
     "awaiting-recovery": 1
   },
   "issueIntake": {
@@ -196,5 +197,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-03T00:36:48.022885+00:00"
+  "checkedAt": "2026-11-03T00:37:24.241604+00:00"
 }
