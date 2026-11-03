@@ -1,12 +1,12 @@
 # 収集Workerの処理結果
 
-issue-25-utc-recovery-01：**waiting-lock**
+issue-25-utc-recovery-01：**retry-wait**
 
 公開apply・restore・本番配置は行わない。承認者名は本人認証の証明ではない。
 
 復旧元: [issue-25-manga23-20261019-repair1-batch-03](../issue-25-manga23-20261019-repair1-batch-03/README.md)。旧依頼・承認・失敗履歴は保持し、日時の表記だけをUTC Zへ修正。同じ取得cache・通算予算を使用する。
 
-共通ロック使用中。次回に再確認する。
+Command '['git', '-c', 'http.version=HTTP/2', '-c', 'http.lowSpeedLimit=1', '-c', 'http.lowSpeedTime=20', '-c', 'credential.helper=!"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe"', '-c', 'credential.interactive=never', '--git-dir=/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/control.git', 'fetch', '--no-tags', 'origin', 'refs/heads/codex/collection-control:refs/remotes/control', 'refs/heads/main:refs/remotes/source']' timed out after 90 seconds
 
 ```json
 {
