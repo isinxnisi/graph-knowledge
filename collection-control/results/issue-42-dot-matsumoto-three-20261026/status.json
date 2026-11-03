@@ -70,13 +70,13 @@
   },
   "requestSha256": "90859cacf56fa33c3fc06c58206d81879a7d4e3995746680dd483e94a7cdcafc",
   "kind": "issue-prepare",
-  "phase": "blocked",
-  "generation": 4051,
+  "phase": "retry-wait",
+  "generation": 4150,
   "attempts": 6,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-02T21:27:28+00:00",
-  "retryAt": 1793647118.8804228,
+  "updatedAt": "2026-11-03T06:34:25+00:00",
+  "retryAt": 1793691292.7238576,
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -122,5 +122,5 @@
     "generatedArtifacts": {}
   },
   "executionComplete": true,
-  "message": "Immutable GitHub artifact changed: collection-control/artifacts/issue-42-dot-matsumoto-three-20261026/.local/collection-issues/issue-42-dot-matsumoto-three-20261026/request-cache/requests.json"
+  "message": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n"
 }
