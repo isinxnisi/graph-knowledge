@@ -82,12 +82,12 @@
   },
   "requestSha256": "790ef37cbbd0b9ee0701581921d7eaf16fc4df8b8c59d3f0e02a0a7961cd9666",
   "kind": "collect-review",
-  "phase": "waiting-control",
-  "generation": 13623,
+  "phase": "retry-wait",
+  "generation": 13717,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
-  "updatedAt": "2026-11-03T09:09:26+00:00",
-  "message": "Execution gate: outside-window",
-  "retryAt": 1793678429.7885811
+  "updatedAt": "2026-11-03T17:43:04+00:00",
+  "message": "<urlopen error _ssl.c:990: The handshake operation timed out>",
+  "retryAt": 1793727933.526939
 }
