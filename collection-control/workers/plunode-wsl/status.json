@@ -43,9 +43,9 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 2,
-    "waiting-control": 50,
+    "waiting-control": 51,
     "completed": 8,
-    "retry-wait": 2
+    "retry-wait": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -53,9 +53,8 @@
       "checkedAt": "2026-11-03T05:02:45+00:00"
     },
     "collection-control/issue-sources/16.json": {
-      "status": "held",
-      "reason": "<urlopen error _ssl.c:990: The handshake operation timed out>",
-      "checkedAt": "2026-11-03T11:50:09+00:00"
+      "status": "registered: issue-16-adachi-three-20261025",
+      "checkedAt": "2026-11-03T11:56:48+00:00"
     },
     "collection-control/issue-sources/5.json": {
       "status": "registered: issue-5-dot-tezuka-adolf-20261025",
@@ -142,9 +141,8 @@
       "checkedAt": "2026-11-03T10:45:30+00:00"
     },
     "collection-control/issue-sources/70.json": {
-      "status": "held",
-      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-      "checkedAt": "2026-11-03T11:51:07+00:00"
+      "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
+      "checkedAt": "2026-11-03T11:57:31+00:00"
     },
     "collection-control/issue-sources/71.json": {
       "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
@@ -194,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-03T11:55:49.039873+00:00"
+  "checkedAt": "2026-11-03T12:00:33.542395+00:00"
 }
