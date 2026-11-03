@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-03 12:51:12 JST。
+確認: 2026-11-03 13:02:48 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -99,12 +99,14 @@ Issue確認結果:
     "checkedAt": "2026-11-02T18:40:15+00:00"
   },
   "collection-control/issue-sources/66.json": {
-    "status": "registered: issue-66-dot-togashi-two-20261029",
-    "checkedAt": "2026-11-02T18:40:17+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
+    "checkedAt": "2026-11-03T03:52:49+00:00"
   },
   "collection-control/issue-sources/67.json": {
-    "status": "registered: issue-67-dot-mizuki-two-20261029",
-    "checkedAt": "2026-11-02T18:40:18+00:00"
+    "status": "held",
+    "reason": "Remote end closed connection without response",
+    "checkedAt": "2026-11-03T03:53:03+00:00"
   },
   "collection-control/issue-sources/68.json": {
     "status": "registered: issue-68-dot-fujikoa-two-20261029",
@@ -143,4 +145,4 @@ Issue確認結果:
 - [issue-25-utc-recovery-06](../../results/issue-25-utc-recovery-06/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-07）
 - [issue-25-utc-recovery-07](../../results/issue-25-utc-recovery-07/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-08）
 - [issue-25-utc-recovery-08](../../results/issue-25-utc-recovery-08/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-09）
-- [issue-25-utc-recovery-09](../../results/issue-25-utc-recovery-09/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-10）
+- [issue-25-utc-recovery-09](../../results/issue-25-utc-recovery-09/README.md): retry-wait（旧 issue-25-manga23-20261019-repair1-batch-10）

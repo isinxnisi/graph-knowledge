@@ -42,11 +42,11 @@
   },
   "controlError": null,
   "requestsByPhase": {
-    "blocked": 5,
-    "waiting-control": 36,
-    "completed": 17,
-    "retry-wait": 2,
-    "awaiting-recovery": 2
+    "blocked": 4,
+    "waiting-control": 29,
+    "retry-wait": 12,
+    "completed": 16,
+    "awaiting-recovery": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -126,12 +126,14 @@
       "checkedAt": "2026-11-02T18:40:15+00:00"
     },
     "collection-control/issue-sources/66.json": {
-      "status": "registered: issue-66-dot-togashi-two-20261029",
-      "checkedAt": "2026-11-02T18:40:17+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno 104] Connection reset by peer>",
+      "checkedAt": "2026-11-03T03:52:49+00:00"
     },
     "collection-control/issue-sources/67.json": {
-      "status": "registered: issue-67-dot-mizuki-two-20261029",
-      "checkedAt": "2026-11-02T18:40:18+00:00"
+      "status": "held",
+      "reason": "Remote end closed connection without response",
+      "checkedAt": "2026-11-03T03:53:03+00:00"
     },
     "collection-control/issue-sources/68.json": {
       "status": "registered: issue-68-dot-fujikoa-two-20261029",
@@ -190,8 +192,8 @@
     },
     "issue-25-utc-recovery-09": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-10",
-      "phase": "waiting-control"
+      "phase": "retry-wait"
     }
   },
-  "checkedAt": "2026-11-03T03:51:12.659100+00:00"
+  "checkedAt": "2026-11-03T04:02:48.786261+00:00"
 }
