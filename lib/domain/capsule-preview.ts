@@ -13,15 +13,19 @@ function timelinePreview(capsule:MemberCapsule) {
   const rows=snapshot.records.flatMap(r=>r.content.times.map(t=>({record:r,time:t.time,timeId:t.id})));
   const placements=snapshot.timeline?.placements??[];
   const candidates=rows.filter(row=>main?placements.some(p=>p.recordId===row.record.id&&p.timeId===row.timeId&&p.axisId===main.id):row.time.kind==="calendar");
-  const selected=candidates.slice().sort((a,b)=>String(a.time.from).localeCompare(String(b.time.from))).slice(0,4);
   const order=main?.kind==="qualitative"?main.order:undefined;
-  const keys=[...new Set(selected.flatMap(r=>[String(r.time.from),String(r.time.to??r.time.from)]))].sort((a,b)=>order?order.indexOf(a)-order.indexOf(b):main?.kind==="cycle"?Number(a)-Number(b):a.localeCompare(b));
+  const compare=(a:string,b:string)=>order?order.indexOf(a)-order.indexOf(b):main?.kind==="cycle"?Number(a)-Number(b):a.localeCompare(b);
+  const selected=candidates.slice().sort((a,b)=>compare(String(a.time.from),String(b.time.from))).slice(0,4);
+  const keys=[...new Set(selected.flatMap(r=>[String(r.time.from),String(r.time.to??r.time.from),...(r.time.kind==="calendar"?[r.time.startLatest,r.time.endEarliest].filter((s):s is string=>!!s):r.time.kind==="cycle"&&r.time.wrap?["0",String(r.time.period)]:[])]))].sort(compare);
   const y=(key:string)=>76+(keys.indexOf(key)/Math.max(1,keys.length-1))*340;
   return {axis:main?.label??"年月日・期間",total:rows.length,untimed:snapshot.records.filter(r=>!r.content.times.length).length,
     ticks:keys.map(key=>({label:key,y:y(key)})),
     items:selected.map((row,i)=>({id:row.record.id+":"+row.timeId,title:row.record.content.assertion,label:themeTimeLabel(row.time),
       meaning:row.time.kind==="calendar"?calendarMeaning(row.time):row.time.to!==undefined?"duration":"point",
-      x:154+i*16,y:y(String(row.time.from)),end:y(String(row.time.to??row.time.from))})),
+      x:154+i*16,y:y(String(row.time.from)),end:y(String(row.time.to??row.time.from)),
+      startLatest:row.time.kind==="calendar"&&row.time.startLatest?y(row.time.startLatest):undefined,
+      endEarliest:row.time.kind==="calendar"&&row.time.endEarliest?y(row.time.endEarliest):undefined,
+      wrap:row.time.kind==="cycle"&&row.time.wrap})),
   };
 }
 export function capsulePreviewModel(capsule:MemberCapsule) {

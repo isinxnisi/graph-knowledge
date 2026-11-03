@@ -54,5 +54,15 @@ it("年表カードは点と期間を区別し、未定時期・別軸を混同�
  expect(timeline.ticks.map(r=>r.label)).toContain("2022-01-04");
  const response=await capsuleShareImage(cap),bytes=Buffer.from(await response.arrayBuffer());expect(bytes.readUInt32BE(16)).toBe(1200);expect(bytes.readUInt32BE(20)).toBe(630);
  if(process.env.CAPSULE_TIMELINE_PREVIEW_PROOF)await writeFile(process.env.CAPSULE_TIMELINE_PREVIEW_PROOF,bytes);
+ const period=value.document!.knowledge!.snapshot.records.find(r=>r.id==="period")!;
+ period.content.times[0].time={kind:"calendar",from:"2021-12-28",startLatest:"2021-12-31",endEarliest:"2022-01-03",to:"2022-01-04",meaning:"duration",label:"境界が不確か"};
+ const uncertain=capsulePreviewModel(cap).timeline!;const interval=uncertain.items.find(i=>i.id==="period:t")!;
+ expect(interval.startLatest).toBeGreaterThan(interval.y);expect(interval.endEarliest).toBeLessThan(interval.end);
+ expect((await(await capsuleShareImage(cap)).arrayBuffer()).byteLength).toBeGreaterThan(10000);
+ const cycle=structuredClone(cap),k=cycle.content.document!.knowledge!;
+ k.snapshot.records=[{...k.snapshot.records[0],content:{...k.snapshot.records[0].content,times:[{id:"cycle",time:{kind:"cycle",axis:"一日",period:24,unit:"時",from:20,to:4,wrap:true,label:"夜間"}}]}}];
+ k.snapshot.timeline={version:1,axes:[{id:"day",kind:"cycle",label:"一日"}],placements:[{axisId:"day",recordId:"point",timeId:"cycle"}],insets:[]};
+ const wrapped=capsulePreviewModel(cycle).timeline!;expect(wrapped.items[0].wrap).toBe(true);expect(wrapped.ticks.map(t=>t.label)).toEqual(["0","4","20","24"]);
+ expect((await(await capsuleShareImage(cycle)).arrayBuffer()).byteLength).toBeGreaterThan(10000);
  value.document!.knowledge!.initialView="graph";expect(capsulePreviewModel(cap).timeline).toBeNull();
 },30000);

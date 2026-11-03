@@ -180,7 +180,7 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
           <label>{text.body}<textarea value={body} placeholder={text.placeholder} maxLength={DISCUSSION_LIMITS.body} disabled={busy || pending} onCompositionStart={() => { composing.current = true; }} onCompositionEnd={() => { composing.current = false; }} onChange={event => edit(event.target.value)} rows={3} /></label>
           <div className={css.composerFooter}><span className={css.composerStatus}>{text.as(data.viewer.name)} · {body.length}/{DISCUSSION_LIMITS.body}</span>
             <button className={`${css.button} ${css.primary}`} disabled={busy || !body.trim()} type="submit"><Icon name="arrow" />{busy ? text.posting : pending ? text.retry : text.submit}</button></div>
-          {pending && <p className={css.feedback} role="status">{text.pending}</p>}
+          {pending && !busy && <p className={css.feedback} role="status">{text.pending}</p>}
         </form>}
       <details className={css.details}><summary>{text.about}</summary><p>{text.help}</p><p>{text.savedDraft}</p>{data.canManage && <p>{text.manageHelp}</p>}</details>
     </>}

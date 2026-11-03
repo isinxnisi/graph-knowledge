@@ -24,7 +24,12 @@ export async function capsuleShareImage(capsule:MemberCapsule){
           {model.timeline.items.map((item,i)=>{
             const point=item.y===item.end,uncertain=item.meaning==="occurrence-window"||item.meaning==="unclassified-range",color=point?"#ac7339":uncertain?"#81989d":"#397e89";
             return <g key={item.id}>
-              {!point&&<line x1={item.x} x2={item.x} y1={item.y} y2={item.end} stroke={color} strokeWidth="3" strokeDasharray={uncertain?"3 4":undefined}/>}
+              {!point&&<g>
+                <line x1={item.x} x2={item.x} y1={item.startLatest??item.y} y2={item.wrap?416:item.endEarliest??item.end} stroke={color} strokeWidth="3" strokeDasharray={uncertain?"3 4":undefined}/>
+                {item.wrap&&<line x1={item.x} x2={item.x} y1="76" y2={item.end} stroke={color} strokeWidth="3"/>}
+                {item.startLatest!==undefined&&<line x1={item.x} x2={item.x} y1={item.y} y2={item.startLatest} stroke={color} strokeWidth="2" strokeDasharray="2 3"/>}
+                {item.endEarliest!==undefined&&<line x1={item.x} x2={item.x} y1={item.endEarliest} y2={item.end} stroke={color} strokeWidth="2" strokeDasharray="2 3"/>}
+              </g>}
               <circle cx={item.x} cy={item.y} r={point?5:3} fill={point?color:"#fbfcfa"} stroke={color} strokeWidth="2"/>
               {!point&&<line x1={item.x-4} x2={item.x+4} y1={item.end} y2={item.end} stroke={color} strokeWidth="2"/>}
               <path d={`M ${item.x+6} ${item.y} L 226 ${76+i*100} L 238 ${76+i*100}`} fill="none" stroke={color} strokeWidth="1"/>
