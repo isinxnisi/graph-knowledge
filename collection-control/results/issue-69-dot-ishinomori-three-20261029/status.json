@@ -70,13 +70,13 @@
   },
   "requestSha256": "a3f50dae8f31b200fc63d218d4c206ad20ade9fce955125a5af066d52220b20f",
   "kind": "issue-prepare",
-  "phase": "waiting-control",
-  "generation": 1853,
+  "phase": "retry-wait",
+  "generation": 1907,
   "attempts": 5,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-03T09:24:54+00:00",
-  "message": "Execution gate: outside-window",
+  "updatedAt": "2026-11-03T15:15:01+00:00",
+  "message": "<urlopen error [Errno 104] Connection reset by peer>",
   "result": {
     "schemaVersion": 1,
     "status": "technical-incomplete",
@@ -124,5 +124,5 @@
     }
   },
   "executionComplete": false,
-  "retryAt": 1793697400.0316257
+  "retryAt": 1793720840.3997178
 }
