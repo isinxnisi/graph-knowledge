@@ -87,12 +87,12 @@
   },
   "requestSha256": "dbbd9ac962a478f5a8f351fcdbd05ab3373bfebe364f8b738b58bffb17d3d104",
   "kind": "collect-review",
-  "phase": "waiting-control",
-  "generation": 3040,
+  "phase": "waiting-lock",
+  "generation": 3041,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-03T06:24:42+00:00",
+  "updatedAt": "2026-11-03T06:52:19+00:00",
   "result": {
     "jobId": "issue-46-dot-aoyama-three-20261027-r0001-0d4c3c14acfa63a5",
     "collectionUnchanged": false,
@@ -119,5 +119,5 @@
     "datasets/collection-decision-drafts/issue-46-dot-aoyama-three-20261027-batch-01/a1c214cb4271a8014aea807e9ae859255c126c3f261ab6590a96ff3abcf67664/issue-46-dot-aoyama-three-20261027-batch-01-normal-draft.json"
   ],
   "retryAt": 1793675452.414871,
-  "message": "Execution gate: one-job-per-cycle"
+  "message": "共通ロック使用中。次回に再確認する。"
 }
