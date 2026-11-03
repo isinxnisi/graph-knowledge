@@ -1,0 +1,17 @@
+{
+  "policy": "knowledge-review-gemini-v1",
+  "purpose": "通常分の自動受理へ接続する候補の評価。完全無誤判定を要求して全件保留へ戻さない。",
+  "baselineCount": 20,
+  "holdoutCount": 40,
+  "autoCandidateRule": {
+    "suitability": "legitimate",
+    "support": "supported"
+  },
+  "engineeringGate": {
+    "schemaCompletionRateAtLeast": 0.95,
+    "ordinarySupportedAutoCandidateRateAtLeast": 0.85,
+    "highRiskFalseAutoCandidatesAtMost": 0
+  },
+  "scope": "提示抜粋と主張の整合・投稿適否。実資料との照合や本番受理transactionは別の実装条件。",
+  "nonBlockingKev": "助言はユーザーが任意で採用。Geminiへの送信・審査条件へKevの指摘や無視を引き継がない。"
+}

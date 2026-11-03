@@ -5,7 +5,7 @@ import { knowledgeSubmissionContentSchema } from "../lib/domain/knowledge-submis
 import { knowledgeRecordContentSchema } from "../lib/domain/knowledge-foundation";
 import { createKnowledgeSubmissionService, migrateKnowledgeSubmissions } from "../lib/server/knowledge-submissions";
 import { ensureKnowledgeFoundationSchema } from "../lib/server/knowledge-foundation";
-import { knowledgeReviewAutoAcceptance, knowledgeReviewBinaryRequest, knowledgeReviewRequest, parseKnowledgeReview, parseKnowledgeReviewBinary } from "../lib/domain/knowledge-review";
+import { kevReviewAuthority, knowledgeReviewBinaryRequest, knowledgeReviewRequest, parseKnowledgeReview, parseKnowledgeReviewBinary } from "../lib/domain/knowledge-review";
 
 const content = (assertion = "青木は作品「海」の挿絵を描いた。") => ({ title: "投稿の草稿", items: [{ key: "item-a", record: { kind: "relation", subjectId: "a", objectId: "b", relation: "挿絵を描いた", assertion, evidence: [] } }] });
 const save = (id = randomUUID(), expectedVersion = 0, value = content()) => ({ action: "save", requestId: randomUUID(), id, expectedVersion, content: value });
@@ -37,7 +37,7 @@ describe("private submission input and review boundaries", () => {
       expect(JSON.stringify(wire.state)).toContain(input.assertion);
       expect(JSON.stringify(wire.questions)).not.toContain(input.assertion);
     }
-    expect(knowledgeReviewAutoAcceptance.enabled).toBe(false);
+    expect(kevReviewAuthority).toEqual({ role: "advisory", blocking: false, automaticAcceptance: false });
   });
   it("rejects incomplete, malformed or inconsistent review output", () => {
     expect(parseKnowledgeReviewBinary(binaryResponse()).suitability.label).toBe("legitimate");

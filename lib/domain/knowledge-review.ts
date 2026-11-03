@@ -85,6 +85,6 @@ export function parseKnowledgeReview(raw: unknown): ReviewResult {
   return { suitability: parseAxis("suitability"), support: parseAxis("support"), runtime: response.kev };
 }
 
-// Calibration is deliberately a deployment gate. A model's high probability
-// alone cannot establish factual correctness or authorize public writes.
-export const knowledgeReviewAutoAcceptance = { enabled: false, reason: "独立した実資料評価・受理方針・共有GPUの運用を確認するまで自動受理は無効" } as const;
+// Kev is optional pre-submission advice. Neither a warning nor overriding it
+// determines acceptance or changes the downstream review policy.
+export const kevReviewAuthority = { role: "advisory", blocking: false, automaticAcceptance: false } as const;

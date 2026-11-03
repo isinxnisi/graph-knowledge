@@ -1,4 +1,6 @@
-- U5着手・未完了（2026-11-03）：[投稿データ層・審査の境界と次の工程](design/KNOWLEDGE_SUBMISSIONS_U5.md)／[実Kev 0.8B・4B比較と復帰・PG検証](verification/KNOWLEDGE_SUBMISSIONS_U5_20261103.md)。作業branchの内部部品と評価のみ。利用者向け投稿画面・審査・受理・通知は未接続。main／3200／β／3276はU4の実行物を維持。
+- U5自動化方針・Gemini実評価（2026-11-03）：[0.8B任意助言／Gemini通常自動受理と残件](design/KNOWLEDGE_SUBMISSIONS_U5.md)／[60件の結果・無料枠・再試行・未接続範囲](verification/KNOWLEDGE_GEMINI_U5_20261103.md)。接続部品まで作業branchへ実装。利用者の投稿から公開までは未完了。
+
+- U5着手・未完了（2026-11-03）：[投稿データ層・審査の境界と次の工程](design/KNOWLEDGE_SUBMISSIONS_U5.md)／[先行Kev比較・復帰・PG検証](verification/KNOWLEDGE_SUBMISSIONS_U5_20261103.md)。作業branchの内部部品と評価のみ。利用者向け投稿画面・審査・受理・通知は未接続。main／3200／β／3276はU4の実行物を維持。
 
 - U4基本接続完了（2026-11-03）：[年表Capsuleの同URL共有・版付き会話・固定掲載・現在停止・OGP・配置検証](verification/KNOWLEDGE_CAPSULE_U4_SHARING_20261103.md)。main／3200／HTTPS β／3276へ反映。現行状態はこちらを優先。一般投稿AI審査・収集切替・本番公開は後続。
 - U4訂正接続（2026-11-03）：[原記録／テーマ構成の明示取込・β検証・配置と復旧](verification/KNOWLEDGE_CAPSULE_U4_UPDATES_20261103.md)。独自名・注記・時期・配置・除外を保持する。共有／停止／年表OGPの総合接続は残る。

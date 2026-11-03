@@ -1,4 +1,4 @@
-2026-11-03追補：U5の[実AI比較と投稿データ層](KNOWLEDGE_SUBMISSIONS_U5.md)へ着手。4Bの小さい開発評価は改善したが、自動受理・常駐運用・実会員投稿の完了ではない。今回のbranchだけの内部部品を、βの利用者機能の完成と混同しない。[検証と残件](../verification/KNOWLEDGE_SUBMISSIONS_U5_20261103.md)。
+2026-11-03 U5更新：[Gemini評価](../verification/KNOWLEDGE_GEMINI_U5_20261103.md)を経て、0.8Bの任意助言とGeminiによる通常分の自動受理を分ける。全件人手承認へ戻さず、補足依頼・例外救済・無料枠queue・版と原資料の確認を接続して進める。[最新契約・実装済み部品・残件](KNOWLEDGE_SUBMISSIONS_U5.md)。U5全体は未完了で、main／3200／β／3276のU4を維持する。
 
 # Plunode本運用初版への統合計画
 
