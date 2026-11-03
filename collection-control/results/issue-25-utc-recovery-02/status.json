@@ -106,12 +106,12 @@
   },
   "requestSha256": "a25b93cfbe06d29201c862380f1208dfa929a0856e6f8ca7473a82b223769b34",
   "kind": "collect-review",
-  "phase": "completed",
-  "generation": 12927,
+  "phase": "waiting-control",
+  "generation": 13325,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
-  "updatedAt": "2026-11-01T20:50:18+00:00",
+  "updatedAt": "2026-11-03T05:00:32+00:00",
   "result": {
     "jobId": "issue-25-utc-recovery-r0002-195d12ba8ceee0b8",
     "collectionUnchanged": false,
@@ -135,5 +135,6 @@
     "sha256": "451fb079e97c22e4fbc5a4db062053733334a9f27ddc3665db2d3796f3e09837"
   },
   "decisionDrafts": [],
-  "retryAt": 1793460886.3758042
+  "retryAt": 1793681163.6690338,
+  "message": "Execution gate: outside-window"
 }
