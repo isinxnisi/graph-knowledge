@@ -42,10 +42,9 @@
   },
   "controlError": null,
   "requestsByPhase": {
-    "waiting-control": 55,
-    "blocked": 1,
-    "completed": 5,
-    "retry-wait": 1
+    "waiting-control": 56,
+    "retry-wait": 1,
+    "completed": 5
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -149,8 +148,9 @@
       "checkedAt": "2026-11-03T04:57:49+00:00"
     },
     "collection-control/issue-sources/73.json": {
-      "status": "registered: issue-73-dot-murata-onepunch-20261030",
-      "checkedAt": "2026-11-03T05:58:30+00:00"
+      "status": "held",
+      "reason": "<urlopen error _ssl.c:990: The handshake operation timed out>",
+      "checkedAt": "2026-11-03T14:47:48+00:00"
     }
   },
   "publicApply": false,
@@ -192,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-03T14:42:40.195282+00:00"
+  "checkedAt": "2026-11-03T14:50:13.903191+00:00"
 }
