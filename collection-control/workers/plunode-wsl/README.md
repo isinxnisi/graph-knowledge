@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-03 16:33:43 JST。
+確認: 2026-11-03 16:38:16 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -27,8 +27,9 @@ Issue確認結果:
     "checkedAt": "2026-11-03T05:02:45+00:00"
   },
   "collection-control/issue-sources/16.json": {
-    "status": "registered: issue-16-adachi-three-20261025",
-    "checkedAt": "2026-11-03T06:56:45+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T07:34:55+00:00"
   },
   "collection-control/issue-sources/5.json": {
     "status": "registered: issue-5-dot-tezuka-adolf-20261025",
@@ -99,27 +100,25 @@ Issue確認結果:
     "checkedAt": "2026-11-03T05:03:12+00:00"
   },
   "collection-control/issue-sources/66.json": {
-    "status": "registered: issue-66-dot-togashi-two-20261029",
-    "checkedAt": "2026-11-03T05:03:13+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T07:35:45+00:00"
   },
   "collection-control/issue-sources/67.json": {
     "status": "registered: issue-67-dot-mizuki-two-20261029",
     "checkedAt": "2026-11-03T05:03:15+00:00"
   },
   "collection-control/issue-sources/68.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-    "checkedAt": "2026-11-03T07:29:36+00:00"
+    "status": "registered: issue-68-dot-fujikoa-two-20261029",
+    "checkedAt": "2026-11-03T07:35:51+00:00"
   },
   "collection-control/issue-sources/69.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-03T07:29:52+00:00"
+    "status": "registered: issue-69-dot-ishinomori-three-20261029",
+    "checkedAt": "2026-11-03T07:35:54+00:00"
   },
   "collection-control/issue-sources/70.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
-    "checkedAt": "2026-11-03T07:30:10+00:00"
+    "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
+    "checkedAt": "2026-11-03T07:35:57+00:00"
   },
   "collection-control/issue-sources/71.json": {
     "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
