@@ -43,9 +43,9 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 2,
-    "waiting-control": 48,
-    "retry-wait": 3,
-    "completed": 9
+    "waiting-control": 49,
+    "completed": 9,
+    "retry-wait": 2
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -137,9 +137,8 @@
       "checkedAt": "2026-11-03T09:47:31+00:00"
     },
     "collection-control/issue-sources/69.json": {
-      "status": "held",
-      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-      "checkedAt": "2026-11-03T10:40:31+00:00"
+      "status": "registered: issue-69-dot-ishinomori-three-20261029",
+      "checkedAt": "2026-11-03T10:45:30+00:00"
     },
     "collection-control/issue-sources/70.json": {
       "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
@@ -193,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-03T10:43:51.936188+00:00"
+  "checkedAt": "2026-11-03T10:47:32.764918+00:00"
 }
