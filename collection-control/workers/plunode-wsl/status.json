@@ -42,9 +42,9 @@
   },
   "controlError": null,
   "requestsByPhase": {
-    "waiting-control": 54,
-    "retry-wait": 4,
-    "completed": 4
+    "waiting-control": 56,
+    "completed": 4,
+    "retry-wait": 2
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -52,8 +52,9 @@
       "checkedAt": "2026-11-03T17:28:45+00:00"
     },
     "collection-control/issue-sources/16.json": {
-      "status": "registered: issue-16-adachi-three-20261025",
-      "checkedAt": "2026-11-03T16:21:10+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+      "checkedAt": "2026-11-03T17:34:06+00:00"
     },
     "collection-control/issue-sources/5.json": {
       "status": "registered: issue-5-dot-tezuka-adolf-20261025",
@@ -191,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-03T17:31:53.124601+00:00"
+  "checkedAt": "2026-11-03T17:37:02.746849+00:00"
 }
