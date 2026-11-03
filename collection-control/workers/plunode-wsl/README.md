@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-03 19:18:47 JST。
+確認: 2026-11-03 19:32:39 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -28,7 +28,7 @@ Issue確認結果:
   },
   "collection-control/issue-sources/16.json": {
     "status": "registered: issue-16-adachi-three-20261025",
-    "checkedAt": "2026-11-03T07:38:45+00:00"
+    "checkedAt": "2026-11-03T10:26:46+00:00"
   },
   "collection-control/issue-sources/5.json": {
     "status": "registered: issue-5-dot-tezuka-adolf-20261025",
@@ -75,24 +75,28 @@ Issue確認結果:
     "checkedAt": "2026-11-03T05:03:03+00:00"
   },
   "collection-control/issue-sources/59.json": {
-    "status": "registered: issue-59-dot-kubo-two-20261028",
-    "checkedAt": "2026-11-03T09:47:15+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T10:27:25+00:00"
   },
   "collection-control/issue-sources/60.json": {
-    "status": "registered: issue-60-dot-ichikawa-houseki-20261028",
-    "checkedAt": "2026-11-03T05:58:11+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-03T10:27:41+00:00"
   },
   "collection-control/issue-sources/61.json": {
-    "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
-    "checkedAt": "2026-11-03T10:03:27+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-11-03T10:28:00+00:00"
   },
   "collection-control/issue-sources/62.json": {
     "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
     "checkedAt": "2026-11-03T09:28:16+00:00"
   },
   "collection-control/issue-sources/64.json": {
-    "status": "registered: issue-64-dot-oda-onepiece-20261029",
-    "checkedAt": "2026-11-03T09:28:19+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-03T10:28:25+00:00"
   },
   "collection-control/issue-sources/65.json": {
     "status": "registered: issue-65-dot-inoue-three-20261029",
