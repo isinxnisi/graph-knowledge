@@ -12,7 +12,7 @@ U4の基本接続まで反映。正式VPSへの配置手順ではない。既存
 python3 scripts/start-local-previews.py beta --node /absolute/path/to/node24
 ```
 
-既に3200が使用中なら何も停止せず拒否する。所有PID／cwdを確認し、更新時だけ既存β Webを止める。`~/.local/state/plunode-previews/beta-knowledge.json`は0600で既存user所有。ここには専用知識PG・Neo4jとβ originだけを保存する。認証・会員DBは従来のprivate設定を引き継ぐ。launcherは事前構築済みの`plunode-knowledge-beta-postgres`／`plunode-knowledge-beta-neo4j`のlabel・volume・loopback portを照合して起動し、mainの通常publisherを起動する。DB生成・migration・seedは行わない。
+既に3200が使用中なら何も停止せず拒否する。所有PID／cwdを確認し、更新時だけ既存β Webを止める。`~/.local/state/plunode-previews/beta-knowledge.json`は0600で既存user所有。ここには専用知識PG・Neo4jとβ origin、任意の投稿受付feature flagを保存する。認証・会員DBは従来のprivate設定を引き継ぐ。launcherは事前構築済みの`plunode-knowledge-beta-postgres`／`plunode-knowledge-beta-neo4j`のlabel・volume・loopback portを照合して起動し、mainの通常publisherを起動する。DB生成・migration・seedは行わない。
 
 Web logは従来の`beta.log`、publisherは同じstateディレクトリの`knowledge-beta-worker.log`／`knowledge-beta-worker.pid`。他のprocessのPIDなら置換しない。Webとworkerを更新する場合は、それぞれのcwd／cmdlineを確認して正常終了させ、同じlauncherで再開する。volume削除で復旧しない。
 
@@ -22,7 +22,7 @@ Web logは従来の`beta.log`、publisherは同じstateディレクトリの`kno
 
 `knowledge-beta-seed.ts FILE SHA256`は選択された公開Theme 3件の固定入力だけを許可する初回移行用。空の専用DBにだけ適用し、同digestの再送は既存結果、別digestは拒否する。別のデータを追加するために既存DBを空にして再実行しない。新しい登録・移行は別操作として設計する。
 
-backupはprivateなfresh directoryへcustom dumpを作り、別名DBへ復元して全tableの行fingerprintとchecksumを照合する。会員DBにmigrationは不要だがWeb切替前のbackupも別名DBへ復元し、会員・コミュニティの保持を確認する。旧dumpでlive DBを上書きしない。
+backupはprivateなfresh directoryへcustom dumpを作り、別名DBへ復元して全tableの行fingerprintとchecksumを照合する。U4読取だけでは会員DB追加migrationは不要。U5受付の有効化時は追加020を明示適用する。Web切替前の会員backupも別名DBへ復元し、会員・コミュニティの保持を確認する。旧dumpでlive DBを上書きしない。
 
 ## 更新・復旧境界
 
@@ -37,3 +37,11 @@ backupはprivateなfresh directoryへcustom dumpを作り、別名DBへ復元し
 2026-11-03に既存共有Docker connectorでQUIC timeoutが継続し、追加の `plunode-beta-http2-recovery`（label `plunode.scope=beta-tunnel-recovery`）をHTTP/2で起動した。同じ既存image・接続資格・remote routeを再利用し、既存connectorやDNS／Accessを変更していない。HTTP/2への切替は[Cloudflareの接続トラブル対処](https://developers.cloudflare.com/tunnel/troubleshooting/)にもあるが、今回のネットワーク根本原因は未確定。
 
 再開時は既存containerのlabel・image・protocol=http2・公開portなしを確認し、必要なら `docker start plunode-beta-http2-recovery`。restart policyはnoで、PC再起動後の自動起動は保証しない。新しいtokenを作る・ログへ出す・別のtokenへ置換する手順ではない。通常shared connectorが安定した後、復旧用だけを `docker stop plunode-beta-http2-recovery` で止め、HTTPS βを再確認できる。停止で悪化した場合は同じcontainerを再開する。共有connector／他プロジェクトのcontainerをまとめて再起動しない。
+
+## U5受付の追加移行・Web切替
+
+会員020を適用する前に既存の適用済みchecksumを実物と照合する。fresh custom dumpを別DBへ復元し、そのDBのownerと復元roleを実際のWeb role（現在のβはgk_member）に合わせ、行fingerprintの一致・追加020・再実行不変を確認する。復元試験の権限不足をliveの権限拡張で回避しない。CLIは既存設定を引き継ぎ `scripts/member-migrate.ts --knowledge-submissions --confirm-origin https://graph-beta.isinxnisi.com` を明示実行する。秘密値をコマンド履歴や記録へ埋め込まない。
+
+buildは検証対象の固定SHAをexportした別directoryで作り、稼働Webをbuild中ずっと停止しない。既存private runtime・同じ依存を使い、BUILD_IDとAPI routeのfile traceに020が含まれることを確認してからWebだけを短く切り替える。DBを戻さず互換Webを保管する。無効化時は受付flagを0にして入口／APIを閉じ、投稿schema・会員DBを消さない。最新の対応buildとbackupは[U5記録](../verification/KNOWLEDGE_SUBMISSION_INTAKE_U5_20261103.md)を優先し、U4復旧buildへ機械的に戻さない。
+
+匿名401だけで完了とせず、HTTPS βの実会員で一覧・草稿保存・再訪・受付・編集・取消・Capsule選択を確認する。Google既存sessionでの確認と、新しいOAuthログイン、fixtureの停止／退会は区別する。

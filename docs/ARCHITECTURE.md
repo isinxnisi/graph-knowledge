@@ -1,3 +1,5 @@
+2026-11-03 U5受付：非公開の投稿・不変内容版・版固定receipt・操作再送記録を、会員DBの専用schema `member_knowledge` に保存する。本人user行のtransaction lockとFK／停止triggerで、保存・取消・停止・退会を同じDB境界に置く。共通知識の公開正本・投影とは分離し、受付だけでは公開しない。main／3200／HTTPS βへ段階反映、AI job・原資料照合・通常自動受理・公開／通知は未接続。本番はU8。[現行契約](design/KNOWLEDGE_SUBMISSIONS_U5.md)／[検証・配置](verification/KNOWLEDGE_SUBMISSION_INTAKE_U5_20261103.md)。以下の日付付き配置は各時点の履歴。
+
 2026-10-30（共有の仕上げ）、Issue #63の同一URLへの明示的な共有更新・版を保持した会話・Capsule別OGP・関係先の条件横断選択を既存3200／HTTPS βへ反映。配置 `5dc34e31` / build `1eOVcSb5AZmVQ3nOgAC5l`、会員DBは015まで（16件）。現在の契約と実操作・SNS未確認範囲は[共有仕上げの検証記録](verification/CAPSULE_SHARING_20261030.md)を参照する。通常保存だけでは共有を変えず、コミュニティの固定掲載も独立させる。本番VPSは更新していない。以下の記述は各時点の履歴。
 
 2026-10-30、Capsuleの現行UIは[編集契約](design/CAPSULE_EDITOR.md)と[β操作検証](verification/CAPSULE_EDITOR_UX_BETA_20261030.md)を参照する。Surface（表示場所）、Studio（草稿・履歴・閲覧状態）、Workspace（本人・保存先）を分け、作成・再訪・再編集で同じ作業空間を使う。既存3200／HTTPS βに反映し、会員DBは014まで適用済み。旧記録の「未反映」は当時の状態であり、現在のβの状態を表さない。本番VPSは今回更新していない。
