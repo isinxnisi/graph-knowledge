@@ -26,28 +26,24 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-03T21:10:19.509187+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-03T20:15:59.356640+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-03T21:10:19.509187+00:00",
+    "eligibleAt": "2026-11-03T20:15:59.356640+00:00",
     "windowEndAt": "2026-11-03T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-5-dot-tezuka-adolf-20261025",
-    "startedAt": "2026-11-03T20:05:19.509192+00:00",
-    "limitAt": "2026-11-03T21:00:19.509187+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-73-dot-murata-onepunch-20261030",
-    "endedAt": "2026-11-03T19:55:12.454814+00:00"
+    "requestId": "issue-5-dot-tezuka-adolf-20261025",
+    "endedAt": "2026-11-03T20:05:59.356641+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
-    "waiting-control": 53,
-    "completed": 9
+    "waiting-control": 52,
+    "completed": 10
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -194,5 +190,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-03T20:05:25.941390+00:00"
+  "checkedAt": "2026-11-03T20:06:40.073693+00:00"
 }
