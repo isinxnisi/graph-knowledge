@@ -26,27 +26,24 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-03T21:21:11.623646+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-03T20:26:31.615659+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-03T21:21:11.623646+00:00",
+    "eligibleAt": "2026-11-03T20:26:31.615659+00:00",
     "windowEndAt": "2026-11-03T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1",
-    "startedAt": "2026-11-03T20:16:11.623649+00:00",
-    "limitAt": "2026-11-03T21:11:11.623646+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-5-dot-tezuka-adolf-20261025",
-    "endedAt": "2026-11-03T20:05:59.356641+00:00"
+    "requestId": "issue-25-manga23-20261019-repair1",
+    "endedAt": "2026-11-03T20:16:31.615661+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
-    "waiting-control": 52,
+    "waiting-control": 51,
+    "blocked": 1,
     "completed": 10
   },
   "issueIntake": {
@@ -194,5 +191,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-03T20:16:18.087866+00:00"
+  "checkedAt": "2026-11-03T20:17:30.887201+00:00"
 }
