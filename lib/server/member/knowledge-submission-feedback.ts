@@ -1,3 +1,4 @@
+import {readAppeal} from "./knowledge-appeals";
 import {createHash} from "node:crypto";
 import {readFile} from "node:fs/promises";
 import path from "node:path";
@@ -69,7 +70,10 @@ export function createMemberSubmissionFeedback(pool:Pool,origin:string,owner:(re
     const sorted=rows.filter(row=>row.job_id).sort((a,b)=>content.items.findIndex(item=>item.key===a.item_key)-content.items.findIndex(item=>item.key===b.item_key));
     const descriptor=sorted[0]?reviewDisclosureForConsent(sorted[0].consent_version):null;
     const disclosure=descriptor&&sorted.every(row=>row.consent_profile_id===descriptor.profileId)?descriptor:null;
-    const items=sorted.map(row=>({key:row.item_key,assertion:content.items.find(item=>item.key===row.item_key)?.record.assertion??'',state:row.state,reason:row.reason,
+    const appealsReady=(await c.query("SELECT to_regclass('member_knowledge.appeals') AS ready")).rows[0]?.ready;
+    const appealMap=new Map<string,Awaited<ReturnType<typeof readAppeal>>>();
+    if(appealsReady)for(const a of (await c.query("SELECT id,job_id FROM member_knowledge.appeals WHERE job_id=ANY($1::uuid[])",[sorted.map(row=>row.job_id)])).rows)appealMap.set(a.job_id,await readAppeal(c,a.id));
+    const items=sorted.map(row=>({...((appealMap.get(row.job_id))?{appeal:appealMap.get(row.job_id)}:{}),key:row.item_key,assertion:content.items.find(item=>item.key===row.item_key)?.record.assertion??'',state:row.state,reason:row.reason,
      nextAttemptAt:['retry','quota','source-retry'].includes(row.state)?stamp(row.state==='source-retry'?row.source_not_before??row.not_before:row.not_before):null,
      ...(row.publication_command?.record?{publication:{id:row.publication_command.record.id,revision:row.publication_result?.revision??(row.publication_command.expectedRevision??0)+1,state:row.publication_state,reason:row.publication_reason??''}}:{})}));
     return submissionFeedbackSchema.parse({receipts,receipt:{revision,submittedAt:stamp(seed.submitted_at),title:content.title,digest:seed.digest,current:Number(seed.current_revision)===revision,cancelled:seed.submission_state==='cancelled',workerAvailable:!!seed.worker_available,items,eventCursor,unread:eventCursor!==null&&BigInt(eventCursor)>BigInt(seed.seen_cursor),disclosure}});

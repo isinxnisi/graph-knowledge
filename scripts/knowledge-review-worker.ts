@@ -1,3 +1,4 @@
+import {runKnowledgeModeration} from "../lib/server/member/knowledge-appeals";
 import {lstat,readFile} from "node:fs/promises";
 import path from "node:path";
 import {pathToFileURL} from "node:url";
@@ -35,7 +36,7 @@ async function main(){
   if(importIndex>=0){const text=await privateText(path.resolve(process.argv[importIndex+1]),256000);const n=await queue.importEvaluation(JSON.parse(text),createHash('sha256').update(text).digest('hex'),config);console.log(JSON.stringify({event:'review-usage-import',imported:n}));return;}
   const key=(await privateText(config.apiKeyFile,8192)).trim();
   const heartbeat=setInterval(()=>{void queue.heartbeat(config).catch(()=>{stopping=true;});},15000);heartbeat.unref();
-  try{while(!stopping){const worked=await runKnowledgeReviewOnce(queue,config,lease=>callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire) as ReturnType<typeof geminiReviewRequest>}),acceptance?lease=>acceptance.validateReview(lease.jobId):undefined);const accepted=acceptance?await acceptance.run(config):false;if(worked||accepted)console.log(JSON.stringify({event:'knowledge-review-iteration',completed:true}));else await new Promise(resolve=>setTimeout(resolve,2500));if(process.argv.includes('--once'))break;}}
+  try{while(!stopping){const worked=await runKnowledgeReviewOnce(queue,config,lease=>callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire) as ReturnType<typeof geminiReviewRequest>}),acceptance?lease=>acceptance.validateReview(lease.jobId):undefined);const moderated=knowledge?await runKnowledgeModeration(pool,knowledge):false;const accepted=acceptance?await acceptance.run(config):false;if(worked||accepted||moderated)console.log(JSON.stringify({event:'knowledge-review-iteration',completed:true}));else await new Promise(resolve=>setTimeout(resolve,2500));if(process.argv.includes('--once'))break;}}
   finally{clearInterval(heartbeat);}
  }finally{await knowledge?.end();await pool.end();}
 }

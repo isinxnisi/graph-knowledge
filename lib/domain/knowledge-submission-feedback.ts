@@ -1,3 +1,4 @@
+import {appealPublicSchema} from "./knowledge-appeal";
 import {z} from "zod";
 import {REVIEW_STATES,REVIEW_CONSENT_VERSION,PUBLICATION_CONSENT_VERSION} from "./knowledge-review-job";
 
@@ -11,7 +12,7 @@ export function reviewDisclosureForConsent(version:string):ReviewDisclosure|null
 }
 export const notificationSummarySchema=z.object({unreadCount:z.number().int().nonnegative(),submissionIds:z.array(z.uuidv4()).max(200)});
 export type SubmissionNotificationSummary=z.infer<typeof notificationSummarySchema>;
-export const feedbackItemSchema=z.object({key:z.string(),assertion:z.string(),state:z.enum(REVIEW_STATES),reason:z.string(),nextAttemptAt:z.string().nullable(),publication:z.object({id:z.string(),revision:z.number().int().positive(),state:z.string(),reason:z.string()}).optional()});
+export const feedbackItemSchema=z.object({appeal:appealPublicSchema.optional(),key:z.string(),assertion:z.string(),state:z.enum(REVIEW_STATES),reason:z.string(),nextAttemptAt:z.string().nullable(),publication:z.object({id:z.string(),revision:z.number().int().positive(),state:z.string(),reason:z.string()}).optional()});
 export const feedbackReceiptSchema=z.object({revision:z.number().int().positive(),submittedAt:z.string(),title:z.string(),digest:z.string(),current:z.boolean(),cancelled:z.boolean(),workerAvailable:z.boolean(),items:z.array(feedbackItemSchema).max(20),eventCursor:z.string().nullable(),unread:z.boolean(),disclosure:reviewDisclosureSchema.nullable()});
 export type FeedbackReceipt=z.infer<typeof feedbackReceiptSchema>;
 export const submissionFeedbackSchema=z.object({receipts:z.array(z.object({revision:z.number().int().positive(),submittedAt:z.string(),title:z.string(),itemCount:z.number().int().nonnegative(),unread:z.boolean()})).max(100),receipt:feedbackReceiptSchema.nullable()});

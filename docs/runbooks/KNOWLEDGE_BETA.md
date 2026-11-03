@@ -84,3 +84,14 @@ buildは検証対象の固定SHAをexportした別directoryで作り、稼働Web
 新しい023 reference_context、024 receipt結果・既読cursor・同意profile、025公開貢献帰属を使う。これらを読めない旧Web／workerへ機械的に戻さない。停止するときは既存の受入済みmainのWeb／review worker／publisherだけをcwdとcmdlineで確認する。新sourceのbuildを事前作成し、切替直前のbackup、明示migration、再実行不変、対応Webとworkerの再開を行う。会員・コミュニティ・旧Capsule・通常KGをresetしない。
 
 新規対象／既存対象への関係／テーマへの出来事／根拠追加／訂正、明示のプロフィール・匿名選択、上部の結果カードと未読、公開活動を確認する。固定receipt linkは本人用であり共有URLではない。公開貢献APIは現在閲覧できる原記録からだけ作者を返し、匿名の内部owner／投稿IDを公開しない。private profile活動の追読時も既存表示を消すことを確認する。
+
+
+## U5の相談・運営例外：追加026
+
+前段の最新配置は[申請修正のβ総合記録](../verification/KNOWLEDGE_SUBMISSION_REPAIR_BETA_20261104.md)。会員DB000〜025と知識001/002/004を保全し、相談・監査・公開処置outboxの追加026を明示適用する。Node24から `scripts/member-migrate.ts --knowledge-appeals --confirm-origin https://graph-beta.isinxnisi.com` を使う。適用後の会員ledgerは27件。既存checksumを変更しない。
+
+fresh dumpを別名DBへ復元し、全既存tableの旧列fingerprintと、追加適用・再実行不変を確認する。切替前にもbackupする。新Webとreview workerを同時に対応させる。新workerは026の明示適用を検査し、通常のキューと公開処置の配達・通知を処理する。project利用量・失敗予約・既存Gemini profile・鍵・共通Kevを変更しない。
+
+Webは既存運営許可リストで私有相談だけへアクセスする。共通知識の公開状態変更は、会員側の確定outboxをreview workerが既存foundationへ配達する。処置がpendingなら通知まで再開する。同じrequest IDのまま配達し、公開側commit後に停止した場合も内容変更を繰返さず通知を再開する。blockedは状態競合として運営画面で再確認する。解除は元案件と現在の状態版を照合する。
+
+復旧時は026対応の資材を保持する。旧dumpで公開状態や相談を上書きしない。緊急に相談APIを止める場合も既存の私有DBと、確定したpublic commandを消さない。全件の手動承認化・無料枠のリセット・既存収集Workerの停止によって回避しない。

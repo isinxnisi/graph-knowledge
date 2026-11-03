@@ -1,0 +1,25 @@
+"use client";
+import {useEffect,useRef,useState} from "react";
+import {z} from "zod";
+import {appealPublicSchema,type SubmissionAppeal} from "../lib/domain/knowledge-appeal";
+import {memberRequest,MemberClientError} from "../lib/client/member-api";
+import {getMemberIdentitySnapshot} from "../lib/client/use-member-identity";
+import {useUiLocale} from "../lib/client/ui-locale";
+import css from "./KnowledgeSubmissionFeedbackCard.module.css";
+export default function KnowledgeAppeal({submissionId,revision,itemKey,userId,appeal,published,onChange}:{submissionId:string;revision:number;itemKey:string;userId:string;appeal?:SubmissionAppeal;published:boolean;onChange:()=>void}){
+ const {locale}=useUiLocale(),t=(ja:string,en:string)=>locale==='en'?en:ja;
+ const [open,setOpen]=useState(false),[detail,setDetail]=useState(''),[shared,setShared]=useState(false),[busy,setBusy]=useState(false),[error,setError]=useState(''),[unknown,setUnknown]=useState(false);
+ const request=useRef<Record<string,unknown>|null>(null),initial=getMemberIdentitySnapshot().version,alive=useRef(true);
+ useEffect(()=>{alive.current=true;return()=>{alive.current=false;};},[]);
+ const belongs=()=>{const v=getMemberIdentitySnapshot();return alive.current&&v.user?.id===userId&&v.version===initial&&v.status==='authenticated';};
+ async function send(){if(busy||!belongs())return;setBusy(true);setError('');const body=request.current??{action:'appeal',requestId:crypto.randomUUID(),submissionId,revision,itemKey,detail,shareWithOperators:true};request.current=body;
+  try{await memberRequest('/api/member/knowledge-submissions/appeals',z.object({appeal:appealPublicSchema,replayed:z.boolean()}),{method:'POST',user:userId,body});if(belongs()){request.current=null;setUnknown(false);setOpen(false);onChange();}}
+  catch(e){if(belongs()){const known=e instanceof MemberClientError&&e.status<500;if(known)request.current=null;setUnknown(!known);setError(e instanceof MemberClientError&&e.code==='APPEAL_EXISTS'?t('この項目の相談は受付済みです。結果を更新してください。','A request exists for this item. Refresh results.'):known?t('送れませんでした。結果を更新して確認してください。','Could not send. Refresh and check the result.'):t('送信結果が不明です。同じ内容で再送できます。','Outcome unknown. Retry the same request.'));}}finally{if(belongs())setBusy(false);}
+ }
+ async function withdraw(){if(!appeal||busy||!belongs())return;setBusy(true);setError('');const body=request.current??{action:'withdraw',requestId:crypto.randomUUID(),id:appeal.id,expectedRevision:appeal.revision};request.current=body;
+  try{await memberRequest('/api/member/knowledge-submissions/appeals',z.object({appeal:appealPublicSchema,replayed:z.boolean()}),{method:'POST',user:userId,body});if(belongs()){request.current=null;setUnknown(false);onChange();}}
+  catch(e){if(belongs()){const known=e instanceof MemberClientError&&e.status<500;if(known)request.current=null;setUnknown(!known);setError(t('取消結果を確認できません。同じ操作で再確認できます。','Could not confirm withdrawal. Retry the same request.'));}}finally{if(belongs())setBusy(false);}
+ }
+ if(appeal)return <div className={css.appeal}><strong>{appeal.status==='withdrawn'?t('相談を取り消しました','Request withdrawn'):appeal.status==='open'?t('運営への相談を受け付けました','Sent to site operators'):t('運営からの回答','Operator response')}</strong><p>{appeal.detail}</p>{appeal.pending&&<p role="status">{t("公開先への処置を反映しています。","Delivering the action to the public record.")}</p>}{appeal.replies.map((r,i)=><div key={i}><small>{new Date(r.createdAt).toLocaleString(locale==='en'?'en':'ja')}</small><p>{r.reason}</p></div>)}{appeal.status==='open'&&<button type="button" disabled={busy} onClick={()=>void withdraw()}>{t('相談を取り消す','Withdraw request')}</button>}{error&&<p role="alert">{error}</p>}{appeal.status==='open'&&<small>{t('この受付版の項目への相談です。編集しても対象は変わりません。','This request stays with this submitted item when you edit.')}</small>}</div>;
+ return <div className={css.appeal}>{!open?<button type="button" onClick={()=>setOpen(true)}>{published?t('公開内容について運営に相談','Contact operators about this publication'):t('この結果について運営に相談','Ask operators to review this result')}</button>:<><label>{t('確認してほしいこと','What should we review?')}<textarea rows={2} maxLength={1500} value={detail} disabled={busy||unknown} onChange={e=>setDetail(e.target.value)} placeholder={t('例：資料のこの文が根拠です。判定理由をもう一度確認してほしいです。','Explain which source passage supports the item or what needs attention.')}/></label><label className={css.sharing}><input type="checkbox" checked={shared} disabled={busy||unknown} onChange={e=>setShared(e.target.checked)}/>{t('この項目・参照する資料・確認結果と相談文を、サイト運営者へ送ります。','Share this item, its sources, result and message with site operators.')}</label><div><button type="button" disabled={busy} onClick={()=>{setOpen(false);request.current=null;setUnknown(false);setError('');}}>{t('閉じる','Close')}</button><button type="button" disabled={busy||!detail.trim()||!shared} onClick={()=>void send()}>{busy?t('送信中…','Sending…'):unknown?t('同じ内容で再送','Retry same request'):t('相談を送る','Send request')}</button></div></>}{error&&<p role="alert">{error}</p>}</div>;
+}

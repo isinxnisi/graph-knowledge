@@ -153,7 +153,7 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
   const candidates=(await pool.query(`SELECT j.id FROM member_knowledge.review_jobs j LEFT JOIN member_knowledge.source_checks s ON s.job_id=j.id JOIN member_knowledge.submissions p ON p.id=j.submission_id WHERE j.consent_version=$1 AND p.owner_id=ANY($2::uuid[]) AND (j.state='reviewed' OR j.state='source-retry' AND s.not_before<=clock_timestamp() OR j.state='verifying' AND s.lease_until<clock_timestamp()) ORDER BY j.created_at LIMIT 8`,[PUBLICATION_CONSENT_VERSION,config.allowedUsers])).rows;
   for(const candidate of candidates){
    const token=randomUUID();const lease=await locked(candidate.id,async(c,s,j)=>{
-    if(!['reviewed','source-retry','verifying'].includes(j.state)||j.consent_version!==PUBLICATION_CONSENT_VERSION||j.result?.suitability!=='legitimate'||j.result?.support!=='supported')return null;
+    if(!['reviewed','source-retry','verifying'].includes(j.state)||j.consent_version!==PUBLICATION_CONSENT_VERSION||!j.operator_confirmation_id&&(j.result?.suitability!=='legitimate'||j.result?.support!=='supported'))return null;
     const prior=(await c.query('SELECT * FROM member_knowledge.source_checks WHERE job_id=$1',[j.id])).rows[0];
     if(prior&&j.state==='verifying'&&new Date(prior.lease_until)>new Date()||prior&&j.state==='source-retry'&&new Date(prior.not_before)>new Date())return null;
     if(prior?.attempts>=3){await c.query("UPDATE member_knowledge.review_jobs SET state='attention',reason='原資料の接続を3回試しました。資料URLを確認してください。' WHERE id=$1",[j.id]);return null;}
@@ -175,7 +175,7 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
     await deliver(decision,async()=>{
      const accepted=await locked(lease.j.id,async(c,s,j)=>{
       const check=(await c.query('SELECT token FROM member_knowledge.source_checks WHERE job_id=$1 FOR UPDATE',[j.id])).rows[0];if(j.state!=='verifying'||check?.token!==token)throw new KnowledgeError('受付版が変わりました',409,'STALE');
-      await c.query("INSERT INTO member_knowledge.publication_decisions(id,job_id,command,digest,references_json,proofs,state) VALUES($1,$2,$3,$4,$5,$6,'pending') ON CONFLICT(id) DO NOTHING",[decision.id,j.id,decision.command,decision.digest,JSON.stringify(plan.references),JSON.stringify({sources:proofs,review:j.result,consent:j.consent_version})]);
+      await c.query("INSERT INTO member_knowledge.publication_decisions(id,job_id,command,digest,references_json,proofs,state) VALUES($1,$2,$3,$4,$5,$6,'pending') ON CONFLICT(id) DO NOTHING",[decision.id,j.id,decision.command,decision.digest,JSON.stringify(plan.references),JSON.stringify({sources:proofs,review:j.result,operatorConfirmationId:j.operator_confirmation_id??null,consent:j.consent_version})]);
       await persistPublicationContributor(c,{decisionId:decision.id,ownerId:s.owner_id,attribution:value.content.attribution??'anonymous',recordId:plan.recordId,submissionId:value.id,submissionRevision:value.revision,operation:item.operation!,entityIds:[...new Set(plan.command.action==='accept-record'?[plan.command.record.content.subjectId,plan.command.record.content.objectId].filter((v):v is string=>!!v):[])],themeIds:item.themes?.map(t=>t.id)??[]});
       await c.query("UPDATE member_knowledge.source_checks SET proofs=$2 WHERE job_id=$1",[j.id,JSON.stringify(proofs)]);
       await c.query("UPDATE member_knowledge.review_jobs SET state='accepted',reason='受理しました。公開へ反映しています。' WHERE id=$1",[j.id]);return true;

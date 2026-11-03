@@ -65,7 +65,7 @@ export function refreshPendingInvitations(force=false){
  }catch{if(generation===inviteGeneration&&state.user?.id===user.id)publishInvitations({owner:user.id,status:'error',count:null});}
  finally{if(generation===inviteGeneration)invitePending=null;}})();return invitePending;
 }
-export const operationsSummarySchema=z.object({pendingCount:z.number().int().nonnegative(),reports:z.number().int().nonnegative(),recoveries:z.number().int().nonnegative(),dueSoon:z.number().int().nonnegative(),expiredReports:z.number().int().nonnegative(),nextDeadline:z.string().nullable()});
+export const operationsSummarySchema=z.object({knowledge:z.number().int().nonnegative().default(0),pendingCount:z.number().int().nonnegative(),reports:z.number().int().nonnegative(),recoveries:z.number().int().nonnegative(),dueSoon:z.number().int().nonnegative(),expiredReports:z.number().int().nonnegative(),nextDeadline:z.string().nullable()});
 type OperationsSummary={owner:string|null;status:'checking'|'ready'|'error';data:z.infer<typeof operationsSummarySchema>|null};
 const initialOperations:OperationsSummary={owner:null,status:'checking',data:null};
 let operations=initialOperations,operationsPending:Promise<void>|null=null,operationsGeneration=0,operationsCheckedAt=0;

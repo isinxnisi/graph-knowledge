@@ -44,7 +44,9 @@ export function createSiteOperationsService(pool:Pool,origin:string,owner:(req:R
      WHERE r.status='pending' AND r.expires_at>clock_timestamp() AND u.active=true AND c.status='archived'
      AND m.generation=r.member_generation AND (m.status='active' OR m.role='admin' AND m.status IN ('left','removed','suspended'))
      AND NOT EXISTS(SELECT 1 FROM community_member a WHERE a.community_id=r.community_id AND a.status='active' AND a.role='admin')`)).rows[0].n;
-    return {pendingCount:reports.reports+recoveries,reports:reports.reports,recoveries,dueSoon:reports.due_soon,expiredReports:reports.expired_reports,nextDeadline:reports.next_deadline};
+    const knowledgeReady=(await c.query("SELECT to_regclass('member_knowledge.appeals') AS ready")).rows[0]?.ready;
+    const knowledge=knowledgeReady?(await c.query("SELECT count(*)::int AS n FROM member_knowledge.appeals a JOIN member_knowledge.review_jobs j ON j.id=a.job_id JOIN member_knowledge.submissions s ON s.id=j.submission_id JOIN \"user\" u ON u.id=s.owner_id WHERE a.status='open' AND u.active")).rows[0].n:0;
+    return {pendingCount:reports.reports+recoveries+knowledge,knowledge,reports:reports.reports,recoveries,dueSoon:reports.due_soon,expiredReports:reports.expired_reports,nextDeadline:reports.next_deadline};
    }
    if(section==='account'){
     const id=memberId(q.get('id')??'');

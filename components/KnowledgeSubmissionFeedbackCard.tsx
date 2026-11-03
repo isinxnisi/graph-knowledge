@@ -1,4 +1,6 @@
 "use client";
+import KnowledgeAppeal from "./KnowledgeAppeal";
+import {canAppeal} from "../lib/domain/knowledge-appeal";
 import {useCallback,useEffect,useRef,useState,useSyncExternalStore} from "react";
 import {submissionFeedbackSchema,notificationSummarySchema,feedbackCounts,feedbackPendingStates,feedbackSummary,type SubmissionFeedback} from "../lib/domain/knowledge-submission-feedback";
 import {reviewStateLabel} from "../lib/domain/knowledge-review-job";
@@ -40,7 +42,7 @@ export default function KnowledgeSubmissionFeedbackCard({submissionId,userId,cur
   return()=>{clearTimeout(timer);controller.abort();};
  },[load,currentRevision,stateVersion]);
  const visible=belongs()&&display?.submissionId===submissionId&&display.identityVersion===version?display:null,data=visible?.data,receipt=data?.receipt;
- const pending=receipt?receipt.items.some(item=>feedbackPendingStates.has(item.state)||item.state==="reviewed"&&receipt.disclosure?.purpose==="publish")||receipt.current&&!receipt.cancelled&&receipt.items.length===0:false;
+ const pending=receipt?receipt.items.some(item=>item.appeal?.status==="open"||item.appeal?.pending||feedbackPendingStates.has(item.state)||item.state==="reviewed"&&receipt.disclosure?.purpose==="publish")||receipt.current&&!receipt.cancelled&&receipt.items.length===0:false;
  useEffect(()=>{
   if(!pending)return;
   const controller=new AbortController(),refresh=()=>{if(!document.hidden)void load(controller.signal);},timer=setInterval(refresh,5000);
@@ -66,10 +68,13 @@ export default function KnowledgeSubmissionFeedbackCard({submissionId,userId,cur
  }
  if(!receipt){return visible?.error?<section className={css.card}><p role="status">{t("確認結果を取得できません。入力内容はそのままです。","Results are unavailable. Your input is unchanged.")}</p><button type="button" onClick={()=>void load()}><Icon name="refresh"/>{t("再取得","Retry")}</button>{requestedRevision!==undefined&&<button type="button" onClick={()=>selectReceipt(null)}>{t("最新の受付結果を見る","Show latest submitted results")}</button>}</section>:null;}
  const stateLabel=(state:string)=>state==="reviewed"&&receipt.disclosure?.purpose==="review"?t("確認が完了しました・未公開","Review completed · not published"):reviewStateLabel(state,locale);
- const summary=feedbackSummary(feedbackCounts(receipt.items),receipt.workerAvailable,receipt.disclosure?.purpose??"publish",locale,receipt.cancelled);
+ const originalSummary=feedbackSummary(feedbackCounts(receipt.items),receipt.workerAvailable,receipt.disclosure?.purpose??"publish",locale,receipt.cancelled);
+ const openAppeals=receipt.items.filter(item=>item.appeal?.status==='open').length;
+ const summary=openAppeals?{...originalSummary,label:originalSummary.published?t("公開済み・運営へ相談中","Published · operator request open"):t("運営への相談を受け付けました","Waiting for operator response"),tone:"neutral"}:originalSummary;
  const published=receipt.items.filter(item=>item.state==="published"&&item.publication?.state==="published"),firstPublished=published[0];
  const publicLink=(item:typeof receipt.items[number])=>item.state==="published"&&item.publication?.state==="published"?<div className={css.publication}><span>{t(`公開した内容版 ${item.publication.revision}`,`Published version ${item.publication.revision}`)}</span><a href={'/?krecord='+encodeURIComponent(item.publication.id)} target="_blank" rel="noopener noreferrer">{t("公開先を開く","Open public record")}<Icon name="external"/></a></div>:null;
  const actionable=receipt.items.filter(item=>["needs-changes","declined","attention"].includes(item.state)),shown=actionable[0];
+ const appealFor=(item:typeof receipt.items[number])=>canAppeal(item.state)||item.appeal?<KnowledgeAppeal key={item.key+":"+receipt.revision} submissionId={submissionId} revision={receipt.revision} itemKey={item.key} userId={userId} appeal={item.appeal} published={item.state==="published"} onChange={()=>void load()}/>:null;
  const time=(value:string)=>new Intl.DateTimeFormat(locale==="en"?"en":"ja",{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"}).format(new Date(value));
  return <section className={css.card} data-tone={summary.tone} aria-label={t("投稿の状況と確認結果","Submission status and results")}>
   <div className={css.heading}><div><span className={css.eyebrow}>{t("投稿の状況","Submission status")}{receipt.unread&&<span className={css.unread}>{t("新しい結果","New results")}</span>}</span><h2 aria-live="polite">{summary.label}</h2></div><button type="button" className={css.refresh} onClick={()=>void load()} aria-label={t("確認結果を更新","Refresh results")} title={t("確認結果を更新","Refresh results")}><Icon name="refresh"/></button></div>
@@ -78,8 +83,9 @@ export default function KnowledgeSubmissionFeedbackCard({submissionId,userId,cur
   </div>
   {(!receipt.current||dirty)&&<p className={css.context}>{t("以下は送信した時点の内容への結果です。編集中の変更には反映されません。","These results concern the submitted version, not your current edits.")}</p>}
   {firstPublished&&<div className={css.published}>{publicLink(firstPublished)}<small>{t("公開先では現在の内容を表示します。","The link opens the current public content.")}{published.length>1&&<> {t(`ほか${published.length-1}件は項目ごとの結果から開けます。`,`Open ${published.length-1} other records from the item results.`)}</>}</small></div>}
-  {shown&&<div className={css.actionable}><strong>{shown.assertion}</strong><p>{shown.reason||stateLabel(shown.state)}</p>{onSelectItem&&receipt.current&&currentRevision===receipt.revision&&<button type="button" onClick={()=>onSelectItem(shown.key)}>{t("該当する項目を確認","Review this item")}<Icon name="arrow"/></button>}{actionable.length>1&&<small>{t(`ほか${actionable.length-1}項目にも確認結果があります。`,`There are results for ${actionable.length-1} other items.`)}</small>}</div>}
-  <details className={css.details}><summary>{t("項目ごとの状況と結果","Item status and results")} · {receipt.items.length}</summary><ul>{receipt.items.map((item,index)=><li key={item.key}><div><strong>{t(`項目 ${index+1}`,`Item ${index+1}`)} · {item.assertion}</strong><span>{stateLabel(item.state)}</span></div>{item.reason&&<p>{item.reason}</p>}{publicLink(item)}{item.nextAttemptAt&&<small>{t("次の確認予定","Next check")} · {time(item.nextAttemptAt)}</small>}</li>)}</ul>{receipt.disclosure&&<p className={css.provider}>{t("送信先","Sent to")} · {receipt.disclosure.serviceName} / {receipt.disclosure.notice}</p>}</details>
+  {!shown&&firstPublished&&appealFor(firstPublished)}
+  {shown&&<div className={css.actionable}><strong>{shown.assertion}</strong><p>{shown.reason||stateLabel(shown.state)}</p>{onSelectItem&&receipt.current&&currentRevision===receipt.revision&&<button type="button" onClick={()=>onSelectItem(shown.key)}>{t("該当する項目を確認","Review this item")}<Icon name="arrow"/></button>}{appealFor(shown)}{actionable.length>1&&<small>{t(`ほか${actionable.length-1}項目にも確認結果があります。`,`There are results for ${actionable.length-1} other items.`)}</small>}</div>}
+  <details className={css.details}><summary>{t("項目ごとの状況と結果","Item status and results")} · {receipt.items.length}</summary><ul>{receipt.items.map((item,index)=><li key={item.key}><div><strong>{t(`項目 ${index+1}`,`Item ${index+1}`)} · {item.assertion}</strong><span>{stateLabel(item.state)}</span></div>{item.reason&&<p>{item.reason}</p>}{publicLink(item)}{item.key!==shown?.key&&item.key!==firstPublished?.key&&appealFor(item)}{item.nextAttemptAt&&<small>{t("次の確認予定","Next check")} · {time(item.nextAttemptAt)}</small>}</li>)}</ul>{receipt.disclosure&&<p className={css.provider}>{t("送信先","Sent to")} · {receipt.disclosure.serviceName} / {receipt.disclosure.notice}</p>}</details>
   {receipt.unread&&receipt.eventCursor&&<div className={css.confirm}><span>{t("確認結果を読んだら、未読通知を消せます。","Mark these results as read after reviewing them.")}</span><button type="button" disabled={acknowledging} onClick={()=>void acknowledge()}><Icon name="check"/>{t("結果を確認した","Mark results as read")}</button></div>}
   {(visible?.error||ackError)&&<p role="status" className={css.context}>{ackError?t("既読にできませんでした。もう一度お試しください。","Could not mark as read. Please retry."):t("通信できません。取得済みの結果を表示しています。","Offline. Showing previously loaded results.")}</p>}
  </section>;

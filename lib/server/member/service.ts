@@ -1,3 +1,4 @@
+import {createKnowledgeAppeals} from "./knowledge-appeals";
 import {createMemberSubmissionFeedback} from "./knowledge-submission-feedback";
 import {createMemberKnowledgeSubmissions} from "./knowledge-submissions";
 import {createCapsulePostReports} from "./capsule-post-reports";
@@ -43,6 +44,7 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
   }
   return {
     submissions: createMemberKnowledgeSubmissions(pool,config.origin,owner,dataset),
+    knowledgeAppeals: createKnowledgeAppeals(pool,config.origin,owner),
     submissionFeedback: createMemberSubmissionFeedback(pool,config.origin,owner),
     accounts: createPublicProfiles(pool, config.origin, owner, config.secret),
     community: createCommunityService(pool, config.origin, owner, config.secret, dataset),
