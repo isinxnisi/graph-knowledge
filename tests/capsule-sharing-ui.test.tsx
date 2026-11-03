@@ -44,6 +44,15 @@ it.each(["network","policy"])("新断面の共有は%s障害で現在の取得�
  await visibility("visible");await waitFor(()=>expect(screen.queryByRole("heading",{name:knowledgeCapsule.content.title})).toBeNull());
  expect(await screen.findByRole("alert")).toBeTruthy();
 });
+it("初回に取得元を確認できなくても同じ旧版を再確認でき、最新版へ付け替えない",async()=>{
+ fetchMock.mockResolvedValueOnce(Response.json({error:{code:"KNOWLEDGE_PUBLICATION_UNAVAILABLE"}},{status:503}));
+ render(<SharedCapsule dataset="demo" linkToken={token} initialRevision={2}/>);
+ await screen.findByRole("alert");
+ fetchMock.mockResolvedValueOnce(Response.json({capsule:{...knowledgeCapsule,revision:2}}));
+ fireEvent.click(screen.getByRole("button",{name:"リンクを再確認"}));
+ await screen.findByRole("heading",{name:knowledgeCapsule.content.title});
+ expect(fetchMock.mock.calls.map(([path])=>path)).toEqual(["/api/shared/capsule?revision=2","/api/shared/capsule?revision=2"]);
+});
 async function visibility(value: "hidden" | "visible") {
   await act(async () => { Object.defineProperty(document, "visibilityState", { configurable: true, value }); document.dispatchEvent(new Event("visibilitychange")); });
 }

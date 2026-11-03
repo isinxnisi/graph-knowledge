@@ -21,6 +21,8 @@ export async function generateMetadata({params,searchParams}:Props):Promise<Meta
 }
 export default async function Page({params,searchParams}:Props){
   const {token}=await params,{revision}=await searchParams;
-  const shared=await capsulePreview(token,typeof revision==="string"?revision:revision?"invalid":undefined);
-  return <SharedCapsule key={`${token}:${revision??"latest"}`} dataset={datasetMode(process.env.GRAPH_DATASET)} linkToken={shared?token:"invalid"} initialRevision={shared&&revision?shared.capsule.revision:undefined}/>;
+  const requested=typeof revision==="string"&&/^[1-9]\d*$/.test(revision)&&Number.isSafeInteger(Number(revision))?Number(revision):undefined;
+  // A temporary source outage must be retryable from this page. The client
+  // reauthorizes the exact requested edition; it never falls back to latest.
+  return <SharedCapsule key={`${token}:${revision??"latest"}`} dataset={datasetMode(process.env.GRAPH_DATASET)} linkToken={revision===undefined||requested?token:"invalid"} initialRevision={requested}/>;
 }
