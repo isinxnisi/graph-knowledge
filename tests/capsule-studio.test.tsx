@@ -493,7 +493,7 @@ it("imports source updates as one undoable draft edit, preserving author content
  await waitFor(()=>expect((button("Import into draft") as HTMLButtonElement).disabled).toBe(false));click("Import into draft");
  await waitFor(()=>expect(screen.queryByRole("dialog",{name:"Source updates"})).toBeNull());
  expect(save).not.toHaveBeenCalled();expect(Object.values(mocks.canvas!.content!.relations)[0].label).toContain("supported observations");
- click("Undo");expect(Object.values(mocks.canvas!.content!.relations)[0].label).toContain("helped");click("Redo");click("Save");await waitFor(()=>expect(save).toHaveBeenCalledTimes(1));
+ click("Undo");expect(screen.queryByText("Source updates imported into the draft. Save to confirm.")).toBeNull();expect(Object.values(mocks.canvas!.content!.relations)[0].label).toContain("helped");click("Redo");click("Save");await waitFor(()=>expect(save).toHaveBeenCalledTimes(1));
  const imported=save.mock.calls[0][0];expect(imported.document!.relations[0].note).toBe("My authored note");expect(imported.document!.relations[0].origin).toMatchObject({revision:2});
  expect(JSON.parse(String(fetcher.mock.calls[0][1]?.body))).toEqual({recordIds:["record-a"],entityIds:["object-a","object-b"],includeTheme:false});
 });

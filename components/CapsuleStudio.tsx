@@ -98,7 +98,7 @@ export default function CapsuleStudio({ externalFocus, onFocusKey, allowKgSearch
   const navigateHistory=useCallback((redo=false)=>{
     const next=redo?redoCapsule(historyRef.current):undoCapsule(historyRef.current);
     const doc=next.present.document!,keys=new Set([...doc.nodes,...doc.relations,...doc.texts].map(item=>item.key));
-    historyRef.current=next;setHistory(next);setSelected(prior=>prior.filter(key=>keys.has(key)));setSelection(prior=>prior&&keys.has(prior.id)?prior:null);setGeneration(v=>v+1);
+    historyRef.current=next;setHistory(next);setMessage(null);setError(null);setSelected(prior=>prior.filter(key=>keys.has(key)));setSelection(prior=>prior&&keys.has(prior.id)?prior:null);setGeneration(v=>v+1);
   },[]);
   const value = history.present, contentDocument = value.document!;
   const [knowledgeView,setKnowledgeView]=useState<"graph"|"timeline"|"split">(capsule.document?.knowledge?.initialView??"graph");

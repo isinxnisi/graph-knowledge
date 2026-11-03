@@ -172,13 +172,15 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
   return {
     publishPending,status:()=>read(statusIn),
     capsuleUpdates:(raw:unknown)=>read(async c=>{
-      const q=capsuleUpdateQuerySchema.parse(raw),actual=await generation(c);
+      const q=capsuleUpdateQuerySchema.parse(raw);
       if(q.includeTheme&&q.theme){
         let resolved;
         try{resolved=await resolvePublicKnowledgeTheme(c,q.theme.id);}
         catch(error){if(error instanceof KnowledgeError&&(error.status===403||error.status===404))throw new KnowledgeError("このテーマは閲覧できません",404,"NOT_FOUND");throw error;}
-        return {generation:actual.id,...resolved,unavailable:[]} satisfies CapsuleUpdateResponse;
+        const control=(await c.query("SELECT active_generation FROM knowledge75.publication_control WHERE singleton")).rows[0];
+        return {generation:control?.active_generation??null,...resolved,unavailable:[]} satisfies CapsuleUpdateResponse;
       }
+      const actual=await generation(c);
       const records=await allowedRows(c,actual.id,[...new Set(q.recordIds)]);
       const entities=distinctEntities(records),sources=[...new Map(records.flatMap(r=>r.sources.map(s=>[pinKey('source',s.id,s.revision),s] as const))).values()];
       const unavailable:CapsuleUpdateResponse['unavailable']=q.recordIds.filter(id=>!records.some(r=>r.record.id===id)).map(id=>({kind:'record',id}));

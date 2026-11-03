@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CapsuleDocument } from "../lib/domain/capsule-document";
-import { capsuleUpdateResponseSchema, type CapsuleUpdateResponse } from "../lib/domain/capsule-updates";
+import { capsuleUpdateResponseSchema, sameUpdateValue, type CapsuleUpdateResponse } from "../lib/domain/capsule-updates";
 import { planCapsuleKnowledgeUpdate, sameCapsuleUpdate } from "../lib/client/capsule-knowledge-updates";
 import { CapsuleModal } from "./CapsuleSurface";
 import Icon from "./Icon";
@@ -27,6 +27,7 @@ export default function CapsuleKnowledgeUpdates({document,onClose,onApply}:{docu
   // eslint-disable-next-line react-hooks/exhaustive-deps
  },[includeTheme,attempt]);
  const plan=useMemo(()=>{if(!response||response.unavailable.length)return null;try{return planCapsuleKnowledgeUpdate(document,response,includeTheme);}catch{return null;}},[document,response,includeTheme]);
+ const names=useMemo(()=>({before:Object.fromEntries([...document.knowledge!.snapshot.entities.map(e=>[e.id,e.content.name]),...document.knowledge!.snapshot.sources.map(s=>[s.id,s.content.title])]),after:Object.fromEntries([...(response?.snapshot.entities??[]).map(e=>[e.id,e.content.name]),...(response?.snapshot.sources??[]).map(s=>[s.id,s.content.title])])}),[document,response]);
  const reload=()=>{setBusy(true);setError(null);setMessage(null);setResponse(null);setAttempt(v=>v+1);};
  async function apply(){
   if(!response||!plan)return;const controller=new AbortController();active.current=controller;setBusy(true);setError(null);setMessage(null);
@@ -47,7 +48,8 @@ export default function CapsuleKnowledgeUpdates({document,onClose,onApply}:{docu
    {error&&<p role="alert">{error}</p>}{message&&<p role="status">{message}</p>}
    {response?.unavailable.length? <p role="alert">{t("現在は閲覧できない取得元があります。保存内容を保つため、今回は取り込めません。","Some sources are unavailable. Import is blocked to preserve your content.")}</p>:null}
    {response&&!plan&&!response.unavailable.length&&<p role="alert">{t("この更新は現在のCapsuleへ取り込めません。保存内容は変更していません。","This update cannot be imported into this Capsule. Your saved content is unchanged.")}</p>}
-   {plan&&<>{!plan.changes.length?<p role="status">{t("取得元に変更はありません。","The source is unchanged.")}</p>:<><p className={styles.summary}>{t(`${plan.changes.length}件の変更`,`${plan.changes.length} changes`)}</p><ul className={styles.list}>{plan.changes.map(c=><li key={c.kind+":"+c.id}><details><summary><span className={styles.kind}>{({record:t("記録","Record"),entity:t("対象","Object"),source:t("資料","Source"),mapping:t("意味対応","Meaning"),theme:t("テーマ","Theme")})[c.kind]}</span><strong>{c.title}</strong><span className={styles.edition}>{c.beforeRevision??"−"} → {c.afterRevision??"−"}</span></summary><div className={styles.columns}><div><h4>{t("取得済み","Captured")}</h4><UpdateValue value={c.before} en={en}/></div><div><h4>{t("取得元の現在版","Current source")}</h4><UpdateValue value={c.after} en={en}/></div></div></details></li>)}</ul></>}
+   {plan&&<>{!plan.changes.length?<p role="status">{t("取得元に変更はありません。","The source is unchanged.")}</p>:<><p className={styles.summary}>{t(`${plan.changes.length}件の変更`,`${plan.changes.length} changes`)}</p><ul className={styles.list}>{plan.changes.map(c=><li key={c.kind+":"+c.id}><details><summary><span className={styles.kind}>{({record:t("記録","Record"),entity:t("対象","Object"),source:t("資料","Source"),mapping:t("意味対応","Meaning"),theme:t("テーマ","Theme")})[c.kind]}</span><strong>{c.title}</strong><span className={styles.edition}>{c.beforeRevision??"−"} → {c.afterRevision??"−"}</span></summary><div className={styles.columns}><div><h4>{t("取得済み","Captured")}</h4><UpdateValue value={changedValues(c.before,c.after)[0]} en={en} names={names.before}/></div><div><h4>{t("取得元の現在版","Current source")}</h4><UpdateValue value={changedValues(c.before,c.after)[1]} en={en} names={names.after}/></div></div></details></li>)}</ul></>}
+    {!!plan.preserved&&<p className={styles.hint}>{t(`独自に編集した${plan.preserved}項目を保持します。`,`${plan.preserved} authored fields will be preserved.`)}</p>}
     {!!plan.retained.length&&<p>{t(`作者の編集がある${plan.retained.length}件の関係は、テーマから外れていてもこのCapsuleに残します。`,`${plan.retained.length} authored relations will remain in this Capsule after removal from the theme.`)}</p>}
     {!!plan.excluded&&<p className={styles.hint}>{t(`Capsuleで外した${plan.excluded}件の関係は追加し直しません。`,`${plan.excluded} excluded relations will stay excluded.`)}</p>}
    </>}
@@ -55,10 +57,22 @@ export default function CapsuleKnowledgeUpdates({document,onClose,onApply}:{docu
   <footer className={styles.footer}><p className={styles.hint}>{t("独自の編集と配置を保ち、草稿へ取り込みます。保存・共有への反映は別操作です。","Import into the draft, keeping authored edits and layout. Saving and publishing remain separate.")}</p><div className={css.actions}><button disabled={busy} onClick={reload}><Icon name="refresh"/>{t("再確認","Check again")}</button><button disabled={busy||!plan?.changes.length} data-variant="primary" onClick={()=>void apply()}>{t("草稿に取り込む","Import into draft")}</button></div></footer>
  </CapsuleModal>;
 }
-function UpdateValue({value,en}:{value:unknown;en:boolean}){
+/** Show changes, rather than repeating the whole record around a small correction. */
+function changedValues(before:unknown,after:unknown):[unknown,unknown]{
+ if(Array.isArray(before)&&Array.isArray(after)&&before.length===1&&after.length===1&&before[0]&&after[0]&&typeof before[0]==="object"&&typeof after[0]==="object"){
+  const a=before[0] as Record<string,unknown>,b=after[0] as Record<string,unknown>,keys=[...new Set([...Object.keys(a),...Object.keys(b)])].filter(k=>!sameUpdateValue(a[k],b[k]));
+  return [Object.fromEntries(keys.map(k=>[k,a[k]])),Object.fromEntries(keys.map(k=>[k,b[k]]))];
+ }
+ return [before,after];
+}
+function UpdateValue({value,en,names}:{value:unknown;en:boolean;names:Record<string,string>}){
  if(value===null||value===undefined)return <p>{en?"Not included":"含まれません"}</p>;
- if(typeof value!=="object")return <p>{String(value)}</p>;
- if(Array.isArray(value))return <>{value.map((v,i)=><UpdateValue key={i} value={v} en={en}/>)}</>;
- const labels:Record<string,string>=en?{}:{name:"名前",description:"説明",kind:"種別",aliases:"別名",assertion:"記録",relation:"関係",subjectId:"起点",objectId:"関係先",polarity:"肯否",scope:"範囲",times:"時期",evidence:"根拠",title:"資料名",url:"URL",bibliography:"書誌",language:"言語",concept:"意味",from:"開始・下限",to:"終了・上限",meaning:"時期の意味",label:"表示名",source:"資料版",revision:"版",locator:"該当箇所",excerpt:"引用",stance:"根拠の扱い",time:"時期",id:"ID"};
- return <dl className={styles.fields}>{Object.entries(value).filter(([,v])=>v!==""&&v!==null&&(!Array.isArray(v)||v.length)).map(([k,v])=><div key={k}><dt>{labels[k]??k}</dt><dd><UpdateValue value={v} en={en}/></dd></div>)}</dl>;
+ if(typeof value!=="object"){
+  const values:Record<string,string>=en?{}:{relation:"関係",note:"説明",period:"期間",calendar:"年月日",cycle:"周期",qualitative:"定性的な時期",affirmed:"肯定",denied:"否定",uncertain:"不確か",support:"支持",refute:"反証",background:"背景",duration:"続いた期間","occurrence-window":"発生時期の幅","legacy-unspecified":"未区別の範囲",year:"年",month:"月",day:"日",ja:"日本語",en:"英語"};
+  return <p>{names[String(value)]??values[String(value)]??String(value)}</p>;
+ }
+ if(Array.isArray(value))return <>{value.map((v,i)=><UpdateValue key={i} value={v} en={en} names={names}/>)}</>;
+ const labels:Record<string,string>=en?{}:{name:"名前",description:"説明",kind:"種別",aliases:"別名",assertion:"記録",relation:"関係",subjectId:"起点",objectId:"関係先",polarity:"肯否",scope:"範囲",times:"時期",evidence:"根拠",title:"資料名",url:"URL",bibliography:"書誌",language:"言語",concept:"意味",from:"開始・下限",to:"終了・上限",meaning:"時期の意味",label:"表示名",source:"資料版",revision:"版",locator:"該当箇所",excerpt:"引用",stance:"根拠の扱い",time:"時期",id:"ID",startBounds:"開始の不確かな幅",endBounds:"終了の不確かな幅",precision:"精度",definition:"意味の定義",recordRevision:"対象の記録版",conceptId:"意味の識別子",origin:"基準",unit:"単位",position:"位置",order:"順序"};
+ if(!Object.keys(value).length)return <p>{en?"Content unchanged; update the captured edition.":"内容は同じです。取得版を更新します。"}</p>;
+ return <dl className={styles.fields}>{Object.entries(value).filter(([k,v])=>k!=="id"&&v!==undefined&&v!==null).map(([k,v])=><div key={k}><dt>{labels[k]??k}</dt><dd><UpdateValue value={v} en={en} names={names}/></dd></div>)}</dl>;
 }

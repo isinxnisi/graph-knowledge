@@ -54,6 +54,8 @@ describe.skipIf(!url || !password)("public fixed Theme and generation Entity rea
     expect((await publication.status()).active).toBeNull();
     const old = await publication.theme({ themeId: "fixed-t", revision: 1 });
     expect(old.records[0].semantics.concept?.label).toBe("旧意味");
+    const beforeGeneration=capsuleUpdateResponseSchema.parse(await publication.capsuleUpdates({recordIds:[],entityIds:[],theme:{id:"fixed-t",revision:1},includeTheme:true}));
+    expect(beforeGeneration.generation).toBeNull();expect(beforeGeneration.snapshot).toEqual(old.snapshot);
     const first = await publish();
     await correct("entity", "fixed-a", 1, { name: "新版の人物名", kind: "person" });
     await correct("source", "fixed-s", 1, { title: "新版資料", bibliography: "第二版" });
