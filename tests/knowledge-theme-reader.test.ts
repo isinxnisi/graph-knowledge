@@ -1,3 +1,4 @@
+import { capsuleUpdateResponseSchema } from "../lib/domain/capsule-updates";
 import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -70,6 +71,25 @@ describe.skipIf(!url || !password)("public fixed Theme and generation Entity rea
     expect(newer.records[0].semantics.concept?.label).toBe("新版意味");
     expect(await publication.theme({ themeId: "fixed-t", revision: 1 })).toEqual(old);
     expect((await publication.themes({ entityId: "fixed-a" })).themes).toEqual([expect.objectContaining({ id: "fixed-t", revision: 2, hasTimeline: false })]);
+  });
+
+  it("compares captured records separately from fixed Theme composition and gates stopped references",async()=>{
+    await seed("updates-");await theme("updates-");await publish();
+    await correct("entity","updates-a",1,{name:"訂正した公開名",kind:"person"});
+    await correct("record","updates-r",1,{...relation("updates-"),assertion:"訂正した原文"});
+    // Unpublished current content must not be exposed through comparison.
+    const pending=capsuleUpdateResponseSchema.parse(await publication.capsuleUpdates({recordIds:["updates-r"],entityIds:["updates-a"]}));
+    expect(pending.snapshot.records[0].revision).toBe(1);expect(pending.snapshot.entities.find(e=>e.id==="updates-a")?.revision).toBe(1);
+    await publish();
+    const current=capsuleUpdateResponseSchema.parse(await publication.capsuleUpdates({recordIds:["updates-r"],entityIds:["updates-a"]}));
+    expect(current.snapshot.records[0].revision).toBe(2);expect(current.snapshot.entities.find(e=>e.id==="updates-a")?.content.name).toBe("訂正した公開名");
+    const fixed=capsuleUpdateResponseSchema.parse(await publication.capsuleUpdates({recordIds:["updates-r"],entityIds:[],theme:{id:"updates-t",revision:1},includeTheme:true}));
+    expect(fixed.theme?.revision).toBe(1);expect(fixed.snapshot.records[0].revision).toBe(1);
+    await visibility("source","updates-s","hidden");
+    const stopped=capsuleUpdateResponseSchema.parse(await publication.capsuleUpdates({recordIds:["updates-r"],entityIds:[]}));
+    expect(stopped.snapshot.records).toEqual([]);expect(stopped.unavailable).toEqual([{kind:"record",id:"updates-r"}]);
+    expect(JSON.stringify(stopped)).not.toContain("訂正した原文");
+    await expect(publication.capsuleUpdates({recordIds:[],entityIds:[],theme:{id:"updates-t",revision:1},includeTheme:true})).rejects.toMatchObject({status:404});
   });
 
   it("retains timeline-only periods and multiple annotations without inventing Entity nodes", async () => {

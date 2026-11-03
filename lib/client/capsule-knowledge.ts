@@ -22,7 +22,7 @@ export function capsuleKnowledgeProjection(document:CapsuleDocument):KnowledgeSn
  const base=document.knowledge?.snapshot;if(!base)return null;
  const result=structuredClone(base);
  for(const e of result.entities){const node=document.nodes.find(n=>n.origin.kind==="knowledge"&&n.origin.id===e.id);if(node)e.content={...e.content,name:node.title,description:node.description};}
- result.records=result.records.flatMap(record=>{
+ result.records=result.records.filter(r=>!document.knowledge?.excludedRecordIds?.includes(r.id)).flatMap(record=>{
   if(record.content.kind!=="relation")return [record];
   const relation=document.relations.find(r=>r.origin.kind==="knowledge"&&r.origin.id===record.id);
   if(!relation)return [];

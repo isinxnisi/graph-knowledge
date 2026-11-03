@@ -8,6 +8,7 @@ import { knowledgeEntityContentSchema, knowledgeSourceContentSchema, knowledgeRe
 import { buildKnowledgePublishedRecord, flattenKnowledgePublishedRecord, knowledgePublicationQuerySchema, type KnowledgePublishedRecord } from "../domain/knowledge-publication";
 import { ensureKnowledgeFoundationSchema, resolvePublicKnowledgeTheme, KnowledgeError, knowledgeDigest } from "./knowledge-foundation";
 
+import { capsuleUpdateQuerySchema, type CapsuleUpdateResponse } from "../domain/capsule-updates";
 import { knowledgeThemeListQuerySchema, knowledgeThemeReadQuerySchema, knowledgeEntityQuerySchema, type KnowledgeThemePage, type KnowledgeThemeRead, type KnowledgeEntityPage } from "../domain/knowledge-theme-reader";
 
 const generationSchema = z.string().regex(/^k75-[a-f0-9]{32}$/);
@@ -170,6 +171,27 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
   async function entity(c:PoolClient,generationId:string,id:string){const r=(await c.query("SELECT e.body FROM knowledge75.publication_entities e JOIN knowledge75.objects o ON o.kind='entity' AND o.id=e.id AND o.visibility='public' JOIN knowledge75.published_revisions p ON p.kind='entity' AND p.id=e.id AND p.revision=e.revision WHERE e.generation=$1 AND e.id=$2",[generationId,id])).rows[0];if(!r)throw new KnowledgeError("この対象は閲覧できません",404,"NOT_FOUND");return r.body as KnowledgeEntityVersion;}
   return {
     publishPending,status:()=>read(statusIn),
+    capsuleUpdates:(raw:unknown)=>read(async c=>{
+      const q=capsuleUpdateQuerySchema.parse(raw),actual=await generation(c);
+      if(q.includeTheme&&q.theme){
+        let resolved;
+        try{resolved=await resolvePublicKnowledgeTheme(c,q.theme.id);}
+        catch(error){if(error instanceof KnowledgeError&&(error.status===403||error.status===404))throw new KnowledgeError("このテーマは閲覧できません",404,"NOT_FOUND");throw error;}
+        return {generation:actual.id,...resolved,unavailable:[]} satisfies CapsuleUpdateResponse;
+      }
+      const records=await allowedRows(c,actual.id,[...new Set(q.recordIds)]);
+      const entities=distinctEntities(records),sources=[...new Map(records.flatMap(r=>r.sources.map(s=>[pinKey('source',s.id,s.revision),s] as const))).values()];
+      const unavailable:CapsuleUpdateResponse['unavailable']=q.recordIds.filter(id=>!records.some(r=>r.record.id===id)).map(id=>({kind:'record',id}));
+      for(const id of new Set(q.entityIds))if(!entities.some(e=>e.id===id)){
+        try{entities.push(await entity(c,actual.id,id));}catch(error){if(error instanceof KnowledgeError&&error.status===404)unavailable.push({kind:'entity',id});else throw error;}
+      }
+      const mappings:KnowledgeMappingVersion[]=[];
+      for(const record of records)if(record.semantics.mappingRevision){
+        const row=(await c.query("SELECT * FROM knowledge75.revisions WHERE kind='mapping' AND id=$1 AND revision=$2",[record.record.id,record.semantics.mappingRevision])).rows[0];
+        if(row)mappings.push({...rowVersion(row),content:knowledgeMappingContentSchema.parse(row.content)});
+      }
+      return {generation:actual.id,snapshot:{schemaVersion:1,initialView:'graph',records:records.map(r=>r.record),entities,sources,mappings},unavailable} satisfies CapsuleUpdateResponse;
+    }),
     themes:(raw:unknown={})=>read(async c=>{
       const q=knowledgeThemeListQuerySchema.parse(raw);
       const values:unknown[]=[];const conditions=["o.kind='theme'","o.visibility='public'","p.id IS NOT NULL"];

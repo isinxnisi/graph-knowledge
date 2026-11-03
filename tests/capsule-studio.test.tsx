@@ -6,6 +6,8 @@ import type GraphCanvas from "../components/GraphCanvas";
 import type { GraphView } from "../lib/client/graph-view";
 import type { LocalCapsule } from "../lib/client/local-capsules";
 import { captureCapsule } from "../lib/client/capsule-editor";
+import { captureKnowledgeCapsule } from "../lib/client/capsule-knowledge";
+import type { CapsuleUpdateResponse } from "../lib/domain/capsule-updates";
 import { emptyGraph } from "../lib/client/graph-state";
 import type { NeighborsResponse } from "../lib/domain/api";
 import examples from "../docs/API_RESPONSE_EXAMPLES.json";
@@ -474,4 +476,34 @@ it("adds a timeline through the relation form, validates dates and retains its p
 it("opts into a timeline without adding dates and can discard that choice",()=>{
  const original=capsule();render(<CapsuleStudio capsule={original} onSave={saveResult}/>);click('Edit');click('Show timeline');
  expect(screen.getByRole('button',{name:'Show relation diagram only'})).toBeTruthy();expect(original.document!.knowledge).toBeUndefined();click('Discard');click('Discard changes');expect(screen.queryByRole('button',{name:'Show relation diagram only'})).toBeNull();
+});
+
+function knowledgeUpdateFixture(){
+ const version={revision:1,createdAt:"2026-11-03T00:00:00.000Z",reason:"登録"};
+ const c=captureKnowledgeCapsule({title:"Captured theme",snapshot:{schemaVersion:1,initialView:"graph",entities:["object-a","object-b"].map(id=>({...version,id,content:{name:id,description:"source description",kind:"person",aliases:[],language:"en"}})),sources:[{...version,id:"source-a",content:{title:"Evidence",url:null,bibliography:"first edition",language:"en"}}],mappings:[],records:[{...version,id:"record-a",content:{kind:"relation",subjectId:"object-a",objectId:"object-b",relation:"helped",assertion:"Old source assertion",polarity:"affirmed",scope:"",times:[],evidence:[{id:"e",source:{id:"source-a",revision:1},locator:"p1",excerpt:"",stance:"support"}]}}]}});
+ c.document!.relations[0].note="My authored note";
+ const response:CapsuleUpdateResponse={generation:"g2",snapshot:structuredClone(c.document!.knowledge!.snapshot),unavailable:[]};response.snapshot.records[0].revision=2;response.snapshot.records[0].content.relation="supported observations";
+ return {c,response};
+}
+it("imports source updates as one undoable draft edit, preserving author content and requiring explicit save",async()=>{
+ const {c,response}=knowledgeUpdateFixture(),save=vi.fn(saveResult),fetcher=vi.spyOn(globalThis,"fetch").mockResolvedValue(new Response(JSON.stringify(response),{status:200}));
+ // Each fetch body must be independently consumable, including the apply-time recheck.
+ fetcher.mockImplementation(async()=>new Response(JSON.stringify(response),{status:200}));
+ render(<CapsuleStudio capsule={c} onSave={save}/>);click("Source updates");
+ await waitFor(()=>expect((button("Import into draft") as HTMLButtonElement).disabled).toBe(false));click("Import into draft");
+ await waitFor(()=>expect(screen.queryByRole("dialog",{name:"Source updates"})).toBeNull());
+ expect(save).not.toHaveBeenCalled();expect(Object.values(mocks.canvas!.content!.relations)[0].label).toContain("supported observations");
+ click("Undo");expect(Object.values(mocks.canvas!.content!.relations)[0].label).toContain("helped");click("Redo");click("Save");await waitFor(()=>expect(save).toHaveBeenCalledTimes(1));
+ const imported=save.mock.calls[0][0];expect(imported.document!.relations[0].note).toBe("My authored note");expect(imported.document!.relations[0].origin).toMatchObject({revision:2});
+ expect(JSON.parse(String(fetcher.mock.calls[0][1]?.body))).toEqual({recordIds:["record-a"],entityIds:["object-a","object-b"],includeTheme:false});
+});
+it("requires renewed review when the source changes during comparison and cancels without changing the Capsule",async()=>{
+ const {c,response}=knowledgeUpdateFixture(),newer=structuredClone(response);newer.snapshot.records[0].revision=3;newer.snapshot.records[0].content.relation="changed again";
+ vi.spyOn(globalThis,"fetch").mockResolvedValueOnce(new Response(JSON.stringify(response),{status:200})).mockResolvedValueOnce(new Response(JSON.stringify(newer),{status:200}));
+ const save=vi.fn(saveResult);render(<CapsuleStudio capsule={c} onSave={save}/>);click("Source updates");await waitFor(()=>expect((button("Import into draft") as HTMLButtonElement).disabled).toBe(false));click("Import into draft");
+ await screen.findByText("The source changed during comparison. Review the new changes.");expect(save).not.toHaveBeenCalled();expect(Object.values(mocks.canvas!.content!.relations)[0].label).toContain("helped");click("Close comparison");expect(screen.queryByRole("button",{name:"Save"})).toBeNull();
+});
+it("blocks stopped or failed update reads while keeping the saved Capsule available",async()=>{
+ const {c,response}=knowledgeUpdateFixture();response.unavailable=[{kind:"record",id:"record-a"}];response.snapshot.records=[];vi.spyOn(globalThis,"fetch").mockImplementation(async()=>new Response(JSON.stringify(response),{status:200}));
+ render(<CapsuleStudio capsule={c} onSave={saveResult}/>);click("Source updates");await screen.findByText("Some sources are unavailable. Import is blocked to preserve your content.");expect((button("Import into draft") as HTMLButtonElement).disabled).toBe(true);click("Close comparison");expect(Object.values(mocks.canvas!.content!.relations)[0].label).toContain("helped");
 });

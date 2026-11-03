@@ -21,6 +21,9 @@ export const capsuleKnowledgeSnapshotSchema = z.strictObject({
 });
 export const capsuleKnowledgeSchema=z.strictObject({
   schemaVersion:z.literal(1), capturedAt:z.iso.datetime(), theme:knowledgePinSchema.optional(),
-  snapshot:capsuleKnowledgeSnapshotSchema, initialView:z.enum(["graph","timeline","split"]),
+  snapshot:capsuleKnowledgeSnapshotSchema,
+  themeRecordIds:z.array(knowledgePinSchema.shape.id).max(400).optional(),
+  excludedRecordIds:z.array(knowledgePinSchema.shape.id).max(400).optional(),
+  initialView:z.enum(["graph","timeline","split"]),
 });
 export type CapsuleKnowledge=z.infer<typeof capsuleKnowledgeSchema>;

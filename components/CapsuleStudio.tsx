@@ -21,6 +21,8 @@ import { ClaimCard } from "./ClaimDetails";
 import Icon from "./Icon";
 import KnowledgeSplit from "./KnowledgeSplit";
 import CapsuleKnowledgeTimeline from "./CapsuleKnowledgeTimeline";
+import CapsuleKnowledgeUpdates from "./CapsuleKnowledgeUpdates";
+import { planCapsuleKnowledgeUpdate } from "../lib/client/capsule-knowledge-updates";
 import KnowledgeRecordDetail from "./KnowledgeRecordDetail";
 import { capsuleKnowledgeProjection, capsuleRelationTimes, capsuleRelationRecordId, withCapsuleTimeline } from "../lib/client/capsule-knowledge";
 import { themeTimeLabel } from "../lib/domain/theme-time";
@@ -101,6 +103,7 @@ export default function CapsuleStudio({ externalFocus, onFocusKey, allowKgSearch
   const value = history.present, contentDocument = value.document!;
   const [knowledgeView,setKnowledgeView]=useState<"graph"|"timeline"|"split">(capsule.document?.knowledge?.initialView??"graph");
   const [knowledgeFocus,setKnowledgeFocus]=useState<string|null>(null);
+  const [updatesOpen,setUpdatesOpen]=useState(false);
   const knowledgeSnapshot=useMemo(()=>capsuleKnowledgeProjection(contentDocument),[contentDocument]);
   const knowledgeMode=editing?contentDocument.knowledge?.initialView??"graph":knowledgeView;
   function chooseKnowledgeView(mode:"graph"|"timeline"|"split"){
@@ -203,7 +206,7 @@ export default function CapsuleStudio({ externalFocus, onFocusKey, allowKgSearch
     const starting = current(); setKnowledgeView(starting.document?.knowledge?.initialView??"graph"); setBeforeEdit({ capsule: capsuleClone(starting), selected: [...selected], selection });
     setHistory(capsuleHistory(starting)); setEditing(true); setGeneration(v => v + 1); setShareOpen(false); setMessage(null); setViewChanged(false);
   }
-  function cancelRequests() { active.current?.abort(); active.current = null; setBusy(false); setNeighbors(null); setComparison(null); setMenu(null); }
+  function cancelRequests() { active.current?.abort(); active.current = null; setBusy(false); setNeighbors(null); setComparison(null); setMenu(null); setUpdatesOpen(false); }
   function discard() {
     cancelRequests(); setTitleDraft(null); setViewChanged(false); setEditor(null); setSearch(false);
     if (!saved) { onClose?.(); return; }
@@ -444,7 +447,7 @@ export default function CapsuleStudio({ externalFocus, onFocusKey, allowKgSearch
 
   return <section className={`${css.studio} ${editing ? css.editing : ""}`} aria-label="Capsule" onKeyDown={event => {
     if (event.nativeEvent.isComposing || composing.current || event.keyCode === 229 || (event.target as Element).closest("input,textarea,select,[contenteditable=true]")) return;
-    if (event.key === "Escape" && !editor && !search && !leave && !shareOpen && !neighbors) { event.preventDefault(); event.stopPropagation(); if (menu) setMenu(null); else requestClose(); }
+    if (event.key === "Escape" && !editor && !search && !leave && !shareOpen && !neighbors && !updatesOpen) { event.preventDefault(); event.stopPropagation(); if (menu) setMenu(null); else requestClose(); }
     if (editing && !busy && !editor && !search && !leave && (event.key === "Delete" || event.key === "Backspace") && selection) { event.preventDefault(); removeSelection(); }
   }}>
     <header className={css.header}>
@@ -509,7 +512,17 @@ export default function CapsuleStudio({ externalFocus, onFocusKey, allowKgSearch
 
       </aside>}
     </div>
-    <footer className={css.footer} inert={saving}><span>{destination}{saved && ` · ${t("保存版", "Revision")} ${saved.revision}`}</span><span>{contentDocument.nodes.length} Entity · {contentDocument.relations.length} {t("関係", "relations")}</span><span className={css.footerSpace}/>{editing ? <button className={css.quietButton} onClick={() => openEditor("capsule")}><Icon name="settings"/>{t("説明", "Description")}</button> : <button className={css.quietButton} title={t("閲覧中の移動は一時的です。編集は今の配置から始まります。", "Viewing moves are temporary. Editing starts from this view.")} onClick={() => { if (saved) { setHistory(capsuleHistory(saved)); setGeneration(v => v + 1); } }}><Icon name="history"/>{t("保存位置", "Saved view")}</button>}<span className={css.future} title={t("知識申請・審査・本線KGへのマージは準備中です", "Knowledge submission, review and KG merging are being prepared")}>{t("知識申請：準備中", "Knowledge submission: coming later")}</span></footer>
+    <footer className={css.footer} inert={saving}><span>{destination}{saved && ` · ${t("保存版", "Revision")} ${saved.revision}`}</span><span>{contentDocument.nodes.length} Entity · {contentDocument.relations.length} {t("関係", "relations")}</span><span className={css.footerSpace}/>{!readOnly && !!contentDocument.knowledge?.snapshot.records.length && <button className={css.quietButton} disabled={busy || !!editor} title={t("取得元の更新", "Source updates")} aria-label={t("取得元の更新", "Source updates")} onClick={()=>setUpdatesOpen(true)}><Icon name="refresh"/><span className={css.optionalLabel}>{t("取得元の更新", "Source updates")}</span></button>}{editing ? <button className={css.quietButton} onClick={() => openEditor("capsule")}><Icon name="settings"/>{t("説明", "Description")}</button> : <button className={css.quietButton} title={t("閲覧中の移動は一時的です。編集は今の配置から始まります。", "Viewing moves are temporary. Editing starts from this view.")} onClick={() => { if (saved) { setHistory(capsuleHistory(saved)); setGeneration(v => v + 1); } }}><Icon name="history"/>{t("保存位置", "Saved view")}</button>}<span className={css.future} title={t("知識申請・審査・本線KGへのマージは準備中です", "Knowledge submission, review and KG merging are being prepared")}>{t("知識申請：準備中", "Knowledge submission: coming later")}</span></footer>
+    {updatesOpen && <CapsuleKnowledgeUpdates document={contentDocument} onClose={()=>setUpdatesOpen(false)} onApply={(response,includeTheme)=>{
+      try{
+        const starting=current(),plan=planCapsuleKnowledgeUpdate(starting.document!,response,includeTheme),next=withDocument(starting,plan.document);
+        const parsed=capsuleSchema.parse(next);if(new TextEncoder().encode(JSON.stringify(parsed)).byteLength>2_000_000)return false;
+        if(!editing)begin();
+        if(!commit(parsed))return false;
+        setUpdatesOpen(false);setKnowledgeFocus(null);setSelection(null);setSelected([]);
+        setMessage(t("取得元の更新を草稿に取り込みました。保存すると確定します。", "Source updates imported into the draft. Save to confirm."));return true;
+      }catch{return false;}
+    }}/>}
     {menu && <CapsuleContextMenu x={menu.clientX} y={menu.clientY} title={selected.length > 1 ? t(`${selected.length}要素を選択`, `${selected.length} selected`) : node?.title ?? (text ? t("テキスト", "Text") : relations.length ? t("関係", "Relation") : t("Capsuleに追加", "Add to Capsule"))} actions={menuActions} onClose={() => setMenu(null)}/>}
     {leave && <CapsuleModal title={t("変更を破棄しますか？", "Discard your changes?")} dismissible={!busy} onClose={() => setLeave(null)}><div className={css.confirmBody}><span className={css.confirmIcon}><Icon name="undo"/></span><h3>{t("変更を破棄しますか？", "Discard your changes?")}</h3><p>{!saved ? t("作成中のCapsuleを破棄し、元のGraphへ戻ります。", "Discard this new Capsule and return to the original graph.") : leave === "discard" ? t("今回の編集を取り消し、編集を始める前の表示に戻ります。保存済みのCapsuleは残ります。", "Return to the view before editing. Your saved Capsule stays intact.") : t("保存していない変更は失われます。保存済みのCapsuleは残ります。", "Unsaved changes will be lost. Your saved Capsule stays intact.")}</p>{closingWithComments && <p>{commentDraft?.hasPending() ? t("投稿結果が未確認のコメントがあります。閉じると本文と再送情報が失われます。共有画面に戻ると、同じ投稿の結果を確認できます。", "A comment submission is unconfirmed. Closing loses its text and retry information. Return to sharing to check the same submission.") : t("投稿していないコメントの入力も失われます。共有画面へ戻ると続きを書けます。", "Your unposted comment draft will also be lost. Return to sharing to continue writing.")}</p>}{editor && <p>{t("入力中のフォームへ戻り、内容を適用してから保存できます。", "Return to the form and apply its content before saving.")}</p>}{error && <p role="alert">{error}</p>}<div className={css.confirmActions}><button data-autofocus disabled={busy} onClick={() => setLeave(null)}>{t("編集を続ける", "Keep editing")}</button><button disabled={busy} data-variant="danger" onClick={finishLeave}>{t("変更を破棄", "Discard changes")}</button><button disabled={busy || closingWithComments || !!editor || !onSave || capacity?.documents === false} data-variant="primary" onClick={() => void save(false,leave)}>{t("保存して終了", "Save and finish")}</button></div></div></CapsuleModal>}
     {shareOpen && <CapsuleModal wide dialogRef={shareDialog} title={t("Capsuleを共有", "Share Capsule")} onClose={requestShareClose}><header className={css.dialogHeading}><h3>{t("Capsuleを共有", "Share Capsule")}</h3><button aria-label={t("共有を閉じる", "Close sharing")} onClick={requestShareClose}><Icon name="close"/></button></header>{sharing}
