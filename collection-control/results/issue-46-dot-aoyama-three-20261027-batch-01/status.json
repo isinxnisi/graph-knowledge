@@ -87,12 +87,12 @@
   },
   "requestSha256": "dbbd9ac962a478f5a8f351fcdbd05ab3373bfebe364f8b738b58bffb17d3d104",
   "kind": "collect-review",
-  "phase": "retry-wait",
-  "generation": 3047,
+  "phase": "waiting-control",
+  "generation": 3049,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-03T07:56:47+00:00",
+  "updatedAt": "2026-11-03T08:54:32+00:00",
   "result": {
     "jobId": "issue-46-dot-aoyama-three-20261027-r0001-0d4c3c14acfa63a5",
     "collectionUnchanged": false,
@@ -118,6 +118,6 @@
   "decisionDrafts": [
     "datasets/collection-decision-drafts/issue-46-dot-aoyama-three-20261027-batch-01/a1c214cb4271a8014aea807e9ae859255c126c3f261ab6590a96ff3abcf67664/issue-46-dot-aoyama-three-20261027-batch-01-normal-draft.json"
   ],
-  "retryAt": 1793692743.2661994,
-  "message": "<urlopen error [Errno 104] Connection reset by peer>"
+  "retryAt": 1793694627.068413,
+  "message": "Execution gate: closing-window"
 }
