@@ -1,4 +1,4 @@
-2026-11-03 U5更新：[Gemini評価](../verification/KNOWLEDGE_GEMINI_U5_20261103.md)を経て、0.8Bの任意助言とGeminiによる通常分の自動受理を分ける。全件人手承認へ戻さず、補足依頼・例外救済・無料枠queue・版と原資料の確認を接続して進める。[最新契約・実装済み部品・残件](KNOWLEDGE_SUBMISSIONS_U5.md)。U5全体は未完了。本人の受付・草稿・取消・Capsule選択取込はmain／3200／HTTPS βへ接続し、3276はU4の隔離表示を維持する。AI処理・公開・通知の残件と実配置は[受付記録](../verification/KNOWLEDGE_SUBMISSION_INTAKE_U5_20261103.md)を参照する。
+2026-11-03 U5：本人受付から、明示同意・永続AIキュー・項目別Gemini結果・任意の0.8Bヒントまでmain／3200／HTTPS βへ接続。無料利用枠・再起動・版固定・取消／停止／退会を扱う。原資料・現在参照の照合、通常の自動受理と公開／通知・異議は次工程で、U5全体は未完了。指定β本人のみ、3276はU4、本番VPS・共通Kevは未変更。[現行契約・残件](KNOWLEDGE_SUBMISSIONS_U5.md)／[今回の実装・配置](../verification/KNOWLEDGE_REVIEW_QUEUE_U5_20261103.md)。AIの全件人手承認へ戻す変更ではない。
 
 # Plunode本運用初版への統合計画
 

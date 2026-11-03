@@ -1,4 +1,4 @@
-2026-11-03 U5受付：非公開の投稿・不変内容版・版固定receipt・操作再送記録を、会員DBの専用schema `member_knowledge` に保存する。本人user行のtransaction lockとFK／停止triggerで、保存・取消・停止・退会を同じDB境界に置く。共通知識の公開正本・投影とは分離し、受付だけでは公開しない。main／3200／HTTPS βへ段階反映、AI job・原資料照合・通常自動受理・公開／通知は未接続。本番はU8。[現行契約](design/KNOWLEDGE_SUBMISSIONS_U5.md)／[検証・配置](verification/KNOWLEDGE_SUBMISSION_INTAKE_U5_20261103.md)。以下の日付付き配置は各時点の履歴。
+2026-11-03 U5：本人受付から、明示同意・永続AIキュー・項目別Gemini結果・任意の0.8Bヒントまでmain／3200／HTTPS βへ接続。無料利用枠・再起動・版固定・取消／停止／退会を扱う。原資料・現在参照の照合、通常の自動受理と公開／通知・異議は次工程で、U5全体は未完了。指定β本人のみ、3276はU4、本番VPS・共通Kevは未変更。非公開job／送信断面は会員DB追加021、匿名利用量は私有内容消去後も残す。公開正本とは分離する。[契約](design/KNOWLEDGE_SUBMISSIONS_U5.md)／[検証](verification/KNOWLEDGE_REVIEW_QUEUE_U5_20261103.md)。以下は各時点の履歴。
 
 2026-10-30（共有の仕上げ）、Issue #63の同一URLへの明示的な共有更新・版を保持した会話・Capsule別OGP・関係先の条件横断選択を既存3200／HTTPS βへ反映。配置 `5dc34e31` / build `1eOVcSb5AZmVQ3nOgAC5l`、会員DBは015まで（16件）。現在の契約と実操作・SNS未確認範囲は[共有仕上げの検証記録](verification/CAPSULE_SHARING_20261030.md)を参照する。通常保存だけでは共有を変えず、コミュニティの固定掲載も独立させる。本番VPSは更新していない。以下の記述は各時点の履歴。
 

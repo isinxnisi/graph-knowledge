@@ -1,4 +1,4 @@
-2026-11-03 U5追補：本人受付を有効にする場合は会員DBへ追加020を明示適用する。知識DBの003は適用しない。private beta-knowledge.jsonの任意 `KNOWLEDGE_SUBMISSIONS_ENABLED=1` とWebで有効化する。AI処理はまだ接続しない。[受付の配置・復旧・残件](../verification/KNOWLEDGE_SUBMISSION_INTAKE_U5_20261103.md)を参照。
+2026-11-03 U5：受付は020、指定β本人のAI確認は追加021を明示適用する。知識DB003は適用しない。AI確認済みは公開済みではない。[最新の配置・実送信・復旧](../verification/KNOWLEDGE_REVIEW_QUEUE_U5_20261103.md)を優先する。
 
 # 知識読取・年表付きCapsuleの段階β
 
@@ -45,3 +45,16 @@ backupはprivateなfresh directoryへcustom dumpを作り、別名DBへ復元し
 buildは検証対象の固定SHAをexportした別directoryで作り、稼働Webをbuild中ずっと停止しない。既存private runtime・同じ依存を使い、BUILD_IDとAPI routeのfile traceに020が含まれることを確認してからWebだけを短く切り替える。DBを戻さず互換Webを保管する。無効化時は受付flagを0にして入口／APIを閉じ、投稿schema・会員DBを消さない。最新の対応buildとbackupは[U5記録](../verification/KNOWLEDGE_SUBMISSION_INTAKE_U5_20261103.md)を優先し、U4復旧buildへ機械的に戻さない。
 
 匿名401だけで完了とせず、HTTPS βの実会員で一覧・草稿保存・再訪・受付・編集・取消・Capsule選択を確認する。Google既存sessionでの確認と、新しいOAuthログイン、fixtureの停止／退会は区別する。
+
+
+## U5永続AI確認の起動・停止・利用量
+
+020と同じbackup／実Web roleへの別DB復元の後、`scripts/member-migrate.ts --knowledge-review --confirm-origin https://graph-beta.isinxnisi.com`をNode24で明示実行し、021と既存checksum／行の保持、再実行不変を確認する。Webの両投稿API route traceに021が含まれることを確認する。過去のreceiptを自動送信しない。
+
+`~/.local/state/plunode-previews/beta-review.json`は既存user所有0600のprivate設定。実評価した無料project／model、RPM／TPM／日次・月次回数／入力・出力上限、APIkeyの絶対path、許可する実会員UUIDを設定する。APIkeyも0600で別ファイルとし、本文や秘密値をGit・公開logへ残さない。現在は指定β本人1人だけ。一般公開・有料fallback・自動model変更はしない。
+
+通常launcherはこの任意profileがあると既存認証・会員接続を引き継ぎ、独立した`knowledge-review-worker.ts`を起動する。PID／logは同じstateディレクトリの`knowledge-review-worker.pid`／`.log`。Web起動前に先行評価の使用量を`--import-evaluation <private-ledger-file>`で一度取り込み、その後は旧live評価CLIと並行運用しない。既存profileの設定digestと異なる変更はworkerが拒否するため、上限・モデルの変更は台帳を保持した別の明示手順として扱う。
+
+利用量は、同じprivate runtimeと`KNOWLEDGE_REVIEW_CONFIG`／許可user設定を引き継いでNode24から`--import tsx scripts/knowledge-review-worker.ts --status`を実行する。これはAPI送信や残量リセットを行わない。応答の実測token内訳と、欠測の予約を区別する。provider側の正確な残量は不明であり、ローカル上限だけで無料枠を保証しない。
+
+停止・復旧時はPIDのcwd／cmdlineが受入済みmainのreview workerであることを確認してSIGTERMする。profileをprivateな退避名へ移し、同workerだけを停止し、既存launcherでWebを再開するとAI入口を閉じられる。既存publisher・共通Kev・他projectを停止しない。ジョブと台帳を消さず同profile／対応Webへ戻すと、未確定送信を間隔・回数上限付きで回復する。取得済み応答が残る場合は再推論せず反映を再開する。取消や停止済みの投稿を再開しない。DBを旧dumpで上書きせず、021対応Webを保持する。

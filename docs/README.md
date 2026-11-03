@@ -1,4 +1,4 @@
-- U5本人受付（2026-11-03）：[投稿画面・会員DB・Capsule選択・停止／退会](design/KNOWLEDGE_SUBMISSIONS_U5.md)／[実OIDC・復元・βの確認記録](verification/KNOWLEDGE_SUBMISSION_INTAKE_U5_20261103.md)。受付までの段階実装で、AI処理・公開・通知は次工程。
+2026-11-03 U5：本人受付から、明示同意・永続AIキュー・項目別Gemini結果・任意の0.8Bヒントまでmain／3200／HTTPS βへ接続。無料利用枠・再起動・版固定・取消／停止／退会を扱う。原資料・現在参照の照合、通常の自動受理と公開／通知・異議は次工程で、U5全体は未完了。指定β本人のみ、3276はU4、本番VPS・共通Kevは未変更。[現行契約](design/KNOWLEDGE_SUBMISSIONS_U5.md)／[キュー・実API・配置記録](verification/KNOWLEDGE_REVIEW_QUEUE_U5_20261103.md)。以下は各段階の記録。
 
 - U5自動化方針・Gemini実評価（2026-11-03）：[0.8B任意助言／Gemini通常自動受理と残件](design/KNOWLEDGE_SUBMISSIONS_U5.md)／[60件の結果・無料枠・再試行・未接続範囲](verification/KNOWLEDGE_GEMINI_U5_20261103.md)。接続部品まで作業branchへ実装。利用者の投稿から公開までは未完了。
 

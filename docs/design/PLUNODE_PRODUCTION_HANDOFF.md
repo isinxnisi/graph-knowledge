@@ -1,4 +1,4 @@
-2026-11-03 U5受付の実配置完了：main／3200／HTTPS βはsource fe40dd54・build givEVGjRrzqDqmfBrJTyE、会員020適用・既存34表のfresh復元／保全・実Google既存sessionの直接投稿／2件選択取込／受付後改訂／取消を確認。PC・390px確認、検証投稿は取消済み。3276はU4維持、本番未更新。[最終記録と再開](../verification/KNOWLEDGE_SUBMISSION_INTAKE_U5_20261103.md)。次は永続job・利用量・0.8B任意助言・原資料照合・Gemini通常自動受理・公開／通知。U5は未完了、基本あと2回程度。捕捉断面全体の送信・取消済みbackfill・別DB間の単一txという誤実装を避ける。[後工程の境界](KNOWLEDGE_SUBMISSIONS_U5.md#受付から後工程へ渡す際の注意)。以下は各時点の履歴。
+2026-11-03 U5：本人受付から、明示同意・永続AIキュー・項目別Gemini結果・任意の0.8Bヒントまでmain／3200／HTTPS βへ接続。無料利用枠・再起動・版固定・取消／停止／退会を扱う。原資料・現在参照の照合、通常の自動受理と公開／通知・異議は次工程で、U5全体は未完了。指定β本人のみ、3276はU4、本番VPS・共通Kevは未変更。次は原資料取得／照合・現在参照認可、固定decision／outboxによる公開収束、本人通知・補足／異議。基本あと1〜2回程度の推定。[再開と制約](../verification/KNOWLEDGE_REVIEW_QUEUE_U5_20261103.md)。以下は各時点の履歴。
 
 2026-11-03 U5受付：本人画面・認証API・草稿／受付／取消・保存Capsuleの選択捕捉を会員DBへ接続。追加020はuser FKと停止triggerを備える。[確認先・検証・配置・残件](../verification/KNOWLEDGE_SUBMISSION_INTAKE_U5_20261103.md)。AI job・原資料照合・自動受理／公開・通知は未接続。基本あと2回程度。以下の未接続・回数は各段階時点の履歴。
 
