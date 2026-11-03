@@ -106,12 +106,12 @@
   },
   "requestSha256": "a25b93cfbe06d29201c862380f1208dfa929a0856e6f8ca7473a82b223769b34",
   "kind": "collect-review",
-  "phase": "waiting-lock",
-  "generation": 13339,
+  "phase": "retry-wait",
+  "generation": 13340,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
-  "updatedAt": "2026-11-03T06:50:09+00:00",
+  "updatedAt": "2026-11-03T07:10:07+00:00",
   "result": {
     "jobId": "issue-25-utc-recovery-r0002-195d12ba8ceee0b8",
     "collectionUnchanged": false,
@@ -135,6 +135,6 @@
     "sha256": "451fb079e97c22e4fbc5a4db062053733334a9f27ddc3665db2d3796f3e09837"
   },
   "decisionDrafts": [],
-  "retryAt": 1793681163.6690338,
-  "message": "共通ロック使用中。次回に再確認する。"
+  "retryAt": 1793689948.9240053,
+  "message": "fatal: unable to access 'https://github.com/isinxnisi/graph-knowledge.git/': OpenSSL SSL_connect: Connection reset by peer in connection to github.com:443 \n"
 }
