@@ -1,3 +1,5 @@
+2026-11-04追補：U5の相談・運営例外をβへ接続済み。U6は[有限資料取得](KNOWLEDGE_COLLECTION_U6.md)までで、収集用のAIは未呼出。投稿審査のproject利用量を収集の別台帳で迂回しない。[現在の配置と残件](../verification/KNOWLEDGE_COLLECTION_U6_CAPTURE_20261104.md)。以下のU5未完了記述は各段階の履歴。
+
 2026-11-03 U5：本人の新しい公開依頼から、Gemini・原資料の引用照合・現在参照確認・自動受理・公開先表示・元の公開版からの訂正を接続。旧AI確認のみの依頼を自動公開しない。U5全体は未完了で、次は異議・運営例外対応と総合確認。指定β本人のみ、3276はU4、本番VPS・共通Kevは変更しない。[現行契約](KNOWLEDGE_SUBMISSIONS_U5.md)／[最新の実装・検証・配置](../verification/KNOWLEDGE_ACCEPTANCE_U5_20261103.md)。以下は各時点の履歴。
 
 2026-11-03 U5追補：本人の明示依頼から永続job・project利用枠・Geminiの項目別結果までを追加021へ接続する段階。0.8Bは任意助言。原資料照合・自動受理／公開・通知は次工程。[現行契約](KNOWLEDGE_SUBMISSIONS_U5.md)／[実操作・配置](../verification/KNOWLEDGE_REVIEW_QUEUE_U5_20261103.md)。以下の未接続記述は前段時点を含む。

@@ -108,3 +108,5 @@ profileの初回準備は `python3 scripts/knowledge-collection-config.py --dire
 既存起動入口 `python3 scripts/start-local-previews.py beta --node <Node24絶対パス>` はprofileがあると収集Workerも起動する。Webが既に3200を使用中なら重複起動しない。Worker単独の再開は同じNodeで `--import tsx scripts/knowledge-collection-worker.ts --config ~/.local/state/plunode-previews/beta-collection-client.json`。一回だけの確認は `--once`。自動起動は既存beta launcherの範囲だけで、Windows予定を新設しない。
 
 運営確認先は `/operations#collection`。現在の段階は資料取得までであり、「取得済み」を知識の公開成功と呼ばない。raw artifactはprivate DB、PC checkpointはprivate collection-state。復旧は027対応のWeb・Workerを使い、古いdumpでliveを上書きしない。VPSへの接続はU8の別工程。
+
+2026-11-04のU6資料取得の現在配置：source `384e7d52e2f385e3ef79e07b56110c20d4254bbc`／3200・HTTPS β build `j_2dRaRyCWvs0g0ek5zx7`。会員027、知識001/002/004、3276は既存U4、本番未変更。[実取得・取消・復元と制約](../verification/KNOWLEDGE_COLLECTION_U6_CAPTURE_20261104.md)。
