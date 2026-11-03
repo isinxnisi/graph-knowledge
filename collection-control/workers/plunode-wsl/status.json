@@ -42,9 +42,9 @@
   },
   "controlError": null,
   "requestsByPhase": {
-    "retry-wait": 18,
-    "waiting-control": 33,
-    "blocked": 2,
+    "waiting-lock": 44,
+    "retry-wait": 8,
+    "blocked": 1,
     "completed": 9
   },
   "issueIntake": {
@@ -53,8 +53,9 @@
       "checkedAt": "2026-11-03T05:02:45+00:00"
     },
     "collection-control/issue-sources/16.json": {
-      "status": "registered: issue-16-adachi-three-20261025",
-      "checkedAt": "2026-11-03T05:02:44+00:00"
+      "status": "held",
+      "reason": "<3>WSL (3229005 - ) ERROR: UtilAcceptVsock:273: accept4 failed 110\nfatal: unable to get password from user\n",
+      "checkedAt": "2026-11-03T06:28:51+00:00"
     },
     "collection-control/issue-sources/5.json": {
       "status": "registered: issue-5-dot-tezuka-adolf-20261025",
@@ -157,15 +158,15 @@
   "recoveryRequests": {
     "issue-25-utc-recovery-01": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-03",
-      "phase": "retry-wait"
+      "phase": "waiting-lock"
     },
     "issue-25-utc-recovery-02": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-01",
-      "phase": "waiting-control"
+      "phase": "waiting-lock"
     },
     "issue-25-utc-recovery-03": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-04",
-      "phase": "retry-wait"
+      "phase": "waiting-lock"
     },
     "issue-25-utc-recovery-04": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-05",
@@ -173,11 +174,11 @@
     },
     "issue-25-utc-recovery-05": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-06",
-      "phase": "waiting-control"
+      "phase": "waiting-lock"
     },
     "issue-25-utc-recovery-06": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-07",
-      "phase": "waiting-control"
+      "phase": "waiting-lock"
     },
     "issue-25-utc-recovery-07": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-08",
@@ -185,12 +186,12 @@
     },
     "issue-25-utc-recovery-08": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-09",
-      "phase": "waiting-control"
+      "phase": "waiting-lock"
     },
     "issue-25-utc-recovery-09": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-10",
-      "phase": "waiting-control"
+      "phase": "waiting-lock"
     }
   },
-  "checkedAt": "2026-11-03T06:28:11.730463+00:00"
+  "checkedAt": "2026-11-03T06:55:57.577811+00:00"
 }
