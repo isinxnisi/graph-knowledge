@@ -1,3 +1,5 @@
+2026-11-03 U5：本人の新しい公開依頼から、Gemini・原資料の引用照合・現在参照確認・自動受理・公開先表示・元の公開版からの訂正を接続。旧AI確認のみの依頼を自動公開しない。U5全体は未完了で、次は異議・運営例外対応と総合確認。指定β本人のみ、3276はU4、本番VPS・共通Kevは変更しない。[現行契約](../design/KNOWLEDGE_SUBMISSIONS_U5.md)／[最新の実装・検証・配置](../verification/KNOWLEDGE_ACCEPTANCE_U5_20261103.md)。以下は各時点の履歴。
+
 2026-11-03 U5：受付は020、指定β本人のAI確認は追加021を明示適用する。知識DB003は適用しない。AI確認済みは公開済みではない。[最新の配置・実送信・復旧](../verification/KNOWLEDGE_REVIEW_QUEUE_U5_20261103.md)を優先する。
 
 # 知識読取・年表付きCapsuleの段階β
@@ -58,3 +60,16 @@ buildは検証対象の固定SHAをexportした別directoryで作り、稼働Web
 利用量は、同じprivate runtimeと`KNOWLEDGE_REVIEW_CONFIG`／許可user設定を引き継いでNode24から`--import tsx scripts/knowledge-review-worker.ts --status`を実行する。これはAPI送信や残量リセットを行わない。応答の実測token内訳と、欠測の予約を区別する。provider側の正確な残量は不明であり、ローカル上限だけで無料枠を保証しない。
 
 停止・復旧時はPIDのcwd／cmdlineが受入済みmainのreview workerであることを確認してSIGTERMする。profileをprivateな退避名へ移し、同workerだけを停止し、既存launcherでWebを再開するとAI入口を閉じられる。既存publisher・共通Kev・他projectを停止しない。ジョブと台帳を消さず同profile／対応Webへ戻すと、未確定送信を間隔・回数上限付きで回復する。取得済み応答が残る場合は再推論せず反映を再開する。取消や停止済みの投稿を再開しない。DBを旧dumpで上書きせず、021対応Webを保持する。
+
+
+## U5原資料照合・公開の追加022
+
+現在は指定されたβ本人だけ。`beta-knowledge.json`の`KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED=1`と既存の`beta-review.json`を使い、旧AI確認だけの同意は自動公開へ上げない。Webの知識接続は読取専用のまま、review workerだけが内部の受理処理へ接続する。Webから任意の受理コマンドを実行できるAPIは開かない。
+
+会員DBと専用知識DBの両方をfresh custom dumpし、実owner／roleで別DBへ復元して全既存tableのfingerprintを照合する。Node24から`scripts/member-migrate.ts --knowledge-acceptance --confirm-origin https://graph-beta.isinxnisi.com`を明示実行する。000〜022の23件となり、既存checksumを変えない。知識DBは既存operations／changesを使い、003等は適用しない。別DBとliveで追加移行・再実行不変・既存行保持を確認する。heartbeat等の通常運用更新を移行による破損と混同しない。
+
+固定SHAで別directoryにbuildし、022のAPI file traceとBUILD_IDを確認する。切替時だけ、自分のmain由来のWeb／review worker／knowledge publisherをcwd・cmdlineで照合して終了し、既存launcherで再起動する。共通Kev・他project・3276・VPSには触れない。実AI送信の範囲・無料project／model・利用量profileは既存設定を引き継ぐ。
+
+公開前の`reviewed`、原資料の`verifying/source-retry`、受理済み`accepted`、公開generation反映済み`published`は別。結果linkは反映を確認したrecord版だけへ出す。原資料の取得は匿名HTTPS HTML/textに限定し、内部IP・redirect先を再検査する。取得失敗は時間・回数を限定して待機し、引用不一致・非対応資料は補足へ戻す。
+
+復旧は同じdecision IDで再送し、公開正本のreceiptから結果を回復する。022と新しい受理decisionを読めるWeb／workerを使う。受理済みdecisionがある状態で旧AI-only Webへ機械的に戻さず、DBを旧dumpで上書きしない。私有草稿の取消・退会後も受理済みの公開向け断面は残り得る。公開知識の停止は別の訂正／運営操作で行う。現在の受理対応buildと両DB backupは[今回の記録](../verification/KNOWLEDGE_ACCEPTANCE_U5_20261103.md)を参照する。

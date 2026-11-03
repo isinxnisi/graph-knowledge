@@ -1,3 +1,5 @@
+2026-11-03 U5：本人の新しい公開依頼から、Gemini・原資料の引用照合・現在参照確認・自動受理・公開先表示・元の公開版からの訂正を接続。旧AI確認のみの依頼を自動公開しない。U5全体は未完了で、次は異議・運営例外対応と総合確認。指定β本人のみ、3276はU4、本番VPS・共通Kevは変更しない。[現行契約](design/KNOWLEDGE_SUBMISSIONS_U5.md)／[最新の実装・検証・配置](verification/KNOWLEDGE_ACCEPTANCE_U5_20261103.md)。以下は各時点の履歴。
+
 2026-11-03 U5：本人受付から、明示同意・永続AIキュー・項目別Gemini結果・任意の0.8Bヒントまでmain／3200／HTTPS βへ接続。無料利用枠・再起動・版固定・取消／停止／退会を扱う。原資料・現在参照の照合、通常の自動受理と公開／通知・異議は次工程で、U5全体は未完了。指定β本人のみ、3276はU4、本番VPS・共通Kevは未変更。[現行契約](design/KNOWLEDGE_SUBMISSIONS_U5.md)／[検証・配置・制約](verification/KNOWLEDGE_REVIEW_QUEUE_U5_20261103.md)。以下は各時点の履歴。
 
 2026-11-03、U5のGemini無料API実評価と接続部品・自動結果ルールを作業branchへ追加。0.8Bは任意助言、通常分はGeminiから自動受理へ進める。[現在の処理・残件](design/KNOWLEDGE_SUBMISSIONS_U5.md)／[実測・利用量・失敗](verification/KNOWLEDGE_GEMINI_U5_20261103.md)。投稿UI・認証API・永続job・公開・通知は未接続。main／3200／β／3276はU4を保持し、本番・共通Kevを変更していない。以下は各時点の履歴。
