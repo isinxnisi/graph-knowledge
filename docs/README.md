@@ -1,4 +1,5 @@
-- U4着手（2026-11-03）：[Capsuleの新断面・編集連動・早期β統合](design/KNOWLEDGE_CAPSULE_U4.md)／[保存・編集の中間検証](verification/KNOWLEDGE_CAPSULE_U4_SAVE_20261103.md)。新形式の共有・OGP・差分取込・β統合は未完として区別する。
+- U4訂正接続（2026-11-03）：[原記録／テーマ構成の明示取込・β検証・配置と復旧](verification/KNOWLEDGE_CAPSULE_U4_UPDATES_20261103.md)。独自名・注記・時期・配置・除外を保持する。共有／停止／年表OGPの総合接続は残る。
+- U4着手時の記録：[Capsuleの新断面・編集連動・早期β統合](design/KNOWLEDGE_CAPSULE_U4.md)／[保存・編集の中間検証](verification/KNOWLEDGE_CAPSULE_U4_SAVE_20261103.md)。現在の進捗は上記の訂正接続記録を優先する。
 - U3のTOP調整（2026-11-02）：[既存デザイン・配置順・初期HTML読取](verification/KNOWLEDGE_EXPLORER_U3_TOP_20261102.md)。既存「ほかの対象から探す」を保持し、テーマ検索も既存の一覧表現を共有する。
 - U3の最新実装（2026-11-02）：[既存TOP・検索モーダルへのテーマ統合](verification/KNOWLEDGE_EXPLORER_U3_DISCOVERY_20261102.md)。紹介テーマは横送り、新着一覧、検索「テーマから」に名前・説明／種類／並び順を追加。関係図・年表を開く前に区別できる。既存Explorer本体を維持し、Themeを中央で読んで元の探索へ戻る。独立3276のみ、会員Capsuleの新断面はU4。
 - U3契約：[中央Graph・固定版・再開](design/KNOWLEDGE_EXPLORER_U3.md)。以前の[確認記録](verification/KNOWLEDGE_EXPLORER_U3_20261102.md)／[一体枠・境界調整](verification/KNOWLEDGE_EXPLORER_U3_SPLIT_20261102.md)は当時の実装・検証として残す。

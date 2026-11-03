@@ -1,5 +1,7 @@
 # U4中間：時期フォーム・任意年表・実会員のβ接続
 
+後続の現在状態は[訂正取込・配置・Tunnel復旧](KNOWLEDGE_CAPSULE_U4_UPDATES_20261103.md)を優先する。以下は時期フォームと初回β接続時点の記録。
+
 2026-11-03。U4全体の完了ではない。前段は[断面保存・編集連動](KNOWLEDGE_CAPSULE_U4_SAVE_20261103.md)、今回の契約は[U4](../design/KNOWLEDGE_CAPSULE_U4.md)、再開は[β runbook](../runbooks/KNOWLEDGE_BETA.md)。
 
 ## 確認先と操作

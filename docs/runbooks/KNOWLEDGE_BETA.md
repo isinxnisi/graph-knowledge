@@ -27,3 +27,11 @@ backupはprivateなfresh directoryへcustom dumpを作り、別名DBへ復元し
 検証済み固定SHAをmainへ受け入れ、通常push後にpublic buildを配置する。新形式Capsuleを保存した後は、それを読めない旧Webへ戻さない。知識読取側の障害は設定を無効にして通常探索を維持し、保存済みの新Capsuleは対応版Webで保持する。原記録正本・公開世代・会員DBを一括resetしない。
 
 確認先は `/api/knowledge/public?mode=status`、TOP紹介／新着、テーマ検索、年表から会員Capsule保存・再訪、通常Graphから任意年表追加。βで `/api/knowledge` と `/api/themes` が無効であり、別Hostや正式originへ誤接続しないことも確認する。新形式の共有は接続完了までサーバーで閉じる。実Googleとfixture、HTTP・実画面・iPhone実機は区別して記録する。
+
+## 訂正比較と今回の復旧用接続
+
+最新source／buildは[U4訂正検証](../verification/KNOWLEDGE_CAPSULE_U4_UPDATES_20261103.md)を照合する。Capsule下部「取得元の更新」は参照IDだけのPOST読取で、保存・共有・原記録訂正を行わない。原記録と固定Theme構成の両比較、Undo・破棄、実会員再訪を確認する。新しいthemeRecordIds／excludedRecordIdsを保存した後は、そのフィールドを読めない前段buildへ戻さない。対応復旧buildは当該worktreeのprivate `.local/u4-beta/beta-build-bcd926e3`。
+
+2026-11-03に既存共有Docker connectorでQUIC timeoutが継続し、追加の `plunode-beta-http2-recovery`（label `plunode.scope=beta-tunnel-recovery`）をHTTP/2で起動した。同じ既存image・接続資格・remote routeを再利用し、既存connectorやDNS／Accessを変更していない。HTTP/2への切替は[Cloudflareの接続トラブル対処](https://developers.cloudflare.com/tunnel/troubleshooting/)にもあるが、今回のネットワーク根本原因は未確定。
+
+再開時は既存containerのlabel・image・protocol=http2・公開portなしを確認し、必要なら `docker start plunode-beta-http2-recovery`。restart policyはnoで、PC再起動後の自動起動は保証しない。新しいtokenを作る・ログへ出す・別のtokenへ置換する手順ではない。通常shared connectorが安定した後、復旧用だけを `docker stop plunode-beta-http2-recovery` で止め、HTTPS βを再確認できる。停止で悪化した場合は同じcontainerを再開する。共有connector／他プロジェクトのcontainerをまとめて再起動しない。
