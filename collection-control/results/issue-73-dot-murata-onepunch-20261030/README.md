@@ -1,11 +1,10 @@
 # 収集Workerの処理結果
 
-issue-73-dot-murata-onepunch-20261030：**retry-wait**
+issue-73-dot-murata-onepunch-20261030：**waiting-control**
 
 公開apply・restore・本番配置は行わない。承認者名は本人認証の証明ではない。
 
-fatal: unable to access 'https://github.com/isinxnisi/graph-knowledge.git/': OpenSSL SSL_connect: Connection reset by peer in connection to github.com:443 
-
+Execution gate: outside-window
 
 ```json
 {
