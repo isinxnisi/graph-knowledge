@@ -4,9 +4,7 @@ issue-42-dot-matsumoto-three-20261026：**retry-wait**
 
 公開apply・restore・本番配置は行わない。承認者名は本人認証の証明ではない。
 
-fatal: TaskCanceledException encountered.
-   �^�X�N����������܂����B
-fatal: unable to get password from user
+fatal: unable to access 'https://github.com/isinxnisi/graph-knowledge.git/': Could not resolve host: github.com
 
 
 ```json

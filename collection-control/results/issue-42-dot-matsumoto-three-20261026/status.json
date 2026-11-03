@@ -71,12 +71,12 @@
   "requestSha256": "90859cacf56fa33c3fc06c58206d81879a7d4e3995746680dd483e94a7cdcafc",
   "kind": "issue-prepare",
   "phase": "retry-wait",
-  "generation": 4156,
+  "generation": 4159,
   "attempts": 6,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-03T07:43:49+00:00",
-  "retryAt": 1793695446.3857338,
+  "updatedAt": "2026-11-03T09:00:03+00:00",
+  "retryAt": 1793700020.9305906,
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -122,5 +122,5 @@
     "generatedArtifacts": {}
   },
   "executionComplete": true,
-  "message": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n"
+  "message": "fatal: unable to access 'https://github.com/isinxnisi/graph-knowledge.git/': Could not resolve host: github.com\n"
 }
