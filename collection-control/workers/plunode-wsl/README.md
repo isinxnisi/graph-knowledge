@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-03 20:31:25 JST。
+確認: 2026-11-03 20:36:32 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -31,9 +31,8 @@ Issue確認結果:
     "checkedAt": "2026-11-03T10:26:46+00:00"
   },
   "collection-control/issue-sources/5.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-11-03T11:28:18+00:00"
+    "status": "registered: issue-5-dot-tezuka-adolf-20261025",
+    "checkedAt": "2026-11-03T11:33:10+00:00"
   },
   "collection-control/issue-sources/42.json": {
     "status": "registered: issue-42-dot-matsumoto-three-20261026",
@@ -56,9 +55,8 @@ Issue確認結果:
     "checkedAt": "2026-11-03T09:47:00+00:00"
   },
   "collection-control/issue-sources/50.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
-    "checkedAt": "2026-11-03T11:28:37+00:00"
+    "status": "registered: issue-50-dot-endo-tista-20261027",
+    "checkedAt": "2026-11-03T11:33:14+00:00"
   },
   "collection-control/issue-sources/51.json": {
     "status": "registered: issue-51-dot-araki-rohan-20261027",
