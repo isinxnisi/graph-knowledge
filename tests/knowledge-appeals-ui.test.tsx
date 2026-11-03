@@ -37,3 +37,10 @@ it('operators inspect explicitly and see that content confirmation still require
 it('rechecking operator authorization hides content and retains a same-case reply',async()=>{
  operatorFetch();const view=render(<KnowledgeOperations userId={user} authorized/>);fireEvent.click(await screen.findByRole('button',{name:'内容を確認（監査に記録）'}));await screen.findByText('Fixture fact');fireEvent.change(screen.getByRole('textbox',{name:'投稿者への回答・判断理由'}),{target:{value:'My unfinished reply'}});view.rerender(<KnowledgeOperations userId={user} authorized={false}/>);expect(screen.queryByText('Fixture fact')).toBeNull();view.rerender(<KnowledgeOperations userId={user} authorized/>);fireEvent.click(await screen.findByRole('button',{name:'内容を確認（監査に記録）'}));await screen.findByText('Fixture fact');expect((screen.getByRole('textbox',{name:'投稿者への回答・判断理由'}) as HTMLTextAreaElement).value).toBe('My unfinished reply');
 });
+
+it('keeps earlier replies folded while the latest action remains visible',()=>{
+ const replies=Array.from({length:4},(_,i)=>({action:'respond',reason:'Reply '+i,createdAt:appeal.createdAt}));render(<KnowledgeAppeal submissionId={id} revision={4} itemKey="selected" userId={user} published appeal={{...appeal,status:'answered',replies}} onChange={()=>{}}/>);const earlier=screen.getByText('前の回答を見る · 2件').closest('details')!;expect(earlier.open).toBe(false);expect(earlier.textContent).toContain('Reply 0');expect(screen.getByText('Reply 3').closest('details')).toBeNull();
+});
+it('labels withdrawn operator cases accurately and disables private inspection',async()=>{
+ fetcher.mockResolvedValueOnce(Response.json({items:[{id,revision:2,status:'withdrawn',created_at:appeal.createdAt,job_state:'published',submitted_revision:4}],nextBefore:null}));render(<KnowledgeOperations userId={user} authorized/>);await screen.findByText(/相談取消/);expect(screen.getByRole('button',{name:'内容を確認（監査に記録）'})).toHaveProperty('disabled',true);
+});
