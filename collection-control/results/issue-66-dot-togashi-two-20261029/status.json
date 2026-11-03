@@ -66,12 +66,12 @@
   },
   "requestSha256": "a46046dfe3361fef153be39bd16da8257bed4ea223d8bf17353bd42177cca608",
   "kind": "issue-prepare",
-  "phase": "retry-wait",
-  "generation": 2062,
+  "phase": "waiting-control",
+  "generation": 2063,
   "attempts": 2,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-03T17:07:42+00:00",
+  "updatedAt": "2026-11-03T17:12:28+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -195,5 +195,5 @@
   },
   "executionComplete": true,
   "retryAt": 1793725921.901618,
-  "message": "<urlopen error [Errno 104] Connection reset by peer>"
+  "message": "Execution gate: outside-window"
 }
