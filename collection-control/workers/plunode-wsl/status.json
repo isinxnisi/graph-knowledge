@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-04T00:11:23.281689+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-04T01:16:43.186721+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-04T00:11:23.281689+00:00",
+    "eligibleAt": "2026-11-04T01:16:43.186721+00:00",
     "windowEndAt": "2026-11-04T03:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-5-dot-tezuka-adolf-20261025-batch-01",
+    "startedAt": "2026-11-04T00:11:43.186723+00:00",
+    "limitAt": "2026-11-04T01:06:43.186721+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-62-dot-akutami-jujutsu-20261028-batch-01",
     "endedAt": "2026-11-04T00:01:23.281694+00:00"
@@ -194,5 +198,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-04T00:02:07.312182+00:00"
+  "checkedAt": "2026-11-04T00:11:49.547460+00:00"
 }
