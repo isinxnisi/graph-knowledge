@@ -112,7 +112,23 @@ function SubmissionWorkspace({userId,connectionWarning}:{userId:string;connectio
  function leave(){if((dirty||pending)&&!window.confirm(t("未保存の入力を破棄して移動しますか？","Discard unsaved input?")))return false;clearEditor();setError(null);setNotice(null);setCancelledNotice(null);urlFor(null);void refreshList().catch(fail);pageHeading.current?.scrollIntoView?.({block:"start",behavior:"instant"});return true;}
  function patch(index:number,change:Partial<KnowledgeSubmissionContent["items"][number]["record"]>){setForm(f=>f?{...f,items:f.items.map((item,i)=>i===index?{...item,record:{...item.record,...change}}:item)}:f);}
  function endpoint(index:number,field:"subjectId"|"objectId",name:string){setForm(f=>{if(!f)return f;const record=f.items[index].record,id=f.entities.some(e=>e.id===record[field])?record[field]!:"draft:"+crypto.randomUUID();return {...f,entities:f.entities.some(e=>e.id===id)?f.entities.map(e=>e.id===id?{...e,content:{...e.content,name}}:e):[...f.entities,{id,content:{name,kind:f.items[index].operation==="create-entity"?"person":"entity",description:"",aliases:[],language:"ja"}}],items:f.items.map((item,i)=>i===index?{...item,record:{...item.record,[field]:id}}:item)};});}
- function registration(index:number,value:string){setForm(f=>{if(!f)return f;const {correction:_correction,about:_about,...original}=f.items[index];void _correction;void _about;const record=original.record;const {aboutRecord:_ar,aboutTheme:_at,legacySemantics:_ls,...base}=record;void _ar;void _at;void _ls;return {...f,schemaVersion:2,items:f.items.map((v,i)=>i!==index?v:{...original,operation:value as NonNullable<typeof v.operation>,record:{...base,kind:value==="create-relation"?"relation":"note",subjectId:null,objectId:null,relation:""}})};});}
+ function registration(index:number,value:string){setForm(f=>{
+  if(!f)return f;
+  const previous=f.items[index],{correction:_correction,about:_about,...original}=previous;void _correction;void _about;
+  const inherited=previous.correction?referenceContext?.records?.find(v=>v.id===previous.correction!.id&&v.revision===previous.correction!.revision)?.content:undefined;
+  const record=original.record,{aboutRecord:_ar,aboutTheme:_at,legacySemantics:_ls,...base}=record;void _ar;void _at;void _ls;
+  // A captured target is not authored prose. When changing the operation,
+  // clear its inherited fact/qualifiers/evidence while retaining actual input.
+  const next={...base,
+   assertion:inherited&&record.assertion===inherited.assertion?"":record.assertion,
+   evidence:inherited?record.evidence.filter(e=>!inherited.evidence.some(v=>v.id===e.id)):record.evidence,
+   scope:inherited&&record.scope===inherited.scope?"":record.scope,
+   times:inherited&&JSON.stringify(record.times)===JSON.stringify(inherited.times)?[]:record.times,
+   polarity:inherited&&record.polarity===inherited.polarity?"affirmed" as const:record.polarity,
+   kind:value==="create-relation"?"relation" as const:"note" as const,subjectId:null,objectId:null,relation:""};
+  return {...f,schemaVersion:2,items:f.items.map((v,i)=>i!==index?v:{...original,operation:value as NonNullable<typeof v.operation>,record:next})};
+ });}
+
  async function chooseTarget(index:number,field:"subjectId"|"objectId"|"about"|"theme",target:SubmissionTarget){if(!form)return;const before=form;await run(async()=>{
   const pin={id:target.id,revision:target.revision},legacy=target.legacyRevision?{revision:target.legacyRevision,entityIds:[...new Set([...(before.legacy?.entityIds??[]),...(target.kind==="entity"?[target.id]:[])])],claimIds:[...new Set([...(before.legacy?.claimIds??[]),...(target.kind==="record"?[target.id]:[])])]}:before.legacy;
   if(target.legacyRevision&&before.legacy&&target.legacyRevision!==before.legacy.revision)throw new MemberClientError(409,"REVISION_CONFLICT");

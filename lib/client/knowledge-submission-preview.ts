@@ -4,8 +4,13 @@ import type { CanvasRelation, ProposalState } from "./graph-presentation";
 
 export function submissionGraphPreview(content: KnowledgeSubmissionContent, context?: KnowledgeSubmissionContext) {
   const nodes = new Map<string, CanvasContent["nodes"][number]>();
-  for(const entity of context?.entities??[])nodes.set(entity.id,{id:entity.id,label:entity.content.name,kind:entity.content.kind,badge:"KG"});
-  for(const entity of content.entities)nodes.set(entity.id,{id:entity.id,label:entity.content.name,kind:entity.content.kind,badge:"新しい対象",proposalState:"create"});
+  // Context is an accumulated reference cache, not the graph to display.
+  // Render only targets used by the current items, never abandoned selections.
+  const records = new Set(content.items.flatMap(item => [item.correction?.id, item.about?.kind === "record" ? item.about.id : undefined, item.record.aboutRecord?.id].filter((id): id is string => !!id)));
+  const baseline = (context?.records??[]).filter(r => records.has(r.id));
+  const needed = new Set(content.items.flatMap(item => [item.record.subjectId,item.record.objectId,item.about?.kind === "entity" ? item.about.id : null]).concat(baseline.flatMap(r => [r.content.subjectId,r.content.objectId])).filter((id): id is string => !!id));
+  for(const entity of context?.entities??[])if(needed.has(entity.id))nodes.set(entity.id,{id:entity.id,label:entity.content.name,kind:entity.content.kind,badge:"KG"});
+  for(const entity of content.entities)if(needed.has(entity.id))nodes.set(entity.id,{id:entity.id,label:entity.content.name,kind:entity.content.kind,badge:"新しい対象",proposalState:"create"});
   const relations:Record<string,CanvasRelation>={},targets:Record<string,string[]>={},owners:Record<string,string>={};
   const ensureNode=(id:string|null)=>{if(id&&!nodes.has(id))nodes.set(id,{id,label:"対象を取得中",kind:"subject",badge:"参照"});};
   const relation=(id:string,record:KnowledgeSubmissionContent["items"][number]["record"],state?:ProposalState,label?:string)=>{
@@ -13,7 +18,7 @@ export function submissionGraphPreview(content: KnowledgeSubmissionContent, cont
     ensureNode(record.subjectId);ensureNode(record.objectId);
     relations[id]={id,subjectId:record.subjectId,objectId:record.objectId,claimIds:[id],label:record.relation,badge:label??"KG",canvasLabel:record.relation||"関係名を入力",polarity:record.polarity,...(state?{proposalState:state}:{})};
   };
-  for(const record of context?.records??[])relation("baseline:"+record.id,record.content);
+  for(const record of baseline)relation("baseline:"+record.id,record.content);
   content.items.forEach((item,index)=>{
     const operation=item.operation??(item.correction?"correct-record":item.record.kind==="relation"?"create-relation":"add-information");
     const state:ProposalState=operation==="add-evidence"?"evidence":operation==="correct-record"?"change":"create";

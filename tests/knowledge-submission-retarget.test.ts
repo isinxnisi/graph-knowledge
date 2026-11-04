@@ -1,0 +1,12 @@
+import {expect,it} from "vitest";
+import {submissionGraphPreview} from "../lib/client/knowledge-submission-preview";
+import {knowledgeRecordContentSchema} from "../lib/domain/knowledge-foundation";
+import type {KnowledgeSubmissionContent,KnowledgeSubmissionContext} from "../lib/domain/knowledge-submission";
+const record=(id:string,subjectId:string,objectId:string)=>({id,revision:1,createdAt:"",reason:"",content:knowledgeRecordContentSchema.parse({kind:"relation",subjectId,objectId,assertion:id,relation:id,evidence:[{id:"e",source:{id:"s",revision:1},locator:"本文"}]})});
+const old=record("old","a","b"),next=record("next","c","d"),other=record("other","a","b"),again=record("again","e","d");
+const context:KnowledgeSubmissionContext={entities:["a","b","c","d","e","unused"].map(id=>({id,revision:1,content:{name:id,kind:"person",description:"",aliases:[],language:"ja"}})),sources:[],records:[old,next,other,again]};
+const item=(key:string,r:typeof old)=>({key,operation:"add-evidence" as const,about:{kind:"record" as const,id:r.id,revision:1},correction:{id:r.id,revision:1},record:r.content});
+const form:KnowledgeSubmissionContent={title:"test",entities:[],entityPins:[],sources:[],sourcePins:[],items:[item("one",old),item("two",other)]};
+it("does not draw abandoned cached targets, retaining only the other active item",()=>{const preview=submissionGraphPreview({...form,items:[item("one",next),form.items[1]]},context);expect(preview.canvas.nodes.map(v=>v.id).sort()).toEqual(["a","b","c","d"]);expect(Object.keys(preview.canvas.relations).sort()).toEqual(["proposal:one","proposal:two"]);expect(preview.canvas.relations["proposal:one"]).toMatchObject({subjectId:"c",objectId:"d",badge:"1 · 根拠を追加"});expect(preview.canvas.relations["baseline:old"]).toBeUndefined();});
+it("prunes each previous selection on repeated target changes",()=>{const preview=submissionGraphPreview({...form,items:[item("one",again),form.items[1]]},context);expect(preview.canvas.nodes.map(v=>v.id).sort()).toEqual(["a","b","d","e"]);expect(preview.canvas.relations["proposal:one"]).toMatchObject({subjectId:"e",objectId:"d"});});
+it("does not fabricate a relation or retain the prior graph while choosing an information target",()=>{const preview=submissionGraphPreview({...form,items:[{key:"one",operation:"add-information",record:{...old.content,kind:"note",assertion:"新しい背景",subjectId:null,objectId:null,relation:""}}]},context);expect(preview.canvas.nodes).toEqual([]);expect(preview.canvas.relations).toEqual({});});

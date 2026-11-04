@@ -14,3 +14,9 @@
 .items button{box-sizing:border-box;justify-content:flex-start;min-width:0}
 .items button>strong{min-width:0;flex:1}.items button>span{flex:none}
 @media(max-width:600px){.canvas{height:auto;grid-template-rows:195px auto}.items button>strong{white-space:normal;line-height:1.5}}
+
+/* Match the visible legend, line and operation badges. Reference KG badges
+   stay neutral so an existing relationship cannot masquerade as a proposal. */
+.preview .canvas [data-relation-id],.preview .canvas [data-node-id]{background:var(--color-panel);color:var(--color-muted);border-color:var(--color-border)}
+.preview .canvas [data-proposal-state="create"],.preview .canvas [data-proposal-state="change"],.preview .canvas [data-proposal-state="evidence"]{background:var(--color-proposal);color:#fff;border-color:var(--color-proposal);font-weight:600}
+:global(:root[data-theme^="dark-"]) .preview .canvas [data-proposal-state="create"],:global(:root[data-theme^="dark-"]) .preview .canvas [data-proposal-state="change"],:global(:root[data-theme^="dark-"]) .preview .canvas [data-proposal-state="evidence"]{color:#152432}

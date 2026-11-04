@@ -25,7 +25,7 @@ beforeEach(() => {
   const computed = globalThis.getComputedStyle;
   vi.spyOn(globalThis, "getComputedStyle").mockImplementation(el => {
     const style = computed(el);
-    return new Proxy(style, { get: (target, key) => key === "getPropertyValue" ? (name: string) => name.startsWith("--color-") ? "#334455" : target.getPropertyValue(name) : Reflect.get(target, key) });
+    return new Proxy(style, { get: (target, key) => key === "getPropertyValue" ? (name: string) => name === "--color-proposal" ? "#2874b8" : name.startsWith("--color-") ? "#334455" : target.getPropertyValue(name) : Reflect.get(target, key) });
   });
 });
 afterEach(() => { cleanup(); created.cores = []; created.resizeCallbacks = []; vi.restoreAllMocks(); vi.unstubAllGlobals(); });
@@ -376,4 +376,16 @@ it("通常Graphでは意味ごとの従来の形と寸法を変更しない", ()
   const cy = created.cores[0];
   expect(cy.getElementById("person").style("shape")).toBe("ellipse"); expect(cy.getElementById("work").style("shape")).toBe("round-rectangle"); expect(cy.getElementById("organization").style("shape")).toBe("hexagon");
   cy.nodes().forEach(node => { expect(node.width()).toBe(116); expect(node.height()).toBe(64); expect(node.data("hasPresentationShape")).toBe(0); });
+});
+
+it("投稿の同じ辺IDでも、両端を選び直したら実Cytoscapeの接続を更新する", async () => {
+ const nodes=["a","b","c","d"].map(id=>({id,label:id,kind:"person"}));
+ const edge={id:"proposal:one",subjectId:"a",objectId:"b",claimIds:["proposal:one"],label:"元の関係",canvasLabel:"元の関係",polarity:"affirmed" as const,badge:"1 · 根拠を追加",proposalState:"evidence" as const};
+ const props={graph:emptyGraph(1),contentOnly:true,selection:null,onEntity:vi.fn(),onRelation:vi.fn(),onToggleEntity:vi.fn(),selectedKeys:[edge.id]};
+ const view=render(<GraphCanvas {...props} content={{nodes,relations:{[edge.id]:edge}}}/>);
+ await act(async()=>{});const cy=created.cores[0];expect(cy.edges()[0].source().id()).toBe("a");
+ view.rerender(<GraphCanvas {...props} content={{nodes,relations:{[edge.id]:{...edge,subjectId:"c",objectId:"d",canvasLabel:"選び直した関係"}}}}/>);
+ await act(async()=>{});const current=cy.getElementById(edge.id);expect(current.source().id()).toBe("c");expect(current.target().id()).toBe("d");expect(cy.getElementById("a").connectedEdges()).toHaveLength(0);expect(current.data("canvasLabel")).toBe("選び直した関係");
+ expect(current.style("line-color")).toBe("rgb(40,116,184)");expect(current.style("target-arrow-color")).toBe("rgb(40,116,184)");expect(current.numericStyle("width")).toBe(2.2);
+ cy.emit("render");const badge=document.querySelector('[data-relation-id="proposal:one"]');expect(badge?.getAttribute("data-proposal-state")).toBe("evidence");expect(badge?.textContent).toBe("1 · 根拠を追加");
 });

@@ -26,6 +26,7 @@ export function attachGraphBadges(cy: Core, layer: HTMLElement, className: strin
       }
       badge.textContent = category;
       badge.dataset.selected = String(edge.hasClass("chosen"));
+      badge.dataset.proposalState = String(edge.data("proposalState") ?? "");
       // 主ラベルの左、最初の行に揃える。拡大縮小・pan・Node移動にも追随する。
       badge.style.left = `${(box.x1 - 3) * zoom + pan.x}px`;
       // labelのboundsには背景paddingとCytoscapeの計測誤差用2pxが含まれる。
@@ -41,7 +42,7 @@ export function attachGraphBadges(cy: Core, layer: HTMLElement, className: strin
       visibleNodes.add(node.id());
       let badge = nodeBadges.get(node.id());
       if (!badge) { badge = document.createElement("span"); badge.className = nodeClassName; badge.dataset.nodeId = node.id(); layer.appendChild(badge); nodeBadges.set(node.id(), badge); }
-      badge.textContent = category; badge.title = category; badge.dataset.selected = String(node.hasClass("chosen"));
+      badge.textContent = category; badge.title = category; badge.dataset.selected = String(node.hasClass("chosen")); badge.dataset.proposalState = String(node.data("proposalState") ?? "");
       const position = node.renderedPosition();
       badge.style.left = `${position.x}px`;
       badge.style.top = `${position.y + node.outerHeight() * zoom / 2 + 4 * zoom}px`;

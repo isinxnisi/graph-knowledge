@@ -194,8 +194,6 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
         { selector: 'node[kind="local"]', style: { shape: "round-rectangle", "background-color": color("panel"), "border-style": "solid" } },
         { selector: 'node[kind="text"]', style: { shape: "round-rectangle", "background-opacity": 0, "border-width": 0, width: "data(textWidth)", height: "data(textHeight)", "text-max-width": "data(textWidth)", "font-size": "data(textFontSize)", "font-weight": (node: cytoscape.NodeSingular) => node.data("textFontWeight") as 400 | 700, "text-justification": (node: cytoscape.NodeSingular) => node.data("textAlign") as "left" | "center" | "right", "text-margin-x": (node: cytoscape.NodeSingular) => Number(node.data("textMarginX")), "line-height": 1.35, "text-overflow-wrap": "whitespace" } },
         { selector: 'node[textStyle="muted"]', style: { "text-opacity": 0.65 } },
-        { selector: 'node[proposalState = "create"], node[proposalState = "change"], node[proposalState = "evidence"]', style: { "border-color": proposal, "border-width": 2.4 } },
-        { selector: 'edge[proposalState = "create"], edge[proposalState = "change"], edge[proposalState = "evidence"]', style: { "line-color": proposal, "target-arrow-color": proposal, width: 2.6 } },
         { selector: "node.hovered", style: { "border-color": color("accent"), "underlay-color": color("accent"), "underlay-opacity": 0.08, "underlay-padding": 5 } },
         { selector: "node.center", style: { "border-width": 3, "border-color": color("accent") } },
         { selector: 'node[kind="event"]', style: { shape: "diamond", "background-color": color("work") } },
@@ -210,6 +208,12 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
         { selector: 'node[kind="text"].chosen', style: { "border-width": 1.5, "border-style": "dashed", "background-color": color("accent-soft"), "background-opacity": 0.25, "underlay-opacity": 0 } },
         { selector: 'node[kind="text"].hovered', style: { "border-width": 1, "border-style": "dashed", "underlay-opacity": 0 } },
         { selector: "edge.chosen", style: { "line-color": color("accent-strong"), "target-arrow-color": color("accent-strong"), width: 4, "text-background-color": color("accent-soft"), "z-index": 10 } },
+        // Proposal colors must follow the generic/selection styles; otherwise
+        // the legend promises blue while Cytoscape paints the baseline color.
+        { selector: 'node[proposalState = "create"], node[proposalState = "change"], node[proposalState = "evidence"]', style: { "border-color": proposal, "border-width": 2.4 } },
+        { selector: 'edge[proposalState = "create"], edge[proposalState = "change"], edge[proposalState = "evidence"]', style: { "line-color": proposal, "target-arrow-color": proposal, width: 1.7 } },
+        { selector: 'edge[proposalState = "create"].chosen, edge[proposalState = "change"].chosen, edge[proposalState = "evidence"].chosen', style: { width: 2.2 } },
+        { selector: 'node[proposalState = "create"].chosen, node[proposalState = "change"].chosen, node[proposalState = "evidence"].chosen', style: { "underlay-color": proposal, "border-width": 2.6 } },
       ];
     };
     const cy = cytoscape({
@@ -376,7 +380,12 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     // 同じ世代でも表示対象は減る。端点を消す前に辺を削除する。
     cy.nodes().forEach((node) => { if (!nodeIds.has(node.id())) savedPositions.current[node.id()] = { ...node.position() }; });
     Object.keys(savedPositions.current).forEach((id) => { if (!graph.cacheNodes[id] && (!initialLayoutDone.current || rootReady)) delete savedPositions.current[id]; });
-    cy.batch(() => { cy.edges().filter((edge) => !relations[edge.id()]).remove(); cy.nodes().filter((node) => !nodeIds.has(node.id())).remove(); });
+    cy.batch(() => {
+      // Cytoscape source/target are immutable via data(). Replace a retained
+      // edge when a form changes its endpoints, even if all nodes still exist.
+      cy.edges().filter((edge) => { const next = relations[edge.id()]; return !next || edge.source().id() !== next.subjectId || edge.target().id() !== next.objectId; }).remove();
+      cy.nodes().filter((node) => !nodeIds.has(node.id())).remove();
+    });
     const routes = edgeRoutes(relations);
     const elements: ElementDefinition[] = newNodes.map((node) => ({ group: "nodes", data: node, position: { x: 0, y: 0 } }));
     Object.values(relations).forEach((claim) => {
@@ -453,7 +462,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       const id = selection.kind === "claim" && graph.claims[selection.id] ? relationId(graph.claims[selection.id]) : selection.id;
       cy.getElementById(id).addClass("chosen");
     }
-  }, [selection, graph, currentKeys, selectedKeys, multiple]);
+  }, [selection, graph, content, currentKeys, selectedKeys, multiple]);
 
   return <>
     <div className={`${styles.canvas} ${fillHeight ? styles.workspaceCanvas : ""} ${navigation ? styles.withNavigation : ""}`}>
