@@ -1,3 +1,5 @@
+2026-11-04 余白・一覧追補：Capsuleのテーマ情報を年表の余白へそろえ、上の重複罫線を除去。取消済み投稿は通常一覧から分離し、履歴・未読から参照可能にした。app `9c821d9b` / build `zkavPW2SqgLy3u-VdjgwC`、main／3200／HTTPS βへ反映。Webのみ、DB／Worker／本番VPSの変更なし。[実操作・検証・残る重複対策](verification/CAPSULE_CONTEXT_AND_SUBMISSION_LIST_20261104.md)。以下は各時点の記録。
+
 2026-11-04 投稿対象・入力案内追補：対象選び直しと図の接続、凡例と投稿色、元の内容／入力欄の区別、テーマ再選択、訂正前後、時期の区切り、日本語の入力エラーを修正。app `7f6ec682` / build `xFCZOeokDcxMdG718u_IF`をmain／3200／HTTPS βへ配置。追加migrationなし。[実操作・検証・保全・制約](verification/KNOWLEDGE_SUBMISSION_RETARGET_20261104.md)。U6の残工程は継続。以下は各時点の記録。
 
 2026-11-04 U6c：公開後の意味整理・候補確認・一括適用／解除をmain／3200／HTTPS βへ接続。元の具体語・26記録版・5テーマ版・25 Capsuleを保持し、実NASA・漫画の2群で確認。app `1a00a448` / build `cUVfr_QUPOYX9Ucm63sEv`。U6全体は未完了、同一性整理・Chat取込・総合一巡が残る。[実操作・配置・制約・再開](verification/KNOWLEDGE_ORGANIZATION_U6_20261104.md)。以下は各時点の履歴。

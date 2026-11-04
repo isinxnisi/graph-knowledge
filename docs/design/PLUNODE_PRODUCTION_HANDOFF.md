@@ -1,5 +1,9 @@
 # 現在の引継ぎ：U6cまで
 
+2026-11-04 余白・一覧追補：Capsuleのテーマ情報を年表の余白へそろえ、上の重複罫線を除去。取消済み投稿は通常一覧から分離し、履歴・未読から参照可能にした。app `9c821d9b` / build `zkavPW2SqgLy3u-VdjgwC`、main／3200／HTTPS βへ反映。Webのみ、DB／Worker／本番VPSの変更なし。[実操作・検証・残る重複対策](../verification/CAPSULE_CONTEXT_AND_SUBMISSION_LIST_20261104.md)。以下は各時点の記録。
+
+本運用前の受入残件として、別投稿間の実質重複と変更なし訂正の抑止が不足している。回数制限・request再送防止との違いとコード確認結果は上記検証記録に残す。今回のUI修正で対応済みにしない。
+
 2026-11-04 投稿対象・入力案内追補：対象選び直しと図の接続、凡例と投稿色、元の内容／入力欄の区別、テーマ再選択、訂正前後、時期の区切り、日本語の入力エラーを修正。app `7f6ec682` / build `xFCZOeokDcxMdG718u_IF`をmain／3200／HTTPS βへ配置。追加migrationなし。[実操作・検証・保全・制約](../verification/KNOWLEDGE_SUBMISSION_RETARGET_20261104.md)。U6の残工程は継続。以下は各時点の記録。
 
 2026-11-04。公開後の意味分類・同じ具体語の候補確認・最大50件の一括適用／解除をmain／3200／HTTPS βへ接続した。[検証・再開・実結果](../verification/KNOWLEDGE_ORGANIZATION_U6_20261104.md)。app source `1a00a448`、build `cUVfr_QUPOYX9Ucm63sEv`。会員DB000〜028／29件、知識001/002/004、private profile・認証・旧KGは保持。3276と本番VPSは今回未更新。未追跡memo.txt／.localを保護する。
