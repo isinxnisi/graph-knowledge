@@ -25,9 +25,10 @@ async function main(){
  const file=process.env.KNOWLEDGE_REVIEW_CONFIG;if(!file||!path.isAbsolute(file)||process.env.KNOWLEDGE_REVIEW_ENABLED!=='1')throw Error('Review worker is not explicitly enabled');
  const config=reviewConfigSchema.parse(JSON.parse(await privateText(file,32000)));
  if(config.allowedUsers.join(',')!==process.env.KNOWLEDGE_REVIEW_ALLOWED_USERS)throw Error('Review user boundary differs');
- const pool=new Pool({connectionString:auth.databaseUrl,max:4}),queue=createReviewQueue(pool);
+ const pool=new Pool({connectionString:auth.databaseUrl,max:4});
  const knowledge=acceptanceEnabled()?new Pool({connectionString:knowledgeReadConfiguration().databaseUrl,max:2}):null;
  const acceptance=knowledge?createKnowledgeAcceptance(pool,knowledge):null;
+ const queue=createReviewQueue(pool,acceptance?{duplicates:(value,key)=>acceptance.duplicates(value,key)}:{});
  let stopping=false;process.once('SIGTERM',()=>{stopping=true;});process.once('SIGINT',()=>{stopping=true;});
  try{
   if(process.argv.includes("--status")){console.log(JSON.stringify(await queue.usage(config)));return;}

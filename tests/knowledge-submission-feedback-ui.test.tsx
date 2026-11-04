@@ -10,6 +10,13 @@ const fetcher=vi.fn(),user={id:"00000000-0000-4000-8000-000000000001",name:"A",l
 function result(cursor="41"):SubmissionFeedback{return {receipts:[{revision:1,submittedAt:"2026-11-04T01:00:00Z",title:"送った内容",itemCount:1,unread:true}],receipt:{revision:1,submittedAt:"2026-11-04T01:00:00Z",title:"送った内容",digest:"digest",current:true,cancelled:false,workerAvailable:true,items:[{key:"item-one",assertion:"NASAが望遠鏡を打ち上げた",state:"needs-changes",reason:"資料の該当部分を加えてください。",nextAttemptAt:null}],eventCursor:cursor,unread:true,disclosure:reviewDisclosureForConsent(PUBLICATION_CONSENT_VERSION)}};}
 beforeEach(async()=>{vi.stubGlobal("fetch",fetcher);fetcher.mockReset();invalidateMemberIdentity();fetcher.mockResolvedValueOnce(Response.json({user}));await refreshMemberIdentity();});
 afterEach(()=>{cleanup();history.replaceState({},"","/");Reflect.deleteProperty(navigator,"clipboard");vi.restoreAllMocks();vi.unstubAllGlobals();});
+it('explains an existing fact without presenting another publication or activity',async()=>{
+ const value=result();Object.assign(value.receipt!.items[0],{state:'published',reason:'同じ知識が登録済みです。',publication:{id:'existing-fact',revision:2,state:'published',reason:'',disposition:'existing'}});
+ fetcher.mockResolvedValueOnce(Response.json(value));render(<KnowledgeSubmissionFeedbackCard submissionId={submissionId} userId={user.id} currentRevision={1}/>);
+ await screen.findByRole('heading',{name:'登録済みの知識です'});
+ expect(screen.getAllByRole('link',{name:'登録済みの知識を開く'})[0].getAttribute('href')).toBe('/?krecord=existing-fact');
+ expect(screen.getAllByText('同じ知識が登録されています。記録や活動履歴は増やしていません。').length).toBeGreaterThan(0);
+});
 it("actionable feedback is visible above details; simply reading does not mark it read",async()=>{
  fetcher.mockResolvedValueOnce(Response.json(result()));const go=vi.fn();render(<KnowledgeSubmissionFeedbackCard submissionId={submissionId} userId={user.id} currentRevision={1} onSelectItem={go}/>);
  await screen.findByRole("heading",{name:"補足が必要です"});expect(screen.getAllByText("資料の該当部分を加えてください。").length).toBeGreaterThan(0);

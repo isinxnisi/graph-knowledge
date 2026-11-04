@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import {duplicateMeaning} from '../domain/knowledge-duplicate';
 import {appendKnowledgeTimelineRecord} from "../domain/knowledge-timeline-append";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
@@ -230,7 +231,7 @@ export function createKnowledgeFoundationService(pool: Pool) {
     }
     return result;
   }
-  async function execute(actor: KnowledgeActor, raw: unknown, internal?:{verify:(c:PoolClient)=>Promise<void>;prepare:()=>Promise<void>}): Promise<unknown> {
+  async function execute(actor: KnowledgeActor, raw: unknown, internal?:{verify:(c:PoolClient)=>Promise<void>;prepare:(result:unknown)=>Promise<void>}): Promise<unknown> {
     const cmd = knowledgeCommandSchema.parse(raw);
     actorAllowed(actor, cmd.action);
     if (actor.kind === "collector" && cmd.action === "create-bundle" && (cmd.legacyLinks.length || cmd.visibility !== "public")) throw new KnowledgeError("収集実行者にはこの操作を許可していません", 403, "FORBIDDEN");
@@ -239,6 +240,10 @@ export function createKnowledgeFoundationService(pool: Pool) {
     const digest = knowledgeDigest({ actorKind: actor.kind, command: cmd });
     try {
       await c.query("BEGIN");
+      // The pilot has one small public write stream. Serialize its final
+      // candidate recheck with record creation/correction/withdrawal, including
+      // collection writes; never hold this lock during an AI or source fetch.
+      await c.query("SELECT pg_advisory_xact_lock(hashtextextended('knowledge-record-writes-v1',0))");
       await c.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))", [actor.id + ":" + cmd.requestId]);
       const prior = (await c.query("SELECT digest,result FROM knowledge75.operations WHERE actor_id=$1 AND request_id=$2", [actor.id, cmd.requestId])).rows[0];
       if (prior) { if (prior.digest !== digest) throw new KnowledgeError("再送IDと内容が一致しません", 409, "REQUEST_CONFLICT"); await c.query("COMMIT"); return prior.result; }
@@ -303,13 +308,19 @@ export function createKnowledgeFoundationService(pool: Pool) {
         }
         if(!r.subjectId&&!r.objectId&&!r.aboutRecord&&!r.aboutTheme)throw new KnowledgeError("公開後に辿れる対象・関係・テーマが必要です");
         if(r.aboutTheme&&!cmd.themes?.some(t=>t.id===r.aboutTheme))throw new KnowledgeError("テーマへの追加と情報の公開を同時に行ってください");
-        let revision=1;
-        if(cmd.expectedRevision){const h=await head(c,"record",cmd.record.id,"FOR UPDATE");expected(h.current_revision,cmd.expectedRevision);await assertPublic(c,"record",cmd.record.id);revision=h.current_revision+1;}
+        let revision=1,unchanged=false,themeChanged=false;
+        if(cmd.expectedRevision){const h=await head(c,"record",cmd.record.id,"FOR UPDATE");expected(h.current_revision,cmd.expectedRevision);await assertPublic(c,"record",cmd.record.id);
+          const old=await version(c,'record',cmd.record.id,h.current_revision);
+          unchanged=knowledgeDigest(duplicateMeaning(old.content))===knowledgeDigest(duplicateMeaning(r))&&knowledgeDigest(old.content.evidence)===knowledgeDigest(r.evidence);
+          revision=unchanged?h.current_revision:h.current_revision+1;
+        }
         await validateRecord(c,{...cmd.record,revision,createdAt:"",reason:cmd.reason},entityPins,true);
-        result=await put("record",cmd.record.id,r,revision,cmd.reason);
+        result=unchanged?await version(c,'record',cmd.record.id,revision):await put("record",cmd.record.id,r,revision,cmd.reason);
         for(const p of [...(cmd.themes??[])].sort((a,b)=>a.id.localeCompare(b.id))){
           const h=await head(c,'theme',p.id,'FOR UPDATE');if(!internal)expected(h.current_revision,p.revision);await assertRevisionPublic(c,'theme',p.id,p.revision);
           const old=await version(c,'theme',p.id,h.current_revision);
+          if(old.content.recordPins.some(v=>v.id===cmd.record.id&&v.revision===revision))continue;
+          themeChanged=true;
           const recordPins=old.content.recordPins.some(v=>v.id===cmd.record.id)?old.content.recordPins.map(v=>v.id===cmd.record.id?{id:v.id,revision}:v):[...old.content.recordPins,{id:cmd.record.id,revision}];
           let timeline=old.content.timeline?structuredClone(old.content.timeline):undefined;
           if(timeline){
@@ -320,6 +331,7 @@ export function createKnowledgeFoundationService(pool: Pool) {
           const snapshot=await capture(c,recordPins,{timeline,initialView:old.content.initialView,publicOnly:true});
           await put('theme',p.id,{...old.content,...snapshotPins(snapshot),...(timeline?{timeline}:{})},h.current_revision+1,'確認済みの投稿をテーマへ追加');
         }
+        result={...(result as object),disposition:unchanged?(themeChanged?'theme-linked':'existing'):cmd.expectedRevision?'updated':'created'};
       } else if (cmd.action === "create-bundle") {
         for (const [rows, label] of [[cmd.entities, "対象"], [cmd.sources, "資料"], [cmd.records, "記録"]] as const) if (new Set(rows.map(r => r.id)).size !== rows.length) throw new KnowledgeError(label + "IDが重複しています");
         assertUnique(cmd.entityPins, "対象の観測版");
@@ -392,7 +404,7 @@ export function createKnowledgeFoundationService(pool: Pool) {
         result = cmd.action === "set-mapping" ? mappings[0] : { mappings };
       }
       await c.query("INSERT INTO knowledge75.operations(actor_id,request_id,actor_kind,digest,input,result) VALUES($1,$2,$3,$4,$5,$6)", [actor.id, cmd.requestId, actor.kind, digest, JSON.stringify(raw), JSON.stringify(result)]);
-      if(internal)await internal.prepare();
+      if(internal)await internal.prepare(result);
       await c.query("COMMIT"); return result;
     } catch (e) {
       await c.query("ROLLBACK");

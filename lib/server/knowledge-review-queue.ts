@@ -11,6 +11,9 @@ import {knowledgeSubmissionContentSchema,type KnowledgeSubmission} from "../doma
 import {knowledgeReviewCommandSchema,REVIEW_CONSENT_VERSION,PUBLICATION_CONSENT_VERSION,type KnowledgeReviewStatus,submissionReviewInput} from "../domain/knowledge-review-job";
 import {geminiReviewRequest,GEMINI_REVIEW_POLICY,parseGeminiReview,type callGeminiReview} from "./gemini-knowledge-review";
 import {knowledgeDigest,KnowledgeError} from "./knowledge-foundation";
+import {DUPLICATE_POLICY,duplicateAdviceSchema,type DuplicateReview} from './knowledge-duplicates';
+import {geminiDuplicateReviewRequest} from './gemini-knowledge-review';
+import {SourceCheckError} from './knowledge-source-verification';
 export const reviewConfigSchema=z.strictObject({
  projectId:z.string().min(1),billingTier:z.literal("free"),verifiedAt:z.string().datetime({offset:true}),
  model:z.literal("gemini-3.5-flash-lite"),rpm:z.number().int().min(1).max(15),tokensPerMinute:z.number().int().positive(),
@@ -32,7 +35,7 @@ export async function reviewStatus(c:Pool|PoolClient,ownerId:string,id:string,re
  if(!rows.length)return undefined;
  if(process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED==='1'){
   const decisions=(await c.query("SELECT job_id,state,reason,result,command FROM member_knowledge.publication_decisions WHERE job_id=ANY($1::uuid[])",[rows.map(r=>r.id)])).rows;
-  for(const row of rows){const d=decisions.find(d=>d.job_id===row.id);if(d)row.publication={id:d.command.record.id,revision:d.result?.revision??(d.command.expectedRevision??0)+1,state:d.state,reason:d.reason};}
+  for(const row of rows){const d=decisions.find(d=>d.job_id===row.id);if(d)row.publication={id:d.command.record.id,revision:d.result?.revision??(d.command.expectedRevision??0)+1,state:d.state,reason:d.reason,...(d.result?.disposition?{disposition:d.result.disposition}:{})};}
  }
  const workerAvailable=(await c.query("SELECT 1 FROM member_knowledge.review_projects WHERE heartbeat_at>clock_timestamp()-interval '45 seconds' LIMIT 1")).rowCount===1;
  return {revision,workerAvailable,items:rows.map(r=>({key:r.item_key,state:r.state,reason:r.reason,nextAttemptAt:['retry','quota'].includes(r.state)?iso(r.not_before):null,attempts:r.attempts,result:r.result,...(r.publication?{publication:r.publication}:{})}))};
@@ -43,7 +46,7 @@ function submission(row:QueryResultRow):KnowledgeSubmission{
 export {quotaDate,nextQuotaDay,nextQuotaMonth} from './knowledge-ai-budget';
 export type ReviewLease={jobId:string;attemptId:string;token:string;wire:string;wireDigest:string;model:string;consentProfileId:string};
 type WireResult=Awaited<ReturnType<typeof callGeminiReview>>;
-export function createReviewQueue(pool:Pool){
+export function createReviewQueue(pool:Pool,options:{duplicates?:(value:KnowledgeSubmission,key:string)=>Promise<DuplicateReview|undefined>}={}){
  let ready:Promise<void>|undefined;
  const ensure=async()=>{ready??=ensureReviewSchema(pool).catch(e=>{ready=undefined;throw e;});await ready;};
  async function tx<T>(run:(c:PoolClient)=>Promise<T>){await ensure();const c=await pool.connect();try{await c.query("BEGIN");const result=await run(c);await c.query("COMMIT");return result;}catch(e){await c.query("ROLLBACK");throw e;}finally{c.release();}}
@@ -66,7 +69,12 @@ export function createReviewQueue(pool:Pool){
     if(result.state==='not-sent'){state='cancelled';reason='submission-changed';}
     else if(parsed?.state==='reviewed'){
      if(parsed.modelVersion!==lease.model){state='attention';reason='評価済みのモデルと応答が異なるため、接続を確認しています。';}
-     else{advice=parsed.review;state=parsed.review.suitability==='abuse'?'declined':parsed.review.suitability==='legitimate'&&parsed.review.support==='supported'?'reviewed':'needs-changes';reason=parsed.review.reason;}
+     else{
+      const material=JSON.parse(JSON.parse(lease.wire).contents[0].parts[0].text),duplicates=material.duplicateCheck as DuplicateReview|undefined;
+      const checked=duplicateAdviceSchema.safeParse(parsed.review.duplicate);
+      if(duplicates&&(!checked.success||checked.data.sameAs&&!duplicates.candidates.some(c=>c.id===checked.data.sameAs))){state='attention';reason='既存の知識との照合結果を確認できませんでした。内容への不受理判定ではありません。';}
+      else{advice={...parsed.review,...(duplicates?{duplicateCheck:duplicates}:{})};state=parsed.review.suitability==='abuse'?'declined':parsed.review.suitability==='legitimate'&&parsed.review.support==='supported'?'reviewed':'needs-changes';reason=parsed.review.reason;}
+     }
     }else if(parsed){state='attention';reason='AIの回答形式を確認できませんでした。内容への不受理判定ではありません。';}
     else if(result.state==='http-error'){
      const retry=Number(result.retryAfter),date=Date.parse(result.retryAfter??'');const ms=Number.isFinite(retry)&&retry>0?retry*1000:Number.isFinite(date)?Math.max(60000,date-Date.now()):60000;
@@ -126,14 +134,17 @@ export function createReviewQueue(pool:Pool){
     const authorization=(await c.query('SELECT consent_profile_id FROM member_knowledge.review_authorizations WHERE submission_id=$1 AND revision=$2',[j.submission_id,j.revision])).rows[0];
     if(!disclosure||disclosure.providerId!=='google-gemini'||j.consent_profile_id!==disclosure.profileId||authorization?.consent_profile_id!==disclosure.profileId){await c.query("UPDATE member_knowledge.review_jobs SET state='attention',reason='送信先の確認内容が変わりました。内容を確認して依頼し直してください。' WHERE id=$1",[j.id]);return null;}
     if(j.attempts>=3){await c.query("UPDATE member_knowledge.review_jobs SET state='attention',reason='送信を3回試しました。AI接続の確認を待っています。' WHERE id=$1",[j.id]);return null;}
-    let wire:string;
+    let wire:string,withDuplicates=false;
     try{
      const value=submission(s),issues=submissionIntentIssues(value.content,value.context);
      if(issues.length){await c.query("UPDATE member_knowledge.review_jobs SET state='needs-changes',reason=$2 WHERE id=$1",[j.id,issues.slice(0,3).join(' ')+' 受付時の内容は保持しています。新しい草稿で投稿先と操作を確認してから依頼し直してください。']);return null;}
-     wire=JSON.stringify(geminiReviewRequest(submissionReviewInput(value,j.item_key,j.consent_version===PUBLICATION_CONSENT_VERSION)));
+     const input=submissionReviewInput(value,j.item_key,j.consent_version===PUBLICATION_CONSENT_VERSION);
+     const duplicates=j.consent_version===PUBLICATION_CONSENT_VERSION?await options.duplicates?.(value,j.item_key):undefined;
+     withDuplicates=!!duplicates?.candidates.length;
+     wire=JSON.stringify(duplicates?.candidates.length?geminiDuplicateReviewRequest(input,duplicates):geminiReviewRequest(input));
     }
-    catch{await c.query("UPDATE member_knowledge.review_jobs SET state='needs-changes',reason='内容・対象・資料の取得版や入力の長さを確認してください。' WHERE id=$1",[j.id]);return null;}
-    const reservation=await reserveKnowledgeAI(c,cfg,{purpose:'submission',policy:GEMINI_REVIEW_POLICY,inputReserved:Buffer.byteLength(wire)+1024,outputReserved:2048,jobId:j.id});
+    catch(e){const bad=e instanceof SourceCheckError;await c.query("UPDATE member_knowledge.review_jobs SET state=$2,reason=$3,not_before=clock_timestamp()+interval '120 seconds' WHERE id=$1",[j.id,bad&&!e.retryable?'needs-changes':'retry',bad?e.message:'既存の知識を確認できません。時間をおいて再試行します。']);return null;}
+    const reservation=await reserveKnowledgeAI(c,cfg,{purpose:'submission',policy:withDuplicates?GEMINI_REVIEW_POLICY+'+'+DUPLICATE_POLICY:GEMINI_REVIEW_POLICY,inputReserved:Buffer.byteLength(wire)+1024,outputReserved:2048,jobId:j.id});
     if(reservation.state==='oversize'){await c.query("UPDATE member_knowledge.review_jobs SET state='needs-changes',reason='一度に確認できる量を超えています。項目の本文や根拠を短くしてください。' WHERE id=$1",[j.id]);return null;}
     if(reservation.state==='wait'){await c.query("UPDATE member_knowledge.review_jobs SET state='quota',reason=$2,not_before=$3,updated_at=clock_timestamp() WHERE id=$1",[j.id,reservation.reason,reservation.wait]);return null;}
     const attemptId=reservation.id,token=randomUUID(),wireDigest=createHash('sha256').update(wire).digest('hex');

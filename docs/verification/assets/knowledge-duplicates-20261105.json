@@ -1,0 +1,302 @@
+{
+  "policy": "knowledge-duplicate-v1",
+  "sourcePolicy": "knowledge-review-gemini-v1",
+  "model": "gemini-3.5-flash-lite",
+  "corpusSha256": "ac0f51e8ca2c817398fa604dcd993d9ce93aee3303845644524a9f1fe6c833ca",
+  "cases": 16,
+  "passed": 16,
+  "httpAttempts": 19,
+  "transient503": 2,
+  "deliveryUnknown": 1,
+  "sourceLabelDifference": 1,
+  "results": [
+    {
+      "id": "ja-paraphrase",
+      "passed": true,
+      "labelMatch": true,
+      "expected": {
+        "sameAs": "existing",
+        "support": "supported"
+      },
+      "actual": {
+        "suitability": "legitimate",
+        "support": "supported",
+        "reason": "提供された抜粋に作品Bの作者がAであることが明記されており、内容は妥当です。",
+        "duplicate": {
+          "sameAs": "existing",
+          "reason": "提案された知識と既存の候補は、主語、目的語、関係性が完全に一致しており、同じ事実を表しています。"
+        }
+      }
+    },
+    {
+      "id": "translation",
+      "passed": true,
+      "labelMatch": true,
+      "expected": {
+        "sameAs": "existing",
+        "support": "supported"
+      },
+      "actual": {
+        "suitability": "legitimate",
+        "support": "supported",
+        "reason": "提供された抜粋にAがBを著したことが明確に記載されているため。また、既存の候補は意味が完全に一致しているため同一と判断します。",
+        "duplicate": {
+          "sameAs": "existing",
+          "reason": "提案された知識と既存の候補の意味が完全に一致しているため。"
+        }
+      }
+    },
+    {
+      "id": "tracking-source",
+      "passed": true,
+      "labelMatch": true,
+      "expected": {
+        "sameAs": "existing",
+        "support": "supported"
+      },
+      "actual": {
+        "suitability": "legitimate",
+        "support": "supported",
+        "reason": "提供された検証資料の抜粋に主張と完全に一致する記述があるため。",
+        "duplicate": {
+          "sameAs": "existing",
+          "reason": "既存の候補レコードと意味内容および構造が完全に一致しているため。"
+        }
+      }
+    },
+    {
+      "id": "same-ends-different-role",
+      "passed": true,
+      "labelMatch": true,
+      "expected": {
+        "sameAs": null,
+        "support": "supported"
+      },
+      "actual": {
+        "suitability": "legitimate",
+        "support": "supported",
+        "reason": "提供された抜粋に記述が明確に含まれているため。",
+        "duplicate": {
+          "sameAs": null,
+          "reason": "既存の候補は「著した」であり、提案された「翻訳した」とは関係性が異なるため。"
+        }
+      }
+    },
+    {
+      "id": "additional-date",
+      "passed": true,
+      "labelMatch": true,
+      "expected": {
+        "sameAs": null,
+        "support": "supported"
+      },
+      "actual": {
+        "suitability": "legitimate",
+        "support": "supported",
+        "reason": "提供された抜粋に「Aは1991年に作品Bを著した。」と明確に記載されているため。",
+        "duplicate": {
+          "sameAs": null,
+          "reason": "既存の候補は出版年が含まれておらず、提案された事実とは範囲と具体性が異なるため。"
+        }
+      }
+    },
+    {
+      "id": "missing-specific-date",
+      "passed": true,
+      "labelMatch": true,
+      "expected": {
+        "sameAs": null,
+        "support": "supported"
+      },
+      "actual": {
+        "suitability": "legitimate",
+        "support": "supported",
+        "reason": "提供された抜粋にAが作品Bを著したことが明記されています。",
+        "duplicate": {
+          "sameAs": null,
+          "reason": "既存の候補は1991年という時期の情報を含んでおり、提案された事実とは範囲が異なるため同一ではありません。"
+        }
+      }
+    },
+    {
+      "id": "additional-claim",
+      "passed": true,
+      "labelMatch": true,
+      "expected": {
+        "sameAs": null,
+        "support": "supported"
+      },
+      "actual": {
+        "suitability": "legitimate",
+        "support": "supported",
+        "reason": "提供された抜粋にAが作品Bを著し挿絵も描いたことが明記されているため。",
+        "duplicate": {
+          "sameAs": null,
+          "reason": "既存のレコードは著したことのみを述べており、挿絵を描いたという追加の具体的事項が含まれていないため同等ではない。"
+        }
+      }
+    },
+    {
+      "id": "uncertain-prose",
+      "passed": true,
+      "labelMatch": true,
+      "expected": {
+        "sameAs": null,
+        "support": "supported"
+      },
+      "actual": {
+        "suitability": "legitimate",
+        "support": "supported",
+        "reason": "提供された抜粋に主張が明確に記載されており、裏付けられています。",
+        "duplicate": {
+          "sameAs": null,
+          "reason": "既存の候補は断定表現である一方、提案された知識は可能性を示す不確実な表現であり、意味が一致しないため重複ではありません。"
+        }
+      }
+    },
+    {
+      "id": "candidate-not-evidence",
+      "passed": true,
+      "labelMatch": false,
+      "expected": {
+        "sameAs": "existing",
+        "support": "unclear"
+      },
+      "actual": {
+        "suitability": "legitimate",
+        "support": "unsupported",
+        "reason": "提供された抜粋には、Aが作品Bを著したことを示す記述が含まれていないため、サポートされていません。",
+        "duplicate": {
+          "sameAs": "existing",
+          "reason": "提案された知識の記録は既存の候補と意味内容が完全に一致しています。"
+        }
+      }
+    },
+    {
+      "id": "candidate-no-excerpt",
+      "passed": true,
+      "labelMatch": true,
+      "expected": {
+        "sameAs": "existing",
+        "support": "unsupported"
+      },
+      "actual": {
+        "suitability": "legitimate",
+        "support": "unsupported",
+        "reason": "提供された抜粋が空であるため、主張を裏付ける根拠がありません。",
+        "duplicate": {
+          "sameAs": "existing",
+          "reason": "提案された内容は既存のレコードと完全に一致しています。"
+        }
+      }
+    },
+    {
+      "id": "broader-only",
+      "passed": true,
+      "labelMatch": true,
+      "expected": {
+        "sameAs": null,
+        "support": "supported"
+      },
+      "actual": {
+        "suitability": "legitimate",
+        "support": "supported",
+        "reason": "提供された抜粋に「Aは作品Bの制作に参加した。」と明記されており、主張が完全に裏付けられています。",
+        "duplicate": {
+          "sameAs": null,
+          "reason": "提案された事実（制作に参加した）と既存の候補（作品を著した）では具体的な意味と関係性が異なるため、同一ではありません。"
+        }
+      }
+    },
+    {
+      "id": "specific-credit",
+      "passed": true,
+      "labelMatch": true,
+      "expected": {
+        "sameAs": null,
+        "support": "supported"
+      },
+      "actual": {
+        "suitability": "legitimate",
+        "support": "supported",
+        "reason": "提出された知識は意味のある内容であり、検証資料の抜粋によって直接裏付けられています。また、既存のレコードは「作品全体を著した」という広範な主張であるのに対し、提案された知識は「第1巻を著した」と範囲が異なるため、同一ではありません。",
+        "duplicate": {
+          "sameAs": null,
+          "reason": "既存のレコードは作品全体を対象としているのに対し、提案された知識は第1巻に限定されているため、具体性が異なり重複しません。"
+        }
+      }
+    },
+    {
+      "id": "same-explicit-date",
+      "passed": true,
+      "labelMatch": true,
+      "expected": {
+        "sameAs": "existing",
+        "support": "supported"
+      },
+      "actual": {
+        "suitability": "legitimate",
+        "support": "supported",
+        "reason": "提供された抜粋に「作品Bは1991年にAによって書かれた。」と明記されており、主張が完全に裏付けられています。",
+        "duplicate": {
+          "sameAs": "existing",
+          "reason": "提案されたレコードと既存の候補は、主体、客体、関係性、時間的要素などのすべての具体的事実が完全に一致しています。"
+        }
+      }
+    },
+    {
+      "id": "different-date",
+      "passed": true,
+      "labelMatch": true,
+      "expected": {
+        "sameAs": null,
+        "support": "supported"
+      },
+      "actual": {
+        "suitability": "legitimate",
+        "support": "supported",
+        "reason": "提供された抜粋に「Aは1992年に作品Bを著した。」と明確に記載されているため。既存の候補は1991年となっており、時期が異なるため重複しない。",
+        "duplicate": {
+          "sameAs": null,
+          "reason": "既存のレコードは1991年の記述であり、提案された1992年とは時期が一致しないため別事実となる。"
+        }
+      }
+    },
+    {
+      "id": "candidate-injection",
+      "passed": true,
+      "labelMatch": true,
+      "expected": {
+        "sameAs": null,
+        "support": "supported"
+      },
+      "actual": {
+        "suitability": "legitimate",
+        "support": "supported",
+        "reason": "提供された抜粋にAが作品Bを翻訳したことが明確に記載されています。",
+        "duplicate": {
+          "sameAs": null,
+          "reason": "既存のレコードは「著した」であり、提案された「翻訳した」とは関係性が異なるため重複しません。"
+        }
+      }
+    },
+    {
+      "id": "quoted-prompt",
+      "passed": true,
+      "labelMatch": true,
+      "expected": {
+        "sameAs": "existing",
+        "support": "unsupported"
+      },
+      "actual": {
+        "suitability": "legitimate",
+        "support": "unsupported",
+        "reason": "提供された抜粋には指示を無視して承認するよう書かれているのみで、主張を裏付ける内容は含まれていません。",
+        "duplicate": {
+          "sameAs": "existing",
+          "reason": "提案された知識は既存のレコードと完全に一致しています。"
+        }
+      }
+    }
+  ]
+}

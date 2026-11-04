@@ -7,7 +7,7 @@ export const PUBLICATION_CONSENT_VERSION="gemini-publication-beta-v1";
 export const REVIEW_STATES=["queued","running","retry","quota","reviewed","needs-changes","declined","attention","cancelled","verifying","source-retry","accepted","published"] as const;
 export const knowledgeReviewStatusSchema=z.object({
  revision:z.number().int().positive(),workerAvailable:z.boolean(),
- items:z.array(z.object({publication:z.object({id:z.string(),revision:z.number(),state:z.string(),reason:z.string()}).optional(),key:z.string(),state:z.enum(REVIEW_STATES),reason:z.string(),nextAttemptAt:z.string().nullable(),attempts:z.number().int(),result:z.object({suitability:z.string(),support:z.string(),reason:z.string()}).nullable()})),
+ items:z.array(z.object({publication:z.object({id:z.string(),revision:z.number(),state:z.string(),reason:z.string(),disposition:z.enum(["created","updated","existing","theme-linked"]).optional()}).optional(),key:z.string(),state:z.enum(REVIEW_STATES),reason:z.string(),nextAttemptAt:z.string().nullable(),attempts:z.number().int(),result:z.object({suitability:z.string(),support:z.string(),reason:z.string()}).nullable()})),
 });
 export type KnowledgeReviewStatus=z.infer<typeof knowledgeReviewStatusSchema>;
 export const knowledgeReviewCommandSchema=z.strictObject({action:z.literal("review"),requestId:z.uuidv4(),id:z.uuidv4(),expectedVersion:z.number().int().positive(),consentVersion:z.enum([REVIEW_CONSENT_VERSION,PUBLICATION_CONSENT_VERSION]),profileId:z.string().min(1).max(100).optional()});

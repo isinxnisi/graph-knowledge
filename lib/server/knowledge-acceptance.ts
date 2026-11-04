@@ -12,6 +12,8 @@ import {PUBLICATION_CONSENT_VERSION} from "../domain/knowledge-review-job";
 import {createKnowledgeFoundationService,knowledgeDigest,KnowledgeError} from "./knowledge-foundation";
 import {verifySourceExcerpt,sourceURL,SourceCheckError,type SourceProof} from "./knowledge-source-verification";
 import type {ReviewConfig} from "./knowledge-review-queue";
+import {captureDuplicates,commonDuplicatePins,duplicateMatch,type DuplicateCapture,type DuplicateReview} from './knowledge-duplicates';
+import {duplicateMeaning,duplicateSourceURL,mergeDuplicateEvidence} from '../domain/knowledge-duplicate';
 
 export const acceptanceEnabled=()=>process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED==='1';
 export async function ensureAcceptanceSchema(pool:Pool){
@@ -96,6 +98,56 @@ async function verifyAcceptedSemantics(c:PoolClient,plan:AcceptancePlan){
  if(typed&&original&&['kind','subjectId','objectId','relation','polarity','scope','times','aboutRecord','aboutTheme'].some(k=>knowledgeDigest(original[k]??null)!==knowledgeDigest((cmd.record.content as Record<string,unknown>)[k]??null)))throw new SourceCheckError('旧KGの型付き限定を変更する場合は、対象の関係を保って別の情報として投稿してください。');
 }
 function material(s:QueryResultRow):KnowledgeSubmission{const captured=s.reference_context??s.source_capsule?.captured;return {id:s.id,revision:s.current_revision,version:s.state_version,state:s.state,content:knowledgeSubmissionContentSchema.parse(s.content),digest:s.digest,createdAt:String(s.created_at),updatedAt:String(s.updated_at),...(captured?{context:captured}:{})};}
+
+/** Resolve reuse before retaining the immutable decision. Keep the published
+ * wording and qualifiers, and add only new independent evidence. */
+export async function reuseDuplicatePlan(knowledge:Pool,plan:AcceptancePlan,capture:DuplicateCapture,advice:unknown,proofs:SourceProof[]=[],knownDocuments:string[]=[]):Promise<AcceptancePlan>{
+ if(plan.command.action!=='accept-record')return plan;
+ const cmd=structuredClone(plan.command),other=duplicateMatch(capture,advice);
+ const match=cmd.expectedRevision?capture.candidates.find(r=>r.id===cmd.record.id):other;
+ if(!match)return plan;
+ if(cmd.expectedRevision&&other&&cmd.record.id!==other.id)throw new SourceCheckError('訂正後の内容は別の既存知識と重複します。その知識への根拠追加を選んでください。');
+ // Deliberate corrections may improve wording on this SAME record. Novelty
+ // protection must not throw away an explicitly requested editorial change.
+ if(cmd.expectedRevision&&knowledgeDigest(duplicateMeaning(match.content))!==knowledgeDigest(duplicateMeaning(cmd.record.content)))return plan;
+ const refs=[...plan.references];
+ const legacy=capture.legacy?.records.find(r=>r.id===match.id);
+ if(legacy){
+  const raw=capture.legacy!.legacy.records.find(r=>r.id===match.id)!;
+  cmd.legacyRecords=[...(cmd.legacyRecords??[]).filter(r=>r.id!==match.id),{...raw,content:legacy.content}];
+  for(const id of [legacy.content.subjectId,legacy.content.objectId].filter((v):v is string=>!!v)){
+   const e=capture.legacy!.entities.find(e=>e.id===id)!,rawEntity=capture.legacy!.legacy.entities.find(e=>e.id===id)!;
+   if(!cmd.legacyEntities?.some(e=>e.id===id))cmd.legacyEntities=[...(cmd.legacyEntities??[]),{...rawEntity,content:e.content}];
+   if(!cmd.entityPins.some(e=>e.id===id))cmd.entityPins.push({id,revision:e.revision});
+  }
+  const ids=new Set(legacy.content.evidence.map(e=>e.source.id));
+  for(const s of capture.legacy!.sources.filter(s=>ids.has(s.id)))if(!cmd.legacySources?.some(v=>v.id===s.id))cmd.legacySources=[...(cmd.legacySources??[]),{id:s.id,content:s.content}];
+ }
+ const oldSources:import("../domain/knowledge-duplicate").DuplicateSource[]=[];
+ for(const p of match.content.evidence.map(e=>e.source)){
+  const imported=capture.legacy?.sources.find(s=>s.id===p.id&&s.revision===p.revision);
+  const row=imported??(await knowledge.query("SELECT id,revision,content FROM knowledge75.revisions WHERE kind='source' AND id=$1 AND revision=$2",[p.id,p.revision])).rows[0];
+  if(!row)throw new SourceCheckError('既存の知識の資料を確認できません。取得し直してください。');
+  oldSources.push({id:row.id,revision:Number(row.revision),content:row.content});
+  if(!cmd.sourcePins.some(s=>s.id===p.id&&s.revision===p.revision))cmd.sourcePins.push(p);
+  if(!refs.some(r=>r.kind==='source'&&r.id===p.id&&r.revision===p.revision))refs.push({kind:'source',...p,content:row.content,...(imported?{legacy:true}:{})});
+ }
+ const allSources=[...oldSources,...(cmd.legacySources??[]).map(s=>({...s,revision:1})),...cmd.sources.map(s=>({...s,revision:1})),...refs.filter(r=>r.kind==='source').map(r=>({id:r.id,revision:r.revision,content:r.content as typeof oldSources[number]['content']}))];
+ // Same fetched document under a different URL is not a fresh source. Retain
+ // this proof in the decision; do not strip meaningful query parameters.
+ const incoming={...cmd.record.content,evidence:cmd.record.content.evidence.filter(e=>{
+  const source=allSources.find(s=>s.id===e.source.id&&s.revision===e.source.revision);
+  const proof=source?.content.url?proofs.find(p=>duplicateSourceURL(p.url)===duplicateSourceURL(source.content.url!)):undefined;
+  return !proof||!knownDocuments.includes(proof.textSha256)||oldSources.some(s=>s.id===e.source.id&&s.revision===e.source.revision);
+ })};
+ cmd.record={id:match.id,content:mergeDuplicateEvidence(match.content,incoming,allSources)};
+ if(cmd.record.content.evidence.length>20)throw new SourceCheckError('この知識の根拠が20件を超えます。既存の資料を確認し、必要なら運営へ相談してください。');
+ cmd.sources=cmd.sources.filter(s=>cmd.record.content.evidence.some(e=>e.source.id===s.id));
+ cmd.expectedRevision=match.revision;cmd.preserveLegacySemantics=true;
+ const reference={kind:'record' as const,id:match.id,revision:match.revision,content:match.content,...(legacy?{legacy:true}:{})};
+ if(!refs.some(r=>r.kind==='record'&&r.id===match.id))refs.push(reference);
+ return {command:knowledgeCommandSchema.parse(cmd),references:refs,recordId:match.id};
+}
 export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterDecision?:()=>Promise<void>;afterPrepare?:()=>Promise<void>}={},verify=verifySourceExcerpt){
  let ready:Promise<void>|undefined;
  const ensure=async()=>{ready??=ensureAcceptanceSchema(pool).catch(e=>{ready=undefined;throw e;});await ready;};
@@ -110,15 +162,25 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
  }
  const foundation=createKnowledgeFoundationService(knowledge);
  async function delivered(decision:QueryResultRow,result:unknown){
+  const disposition=(result as {disposition?:string}).disposition;
+  const reason=disposition==='existing'?'同じ知識が登録済みです。記録・保存版・活動履歴は増やしていません。':disposition==='theme-linked'?'既存の知識を指定したテーマへ追加しました。':'知識へ反映しました。';
   // Acknowledgement is idempotent even if private account/job rows no longer exist.
-  const c=await pool.connect();try{await c.query('BEGIN');await c.query("UPDATE member_knowledge.publication_decisions SET state='published',result=$2,published_at=clock_timestamp(),reason='' WHERE id=$1",[decision.id,result]);await c.query("UPDATE member_knowledge.review_jobs SET state='accepted',reason='受理しました。検索・関係図へ反映しています。',lease_token=NULL,lease_until=NULL WHERE id=$1 AND state='accepted'",[decision.job_id]);await finalizePublicationContributor(c,decision.id,result as {id:string;revision:number});await c.query('COMMIT');}catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}
+  const c=await pool.connect();try{await c.query('BEGIN');await c.query("UPDATE member_knowledge.publication_decisions SET state='published',result=$2,published_at=clock_timestamp(),reason=$3 WHERE id=$1",[decision.id,result,reason]);await c.query("UPDATE member_knowledge.review_jobs SET state='accepted',reason=$2,lease_token=NULL,lease_until=NULL WHERE id=$1 AND state='accepted'",[decision.job_id,reason]);await finalizePublicationContributor(c,decision.id,result as {id:string;revision:number});await c.query('COMMIT');}catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}
  }
- async function deliver(decision:QueryResultRow,prepare:()=>Promise<void>=async()=>{}){
+ async function deliver(decision:QueryResultRow,prepare:(result:unknown)=>Promise<void>=async()=>{}){
   await verifyLegacyCommand(decision.command);
-  const result=await foundation.execute({kind:'submission',id:'member-submission-v1'},decision.command,{verify:async c=>{await verifyAcceptanceReferences(c,decision.references_json);await verifyAcceptedSemantics(c,{command:decision.command,references:decision.references_json,recordId:decision.command.record.id});},prepare});
+  const result=await foundation.execute({kind:'submission',id:'member-submission-v1'},decision.command,{verify:async c=>{
+   const guard=decision.proofs?.duplicates;
+   if(guard){const current=(await commonDuplicatePins(c,guard.record)).map(r=>({id:r.id,revision:r.revision,digest:knowledgeDigest(r.content)}));if(knowledgeDigest(current)!==knowledgeDigest(guard.common))throw new KnowledgeError('既存の知識が増えたため重複を確認し直します',409,'DUPLICATE_REVIEW_REQUIRED');}
+   await verifyAcceptanceReferences(c,decision.references_json);await verifyAcceptedSemantics(c,{command:decision.command,references:decision.references_json,recordId:decision.command.record.id});},prepare});
   await hooks.afterDecision?.();await delivered(decision,result);
  }
  return {
+ async duplicates(value:KnowledgeSubmission,key:string):Promise<DuplicateReview|undefined>{
+  const plan=acceptancePlan(value,key,'00000000-0000-4000-8000-000000000001',value.context?.records?.find(r=>r.id===value.content.items.find(i=>i.key===key)?.correction?.id));
+  if(plan.command.action!=='accept-record')return;
+  return (await captureDuplicates(knowledge,plan.command.record.content,plan.command.expectedRevision?plan.recordId:undefined)).review;
+ },
  async validateReview(jobId:string){
   const row=(await pool.query("SELECT s.*,r.content,r.digest,r.source_capsule,r.reference_context,j.item_key,j.consent_version FROM member_knowledge.review_jobs j JOIN member_knowledge.submissions s ON s.id=j.submission_id JOIN member_knowledge.submission_revisions r ON r.submission_id=s.id AND r.revision=s.current_revision WHERE j.id=$1",[jobId])).rows[0];
   if(!row||row.consent_version!==PUBLICATION_CONSENT_VERSION)return null;
@@ -142,7 +204,7 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
   const indexed=(await pool.query("SELECT d.id,d.job_id,d.result FROM member_knowledge.publication_decisions d JOIN member_knowledge.review_jobs j ON j.id=d.job_id WHERE d.state='published' AND j.state='accepted' LIMIT 20")).rows;
   for(const d of indexed){
    const exists=(await knowledge.query("SELECT 1 FROM knowledge75.publication_control c JOIN knowledge75.publication_records r ON r.generation=c.active_generation JOIN knowledge75.objects o ON o.kind='record' AND o.id=r.id WHERE c.singleton AND r.id=$1 AND r.revision>=$2 AND o.visibility='public'",[d.result.id,d.result.revision])).rowCount;
-   if(exists)await pool.query("UPDATE member_knowledge.review_jobs SET state='published',reason='知識として公開しました。' WHERE id=$1 AND state='accepted'",[d.job_id]);
+   if(exists)await pool.query("UPDATE member_knowledge.review_jobs SET state='published',reason=$2 WHERE id=$1 AND state='accepted'",[d.job_id,d.result?.disposition==='existing'?'同じ知識が登録済みです。記録・保存版・活動履歴は増やしていません。':d.result?.disposition==='theme-linked'?'既存の知識を指定したテーマへ追加しました。':'知識として公開しました。']);
   }
   const pending=(await pool.query("SELECT * FROM member_knowledge.publication_decisions WHERE state='pending' AND not_before<=clock_timestamp() ORDER BY created_at LIMIT 1")).rows[0];
   if(pending){
@@ -170,13 +232,21 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
      if(!source?.content.url)throw new SourceCheckError('書誌だけの資料はまだ自動照合できません。本文を確認できる公開URLを追加してください。');
      proofs.push(await verify(source.content.url,evidence.excerpt));
     }
-    const plan=acceptancePlan(value,item.key,lease.j.id,value.context?.records?.find((r:{id:string})=>r.id===item.correction?.id));
-    const decision={id:lease.j.id,job_id:lease.j.id,command:plan.command,digest:knowledgeDigest(plan.command),references_json:plan.references,proofs};
-    await deliver(decision,async()=>{
+    const originalPlan=acceptancePlan(value,item.key,lease.j.id,value.context?.records?.find((r:{id:string})=>r.id===item.correction?.id));
+    if(originalPlan.command.action!=='accept-record')throw Error('Unexpected publication action');
+    const capture=await captureDuplicates(knowledge,originalPlan.command.record.content,originalPlan.command.expectedRevision?originalPlan.recordId:undefined);
+    const exact=capture.review.candidates.some(c=>knowledgeDigest(c.meaning)===knowledgeDigest(duplicateMeaning(originalPlan.command.action==='accept-record'?originalPlan.command.record.content:item.record)));
+    if(capture.review.candidates.length&&!exact&&knowledgeDigest(capture.review)!==knowledgeDigest(lease.j.result?.duplicateCheck??null))throw new KnowledgeError('既存の知識が増えたため重複を確認し直します',409,'DUPLICATE_REVIEW_REQUIRED');
+    const match=originalPlan.command.expectedRevision?capture.candidates.find(r=>r.id===originalPlan.recordId):duplicateMatch(capture,lease.j.result?.duplicate);
+    const known=match?(await pool.query("SELECT proofs->'sources' AS sources FROM member_knowledge.publication_decisions WHERE state='published' AND (command->'record'->>'id'=$1 OR result->>'id'=$1)",[match.id])).rows.flatMap(r=>(r.sources??[]).map((s:SourceProof)=>s.textSha256)):[];
+    const plan=await reuseDuplicatePlan(knowledge,originalPlan,capture,lease.j.result?.duplicate,proofs,known);
+    const retainedProofs={sources:proofs,review:lease.j.result,operatorConfirmationId:lease.j.operator_confirmation_id??null,consent:lease.j.consent_version,duplicates:{record:originalPlan.command.record.content,common:capture.common}};
+    const decision={id:lease.j.id,job_id:lease.j.id,command:plan.command,digest:knowledgeDigest(plan.command),references_json:plan.references,proofs:retainedProofs};
+    await deliver(decision,async result=>{
      const accepted=await locked(lease.j.id,async(c,s,j)=>{
       const check=(await c.query('SELECT token FROM member_knowledge.source_checks WHERE job_id=$1 FOR UPDATE',[j.id])).rows[0];if(j.state!=='verifying'||check?.token!==token)throw new KnowledgeError('受付版が変わりました',409,'STALE');
-      await c.query("INSERT INTO member_knowledge.publication_decisions(id,job_id,command,digest,references_json,proofs,state) VALUES($1,$2,$3,$4,$5,$6,'pending') ON CONFLICT(id) DO NOTHING",[decision.id,j.id,decision.command,decision.digest,JSON.stringify(plan.references),JSON.stringify({sources:proofs,review:j.result,operatorConfirmationId:j.operator_confirmation_id??null,consent:j.consent_version})]);
-      await persistPublicationContributor(c,{decisionId:decision.id,ownerId:s.owner_id,attribution:value.content.attribution??'anonymous',recordId:plan.recordId,submissionId:value.id,submissionRevision:value.revision,operation:item.operation!,entityIds:[...new Set(plan.command.action==='accept-record'?[plan.command.record.content.subjectId,plan.command.record.content.objectId].filter((v):v is string=>!!v):[])],themeIds:item.themes?.map(t=>t.id)??[]});
+      await c.query("INSERT INTO member_knowledge.publication_decisions(id,job_id,command,digest,references_json,proofs,state) VALUES($1,$2,$3,$4,$5,$6,'pending') ON CONFLICT(id) DO NOTHING",[decision.id,j.id,decision.command,decision.digest,JSON.stringify(plan.references),JSON.stringify(retainedProofs)]);
+      if((result as {disposition?:string}).disposition!=='existing')await persistPublicationContributor(c,{decisionId:decision.id,ownerId:s.owner_id,attribution:value.content.attribution??'anonymous',recordId:plan.recordId,submissionId:value.id,submissionRevision:value.revision,operation:plan.recordId!==originalPlan.recordId?'add-evidence':item.operation!,entityIds:[...new Set(plan.command.action==='accept-record'?[plan.command.record.content.subjectId,plan.command.record.content.objectId].filter((v):v is string=>!!v):[])],themeIds:item.themes?.map(t=>t.id)??[]});
       await c.query("UPDATE member_knowledge.source_checks SET proofs=$2 WHERE job_id=$1",[j.id,JSON.stringify(proofs)]);
       await c.query("UPDATE member_knowledge.review_jobs SET state='accepted',reason='受理しました。公開へ反映しています。' WHERE id=$1",[j.id]);return true;
      });if(!accepted)throw new KnowledgeError('受付版または会員状態が変わりました',409,'STALE');await hooks.afterPrepare?.();
@@ -184,6 +254,7 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
    }catch(e){
     await locked(lease.j.id,async(c,_s,j)=>{
      if(j.state!=='verifying')return;
+     if(e instanceof KnowledgeError&&e.code==='DUPLICATE_REVIEW_REQUIRED'){await c.query("UPDATE member_knowledge.review_jobs SET state='queued',reason='既存の知識が更新されたため、重複を確認し直します。',not_before=clock_timestamp()+interval '5 seconds' WHERE id=$1",[j.id]);return;}
      const reason=e instanceof SourceCheckError?e.message:e instanceof KnowledgeError&&e.code==='CONFLICT'?'取得元が更新されました。最新版を確認して投稿し直してください。':'原資料・公開接続を確認できません。時間をおいて再試行します。';
      const retry=!(e instanceof SourceCheckError)||e.retryable;
      await c.query('UPDATE member_knowledge.source_checks SET reason=$2,not_before=clock_timestamp()+$3::integer*interval \'1 millisecond\',lease_until=NULL WHERE job_id=$1',[j.id,reason,e instanceof SourceCheckError?e.retryAfterMs:120000]);

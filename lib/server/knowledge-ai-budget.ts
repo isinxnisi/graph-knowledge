@@ -6,7 +6,7 @@ const formatter=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Los_Angeles',
 export const quotaDate=(now:Date)=>formatter.format(now);
 export function nextQuotaDay(now:Date){const today=quotaDate(now),[y,m,d]=today.split('-').map(Number);let next=new Date(Date.UTC(y,m-1,d+1));while(quotaDate(next)===today)next=new Date(next.getTime()+3600000);return next;}
 export function nextQuotaMonth(now:Date){const month=quotaDate(now).slice(0,7),[y,m]=month.split('-').map(Number);let next=new Date(Date.UTC(y,m,1));while(quotaDate(next).slice(0,7)===month)next=new Date(next.getTime()+3600000);return next;}
-export async function reserveKnowledgeAI(c:PoolClient,cfg:ReviewConfig,input:{purpose:'submission'|'collection-read'|'collection-check'|'collection-evaluation';policy:string;inputReserved:number;outputReserved:number;jobId?:string}){
+export async function reserveKnowledgeAI(c:PoolClient,cfg:ReviewConfig,input:{purpose:'submission'|'evaluation'|'collection-read'|'collection-check'|'collection-evaluation';policy:string;inputReserved:number;outputReserved:number;jobId?:string}){
  const project=(await c.query('SELECT * FROM member_knowledge.review_projects WHERE project_id=$1 FOR UPDATE',[cfg.projectId])).rows[0];if(!project||project.config_digest!==knowledgeDigest({...cfg,apiKeyFile:undefined}))throw Error('AI project configuration differs');
  const now=new Date(),day=quotaDate(now),month=day.slice(0,7),{inputReserved,outputReserved}=input;
  const usage=(await c.query(`SELECT COALESCE(sum(request_charge) FILTER(WHERE quota_day=$2),0)::int AS day_requests,COALESCE(sum(request_charge) FILTER(WHERE quota_month=$3),0)::int AS month_requests,

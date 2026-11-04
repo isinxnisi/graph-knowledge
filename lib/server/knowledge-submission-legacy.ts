@@ -21,6 +21,18 @@ async function read<T>(action: (tx: ReadTx) => Promise<T>): Promise<T> {
   finally { await session.close(); await db.driver.close(); }
 }
 
+/** Bounded, read-only duplicate candidates on the same directed KG endpoints.
+ * Never confuse a partial first page with a complete duplicate check. */
+export async function readLegacyDuplicateReferences(subjectId:string|null,objectId:string|null,dependencies:SubmissionLegacyDependencies={read}){
+ if(!z.uuidv4().safeParse(subjectId).success||!z.uuidv4().safeParse(objectId).success)return null;
+ const ids=await dependencies.read(async tx=>{
+  const result=await tx.run("MATCH (c:Claim)-[:SUBJECT]->(:Entity {id:$subjectId}), (c)-[:OBJECT]->(:Entity {id:$objectId}) WHERE c.visibility='published' RETURN c.id AS id ORDER BY id LIMIT 21",{subjectId,objectId});
+  return result.records.map(r=>String(r.get('id')));
+ });
+ if(ids.length>20)throw new ApiError(422,'INVALID_ARGUMENT','同じ対象間の知識が多いため、既存の知識を選んで根拠を追加してください。');
+ return ids.length?readSubmissionLegacyReferences({entityIds:[],claimIds:ids},dependencies):null;
+}
+
 /** Canonical public KG capture shared by the web and review worker. Never writes KG. */
 export async function readSubmissionLegacyReferences(input: z.input<typeof inputSchema>, dependencies: SubmissionLegacyDependencies = { read }) {
   const value = inputSchema.parse(input);
