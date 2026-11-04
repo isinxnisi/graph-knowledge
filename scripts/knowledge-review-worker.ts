@@ -1,3 +1,4 @@
+import {createTranslationGeneration} from '../lib/server/knowledge-translation-generation';
 import {runKnowledgeModeration} from "../lib/server/member/knowledge-appeals";
 import {lstat,readFile} from "node:fs/promises";
 import path from "node:path";
@@ -29,6 +30,7 @@ async function main(){
  const knowledge=acceptanceEnabled()?new Pool({connectionString:knowledgeReadConfiguration().databaseUrl,max:2}):null;
  const acceptance=knowledge?createKnowledgeAcceptance(pool,knowledge):null;
  const queue=createReviewQueue(pool,acceptance?{duplicates:(value,key)=>acceptance.duplicates(value,key)}:{});
+ const translations=knowledge?createTranslationGeneration(pool,knowledge):null;
  let stopping=false;process.once('SIGTERM',()=>{stopping=true;});process.once('SIGINT',()=>{stopping=true;});
  try{
   if(process.argv.includes("--status")){console.log(JSON.stringify(await queue.usage(config)));return;}
@@ -37,7 +39,10 @@ async function main(){
   if(importIndex>=0){const text=await privateText(path.resolve(process.argv[importIndex+1]),256000);const n=await queue.importEvaluation(JSON.parse(text),createHash('sha256').update(text).digest('hex'),config);console.log(JSON.stringify({event:'review-usage-import',imported:n}));return;}
   const key=(await privateText(config.apiKeyFile,8192)).trim();
   const heartbeat=setInterval(()=>{void queue.heartbeat(config).catch(()=>{stopping=true;});},15000);heartbeat.unref();
-  try{while(!stopping){const worked=await runKnowledgeReviewOnce(queue,config,lease=>callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire) as ReturnType<typeof geminiReviewRequest>}),acceptance?lease=>acceptance.validateReview(lease.jobId):undefined);const moderated=knowledge?await runKnowledgeModeration(pool,knowledge):false;const accepted=acceptance?await acceptance.run(config):false;if(worked||accepted||moderated)console.log(JSON.stringify({event:'knowledge-review-iteration',completed:true}));else await new Promise(resolve=>setTimeout(resolve,2500));if(process.argv.includes('--once'))break;}}
+  try{while(!stopping){const worked=await runKnowledgeReviewOnce(queue,config,lease=>callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire) as ReturnType<typeof geminiReviewRequest>}),acceptance?lease=>acceptance.validateReview(lease.jobId):undefined);const moderated=knowledge?await runKnowledgeModeration(pool,knowledge):false;const accepted=acceptance?await acceptance.run(config):false;
+   let generated=false;
+   if(translations&&!worked){await translations.recover();const lease=await translations.claim(config);if(lease){generated=true;await translations.finish(lease,await translations.canSend(lease)?await callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire)}):{state:'not-sent'});}}
+   if(worked||accepted||moderated||generated)console.log(JSON.stringify({event:'knowledge-review-iteration',completed:true}));else await new Promise(resolve=>setTimeout(resolve,2500));if(process.argv.includes('--once'))break;}}
   finally{clearInterval(heartbeat);}
  }finally{await knowledge?.end();await pool.end();}
 }

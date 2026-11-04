@@ -1,3 +1,4 @@
+import {createMemberTranslationGeneration} from './translation-generation';
 import {createMemberKnowledgeOrganization} from "./knowledge-organization";
 import {createMemberCollectionReading} from "./knowledge-collection-reading";
 import {createKnowledgeCollection} from "./knowledge-collection";
@@ -46,6 +47,7 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
     if (content.dataset !== dataset) throw new MemberError(400, "DATASET_MISMATCH");
   }
   return {
+    translationGeneration:createMemberTranslationGeneration(pool,config.origin,owner),
     submissions: createMemberKnowledgeSubmissions(pool,config.origin,owner,dataset),
     collection: createKnowledgeCollection(pool,config.origin,owner),
     collectionReading: createMemberCollectionReading(pool,config.origin,owner),

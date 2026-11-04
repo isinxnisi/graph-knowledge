@@ -7,3 +7,6 @@
 .body p{white-space:pre-wrap;margin-block:.65rem}
 .body small{display:block;opacity:.75;margin-block:.35rem}
 .body a,.body button{display:inline-flex;margin-block:.3rem;margin-inline-end:.6rem}
+.generation{border-block-start:1px solid var(--color-border);margin-top:.4rem;padding-top:.5rem}
+.generation .consent{display:flex;align-items:baseline;gap:.45rem;line-height:1.5}
+.consent input{flex:none;align-self:center}

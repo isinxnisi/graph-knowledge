@@ -1,3 +1,4 @@
+import {createMemberTranslationGeneration} from './translation-generation';
 import {capsuleSubmissionSelection} from "../../domain/knowledge-submission-selection";
 import {captureSubmissionCapsule} from "../../domain/knowledge-submission-capsule";
 import {reviewDisclosureForConsent} from "../../domain/knowledge-submission-feedback";
@@ -30,6 +31,7 @@ export async function knowledgeSubmissionHandle(action:()=>Promise<Response>){
 }
 export function createMemberKnowledgeSubmissions(pool:Pool,origin:string,owner:(r:Request)=>Promise<{id:string}>,dataset:DatasetMode){
  const store=createKnowledgeSubmissionService(pool,{memberStore:true,dataset}),reviews=createReviewQueue(pool);
+ const generation=createMemberTranslationGeneration(pool,origin,owner);
  let acceptanceReady:Promise<void>|undefined;
  const readyAcceptance=async(id:string)=>{if(reviewEnabledFor(id)&&process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED==='1'){acceptanceReady??=ensureAcceptanceSchema(pool).catch(e=>{acceptanceReady=undefined;throw e;});await acceptanceReady;}};
  const enabled=()=>{if(process.env.KNOWLEDGE_SUBMISSIONS_ENABLED!=="1")throw new MemberError(404,"NOT_FOUND");};
@@ -52,6 +54,11 @@ export function createMemberKnowledgeSubmissions(pool:Pool,origin:string,owner:(
     const requestId=translation.success?translation.data.requestId:selection.success?selection.data.requestId:capture.data!.requestId;
     const prior=await store.replay(user.id,requestId,knowledgeDigest(input));if(prior)return memberJson({submission:prior});
     const picked=translation.success?await captureTranslationSelection(translation.data.target,translation.data.language):selection.success?await captureSubmissionSelection(selection.data.context,selection.data.content):await captureSubmissionSelection({dataset:'public-kg',entityIds:[],claimIds:[],entityPins:[],recordPins:[{id:capture.data!.recordId,revision:capture.data!.recordRevision}]});
+    if(translation.success&&translation.data.generationId){
+     const text=await generation.queue().draft(user.id,translation.data.target,translation.data.language,translation.data.generationId);
+     if(picked.content.items[0].translation!.expectedRevision!==0)throw new KnowledgeError('公開済みの訳文があります。訂正として内容を確認してください',409,'TRANSLATION_EXISTS');
+     picked.content.items[0].translation!.text=text;
+    }
     if(capture.success)for(const item of picked.content.items)item.operation='correct-record';
     return memberJson({submission:await store.execute(user.id,input,picked)});
    }
