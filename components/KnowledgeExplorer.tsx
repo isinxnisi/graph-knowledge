@@ -7,6 +7,7 @@ import { themeTimeLabel } from "../lib/domain/theme-time";
 import type { KnowledgePublishedRecord } from "../lib/domain/knowledge-publication";
 import type { KnowledgeEntityVersion } from "../lib/domain/knowledge-foundation";
 import { contributionLabels } from "../lib/i18n/contribution";
+import KnowledgeSourceBibliography from "./KnowledgeSourceBibliography";
 import css from "./KnowledgeExplorer.module.css";
 
 type Page = { generation: string; records: KnowledgePublishedRecord[]; entities: KnowledgeEntityVersion[]; nextCursor: string | null; hasMore: boolean };
@@ -42,7 +43,7 @@ function Detail({ dto, onEntity }: { dto: KnowledgePublishedRecord; onEntity: (i
     {r.evidence.map((e) => { const s = dto.sources.find((s) => s.id === e.source.id && s.revision === e.source.revision); return <div className={css.source} key={e.id}>
       {s?.content.url ? <a href={s.content.url} target="_blank" rel="noreferrer">{s.content.title} ↗</a> : <strong>{s?.content.title ?? "資料"}</strong>}
       <div className={css.meta}>資料版 {e.source.revision} · {e.locator} · {({ support: "支持", refute: "反証", background: "背景" })[e.stance]}</div>
-      {s?.content.bibliography && <p className={css.meta}>{s.content.bibliography}</p>}
+      {s?.content.bibliography && <KnowledgeSourceBibliography value={s.content.bibliography} className={css.meta}/>}
       {e.excerpt && <blockquote>{e.excerpt}</blockquote>}
     </div>; })}
   </article>;

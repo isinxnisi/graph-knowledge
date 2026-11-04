@@ -12,6 +12,7 @@ import type {
   KnowledgeSnapshot,
 } from "../lib/domain/knowledge-foundation";
 import { correctionKnowledgeInputDraft, newKnowledgeInputDraft, prepareKnowledgeInputSubmission, readKnowledgeInputDraft, writeKnowledgeInputDraft, type KnowledgeInputDraft, type KnowledgeInputField, type KnowledgeInputChoice } from "../lib/client/knowledge-input-draft";
+import KnowledgeSourceBibliography from "./KnowledgeSourceBibliography";
 import css from "./KnowledgeFoundation.module.css";
 
 type Catalog = KnowledgeList & { sourceVersions?: SourceVersion[] };
@@ -43,7 +44,7 @@ function RecordDetail({ record, entities, sources }: { record: RecordVersion; en
       return <div className={css.evidence} key={e.id}>
         {source?.content.url ? <a href={source.content.url} target="_blank" rel="noreferrer">{source.content.title} ↗</a> : <strong>{source?.content.title ?? "資料"}</strong>}
         <div className={css.meta}>資料版 {e.source.revision} · {e.locator} · {({ support: "支持", refute: "反証", background: "背景" } as Record<string, string>)[e.stance] ?? e.stance}</div>
-        {source?.content.bibliography && <p>{source.content.bibliography}</p>}
+        {source?.content.bibliography && <KnowledgeSourceBibliography value={source.content.bibliography} className={css.meta}/>}
         <blockquote>{e.excerpt}</blockquote>
       </div>;
     })}

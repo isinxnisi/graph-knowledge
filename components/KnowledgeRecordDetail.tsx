@@ -3,6 +3,7 @@ import { themeTimeLabel } from "../lib/domain/theme-time";
 import type { KnowledgePublishedRecord } from "../lib/domain/knowledge-publication";
 import { useUiLocale } from "../lib/client/ui-locale";
 import KnowledgeContributors from "./KnowledgeContributors";
+import KnowledgeSourceBibliography from "./KnowledgeSourceBibliography";
 import css from "./KnowledgeExplorer.module.css";
 
 export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme }: {onRecord?:(id:string)=>void;onTheme?:(id:string)=>void; dto: KnowledgePublishedRecord; onEntity: (id: string) => void }) {
@@ -25,7 +26,7 @@ export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme }
     {r.evidence.map((e) => { const s = dto.sources.find((s) => s.id === e.source.id && s.revision === e.source.revision); return <div className={css.source} key={e.id}>
       {s?.content.url ? <a href={s.content.url} target="_blank" rel="noreferrer">{s.content.title} ↗</a> : <strong>{s?.content.title ?? (en ? "Source" : "資料")}</strong>}
       <div className={css.meta}>{en ? "Source revision" : "資料版"} {e.source.revision} · {e.locator} · {en ? e.stance : ({ support: "支持", refute: "反証", background: "背景" })[e.stance]}</div>
-      {s?.content.bibliography && <p className={css.meta}>{s.content.bibliography}</p>}
+      {s?.content.bibliography && <KnowledgeSourceBibliography value={s.content.bibliography} className={css.meta} locale={locale}/>}
       {e.excerpt && <blockquote>{e.excerpt}</blockquote>}
     </div>; })}
   </article>;

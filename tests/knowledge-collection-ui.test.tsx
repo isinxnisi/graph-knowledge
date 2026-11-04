@@ -34,4 +34,5 @@ it('shows returned candidates and published results without mistaking them for a
  expect(screen.queryByText(/登録処理の状態を取得できません/)).toBeNull();
  fireEvent.click(screen.getByText('項目・結果を見る'));
  expect(screen.getByRole('link',{name:'AはBを共同で準備した。'}).getAttribute('href')).toBe('/?krecord=registered');
+ expect(screen.getByText(/公開しました。/)).toBeTruthy();
 });
