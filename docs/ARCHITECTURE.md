@@ -1,3 +1,5 @@
+2026-11-04 U6b：取得済み資料の読解・個別支持確認・共通原記録への自動登録をmain／3200／HTTPS βへ接続。実NASA資料からTheme追記とThemeなしの2関係を登録し、旧Theme版を保持。app `fca14761` / build `6e-oR7REeDvKQEgoaaU1g`。U6全体は未完了で、後追い意味整理・パッケージ取込・総合一巡は後続。[実操作・利用量・制約・再開](verification/KNOWLEDGE_COLLECTION_U6_READING_20261104.md)。以下は各時点の履歴。
+
 2026-11-04 U6資料取得：有限依頼・HTTPS API・PC取得・artifact／配送checkpoint・取消をmain／3200／HTTPS βへ接続し、実NASA2資料を確認。U6全体は未完了で、読解・通常自動登録・意味整理・AI枠の接続は後続。U5の保存枠による新規Capsule保存・共有未確認は解消。[配置・実操作・残件](verification/KNOWLEDGE_COLLECTION_U6_CAPTURE_20261104.md)。以下は各時点の履歴。
 
 2026-11-04 U5：受付項目への相談・取消、運営回答／再確認／例外確認、公開停止・元案件からの解除、本人通知をmain／3200／HTTPS βへ接続。限定βでのU5基本接続まで完了。一般提供条件と今回の会員新規Capsule保存再確認は残る（保存枠20件が満杯）。U6収集・U7統合受入・U8正式公開は別工程。 [検証・配置・制約](verification/KNOWLEDGE_APPEALS_U5_20261104.md)。以下は各時点の履歴。

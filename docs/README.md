@@ -1,3 +1,5 @@
+2026-11-04 U6b：取得済み資料の読解・個別支持確認・共通原記録への自動登録をmain／3200／HTTPS βへ接続。実NASA資料からTheme追記とThemeなしの2関係を登録し、旧Theme版を保持。app `fca14761` / build `6e-oR7REeDvKQEgoaaU1g`。U6全体は未完了で、後追い意味整理・パッケージ取込・総合一巡は後続。[実操作・利用量・制約・再開](verification/KNOWLEDGE_COLLECTION_U6_READING_20261104.md)。以下は各時点の履歴。
+
 2026-11-04 容量不足からの復旧：[開発PCの生成物整理・DB保護・サービス復帰とU6再開時の注意](verification/STORAGE_CLEANUP_20261104.md)。3200／HTTPS β／3276は停止前の実行物へ復帰し、U6読解版の配置は未完了。
 
 U6の現在地：[有限資料取得のβ検証](verification/KNOWLEDGE_COLLECTION_U6_CAPTURE_20261104.md)／[範囲と後続契約](design/KNOWLEDGE_COLLECTION_U6.md)。取得と再開まで接続済み。読解・登録・意味整理は後続。

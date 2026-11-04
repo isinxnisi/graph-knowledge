@@ -1,3 +1,5 @@
+2026-11-04 U6b：取得済み資料の読解・個別支持確認・共通原記録への自動登録をmain／3200／HTTPS βへ接続。実NASA資料からTheme追記とThemeなしの2関係を登録し、旧Theme版を保持。app `fca14761` / build `6e-oR7REeDvKQEgoaaU1g`。U6全体は未完了で、後追い意味整理・パッケージ取込・総合一巡は後続。[実操作・利用量・制約・再開](../verification/KNOWLEDGE_COLLECTION_U6_READING_20261104.md)。以下は各時点の履歴。
+
 2026-11-04 現在：U5相談・運営例外まで反映。source `d739bf15`、build `Grzh6GQvdhq0j0nBArhr2`、会員000〜026（27件）、知識001/002/004。[最新の実操作・backup・制約](../verification/KNOWLEDGE_APPEALS_U5_20261104.md)。以下の配置番号・残件は各段階時点の記録。
 
 2026-11-03 投稿フォーム追補：現在のWeb sourceは `b204e2b8`、buildは `uZweEcFz-KDdbAVln1V3N`。入力案内・人物の草稿経路・2列表示・通常本人取得5分／通信失敗時の入力保持を3200とHTTPS βへ反映。DB追加なし、ledger23件。復旧互換buildは `rbLDeOtrWsJT7AL8c8eLV`。実操作・トンネル復旧・GitHub認証の記録は[フォームUX修正](../verification/KNOWLEDGE_SUBMISSION_FORM_UX_20261103.md)を優先する。以下のsource／buildは各工程時点の記録。
@@ -110,3 +112,18 @@ profileの初回準備は `python3 scripts/knowledge-collection-config.py --dire
 運営確認先は `/operations#collection`。現在の段階は資料取得までであり、「取得済み」を知識の公開成功と呼ばない。raw artifactはprivate DB、PC checkpointはprivate collection-state。復旧は027対応のWeb・Workerを使い、古いdumpでliveを上書きしない。VPSへの接続はU8の別工程。
 
 2026-11-04のU6資料取得の現在配置：source `384e7d52e2f385e3ef79e07b56110c20d4254bbc`／3200・HTTPS β build `j_2dRaRyCWvs0g0ek5zx7`。会員027、知識001/002/004、3276は既存U4、本番未変更。[実取得・取消・復元と制約](../verification/KNOWLEDGE_COLLECTION_U6_CAPTURE_20261104.md)。
+
+
+## U6b：読解Readerと共通利用枠
+
+会員追加028は `scripts/member-migrate.ts --collection-reading --confirm-origin https://graph-beta.isinxnisi.com` を明示指定し、既存000〜027と知識001/002/004のchecksumを維持する。fresh dump→実ownerで別名DB復元→追加/再実行/旧行照合の順を守る。今回の028は中断前に適用済みで、最終切替は29件を再確認した。
+
+初回だけ `python3 scripts/knowledge-collection-config.py --directory ~/.local/state/plunode-previews --reader --worker-id plunode-beta-reader` でcaptureとは別資格を作る。既存fileがあれば再生成/上書きしない。server profile `beta-collection-reader.json`、PC profile `beta-collection-reader-client.json`とkey fileは0600、checkpoint directoryは0700。Webにはtoken hashだけを渡す。
+
+再開は受入済みmainと既存private設定で `python3 scripts/start-local-previews.py beta --node /home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/issue75/node`。Webが3200で稼働中なら二重起動を拒否する。readerは同じstate内の`knowledge-collection-reader.pid`/`.log`、`collection-reader-state`を使用する。必要サービスを起動し、`/operations#collection`から取得済み資料と対象を選ぶ。
+
+worker単独再開は同じNode24で `--import tsx scripts/knowledge-collection-reader.ts --config ~/.local/state/plunode-previews/beta-collection-reader-client.json`。停止はPIDのcwd/cmdlineを確認してSIGTERMし、進行中の推論は応答保存・配送まで待つ。sending/response/pending checkpointを削除して再推論を強制しない。Web更新時はcapture/review/publisher/readerも受入済みmainの所有processだけを止め、同じlauncherで復帰する。
+
+同projectの投稿確認・評価・収集に共通の永続枠を使う。collectionは日/月とも全体の1/3以下（現在26回/日・800回/月）、全体80回/日・2400回/月とtoken/RPM/TPMは従来どおり。台帳の削除、別keyへの迂回、有料fallback、自動model変更で待機を回避しない。providerの無料残量をローカル台帳だけで保証したと扱わない。
+
+復旧は028と既存の読解job/保存形式を読める資材を使用し、DBをresetしない。最終の互換退避buildと両DB backupは上記U6b検証記録を照合する。緊急停止時も公開済みRecordと旧Theme/Capsuleを削除せず、reader資格の取り外しと同workerの停止を分けて行う。既存漫画Worker・共通Kev・他projectのサービスを一括停止する手順ではない。

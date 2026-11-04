@@ -1,0 +1,545 @@
+{
+  "source": "https://science.nasa.gov/mission/webb/launch/",
+  "jobs": [
+    {
+      "id": "194f3a97-6791-4881-bbe3-da0135296858",
+      "scope": "Webbの打ち上げキャンペーンの準備と実施について、NASAとNorthrop Grummanが共同で責任を担った関係を登録する。ESA・ArianeSpace・打ち上げ日などの既登録事項は追加しない。新しい対象は資料に明記されたNASAとNorthrop Grummanに限る。",
+      "target": {
+        "id": "u3:a508eb51cfd248dd:theme",
+        "kind": "theme",
+        "revision": 1
+      },
+      "policy": "collection-reading-v1",
+      "state": "active",
+      "created_at": "2026-11-04T04:50:08.804Z",
+      "tasks": [
+        {
+          "id": "b55620be-22a2-438c-af7d-0f3337b06460",
+          "purpose": "read",
+          "state": "attention",
+          "reason": "[\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"regex\",\n    \"pattern\": \"/^new:[a-z0-9-]{1,30}$/\",\n    \"path\": [\n      \"entities\",\n      0,\n      \"key\"\n    ],\n    \"message\": \"Invalid string: must match pattern /^new:[a-z0-9-]{1,30}$/\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"regex\",\n    \"pattern\": \"/^new:[a-z0-9-]{1,30}$/\",\n    \"path\": [\n      \"entities\",\n      1,\n      \"key\"\n    ],\n    \"message\": \"Invalid string: must match pattern /^new:[a-z0-9-]{1,30}$/\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"too_big\",\n    \"maximum\": 10,\n    \"inclusive\": true,\n    \"path\": [\n      \"records\",\n      0,\n      \"from\"\n    ],\n    \"message\": \"Too big: expected string to have <=10 characters\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"too_big\",\n    \"maximum\": 10,\n    \"inclusive\": true,\n    \"path\": [\n      \"records\",\n      0,\n      \"to\"\n    ],\n    \"message\": \"Too big: expected string to have <=10 characters\"\n  }\n]",
+          "attempts": 1,
+          "candidate": null,
+          "attemptsDetail": [
+            {
+              "wire_digest": "9355aaa799d8387f2e3233ba08046c433b04cd7b571b86261898c68e46e4ccec",
+              "model": "gemini-3.5-flash-lite",
+              "purpose": "collection-read",
+              "started_at": "2026-11-04T04:50:10.482Z",
+              "finished_at": "2026-11-04T04:50:13.198Z",
+              "input_actual": 2158,
+              "candidates_actual": 497,
+              "thoughts_actual": null,
+              "output_reserved": 2048,
+              "response": {
+                "modelVersion": "gemini-3.5-flash-lite",
+                "usageMetadata": {
+                  "serviceTier": "standard",
+                  "totalTokenCount": 2655,
+                  "promptTokenCount": 2158,
+                  "promptTokensDetails": [
+                    {
+                      "modality": "TEXT",
+                      "tokenCount": 2158
+                    }
+                  ],
+                  "candidatesTokenCount": 497
+                },
+                "content": "{\n  \"reason\": \"Extracted relationships between NASA and Northrop Grumman regarding the launch campaign preparation and launch campaign based on the text.\",\n  \"records\": [\n    {\n      \"to\": \"u3:a508eb51cfd248dd:entity:nasa\",\n      \"from\": \"u3:a508eb51cfd248dd:entity:northrop_grumman\",\n      \"kind\": \"relation\",\n      \"quote\": \"The launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace.\",\n      \"scope\": \"Webbの打ち上げキャンペーンの準備と実施について、NASAとNorthrop Grummanが共同で責任を担った関係を登録する。\",\n      \"locator\": \"Main text\",\n      \"objectId\": \"u3:a508eb51cfd248dd:entity:nasa\",\n      \"polarity\": \"affirmed\",\n      \"relation\": \"共同で責任を担う\",\n      \"timeKind\": \"none\",\n      \"assertion\": \"Northrop GrummanはNASAと共同で打ち上げキャンペーンの準備と実施の責任を担った\",\n      \"subjectId\": \"u3:a508eb51cfd248dd:entity:northrop_grumman\",\n      \"timeLabel\": \"\",\n      \"timeQuote\": \"\"\n    }\n  ],\n  \"entities\": [\n    {\n      \"key\": \"u3:a508eb51cfd248dd:entity:nasa\",\n      \"kind\": \"組織\",\n      \"name\": \"NASA\",\n      \"quote\": \"The launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace.\"\n    },\n    {\n      \"key\": \"u3:a508eb51cfd248dd:entity:northrop_grumman\",\n      \"kind\": \"組織\",\n      \"name\": \"Northrop Grumman\",\n      \"quote\": \"The launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace.\"\n    }\n  ]\n}"
+              }
+            }
+          ]
+        }
+      ],
+      "decisions": [],
+      "elapsedUntilChecksRecordedMs": 4394
+    },
+    {
+      "id": "e634c1de-711a-4472-870b-78594c13baeb",
+      "scope": "Webbの打ち上げキャンペーンの準備と実施の共同責任。NASAからWebbへ、Northrop GrummanからWebbへの関係を、資料に明記された範囲で登録する。既存のWebb対象を使い、新規対象はNASAとNorthrop Grummanに限る。ESA・ArianeSpace・打ち上げ日などは追加しない。時期の記載がなければ日付は付けない。",
+      "target": {
+        "id": "u3:a508eb51cfd248dd:theme",
+        "kind": "theme",
+        "revision": 1
+      },
+      "policy": "collection-reading-v1",
+      "state": "active",
+      "created_at": "2026-11-04T04:58:44.072Z",
+      "tasks": [
+        {
+          "id": "4f2bc5ec-5474-4064-a4a5-b116c70ca81f",
+          "purpose": "read",
+          "state": "done",
+          "reason": "",
+          "attempts": 1,
+          "candidate": null,
+          "attemptsDetail": [
+            {
+              "wire_digest": "923a0f29c268e83d1480d1ab3bdf4ae3823e48cf7f61b7e113e80d542954992c",
+              "model": "gemini-3.5-flash-lite",
+              "purpose": "collection-read",
+              "started_at": "2026-11-04T04:58:44.602Z",
+              "finished_at": "2026-11-04T04:58:48.788Z",
+              "input_actual": 2227,
+              "candidates_actual": 671,
+              "thoughts_actual": null,
+              "output_reserved": 2048,
+              "response": {
+                "modelVersion": "gemini-3.5-flash-lite",
+                "usageMetadata": {
+                  "serviceTier": "standard",
+                  "totalTokenCount": 2898,
+                  "promptTokenCount": 2227,
+                  "promptTokensDetails": [
+                    {
+                      "modality": "TEXT",
+                      "tokenCount": 2227
+                    }
+                  ],
+                  "candidatesTokenCount": 671
+                },
+                "content": "{\n  \"reason\": \"NASAとNorthrop Grummanの新entitiesを登録し、資料に基づく情報を抽出する。\",\n  \"records\": [\n    {\n      \"to\": \"\",\n      \"from\": \"\",\n      \"kind\": \"relation\",\n      \"quote\": \"The launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace.\",\n      \"scope\": \"Webbの打ち上げキャンペーンの準備と実施の共同責任。NASAからWebbへ、Northrop GrummanからWebbへの関係を、資料に明記された範囲で登録する。\",\n      \"locator\": \"Main text\",\n      \"objectId\": \"u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726\",\n      \"polarity\": \"affirmed\",\n      \"relation\": \"打ち上げキャンペーンの準備と実施に責任を負う\",\n      \"timeKind\": \"none\",\n      \"assertion\": \"NASAはWebb宇宙望遠鏡の打ち上げキャンペーンの準備と実施の共同責任を負う\",\n      \"subjectId\": \"new:1\",\n      \"timeLabel\": \"\",\n      \"timeQuote\": \"\"\n    },\n    {\n      \"to\": \"\",\n      \"from\": \"\",\n      \"kind\": \"relation\",\n      \"quote\": \"The launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace.\",\n      \"scope\": \"Webbの打ち上げキャンペーンの準備と実施の共同責任。NASAからWebbへ、Northrop GrummanからWebbへの関係を、資料に明記された範囲で登録する。\",\n      \"locator\": \"Main text\",\n      \"objectId\": \"u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726\",\n      \"polarity\": \"affirmed\",\n      \"relation\": \"打ち上げキャンペーンの準備と実施に責任を負う\",\n      \"timeKind\": \"none\",\n      \"assertion\": \"Northrop GrummanはWebb宇宙望遠鏡の打ち上げキャンペーンの準備と実施の共同責任を負う\",\n      \"subjectId\": \"new:2\",\n      \"timeLabel\": \"\",\n      \"timeQuote\": \"\"\n    }\n  ],\n  \"entities\": [\n    {\n      \"key\": \"new:1\",\n      \"kind\": \"組織\",\n      \"name\": \"NASA\",\n      \"quote\": \"The launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace.\"\n    },\n    {\n      \"key\": \"new:2\",\n      \"kind\": \"組織\",\n      \"name\": \"Northrop Grumman\",\n      \"quote\": \"The launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace.\"\n    }\n  ]\n}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "b56bc56b-18f3-455a-8782-497472876af8",
+          "purpose": "check",
+          "state": "attention",
+          "reason": "提供された抜粋では、打ち上げキャンペーンの準備と実施がNASAだけでなくESA、Northrop Grumman、ArianeSpaceの共同責任であるとされており、NASAとWebb間の直接の関係として全体が完全に一致しているとは言えず、またスコープに反する要素（ESAやArianeSpaceの言及）が含まれるため、サポートは不十分です。",
+          "attempts": 1,
+          "candidate": {
+            "to": "",
+            "from": "",
+            "kind": "relation",
+            "quote": "The launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace.",
+            "scope": "Webbの打ち上げキャンペーンの準備と実施の共同責任。NASAからWebbへ、Northrop GrummanからWebbへの関係を、資料に明記された範囲で登録する。",
+            "locator": "Main text",
+            "objectId": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+            "polarity": "affirmed",
+            "relation": "打ち上げキャンペーンの準備と実施に責任を負う",
+            "timeKind": "none",
+            "assertion": "NASAはWebb宇宙望遠鏡の打ち上げキャンペーンの準備と実施の共同責任を負う",
+            "subjectId": "new:1",
+            "timeLabel": "",
+            "timeQuote": ""
+          },
+          "attemptsDetail": [
+            {
+              "wire_digest": "f48b9545028bf51b4ace61143571f43b42a8c8fe4397aec6b20d786d169946b5",
+              "model": "gemini-3.5-flash-lite",
+              "purpose": "collection-check",
+              "started_at": "2026-11-04T04:58:53.993Z",
+              "finished_at": "2026-11-04T04:58:55.692Z",
+              "input_actual": 709,
+              "candidates_actual": 97,
+              "thoughts_actual": null,
+              "output_reserved": 2048,
+              "response": {
+                "modelVersion": "gemini-3.5-flash-lite",
+                "usageMetadata": {
+                  "serviceTier": "standard",
+                  "totalTokenCount": 806,
+                  "promptTokenCount": 709,
+                  "promptTokensDetails": [
+                    {
+                      "modality": "TEXT",
+                      "tokenCount": 709
+                    }
+                  ],
+                  "candidatesTokenCount": 97
+                },
+                "content": "{\"reason\": \"提供された抜粋では、打ち上げキャンペーンの準備と実施がNASAだけでなくESA、Northrop Grumman、ArianeSpaceの共同責任であるとされており、NASAとWebb間の直接の関係として全体が完全に一致しているとは言えず、またスコープに反する要素（ESAやArianeSpaceの言及）が含まれるため、サポートは不十分です。\", \"support\": \"unclear\", \"suitability\": \"legitimate\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "42cb82ba-43d6-4c32-9eb9-2e99cf23bbea",
+          "purpose": "check",
+          "state": "attention",
+          "reason": "提出された証拠では、打ち上げキャンペーンの準備と実施はNASA、ESA、Northrop Grumman、ArianeSpaceの共同責任であったと記載されています。アサートンではNASAとNorthrop Grummanの共同責任とされていますが、証拠にはESAとArianeSpaceも含まれており、指示されたスコープやエンドポイントの限定事項（NASAとNorthrop Grummanに限る）と完全に一致しないため、サポートはunclearとなります。意義のある知識であるため適合性はlegitimateです。",
+          "attempts": 1,
+          "candidate": {
+            "to": "",
+            "from": "",
+            "kind": "relation",
+            "quote": "The launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace.",
+            "scope": "Webbの打ち上げキャンペーンの準備と実施の共同責任。NASAからWebbへ、Northrop GrummanからWebbへの関係を、資料に明記された範囲で登録する。",
+            "locator": "Main text",
+            "objectId": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+            "polarity": "affirmed",
+            "relation": "打ち上げキャンペーンの準備と実施に責任を負う",
+            "timeKind": "none",
+            "assertion": "Northrop GrummanはWebb宇宙望遠鏡の打ち上げキャンペーンの準備と実施の共同責任を負う",
+            "subjectId": "new:2",
+            "timeLabel": "",
+            "timeQuote": ""
+          },
+          "attemptsDetail": [
+            {
+              "wire_digest": "5ebab34199a611cfac0036ec34f0e1069ca3fd52f877b0b608b5847ca88c7b22",
+              "model": "gemini-3.5-flash-lite",
+              "purpose": "collection-check",
+              "started_at": "2026-11-04T04:59:00.856Z",
+              "finished_at": "2026-11-04T04:59:03.486Z",
+              "input_actual": 715,
+              "candidates_actual": 126,
+              "thoughts_actual": null,
+              "output_reserved": 2048,
+              "response": {
+                "modelVersion": "gemini-3.5-flash-lite",
+                "usageMetadata": {
+                  "serviceTier": "standard",
+                  "totalTokenCount": 841,
+                  "promptTokenCount": 715,
+                  "promptTokensDetails": [
+                    {
+                      "modality": "TEXT",
+                      "tokenCount": 715
+                    }
+                  ],
+                  "candidatesTokenCount": 126
+                },
+                "content": "{\"reason\": \"提出された証拠では、打ち上げキャンペーンの準備と実施はNASA、ESA、Northrop Grumman、ArianeSpaceの共同責任であったと記載されています。アサートンではNASAとNorthrop Grummanの共同責任とされていますが、証拠にはESAとArianeSpaceも含まれており、指示されたスコープやエンドポイントの限定事項（NASAとNorthrop Grummanに限る）と完全に一致しないため、サポートはunclearとなります。意義のある知識であるため適合性はlegitimateです。\", \"support\": \"unclear\", \"suitability\": \"legitimate\"}"
+              }
+            }
+          ]
+        }
+      ],
+      "decisions": [],
+      "elapsedUntilChecksRecordedMs": 19414
+    },
+    {
+      "id": "1e10a831-bc2d-468a-8b71-800fc6415653",
+      "scope": "Webbの打ち上げキャンペーンの準備・実施について、NASAとNorthrop Grummanが共同で担った役割を、各組織からWebbへの関係として登録する。資料に書かれた共同責任の意味を保ち、ほかの参加者を否定しない。日付は追加しない。",
+      "target": {
+        "id": "u3:a508eb51cfd248dd:theme",
+        "kind": "theme",
+        "revision": 1
+      },
+      "policy": "collection-reading-v1",
+      "state": "active",
+      "created_at": "2026-11-04T05:08:13.760Z",
+      "tasks": [
+        {
+          "id": "1424b8f2-2d24-4a67-8f9f-67f737a9c6b3",
+          "purpose": "read",
+          "state": "done",
+          "reason": "",
+          "attempts": 1,
+          "candidate": null,
+          "attemptsDetail": [
+            {
+              "wire_digest": "09ac08476c315d5045c8ac204297cec1f4989904c1af514d24317193ce1f0b29",
+              "model": "gemini-3.5-flash-lite",
+              "purpose": "collection-read",
+              "started_at": "2026-11-04T05:08:14.774Z",
+              "finished_at": "2026-11-04T05:08:23.850Z",
+              "input_actual": 2271,
+              "candidates_actual": 326,
+              "thoughts_actual": null,
+              "output_reserved": 2048,
+              "response": {
+                "modelVersion": "gemini-3.5-flash-lite",
+                "usageMetadata": {
+                  "serviceTier": "standard",
+                  "totalTokenCount": 2597,
+                  "promptTokenCount": 2271,
+                  "promptTokensDetails": [
+                    {
+                      "modality": "TEXT",
+                      "tokenCount": 2271
+                    }
+                  ],
+                  "candidatesTokenCount": 326
+                },
+                "content": "{\n  \"reason\": \"Extracted the new entity Northrop Grumman and a record for its role in the launch campaign.\",\n  \"records\": [\n    {\n      \"to\": \"\",\n      \"from\": \"\",\n      \"kind\": \"relation\",\n      \"quote\": \"The launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace.\",\n      \"scope\": \"jointly with others\",\n      \"locator\": \"Main text\",\n      \"objectId\": \"u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726\",\n      \"polarity\": \"affirmed\",\n      \"relation\": \"打ち上げキャンペーンの準備と実施を共同で担う\",\n      \"timeKind\": \"none\",\n      \"assertion\": \"Northrop GrummanはWebb宇宙望遠鏡の打ち上げキャンペーンの準備と実施を共同で担った。\",\n      \"subjectId\": \"new:1\",\n      \"timeLabel\": \"\",\n      \"timeQuote\": \"\"\n    }\n  ],\n  \"entities\": [\n    {\n      \"key\": \"new:1\",\n      \"kind\": \"組織\",\n      \"name\": \"Northrop Grumman\",\n      \"quote\": \"The launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace.\"\n    }\n  ]\n}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "6e8843b7-b8f2-473b-820b-2df8c4480c71",
+          "purpose": "check",
+          "state": "done",
+          "reason": "登録しました。検索・図へ反映しています。",
+          "attempts": 1,
+          "candidate": {
+            "to": "",
+            "from": "",
+            "kind": "relation",
+            "quote": "The launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace.",
+            "scope": "jointly with others",
+            "locator": "Main text",
+            "objectId": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+            "polarity": "affirmed",
+            "relation": "打ち上げキャンペーンの準備と実施を共同で担う",
+            "timeKind": "none",
+            "assertion": "Northrop GrummanはWebb宇宙望遠鏡の打ち上げキャンペーンの準備と実施を共同で担った。",
+            "subjectId": "new:1",
+            "timeLabel": "",
+            "timeQuote": ""
+          },
+          "attemptsDetail": [
+            {
+              "wire_digest": "3fc0dae3c65479c8cd291b69a689812696f48792cc96df0de7a4dd7cde43e21a",
+              "model": "gemini-3.5-flash-lite",
+              "purpose": "collection-check",
+              "started_at": "2026-11-04T05:08:29.059Z",
+              "finished_at": "2026-11-04T05:08:30.614Z",
+              "input_actual": 743,
+              "candidates_actual": 97,
+              "thoughts_actual": null,
+              "output_reserved": 2048,
+              "response": {
+                "modelVersion": "gemini-3.5-flash-lite",
+                "usageMetadata": {
+                  "serviceTier": "standard",
+                  "totalTokenCount": 840,
+                  "promptTokenCount": 743,
+                  "promptTokensDetails": [
+                    {
+                      "modality": "TEXT",
+                      "tokenCount": 743
+                    }
+                  ],
+                  "candidatesTokenCount": 97
+                },
+                "content": "{\"reason\": \"提供された抜粋には、NASA、ESA、Northrop Grumman、ArianeSpaceの4者が共同で打ち上げキャンペーンの準備と実施を担ったことが明記されており、Northrop GrummanがWebb宇宙望遠鏡の打ち上げキャンペーンの準備と実施を共同で担ったという主張は完全に支持されている。内容も意味のある知識であり、適切である。\", \"support\": \"supported\", \"suitability\": \"legitimate\"}"
+              }
+            }
+          ]
+        }
+      ],
+      "decisions": [
+        {
+          "state": "applied",
+          "reason": "",
+          "record": {
+            "id": "collection-record:673bb0541d4ff449bbbd985e86ef8204",
+            "content": {
+              "kind": "relation",
+              "scope": "jointly with others",
+              "times": [],
+              "evidence": [
+                {
+                  "id": "source-quote",
+                  "source": {
+                    "id": "collection-source:39b7c227-8276-4789-bbfe-2cc225a6ca9f",
+                    "revision": 1
+                  },
+                  "stance": "support",
+                  "excerpt": "pter: comprised of the Cone 3936 plus the ACU 2624 lower cylinder and clamp-band, which provided the separating mechanical and electrical interface between the Webb Observatory and the Launch Vehicle. Launch campaign preparation and launch campaign. The launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace. On Friday 17 December, the Ariane 5 rocket fairing was closed around the James Webb Space Telescope. This protective fairing, or ‘nose cone’, will shield the telescope during liftoff and its journey through the atmosphere on 24 December. ESA/CNES/Ar",
+                  "locator": "Main text"
+                }
+              ],
+              "objectId": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+              "polarity": "affirmed",
+              "relation": "打ち上げキャンペーンの準備と実施を共同で担う",
+              "assertion": "Northrop GrummanはWebb宇宙望遠鏡の打ち上げキャンペーンの準備と実施を共同で担った。",
+              "subjectId": "collection-entity:d92c32e504cdbd8d604135d66a0bc7bd",
+              "aboutTheme": "u3:a508eb51cfd248dd:theme"
+            }
+          }
+        }
+      ],
+      "elapsedUntilChecksRecordedMs": 16854
+    },
+    {
+      "id": "1368606a-b189-4417-bb71-35846022067b",
+      "scope": "Northrop GrummanがNASAと共同でWebbの打ち上げキャンペーンの準備・実施に責任を担ったという、両組織の関係を登録する。ほかの共同参加者がいないとはしない。時期は追加しない。",
+      "target": {
+        "id": "collection-entity:d92c32e504cdbd8d604135d66a0bc7bd",
+        "kind": "entity",
+        "revision": 1
+      },
+      "policy": "collection-reading-v1",
+      "state": "active",
+      "created_at": "2026-11-04T05:12:39.000Z",
+      "tasks": [
+        {
+          "id": "1be55133-05ed-4aec-9e76-50d4a59ec0f2",
+          "purpose": "read",
+          "state": "done",
+          "reason": "",
+          "attempts": 1,
+          "candidate": null,
+          "attemptsDetail": [
+            {
+              "wire_digest": "7c1309eea26428389f71229800c7509154e0cea4a59bef1a7fe4375309544f64",
+              "model": "gemini-3.5-flash-lite",
+              "purpose": "collection-read",
+              "started_at": "2026-11-04T05:12:44.018Z",
+              "finished_at": "2026-11-04T05:12:46.388Z",
+              "input_actual": 2030,
+              "candidates_actual": 376,
+              "thoughts_actual": null,
+              "output_reserved": 2048,
+              "response": {
+                "modelVersion": "gemini-3.5-flash-lite",
+                "usageMetadata": {
+                  "serviceTier": "standard",
+                  "totalTokenCount": 2406,
+                  "promptTokenCount": 2030,
+                  "promptTokensDetails": [
+                    {
+                      "modality": "TEXT",
+                      "tokenCount": 2030
+                    }
+                  ],
+                  "candidatesTokenCount": 376
+                },
+                "content": "{\n  \"reason\": \"The source text states that the launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and Arianespace. Since Northrop Grumman is an existing entity, we can create a relation connecting it to a new entity NASA, but we only have space for one record or need to check if NASA is registered. Wait, NASA is not in entities list, so we can declare NASA as new:1.\",\n  \"records\": [\n    {\n      \"to\": \"\",\n      \"from\": \"\",\n      \"kind\": \"relation\",\n      \"quote\": \"The launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace.\",\n      \"scope\": \"jointly with others\",\n      \"locator\": \"Components\",\n      \"objectId\": \"new:1\",\n      \"polarity\": \"affirmed\",\n      \"relation\": \"共同で責任を担った\",\n      \"timeKind\": \"none\",\n      \"assertion\": \"Northrop GrummanはNASAと共同で打ち上げキャンペーンの準備と実施の責任を担った。\",\n      \"subjectId\": \"collection-entity:d92c32e504cdbd8d604135d66a0bc7bd\",\n      \"timeLabel\": \"\",\n      \"timeQuote\": \"\"\n    }\n  ],\n  \"entities\": [\n    {\n      \"key\": \"new:1\",\n      \"kind\": \"組織\",\n      \"name\": \"NASA\",\n      \"quote\": \"The launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace.\"\n    }\n  ]\n}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "ab831afc-a271-47a2-9a40-67357a952b7d",
+          "purpose": "check",
+          "state": "done",
+          "reason": "登録しました。検索・図へ反映しています。",
+          "attempts": 1,
+          "candidate": {
+            "to": "",
+            "from": "",
+            "kind": "relation",
+            "quote": "The launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace.",
+            "scope": "jointly with others",
+            "locator": "Components",
+            "objectId": "new:1",
+            "polarity": "affirmed",
+            "relation": "共同で責任を担った",
+            "timeKind": "none",
+            "assertion": "Northrop GrummanはNASAと共同で打ち上げキャンペーンの準備と実施の責任を担った。",
+            "subjectId": "collection-entity:d92c32e504cdbd8d604135d66a0bc7bd",
+            "timeLabel": "",
+            "timeQuote": ""
+          },
+          "attemptsDetail": [
+            {
+              "wire_digest": "1198966d24abdbded1d6e738dcb17b8ee6bb0a38e378ec5ce453b04c9e329ed8",
+              "model": "gemini-3.5-flash-lite",
+              "purpose": "collection-check",
+              "started_at": "2026-11-04T05:12:51.601Z",
+              "finished_at": "2026-11-04T05:12:57.826Z",
+              "input_actual": 710,
+              "candidates_actual": 83,
+              "thoughts_actual": null,
+              "output_reserved": 2048,
+              "response": {
+                "modelVersion": "gemini-3.5-flash-lite",
+                "usageMetadata": {
+                  "serviceTier": "standard",
+                  "totalTokenCount": 793,
+                  "promptTokenCount": 710,
+                  "promptTokensDetails": [
+                    {
+                      "modality": "TEXT",
+                      "tokenCount": 710
+                    }
+                  ],
+                  "candidatesTokenCount": 83
+                },
+                "content": "{\"reason\": \"提供された抜粋には「Launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace」と記載されており、Northrop GrummanとNASAが共同で責任を担っていたことが明示されているため、主張は支持されます。意味のある知識であり、適切です。\", \"support\": \"supported\", \"suitability\": \"legitimate\"}"
+              }
+            }
+          ]
+        }
+      ],
+      "decisions": [
+        {
+          "state": "applied",
+          "reason": "",
+          "record": {
+            "id": "collection-record:4a7a04fa46188157b26ceb6bd0b71111",
+            "content": {
+              "kind": "relation",
+              "scope": "jointly with others",
+              "times": [],
+              "evidence": [
+                {
+                  "id": "source-quote",
+                  "source": {
+                    "id": "collection-source:39b7c227-8276-4789-bbfe-2cc225a6ca9f",
+                    "revision": 1
+                  },
+                  "stance": "support",
+                  "excerpt": "pter: comprised of the Cone 3936 plus the ACU 2624 lower cylinder and clamp-band, which provided the separating mechanical and electrical interface between the Webb Observatory and the Launch Vehicle. Launch campaign preparation and launch campaign. The launch campaign preparation and launch campaign were the mutual responsibility of NASA, ESA, Northrop Grumman and ArianeSpace. On Friday 17 December, the Ariane 5 rocket fairing was closed around the James Webb Space Telescope. This protective fairing, or ‘nose cone’, will shield the telescope during liftoff and its journey through the atmosphere on 24 December. ESA/CNES/Ar",
+                  "locator": "Components"
+                }
+              ],
+              "objectId": "collection-entity:f0a87c0a105bdf0fb1d92e86b5632642",
+              "polarity": "affirmed",
+              "relation": "共同で責任を担った",
+              "assertion": "Northrop GrummanはNASAと共同で打ち上げキャンペーンの準備と実施の責任を担った。",
+              "subjectId": "collection-entity:d92c32e504cdbd8d604135d66a0bc7bd"
+            }
+          }
+        }
+      ],
+      "elapsedUntilChecksRecordedMs": 18826
+    }
+  ],
+  "usage": [
+    {
+      "purpose": "collection-check",
+      "input": 2877,
+      "outputreservedoractual": 8192,
+      "candidates": 403,
+      "unknownthoughtcalls": 4,
+      "attempts": 4,
+      "requestsCharged": 4
+    },
+    {
+      "purpose": "collection-evaluation",
+      "input": 8162,
+      "outputreservedoractual": 30720,
+      "candidates": 1980,
+      "unknownthoughtcalls": 15,
+      "attempts": 15,
+      "requestsCharged": 15
+    },
+    {
+      "purpose": "collection-read",
+      "input": 8686,
+      "outputreservedoractual": 8192,
+      "candidates": 1870,
+      "unknownthoughtcalls": 4,
+      "attempts": 4,
+      "requestsCharged": 4
+    },
+    {
+      "purpose": "evaluation",
+      "input": 15682,
+      "outputreservedoractual": 71680,
+      "candidates": null,
+      "unknownthoughtcalls": 35,
+      "attempts": 35,
+      "requestsCharged": 35
+    },
+    {
+      "purpose": "submission",
+      "input": 11299,
+      "outputreservedoractual": 24576,
+      "candidates": 535,
+      "unknownthoughtcalls": 14,
+      "attempts": 14,
+      "requestsCharged": 12
+    }
+  ],
+  "oldThemeContentPreserved": true,
+  "themeRevisions": [
+    1,
+    2
+  ],
+  "capture": {
+    "url": "https://science.nasa.gov/mission/webb/launch/",
+    "body_sha256": "aca6433ca333f34b5f42cd5f5a3ba8cb84e507a83ea9a305176f5ce87559aa42",
+    "text_sha256": "0a3d60a43855ef296816d749776421a5d47ab0f2dde39c6afac686b21337dd70",
+    "fetched_at": "2026-11-03T23:49:45.856Z",
+    "bytes": 317079
+  }
+}
