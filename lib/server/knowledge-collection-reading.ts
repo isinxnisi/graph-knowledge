@@ -4,10 +4,10 @@ import path from 'node:path';
 import type {Pool,PoolClient,QueryResultRow} from 'pg';
 import {readingOperatorSchema,readingWorkerSchema,READING_POLICY,sourceChunks,type ReadingLease} from '../domain/knowledge-collection-reading';
 import {createKnowledgeFoundationService,knowledgeDigest,KnowledgeError} from './knowledge-foundation';
-import {readingPlans,readingRequest,readingProblemMessage,type ReadingContext} from './knowledge-collection-plan';
+import {readingPlans,readingRequest,readingCheckRequest,readingProblemMessage,type ReadingContext} from './knowledge-collection-plan';
 import {verifyAcceptanceReferences} from './knowledge-acceptance';
 import {normalizeSourceText,sourceText,SourceCheckError} from './knowledge-source-verification';
-import {geminiReviewRequest,parseGeminiJson,parseGeminiReview} from './gemini-knowledge-review';
+import {parseGeminiJson,parseGeminiReview} from './gemini-knowledge-review';
 import {reserveKnowledgeAI} from './knowledge-ai-budget';
 import type {ReviewConfig} from './knowledge-review-queue';
 import {memberTransaction} from './member/operations';
@@ -51,7 +51,7 @@ export function createCollectionReading(pool:Pool,knowledge:Pool,cfg:ReviewConfi
   const s=await source(c,t.source_id);const plans=readingPlans(raw,j.context,{id:'collection-source:'+s.id,title:s.url,url:s.document.url,text:s.document.text,bodySha256:s.body_sha256,textSha256:s.text_sha256},j.id);
   for(const plan of plans){const id=randomUUID();if(plan.state==='attention'){await c.query("INSERT INTO knowledge_collection.read_tasks(id,job_id,source_id,purpose,content,state,reason) VALUES($1,$2,$3,'check',$4,'attention',$5)",[id,j.id,t.source_id,{candidate:plan.candidate},plan.reason]);continue;}
    if((await c.query("SELECT 1 FROM knowledge_collection.read_tasks WHERE job_id=$1 AND purpose='check' AND content->'command'->'record'->>'id'=$2",[j.id,plan.command.action==='accept-record'?plan.command.record.id:''])).rowCount)continue;
-   const request=geminiReviewRequest(plan.review);request.systemInstruction.parts[0].text+=' A relation must explicitly relate BOTH endpoints; a duration is a time annotation, not a relation named duration/lasted between a person and a period. Episode/note is about one subject. Additionally require relevance to the requested collection scope, correct endpoint identity, no invented precision or membership. Unclear identity/relevance => support unclear. Scope: '+j.scope;
+   const request=readingCheckRequest(plan.review,j.scope);
    await c.query("INSERT INTO knowledge_collection.read_tasks(id,job_id,source_id,purpose,content) VALUES($1,$2,$3,'check',$4)",[id,j.id,t.source_id,{command:plan.command,request,candidate:plan.candidate}]);
   }return {candidates:plans.length,reason:!plans.length?'この資料では登録する項目がありませんでした。':''};
  }

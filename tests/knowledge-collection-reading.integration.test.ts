@@ -10,6 +10,7 @@ import * as auth from '../app/api/auth/[...all]/route';import * as profile from 
 import * as operator from '../app/api/site-operations/collection-reading/route';import * as worker from '../app/api/knowledge-collection/reading-worker/route';
 import {createKnowledgeFoundationService} from '../lib/server/knowledge-foundation';
 import {createCollectionReading} from '../lib/server/knowledge-collection-reading';
+import {quotaDate} from '../lib/server/knowledge-ai-budget';
 import {createReviewQueue,reviewConfigSchema} from '../lib/server/knowledge-review-queue';
 import {createCollectionReader} from '../scripts/knowledge-collection-reader';
 import type {ReadingOutput,ReadingLease} from '../lib/domain/knowledge-collection-reading';
@@ -75,10 +76,10 @@ describe('fixed captured reading through authenticated API and durable publicati
   const current=await foundation.resolveTheme({kind:'reader',id:'test'},theme),old=await foundation.resolveTheme({kind:'reader',id:'test'},theme,1);expect(current.theme.revision).toBe(2);expect(current.snapshot.records).toHaveLength(2);expect(old.snapshot.records).toHaveLength(1);expect(current.theme.content.timeline?.placements).toHaveLength(1);
  });
  it('uses global submission usage and leaves a collection-only daily ceiling',async()=>{
-  await intake();await pool().query("UPDATE member_knowledge.review_attempts SET request_charge=1,purpose='submission',quota_day=current_date WHERE id IN(SELECT id FROM member_knowledge.review_attempts LIMIT 1)");
+  await intake();const day=quotaDate(new Date()),month=day.slice(0,7),limit=Math.floor(cfg.requestsPerDay/3);await pool().query("UPDATE member_knowledge.review_attempts SET request_charge=1,purpose='submission',quota_day=$1,quota_month=$2 WHERE id IN(SELECT id FROM member_knowledge.review_attempts LIMIT 1)",[day,month]);
   const old=cfg.requestsPerDay;cfg.requestsPerDay=1;try{await expect(core.worker('direct',{action:'claim',requestId:randomUUID()})).rejects.toThrow('configuration differs');}finally{cfg.requestsPerDay=old;}
-  const seed=(await pool().query('SELECT * FROM member_knowledge.review_attempts LIMIT 1')).rows[0];for(let i=0;i<20;i++)await pool().query("INSERT INTO member_knowledge.review_attempts(id,project_id,provider,model,policy,purpose,state,quota_day,quota_month,input_reserved,output_reserved,input_actual,output_actual,started_at) VALUES($1,$2,'gemini',$3,$4,'collection-read','received',$5,$6,1,1,1,1,clock_timestamp()-interval '2 minutes')",[randomUUID(),cfg.projectId,cfg.model,'test',seed.quota_day,seed.quota_month]);
-  expect(await claim()).toBeNull();expect((await pool().query("SELECT reason FROM knowledge_collection.read_tasks WHERE state='quota' ORDER BY created_at DESC LIMIT 1")).rows[0].reason).toContain('投稿確認の枠');
+  for(let i=0;i<limit-1;i++)await pool().query("INSERT INTO member_knowledge.review_attempts(id,project_id,provider,model,policy,purpose,state,quota_day,quota_month,input_reserved,output_reserved,input_actual,output_actual,started_at) VALUES($1,$2,'gemini',$3,$4,'collection-read','received',$5,$6,1,1,1,1,clock_timestamp()-interval '2 minutes')",[randomUUID(),cfg.projectId,cfg.model,'test',day,month]);
+  expect(await claim()).not.toBeNull();await intake();expect(await claim()).toBeNull();expect((await pool().query("SELECT reason FROM knowledge_collection.read_tasks WHERE state='quota' ORDER BY created_at DESC LIMIT 1")).rows[0].reason).toContain('投稿確認の枠');
  });
  it('replays lost completion acknowledgement without another model request',async()=>{
   await intake();const state=path.join(temporary,'client');await mkdir(state,{mode:0o700});let calls=0,lost=true;const client=createCollectionReader(state,async b=>{const r=await work(b);if(!r.ok)throw Error('API rejected '+r.status);const data=await r.json();if(b.action==='complete'&&lost){lost=false;throw Error('Lost ACK');}return data;},async()=>{calls++;return {state:'received' as const,status:200,raw:extraction([])};});

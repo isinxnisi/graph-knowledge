@@ -21,7 +21,7 @@ export async function reserveKnowledgeAI(c:PoolClient,cfg:ReviewConfig,input:{pu
  if(project.paused_until&&new Date(project.paused_until)>now){wait=new Date(project.paused_until);reason=project.pause_reason;}
  else if(usage.day_requests>=cfg.requestsPerDay||Number(usage.day_input)+inputReserved>cfg.inputTokensPerDay||Number(usage.day_output)+outputReserved>cfg.outputTokensPerDay){wait=nextQuotaDay(now);reason='本日の無料利用枠を待っています。';}
  else if(usage.month_requests>=cfg.requestsPerMonth||Number(usage.month_input)+inputReserved>cfg.inputTokensPerMonth||Number(usage.month_output)+outputReserved>cfg.outputTokensPerMonth){wait=nextQuotaMonth(now);reason='今月の利用枠を待っています。';}
- else if(input.purpose!=='submission'&&(usage.collection_requests>=Math.min(20,Math.floor(cfg.requestsPerDay/3))||usage.collection_month_requests>=Math.floor(cfg.requestsPerMonth/3))){wait=usage.collection_month_requests>=Math.floor(cfg.requestsPerMonth/3)?nextQuotaMonth(now):nextQuotaDay(now);reason='収集用の利用枠を待っています。投稿確認の枠を残しています。';}
+ else if(input.purpose!=='submission'&&(usage.collection_requests>=Math.floor(cfg.requestsPerDay/3)||usage.collection_month_requests>=Math.floor(cfg.requestsPerMonth/3))){wait=usage.collection_month_requests>=Math.floor(cfg.requestsPerMonth/3)?nextQuotaMonth(now):nextQuotaDay(now);reason='収集用の利用枠を待っています。投稿確認の枠を残しています。';}
  else if(usage.minute_requests>=cfg.rpm||Number(usage.minute_input)+inputReserved>cfg.tokensPerMinute){wait=new Date(now.getTime()+61000);reason='利用が集中しています。順番に確認します。';}
  else if(usage.last_start){const after=new Date(new Date(usage.last_start).getTime()+Math.ceil(60000/cfg.rpm)+100);if(after>now){wait=after;reason='順番に確認しています。';}}
  if(wait)return {state:'wait' as const,wait,reason};
