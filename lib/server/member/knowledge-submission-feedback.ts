@@ -64,7 +64,7 @@ export function createMemberSubmissionFeedback(pool:Pool,origin:string,owner:(re
      LEFT JOIN LATERAL (SELECT max(e.id)::text AS cursor FROM member_knowledge.feedback_events e WHERE e.job_id=j.id) event ON true
      WHERE s.id=$1 AND s.owner_id=$2 ORDER BY j.created_at,j.item_key`,[submissionId,user.id,revision])).rows;
     const seed=rows[0];if(!seed)throw new MemberError(404,'NOT_FOUND');
-    const content=z.object({title:z.string(),items:z.array(z.object({key:z.string(),record:z.object({assertion:z.string()})}))}).parse(seed.content);
+    const content=z.object({title:z.string(),items:z.array(z.object({key:z.string(),operation:z.string().optional(),translation:z.object({text:z.string()}).optional(),record:z.object({assertion:z.string()})}))}).parse(seed.content);
     let eventCursor:string|null=null;
     for(const row of rows)if(row.cursor&&(eventCursor===null||BigInt(row.cursor)>BigInt(eventCursor)))eventCursor=row.cursor;
     const sorted=rows.filter(row=>row.job_id).sort((a,b)=>content.items.findIndex(item=>item.key===a.item_key)-content.items.findIndex(item=>item.key===b.item_key));
