@@ -7,7 +7,7 @@ import {reviewEnabledFor} from '../knowledge-review-queue';
 import {assertMemberOrigin,memberInput,memberJson,MemberError} from './http';
 export function createMemberTranslationGeneration(pool:Pool,origin:string,owner:(r:Request)=>Promise<{id:string}>){
  let queue:ReturnType<typeof createTranslationGeneration>|undefined;
- const service=()=>queue??=createTranslationGeneration(pool,new PgPool({connectionString:knowledgeReadConfiguration().databaseUrl,max:2}));
+ const service=()=>queue??=createTranslationGeneration(pool,new PgPool({connectionString:knowledgeReadConfiguration().databaseUrl,max:2,options:'-c default_transaction_read_only=on'}));
  return {
   queue:service,
   async command(request:Request){assertMemberOrigin(request,origin);if(!request.headers.has('x-member-user'))throw new MemberError(400,'INVALID_ARGUMENT');const user=await owner(request);if(!reviewEnabledFor(user.id)||process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED!=='1')throw new MemberError(404,'NOT_FOUND');

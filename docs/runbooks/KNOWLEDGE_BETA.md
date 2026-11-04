@@ -157,3 +157,14 @@ Dockerのport proxyが開いただけではDB readyではない。Neo4jのStarte
 PGも同時停止した場合、TOPだけで完了とせずpublisher/reviewer/capture/readerのPIDの生存・cwd・cmdlineを確認する。今回はpublisher/reviewerだけ終了していた。Web稼働中にbeta起動を重ねず、受入済みmainのlauncher関数を同じstart.lock内で呼び、既存Webの実効設定とprivate profileから不足Workerだけ復帰した。資格・checkpointを再生成せず、未完了jobや利用量台帳を消さない。生存Workerは既存の所有確認により二重起動しない。
 
 この手順は通常KG DBの復帰だけで、Docker全体や共通Kev・他projectを再起動する指示ではない。復旧用Cloudflaredのrestart=noは既存方針のまま、必要時は上記tunnel手順を使う。
+
+
+## 明示依頼の翻訳生成：追加029
+
+既存の両DBをfresh dumpし、別DBへの復元・旧62表のfingerprint・追加029の適用と再実行不変を確認する。会員側は Node24 の `scripts/member-migrate.ts --translation-generation --confirm-origin https://graph-beta.isinxnisi.com` で000〜029の30件を照合する。知識側001/002/004/005は保持し、新しいmigrationは加えない。Webの公開原文読取接続はread-only、生成queueとusageだけが会員DBを更新する。
+
+既存review workerが投稿確認を優先し、空きで生成を処理する。同じ無料project・profile・鍵・launcherを使い、新しい予定や共有Kev変更は不要。翻訳生成と生成評価は合算で日/月の1/6以下（現profileは13回/日・400回/月）、投稿確認は全体枠内で継続する。回数と入力・出力・推論・cache・欠測予約は用途/方針別に既存 `knowledge-review-worker.ts --status` で確認できる。欠測を0として台帳を消さない。
+
+生成中の応答はattemptへ保存してから確定する。再開は同じWeb/review workerのlauncherを使い、期限切れleaseの保存応答を再利用する。通信結果不明は二分以上あけ最大三回。公開停止・原文版変更は再利用不可、DB一時障害は原文失効と扱わない。手入力の訳文投稿がfallbackになる。有料APIや別キーへ自動切替しない。
+
+切替時、Webの親wrapperだけでなく、同じcwdと既知cmdlineの子Next processが終了したことをポートで確認する。今回一度終了待ちが残ったため、所有を確認した旧Webだけを停止してから再開した。無関係な3276・共通Kev・他プロジェクトは停止しない。029対応の資材で復旧し、旧dumpでliveを上書きしない。
