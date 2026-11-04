@@ -74,7 +74,7 @@ function seed(title:string,state:KnowledgeSubmission['state']='draft'){
 }
 it('separates lifecycle and unread results in the list and opens the exact older unread receipt',async()=>{
  seed('下書きの人物');seed('取消した人物','cancelled');const id=seed('公開済みの人物','queued');reviewCounts.set(id,{published:1});mocked.unread=[id];render(<KnowledgeSubmissions/>);
- await screen.findByText('公開済みの人物');expect(screen.getByText('草稿',{exact:true})).toBeTruthy();expect(screen.getByText('取消済み',{exact:true})).toBeTruthy();expect(screen.getByText('公開しました',{exact:true})).toBeTruthy();
+ await screen.findByText('公開済みの人物');expect(screen.getByText('草稿',{exact:true})).toBeTruthy();expect(screen.queryByText('取消済み',{exact:true})).toBeNull();expect(screen.getByText('公開しました',{exact:true})).toBeTruthy();fireEvent.click(screen.getByRole('button',{name:'取消済み 1'}));expect(screen.getByText('取消した人物')).toBeTruthy();expect(screen.queryByText('下書きの人物')).toBeNull();
  fireEvent.click(screen.getByRole('button',{name:'未読の結果 1'}));expect(screen.queryByText('下書きの人物')).toBeNull();
  fireEvent.click(screen.getByRole('button',{name:'公開済みの人物・未読の結果を見る'}));await screen.findByRole('region',{name:'投稿の編集'});
  expect(new URLSearchParams(location.search).get('receipt')).toBe('1');expect(new URLSearchParams(location.search).get('id')).toBe(id);expect(sent).toHaveLength(0);
@@ -113,3 +113,14 @@ it('shows the correction search again when switching away from a previously sele
 it('explains missing evidence without exposing a schema error or suggesting a reload of a saved draft',async()=>{await start();fireEvent.change(screen.getByRole('textbox',{name:'人物・作品の名前'}),{target:{value:'資料待ちの草稿'}});fact('入力した事実は保持します。');fireEvent.click(screen.getByRole('button',{name:'草稿を保存'}));await screen.findByText('草稿を保存しました。');consent();fireEvent.click(screen.getByRole('button',{name:'知識を届ける'}));const alert=await screen.findByRole('alert');expect(alert.textContent).toContain('項目1：公開するには、事実を確かめた資料を1件以上追加してください。');expect(alert.textContent).not.toMatch(/Too small|expected array|items/);expect(within(alert).queryByRole('button',{name:'最新の保存版を読み直す'})).toBeNull();expect(screen.getByRole('textbox',{name:'登録する事実'})).toHaveProperty('value','入力した事実は保持します。');expect(sent.map(v=>v.action)).toEqual(['save']);expect(screen.queryByText('草稿を保存しました。')).toBeNull();fireEvent.click(screen.getByRole('button',{name:'投稿を取り消す'}));expect(within(screen.getByRole('dialog')).queryByText(/公開するには、事実を確かめた資料/)).toBeNull();});
 
 it('offers the saved revision only for a real update conflict while retaining the unsaved input',async()=>{await start();fireEvent.change(screen.getByRole('textbox',{name:'人物・作品の名前'}),{target:{value:'競合の確認'}});fact('保存した事実。');fireEvent.click(screen.getByRole('button',{name:'草稿を保存'}));await screen.findByText('草稿を保存しました。');fact('まだ保存していない入力。');conflictNext=true;fireEvent.click(screen.getByRole('button',{name:'草稿を保存'}));const alert=await screen.findByRole('alert');expect(alert.textContent).toContain('別の操作で更新');expect(within(alert).getByRole('button',{name:'最新の保存版を読み直す'})).toBeTruthy();expect(screen.getByRole('textbox',{name:'登録する事実'})).toHaveProperty('value','まだ保存していない入力。');});
+
+it('keeps cancelled submissions out of the normal list while retaining their unread results and direct history',async()=>{
+ seed('通常の草稿');const id=seed('取消後にも残る結果','cancelled');mocked.unread=[id];render(<KnowledgeSubmissions/>);
+ const list=await screen.findByRole('list',{name:'投稿一覧'});await screen.findByRole('button',{name:'通常の草稿'});expect(within(list).queryByText('取消後にも残る結果')).toBeNull();
+ fireEvent.click(screen.getByRole('button',{name:'未読の結果 1'}));expect(screen.getByRole('button',{name:'取消後にも残る結果・未読の結果を見る'})).toBeTruthy();expect(screen.queryByRole('button',{name:'通常の草稿'})).toBeNull();
+ fireEvent.click(screen.getByRole('button',{name:'取消済み 1'}));expect(screen.getByRole('button',{name:'未読の結果 1'}).getAttribute('aria-pressed')).toBe('false');expect(screen.getByRole('button',{name:'取消済み 1'}).getAttribute('aria-pressed')).toBe('true');
+ act(()=>{navigatePersonalList(new URL('/member/submissions',location.href));});await screen.findByRole('button',{name:'通常の草稿'});expect(within(list).queryByText('取消後にも残る結果')).toBeNull();
+});
+it('does not describe an all-cancelled history as having no submissions and preserves access to it',async()=>{
+ seed('過去の取消','cancelled');render(<KnowledgeSubmissions/>);await screen.findByText('通常の投稿はありません。取消済みは上の「取消済み」から確認できます。');expect(screen.queryByText(/まだ投稿はありません/)).toBeNull();fireEvent.click(screen.getByRole('button',{name:'取消済み 1'}));expect(screen.getByRole('button',{name:'過去の取消'})).toBeTruthy();
+});
