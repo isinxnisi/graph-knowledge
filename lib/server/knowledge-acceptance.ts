@@ -228,7 +228,7 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
     if(prior&&j.state==='verifying'&&new Date(prior.lease_until)>new Date()||prior&&j.state==='source-retry'&&new Date(prior.not_before)>new Date())return null;
     if(prior?.attempts>=3){await c.query("UPDATE member_knowledge.review_jobs SET state='attention',reason='原資料の接続を3回試しました。資料URLを確認してください。' WHERE id=$1",[j.id]);return null;}
     await c.query("INSERT INTO member_knowledge.source_checks(job_id,attempts,token,lease_until) VALUES($1,1,$2,clock_timestamp()+interval '180 seconds') ON CONFLICT(job_id) DO UPDATE SET attempts=source_checks.attempts+1,token=$2,lease_until=clock_timestamp()+interval '180 seconds'",[j.id,token]);
-    await c.query("UPDATE member_knowledge.review_jobs SET state='verifying',reason='原資料の本文と抜粋を照合しています。' WHERE id=$1",[j.id]);return {s,j};
+    await c.query("UPDATE member_knowledge.review_jobs SET state='verifying',reason=$2 WHERE id=$1",[j.id,s.content.items.some((i:{operation?:string})=>i.operation==='translate-text')?'原文と訳文の対象版・公開範囲を照合しています。':'原資料の本文と抜粋を照合しています。']);return {s,j};
    });if(!lease)continue;
    try{
     const value=material(lease.s),item=value.content.items.find(i=>i.key===lease.j.item_key)!;

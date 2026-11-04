@@ -47,7 +47,8 @@ export function createKnowledgeContributors(pool:Pool){
    const page=rows.slice(0,20);
    // One normal public KG read applies current visibility and dependency gates.
    // An accepted member-side receipt alone does not grant public readability.
-   const records=page.length?(await knowledge.graph({recordIds:[...new Set(page.filter(r=>r.operation!=='translate-text').map(r=>r.record_id as string))]})).records:[];
+   const factIds=[...new Set(page.filter(r=>r.operation!=='translate-text').map(r=>r.record_id as string))];
+   const records=factIds.length?(await knowledge.graph({recordIds:factIds})).records:[];
    const visible=new Map(records.map(r=>[r.record.id,r.record]));
     const translations=new Map<string,Awaited<ReturnType<typeof knowledge.translationById>>>();
     for(const r of page.filter(r=>r.operation==='translate-text')){try{translations.set(r.decision_id,await knowledge.translationById(r.record_id,r.record_revision));}catch{/* Public read excludes withdrawn originals and translations. */}}
@@ -60,6 +61,13 @@ export function createKnowledgeContributors(pool:Pool){
    const last=page.at(-1);return memberJson({available:true,activities,nextCursor:rows.length>20&&last?Buffer.from(JSON.stringify({handle:v.handle,time:last.published_time,id:last.decision_id})).toString('base64url'):null});
   }
   if(!v.id)throw new MemberError(400,'INVALID_ARGUMENT');
+  if(v.kind==='translation'){
+   const value=await knowledge.translationById(v.id,v.revision);
+   const rows=(await pool.query(columns+` WHERE c.published_at IS NOT NULL AND c.operation='translate-text' AND c.record_id=$1 AND c.record_revision<=$2 ORDER BY c.published_at,c.decision_id LIMIT 50`,[value.id,value.revision])).rows;
+   await knowledge.translationById(value.id,value.revision);
+   const fresh=(await pool.query(columns+` WHERE c.decision_id=ANY($1::uuid[]) AND c.published_at IS NOT NULL ORDER BY c.published_at,c.decision_id`,[rows.map(r=>r.decision_id)])).rows;
+   return memberJson({contributors:fresh.map(dto)});
+  }
   let selectedRevision=v.revision,themeRevision:number|undefined,themeRecords:Map<string,number>|null=null;
   const qualify=async()=>{
    if(v.kind==='record'){

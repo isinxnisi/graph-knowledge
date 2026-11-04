@@ -8,9 +8,10 @@ import {knowledgeSubmissionSchema} from "../lib/domain/knowledge-submission";
 import {buildKnowledgePublishedRecord} from "../lib/domain/knowledge-publication";
 import {captureKnowledgeCapsule} from "../lib/client/capsule-knowledge";
 import type {KnowledgeSnapshot} from "../lib/domain/knowledge-foundation";
+import {createKnowledgeContributors} from "../lib/server/member/knowledge-contributors";
 import {createKnowledgeAcceptance} from "../lib/server/knowledge-acceptance";
 import {migrateKnowledgeTranslations} from "../lib/server/knowledge-translation-migrate";
-import {readKnowledgeTextOriginal,readKnowledgeTranslation,createKnowledgeFoundationService} from "../lib/server/knowledge-foundation";
+import {readKnowledgeTranslationById,readKnowledgeTextOriginal,readKnowledgeTranslation,createKnowledgeFoundationService} from "../lib/server/knowledge-foundation";
 import {ensureKnowledgePublicationSchema} from "../lib/server/knowledge-publication";
 import {matchSourceExcerpt,SourceCheckError} from "../lib/server/knowledge-source-verification";
 import {REVIEW_CONSENT_VERSION,PUBLICATION_CONSENT_VERSION} from "../lib/domain/knowledge-review-job";
@@ -20,8 +21,8 @@ import {memberConfig} from "../lib/server/member/config";
 import {memberPool} from "../lib/server/member/auth";
 import {operateMember} from "../lib/server/member/operations";
 import {startMemberOidc} from "./support/member-oidc";
-const publicRead=vi.hoisted(()=>({dto:null as unknown,detail:null as null|((id:string)=>Promise<unknown>),entities:null as null|((id:string)=>Promise<unknown>),textOriginal:null as null|((target:unknown)=>Promise<unknown>),textTranslation:null as null|((target:unknown,language:string)=>Promise<unknown>)}));
-vi.mock("../lib/server/knowledge-publication-preview",()=>({knowledgePublicationPreview:async()=>({detail:async(q:{recordId:string})=>(publicRead.dto as {record?:{id:string}}|null)?.record?.id===q.recordId?({generation:"fixture",record:publicRead.dto}):publicRead.detail!(q.recordId),entities:async(q:{entityId:string})=>publicRead.entities!(q.entityId),textOriginal:async(t:unknown)=>publicRead.textOriginal!(t),textTranslation:async(t:unknown,l:string)=>publicRead.textTranslation!(t,l)})}));
+const publicRead=vi.hoisted(()=>({dto:null as unknown,detail:null as null|((id:string)=>Promise<unknown>),entities:null as null|((id:string)=>Promise<unknown>),translationById:null as null|((id:string,revision?:number)=>Promise<unknown>),textOriginal:null as null|((target:unknown)=>Promise<unknown>),textTranslation:null as null|((target:unknown,language:string)=>Promise<unknown>)}));
+vi.mock("../lib/server/knowledge-publication-preview",()=>({knowledgePublicationPreview:async()=>({detail:async(q:{recordId:string})=>(publicRead.dto as {record?:{id:string}}|null)?.record?.id===q.recordId?({generation:"fixture",record:publicRead.dto}):publicRead.detail!(q.recordId),entities:async(q:{entityId:string})=>publicRead.entities!(q.entityId),translationById:async(id:string,revision?:number)=>publicRead.translationById!(id,revision),textOriginal:async(t:unknown)=>publicRead.textOriginal!(t),textTranslation:async(t:unknown,l:string)=>publicRead.textTranslation!(t,l)})}));
 vi.mock("server-only",()=>({}));
 import {memberRuntime} from "../lib/server/member/runtime";
 import * as authRoute from "../app/api/auth/[...all]/route";
@@ -77,6 +78,7 @@ beforeAll(async()=>{
  fixture=await startMemberOidc();const pool=memberPool(config);
  const foundation=createKnowledgeFoundationService(acceptanceKnowledge);
  publicRead.detail=async id=>{const record=await foundation.get({kind:'reader',id:'public'},'record',id),all=await foundation.list({kind:'reader',id:'public'});return {generation:'fixture',record:buildKnowledgePublishedRecord(record,{entities:all.entities.filter(e=>e.id===record.content.subjectId||e.id===record.content.objectId),sources:all.sources.filter(source=>record.content.evidence.some(e=>e.source.id===source.id)),mappings:[]})};};
+ publicRead.translationById=async(id,revision)=>{const c=await acceptanceKnowledge.connect();try{return await readKnowledgeTranslationById(c,id,revision);}finally{c.release();}};
  publicRead.textOriginal=async target=>{const c=await acceptanceKnowledge.connect();try{return await readKnowledgeTextOriginal(c,target as import('../lib/domain/knowledge-translation').KnowledgeTextTarget,true);}finally{c.release();}};
  publicRead.textTranslation=async(target,language)=>{const c=await acceptanceKnowledge.connect();try{return await readKnowledgeTranslation(c,target as import('../lib/domain/knowledge-translation').KnowledgeTextTarget,language);}finally{c.release();}};
  publicRead.entities=async id=>({generation:'fixture',entities:[await foundation.get({kind:'reader',id:'public'},'entity',id)]});
@@ -290,6 +292,15 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
   expect(value.review.items[0]).toMatchObject({state:'published',publication:{revision:1,state:'published'}});
   expect((await foundation.get({kind:'reader',id:'test'},'record',rid)).revision).toBe(1);
   const contribution=(await memberRuntime().pool.query("SELECT operation,attribution FROM member_knowledge.publication_contributors WHERE submission_id=$1",[command.id])).rows[0];expect(contribution).toEqual({operation:'translate-text',attribution:'profile'});
+  const oldRuntime=process.env.KNOWLEDGE_RUNTIME,oldEnabled=process.env.KNOWLEDGE_PUBLICATION_ENABLED,oldOrigin=process.env.KNOWLEDGE_PUBLIC_ORIGIN;
+  process.env.KNOWLEDGE_RUNTIME='beta';process.env.KNOWLEDGE_PUBLICATION_ENABLED='1';process.env.KNOWLEDGE_PUBLIC_ORIGIN='https://graph-beta.isinxnisi.com';
+  try{
+   const url='https://graph-beta.isinxnisi.com/api/knowledge/contributors?'+new URLSearchParams({kind:'translation',id:value.review.items[0].publication.id,revision:'1'}),read=()=>createKnowledgeContributors(memberRuntime().pool).read(new Request(url,{headers:{host:'graph-beta.isinxnisi.com'}}));
+   const named=await (await read()).json();expect(named.contributors).toHaveLength(1);expect(named.contributors[0]).toMatchObject({operation:'translate-text',anonymous:false});expect(named.contributors[0].person.handle).toBeTruthy();
+   await memberRuntime().pool.query("UPDATE member_knowledge.publication_contributors SET attribution='anonymous',activity_public=false WHERE submission_id=$1",[command.id]);
+   expect((await (await read()).json()).contributors[0]).toMatchObject({anonymous:true,person:null});
+  }finally{process.env.KNOWLEDGE_RUNTIME=oldRuntime;process.env.KNOWLEDGE_PUBLICATION_ENABLED=oldEnabled;process.env.KNOWLEDGE_PUBLIC_ORIGIN=oldOrigin;}
+
  });
  it('publishes a new person with the submitted classification and a source-backed note',async()=>{
   const v=reviewContent();Object.assign(v,{entities:[{id:'new-person',content:{name:'架空の人物',kind:'人物',description:'',aliases:[],language:'ja'}}]});Object.assign(v.items[0].record,{subjectId:'new-person',assertion:'架空の人物はこの観測所の設立者。'});v.items[0].record.evidence[0].excerpt='架空の人物はこの観測所の設立者。';
