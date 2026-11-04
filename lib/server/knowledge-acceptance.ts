@@ -23,7 +23,7 @@ export async function ensureAcceptanceSchema(pool:Pool){
  const checksum=createHash('sha256').update(await readFile(path.join(process.cwd(),'db/member/022-knowledge-acceptance.sql'))).digest('hex');
  if((await pool.query("SELECT checksum FROM member_migration WHERE name='022-knowledge-acceptance.sql'")).rows[0]?.checksum!==checksum)throw new KnowledgeError('公開受理用の明示migrationが必要です',503,'MIGRATION_REQUIRED');
 }
-export type AcceptancePlan={command:KnowledgeCommand;references:{kind:'entity'|'source'|'record'|'theme';id:string;revision:number;content?:unknown;legacy?:boolean}[];recordId:string};
+export type AcceptancePlan={command:KnowledgeCommand;references:{kind:'entity'|'source'|'record'|'theme';id:string;revision:number;content?:unknown;legacy?:boolean}[];recordId:string;operation:NonNullable<KnowledgeSubmission['content']['items'][number]['operation']>};
 export function acceptancePlan(value:KnowledgeSubmission,key:string,decisionId:string,observedRecord?:{id:string;revision:number;content:unknown}):AcceptancePlan{
  const item=value.content.items.find(i=>i.key===key);if(!item)throw new SourceCheckError('対象の項目がありません。');
  const issues=submissionIntentIssues({...value.content,items:[item]},value.context);if(issues.length)throw new SourceCheckError(issues.join(' / '));
@@ -70,7 +70,7 @@ export function acceptancePlan(value:KnowledgeSubmission,key:string,decisionId:s
  for(const p of themes){const t=value.context?.themes?.find(v=>v.id===p.id&&v.revision===p.revision);if(!t)throw new SourceCheckError('追加先テーマを選び直してください。');references.push({kind:'theme',...p,content:t.content});}
  const uniqueReferences=[...new Map(references.map(ref=>[ref.kind+':'+ref.id+'@'+ref.revision,ref])).values()];
  const command=knowledgeCommandSchema.parse({action:'accept-record',requestId:decisionId,entities,sources,legacyEntities,legacySources,legacyRecords,themes,entityPins:uniqueReferences.filter(r=>r.kind==='entity').map(({id,revision})=>({id,revision})),sourcePins:uniqueReferences.filter(r=>r.kind==='source').map(({id,revision})=>({id,revision})),record:{id,content:record},...(item.correction?{expectedRevision:item.correction.revision,preserveLegacySemantics:true}:{}),reason:'利用者投稿の内容確認・原資料照合による自動受理'});
- return {command,references:uniqueReferences,recordId:id};
+ return {command,references:uniqueReferences,recordId:id,operation:item.operation!};
 }
 async function verifyLegacyCommand(command:KnowledgeCommand){
  if(command.action!=='accept-record'||!(command.legacyEntities?.length||command.legacyRecords?.length))return;
@@ -91,7 +91,7 @@ export async function verifyAcceptanceReferences(c:PoolClient,refs:AcceptancePla
   if(ref.content&&knowledgeDigest(ref.content)!==knowledgeDigest(row.content))throw new SourceCheckError('対象名・資料の取得版が原記録と異なります。取得元の内容を確認してください。');
  }
 }
-async function verifyAcceptedSemantics(c:PoolClient,plan:AcceptancePlan){
+async function verifyAcceptedSemantics(c:PoolClient,plan:Pick<AcceptancePlan,'command'|'references'>){
  if(plan.command.action!=='accept-record'||!plan.command.expectedRevision)return;
  const cmd=plan.command,original=plan.references.find(r=>r.kind==='record'&&r.id===cmd.record.id)?.content as Record<string,unknown>|undefined;
  const typed=cmd.legacyRecords?.some(r=>r.id===cmd.record.id)||(await c.query("SELECT 1 FROM knowledge75.legacy_links WHERE record_id=$1 AND payload ? 'claim'",[cmd.record.id])).rowCount;
@@ -99,17 +99,18 @@ async function verifyAcceptedSemantics(c:PoolClient,plan:AcceptancePlan){
 }
 function material(s:QueryResultRow):KnowledgeSubmission{const captured=s.reference_context??s.source_capsule?.captured;return {id:s.id,revision:s.current_revision,version:s.state_version,state:s.state,content:knowledgeSubmissionContentSchema.parse(s.content),digest:s.digest,createdAt:String(s.created_at),updatedAt:String(s.updated_at),...(captured?{context:captured}:{})};}
 
-/** Resolve reuse before retaining the immutable decision. Keep the published
- * wording and qualifiers, and add only new independent evidence. */
+/** Resolve reuse before retaining the immutable decision. New submissions and
+ * evidence additions preserve published wording; explicit corrections replace it. */
 export async function reuseDuplicatePlan(knowledge:Pool,plan:AcceptancePlan,capture:DuplicateCapture,advice:unknown,proofs:SourceProof[]=[],knownDocuments:string[]=[]):Promise<AcceptancePlan>{
  if(plan.command.action!=='accept-record')return plan;
  const cmd=structuredClone(plan.command),other=duplicateMatch(capture,advice);
  const match=cmd.expectedRevision?capture.candidates.find(r=>r.id===cmd.record.id):other;
  if(!match)return plan;
  if(cmd.expectedRevision&&other&&cmd.record.id!==other.id)throw new SourceCheckError('訂正後の内容は別の既存知識と重複します。その知識への根拠追加を選んでください。');
- // Deliberate corrections may improve wording on this SAME record. Novelty
- // protection must not throw away an explicitly requested editorial change.
- if(cmd.expectedRevision&&knowledgeDigest(duplicateMeaning(match.content))!==knowledgeDigest(duplicateMeaning(cmd.record.content)))return plan;
+ // A deliberate correction can change only an existing quote or locator, with
+ // identical factual meaning. Do not turn that replacement into an append-only
+ // evidence merge. Foundation still treats a fully unchanged correction as a no-op.
+ if(plan.operation==='correct-record')return plan;
  const refs=[...plan.references];
  const legacy=capture.legacy?.records.find(r=>r.id===match.id);
  if(legacy){
@@ -146,7 +147,7 @@ export async function reuseDuplicatePlan(knowledge:Pool,plan:AcceptancePlan,capt
  cmd.expectedRevision=match.revision;cmd.preserveLegacySemantics=true;
  const reference={kind:'record' as const,id:match.id,revision:match.revision,content:match.content,...(legacy?{legacy:true}:{})};
  if(!refs.some(r=>r.kind==='record'&&r.id===match.id))refs.push(reference);
- return {command:knowledgeCommandSchema.parse(cmd),references:refs,recordId:match.id};
+ return {...plan,command:knowledgeCommandSchema.parse(cmd),references:refs,recordId:match.id};
 }
 export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterDecision?:()=>Promise<void>;afterPrepare?:()=>Promise<void>}={},verify=verifySourceExcerpt){
  let ready:Promise<void>|undefined;
@@ -172,7 +173,7 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
   const result=await foundation.execute({kind:'submission',id:'member-submission-v1'},decision.command,{verify:async c=>{
    const guard=decision.proofs?.duplicates;
    if(guard){const current=(await commonDuplicatePins(c,guard.record)).map(r=>({id:r.id,revision:r.revision,digest:knowledgeDigest(r.content)}));if(knowledgeDigest(current)!==knowledgeDigest(guard.common))throw new KnowledgeError('既存の知識が増えたため重複を確認し直します',409,'DUPLICATE_REVIEW_REQUIRED');}
-   await verifyAcceptanceReferences(c,decision.references_json);await verifyAcceptedSemantics(c,{command:decision.command,references:decision.references_json,recordId:decision.command.record.id});},prepare});
+   await verifyAcceptanceReferences(c,decision.references_json);await verifyAcceptedSemantics(c,{command:decision.command,references:decision.references_json});},prepare});
   await hooks.afterDecision?.();await delivered(decision,result);
  }
  return {

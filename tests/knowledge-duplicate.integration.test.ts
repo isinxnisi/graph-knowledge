@@ -13,7 +13,7 @@ describe.skipIf(!connectionString)('duplicate acceptance on isolated PostgreSQL'
  async function seed(prefix:string){await run({action:'create-bundle',requestId:randomUUID(),reason:'隔離試験',entities:[{id:prefix+'a',content:{name:'A',kind:'person'}},{id:prefix+'b',content:{name:'B',kind:'work'}}],sources:[{id:prefix+'s',content:{title:'資料',url:'https://example.org/'+prefix}}],records:[{id:prefix+'original',content:content(prefix)}]});}
  function proposed(prefix:string):AcceptancePlan{
   const record=content(prefix);record.evidence[0].source={id:prefix+'submitted-source',revision:1};
-  return {recordId:prefix+'new',references:[],command:knowledgeCommandSchema.parse({action:'accept-record',requestId:randomUUID(),reason:'確認済み投稿',entities:[],sources:[{id:prefix+'submitted-source',content:{title:'題名だけ変更',url:'https://example.org/'+prefix+'?utm_source=retry'}}],entityPins:[{id:prefix+'a',revision:1},{id:prefix+'b',revision:1}],sourcePins:[],record:{id:prefix+'new',content:record}})};
+  return {recordId:prefix+'new',references:[],operation:'create-relation',command:knowledgeCommandSchema.parse({action:'accept-record',requestId:randomUUID(),reason:'確認済み投稿',entities:[],sources:[{id:prefix+'submitted-source',content:{title:'題名だけ変更',url:'https://example.org/'+prefix+'?utm_source=retry'}}],entityPins:[{id:prefix+'a',revision:1},{id:prefix+'b',revision:1}],sourcePins:[],record:{id:prefix+'new',content:record}})};
  }
  beforeAll(async()=>{expect((await pool.query('SELECT current_database() AS name')).rows[0].name).toMatch(/^plunode_knowledge75_test_/);await ensureKnowledgeFoundationSchema(pool);},30000);
  afterAll(async()=>{await pool.end();});
@@ -35,6 +35,19 @@ describe.skipIf(!connectionString)('duplicate acceptance on isolated PostgreSQL'
   const repeated=await reuseDuplicatePlan(pool,again,await captureDuplicates(pool,again.command.record.content),{sameAs:p+'original',reason:'同義'});
   expect(await foundation.execute(actor,repeated.command)).toMatchObject({id:p+'original',revision:2,disposition:'existing'});
   expect((await foundation.get({kind:'reader',id:'reader'},'record',p+'original',1)).content.evidence).toHaveLength(1);
+ });
+ it('keeps explicit evidence additions append-only even though they target an existing revision',async()=>{
+  const p='duplicate-add-evidence-';await seed(p);const plan=proposed(p);if(plan.command.action!=='accept-record')throw Error('fixture');
+  const original=content(p),incoming={...plan.command.record.content.evidence[0],id:'added',locator:'別の箇所',excerpt:'Bの作者はAである。'};
+  plan.operation='add-evidence';plan.recordId=p+'original';plan.command.record={id:plan.recordId,content:{...original,evidence:[...original.evidence,incoming]}};
+  plan.command.expectedRevision=1;plan.command.sourcePins=[{id:p+'s',revision:1}];
+  const capture=await captureDuplicates(pool,plan.command.record.content,plan.recordId);
+  const sameDocument=await reuseDuplicatePlan(pool,plan,capture,null);
+  expect(await foundation.execute(actor,sameDocument.command)).toMatchObject({revision:1,disposition:'existing',content:{evidence:original.evidence}});
+  plan.command.requestId=randomUUID();plan.command.sources[0].content.url='https://independent.example.org/'+p;
+  const independent=await reuseDuplicatePlan(pool,plan,capture,null),result=await foundation.execute(actor,independent.command) as KnowledgeRecordVersion;
+  expect(result).toMatchObject({id:plan.recordId,revision:2});expect(result.content.evidence).toHaveLength(2);
+  expect(result.content.evidence[0]).toEqual(original.evidence[0]);expect(result.content.evidence[1]).toMatchObject({locator:incoming.locator,excerpt:incoming.excerpt,source:incoming.source});
  });
  it('links an existing record to another theme without changing fixed older themes or the record',async()=>{
   const p='duplicate-theme-';await seed(p);

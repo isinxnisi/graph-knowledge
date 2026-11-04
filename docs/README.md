@@ -1,3 +1,5 @@
+2026-11-05 多言語の基礎確認：原語・翻訳・事実訂正／訳文訂正を分ける[設計案（採用待ち・未実装）](design/KNOWLEDGE_MULTILINGUAL_PROPOSAL.md)を保存。既存の引用だけ／記載箇所だけの訂正が重複処理に吸収される回帰は別に修正。[検証・反映状態](verification/KNOWLEDGE_QUOTE_CORRECTION_20261105.md)。
+
 2026-11-05 投稿重複対策：同じ意味の利用者投稿を既存Recordへ再利用し、新根拠・別テーマだけを追加。追加なし／変更なし訂正は記録・内容版・活動履歴を増やさず、一覧と結果へ登録済みを表示。app `9e679afd` / build `eltwp98MIdtjfECPyDKAt`をmain／3200／HTTPS βへ反映。追加migrationなし。Entity同一性・既存重複整理・収集／Chat経路への全面適用はU6残件。[実操作・比較評価・保全・制約](verification/KNOWLEDGE_DUPLICATES_20261105.md)。
 
 2026-11-04 余白・一覧追補：Capsuleのテーマ情報を年表の余白へそろえ、上の重複罫線を除去。取消済み投稿は通常一覧から分離し、履歴・未読から参照可能にした。app `9c821d9b` / build `zkavPW2SqgLy3u-VdjgwC`、main／3200／HTTPS βへ反映。Webのみ、DB／Worker／本番VPSの変更なし。[実操作・検証・残る重複対策](verification/CAPSULE_CONTEXT_AND_SUBMISSION_LIST_20261104.md)。以下は各時点の記録。
