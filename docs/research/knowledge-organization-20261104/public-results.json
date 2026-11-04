@@ -1,0 +1,78 @@
+{
+  "打ち上げへの協力": {
+    "rows": [
+      {
+        "id": "collection-record:4a7a04fa46188157b26ceb6bd0b71111",
+        "recordRevision": 1,
+        "relation": "共同で責任を担った",
+        "semantics": {
+          "status": "current",
+          "concept": {
+            "id": "concept:abdda90d-2efd-465b-92f1-f4689d255bed",
+            "label": "打ち上げへの協力",
+            "revision": 1,
+            "definition": "打ち上げキャンペーンの準備・実施を、他の参加者と共同で担う関係。単独実施や、単なる同時参加とは区別する。"
+          },
+          "recordRevision": 1,
+          "mappingRevision": 1
+        }
+      },
+      {
+        "id": "collection-record:673bb0541d4ff449bbbd985e86ef8204",
+        "recordRevision": 1,
+        "relation": "打ち上げキャンペーンの準備と実施を共同で担う",
+        "semantics": {
+          "status": "current",
+          "concept": {
+            "id": "concept:abdda90d-2efd-465b-92f1-f4689d255bed",
+            "label": "打ち上げへの協力",
+            "revision": 1,
+            "definition": "打ち上げキャンペーンの準備・実施を、他の参加者と共同で担う関係。単独実施や、単なる同時参加とは区別する。"
+          },
+          "recordRevision": 1,
+          "mappingRevision": 1
+        }
+      }
+    ],
+    "meaningIdSearchMatched": true,
+    "generation": "k75-21d1946379c6344cb815d76b66e56433"
+  },
+  "作品づくりへの参加": {
+    "rows": [
+      {
+        "id": "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1",
+        "recordRevision": 1,
+        "relation": "ストーリー共同制作",
+        "semantics": {
+          "status": "current",
+          "concept": {
+            "id": "concept:5c2c28f5-133c-4722-9067-6915b548fa80",
+            "label": "作品づくりへの参加",
+            "revision": 1,
+            "definition": "著者、ストーリー共同制作など、作品の制作に役割をもって参加する関係。役割や対象の刊行物の限定は各記録の具体的な関係名・根拠で区別する。"
+          },
+          "recordRevision": 1,
+          "mappingRevision": 1
+        }
+      },
+      {
+        "id": "69ed2335-344f-41a6-a17f-77708faa0398",
+        "recordRevision": 1,
+        "relation": "著者",
+        "semantics": {
+          "status": "current",
+          "concept": {
+            "id": "concept:5c2c28f5-133c-4722-9067-6915b548fa80",
+            "label": "作品づくりへの参加",
+            "revision": 1,
+            "definition": "著者、ストーリー共同制作など、作品の制作に役割をもって参加する関係。役割や対象の刊行物の限定は各記録の具体的な関係名・根拠で区別する。"
+          },
+          "recordRevision": 1,
+          "mappingRevision": 1
+        }
+      }
+    ],
+    "meaningIdSearchMatched": true,
+    "generation": "k75-21d1946379c6344cb815d76b66e56433"
+  }
+}
