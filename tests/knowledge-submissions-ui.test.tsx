@@ -27,8 +27,8 @@ let loadFailure=false,failNext=false;const reviewCounts=new Map<string,Record<st
 beforeEach(()=>{
  vi.clearAllMocks();history.replaceState({},"","/member/submissions");stored.clear();sent.length=0;loadFailure=false;failNext=false;mocked.unread=[];mocked.identity={status:"authenticated",user:{id:"10000000-0000-4000-8000-000000000001"},error:false,version:1,rechecking:false,refreshError:false};
  reviewCounts.clear();vi.stubGlobal('scrollTo',vi.fn());
- vi.spyOn(HTMLDialogElement.prototype,'showModal').mockImplementation(function(){this.setAttribute('open','');});
- vi.spyOn(HTMLDialogElement.prototype,'close').mockImplementation(function(){this.removeAttribute('open');});
+ vi.spyOn(HTMLDialogElement.prototype,'showModal').mockImplementation(function(this:HTMLDialogElement){this.setAttribute('open','');});
+ vi.spyOn(HTMLDialogElement.prototype,'close').mockImplementation(function(this:HTMLDialogElement){this.removeAttribute('open');});
  vi.stubGlobal("fetch",vi.fn(async(path:string,init?:RequestInit)=>{
   if(path.includes('/knowledge-submissions/feedback?'))return Response.json({receipts:[{revision:2,submittedAt:stamp,title:'現在の受付',itemCount:1,unread:false},{revision:1,submittedAt:stamp,title:'以前の受付',itemCount:1,unread:true}],receipt:null});
   if(path.startsWith('/api/knowledge/public')){const q=new URL(path,'https://test').searchParams;return Response.json(q.get('mode')==='entities'?{entities:[a,b]}:q.get('mode')==='themes'?{themes:[{id:theme.id,revision:theme.revision,title:theme.content.title}]}:{records:[{record:original,entities:[a,b],sources:[source]}]});}
