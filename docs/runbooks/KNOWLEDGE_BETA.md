@@ -1,3 +1,5 @@
+2026-11-04 U6c配置：app `1a00a448` / build `cUVfr_QUPOYX9Ucm63sEv`、3200／HTTPS β。追加migrationなし、会員ledger29件。意味整理の入口は `/operations#semantics`。既存launcher/profileを使用する。直近backup・資材・制限は[U6c検証](../verification/KNOWLEDGE_ORGANIZATION_U6_20261104.md)。U6全体／本番切替の完了ではない。以下は各時点の記録。
+
 2026-11-04 投稿表示追補：状態/未読の分離、受付版への導線、中央の取消確認、取消後の一覧復帰、文字の重なりとmenu再選択を修正。app `c43ed6e0` / build `ENv2ojr0L28qQLPE2bD9Z`を3200/HTTPS βへ配置。追加migrationなし。[実操作・保全・制約](../verification/KNOWLEDGE_SUBMISSION_STATUS_UX_20261104.md)。U6の残りは未完了。
 
 2026-11-04 U6b：取得済み資料の読解・個別支持確認・共通原記録への自動登録をmain／3200／HTTPS βへ接続。実NASA資料からTheme追記とThemeなしの2関係を登録し、旧Theme版を保持。app `fca14761` / build `6e-oR7REeDvKQEgoaaU1g`。U6全体は未完了で、後追い意味整理・パッケージ取込・総合一巡は後続。[実操作・利用量・制約・再開](../verification/KNOWLEDGE_COLLECTION_U6_READING_20261104.md)。以下は各時点の履歴。

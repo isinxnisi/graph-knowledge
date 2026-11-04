@@ -1,3 +1,5 @@
+2026-11-04 U6c：公開後の意味整理・候補確認・一括適用／解除をmain／3200／HTTPS βへ接続。元の具体語・26記録版・5テーマ版・25 Capsuleを保持し、実NASA・漫画の2群で確認。app `1a00a448` / build `cUVfr_QUPOYX9Ucm63sEv`。U6全体は未完了、同一性整理・Chat取込・総合一巡が残る。[実操作・配置・制約・再開](verification/KNOWLEDGE_ORGANIZATION_U6_20261104.md)。以下は各時点の履歴。
+
 2026-11-04 U6b：取得済み資料の読解・個別支持確認・共通原記録への自動登録をmain／3200／HTTPS βへ接続。実NASA資料からTheme追記とThemeなしの2関係を登録し、旧Theme版を保持。app `fca14761` / build `6e-oR7REeDvKQEgoaaU1g`。U6全体は未完了で、後追い意味整理・パッケージ取込・総合一巡は後続。[実操作・利用量・制約・再開](verification/KNOWLEDGE_COLLECTION_U6_READING_20261104.md)。以下は各時点の履歴。
 
 2026-11-04 U6資料取得：有限依頼・HTTPS API・PC取得・artifact／配送checkpoint・取消をmain／3200／HTTPS βへ接続し、実NASA2資料を確認。U6全体は未完了で、読解・通常自動登録・意味整理・AI枠の接続は後続。U5の保存枠による新規Capsule保存・共有未確認は解消。[配置・実操作・残件](verification/KNOWLEDGE_COLLECTION_U6_CAPTURE_20261104.md)。以下は各時点の履歴。

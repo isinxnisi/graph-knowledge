@@ -1,11 +1,13 @@
-2026-11-04 U6b：取得済み資料の読解・個別支持確認・共通原記録への自動登録をmain／3200／HTTPS βへ接続。実NASA資料からTheme追記とThemeなしの2関係を登録し、旧Theme版を保持。app `fca14761` / build `6e-oR7REeDvKQEgoaaU1g`。U6全体は未完了で、後追い意味整理・パッケージ取込・総合一巡は後続。[現在地と検証](../verification/KNOWLEDGE_COLLECTION_U6_READING_20261104.md)。
+# 現在の引継ぎ：U6cまで
 
-## 次に進めるU6の残り（現行）
+2026-11-04。公開後の意味分類・同じ具体語の候補確認・最大50件の一括適用／解除をmain／3200／HTTPS βへ接続した。[検証・再開・実結果](../verification/KNOWLEDGE_ORGANIZATION_U6_20261104.md)。app source `1a00a448`、build `cUVfr_QUPOYX9Ucm63sEv`。会員DB000〜028／29件、知識001/002/004、private profile・認証・旧KGは保持。3276と本番VPSは今回未更新。未追跡memo.txt／.localを保護する。
 
-- 後追い意味整理：対象Record群と内容版・原語を固定し、語義/分類/同一性の候補を比較して必要な分をまとめて適用する。元の具体語・根拠・旧版・Capsule断面を変えず、古い内容への意味対応を現在版へ黙って付け替えない。整理は通常収集の掲載に必須の承認gateにしない。
-- Chatパッケージ取込：コード実行ではなく、厳密なデータ形式・原入力hash・参照・根拠を検査する入口。登録先と範囲を明示し、再送/部分不備/訂正を扱う。Issue経由しか許さない方式へ固定せず、まず既存共通受理へ接続する。
-- 各経路を異なる二つの実テーマとThemeなしで一巡し、実際の入力負担と人が補った判断を記録する。基本追加1〜2回の推定。U7の旧KG/通常対象検索との横断、保存/共有/訂正の統合受入と、U8正式公開は別工程。
-- 再開時は同じbranchのHEAD、main、既存private profile、現在DB ledger29、公開世代を照合する。実装source `fca14761` / build `6e-oR7REeDvKQEgoaaU1g`を基準とし、古いstaged build/旧dumpで戻さない。通常起動はβrunbookの既存launcher。未追跡memo.txtと.localを保持。
+次はU6の残り：Entity同一性の候補と安全な適用、Chatパッケージの厳密な取込・再送／部分不備／訂正、実テーマ2件＋Themeなしの総合一巡。基本あと2回程度の指示を目安とする再見積（推定）。U7統合受入・U8正式配置は別工程。
+
+- 元の具体語・根拠・内容版を変えず、意味対応は別版。通常収集の公開を人手整理待ちの承認gateにしない。
+- 今回の候補は同じ関係名への既存定義の再利用で、AIの意味判定や同名Entityの自動mergeではない。新定義は運営入力。Entity同一性は勝手に統合せず、旧Theme/CapsuleのID・断面を保つ契約を先に決める。
+- Chat取込はデータ形式・hash・参照・根拠の検査から共通受理へ接続し、コード実行やGitHub Issue限定にしない。
+- 次担当は `KNOWLEDGE_COLLECTION_U6.md` と本検証の残件を優先。古いsource/dumpへ戻さず、現在のsource/build・DB ledger・公開世代を実物照合する。
 
 以下のU6a以前・U3/3276が主入口という記述は、その時点の履歴。現在の入口はHTTPS βの運営画面と通常Explorer。
 

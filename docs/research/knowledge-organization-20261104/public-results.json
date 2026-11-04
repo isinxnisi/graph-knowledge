@@ -35,7 +35,7 @@
       }
     ],
     "meaningIdSearchMatched": true,
-    "generation": "k75-21d1946379c6344cb815d76b66e56433"
+    "generation": "k75-16a3defcdd6095dd527623e7c9d5abf6"
   },
   "作品づくりへの参加": {
     "rows": [
@@ -52,7 +52,7 @@
             "definition": "著者、ストーリー共同制作など、作品の制作に役割をもって参加する関係。役割や対象の刊行物の限定は各記録の具体的な関係名・根拠で区別する。"
           },
           "recordRevision": 1,
-          "mappingRevision": 1
+          "mappingRevision": 3
         }
       },
       {
@@ -73,6 +73,6 @@
       }
     ],
     "meaningIdSearchMatched": true,
-    "generation": "k75-21d1946379c6344cb815d76b66e56433"
+    "generation": "k75-16a3defcdd6095dd527623e7c9d5abf6"
   }
 }
