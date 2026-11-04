@@ -1,3 +1,4 @@
+import {createMemberCollectionReading} from "./knowledge-collection-reading";
 import {createKnowledgeCollection} from "./knowledge-collection";
 import {createKnowledgeAppeals} from "./knowledge-appeals";
 import {createMemberSubmissionFeedback} from "./knowledge-submission-feedback";
@@ -46,6 +47,7 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
   return {
     submissions: createMemberKnowledgeSubmissions(pool,config.origin,owner,dataset),
     collection: createKnowledgeCollection(pool,config.origin,owner),
+    collectionReading: createMemberCollectionReading(pool,config.origin,owner),
     knowledgeAppeals: createKnowledgeAppeals(pool,config.origin,owner),
     submissionFeedback: createMemberSubmissionFeedback(pool,config.origin,owner),
     accounts: createPublicProfiles(pool, config.origin, owner, config.secret),

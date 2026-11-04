@@ -17,8 +17,8 @@ export async function ensureCollectionSchema(pool:Pool){
 const hash=(s:string|Buffer)=>createHash('sha256').update(s).digest('hex');
 const stamp=(x:unknown)=>x instanceof Date?x.toISOString():String(x);
 export const collectionConfigSchema=z.strictObject({workerId:z.string().regex(/^[a-z0-9-]{1,80}$/),tokenSha256:z.string().regex(/^[a-f0-9]{64}$/)});
-export async function collectionWorkerIdentity(request:Request){
- const file=process.env.KNOWLEDGE_COLLECTION_CONFIG;if(!file||!path.isAbsolute(file))throw new MemberError(503,'WORKER_NOT_CONFIGURED');
+export async function collectionWorkerIdentity(request:Request,environmentKey='KNOWLEDGE_COLLECTION_CONFIG'){
+ const file=process.env[environmentKey];if(!file||!path.isAbsolute(file))throw new MemberError(503,'WORKER_NOT_CONFIGURED');
  const stat=await lstat(file);if(!stat.isFile()||stat.isSymbolicLink()||stat.uid!==process.getuid?.()||(stat.mode&0o777)!==0o600||stat.size>4000)throw new MemberError(503,'WORKER_NOT_CONFIGURED');
  const config=collectionConfigSchema.parse(JSON.parse(await readFile(file,'utf8'))),authorization=request.headers.get('authorization')??'';
  if(!/^Bearer [a-f0-9]{64}$/.test(authorization)||!timingSafeEqual(Buffer.from(hash(authorization.slice(7)),'hex'),Buffer.from(config.tokenSha256,'hex')))throw new MemberError(401,'UNAUTHENTICATED');

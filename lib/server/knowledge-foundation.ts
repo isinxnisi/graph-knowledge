@@ -36,7 +36,7 @@ function expected(actual: number, requested: number) {
 }
 function actorAllowed(actor: KnowledgeActor, action: string) {
   if (!actor.id || actor.id.length > 200) throw new KnowledgeError("認証された操作主体が必要です", 403, "FORBIDDEN");
-  if (action === "accept-record") { if(actor.kind === "submission")return;throw new KnowledgeError("知識投稿の内部受理処理が必要です",403,"FORBIDDEN"); }
+  if (action === "accept-record") { if(actor.kind === "submission"||actor.kind === "collection")return;throw new KnowledgeError("知識投稿の内部受理処理が必要です",403,"FORBIDDEN"); }
   if (actor.kind === "operator") return;
   if (actor.kind === "collector" && action === "create-bundle") return;
   throw new KnowledgeError(actor.kind === "user" ? "利用者の変更は知識投稿の審査経路へ提出してください" : "この操作の権限がありません", 403, "SUBMISSION_REQUIRED");
@@ -254,6 +254,7 @@ export function createKnowledgeFoundationService(pool: Pool) {
         await changed(kind, id);
         return version(c, kind, id, revision);
       }
+      if(actor.kind==='collection'&&!internal)throw new KnowledgeError('収集の固定範囲と根拠の照合が必要です',403,'FORBIDDEN');
       if(internal)await internal.verify(c);
       let result: unknown;
       if(cmd.action === "accept-record") {

@@ -39,7 +39,7 @@ const responseSchema = z.object({
   usageMetadata: z.object({ promptTokenCount: count, candidatesTokenCount: count, thoughtsTokenCount: count, cachedContentTokenCount: count, totalTokenCount: count }).optional(),
   candidates: z.array(z.object({ finishReason: z.string().optional(), content: z.object({ parts: z.array(z.object({ text: z.string().optional(), thought: z.boolean().optional() })) }).optional() })).optional(),
 });
-export function parseGeminiReview(raw: unknown) {
+export function parseGeminiJson(raw: unknown) {
   const checked = responseSchema.safeParse(raw);
   if (!checked.success) return { responseId: null, modelVersion: null, usage: { promptTokenCount: null, candidatesTokenCount: null, thoughtsTokenCount: null, cachedContentTokenCount: null, totalTokenCount: null }, state: "invalid" as const, reason: "invalid-envelope" };
   const response = checked.data;
@@ -53,15 +53,19 @@ export function parseGeminiReview(raw: unknown) {
   const text = (candidate.content?.parts ?? []).filter(part => part.thought !== true).map(part => part.text ?? "").join("");
   let content: unknown;
   try { content = JSON.parse(text); } catch { return { ...meta, state: "invalid" as const, reason: "invalid-json" }; }
-  const parsed = geminiReviewSchema.safeParse(content);
-  if (!parsed.success) return { ...meta, state: "invalid" as const, reason: "invalid-review-schema" };
-  return { ...meta, state: "reviewed" as const, review: parsed.data };
+  return {...meta,state:'parsed' as const,content};
+}
+export function parseGeminiReview(raw:unknown){
+ const parsed=parseGeminiJson(raw);if(parsed.state!=='parsed')return parsed;
+ const review=geminiReviewSchema.safeParse(parsed.content);const {content:_,...meta}=parsed;void _;
+ if(!review.success)return {...meta,state:'invalid' as const,reason:'invalid-review-schema'};
+ return {...meta,state:'reviewed' as const,review:review.data};
 }
 
 /** One HTTP attempt only. The caller owns quotas, durable attempts and retry.
  * No SDK retries, provider fallback, tools, URL fetches or publication writes.
  */
-export async function callGeminiReview(options: { apiKey: string; model: string; request: ReturnType<typeof geminiReviewRequest>; fetcher?: typeof fetch; timeoutMs?: number }) {
+export async function callGeminiReview(options: { apiKey: string; model: string; request: {systemInstruction: unknown;contents:unknown;generationConfig:unknown}; fetcher?: typeof fetch; timeoutMs?: number }) {
   if (!/^gemini-[a-z0-9.-]+$/.test(options.model) || !options.apiKey.trim()) throw new Error("Invalid Gemini configuration");
   const wire = JSON.stringify(options.request);
   if (Buffer.byteLength(wire) > 128_000) throw new Error("Review request exceeds 128KB");

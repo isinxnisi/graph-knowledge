@@ -63,6 +63,16 @@ def beta_knowledge():
         if set(config) != {'workerId','tokenSha256'} or not re.fullmatch(r'[a-z0-9-]{1,80}',config['workerId']) or not re.fullmatch(r'[a-f0-9]{64}',config['tokenSha256']):
             raise ValueError('Unexpected beta collection profile')
         values.update(KNOWLEDGE_COLLECTION_ENABLED='1', KNOWLEDGE_COLLECTION_CONFIG=str(collection))
+    reader = STATE / 'beta-collection-reader.json'
+    if reader.exists():
+        info = reader.lstat()
+        if reader.is_symlink() or info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) != 0o600 or info.st_size > 4000:
+            raise ValueError('Private reader configuration ownership mismatch')
+        config = json.loads(reader.read_text())
+        import re
+        if set(config) != {'workerId','tokenSha256'} or not re.fullmatch(r'[a-z0-9-]{1,80}',config['workerId']) or not re.fullmatch(r'[a-f0-9]{64}',config['tokenSha256']) or not review.exists() or not collection.exists():
+            raise ValueError('Reader requires reviewed AI and capture profiles')
+        values.update(KNOWLEDGE_COLLECTION_READING_ENABLED='1', KNOWLEDGE_COLLECTION_READER_CONFIG=str(reader))
     return {**values,'THEME_WORKBENCH_ENABLED':'0'}
 
 
@@ -121,6 +131,26 @@ def start_knowledge_collector(node, env):
         child = subprocess.Popen([node,'--import','tsx','scripts/knowledge-collection-worker.ts','--config',str(config)],cwd=ROOT,env=env,stdin=subprocess.DEVNULL,stdout=log,stderr=log,start_new_session=True)
     pidfile.write_text(str(child.pid)); pidfile.chmod(0o600)
 
+def start_knowledge_reader(node, env):
+    if env.get('KNOWLEDGE_COLLECTION_READING_ENABLED') != '1': return
+    config = STATE / 'beta-collection-reader-client.json'
+    if not config.exists(): raise ValueError('Private collection worker profile required')
+    info = config.lstat()
+    if config.is_symlink() or info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) != 0o600:
+        raise ValueError('Private collection worker profile ownership mismatch')
+    pidfile = STATE / 'knowledge-collection-reader.pid'
+    if pidfile.exists():
+        proc = Path('/proc') / pidfile.read_text().strip()
+        if (proc/'cmdline').exists() and (proc/'cmdline').read_bytes():
+            if (proc/'cwd').resolve() != ROOT or b'scripts/knowledge-collection-reader.ts' not in (proc/'cmdline').read_bytes():
+                raise ValueError('Collection PID belongs to another process')
+            return
+    with (STATE/'knowledge-collection-reader.log').open('ab') as log:
+        os.chmod(STATE/'knowledge-collection-reader.log',0o600)
+        child = subprocess.Popen([node,'--import','tsx','scripts/knowledge-collection-reader.ts','--config',str(config)],cwd=ROOT,env=env,stdin=subprocess.DEVNULL,stdout=log,stderr=log,start_new_session=True)
+    pidfile.write_text(str(child.pid)); pidfile.chmod(0o600)
+
+
 
 def start(name, node):
     port, args = SERVICES[name]
@@ -154,6 +184,7 @@ def start(name, node):
         start_knowledge_publisher(node, publisher_env)
         start_knowledge_reviewer(node, publisher_env)
         start_knowledge_collector(node, publisher_env)
+        start_knowledge_reader(node, publisher_env)
     log = STATE / f'{name}.log'
     pidfile = STATE / f'{name}.pid'
     pid = os.fork()

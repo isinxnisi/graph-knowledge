@@ -1,3 +1,4 @@
+import {quotaDate,reserveKnowledgeAI} from './knowledge-ai-budget';
 import {submissionIntentIssues} from "../domain/knowledge-submission-intent";
 import {reviewDisclosureForConsent} from "../domain/knowledge-submission-feedback";
 import {ensureSubmissionFeedbackSchema} from "./member/knowledge-submission-feedback";
@@ -39,10 +40,7 @@ export async function reviewStatus(c:Pool|PoolClient,ownerId:string,id:string,re
 function submission(row:QueryResultRow):KnowledgeSubmission{
  return {id:row.id,revision:row.current_revision,version:row.state_version,state:row.state,content:knowledgeSubmissionContentSchema.parse(row.content),digest:row.digest,createdAt:iso(row.created_at),updatedAt:iso(row.updated_at),origin:row.source_capsule?.capsuleId?{capsuleId:row.source_capsule.capsuleId,capsuleRevision:row.source_capsule.capsuleRevision,title:row.source_capsule.title,keys:row.source_capsule.keys}:null,...((row.reference_context??row.source_capsule?.captured)?{context:row.reference_context??row.source_capsule.captured}:{})};
 }
-const quotaFormatter=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Los_Angeles",year:"numeric",month:"2-digit",day:"2-digit"});
-export function quotaDate(now:Date){return quotaFormatter.format(now);}
-export function nextQuotaDay(now:Date){const today=quotaDate(now),[y,m,d]=today.split('-').map(Number);let next=new Date(Date.UTC(y,m-1,d+1));while(quotaDate(next)===today)next=new Date(next.getTime()+3600000);return next;}
-export function nextQuotaMonth(now:Date){const month=quotaDate(now).slice(0,7),[y,m]=month.split('-').map(Number);let next=new Date(Date.UTC(y,m,1));while(quotaDate(next).slice(0,7)===month)next=new Date(next.getTime()+3600000);return next;}
+export {quotaDate,nextQuotaDay,nextQuotaMonth} from './knowledge-ai-budget';
 export type ReviewLease={jobId:string;attemptId:string;token:string;wire:string;wireDigest:string;model:string;consentProfileId:string};
 type WireResult=Awaited<ReturnType<typeof callGeminiReview>>;
 export function createReviewQueue(pool:Pool){
@@ -135,23 +133,11 @@ export function createReviewQueue(pool:Pool){
      wire=JSON.stringify(geminiReviewRequest(submissionReviewInput(value,j.item_key,j.consent_version===PUBLICATION_CONSENT_VERSION)));
     }
     catch{await c.query("UPDATE member_knowledge.review_jobs SET state='needs-changes',reason='内容・対象・資料の取得版や入力の長さを確認してください。' WHERE id=$1",[j.id]);return null;}
-    const project=(await c.query("SELECT * FROM member_knowledge.review_projects WHERE project_id=$1 FOR UPDATE",[cfg.projectId])).rows[0];if(!project)throw Error("Review project is not configured");
-    const now=new Date(),day=quotaDate(now),month=day.slice(0,7),inputReserved=Buffer.byteLength(wire)+1024,outputReserved=2048;
-    const usage=(await c.query(`SELECT COALESCE(sum(request_charge) FILTER(WHERE quota_day=$2),0)::int AS day_requests,COALESCE(sum(request_charge) FILTER(WHERE quota_month=$3),0)::int AS month_requests,
-      COALESCE(sum(COALESCE(input_actual,input_reserved)) FILTER(WHERE quota_day=$2),0)::bigint AS day_input,COALESCE(sum(COALESCE(output_actual,output_reserved)) FILTER(WHERE quota_day=$2),0)::bigint AS day_output,
-      COALESCE(sum(COALESCE(input_actual,input_reserved)) FILTER(WHERE quota_month=$3),0)::bigint AS month_input,COALESCE(sum(COALESCE(output_actual,output_reserved)) FILTER(WHERE quota_month=$3),0)::bigint AS month_output,
-      COALESCE(sum(request_charge) FILTER(WHERE started_at>clock_timestamp()-interval '1 minute'),0)::int AS minute_requests,COALESCE(sum(COALESCE(input_actual,input_reserved)) FILTER(WHERE started_at>clock_timestamp()-interval '1 minute'),0)::bigint AS minute_input,
-      max(started_at) AS last_start FROM member_knowledge.review_attempts WHERE project_id=$1`,[cfg.projectId,day,month])).rows[0];
-    let wait:Date|null=null,reason='';
-    if(project.paused_until&&new Date(project.paused_until)>now){wait=new Date(project.paused_until);reason=project.pause_reason;}
-    else if(usage.day_requests>=cfg.requestsPerDay||Number(usage.day_input)+inputReserved>cfg.inputTokensPerDay||Number(usage.day_output)+outputReserved>cfg.outputTokensPerDay){wait=nextQuotaDay(now);reason='本日の無料利用枠を待っています。';}
-    else if(usage.month_requests>=cfg.requestsPerMonth||Number(usage.month_input)+inputReserved>cfg.inputTokensPerMonth||Number(usage.month_output)+outputReserved>cfg.outputTokensPerMonth){wait=nextQuotaMonth(now);reason='今月の利用枠を待っています。';}
-    else if(usage.minute_requests>=cfg.rpm||Number(usage.minute_input)+inputReserved>cfg.tokensPerMinute){wait=new Date(now.getTime()+61000);reason='利用が集中しています。順番に確認します。';}
-    else if(usage.last_start){const after=new Date(new Date(usage.last_start).getTime()+Math.ceil(60000/cfg.rpm)+100);if(after>now){wait=after;reason='順番に確認しています。';}}
-    if(inputReserved>cfg.tokensPerMinute||inputReserved>cfg.inputTokensPerDay||outputReserved>cfg.outputTokensPerDay){await c.query("UPDATE member_knowledge.review_jobs SET state='needs-changes',reason='一度に確認できる量を超えています。項目の本文や根拠を短くしてください。' WHERE id=$1",[j.id]);return null;}
-    if(wait){await c.query("UPDATE member_knowledge.review_jobs SET state='quota',reason=$2,not_before=$3,updated_at=clock_timestamp() WHERE id=$1",[j.id,reason,wait]);return null;}
-    const attemptId=randomUUID(),token=randomUUID(),wireDigest=createHash("sha256").update(wire).digest("hex");
-    await c.query(`INSERT INTO member_knowledge.review_attempts(id,job_id,project_id,provider,model,policy,purpose,state,quota_day,quota_month,input_reserved,output_reserved) VALUES($1,$2,$3,'gemini',$4,$5,'submission','sending',$6,$7,$8,$9)`,[attemptId,j.id,cfg.projectId,cfg.model,GEMINI_REVIEW_POLICY,day,month,inputReserved,outputReserved]);
+    const reservation=await reserveKnowledgeAI(c,cfg,{purpose:'submission',policy:GEMINI_REVIEW_POLICY,inputReserved:Buffer.byteLength(wire)+1024,outputReserved:2048,jobId:j.id});
+    if(reservation.state==='oversize'){await c.query("UPDATE member_knowledge.review_jobs SET state='needs-changes',reason='一度に確認できる量を超えています。項目の本文や根拠を短くしてください。' WHERE id=$1",[j.id]);return null;}
+    if(reservation.state==='wait'){await c.query("UPDATE member_knowledge.review_jobs SET state='quota',reason=$2,not_before=$3,updated_at=clock_timestamp() WHERE id=$1",[j.id,reservation.reason,reservation.wait]);return null;}
+    const attemptId=reservation.id,token=randomUUID(),wireDigest=createHash('sha256').update(wire).digest('hex');
+    await c.query("UPDATE member_knowledge.review_attempts SET state='sending' WHERE id=$1",[attemptId]);
     await c.query("INSERT INTO member_knowledge.review_payloads(attempt_id,job_id,wire,wire_digest) VALUES($1,$2,$3,$4)",[attemptId,j.id,wire,wireDigest]);
     await c.query("UPDATE member_knowledge.review_jobs SET state='running',reason='',attempts=attempts+1,lease_token=$2,lease_until=clock_timestamp()+interval '180 seconds',updated_at=clock_timestamp() WHERE id=$1",[j.id,token]);
     return {jobId:j.id,attemptId,token,wire,wireDigest,model:cfg.model,consentProfileId:disclosure.profileId};
