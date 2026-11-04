@@ -10,7 +10,7 @@ export default function CapsuleKnowledgeTimeline({document,focused,onFocus,onSho
  const snapshot=capsuleKnowledgeProjection(document);if(!snapshot)return null;
  const records=snapshot.records.map(record=>buildKnowledgePublishedRecord(record,snapshot));
  return <div className={css.knowledgeTimeline}>
-  <KnowledgeThemeContext records={records} selectedRecordId={focused} onRead={onFocus}/>
+  <KnowledgeThemeContext className={css.themeContext} records={records} selectedRecordId={focused} onRead={onFocus}/>
   <KnowledgeTimeline emptyMessage="関係を編集して時期を追加すると、ここに年表が表示されます。" snapshot={snapshot} focusedRecordId={focused} onFocusRecord={onFocus} untimedInContext onShowGraph={onShowGraph} headerAction={<button aria-label={split?"関係図を閉じる":"関係図を並べて表示"} aria-pressed={split} onClick={onToggleGraph}><Icon name="panel"/></button>}/>
  </div>;
 }

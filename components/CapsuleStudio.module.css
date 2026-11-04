@@ -103,3 +103,7 @@
 @media(max-width:640px){.byline{max-width:48px;flex:none}.byline [data-person-label]{display:none}}
 
 .submission a{display:inline-flex;align-items:center;gap:5px;color:var(--color-accent);text-decoration:none;font-size:11px}.submission a:hover{text-decoration:underline}@media(max-width:700px){.submission a{font-size:0;min-width:32px;min-height:32px;justify-content:center}.submission a svg:last-child{display:none}}
+
+/* Match the embedded timeline gutter; the studio header already owns the top divider. */
+.knowledgeTimeline>.themeContext{margin:0 18px 10px;padding:8px 0;border-block-start:0}
+@media(max-width:800px){.knowledgeTimeline>.themeContext{margin-inline:10px}}

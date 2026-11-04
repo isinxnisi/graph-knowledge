@@ -6,14 +6,14 @@ import Icon from "./Icon";
 import css from "./KnowledgeThemeContext.module.css";
 
 /** Undated knowledge belongs to the theme, independently of the chosen graph. */
-export default function KnowledgeThemeContext({ records, selectedRecordId, onRead }: {
-  records: KnowledgePublishedRecord[]; selectedRecordId: string | null; onRead: (id: string) => void;
+export default function KnowledgeThemeContext({ records, selectedRecordId, onRead, className }: {
+  records: KnowledgePublishedRecord[]; selectedRecordId: string | null; onRead: (id: string) => void; className?: string;
 }) {
   const { locale } = useUiLocale(), en = locale === "en";
   const [expanded, setExpanded] = useState(false);
   const context = records.filter((r) => r.record.content.times.length === 0);
   if (!context.length) return null;
-  return <section className={css.context} aria-label={en ? "Theme information" : "テーマの情報"}>
+  return <section className={[css.context,className].filter(Boolean).join(" ")} aria-label={en ? "Theme information" : "テーマの情報"}>
     <header><h3><Icon name="book" />{en ? "Theme information" : "テーマの情報"}<small>{context.length}{en ? " records" : "件"}</small></h3>
       {context.length > 1 && <button className={`${css.more} ${context.length === 2 && !expanded ? css.mobileOnly : ""}`} aria-label={expanded ? en ? "Show less" : "折りたたむ" : en ? "Read all theme information" : "テーマの情報をすべて見る"} aria-expanded={expanded} onClick={() => setExpanded((s) => !s)}>
         {expanded ? en ? "Show less" : "折りたたむ" : <><span className={css.desktopCount}>{en ? `${context.length - 2} more` : `ほか${context.length - 2}件`}</span><span className={css.mobileCount}>{en ? `${context.length - 1} more` : `ほか${context.length - 1}件`}</span></>}<Icon name="chevron" />

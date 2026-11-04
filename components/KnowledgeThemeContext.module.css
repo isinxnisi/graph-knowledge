@@ -5,7 +5,7 @@
 .context :global(.ui-icon) { width: 12px; height: 12px; flex-shrink: 0; }
 .context ul { display: grid; grid-template-columns: repeat(auto-fit,minmax(210px,1fr)); list-style: none; gap: 2px 8px; margin: 0; padding: 0; overscroll-behavior-y: auto; }
 .context li { min-width: 0; }
-.context li button { width: 100%; display: grid; gap: 4px; min-height: 32px; padding: 5px 6px; text-align: left; border: 0; background: transparent; }
+.context li button { width: 100%; display: grid; grid-template-columns: minmax(0,1fr); justify-content: stretch; gap: 4px; min-height: 32px; padding: 5px 6px; text-align: left; border: 0; background: transparent; }
 .context li button[aria-pressed="true"] { background: var(--color-accent-soft); box-shadow: inset 2px 0 var(--color-accent); }
 .assertion { display: block; min-width: 0; font-size: 12px; line-height: 1.7; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .polarity { margin-right: 6px; }
