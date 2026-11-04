@@ -20,3 +20,18 @@ it('retains the reading form across revalidation and requires an explicit target
  fireEvent.click((await screen.findByText('Webbの年表')).closest('button')!);fireEvent.change(screen.getByRole('textbox',{name:'この資料から登録する内容・範囲'}),{target:{value:'副鏡の直径を調べて登録する'}});fireEvent.click(screen.getByRole('checkbox',{name:/指定した資料・対象・範囲/}));expect(screen.getByRole('button',{name:'読解して登録を開始'})).toHaveProperty('disabled',false);
  view.rerender(<KnowledgeCollection userId="owner" authorized={false}/>);expect(screen.queryByRole('textbox',{name:'この資料から登録する内容・範囲'})).toBeNull();view.rerender(<KnowledgeCollection userId="owner" authorized/>);expect(screen.getByRole('textbox',{name:'この資料から登録する内容・範囲'})).toHaveProperty('value','副鏡の直径を調べて登録する');expect(screen.getByRole('checkbox',{name:/指定した資料・対象・範囲/})).toHaveProperty('checked',true);
 });
+
+it('shows returned candidates and published results without mistaking them for a status fetch failure',async()=>{
+ const reading={provider:'Google Gemini',workerConnected:true,jobs:[{
+  id:'read-job',capture_job_id:'capture',scope:'共同で担った役割',target:{kind:'theme',id:'theme',revision:1},label:'Webbの協力',state:'active',createdAt:'2026-11-04T00:00:00Z',
+  tasks:[{id:'read',purpose:'read',state:'done',reason:'',attempts:1,candidate:null,next_attempt:'2026-11-04T00:00:00Z'},
+   {id:'check',purpose:'check',state:'done',reason:'登録しました。',attempts:1,candidate:{assertion:'AはBを共同で準備した。'},next_attempt:'2026-11-04T00:00:00Z'}],
+  decisions:[{id:'registered',state:'applied',reason:'',assertion:'AはBを共同で準備した。',indexed:true}]
+ }]};
+ fetcher.mockImplementation(async url=>Response.json(String(url).includes('collection-reading')?reading:page));
+ render(<KnowledgeCollection userId="owner" authorized/>);
+ await screen.findByText('読解 1/1資料区画 · 登録 1件 · 要確認 0件');
+ expect(screen.queryByText(/登録処理の状態を取得できません/)).toBeNull();
+ fireEvent.click(screen.getByText('項目・結果を見る'));
+ expect(screen.getByRole('link',{name:'AはBを共同で準備した。'}).getAttribute('href')).toBe('/?krecord=registered');
+});
