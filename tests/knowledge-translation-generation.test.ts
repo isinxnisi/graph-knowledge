@@ -94,6 +94,9 @@ describe.skipIf(!url)('translation generation with durable PostgreSQL state',()=
   await request();for(let i=0;i<13;i++){expect((await reserve('translation-generate')).state).toBe('reserved');await pool.query("UPDATE member_knowledge.review_attempts SET started_at=clock_timestamp()-interval '2 minutes'");}
   expect(await reserve('translation-generate')).toMatchObject({state:'wait',reason:expect.stringContaining('翻訳用')});
   expect((await reserve('submission')).state).toBe('reserved');
+  await pool.query('DELETE FROM member_knowledge.review_attempts');
+  await pool.query("INSERT INTO member_knowledge.review_attempts(id,project_id,provider,model,policy,purpose,state,quota_day,quota_month,input_reserved,output_reserved,input_actual,output_actual,started_at) SELECT gen_random_uuid(),$1,'gemini',$2,'fixture','translation-generate','received',$3,$4,1,1,1,1,clock_timestamp()-interval '2 minutes' FROM generate_series(1,80)",[cfg.projectId,cfg.model,quotaDate(new Date()),quotaDate(new Date()).slice(0,7)]);
+  expect(await reserve('translation-generate')).toMatchObject({state:'wait',reason:expect.stringContaining('本日の')});
   await pool.query('UPDATE member_knowledge.review_attempts SET quota_day=$1,quota_month=$2',[quotaDate(new Date()),quotaDate(new Date()).slice(0,7)]);
  });
  it('rejects missing consent, the original language, wrong Origin and wrong identity',async()=>{
@@ -108,5 +111,10 @@ describe.skipIf(!url)('translation generation with durable PostgreSQL state',()=
   await pool.query("UPDATE knowledge75.objects SET visibility='hidden' WHERE kind='entity' AND id=$1",[target.id]);
   expect(await core.canSend(l)).toBe(false);await expect(core.status(alice,target,'en')).rejects.toThrow();
   await pool.query("UPDATE knowledge75.objects SET visibility='public' WHERE kind='entity' AND id=$1",[target.id]);
+ });
+ it('does not cancel a queued request on a transient knowledge DB failure',async()=>{
+  await request();const failure=vi.spyOn(knowledge,'connect').mockRejectedValueOnce(new Error('temporary connection failure') as never);
+  await expect(core.claim(cfg)).rejects.toThrow('temporary');failure.mockRestore();
+  expect((await core.status(alice,target,'en')).state).toBe('queued');expect((await core.claim(cfg))?.jobId).toBeTruthy();
  });
 });
