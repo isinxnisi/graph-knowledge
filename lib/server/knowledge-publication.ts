@@ -1,3 +1,5 @@
+import {readKnowledgeTextOriginal,readKnowledgeTranslation,readKnowledgeTranslationById} from "./knowledge-foundation";
+import type {KnowledgeTextTarget} from "../domain/knowledge-translation";
 import { createHash, randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
@@ -106,7 +108,9 @@ async function capsuleReferenceRows(c:PoolClient,groups:KnowledgeReference[][],c
   JOIN knowledge75.revisions r ON r.kind=requested.kind AND r.id=requested.id AND r.revision=requested.revision
   JOIN knowledge75.objects o ON o.kind=r.kind AND o.id=r.id AND o.visibility='public'
   JOIN knowledge75.published_revisions p ON p.kind=r.kind AND p.id=r.id AND p.revision=r.revision`,[JSON.stringify(pins)])).rows;
- return new Map(rows.map(r=>[pinKey(r.kind,r.id,Number(r.revision)),r]));
+ const result=new Map(rows.map(r=>[pinKey(r.kind,r.id,Number(r.revision)),r]));
+ for(const p of pins.filter(p=>p.kind==='translation')){try{const value=await readKnowledgeTranslationById(c,p.id,p.revision);result.set(pinKey(p.kind,p.id,p.revision),{kind:'translation',id:p.id,revision:p.revision,content:value});}catch(e){if(!(e instanceof KnowledgeError&&e.status<500))throw e;}}
+ return result;
 }
 
 export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:PublicationHooks={},options:{prepareSchema?:()=>Promise<unknown>}={}) {
@@ -194,6 +198,7 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
     validateCapsuleKnowledge:(raw:unknown)=>read(async c=>{
       const k=capsuleKnowledgeSchema.parse(raw),pins=capsuleKnowledgeReferences(k),rows=await capsuleReferenceRows(c,[pins],true);
       if(pins.some(p=>!rows.has(pinKey(p.kind,p.id,p.revision))))return false;
+      for(const v of k.snapshot.translations??[]){const saved=rows.get(pinKey('translation',v.id,v.revision));if(!saved||knowledgeDigest(saved.content)!==knowledgeDigest(v))return false;}
       return ([['records','record'],['entities','entity'],['sources','source'],['mappings','mapping']] as const).every(([group,kind])=>k.snapshot[group].every(version=>{
         const row=rows.get(pinKey(kind,version.id,version.revision))!;
         return knowledgeDigest({content:version.content,createdAt:version.createdAt,reason:version.reason})===knowledgeDigest({content:row.content,createdAt:iso(row.created_at),reason:row.reason});
@@ -281,6 +286,9 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
       return {generation:actual.id,records,entities:distinctEntities(records),hasMore,nextCursor:hasMore?encodeCursor({v:1,generation:actual.id,filter,after:selected.at(-1)!.id}):null} satisfies KnowledgePublicationPage;
     }),
     facets:(raw:{generation?:string}={})=>read(async c=>{const q=z.strictObject({generation:generationSchema.optional()}).parse(raw);const actual=await generation(c,q.generation);const concepts=(await c.query(`SELECT DISTINCT r.concept_id AS id,r.body->'semantics'->'concept'->>'label' AS label FROM knowledge75.publication_records r WHERE r.generation=$1 AND r.concept_id IS NOT NULL AND ${readableSql()} ORDER BY id`,[actual.id])).rows as {id:string;label:string}[];const relations=(await c.query(`SELECT DISTINCT r.relation_label AS label FROM knowledge75.publication_records r WHERE r.generation=$1 AND ${readableSql()} ORDER BY label`,[actual.id])).rows;return {generation:actual.id,concepts,relationLabels:relations.map(r=>String(r.label))};}),
+    translationById:(id:string,revision?:number)=>read(c=>readKnowledgeTranslationById(c,id,revision)),
+    textOriginal:(target:KnowledgeTextTarget)=>read(c=>readKnowledgeTextOriginal(c,target,true)),
+    textTranslation:(target:KnowledgeTextTarget,language:string,revision?:number)=>read(c=>readKnowledgeTranslation(c,target,language,revision)),
     detail:(raw:{generation?:string;recordId:string})=>read(async c=>{const q=z.strictObject({generation:generationSchema.optional(),recordId:z.string().min(1).max(120)}).parse(raw);const actual=await generation(c,q.generation);const records=await allowedRows(c,actual.id,[q.recordId]);if(!records[0])throw new KnowledgeError("この記録は閲覧できません",404,"NOT_FOUND");return {generation:actual.id,record:records[0]};}),
     graph:(raw:{generation?:string;recordIds:string[]})=>read(async c=>{const q=z.strictObject({generation:generationSchema.optional(),recordIds:z.array(z.string().min(1).max(120)).max(200)}).parse(raw);const actual=await generation(c,q.generation);const records=await allowedRows(c,actual.id,[...new Set(q.recordIds)]);const sources=[...new Map(records.flatMap(r=>r.sources.map(s=>[pinKey("source",s.id,s.revision),s] as const))).values()];return {generation:actual.id,records,entities:distinctEntities(records),sources};}),
     neighbors:(raw:{generation?:string;entityId:string;direction?:"both"|"out"|"in";limit?:number;cursor?:string})=>read(async c=>{

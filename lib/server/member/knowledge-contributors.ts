@@ -27,7 +27,7 @@ export async function finalizePublicationContributor(c:PoolClient,id:string,resu
  if(row.record_id!==result.id||row.record_revision!==null&&row.record_revision!==result.revision)throw new MemberError(409,'CONTRIBUTION_CONFLICT');
  await c.query('UPDATE member_knowledge.publication_contributors SET record_revision=$2,published_at=COALESCE(published_at,clock_timestamp()) WHERE decision_id=$1',[id,result.revision]);
 }
-const query=z.strictObject({kind:z.enum(['record','entity','theme','profile']).default('record'),id:knowledgeIdSchema.optional(),handle:publicHandleSchema.optional(),revision:z.coerce.number().int().positive().optional(),cursor:z.string().max(1000).optional()});
+const query=z.strictObject({kind:z.enum(['record','entity','theme','profile','translation']).default('record'),id:knowledgeIdSchema.optional(),handle:publicHandleSchema.optional(),revision:z.coerce.number().int().positive().optional(),cursor:z.string().max(1000).optional()});
 const columns=`SELECT c.*,to_char(c.published_at AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS published_time,p.handle,p.display_name,p.icon,p.official,u.image AS provider_image,u.active FROM member_knowledge.publication_contributors c LEFT JOIN "user" u ON u.id=c.owner_id LEFT JOIN public_profile p ON p.user_id=u.id`;
 function dto(r:QueryResultRow){const visible=publicProfilesEnabled()&&r.attribution==='profile'&&r.active===true&&r.handle;return {id:r.decision_id,recordId:r.record_id,revision:r.record_revision,operation:r.operation,publishedAt:r.published_time,anonymous:r.attribution==='anonymous',person:visible?{handle:r.handle,displayName:r.display_name,icon:r.icon,official:!!r.official,imageUrl:publicProfileImage(r.icon,r.provider_image)}:null};}
 export function createKnowledgeContributors(pool:Pool){
@@ -47,14 +47,16 @@ export function createKnowledgeContributors(pool:Pool){
    const page=rows.slice(0,20);
    // One normal public KG read applies current visibility and dependency gates.
    // An accepted member-side receipt alone does not grant public readability.
-   const records=page.length?(await knowledge.graph({recordIds:[...new Set(page.map(r=>r.record_id as string))]})).records:[];
+   const records=page.length?(await knowledge.graph({recordIds:[...new Set(page.filter(r=>r.operation!=='translate-text').map(r=>r.record_id as string))]})).records:[];
    const visible=new Map(records.map(r=>[r.record.id,r.record]));
+    const translations=new Map<string,Awaited<ReturnType<typeof knowledge.translationById>>>();
+    for(const r of page.filter(r=>r.operation==='translate-text')){try{translations.set(r.decision_id,await knowledge.translationById(r.record_id,r.record_revision));}catch{/* Public read excludes withdrawn originals and translations. */}}
    const fresh=(await pool.query(columns+` WHERE c.decision_id=ANY($1::uuid[]) AND c.owner_id=$2 AND c.activity_public AND c.attribution='profile' AND c.published_at IS NOT NULL`,[page.map(r=>r.decision_id),profile.user_id])).rows;
    // Recheck member privacy after the cross-database public read. No member
    // lock is held while waiting on the KG, and no provider identity is returned.
    if(!publicProfilesEnabled()||!(await pool.query('SELECT 1 FROM public_profile p JOIN "user" u ON u.id=p.user_id WHERE p.handle=$1 AND p.user_id=$2 AND u.active=true AND p.timeline_public=true',[v.handle,profile.user_id])).rowCount)return unavailable();
    const byId=new Map(fresh.map(r=>[r.decision_id,r]));
-   const activities=page.flatMap(row=>{const r=byId.get(row.decision_id),record=visible.get(row.record_id);return r&&record&&record.revision>=r.record_revision?[{...dto(r),title:record.content.assertion,href:'/?krecord='+encodeURIComponent(r.record_id)}]:[];});
+   const activities=page.flatMap(row=>{const r=byId.get(row.decision_id),record=visible.get(row.record_id),translation=translations.get(row.decision_id);if(r&&translation&&translation.revision>=r.record_revision)return [{...dto(r),title:'翻訳 · '+translation.text,href:'/translations?'+new URLSearchParams({id:translation.id,revision:String(r.record_revision)})}];return r&&record&&record.revision>=r.record_revision?[{...dto(r),title:record.content.assertion,href:'/?krecord='+encodeURIComponent(r.record_id)}]:[];});
    const last=page.at(-1);return memberJson({available:true,activities,nextCursor:rows.length>20&&last?Buffer.from(JSON.stringify({handle:v.handle,time:last.published_time,id:last.decision_id})).toString('base64url'):null});
   }
   if(!v.id)throw new MemberError(400,'INVALID_ARGUMENT');
@@ -70,7 +72,7 @@ export function createKnowledgeContributors(pool:Pool){
   };
   await qualify();
   const condition=v.kind==='record'?'c.record_id=$1 AND c.record_revision<=$2':v.kind==='entity'?'$1=ANY(c.entity_ids)':'$1=ANY(c.theme_ids) AND c.record_id=ANY($2::text[])';
-  const rows=(await pool.query(columns+` WHERE c.published_at IS NOT NULL AND ${condition} ORDER BY c.published_at,c.decision_id LIMIT 50`,v.kind==='record'?[v.id,selectedRevision]:v.kind==='theme'?[v.id,[...themeRecords!.keys()]]:[v.id])).rows;
+  const rows=(await pool.query(columns+` WHERE c.published_at IS NOT NULL AND c.operation<>'translate-text' AND ${condition} ORDER BY c.published_at,c.decision_id LIMIT 50`,v.kind==='record'?[v.id,selectedRevision]:v.kind==='theme'?[v.id,[...themeRecords!.keys()]]:[v.id])).rows;
   const records=rows.length?(await knowledge.graph({recordIds:[...new Set(rows.map(r=>r.record_id as string))]})).records:[];
   const visible=new Map(records.map(r=>[r.record.id,r.record.revision]));
   // The target can be withdrawn while we read the member DB. Repeat its

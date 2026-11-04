@@ -1,3 +1,4 @@
+import {knowledgeTranslationVersionSchema,knowledgeOriginalText} from "./knowledge-translation";
 import { z } from "zod";
 import { knowledgeEntityContentSchema, knowledgeSourceContentSchema, knowledgeRecordContentSchema, knowledgeMappingContentSchema, knowledgeTimelineSchema, knowledgePinSchema, knowledgeTimelineIssues } from "./knowledge-foundation";
 const version = <T extends z.ZodType>(content: T) => z.strictObject({ ...knowledgePinSchema.shape, content, createdAt: z.iso.datetime(), reason: z.string().max(4000) });
@@ -6,6 +7,7 @@ export const capsuleKnowledgeSnapshotSchema = z.strictObject({
   entities: z.array(version(knowledgeEntityContentSchema)).max(400),
   sources: z.array(version(knowledgeSourceContentSchema)).max(800),
   records: z.array(version(knowledgeRecordContentSchema)).max(400),
+  translations:z.array(knowledgeTranslationVersionSchema).max(100).optional(),
   mappings: z.array(version(knowledgeMappingContentSchema)).max(400),
   timeline: knowledgeTimelineSchema.optional(), initialView: z.enum(["graph", "timeline", "split"]),
 }).superRefine((s,ctx) => {
@@ -16,6 +18,12 @@ export const capsuleKnowledgeSnapshotSchema = z.strictObject({
     const c=record.content;
     for(const id of [c.subjectId,c.objectId].filter(Boolean))if(!s.entities.some(e=>e.id===id))issue("Missing snapshot entity");
     for(const e of c.evidence)if(!s.sources.some(source=>source.id===e.source.id&&source.revision===e.source.revision))issue("Missing source edition");
+  }
+  const translations=s.translations??[];
+  if(new Set(translations.map(t=>t.id)).size!==translations.length)issue('Duplicate translation identity');
+  for(const t of translations){const rows=t.target.kind==='record'?s.records:t.target.kind==='entity'?s.entities:t.target.kind==='source'?s.sources:[];
+   const original=rows.find(v=>v.id===t.target.id&&v.revision===t.target.revision);
+   try{if(!original||knowledgeOriginalText(t.target,original.content).text!==t.originalText)issue('Translation original is not in this snapshot');}catch{issue('Invalid translation original');}
   }
   if(s.timeline)for(const message of knowledgeTimelineIssues(s.records,s.timeline))issue(message);
 });

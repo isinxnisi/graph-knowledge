@@ -4,6 +4,7 @@ import { z } from "zod";
 // Source text is untrusted material, not an instruction or verified fact.
 export const knowledgeReviewInputSchema = z.strictObject({
   assertion: z.string().trim().min(1).max(4000),
+  translation: z.strictObject({originalText:z.string().min(1).max(4000),sourceLanguage:z.string().optional(),targetLanguage:z.string().min(1).max(100)}).optional(),
   context: z.string().max(16000).default(""),
   evidence: z.array(z.strictObject({
     title: z.string().max(300), locator: z.string().max(1000),

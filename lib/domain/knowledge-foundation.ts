@@ -1,3 +1,5 @@
+import {knowledgeIdSchema,knowledgeRevisionSchema,knowledgePinSchema} from "./knowledge-ids";
+import {translationCommandShape} from "./knowledge-translation";
 import { z } from "zod";
 import { themeTimeSchema } from "./theme-workbench";
 import { themeTimelineIssues } from "./theme-timeline";
@@ -6,9 +8,7 @@ import { knowledgeTextLanguageSchema as originalLanguage } from "./knowledge-lan
 
 // A common record is independent of any editorial Theme. IDs never derive from
 // display names; a pin identifies one immutable content revision.
-export const knowledgeIdSchema = z.string().min(1).max(120).regex(/^[A-Za-z0-9][A-Za-z0-9._:-]*$/);
-export const knowledgeRevisionSchema = z.number().int().positive().max(Number.MAX_SAFE_INTEGER - 1);
-export const knowledgePinSchema = z.strictObject({ id: knowledgeIdSchema, revision: knowledgeRevisionSchema });
+export {knowledgeIdSchema,knowledgeRevisionSchema,knowledgePinSchema} from "./knowledge-ids";
 export type KnowledgePin = z.infer<typeof knowledgePinSchema>;
 const text = z.string().trim().min(1);
 export const knowledgeEntityContentSchema = z.strictObject({
@@ -78,7 +78,7 @@ export type KnowledgeContentByKind = { entity: KnowledgeEntityContent; source: K
 export type KnowledgeStatus = { kind: KnowledgeKind; id: string; revision: number; visibility: "private" | "public" | "hidden"; confirmation: "unreviewed" | "checked" | "disputed" };
 export type KnowledgeActor = { kind: "operator" | "collector" | "collection" | "submission" | "user" | "reader"; id: string };
 export type KnowledgeList = { entities: KnowledgeEntityVersion[]; sources: KnowledgeSourceVersion[]; records: KnowledgeRecordVersion[]; themes: KnowledgeThemeVersion[]; statuses: KnowledgeStatus[] };
-export type KnowledgeSnapshot = { schemaVersion: 1; entities: KnowledgeEntityVersion[]; sources: KnowledgeSourceVersion[]; records: KnowledgeRecordVersion[]; mappings: KnowledgeMappingVersion[]; timeline?: KnowledgeTimeline; initialView: "graph" | "timeline" | "split" };
+export type KnowledgeSnapshot = { translations?:import("./knowledge-translation").KnowledgeTranslationVersion[]; schemaVersion: 1; entities: KnowledgeEntityVersion[]; sources: KnowledgeSourceVersion[]; records: KnowledgeRecordVersion[]; mappings: KnowledgeMappingVersion[]; timeline?: KnowledgeTimeline; initialView: "graph" | "timeline" | "split" };
 export type KnowledgeThemeResolved = { theme: KnowledgeThemeVersion; snapshot: KnowledgeSnapshot };
 export type KnowledgeChange = { kind: KnowledgeKind; id: string; beforeRevision: number | null; afterRevision: number | null; before: unknown; after: unknown; requiresRecordCorrection?: boolean };
 export type KnowledgeThemeDiff = { themeId: string; revision: number; refreshToken: string; changes: KnowledgeChange[]; unavailable: { kind: KnowledgeKind; id: string }[] };
@@ -89,6 +89,8 @@ const entityNew = z.strictObject({ id: knowledgeIdSchema, content: knowledgeEnti
 const sourceNew = z.strictObject({ id: knowledgeIdSchema, content: knowledgeSourceContentSchema });
 const recordNew = z.strictObject({ id: knowledgeIdSchema, content: knowledgeRecordContentSchema });
 export const knowledgeCommandSchema = z.discriminatedUnion("action", [
+  z.strictObject({...base,...translationCommandShape,reason}),
+  z.strictObject({...base,action:z.literal("set-translation-visibility"),id:knowledgeIdSchema,expectedStatusRevision:knowledgeRevisionSchema,visibility:z.enum(["public","hidden"]),reason}),
   z.strictObject({...base,action:z.literal("accept-record"),entities:z.array(entityNew).max(40),sources:z.array(sourceNew).max(40),entityPins:z.array(knowledgePinSchema).max(40),sourcePins:z.array(knowledgePinSchema).max(40),record:recordNew,expectedRevision:knowledgeRevisionSchema.optional(),themes:z.array(knowledgePinSchema).max(8).optional(),preserveLegacySemantics:z.boolean().optional(),legacyEntities:z.array(z.strictObject({id:knowledgeIdSchema,content:knowledgeEntityContentSchema,revision:z.string(),payload:z.unknown(),sha256:z.string().regex(/^[a-f0-9]{64}$/)})).max(40).optional(),legacySources:z.array(z.strictObject({id:knowledgeIdSchema,content:knowledgeSourceContentSchema})).max(80).optional(),legacyRecords:z.array(z.strictObject({id:knowledgeIdSchema,content:knowledgeRecordContentSchema,revision:z.string(),payload:z.unknown(),sha256:z.string().regex(/^[a-f0-9]{64}$/)})).max(20).optional(),reason}),
   z.strictObject({ ...base, action: z.literal("create-bundle"), entities: z.array(entityNew).max(200).default([]), sources: z.array(sourceNew).max(400).default([]), records: z.array(recordNew).min(1).max(400), entityPins: z.array(knowledgePinSchema).max(400).default([]), visibility: z.enum(["private", "public"]).default("public"), reason,
     legacyLinks: z.array(z.strictObject({ dataset: text.max(100), legacyClaimId: knowledgeIdSchema, recordId: knowledgeIdSchema, importedRevision: z.literal(1), payload: z.json(), sha256: z.string().regex(/^[a-f0-9]{64}$/) })).max(400).default([]),

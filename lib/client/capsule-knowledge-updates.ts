@@ -80,6 +80,7 @@ export function planCapsuleKnowledgeUpdate(document:CapsuleDocument,response:Cap
   timeline.placements=timeline.placements.filter(p=>candidate.records.some(r=>r.id===p.recordId&&r.content.times.some(t=>t.id===p.timeId&&timeline.axes.some(a=>a.id===p.axisId&&a.kind===t.time.kind))));
   timeline.insets=timeline.insets.filter(p=>candidate.records.some(r=>r.id===p.parentRecordId)&&timeline.axes.some(a=>a.id===p.axisId));
  }
+ candidate.translations=(old.translations??[]).filter(t=>(t.target.kind==='record'?candidate.records:t.target.kind==='entity'?candidate.entities:t.target.kind==='source'?candidate.sources:[]).some(v=>v.id===t.target.id&&v.revision===t.target.revision));
  attachment.snapshot={...candidate,initialView:old.initialView,...(timeline?{timeline}:{})};
  attachment.capturedAt=new Date().toISOString();
  attachment.excludedRecordIds=[...excluded];

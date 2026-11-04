@@ -1,3 +1,5 @@
+import {translationTargetKey} from "./knowledge-translation";
+import {translationTextLimit} from "./knowledge-translation";
 import {knowledgeEntityContentSchema,knowledgeSourceContentSchema,knowledgeRecordContentSchema,type KnowledgePin} from "./knowledge-foundation";
 import type {KnowledgeSubmissionContent,KnowledgeSubmissionContext} from "./knowledge-submission";
 export function submissionIntentIssues(content:KnowledgeSubmissionContent,context?:KnowledgeSubmissionContext):string[]{
@@ -9,6 +11,14 @@ export function submissionIntentIssues(content:KnowledgeSubmissionContent,contex
  for(const [index,item] of content.items.entries()){
   const prefix=`項目${index+1}：`,r=item.record,op=item.operation;
   const fail=(message:string)=>issues.push(prefix+message);
+  if(op==='translate-text'){
+   const v=item.translation,original=context?.texts?.find(t=>v&&translationTargetKey(t.target)===translationTargetKey(v.target));
+   if(content.items.length!==1)fail('訳文は元の事実と分け、一件ずつ投稿してください。');
+   if(!v||!original)fail('翻訳する原文を読み直してください。');
+   else{if(!v.text.trim()||v.text.length>translationTextLimit(v.target))fail('訳文の内容と文字数を確認してください。');if(original.language?.tag===v.language)fail('原文と異なる訳文の言語を選んでください。');if((original.translation?.revision??0)!==v.expectedRevision)fail('訳文の最新版を読み直してください。');}
+   continue;
+  }
+  if(item.translation)fail('訳文の投稿は翻訳の入口から行ってください。');
   const parsed=knowledgeRecordContentSchema.safeParse(r);if(!parsed.success){
    const issue=parsed.error.issues[0],field=issue?.path[0];
    if(field==="evidence")fail(r.evidence.length===0?"公開するには、事実を確かめた資料を1件以上追加してください。草稿は資料なしでも保存できます。":issue?.path.includes("locator")?"資料の「書かれている場所」を入力してください。":issue?.path.includes("excerpt")?"資料の「その部分の原文」は4000文字以内で入力してください。":"資料の内容を確認してください。資料は20件まで追加できます。");

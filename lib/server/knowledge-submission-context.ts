@@ -12,6 +12,11 @@ export async function resolveSubmissionContext(content:KnowledgeSubmissionConten
  const legacy=content.legacy?await readSubmissionLegacyReferences(content.legacy):undefined;
  if(legacy){captured.entities.push(...legacy.entities);captured.sources.push(...legacy.sources);captured.records!.push(...legacy.records);captured.legacy={revision:legacy.revision,entities:legacy.legacy.entities,records:legacy.legacy.records};}
  const service=()=>knowledgePublicationPreview();
+ for(const item of content.items.filter(i=>i.operation==='translate-text')){
+  if(!item.translation)throw new KnowledgeError('翻訳対象を選んでください');
+  const v=item.translation,original=await (await service()).textOriginal(v.target),current=await (await service()).textTranslation(v.target,v.language);
+  captured.texts??=[];captured.texts.push({...original,translation:current.translation});
+ }
  const recordPins=unique(content.items.flatMap(i=>[...(i.correction?[i.correction]:[]),...(i.about?.kind==='record'?[i.about]:[]),...(i.record.aboutRecord?[i.record.aboutRecord]:[])]));
  for(const p of recordPins){
   if(captured.records!.some(r=>r.id===p.id&&r.revision===p.revision))continue;
@@ -57,5 +62,12 @@ export async function captureSubmissionSelection(selection:z.infer<typeof submis
  // up from a node's free-form note. New evidence still needs the author's input.
  if(authored&&legacy)for(const item of content.items){const old=captured.records?.find(r=>r.id===item.correction?.id&&r.revision===item.correction?.revision);if(old){if(!item.record.evidence.length)item.record.evidence=old.content.evidence;if(!item.record.scope)item.record.scope=old.content.scope;if(!item.record.times.length)item.record.times=old.content.times;}
  content.sourcePins=unique([...content.sourcePins,...captured.sources.map(v=>({id:v.id,revision:v.revision}))]);}
+ return {content,captured};
+}
+
+export async function captureTranslationSelection(target:import('../domain/knowledge-translation').KnowledgeTextTarget,language:string){
+ const content=knowledgeSubmissionContentSchema.parse({schemaVersion:2,attribution:'profile',title:'訳文の投稿',entities:[],entityPins:[],sources:[],sourcePins:[],items:[{key:'translation',operation:'translate-text',translation:{target,language,text:'',expectedRevision:0},record:{kind:'note',subjectId:null,objectId:null,assertion:'',relation:'',polarity:'affirmed',scope:'',times:[],evidence:[]}}]});
+ const captured=await resolveSubmissionContext(content),original=captured.texts![0];
+ content.title='翻訳 · '+original.text.slice(0,150);content.items[0].translation!.text=original.translation?.text??'';content.items[0].translation!.expectedRevision=original.translation?.revision??0;content.items[0].record.assertion=original.text;
  return {content,captured};
 }

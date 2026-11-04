@@ -3,7 +3,7 @@ import path from "node:path";
 import { readFile } from "node:fs/promises";
 import type { Pool, PoolClient, QueryResultRow } from "pg";
 import { z } from "zod";
-import { knowledgeSubmissionCommandSchema, knowledgeSubmissionContentSchema, knowledgeSubmissionCaptureSchema,knowledgePublicCaptureSchema,knowledgeSelectionCaptureSchema, type KnowledgeSubmission } from "../domain/knowledge-submission";
+import { knowledgeSubmissionCommandSchema, knowledgeSubmissionContentSchema, knowledgeSubmissionCaptureSchema,knowledgeTranslationCaptureSchema,knowledgePublicCaptureSchema,knowledgeSelectionCaptureSchema, type KnowledgeSubmission } from "../domain/knowledge-submission";
 import type { DatasetMode } from "../domain/dataset";
 import { memberCapsuleSchema } from "../domain/member-capsule";
 import { captureSubmissionCapsule } from "../domain/knowledge-submission-capsule";
@@ -91,7 +91,7 @@ export function createKnowledgeSubmissionService(pool: Pool, options?: { memberS
     async execute(ownerId: string, raw: unknown, publicCapture?:{content:KnowledgeSubmission["content"];captured:unknown}): Promise<KnowledgeSubmission> {
       ownerId = owner(ownerId);
       if (Buffer.byteLength(JSON.stringify(raw)) > 128_000) throw new KnowledgeError("投稿が128KBを超えています", 413, "TOO_LARGE");
-      let input = knowledgeSelectionCaptureSchema.safeParse(raw).success?knowledgeSelectionCaptureSchema.parse(raw):knowledgePublicCaptureSchema.safeParse(raw).success?knowledgePublicCaptureSchema.parse(raw):knowledgeSubmissionCaptureSchema.safeParse(raw).success ? knowledgeSubmissionCaptureSchema.parse(raw) : knowledgeSubmissionCommandSchema.parse(raw);
+      let input = knowledgeTranslationCaptureSchema.safeParse(raw).success?knowledgeTranslationCaptureSchema.parse(raw):knowledgeSelectionCaptureSchema.safeParse(raw).success?knowledgeSelectionCaptureSchema.parse(raw):knowledgePublicCaptureSchema.safeParse(raw).success?knowledgePublicCaptureSchema.parse(raw):knowledgeSubmissionCaptureSchema.safeParse(raw).success ? knowledgeSubmissionCaptureSchema.parse(raw) : knowledgeSubmissionCommandSchema.parse(raw);
       const digest = knowledgeDigest(raw);
       return transaction(ownerId, async c => {
         // Serializes idempotency and each member's create/update requests.
@@ -102,7 +102,7 @@ export function createKnowledgeSubmissionService(pool: Pool, options?: { memberS
           return previous.response;
         }
         let sourceCapsule: unknown = null;
-        if(input.action === "capture-public" || input.action === "capture-selection") {
+        if(input.action === "capture-public" || input.action === "capture-selection" || input.action === "capture-translation") {
           if(!publicCapture)throw new KnowledgeError("公開原本のサーバー確認が必要です",403,"FORBIDDEN");
           if(Buffer.byteLength(JSON.stringify(publicCapture))>128_000)throw new KnowledgeError("取得版が大きすぎます",413,"TOO_LARGE");
           sourceCapsule={kind:input.action==='capture-public'?"public-record":"selection",...(input.action==='capture-public'?{recordId:input.recordId,recordRevision:input.recordRevision}:{}),captured:publicCapture.captured};

@@ -1,7 +1,7 @@
 import {capsuleSubmissionSelection} from "../../domain/knowledge-submission-selection";
 import {captureSubmissionCapsule} from "../../domain/knowledge-submission-capsule";
 import {reviewDisclosureForConsent} from "../../domain/knowledge-submission-feedback";
-import {captureSubmissionSelection,resolveSubmissionContext} from "../knowledge-submission-context";
+import {captureSubmissionSelection,captureTranslationSelection,resolveSubmissionContext} from "../knowledge-submission-context";
 import {submissionIntentIssues} from "../../domain/knowledge-submission-intent";
 import {ApiError} from "../http";
 import type { Pool } from "pg";
@@ -13,7 +13,7 @@ import {knowledgeReviewRequest,parseKnowledgeReview} from "../../domain/knowledg
 import { z } from "zod";
 import type { DatasetMode } from "../../domain/dataset";
 import { memberCapsuleSchema } from "../../domain/member-capsule";
-import { submissionSelectionContextSchema, knowledgeSubmissionCommandSchema, knowledgeSubmissionCaptureSchema,knowledgeSelectionCaptureSchema,knowledgePublicCaptureSchema,knowledgeSubmissionContentSchema } from "../../domain/knowledge-submission";
+import { submissionSelectionContextSchema, knowledgeSubmissionCommandSchema, knowledgeSubmissionCaptureSchema,knowledgeSelectionCaptureSchema,knowledgePublicCaptureSchema,knowledgeTranslationCaptureSchema,knowledgeSubmissionContentSchema } from "../../domain/knowledge-submission";
 import { capsuleSubmissionCandidates } from "../../domain/knowledge-submission-capsule";
 import { createKnowledgeSubmissionService } from "../knowledge-submissions";
 import { KnowledgeError,knowledgeDigest } from "../knowledge-foundation";
@@ -45,12 +45,13 @@ export function createMemberKnowledgeSubmissions(pool:Pool,origin:string,owner:(
    if(knowledgeReviewCommandSchema.safeParse(input).success){if(!reviewEnabledFor(user.id))throw new MemberError(404,"NOT_FOUND");await readyAcceptance(user.id);const v=knowledgeReviewCommandSchema.parse(input);const saved=await store.get(user.id,v.id);const issues=submissionIntentIssues(saved.content,saved.context);if(issues.length)throw new KnowledgeError(issues.join(" / "),400,"SUBMISSION_TARGET_REQUIRED");if(v.consentVersion!==(process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED==='1'?PUBLICATION_CONSENT_VERSION:REVIEW_CONSENT_VERSION))throw new MemberError(409,"VERSION_CONFLICT");return memberJson({submission:await reviews.authorize(user.id,input)});}
    const selection=knowledgeSelectionCaptureSchema.safeParse(input);
    const capture=knowledgePublicCaptureSchema.safeParse(input);
-   if(selection.success||capture.success){
+   const translation=knowledgeTranslationCaptureSchema.safeParse(input);
+   if(selection.success||capture.success||translation.success){
     await readyAcceptance(user.id);
     if(!reviewEnabledFor(user.id)||process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED!=="1")throw new MemberError(404,"NOT_FOUND");
-    const requestId=selection.success?selection.data.requestId:capture.data!.requestId;
+    const requestId=translation.success?translation.data.requestId:selection.success?selection.data.requestId:capture.data!.requestId;
     const prior=await store.replay(user.id,requestId,knowledgeDigest(input));if(prior)return memberJson({submission:prior});
-    const picked=selection.success?await captureSubmissionSelection(selection.data.context,selection.data.content):await captureSubmissionSelection({dataset:'public-kg',entityIds:[],claimIds:[],entityPins:[],recordPins:[{id:capture.data!.recordId,revision:capture.data!.recordRevision}]});
+    const picked=translation.success?await captureTranslationSelection(translation.data.target,translation.data.language):selection.success?await captureSubmissionSelection(selection.data.context,selection.data.content):await captureSubmissionSelection({dataset:'public-kg',entityIds:[],claimIds:[],entityPins:[],recordPins:[{id:capture.data!.recordId,revision:capture.data!.recordRevision}]});
     if(capture.success)for(const item of picked.content.items)item.operation='correct-record';
     return memberJson({submission:await store.execute(user.id,input,picked)});
    }

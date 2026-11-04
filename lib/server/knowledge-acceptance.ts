@@ -1,3 +1,6 @@
+import {translationTargetKey} from "../domain/knowledge-translation";
+import {translationId} from "./knowledge-translation-storage";
+import {readKnowledgeTextOriginal} from "./knowledge-foundation";
 import {submissionIntentIssues,submissionReviewEvidence} from "../domain/knowledge-submission-intent";
 import {readSubmissionLegacyReferences} from "./knowledge-submission-legacy";
 import {ensurePublicationContributorSchema,persistPublicationContributor,finalizePublicationContributor} from "./member/knowledge-contributors";
@@ -27,6 +30,10 @@ export type AcceptancePlan={command:KnowledgeCommand;references:{kind:'entity'|'
 export function acceptancePlan(value:KnowledgeSubmission,key:string,decisionId:string,observedRecord?:{id:string;revision:number;content:unknown}):AcceptancePlan{
  const item=value.content.items.find(i=>i.key===key);if(!item)throw new SourceCheckError('対象の項目がありません。');
  const issues=submissionIntentIssues({...value.content,items:[item]},value.context);if(issues.length)throw new SourceCheckError(issues.join(' / '));
+ if(item.operation==='translate-text'){
+  const t=item.translation!,original=value.context!.texts!.find(v=>translationTargetKey(v.target)===translationTargetKey(t.target))!;
+  return {command:knowledgeCommandSchema.parse({action:'accept-translation',requestId:decisionId,target:t.target,language:t.language,text:t.text,originalHash:original.hash,expectedRevision:t.expectedRevision,reason:'公開原文との意味一致を確認した訳文'}),references:[{kind:t.target.kind,id:t.target.id,revision:t.target.revision,content:original.content}],recordId:translationId(t.target,t.language),operation:'translate-text'};
+ }
  const references:AcceptancePlan['references']=[];
  const allocate=(kind:string,id:string)=>'submission:'+(kind==='record'?decisionId:knowledgeDigest({submission:value.id,revision:value.revision}).slice(0,32))+':'+kind+':'+knowledgeDigest(id).slice(0,16);
  const baseline=observedRecord??value.context?.records?.find(r=>r.id===item.correction?.id&&r.revision===item.correction?.revision);
@@ -188,8 +195,8 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
   const c=await knowledge.connect().catch(()=>null);if(!c)return {reason:"取得元の公開状態を確認できません。時間をおいて再試行します。",retryable:true};
   try{
    const value=material(row),item=value.content.items.find(i=>i.key===row.item_key)!;
-   if(!item.record.evidence.length)throw new SourceCheckError('資料と、本文から引用した根拠の抜粋を追加してください。');
-   for(const evidence of submissionReviewEvidence(item,value.context)){
+   if(item.operation!=='translate-text'&&!item.record.evidence.length)throw new SourceCheckError('資料と、本文から引用した根拠の抜粋を追加してください。');
+   for(const evidence of item.operation==='translate-text'?[]:submissionReviewEvidence(item,value.context)){
     const source=value.content.sources.find(s=>s.id===evidence.source.id&&evidence.source.revision===1)??value.context?.sources.find(s=>s.id===evidence.source.id&&s.revision===evidence.source.revision);
     if(!source?.content.url)throw new SourceCheckError('書誌だけの資料はまだ自動照合できません。公開URLを追加してください。');
     sourceURL(source.content.url);if(!evidence.excerpt.trim())throw new SourceCheckError('資料本文から引用した根拠の抜粋を追加してください。');
@@ -202,10 +209,10 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
  },
  async run(config:ReviewConfig){
   await ensure();
-  const indexed=(await pool.query("SELECT d.id,d.job_id,d.result FROM member_knowledge.publication_decisions d JOIN member_knowledge.review_jobs j ON j.id=d.job_id WHERE d.state='published' AND j.state='accepted' LIMIT 20")).rows;
+  const indexed=(await pool.query("SELECT d.id,d.job_id,d.result,d.command FROM member_knowledge.publication_decisions d JOIN member_knowledge.review_jobs j ON j.id=d.job_id WHERE d.state='published' AND j.state='accepted' LIMIT 20")).rows;
   for(const d of indexed){
-   const exists=(await knowledge.query("SELECT 1 FROM knowledge75.publication_control c JOIN knowledge75.publication_records r ON r.generation=c.active_generation JOIN knowledge75.objects o ON o.kind='record' AND o.id=r.id WHERE c.singleton AND r.id=$1 AND r.revision>=$2 AND o.visibility='public'",[d.result.id,d.result.revision])).rowCount;
-   if(exists)await pool.query("UPDATE member_knowledge.review_jobs SET state='published',reason=$2 WHERE id=$1 AND state='accepted'",[d.job_id,d.result?.disposition==='existing'?'同じ知識が登録済みです。記録・保存版・活動履歴は増やしていません。':d.result?.disposition==='theme-linked'?'既存の知識を指定したテーマへ追加しました。':'知識として公開しました。']);
+   const exists=d.command.action==='accept-translation'?await (async()=>{const c=await knowledge.connect();try{await readKnowledgeTextOriginal(c,d.command.target);return !!(await c.query("SELECT 1 FROM knowledge75.text_translation_heads WHERE id=$1 AND visibility='public' AND current_revision >= $2",[d.result.id,d.result.revision])).rowCount;}catch{return false;}finally{c.release();}})():(await knowledge.query("SELECT 1 FROM knowledge75.publication_control c JOIN knowledge75.publication_records r ON r.generation=c.active_generation JOIN knowledge75.objects o ON o.kind='record' AND o.id=r.id WHERE c.singleton AND r.id=$1 AND r.revision>=$2 AND o.visibility='public'",[d.result.id,d.result.revision])).rowCount;
+   if(exists)await pool.query("UPDATE member_knowledge.review_jobs SET state='published',reason=$2 WHERE id=$1 AND state='accepted'",[d.job_id,d.result?.disposition==='existing'?'同じ知識が登録済みです。記録・保存版・活動履歴は増やしていません。':d.result?.disposition==='theme-linked'?'既存の知識を指定したテーマへ追加しました。':d.command.action==='accept-translation'?'訳文を公開しました。':'知識として公開しました。']);
   }
   const pending=(await pool.query("SELECT * FROM member_knowledge.publication_decisions WHERE state='pending' AND not_before<=clock_timestamp() ORDER BY created_at LIMIT 1")).rows[0];
   if(pending){
@@ -225,6 +232,19 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
    });if(!lease)continue;
    try{
     const value=material(lease.s),item=value.content.items.find(i=>i.key===lease.j.item_key)!;
+    if(item.operation==='translate-text'){
+     const plan=acceptancePlan(value,item.key,lease.j.id),retainedProofs={translationEquivalence:true,review:lease.j.result,operatorConfirmationId:lease.j.operator_confirmation_id??null,consent:lease.j.consent_version};
+     const decision={id:lease.j.id,job_id:lease.j.id,command:plan.command,digest:knowledgeDigest(plan.command),references_json:plan.references,proofs:retainedProofs};
+     await deliver(decision,async result=>{
+      const accepted=await locked(lease.j.id,async(c,s,j)=>{
+       const check=(await c.query('SELECT token FROM member_knowledge.source_checks WHERE job_id=$1 FOR UPDATE',[j.id])).rows[0];if(j.state!=='verifying'||check?.token!==token)throw new KnowledgeError('受付版が変わりました',409,'STALE');
+       await c.query("INSERT INTO member_knowledge.publication_decisions(id,job_id,command,digest,references_json,proofs,state) VALUES($1,$2,$3,$4,$5,$6,'pending') ON CONFLICT(id) DO NOTHING",[decision.id,j.id,decision.command,decision.digest,JSON.stringify(plan.references),JSON.stringify(retainedProofs)]);
+       if((result as {disposition?:string}).disposition!=='existing')await persistPublicationContributor(c,{decisionId:decision.id,ownerId:s.owner_id,attribution:value.content.attribution??'anonymous',recordId:plan.recordId,submissionId:value.id,submissionRevision:value.revision,operation:'translate-text',entityIds:plan.references.filter(r=>r.kind==='entity').map(r=>r.id),themeIds:plan.references.filter(r=>r.kind==='theme').map(r=>r.id)});
+       await c.query("UPDATE member_knowledge.review_jobs SET state='accepted',reason='訳文を受理しました。公開へ反映しています。' WHERE id=$1",[j.id]);return true;
+      });if(!accepted)throw new KnowledgeError('受付版または会員状態が変わりました',409,'STALE');await hooks.afterPrepare?.();
+     });
+     return true;
+    }
     if(!item.record.evidence.length)throw new SourceCheckError('根拠の資料と、資料本文からの抜粋を追加してください。');
     const proofs:SourceProof[]=[];const start=Date.now();
     for(const evidence of submissionReviewEvidence(item,value.context)){
@@ -256,8 +276,8 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
     await locked(lease.j.id,async(c,_s,j)=>{
      if(j.state!=='verifying')return;
      if(e instanceof KnowledgeError&&e.code==='DUPLICATE_REVIEW_REQUIRED'){await c.query("UPDATE member_knowledge.review_jobs SET state='queued',reason='既存の知識が更新されたため、重複を確認し直します。',not_before=clock_timestamp()+interval '5 seconds' WHERE id=$1",[j.id]);return;}
-     const reason=e instanceof SourceCheckError?e.message:e instanceof KnowledgeError&&e.code==='CONFLICT'?'取得元が更新されました。最新版を確認して投稿し直してください。':'原資料・公開接続を確認できません。時間をおいて再試行します。';
-     const retry=!(e instanceof SourceCheckError)||e.retryable;
+     const reason=e instanceof SourceCheckError?e.message:e instanceof KnowledgeError&&e.status<500?e.message:e instanceof KnowledgeError&&e.code==='CONFLICT'?'取得元が更新されました。最新版を確認して投稿し直してください。':'原資料・公開接続を確認できません。時間をおいて再試行します。';
+     const retry=e instanceof KnowledgeError&&e.status<500?false:!(e instanceof SourceCheckError)||e.retryable;
      await c.query('UPDATE member_knowledge.source_checks SET reason=$2,not_before=clock_timestamp()+$3::integer*interval \'1 millisecond\',lease_until=NULL WHERE job_id=$1',[j.id,reason,e instanceof SourceCheckError?e.retryAfterMs:120000]);
      await c.query('UPDATE member_knowledge.review_jobs SET state=$2,reason=$3 WHERE id=$1',[j.id,retry?'source-retry':'needs-changes',reason]);
     });

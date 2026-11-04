@@ -24,7 +24,7 @@ export function appealSnapshot(row:QueryResultRow){
  const content=knowledgeSubmissionContentSchema.parse(row.content),item=content.items.find(i=>i.key===row.item_key);
  if(!item)throw new MemberError(409,'ITEM_CHANGED');
  const ctx=row.reference_context??row.source_capsule?.captured,ids=[item.record.subjectId,item.record.objectId];
- return {item,entities:[...content.entities,...(ctx?.entities??[])].filter(e=>ids.includes(e.id)).map(e=>({id:e.id,content:{name:e.content.name,kind:e.content.kind}})),sources:[...content.sources,...(ctx?.sources??[])].filter(s=>item.record.evidence.some(e=>e.source.id===s.id&&(s.revision??1)===e.source.revision)),review:{state:row.state,reason:row.reason,result:row.result},submittedAt:stamp(row.submitted_at)};
+ return {item,...(item.translation?{translationOriginal:ctx?.texts?.find((v:{target:unknown})=>knowledgeDigest(v.target)===knowledgeDigest(item.translation!.target))}:{}),entities:[...content.entities,...(ctx?.entities??[])].filter(e=>ids.includes(e.id)).map(e=>({id:e.id,content:{name:e.content.name,kind:e.content.kind}})),sources:[...content.sources,...(ctx?.sources??[])].filter(s=>item.record.evidence.some(e=>e.source.id===s.id&&(s.revision??1)===e.source.revision)),review:{state:row.state,reason:row.reason,result:row.result},submittedAt:stamp(row.submitted_at)};
 }
 async function feedback(c:PoolClient,j:QueryResultRow,key:string){
  await c.query("SELECT pg_advisory_xact_lock(hashtextextended('knowledge-feedback:'||$1,0))",[j.submission_id]);
@@ -106,8 +106,8 @@ export function createKnowledgeAppeals(pool:Pool,origin:string,owner:(r:Request)
     const opId=prior?.id??randomUUID();
     if(!prior)await c.query('INSERT INTO member_knowledge.appeal_operations(id,appeal_id,actor_id,request_id,payload_hash,action,reason) VALUES($1,$2,$3,$4,$5,$6,$7)',[opId,a.id,u.id,input.requestId,hash,input.action,input.reason]);
     if(input.action==='inspect'){
-     const publication=(await c.query("SELECT d.command->'record'->>'id' AS id,d.result->>'revision' AS revision FROM member_knowledge.publication_decisions d WHERE d.job_id=$1 AND d.state='published'",[j.id])).rows[0];
-     const status=publication?(await knowledge().query("SELECT status_revision,visibility FROM knowledge75.objects WHERE kind='record' AND id=$1",[publication.id])).rows[0]:null;
+     const publication=(await c.query("SELECT d.command->>'action' AS action,d.result->>'id' AS id,d.result->>'revision' AS revision FROM member_knowledge.publication_decisions d WHERE d.job_id=$1 AND d.state='published'",[j.id])).rows[0];
+     const status=publication?(await knowledge().query(publication.action==='accept-translation'?"SELECT status_revision,visibility FROM knowledge75.text_translation_heads WHERE id=$1":"SELECT status_revision,visibility FROM knowledge75.objects WHERE kind='record' AND id=$1",[publication.id])).rows[0]:null;
      return {result:{case:await readAppeal(c,a.id),snapshot:a.snapshot,current:{submittedRevision:j.revision,state:j.state,current:s.current_revision===j.revision&&s.digest===j.submitted_digest&&s.state==='queued',publication:publication&&status?{...publication,revision:Number(publication.revision),...status}:null},moderation:(await c.query("SELECT state,reason,command->>'visibility' AS visibility FROM member_knowledge.moderation_decisions WHERE appeal_id=$1 ORDER BY created_at DESC,id DESC LIMIT 1",[a.id])).rows[0]??null,history:(await c.query('SELECT action,reason,created_at FROM member_knowledge.appeal_operations WHERE appeal_id=$1 ORDER BY created_at,id',[a.id])).rows},replayed:!!prior};
     }
     if(a.revision!==input.expectedRevision)throw new MemberError(409,'VERSION_CONFLICT');
@@ -122,15 +122,16 @@ export function createKnowledgeAppeals(pool:Pool,origin:string,owner:(r:Request)
      await c.query('DELETE FROM member_knowledge.source_checks WHERE job_id=$1',[j.id]);
     }else if(input.action==='hide'||input.action==='restore'){
      const d=(await c.query("SELECT * FROM member_knowledge.publication_decisions WHERE job_id=$1 AND state='published'",[j.id])).rows[0];if(!d)throw new MemberError(409,'NOT_PUBLISHED');
-     await c.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))",['knowledge-moderation:'+d.command.record.id]);
-     const r=(await knowledge().query("SELECT visibility,status_revision FROM knowledge75.objects WHERE kind='record' AND id=$1",[d.command.record.id])).rows[0];
+     const translation=d.command.action==='accept-translation',publicationId=translation?d.result.id:d.command.record.id;
+      await c.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))",['knowledge-moderation:'+publicationId]);
+     const r=(await knowledge().query(translation?"SELECT visibility,status_revision FROM knowledge75.text_translation_heads WHERE id=$1":"SELECT visibility,status_revision FROM knowledge75.objects WHERE kind='record' AND id=$1",[publicationId])).rows[0];
      if(!r||r.status_revision!==input.statusRevision||r.visibility!==(input.action==='hide'?'public':'hidden'))throw new MemberError(409,'PUBLICATION_CHANGED');
-     if((await c.query("SELECT 1 FROM member_knowledge.moderation_decisions WHERE command->>'id'=$1 AND state='pending'",[d.command.record.id])).rowCount)throw new MemberError(409,'MODERATION_PENDING');
+     if((await c.query("SELECT 1 FROM member_knowledge.moderation_decisions WHERE command->>'id'=$1 AND state='pending'",[publicationId])).rowCount)throw new MemberError(409,'MODERATION_PENDING');
      if(input.action==='restore'){
-      const stop=(await c.query("SELECT * FROM member_knowledge.moderation_decisions WHERE command->>'id'=$1 ORDER BY created_at DESC,id DESC LIMIT 1",[d.command.record.id])).rows[0];
+      const stop=(await c.query("SELECT * FROM member_knowledge.moderation_decisions WHERE command->>'id'=$1 ORDER BY created_at DESC,id DESC LIMIT 1",[publicationId])).rows[0];
       if(!stop||stop.appeal_id!==a.id||stop.state!=='applied'||stop.command.visibility!=='hidden'||stop.result?.revision!==r.status_revision)throw new MemberError(409,'ORIGINAL_CASE_REQUIRED');
      }
-     const command={action:'set-visibility',requestId:opId,kind:'record',id:d.command.record.id,expectedStatusRevision:r.status_revision,visibility:input.action==='hide'?'hidden':'public',reason:'サイト運営による公開範囲の対応'};
+     const command={action:translation?'set-translation-visibility':'set-visibility',requestId:opId,...(translation?{}:{kind:'record'}),id:publicationId,expectedStatusRevision:r.status_revision,visibility:input.action==='hide'?'hidden':'public',reason:'サイト運営による公開範囲の対応'};
      await c.query('INSERT INTO member_knowledge.moderation_decisions(id,appeal_id,command) VALUES($1,$2,$3)',[opId,a.id,command]);result={...result,pending:true};
     }
     await c.query("UPDATE member_knowledge.appeals SET status='answered',revision=revision+1,updated_at=clock_timestamp() WHERE id=$1",[a.id]);

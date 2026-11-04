@@ -9,7 +9,8 @@ import {buildKnowledgePublishedRecord} from "../lib/domain/knowledge-publication
 import {captureKnowledgeCapsule} from "../lib/client/capsule-knowledge";
 import type {KnowledgeSnapshot} from "../lib/domain/knowledge-foundation";
 import {createKnowledgeAcceptance} from "../lib/server/knowledge-acceptance";
-import {createKnowledgeFoundationService} from "../lib/server/knowledge-foundation";
+import {migrateKnowledgeTranslations} from "../lib/server/knowledge-translation-migrate";
+import {readKnowledgeTextOriginal,readKnowledgeTranslation,createKnowledgeFoundationService} from "../lib/server/knowledge-foundation";
 import {ensureKnowledgePublicationSchema} from "../lib/server/knowledge-publication";
 import {matchSourceExcerpt,SourceCheckError} from "../lib/server/knowledge-source-verification";
 import {REVIEW_CONSENT_VERSION,PUBLICATION_CONSENT_VERSION} from "../lib/domain/knowledge-review-job";
@@ -19,8 +20,8 @@ import {memberConfig} from "../lib/server/member/config";
 import {memberPool} from "../lib/server/member/auth";
 import {operateMember} from "../lib/server/member/operations";
 import {startMemberOidc} from "./support/member-oidc";
-const publicRead=vi.hoisted(()=>({dto:null as unknown,detail:null as null|((id:string)=>Promise<unknown>),entities:null as null|((id:string)=>Promise<unknown>)}));
-vi.mock("../lib/server/knowledge-publication-preview",()=>({knowledgePublicationPreview:async()=>({detail:async(q:{recordId:string})=>(publicRead.dto as {record?:{id:string}}|null)?.record?.id===q.recordId?({generation:"fixture",record:publicRead.dto}):publicRead.detail!(q.recordId),entities:async(q:{entityId:string})=>publicRead.entities!(q.entityId)})}));
+const publicRead=vi.hoisted(()=>({dto:null as unknown,detail:null as null|((id:string)=>Promise<unknown>),entities:null as null|((id:string)=>Promise<unknown>),textOriginal:null as null|((target:unknown)=>Promise<unknown>),textTranslation:null as null|((target:unknown,language:string)=>Promise<unknown>)}));
+vi.mock("../lib/server/knowledge-publication-preview",()=>({knowledgePublicationPreview:async()=>({detail:async(q:{recordId:string})=>(publicRead.dto as {record?:{id:string}}|null)?.record?.id===q.recordId?({generation:"fixture",record:publicRead.dto}):publicRead.detail!(q.recordId),entities:async(q:{entityId:string})=>publicRead.entities!(q.entityId),textOriginal:async(t:unknown)=>publicRead.textOriginal!(t),textTranslation:async(t:unknown,l:string)=>publicRead.textTranslation!(t,l)})}));
 vi.mock("server-only",()=>({}));
 import {memberRuntime} from "../lib/server/member/runtime";
 import * as authRoute from "../app/api/auth/[...all]/route";
@@ -72,10 +73,12 @@ const post=(body:unknown,cookie=alice.cookies.value,user=aliceId,headers:Record<
 const current=async(id:string,cookie=alice.cookies.value,user=aliceId)=>item.GET(request("/api/member/knowledge-submissions/"+id,cookie,"GET",undefined,{"x-member-user":user}),ctx(id));
 beforeAll(async()=>{
  const config=memberConfig();if(!config||config.provider.kind!=="fixture"||process.env.KNOWLEDGE_SUBMISSIONS_ENABLED!=="1")throw Error("Use the disposable --submissions harness");
- acceptanceKnowledge=new Pool({connectionString:process.env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL});await ensureKnowledgePublicationSchema(acceptanceKnowledge);
+ acceptanceKnowledge=new Pool({connectionString:process.env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL});await ensureKnowledgePublicationSchema(acceptanceKnowledge);await migrateKnowledgeTranslations(acceptanceKnowledge);
  fixture=await startMemberOidc();const pool=memberPool(config);
  const foundation=createKnowledgeFoundationService(acceptanceKnowledge);
  publicRead.detail=async id=>{const record=await foundation.get({kind:'reader',id:'public'},'record',id),all=await foundation.list({kind:'reader',id:'public'});return {generation:'fixture',record:buildKnowledgePublishedRecord(record,{entities:all.entities.filter(e=>e.id===record.content.subjectId||e.id===record.content.objectId),sources:all.sources.filter(source=>record.content.evidence.some(e=>e.source.id===source.id)),mappings:[]})};};
+ publicRead.textOriginal=async target=>{const c=await acceptanceKnowledge.connect();try{return await readKnowledgeTextOriginal(c,target as import('../lib/domain/knowledge-translation').KnowledgeTextTarget,true);}finally{c.release();}};
+ publicRead.textTranslation=async(target,language)=>{const c=await acceptanceKnowledge.connect();try{return await readKnowledgeTranslation(c,target as import('../lib/domain/knowledge-translation').KnowledgeTextTarget,language);}finally{c.release();}};
  publicRead.entities=async id=>({generation:'fixture',entities:[await foundation.get({kind:'reader',id:'public'},'entity',id)]});
  try{await migrateMemberDatabase(pool,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true);}finally{await pool.end();}
  alice=await login("alice");bob=await login("bob");
@@ -269,6 +272,24 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
   expect(await engine.run(cfg)).toBe(false);expect(await knowledgeCount()).toBe(before+1);
   const decision=(await memberRuntime().pool.query('SELECT command,proofs FROM member_knowledge.publication_decisions WHERE job_id=(SELECT id FROM member_knowledge.review_jobs WHERE submission_id=$1)',[command.id])).rows[0];
   expect(JSON.stringify(decision)).not.toContain(aliceId);expect(decision.proofs.sources[0].extractor).toBe('public-text-v1');
+ });
+ it('captures a private translation, reviews equivalence and publishes without creating or correcting a fact',async()=>{
+  process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='1';
+  const rid='translation-original-'+randomUUID(),eid='translation-person-'+randomUUID(),sid='translation-source-'+randomUUID(),foundation=createKnowledgeFoundationService(acceptanceKnowledge);
+  await foundation.execute({kind:'operator',id:'fixture'},{action:'create-bundle',requestId:randomUUID(),reason:'翻訳用の公開原本',entities:[{id:eid,content:{name:'ある人物',kind:'person'}}],sources:[{id:sid,content:{title:'資料',url:'https://example.org/original'}}],records:[{id:rid,content:{kind:'note',subjectId:eid,assertion:'この人物は2003年に設立した。',textLanguages:{assertion:{tag:'ja',basis:'declared'}},evidence:[{id:'q',source:{id:sid,revision:1},locator:'冒頭',excerpt:'2003年に設立した。'}]}}]});
+  await acceptanceKnowledge.query("INSERT INTO knowledge75.published_revisions(kind,id,revision) SELECT kind,id,current_revision FROM knowledge75.objects WHERE id=ANY($1::text[]) ON CONFLICT DO NOTHING",[[eid,sid,rid]]);
+  const target={kind:'record',id:rid,revision:1,field:'assertion'},id=randomUUID(),captured=await post({action:'capture-translation',requestId:randomUUID(),id,expectedVersion:0,target,language:'en'});
+  expect(captured.status).toBe(200);const draft=knowledgeSubmissionSchema.parse((await captured.json()).submission);
+  expect(draft.context?.texts?.[0].text).toBe('この人物は2003年に設立した。');
+  expect((await current(id,bob.cookies.value,bobId)).status).toBe(404);
+  draft.content.items[0].translation!.text='This person founded it in 2003.';
+  const before=await knowledgeCount(),{command,cfg}=await acceptedCandidate(draft.content);
+  const verify=vi.fn(fixtureVerify),engine=createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},verify);
+  expect(await engine.run(cfg)).toBe(true);expect(verify).not.toHaveBeenCalled();expect(await knowledgeCount()).toBe(before);
+  await engine.run(cfg);const value=(await (await current(command.id)).json()).submission;
+  expect(value.review.items[0]).toMatchObject({state:'published',publication:{revision:1,state:'published'}});
+  expect((await foundation.get({kind:'reader',id:'test'},'record',rid)).revision).toBe(1);
+  const contribution=(await memberRuntime().pool.query("SELECT operation,attribution FROM member_knowledge.publication_contributors WHERE submission_id=$1",[command.id])).rows[0];expect(contribution).toEqual({operation:'translate-text',attribution:'profile'});
  });
  it('publishes a new person with the submitted classification and a source-backed note',async()=>{
   const v=reviewContent();Object.assign(v,{entities:[{id:'new-person',content:{name:'架空の人物',kind:'人物',description:'',aliases:[],language:'ja'}}]});Object.assign(v.items[0].record,{subjectId:'new-person',assertion:'架空の人物はこの観測所の設立者。'});v.items[0].record.evidence[0].excerpt='架空の人物はこの観測所の設立者。';

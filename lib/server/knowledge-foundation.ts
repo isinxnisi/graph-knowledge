@@ -1,3 +1,6 @@
+import {knowledgeTextTargetSchema,knowledgeOriginalText,type KnowledgeTextTarget} from "../domain/knowledge-translation";
+import {assertTranslationSchema} from "./knowledge-translation-migrate";
+import {putTranslation,storedTranslation,translationId,translationHash} from "./knowledge-translation-storage";
 import { createHash } from "node:crypto";
 import {duplicateMeaning} from '../domain/knowledge-duplicate';
 import {appendKnowledgeTimelineRecord} from "../domain/knowledge-timeline-append";
@@ -37,6 +40,7 @@ function expected(actual: number, requested: number) {
 }
 function actorAllowed(actor: KnowledgeActor, action: string) {
   if (!actor.id || actor.id.length > 200) throw new KnowledgeError("認証された操作主体が必要です", 403, "FORBIDDEN");
+  if (action === "accept-translation" && actor.kind === "submission") return;
   if (action === "accept-record") { if(actor.kind === "submission"||actor.kind === "collection")return;throw new KnowledgeError("知識投稿の内部受理処理が必要です",403,"FORBIDDEN"); }
   if (actor.kind === "operator") return;
   if (actor.kind === "collector" && action === "create-bundle") return;
@@ -262,7 +266,16 @@ export function createKnowledgeFoundationService(pool: Pool) {
       if(actor.kind==='collection'&&!internal)throw new KnowledgeError('収集の固定範囲と根拠の照合が必要です',403,'FORBIDDEN');
       if(internal)await internal.verify(c);
       let result: unknown;
-      if(cmd.action === "accept-record") {
+      if(cmd.action === "accept-translation") {
+        await assertTranslationSchema(c);if(actor.kind==='submission'&&!internal)throw new KnowledgeError('翻訳投稿の確認が必要です',403,'SUBMISSION_REQUIRED');
+        const original=await readKnowledgeTextOriginal(c,cmd.target,true,true);
+        try{result=await putTranslation(c,cmd,actor,original.content);}catch(e){throw new KnowledgeError((e as Error).message,409,'TRANSLATION_CONFLICT');}
+      } else if(cmd.action === "set-translation-visibility") {
+        await assertTranslationSchema(c);const h=(await c.query('SELECT * FROM knowledge75.text_translation_heads WHERE id=$1 FOR UPDATE',[cmd.id])).rows[0];
+        if(!h)throw new KnowledgeError('訳文がありません',404,'NOT_FOUND');expected(h.status_revision,cmd.expectedStatusRevision);
+        if(cmd.visibility==='public')await readKnowledgeTextOriginal(c,h.target);
+        await c.query('UPDATE knowledge75.text_translation_heads SET visibility=$2,status_revision=status_revision+1 WHERE id=$1',[cmd.id,cmd.visibility]);result={id:cmd.id,revision:h.status_revision+1,visibility:cmd.visibility};
+      } else if(cmd.action === "accept-record") {
         const entityPins=[...cmd.entityPins];
         async function acceptedReference(kind:"entity"|"source",value:{id:string;content:unknown}){
           const old=(await c.query("SELECT o.*,r.content FROM knowledge75.objects o JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=1 WHERE o.kind=$1 AND o.id=$2 FOR SHARE OF o",[kind,value.id])).rows[0];
@@ -469,4 +482,22 @@ export function createKnowledgeFoundationService(pool: Pool) {
     }),
   };
 }
+/** Same current visibility and published-edition gates as ordinary public reads. */
+export async function readKnowledgeTextOriginal(c:PoolClient,raw:KnowledgeTextTarget,requireCurrent=false,lock=false){
+ const target=knowledgeTextTargetSchema.parse(raw),h=await head(c,target.kind,target.id,lock?'FOR SHARE':'');
+ if(requireCurrent)expected(h.current_revision,target.revision);
+ await assertRevisionPublic(c,target.kind,target.id,target.revision);const original=await version(c,target.kind,target.id,target.revision);
+ if(target.kind==='record'&&!await recordReadable(c,original as KnowledgeRecordVersion))throw new KnowledgeError('原文を閲覧できません',404,'NOT_FOUND');
+ if(target.kind==='theme')await resolve(c,target.id,target.revision,true);
+ try{const text=knowledgeOriginalText(target,original.content);return {...text,content:original.content,target,hash:translationHash(text.text)};}catch(e){throw new KnowledgeError((e as Error).message,400,'TRANSLATION_TARGET');}
+}
+export async function readKnowledgeTranslation(c:PoolClient,target:KnowledgeTextTarget,language:string,revision?:number){
+ await assertTranslationSchema(c);const original=await readKnowledgeTextOriginal(c,target),translation=await storedTranslation(c,translationId(target,language),revision);
+ if(translation&&translation.originalHash!==original.hash)throw new KnowledgeError('訳文の原本が一致しません',409,'TRANSLATION_CONFLICT');return {original:{text:original.text,hash:original.hash,language:original.language},translation};
+}
 export type KnowledgeFoundationService = ReturnType<typeof createKnowledgeFoundationService>;
+
+export async function readKnowledgeTranslationById(c:PoolClient,id:string,revision?:number){
+ await assertTranslationSchema(c);const v=await storedTranslation(c,id,revision);if(!v)throw new KnowledgeError('訳文がありません',404,'NOT_FOUND');
+ const original=await readKnowledgeTextOriginal(c,v.target);if(original.hash!==v.originalHash)throw new KnowledgeError('原文が一致しません',409,'CONFLICT');return v;
+}
