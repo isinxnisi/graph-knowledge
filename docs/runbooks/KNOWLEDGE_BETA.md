@@ -127,3 +127,15 @@ worker単独再開は同じNode24で `--import tsx scripts/knowledge-collection-
 同projectの投稿確認・評価・収集に共通の永続枠を使う。collectionは日/月とも全体の1/3以下（現在26回/日・800回/月）、全体80回/日・2400回/月とtoken/RPM/TPMは従来どおり。台帳の削除、別keyへの迂回、有料fallback、自動model変更で待機を回避しない。providerの無料残量をローカル台帳だけで保証したと扱わない。
 
 復旧は028と既存の読解job/保存形式を読める資材を使用し、DBをresetしない。最終の互換退避buildと両DB backupは上記U6b検証記録を照合する。緊急停止時も公開済みRecordと旧Theme/Capsuleを削除せず、reader資格の取り外しと同workerの停止を分けて行う。既存漫画Worker・共通Kev・他projectのサービスを一括停止する手順ではない。
+
+## 通常GraphのDB停止からの復帰
+
+Web稼働中にTOP500/digest1234724013、`/api/dataset`503となった場合、通常KG7697の停止を確認する。[2026-11-04の復帰記録](../verification/LOCAL_GRAPH_DB_RECOVERY_20261104.md)。会員PG55433、新知識PG55476/Neo4j7699とは分けて調べ、Webの再buildやDB再投入で直そうとしない。
+
+既存container `graph-knowledge-film-confirmation-20261028` のdata volume `graph-film-confirmation-20261028`、127.0.0.1:7697→7687、image・設定を照合する。停止時は `docker start graph-knowledge-film-confirmation-20261028`。日常確認用としてrestart policyはunless-stoppedへ変更済み。将来再作成するときも同policy・既存volume・loopback bindingを維持し、旧seedやdumpをliveへ上書きしない。
+
+Dockerのport proxyが開いただけではDB readyではない。Neo4jのStartedログ、`http://localhost:3200/api/dataset`200とrevision、TOP200、通常Graphの表示まで確認する。今回のDB起動は約42秒。稼働Webは接続を回復し再起動不要だった。DBが正常でも問題が残る場合は、その時点のWebログを調べる。
+
+PGも同時停止した場合、TOPだけで完了とせずpublisher/reviewer/capture/readerのPIDの生存・cwd・cmdlineを確認する。今回はpublisher/reviewerだけ終了していた。Web稼働中にbeta起動を重ねず、受入済みmainのlauncher関数を同じstart.lock内で呼び、既存Webの実効設定とprivate profileから不足Workerだけ復帰した。資格・checkpointを再生成せず、未完了jobや利用量台帳を消さない。生存Workerは既存の所有確認により二重起動しない。
+
+この手順は通常KG DBの復帰だけで、Docker全体や共通Kev・他projectを再起動する指示ではない。復旧用Cloudflaredのrestart=noは既存方針のまま、必要時は上記tunnel手順を使う。
