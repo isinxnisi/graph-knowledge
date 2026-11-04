@@ -1,5 +1,7 @@
 # 現在の引継ぎ：U6cまで
 
+2026-11-04 投稿対象・入力案内追補：対象選び直しと図の接続、凡例と投稿色、元の内容／入力欄の区別、テーマ再選択、訂正前後、時期の区切り、日本語の入力エラーを修正。app `7f6ec682` / build `xFCZOeokDcxMdG718u_IF`をmain／3200／HTTPS βへ配置。追加migrationなし。[実操作・検証・保全・制約](../verification/KNOWLEDGE_SUBMISSION_RETARGET_20261104.md)。U6の残工程は継続。以下は各時点の記録。
+
 2026-11-04。公開後の意味分類・同じ具体語の候補確認・最大50件の一括適用／解除をmain／3200／HTTPS βへ接続した。[検証・再開・実結果](../verification/KNOWLEDGE_ORGANIZATION_U6_20261104.md)。app source `1a00a448`、build `cUVfr_QUPOYX9Ucm63sEv`。会員DB000〜028／29件、知識001/002/004、private profile・認証・旧KGは保持。3276と本番VPSは今回未更新。未追跡memo.txt／.localを保護する。
 
 次はU6の残り：Entity同一性の候補と安全な適用、Chatパッケージの厳密な取込・再送／部分不備／訂正、実テーマ2件＋Themeなしの総合一巡。基本あと2回程度の指示を目安とする再見積（推定）。U7統合受入・U8正式配置は別工程。
