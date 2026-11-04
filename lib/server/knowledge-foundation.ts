@@ -357,7 +357,7 @@ export function createKnowledgeFoundationService(pool: Pool) {
         result = await put(cmd.kind, cmd.id, content, cmd.expectedRevision + 1, cmd.reason);
       } else if (cmd.action === "create-theme") {
         const snapshot = await capture(c, cmd.recordPins, { entityPins: cmd.entityPins, sourcePins: cmd.sourcePins, timeline: cmd.timeline, initialView: cmd.initialView, publicOnly: true });
-        result = await put("theme", cmd.id, { title: cmd.title, description: cmd.description, ...snapshotPins(snapshot), ...(cmd.timeline ? { timeline: cmd.timeline } : {}), initialView: cmd.initialView }, 1, cmd.reason);
+        result = await put("theme", cmd.id, { title: cmd.title, description: cmd.description, ...(cmd.textLanguages ? { textLanguages: cmd.textLanguages } : {}), ...snapshotPins(snapshot), ...(cmd.timeline ? { timeline: cmd.timeline } : {}), initialView: cmd.initialView }, 1, cmd.reason);
       } else if (cmd.action === "refresh-theme") {
         const h = await head(c, "theme", cmd.id, "FOR UPDATE"); expected(h.current_revision, cmd.expectedRevision);
         const old = await version(c, "theme", cmd.id);

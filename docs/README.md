@@ -1,3 +1,5 @@
+2026-11-05 原語保存の第一段階：投稿文・名称・関係語・引用・資料・Themeの言語を内容版と別々に保持する。異言語の事実訂正は旧版と訂正者を残す。翻訳生成／訳文訂正は後続。[現行契約](design/KNOWLEDGE_ORIGINAL_LANGUAGES.md)／[検証](verification/KNOWLEDGE_ORIGINAL_LANGUAGES_20261105.md)。
+
 2026-11-05 引用訂正の回帰修正：引用だけ／記載箇所だけの明示訂正を次版へ保持。app `1f1efd3f` / build `FECRlX7I0yAs_6MVqAN8P`、main／3200／HTTPS βへ反映。追加migrationなし。[検証](verification/KNOWLEDGE_QUOTE_CORRECTION_20261105.md)。以下は各時点の記録。
 
 2026-11-05 多言語の基礎確認：原語・翻訳・事実訂正／訳文訂正を分ける[設計案（採用待ち・未実装）](design/KNOWLEDGE_MULTILINGUAL_PROPOSAL.md)を保存。既存の引用だけ／記載箇所だけの訂正が重複処理に吸収される回帰は別に修正。[検証・反映状態](verification/KNOWLEDGE_QUOTE_CORRECTION_20261105.md)。

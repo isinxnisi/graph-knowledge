@@ -34,7 +34,7 @@ function Detail({ dto, onEntity }: { dto: KnowledgePublishedRecord; onEntity: (i
     <h2>{r.kind === "relation" ? `${name(r.subjectId)} → ${name(r.objectId)}` : "出来事・説明"}</h2>
     {dto.entities.length > 0 && <div className={css.actions} aria-label="図の対象から辿る">{dto.entities.map((e) => <button key={e.id} onClick={() => onEntity(e.id)}>{e.content.name}</button>)}</div>}
     <div className={css.meta}>内容版 {dto.record.revision} · {r.polarity === "affirmed" ? "肯定" : r.polarity === "denied" ? "否定" : "不確実"}</div>
-    {r.relation && <p><strong>{r.relation}</strong></p>}<p>{r.assertion}</p>
+    {r.relation && <p lang={r.textLanguages?.relation?.tag}><strong>{r.relation}</strong></p>}<p lang={r.textLanguages?.assertion?.tag}>{r.assertion}</p>
     {r.scope && <p>範囲：{r.scope}</p>}
     {r.times.map((t) => <p key={t.id}>{themeTimeLabel(t.time)}</p>)}
     {typed?.event && <p>開催期間：{typed.event.metadata.period.from?.value ?? "未記載"} 〜 {typed.event.metadata.period.to?.value ?? "未記載"}<br /><span className={css.meta}>人物の参加期間とは別の情報です。</span></p>}
@@ -44,7 +44,7 @@ function Detail({ dto, onEntity }: { dto: KnowledgePublishedRecord; onEntity: (i
       {s?.content.url ? <a href={s.content.url} target="_blank" rel="noreferrer">{s.content.title} ↗</a> : <strong>{s?.content.title ?? "資料"}</strong>}
       <div className={css.meta}>資料版 {e.source.revision} · {e.locator} · {({ support: "支持", refute: "反証", background: "背景" })[e.stance]}</div>
       {s?.content.bibliography && <KnowledgeSourceBibliography value={s.content.bibliography} className={css.meta}/>}
-      {e.excerpt && <blockquote>{e.excerpt}</blockquote>}
+      {e.excerpt && <blockquote lang={e.textLanguages?.excerpt?.tag}>{e.excerpt}</blockquote>}
     </div>; })}
   </article>;
 }

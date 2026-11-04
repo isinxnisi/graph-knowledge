@@ -52,7 +52,7 @@ export function capsuleSubmissionSelection(document: CapsuleDocument, selected: 
     if(origin.kind==="kg"){context.entityIds!.push(id);if(origin.revision)revisions.add(origin.revision);}
     else if(origin.kind==="unresolved")context.entityIds!.push(id);
     else if(origin.kind==="knowledge"){context.entityPins!.push(pin(id,origin.revision));content.entityPins.push(pin(id,origin.revision));}
-    else content.entities.push({id,content:{name:node.title,kind:node.badge||"対象",description:node.description,aliases:[],language:"ja"}});
+    else content.entities.push({id,content:{name:node.title,kind:node.badge||"対象",description:node.description,aliases:[],language:"und"}});
   }
   for (const node of nodes.filter(n=>selectedSet.has(n.key))) {
     const id=ids.get(node.key)!,origin=node.origin,revision=origin.kind==="knowledge"?origin.revision:1;
@@ -72,7 +72,7 @@ export function capsuleSubmissionSelection(document: CapsuleDocument, selected: 
     const item=content.items.find(i=>i.key==="item-relation:"+evidence.targetKey||i.key==="item-node:"+evidence.targetKey);
     if(!item||(!evidence.url&&!evidence.note))continue;
     const sourceId="proposal-source:"+evidence.key;
-    content.sources.push({id:sourceId,content:{title:evidence.title||"資料",url:evidence.url||null,bibliography:evidence.url?"":evidence.note,language:"ja"}});
+    content.sources.push({id:sourceId,content:{title:evidence.title||"資料",url:evidence.url||null,bibliography:evidence.url?"":evidence.note,language:"und"}});
     item.record.evidence.push({id:"proposal-evidence:"+evidence.key,source:pin(sourceId,1),locator:evidence.locator||"箇所を確認してください",excerpt:"",stance:evidence.stance});
   }
   // Snapshot source references remain pinned; quotation text is never inferred from annotations.

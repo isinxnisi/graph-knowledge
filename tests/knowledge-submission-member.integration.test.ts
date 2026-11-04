@@ -305,14 +305,14 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
   await createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify).run(cfg);expect(await knowledgeCount()).toBe(before+1);process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='0';
  });
 
- async function correctionCandidate(options:{unchanged?:boolean;newRelation?:boolean;evidence?:{excerpt?:string;locator?:string}}={}){
+ async function correctionCandidate(options:{unchanged?:boolean;newRelation?:boolean;fact?:{text:string;language:string};evidence?:{excerpt?:string;locator?:string}}={}){
   process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='1';await memberRuntime().pool.query("UPDATE member_knowledge.submission_receipts SET submitted_at=clock_timestamp()-interval '2 hours'");
   const foundation=createKnowledgeFoundationService(acceptanceKnowledge),prefix='correct:'+randomUUID(),a=prefix+':a',b=prefix+':b',src=prefix+':source',rid=prefix+':record';
-  const created=await foundation.execute({kind:'operator',id:'fixture'}, {action:'create-bundle',requestId:randomUUID(),reason:'fixture',entities:[{id:a,content:{name:'A',kind:'人物'}},{id:b,content:{name:'B',kind:'作品'}}],sources:[{id:src,content:{title:'公開資料',url:'https://example.org/source'}}],records:[{id:rid,content:{kind:'relation',subjectId:a,objectId:b,relation:'制作した',assertion:'AはBを制作した。',evidence:[{id:'quote',source:{id:src,revision:1},locator:'本文',excerpt:'Aは資料で説明された作品Bを制作した。'}]}}]}) as {entities:KnowledgeSnapshot['entities'];sources:KnowledgeSnapshot['sources'];records:KnowledgeSnapshot['records']};
+  const created=await foundation.execute({kind:'operator',id:'fixture'}, {action:'create-bundle',requestId:randomUUID(),reason:'fixture',entities:[{id:a,content:{name:'A',kind:'人物'}},{id:b,content:{name:'B',kind:'作品'}}],sources:[{id:src,content:{title:'公開資料',url:'https://example.org/source'}}],records:[{id:rid,content:{kind:'relation',subjectId:a,objectId:b,relation:'制作した',assertion:'AはBを制作した。',textLanguages:{assertion:{tag:'ja',basis:'declared'},relation:{tag:'ja',basis:'declared'}},evidence:[{id:'quote',source:{id:src,revision:1},locator:'本文',excerpt:'Aは資料で説明された作品Bを制作した。'}]}}]}) as {entities:KnowledgeSnapshot['entities'];sources:KnowledgeSnapshot['sources'];records:KnowledgeSnapshot['records']};
   const snapshot:KnowledgeSnapshot={schemaVersion:1,...created,mappings:[],initialView:'graph'};const local=captureKnowledgeCapsule({snapshot,title:'公開記録の訂正'});
   const createdCap=await capsules.POST(request('/api/member/capsules',alice.cookies.value,'POST',{requestId:randomUUID(),content:{dataset:'demo',title:local.title,note:local.note,language:local.language,entityIds:local.entityIds,claimIds:local.claimIds,document:local.document}}));expect(createdCap.status).toBe(201);const cap=(await createdCap.json()).capsule;
   const id=randomUUID();const capture=await post({action:'capture',id,requestId:randomUUID(),expectedVersion:0,capsuleId:cap.id,capsuleRevision:1,keys:[rid]});expect(capture.status).toBe(200);const v=(await capture.json()).submission;
-  const edited={...v.content,schemaVersion:2,items:v.content.items.map((item:{record:{evidence:{excerpt:string;locator:string}[]};correction:{id:string;revision:number}})=>({...item,operation:options.newRelation?'create-relation':'correct-record',...(options.newRelation?{correction:undefined,about:undefined}:{about:{kind:'record',...item.correction}}),record:{...item.record,...(!options.unchanged?{assertion:'Aは作品Bを制作した。'}:{}),...(options.evidence?{evidence:item.record.evidence.map((e,index)=>index===0?{...e,...options.evidence}:e)}:{})}}))};expect((await post(save(id,1,edited))).status).toBe(200);
+  const edited={...v.content,schemaVersion:2,items:v.content.items.map((item:{record:{evidence:{excerpt:string;locator:string}[]};correction:{id:string;revision:number}})=>({...item,operation:options.newRelation?'create-relation':'correct-record',...(options.newRelation?{correction:undefined,about:undefined}:{about:{kind:'record',...item.correction}}),record:{...item.record,...(!options.unchanged?{assertion:'Aは作品Bを制作した。'}:{}),...(options.fact?{assertion:options.fact.text,textLanguages:{assertion:{tag:options.fact.language,basis:'declared'},relation:{tag:'ja',basis:'declared'}}}:{}),...(options.evidence?{evidence:item.record.evidence.map((e,index)=>index===0?{...e,...options.evidence}:e)}:{})}}))};expect((await post(save(id,1,edited))).status).toBe(200);
   expect((await post({action:'submit',id,requestId:randomUUID(),expectedVersion:2})).status).toBe(200);expect((await post({action:'review',id,requestId:randomUUID(),expectedVersion:3,consentVersion:PUBLICATION_CONSENT_VERSION})).status).toBe(200);
   const cfg=reviewConfig();await runKnowledgeReviewOnce(createReviewQueue(memberRuntime().pool),cfg,async()=>reviewedResponse());return {id,cfg,foundation,src,rid};
  }
@@ -333,6 +333,18 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
   expect((await (await current(id)).json()).submission.review.items[0].publication).toMatchObject({id:rid,revision:2,disposition:'updated'});
   expect((await memberRuntime().pool.query('SELECT record_id,record_revision,operation FROM member_knowledge.publication_contributors WHERE submission_id=$1',[id])).rows).toEqual([{record_id:rid,record_revision:2,operation:'correct-record'}]);
   expect(await engine.run(cfg)).toBe(false);expect((await foundation.get({kind:'reader',id:'public'},'record',rid)).revision).toBe(2);
+ });
+ it('retains the Japanese original when accepting an English factual correction and pins its author and language',async()=>{
+  const {id,cfg,foundation,rid}=await correctionCandidate({fact:{text:'A created work B.',language:'en'}});
+  await createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify).run(cfg);
+  const old=await foundation.get({kind:'reader',id:'public'},'record',rid,1),next=await foundation.get({kind:'reader',id:'public'},'record',rid);
+  expect(old.content).toMatchObject({assertion:'AはBを制作した。',textLanguages:{assertion:{tag:'ja',basis:'declared'}}});
+  expect(next.revision).toBe(2);expect(next.content).toMatchObject({assertion:'A created work B.',textLanguages:{assertion:{tag:'en',basis:'declared'},relation:{tag:'ja',basis:'declared'}}});
+  expect(next.content.evidence).toEqual(old.content.evidence);
+  expect((await memberRuntime().pool.query('SELECT record_id,record_revision,operation FROM member_knowledge.publication_contributors WHERE submission_id=$1',[id])).rows).toEqual([{record_id:rid,record_revision:2,operation:'correct-record'}]);
+  const submission=(await (await current(id)).json()).submission;
+  const cap=(await (await capsuleItem.GET(request('/api/member/capsules/'+submission.origin.capsuleId,alice.cookies.value),{params:Promise.resolve({id:submission.origin.capsuleId})})).json()).capsule;
+  expect(cap.content.document.knowledge.snapshot.records[0].content.assertion).toBe('AはBを制作した。');
  });
  it('does not create another record, content revision or contributor activity for a newly submitted identical fact',async()=>{
   const {id,cfg,foundation,rid}=await correctionCandidate({unchanged:true,newRelation:true,evidence:{excerpt:'AはBを制作した。',locator:'別の箇所'}}),before=await knowledgeCount();

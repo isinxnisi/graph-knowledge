@@ -20,7 +20,7 @@ const stamp="2026-11-04T01:00:00Z",stored=new Map<string,KnowledgeSubmission>(),
 for(const name of ['showModal','close'])if(typeof HTMLDialogElement.prototype[name as 'close']!=='function')Object.defineProperty(HTMLDialogElement.prototype,name,{configurable:true,writable:true,value(){}});
 const a={id:"existing-a",revision:2,createdAt:stamp,reason:"公開",content:{name:"既存の人物A",kind:"person",aliases:[],description:"",language:"ja"}},b={...a,id:"existing-b",content:{...a.content,name:"既存の作品B",kind:"work"}};
 const source={id:"existing-source",revision:1,createdAt:stamp,reason:"公開",content:{title:"以前の資料",url:"https://example.test/original",bibliography:"",language:"ja"}};
-const original={id:"existing-record",revision:3,createdAt:stamp,reason:"公開",content:knowledgeRecordContentSchema.parse({kind:"relation",subjectId:a.id,objectId:b.id,relation:"描いた",assertion:"公開された元の事実。",evidence:[{id:"old-quote",source:{id:source.id,revision:1},locator:"元の場所",excerpt:""}]})};
+const original={id:"existing-record",revision:3,createdAt:stamp,reason:"公開",content:knowledgeRecordContentSchema.parse({kind:"relation",subjectId:a.id,objectId:b.id,relation:"描いた",assertion:"公開された元の事実。",textLanguages:{assertion:{tag:"ja",basis:"declared"}},evidence:[{id:"old-quote",source:{id:source.id,revision:1},locator:"元の場所",excerpt:""}]})};
 const theme={id:"theme-a",revision:1,content:{title:"ある主題の年表",description:"",recordPins:[{id:original.id,revision:original.revision}],entityPins:[{id:a.id,revision:a.revision},{id:b.id,revision:b.revision}],sourcePins:[{id:source.id,revision:1}],mappingPins:[],initialView:"timeline" as const}};
 const context:KnowledgeSubmissionContext={entities:[a,b],sources:[source],records:[original],themes:[theme]};
 let loadFailure=false,failNext=false,conflictNext=false;const reviewCounts=new Map<string,Record<string,number>>();
@@ -123,4 +123,24 @@ it('keeps cancelled submissions out of the normal list while retaining their unr
 });
 it('does not describe an all-cancelled history as having no submissions and preserves access to it',async()=>{
  seed('過去の取消','cancelled');render(<KnowledgeSubmissions/>);await screen.findByText('通常の投稿はありません。取消済みは上の「取消済み」から確認できます。');expect(screen.queryByText(/まだ投稿はありません/)).toBeNull();fireEvent.click(screen.getByRole('button',{name:'取消済み 1'}));expect(screen.getByRole('button',{name:'過去の取消'})).toBeTruthy();
+});
+
+it('saves independent original languages and restores them without switching the Japanese UI',async()=>{
+ const view=await start();fireEvent.change(screen.getByRole('textbox',{name:'人物・作品の名前'}),{target:{value:'A'}});fact('A founded this observatory.');await completeSource();
+ fireEvent.change(screen.getByRole('combobox',{name:'本文の言語'}),{target:{value:'en'}});
+ fireEvent.change(screen.getByRole('combobox',{name:'名前の言語'}),{target:{value:'ja'}});
+ fireEvent.change(screen.getByRole('combobox',{name:'引用の言語'}),{target:{value:'ja'}});
+ fireEvent.click(screen.getByRole('button',{name:'草稿を保存'}));await screen.findByText('草稿を保存しました。');
+ const saved=[...stored.values()][0];expect(saved.content.items[0].record.textLanguages?.assertion).toEqual({tag:'en',basis:'declared'});expect(saved.content.items[0].record.evidence[0].textLanguages?.excerpt).toEqual({tag:'ja',basis:'declared'});expect(saved.content.entities[0].content.textLanguages?.name).toEqual({tag:'ja',basis:'declared'});
+ view.unmount();render(<KnowledgeSubmissions/>);
+ await waitFor(()=>expect(screen.getByRole('combobox',{name:'本文の言語'})).toHaveProperty('value','en'));
+ expect(screen.getByRole('textbox',{name:'登録する事実'})).toHaveProperty('value','A founded this observatory.');expect(screen.getByRole('combobox',{name:'引用の言語'})).toHaveProperty('value','ja');
+});
+
+it('does not label new correction prose with the original author language unless explicitly selected',async()=>{
+ await start();operation('correct-record');fireEvent.click(await screen.findByRole('button',{name:/公開された元の事実/}));
+ await waitFor(()=>expect(screen.getByRole('combobox',{name:'本文の言語'})).toHaveProperty('value','ja'));
+ fact('A corrected statement in English.');expect(screen.getByRole('combobox',{name:'本文の言語'})).toHaveProperty('value','');
+ fireEvent.change(screen.getByRole('combobox',{name:'本文の言語'}),{target:{value:'en'}});fact('Another corrected statement in English.');
+ expect(screen.getByRole('combobox',{name:'本文の言語'})).toHaveProperty('value','en');expect(screen.getByText('訂正前の内容').nextSibling?.textContent).toContain('公開された元の事実。');
 });

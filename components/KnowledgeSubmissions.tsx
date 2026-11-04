@@ -7,6 +7,8 @@ import {memberRequest,MemberClientError,memberListSchema} from "../lib/client/me
 import {knowledgeSubmissionContentSchema,knowledgeSubmissionSchema,knowledgeSubmissionContextSchema,type KnowledgeSubmissionContext,type KnowledgeSubmission,type KnowledgeSubmissionContent} from "../lib/domain/knowledge-submission";
 import {useUiLocale} from "../lib/client/ui-locale";
 import {PersonalMemberControls} from "./PersonalFrame";
+import {retainedTextLanguages} from "../lib/domain/knowledge-language";
+import {setSubmissionLanguage} from "../lib/domain/knowledge-submission-languages";
 import KnowledgeSubmissionItem from "./KnowledgeSubmissionItem";
 import type {SubmissionTarget} from "./KnowledgeSubmissionTarget";
 import KnowledgeSubmissionGraph from "./KnowledgeSubmissionGraph";
@@ -37,6 +39,7 @@ export default function KnowledgeSubmissions(){
 function SubmissionWorkspace({userId,connectionWarning}:{userId:string;connectionWarning:boolean}){
  const {locale}=useUiLocale(),en=locale==="en",t=(ja:string,english:string)=>en?english:ja;
  const notifications=useSubmissionNotifications();
+ const languageChoices=useRef(new Set<string>());
  const [listLoaded,setListLoaded]=useState(false);
  const [referenceContext,setReferenceContext]=useState<KnowledgeSubmissionContext|undefined>(),[selectedKey,setSelectedKey]=useState<string|undefined>();
  const [disclosure,setDisclosure]=useState<ReviewDisclosure|null>(null);
@@ -59,7 +62,7 @@ function SubmissionWorkspace({userId,connectionWarning}:{userId:string;connectio
  const fail=useCallback((e:unknown)=>{if(!current())return;if(e instanceof MemberClientError&&e.status===401){void refreshMemberIdentity(true).catch(()=>{});return;}setReloadSuggested(e instanceof MemberClientError&&e.status===409);setError(e instanceof MemberClientError?(e.status===409?"別の操作で更新されています。最新状態を確認してください。":e.status===429?"操作が続いています。少し待って再試行してください。":e.status===413?"選択・入力が大きすぎます。項目を少なくしてください。":e.status===404?"対象がありません。削除・取消や別アカウントでないか確認してください。":"投稿を確認できませんでした。接続を確認して再試行してください。"):"接続を確認できませんでした。入力はこの画面に残っています。");},[current]);
  const refreshList=useCallback(async(signal?:AbortSignal)=>{const r=await memberRequest("/api/member/knowledge-submissions",listSchema,{user:userId,signal});if(current()){setItems(r.submissions);setReviewMode(r.processing!=="not-connected");setPublishMode(r.processing==="publishing-beta");setConsentVersion(r.consentVersion);setDisclosure(r.reviewDisclosure??null);setListLoaded(true);}},[userId,current]);
  const urlFor=(id:string|null,capsuleId?:string,receipt?:number)=>{const u=new URL(location.href);u.search="";u.hash="";if(id)u.searchParams.set("id",id);if(capsuleId)u.searchParams.set("capsule",capsuleId);if(receipt)u.searchParams.set("receipt",String(receipt));history.replaceState(history.state,"",u);window.dispatchEvent(new Event("knowledge-submission:receipt-location"));};
- const open=useCallback(async(id:string,signal?:AbortSignal)=>{const r=await memberRequest("/api/member/knowledge-submissions/"+id,resultSchema,{user:userId,signal});if(current()){setSaved(r.submission);setReferenceContext(r.submission.context);setForm(r.submission.content);setDraftId(id);setConsent(false);}},[userId,current]);
+ const open=useCallback(async(id:string,signal?:AbortSignal)=>{const r=await memberRequest("/api/member/knowledge-submissions/"+id,resultSchema,{user:userId,signal});if(current()){languageChoices.current.clear();setSaved(r.submission);setReferenceContext(r.submission.context);setForm(r.submission.content);setDraftId(id);setConsent(false);}},[userId,current]);
  const selectCapsule=useCallback(async(id:string,signal?:AbortSignal)=>{const r=await memberRequest("/api/member/knowledge-submissions/capsule?capsuleId="+id,candidatesSchema,{user:userId,signal});if(current()){setSelection(r);setChecked([]);setChoice(false);}},[userId,current]);
  const selectPublicRecord=useCallback(async(id:string,signal?:AbortSignal)=>{
   const response=await fetch('/api/knowledge/public?mode=record&recordId='+encodeURIComponent(id),{cache:'no-store',signal});if(!response.ok)throw Error('PUBLIC_RECORD_UNAVAILABLE');
@@ -73,7 +76,7 @@ function SubmissionWorkspace({userId,connectionWarning}:{userId:string;connectio
  },[current,fail,refreshList,open,selectCapsule,selectPublicRecord]);
  useEffect(()=>{if(!dirty&&!pending)return;const warn=(e:BeforeUnloadEvent)=>{e.preventDefault();e.returnValue="";};addEventListener("beforeunload",warn);return()=>removeEventListener("beforeunload",warn);},[dirty,pending]);
  useEffect(()=>{if(cancelledNotice){noticeRef.current?.focus({preventScroll:true});noticeRef.current?.scrollIntoView?.({block:"start",behavior:"instant"});}},[cancelledNotice]);
- const clearEditor=useCallback(()=>{setSaved(null);setReferenceContext(undefined);setForm(null);setPublicChoice(null);setDraftId(null);setSelection(null);setChecked([]);setPending(null);setConsent(false);setHints({});setSelectedKey(undefined);setConfirmCancel(false);},[]);
+ const clearEditor=useCallback(()=>{languageChoices.current.clear();setSaved(null);setReferenceContext(undefined);setForm(null);setPublicChoice(null);setDraftId(null);setSelection(null);setChecked([]);setPending(null);setConsent(false);setHints({});setSelectedKey(undefined);setConfirmCancel(false);},[]);
  useEffect(()=>{const showList=()=>{if(!current())return;clearEditor();setUnreadOnly(false);setCancelledOnly(false);setNotice(null);setCancelledNotice(null);setError(null);void refreshList().catch(fail);pageHeading.current?.scrollIntoView?.({block:"start",behavior:"instant"});};window.addEventListener(personalSubmissionListEvent,showList);return()=>window.removeEventListener(personalSubmissionListEvent,showList);},[clearEditor,current,refreshList,fail]);
  async function openFromList(id:string,unread:boolean){
   let revision:number|undefined;
@@ -111,8 +114,11 @@ function SubmissionWorkspace({userId,connectionWarning}:{userId:string;connectio
   await run(async()=>{let result=saved;if(dirty||!result){const id=draftId??crypto.randomUUID();setDraftId(id);urlFor(id);result=await send({action:"save",requestId:crypto.randomUUID(),id,expectedVersion:saved?.version??0,content:candidate});}if(submit&&result?.state==="draft")result=await send({action:"submit",requestId:crypto.randomUUID(),id:result.id,expectedVersion:result.version});if(submit&&reviewMode&&result?.state==="queued")result=await send({action:"review",requestId:crypto.randomUUID(),id:result.id,expectedVersion:result.version,consentVersion,profileId:disclosure?.profileId});if(current())setNotice(submit&&reviewMode?publishMode?t("受け付けました。確認結果と公開先をここにお知らせします。","Received. Results and publication links will appear here."):t("確認を依頼しました。画面を閉じても受付は残ります。","Review requested. Your receipt is retained when you leave."):submit?t("受付を保存しました。AI処理と公開の接続は準備中です。","Received. AI processing and publication are not connected yet."):t("草稿を保存しました。","Draft saved."));});
  }
  function leave(){if((dirty||pending)&&!window.confirm(t("未保存の入力を破棄して移動しますか？","Discard unsaved input?")))return false;clearEditor();setError(null);setNotice(null);setCancelledNotice(null);urlFor(null);void refreshList().catch(fail);pageHeading.current?.scrollIntoView?.({block:"start",behavior:"instant"});return true;}
- function patch(index:number,change:Partial<KnowledgeSubmissionContent["items"][number]["record"]>){setForm(f=>f?{...f,items:f.items.map((item,i)=>i===index?{...item,record:{...item.record,...change}}:item)}:f);}
- function endpoint(index:number,field:"subjectId"|"objectId",name:string){setForm(f=>{if(!f)return f;const record=f.items[index].record,id=f.entities.some(e=>e.id===record[field])?record[field]!:"draft:"+crypto.randomUUID();return {...f,entities:f.entities.some(e=>e.id===id)?f.entities.map(e=>e.id===id?{...e,content:{...e.content,name}}:e):[...f.entities,{id,content:{name,kind:f.items[index].operation==="create-entity"?"person":"entity",description:"",aliases:[],language:"ja"}}],items:f.items.map((item,i)=>i===index?{...item,record:{...item.record,[field]:id}}:item)};});}
+ function patch(index:number,change:Partial<KnowledgeSubmissionContent["items"][number]["record"]>){setForm(f=>f?{...f,items:f.items.map((item,i)=>{
+  if(i!==index)return item;const next={...item.record,...change},baseline=referenceContext?.records?.find(r=>r.id===item.correction?.id&&r.revision===item.correction?.revision)?.content;
+  if(baseline&&item.record.textLanguages){const languages={...item.record.textLanguages};for(const field of ['assertion','relation','scope'] as const)if(change[field]!==undefined&&change[field]!==item.record[field]&&baseline[field]===item.record[field]&&!languageChoices.current.has(item.key+':'+field))delete languages[field];next.textLanguages=languages;}
+  return {...item,record:next};})}:f);}
+ function endpoint(index:number,field:"subjectId"|"objectId",name:string){setForm(f=>{if(!f)return f;const record=f.items[index].record,id=f.entities.some(e=>e.id===record[field])?record[field]!:"draft:"+crypto.randomUUID();return {...f,entities:f.entities.some(e=>e.id===id)?f.entities.map(e=>e.id===id?{...e,content:{...e.content,name}}:e):[...f.entities,{id,content:{name,kind:f.items[index].operation==="create-entity"?"person":"entity",description:"",aliases:[],language:"und"}}],items:f.items.map((item,i)=>i===index?{...item,record:{...item.record,[field]:id}}:item)};});}
  function registration(index:number,value:string){setForm(f=>{
   if(!f)return f;
   const previous=f.items[index],{correction:_correction,about:_about,...original}=previous;void _correction;void _about;
@@ -127,7 +133,7 @@ function SubmissionWorkspace({userId,connectionWarning}:{userId:string;connectio
    times:inherited&&JSON.stringify(record.times)===JSON.stringify(inherited.times)?[]:record.times,
    polarity:inherited&&record.polarity===inherited.polarity?"affirmed" as const:record.polarity,
    kind:value==="create-relation"?"relation" as const:"note" as const,subjectId:null,objectId:null,relation:""};
-  return {...f,schemaVersion:2,items:f.items.map((v,i)=>i!==index?v:{...original,operation:value as NonNullable<typeof v.operation>,record:next})};
+  return {...f,schemaVersion:2,items:f.items.map((v,i)=>i!==index?v:{...original,operation:value as NonNullable<typeof v.operation>,record:{...next,textLanguages:retainedTextLanguages(record,next,record.textLanguages)}})};
  });}
 
  async function chooseTarget(index:number,field:"subjectId"|"objectId"|"about"|"theme",target:SubmissionTarget){if(!form)return;const before=form;await run(async()=>{
@@ -143,13 +149,14 @@ function SubmissionWorkspace({userId,connectionWarning}:{userId:string;connectio
    const edited=next.items[index],oldBase=referenceContext?.records?.find(v=>v.id===before.items[index].correction?.id&&v.revision===before.items[index].correction?.revision)?.content;
    const authoredEvidence=edited.record.evidence.filter(e=>next.sources.some(s=>s.id===e.source.id));
    const authoredAssertion=edited.operation==='correct-record'&&edited.record.assertion.trim()&&edited.record.assertion!==oldBase?.assertion?edited.record.assertion:undefined;
-   const proposed={...original.content,...(authoredAssertion?{assertion:authoredAssertion}:{}),evidence:[...original.content.evidence,...authoredEvidence.filter(e=>!original.content.evidence.some(v=>v.id===e.id))]};
+   if(!authoredAssertion)for(const field of ['assertion','relation','scope'])languageChoices.current.delete(edited.key+':'+field);
+   const proposed={...original.content,...(authoredAssertion?{assertion:authoredAssertion,textLanguages:{...original.content.textLanguages,assertion:edited.record.textLanguages?.assertion}}:{}),evidence:[...original.content.evidence,...authoredEvidence.filter(e=>!original.content.evidence.some(v=>v.id===e.id))]};
    next={...next,entityPins:[...new Map([...next.entityPins,...ctx.entities.filter(v=>v.revision).map(v=>({id:v.id,revision:v.revision!}))].map(v=>[v.id,v])).values()],sourcePins:[...new Map([...next.sourcePins,...ctx.sources.map(v=>({id:v.id,revision:v.revision}))].map(v=>[v.id+"@"+v.revision,v])).values()],items:next.items.map((item,i)=>i===index?{...item,record:proposed}:item)};
   }
   if(current()){setReferenceContext(ctx);setForm(next);setSelectedKey(next.items[index].key);}
  });}
  function entityKind(id:string,value:string){value=({人物:"person",作品:"work",組織:"organization",場所:"place",出来事:"event",対象:"entity"} as Record<string,string>)[value]??value;setForm(f=>f?{...f,entities:f.entities.map(e=>e.id===id?{...e,content:{...e.content,kind:value}}:e)}:f);}
- function addEvidence(index:number){setForm(f=>{if(!f)return f;const id="source:"+crypto.randomUUID();return {...f,sources:[...f.sources,{id,content:{title:"",url:null,bibliography:"",language:"ja"}}],items:f.items.map((item,i)=>i===index?{...item,record:{...item.record,evidence:[...item.record.evidence,{id:"evidence:"+crypto.randomUUID(),source:{id,revision:1},locator:"",excerpt:"",stance:"support" as const}]}}:item)};});}
+ function addEvidence(index:number){setForm(f=>{if(!f)return f;const id="source:"+crypto.randomUUID();return {...f,sources:[...f.sources,{id,content:{title:"",url:null,bibliography:"",language:"und"}}],items:f.items.map((item,i)=>i===index?{...item,record:{...item.record,evidence:[...item.record.evidence,{id:"evidence:"+crypto.randomUUID(),source:{id,revision:1},locator:"",excerpt:"",stance:"support" as const}]}}:item)};});}
  function evidence(index:number,id:string,field:"locator"|"excerpt",value:string){setForm(f=>f?{...f,items:f.items.map((item,i)=>i===index?{...item,record:{...item.record,evidence:item.record.evidence.map(e=>e.id===id?{...e,[field]:value}:e)}}:item)}:f);}
  function source(id:string,field:"title"|"url"|"bibliography",value:string){setForm(f=>f?{...f,sources:f.sources.map(s=>s.id===id?{...s,content:{...s.content,[field]:field==="url"?value||null:value}}:s)}:f);}
  async function choose(){await run(async()=>{const r=await memberRequest("/api/member/capsules",memberListSchema,{user:userId});if(current()){setCapsules(r.capsules.filter(c=>!c.trashedAt&&c.hasDocument).map(c=>({id:c.id,revision:c.revision,title:c.content.title})));setChoice(true);}});}
@@ -179,7 +186,7 @@ function SubmissionWorkspace({userId,connectionWarning}:{userId:string;connectio
   <label>{t("一覧で見分ける名前","Name in your list")}<input disabled={blocked} maxLength={200} placeholder={t("空欄なら、最初の事実を使います","Leave blank to use the first fact")} value={form.title} onChange={e=>setForm({...form,title:e.target.value})}/></label>
   <small className={css.hint}>{t("自分の投稿一覧で使う名前です。知識の本文や人物名とは別です。","This identifies the submission in your list, not the fact or subject name.")}</small>
  </details>
- {form.items.map((item,index)=><KnowledgeSubmissionItem key={item.key} item={item} index={index} content={form} context={referenceContext} disabled={blocked} canRemove={form.items.length>1} locale={locale}
+ {form.items.map((item,index)=><KnowledgeSubmissionItem key={item.key} item={item} index={index} content={form} context={referenceContext} onLanguage={(field,tag,id)=>{languageChoices.current.add(item.key+":"+field);setForm(f=>f?setSubmissionLanguage(f,index,field,tag,id):f);}} disabled={blocked} canRemove={form.items.length>1} locale={locale}
   showHints={reviewMode&&!!saved} hintBusy={hintBusy===item.key} hintDisabled={dirty||!!hintBusy} hint={saved&&hints[item.key]?.id===saved.id&&hints[item.key]?.digest===saved.digest&&!dirty?hints[item.key]:undefined}
   onThemes={themes=>setForm({...form,items:form.items.map((v,i)=>i===index?{...v,themes}:v)})} onSelect={()=>setSelectedKey(item.key)} onTarget={(field,target)=>void chooseTarget(index,field,target)} onRemove={()=>setForm({...form,items:form.items.filter(i=>i.key!==item.key)})} onRecord={v=>patch(index,v)} onRegistration={v=>registration(index,v)} onEndpoint={(field,value)=>endpoint(index,field,value)} onEntityKind={value=>entityKind(item.record.subjectId!,value)}
   onSource={source} onEvidence={(id,field,value)=>evidence(index,id,field,value)} onAddSource={()=>addEvidence(index)} onHint={()=>void hint(item.key)}/>) }

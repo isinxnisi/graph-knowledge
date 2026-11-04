@@ -1,5 +1,7 @@
 # 現在の引継ぎ：U6cまで
 
+2026-11-05 原語保存の第一段階：投稿文・名称・関係語・引用・資料・Themeの言語を内容版と別々に保持する。異言語の事実訂正は旧版と訂正者を残す。翻訳生成／訳文訂正は後続。[現行契約](KNOWLEDGE_ORIGINAL_LANGUAGES.md)／[検証](../verification/KNOWLEDGE_ORIGINAL_LANGUAGES_20261105.md)。
+
 2026-11-05 引用訂正の回帰修正：app `1f1efd3f` / build `FECRlX7I0yAs_6MVqAN8P`、main／3200／HTTPS βへ反映。本文が同じ明示訂正でも引用・記載箇所を次版へ保持する。追加migrationなし。[検証・残件](../verification/KNOWLEDGE_QUOTE_CORRECTION_20261105.md)。以下は各時点の記録。
 
 2026-11-05 多言語：UIの日英切替と知識本文の多言語管理を区別する。[原語・翻訳・訂正の設計案](KNOWLEDGE_MULTILINGUAL_PROPOSAL.md)はユーザー採用待ち・未実装。U6のEntity同一性／Chat schemaでも原語と翻訳の分離を考慮する。引用だけ／記載箇所だけの明示訂正の回帰は独立修正。[検証・反映状態](../verification/KNOWLEDGE_QUOTE_CORRECTION_20261105.md)。

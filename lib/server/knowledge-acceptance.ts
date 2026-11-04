@@ -33,7 +33,7 @@ export function acceptancePlan(value:KnowledgeSubmission,key:string,decisionId:s
  const about=item.about?.kind==='record'?value.context?.records?.find(r=>r.id===item.about!.id&&r.revision===item.about!.revision):undefined;
  const inputRecord={...item.record,...(item.operation==='add-information'&&about?{subjectId:about.content.subjectId,objectId:about.content.objectId}:{})};
  const used=[...new Set([inputRecord.subjectId,inputRecord.objectId].filter((v):v is string=>!!v))];
- const entities=value.content.entities.filter(e=>used.includes(e.id)).map(e=>({id:allocate('entity',e.id),content:{...e.content,description:'',aliases:[]}}));
+ const entities=value.content.entities.filter(e=>used.includes(e.id)).map(e=>({id:allocate('entity',e.id),content:{...e.content,description:'',aliases:[],...(e.content.textLanguages?{textLanguages:{name:e.content.textLanguages.name}}:{})}}));
  const legacyEntities=(value.context?.legacy?.entities??[]).filter(e=>used.includes(e.id)).map(e=>({id:e.id,content:value.context!.entities.find(v=>v.id===e.id)!.content,revision:e.revision,payload:e.payload,sha256:e.sha256}));
  const entityId=(id:string|null)=>{
   if(!id)return null;if(value.content.entities.some(e=>e.id===id))return allocate('entity',id);

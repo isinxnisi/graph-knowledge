@@ -29,9 +29,9 @@ export function captureSubmissionCapsule(capsule: MemberCapsule, keys: string[])
  const selectedRelations=doc.relations.filter(r=>keys.includes(r.origin.kind==="knowledge"?r.origin.id:"capsule-relation:"+r.key));
  const nodeKeys=new Set(selectedRelations.flatMap(r=>[r.source,r.target]));
  const manual=doc.evidence.filter(e=>selectedRelations.some(r=>r.key===e.targetKey));
- const sources=manual.filter(e=>e.locator.trim()).map(e=>({id:"submission-source:"+e.key,content:{title:e.title,url:e.url,bibliography:e.url?"":e.title,language:capsule.content.language}}));
+ const sources=manual.filter(e=>e.locator.trim()).map(e=>({id:"submission-source:"+e.key,content:{title:e.title,url:e.url,bibliography:e.url?"":e.title,language:"und"}}));
  const kg=selectedRelations.flatMap(rel=>rel.origin.kind==="kg"?(rel.origin.detail?.citations??[]).map(c=>({recordId:"capsule-relation:"+rel.key,id:"submission-kg-source:"+rel.key+":"+c.id,citation:c})):[]);
- for(const entry of kg){const s=entry.citation.source;sources.push({id:entry.id,content:{title:s.title.slice(0,300),url:s.url,bibliography:[s.title,...s.authors,s.publisher,s.publishedAt,s.edition].filter(Boolean).join(" · ").slice(0,4000),language:capsule.content.language}});}
+ for(const entry of kg){const s=entry.citation.source;sources.push({id:entry.id,content:{title:s.title.slice(0,300),url:s.url,bibliography:[s.title,...s.authors,s.publisher,s.publishedAt,s.edition].filter(Boolean).join(" · ").slice(0,4000),language:"und"}});}
  const content=knowledgeSubmissionContentSchema.parse({title:capsule.content.title,
   entities:newEntities.map(e=>({id:e.id,content:e.content})),entityPins:existing.map(e=>({id:e.id,revision:e.revision})),sourcePins,sources,
   items:records.map(r=>({key:r.id,...(doc.knowledge?.snapshot.records.some(base=>base.id===r.id)?{correction:{id:r.id,revision:r.revision}}:{}),record:{...r.content,evidence:[...r.content.evidence,...manual.filter(e=>e.locator.trim()&&selectedRelations.some(rel=>rel.key===e.targetKey&&(rel.origin.kind==="knowledge"?rel.origin.id:"capsule-relation:"+rel.key)===r.id)).map(e=>({id:e.key,source:{id:"submission-source:"+e.key,revision:1},locator:e.locator,excerpt:"",stance:e.stance})),...kg.filter(e=>e.recordId===r.id).map(e=>({id:e.citation.id,source:{id:e.id,revision:1},locator:e.citation.locator,excerpt:"",stance:e.citation.stance}))]}}))});

@@ -17,7 +17,7 @@ export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme }
     {r.aboutTheme&&<p className={css.meta}>{en?"About this theme: ":"このテーマについて："}{onTheme?<button onClick={()=>onTheme(r.aboutTheme!)}>{en?"Open theme":"テーマを読む"}</button>:<a href={"/?ktheme="+encodeURIComponent(r.aboutTheme)}>{en?"Open theme":"テーマを読む"}</a>}</p>}
     {dto.entities.length > 0 && <div className={css.actions} aria-label={en ? "Follow a subject" : "図の対象から辿る"}>{dto.entities.map((e) => <button key={e.id} onClick={() => onEntity(e.id)}>{e.content.name}</button>)}</div>}
     <div className={css.meta}>{en ? "Content revision" : "内容版"} {dto.record.revision} · {r.polarity === "affirmed" ? en ? "Affirmed" : "肯定" : r.polarity === "denied" ? en ? "Denied" : "否定" : en ? "Uncertain" : "不確実"}</div>
-    {r.relation && <p><strong>{r.relation}</strong></p>}<p>{r.assertion}</p>
+    {r.relation && <p lang={r.textLanguages?.relation?.tag}><strong>{r.relation}</strong></p>}<p lang={r.textLanguages?.assertion?.tag}>{r.assertion}</p>{r.textLanguages?.assertion&&<small className={css.meta}>{en?"Original language":"原文の言語"} · {r.textLanguages.assertion.tag}</small>}
     {r.scope && <p>{en ? "Scope" : "範囲"}：{r.scope}</p>}
     {r.times.map((t) => <p key={t.id}>{themeTimeLabel(t.time)}</p>)}
     {typed?.event && <p>{en ? "Event occurrence" : "開催期間"}：{typed.event.metadata.period.from?.value ?? "?"} 〜 {typed.event.metadata.period.to?.value ?? "?"}<br /><span className={css.meta}>{en ? "Separate from a person's participation period." : "人物の参加期間とは別の情報です。"}</span></p>}
@@ -27,7 +27,7 @@ export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme }
       {s?.content.url ? <a href={s.content.url} target="_blank" rel="noreferrer">{s.content.title} ↗</a> : <strong>{s?.content.title ?? (en ? "Source" : "資料")}</strong>}
       <div className={css.meta}>{en ? "Source revision" : "資料版"} {e.source.revision} · {e.locator} · {en ? e.stance : ({ support: "支持", refute: "反証", background: "背景" })[e.stance]}</div>
       {s?.content.bibliography && <KnowledgeSourceBibliography value={s.content.bibliography} className={css.meta} locale={locale}/>}
-      {e.excerpt && <blockquote>{e.excerpt}</blockquote>}
+      {e.excerpt && <blockquote lang={e.textLanguages?.excerpt?.tag}>{e.excerpt}</blockquote>}
     </div>; })}
   </article>;
 }

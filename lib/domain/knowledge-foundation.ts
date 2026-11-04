@@ -2,6 +2,7 @@ import { z } from "zod";
 import { themeTimeSchema } from "./theme-workbench";
 import { themeTimelineIssues } from "./theme-timeline";
 import { knowledgeTimelineLayout, knowledgeTimelineRows } from "./knowledge-timeline";
+import { knowledgeTextLanguageSchema as originalLanguage } from "./knowledge-language";
 
 // A common record is independent of any editorial Theme. IDs never derive from
 // display names; a pin identifies one immutable content revision.
@@ -13,15 +14,18 @@ const text = z.string().trim().min(1);
 export const knowledgeEntityContentSchema = z.strictObject({
   name: text.max(200), aliases: z.array(text.max(200)).max(30).default([]),
   kind: text.max(80), description: z.string().max(8000).default(""),
-  language: text.max(35).default("ja"),
-});
+  language: text.max(35).default("und"),
+  textLanguages: z.strictObject({ name: originalLanguage.optional(), description: originalLanguage.optional(), aliases: z.array(originalLanguage.nullable()).max(30).optional() }).optional(),
+}).refine(e => !e.textLanguages?.aliases || e.textLanguages.aliases.length === e.aliases.length, "別名と言語指定の数が一致しません");
 export const knowledgeSourceContentSchema = z.strictObject({
   title: text.max(300), url: z.url({ protocol: /^https?$/ }).max(2000).nullable().default(null),
-  bibliography: z.string().trim().max(4000).default(""), language: text.max(35).default("ja"),
+  bibliography: z.string().trim().max(4000).default(""), language: text.max(35).default("und"),
+  textLanguages: z.strictObject({ title: originalLanguage.optional(), bibliography: originalLanguage.optional(), document: originalLanguage.optional() }).optional(),
 }).refine(s => Boolean(s.url || s.bibliography), "資料URLまたは書誌を記入してください");
 export const knowledgeEvidenceSchema = z.strictObject({
   id: knowledgeIdSchema, source: knowledgePinSchema,
   locator: text.max(1000), excerpt: z.string().max(4000).default(""),
+  textLanguages: z.strictObject({ locator: originalLanguage.optional(), excerpt: originalLanguage.optional() }).optional(),
   stance: z.enum(["support", "refute", "background"]).default("support"),
 });
 export const knowledgeTimeAnnotationSchema = z.strictObject({ id: knowledgeIdSchema, time: themeTimeSchema });
@@ -33,6 +37,7 @@ export const knowledgeRecordContentSchema = z.strictObject({
   assertion: text.max(4000), relation: z.string().trim().max(200).default(""),
   polarity: z.enum(["affirmed", "denied", "uncertain"]).default("affirmed"),
   scope: z.string().max(3000).default(""),
+  textLanguages: z.strictObject({ assertion: originalLanguage.optional(), relation: originalLanguage.optional(), scope: originalLanguage.optional() }).optional(),
   times: z.array(knowledgeTimeAnnotationSchema).max(16).default([]),
   evidence: z.array(knowledgeEvidenceSchema).min(1).max(20),
 }).superRefine((r, c) => {
@@ -51,6 +56,7 @@ export const knowledgeTimelineSchema = z.strictObject({
 });
 export const knowledgeThemeContentSchema = z.strictObject({
   title: text.max(200), description: z.string().max(8000).default(""),
+  textLanguages: z.strictObject({ title: originalLanguage.optional(), description: originalLanguage.optional() }).optional(),
   recordPins: z.array(knowledgePinSchema).min(1).max(400), entityPins: z.array(knowledgePinSchema).max(400),
   sourcePins: z.array(knowledgePinSchema).max(800), mappingPins: z.array(knowledgePinSchema).max(400).default([]),
   timeline: knowledgeTimelineSchema.optional(), initialView: z.enum(["graph", "timeline", "split"]).default("graph"),
@@ -88,7 +94,7 @@ export const knowledgeCommandSchema = z.discriminatedUnion("action", [
     legacyLinks: z.array(z.strictObject({ dataset: text.max(100), legacyClaimId: knowledgeIdSchema, recordId: knowledgeIdSchema, importedRevision: z.literal(1), payload: z.json(), sha256: z.string().regex(/^[a-f0-9]{64}$/) })).max(400).default([]),
   }),
   z.strictObject({ ...base, action: z.literal("correct"), kind: z.enum(["entity", "source", "record"]), id: knowledgeIdSchema, expectedRevision: knowledgeRevisionSchema, content: z.unknown(), entityPins: z.array(knowledgePinSchema).max(400).optional(), reason }),
-  z.strictObject({ ...base, action: z.literal("create-theme"), id: knowledgeIdSchema, title: text.max(200), description: z.string().max(8000).default(""), recordPins: z.array(knowledgePinSchema).min(1).max(400), entityPins: z.array(knowledgePinSchema).max(400).optional(), sourcePins: z.array(knowledgePinSchema).max(800).optional(), timeline: knowledgeTimelineSchema.optional(), initialView: z.enum(["graph", "timeline", "split"]).default("graph"), reason: reason.default("テーマへ記録を選択") }),
+  z.strictObject({ ...base, action: z.literal("create-theme"), id: knowledgeIdSchema, title: text.max(200), description: z.string().max(8000).default(""), textLanguages: knowledgeThemeContentSchema.shape.textLanguages, recordPins: z.array(knowledgePinSchema).min(1).max(400), entityPins: z.array(knowledgePinSchema).max(400).optional(), sourcePins: z.array(knowledgePinSchema).max(800).optional(), timeline: knowledgeTimelineSchema.optional(), initialView: z.enum(["graph", "timeline", "split"]).default("graph"), reason: reason.default("テーマへ記録を選択") }),
   z.strictObject({ ...base, action: z.literal("refresh-theme"), id: knowledgeIdSchema, expectedRevision: knowledgeRevisionSchema, refreshToken: z.string().regex(/^[a-f0-9]{64}$/), recordPins: z.array(knowledgePinSchema).min(1).max(400).optional(), entityPins: z.array(knowledgePinSchema).max(400).optional(), sourcePins: z.array(knowledgePinSchema).max(800).optional(), reason }),
   z.strictObject({ ...base, action: z.literal("set-visibility"), kind: z.enum(["entity", "source", "record", "theme"]), id: knowledgeIdSchema, expectedStatusRevision: knowledgeRevisionSchema, visibility: z.enum(["private", "public", "hidden"]), reason }),
   z.strictObject({ ...base, action: z.literal("set-confirmation"), kind: z.enum(["entity", "source", "record"]), id: knowledgeIdSchema, expectedStatusRevision: knowledgeRevisionSchema, expectedContentRevision: knowledgeRevisionSchema, confirmation: z.enum(["unreviewed", "checked", "disputed"]), reason }),

@@ -31,6 +31,17 @@ describe.skipIf(!connectionString)("knowledge foundation PostgreSQL transactions
   const refresh = async(id:string,revision:number,token?:string) => run({requestId:request(),action:"refresh-theme",id,expectedRevision:revision,refreshToken:token??(await service.diffTheme(operator,id)).refreshToken,reason:"差分を確認して反映"});
   beforeAll(async()=>{ const name=(await pool.query("SELECT current_database() AS name")).rows[0].name;expect(name).toMatch(/^plunode_knowledge75_test_/);await ensureKnowledgeFoundationSchema(pool); },30000);
   afterAll(async()=>{await pool.end();});
+  it("persists original-language fields and keeps them pinned in old theme snapshots after a foreign-language correction",async()=>{
+    const b=bundle("language-");b.records[0].content.textLanguages={assertion:{tag:"ja",basis:"declared"},relation:{tag:"ja",basis:"declared"}};
+    await run(b);await run({requestId:request(),action:"create-theme",id:"language-theme",title:"Original theme",description:"日本語の解説",textLanguages:{title:{tag:"en",basis:"declared"},description:{tag:"ja",basis:"declared"}},recordPins:[{id:"language-r",revision:1}]});
+    const old=await service.resolveTheme(operator,"language-theme");
+    expect(old.theme.content.textLanguages?.title).toEqual({tag:"en",basis:"declared"});
+    await correct("record","language-r",1,{...b.records[0].content,assertion:"A helped B with the observation.",textLanguages:{assertion:{tag:"en",basis:"declared"},relation:{tag:"ja",basis:"declared"}}});
+    expect((await service.get(reader,"record","language-r")).content).toMatchObject({assertion:"A helped B with the observation.",textLanguages:{assertion:{tag:"en",basis:"declared"}}});
+    expect((await service.resolveTheme(operator,"language-theme")).snapshot).toEqual(old.snapshot);
+    expect((await service.get(reader,"record","language-r",1)).content.textLanguages?.assertion).toEqual({tag:"ja",basis:"declared"});
+  });
+
   it("replays receipts once under simultaneous identical requests and rejects changed retry", async()=>{const b=bundle("receipt-");const [a,c]=await Promise.all([run(b),run(b)]);expect(a).toEqual(c);await expect(run({...b,reason:"別内容"})).rejects.toMatchObject({status:409,code:"REQUEST_CONFLICT"});expect((await pool.query("SELECT count(*)::int AS n FROM knowledge75.operations WHERE request_id=$1",[b.requestId])).rows[0].n).toBe(1);});
   it("rolls the entire bundle back on missing evidence source", async()=>{const b=bundle("rollback-");b.records[0].content.evidence[0].source.id="missing";await expect(run(b)).rejects.toMatchObject({status:404});expect((await pool.query("SELECT count(*)::int AS n FROM knowledge75.objects WHERE id LIKE 'rollback-%'")).rows[0].n).toBe(0);});
   it("never merges same names and requires observed existing entity versions", async()=>{await run(bundle("names-"));const c=content("names-");await expect(run({requestId:request(),action:"create-bundle",reason:"追加",records:[{id:"names-r2",content:c}]})).rejects.toThrow("観測版");await run({requestId:request(),action:"create-bundle",reason:"追加",entityPins:[{id:"names-a",revision:1},{id:"names-b",revision:1}],records:[{id:"names-r2",content:c}]});expect((await service.list(operator)).entities.filter(e=>e.id.startsWith("names-")).length).toBe(2);});
