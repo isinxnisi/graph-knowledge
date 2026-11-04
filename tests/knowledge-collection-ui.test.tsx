@@ -25,7 +25,8 @@ it('shows returned candidates and published results without mistaking them for a
  const reading={provider:'Google Gemini',workerConnected:true,jobs:[{
   id:'read-job',capture_job_id:'capture',scope:'共同で担った役割',target:{kind:'theme',id:'theme',revision:1},label:'Webbの協力',state:'active',createdAt:'2026-11-04T00:00:00Z',
   tasks:[{id:'read',purpose:'read',state:'done',reason:'',attempts:1,candidate:null,next_attempt:'2026-11-04T00:00:00Z'},
-   {id:'check',purpose:'check',state:'done',reason:'登録しました。',attempts:1,candidate:{assertion:'AはBを共同で準備した。'},next_attempt:'2026-11-04T00:00:00Z'}],
+   {id:'check',record_id:'registered',purpose:'check',state:'done',reason:'登録しました。',attempts:1,candidate:{assertion:'AはBを共同で準備した。'},next_attempt:'2026-11-04T00:00:00Z'},
+   {id:'other',record_id:'different-record',purpose:'check',state:'queued',reason:'別資料の確認を待っています。',attempts:0,candidate:{assertion:'AはBを共同で準備した。'},next_attempt:'2026-11-04T00:00:00Z'}],
   decisions:[{id:'registered',state:'applied',reason:'',assertion:'AはBを共同で準備した。',indexed:true}]
  }]};
  fetcher.mockImplementation(async url=>Response.json(String(url).includes('collection-reading')?reading:page));
@@ -34,5 +35,6 @@ it('shows returned candidates and published results without mistaking them for a
  expect(screen.queryByText(/登録処理の状態を取得できません/)).toBeNull();
  fireEvent.click(screen.getByText('項目・結果を見る'));
  expect(screen.getByRole('link',{name:'AはBを共同で準備した。'}).getAttribute('href')).toBe('/?krecord=registered');
- expect(screen.getByText(/公開しました。/)).toBeTruthy();
+ expect(screen.getAllByText(/公開しました。/)).toHaveLength(1);
+ expect(screen.getAllByText(/別資料の確認を待っています/).length).toBeGreaterThan(0);
 });
