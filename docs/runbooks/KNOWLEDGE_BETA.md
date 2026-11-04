@@ -1,3 +1,5 @@
+2026-11-05 原語保存：app `ca8bd4c8` / build `Wbe4DmLbue8-YBBhQmfH-`、main／3200／HTTPS β。Web・既存Workerを更新し、追加migrationなし。会員ledger29／知識001・002・004、private profile・認証を保持。3276／本番VPSは未更新。[実操作・backup・制約](../verification/KNOWLEDGE_ORIGINAL_LANGUAGES_20261105.md)。以下は各時点の記録。
+
 2026-11-05 引用訂正の回帰修正：app `1f1efd3f` / build `FECRlX7I0yAs_6MVqAN8P`、main／3200／HTTPS βへ反映。Webと既存投稿受理Workerを更新、追加migrationなし、会員ledger29・知識001/002/004・private profileを保持。3276／本番VPSは未更新。[保全・実操作・制約](../verification/KNOWLEDGE_QUOTE_CORRECTION_20261105.md)。以下は各時点の記録。
 
 2026-11-05 投稿重複対策：同じ意味の利用者投稿を既存Recordへ再利用し、新根拠・別テーマだけを追加。追加なし／変更なし訂正は記録・内容版・活動履歴を増やさず、一覧と結果へ登録済みを表示。app `9e679afd` / build `eltwp98MIdtjfECPyDKAt`をmain／3200／HTTPS βへ反映。追加migrationなし。Entity同一性・既存重複整理・収集／Chat経路への全面適用はU6残件。[実操作・比較評価・保全・制約](../verification/KNOWLEDGE_DUPLICATES_20261105.md)。

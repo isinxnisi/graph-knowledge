@@ -1,0 +1,78 @@
+{
+  "appSource": "ca8bd4c823264c195d4d779680166e1df3db0854",
+  "build": "Wbe4DmLbue8-YBBhQmfH-",
+  "checks": {
+    "memberOidcAndSourceFixture": 49,
+    "isolatedFoundationDuplicateAndUi": 64,
+    "relatedCapsulePublicationUi": 70,
+    "originalLanguageFinal": 8,
+    "countsOverlap": true,
+    "changedFileLint": true,
+    "fullNextBuildAndTypes": true
+  },
+  "browser": {
+    "draftId": "445c7a0d-42a0-43df-ae93-c57cb190917e",
+    "state": "draft",
+    "name": {
+      "tag": "ja",
+      "basis": "declared"
+    },
+    "statement": {
+      "tag": "en",
+      "basis": "declared"
+    },
+    "quotation": {
+      "tag": "en",
+      "basis": "declared"
+    },
+    "sourceDocument": {
+      "tag": "en",
+      "basis": "declared"
+    },
+    "sourceTitle": {
+      "tag": "en",
+      "basis": "declared"
+    },
+    "realGoogleSession": true,
+    "uiLanguage": "ja",
+    "pcAnd390pxChecked": true,
+    "horizontalOverflow": false,
+    "draftReloadRetainedLanguages": true,
+    "publicSubmission": false,
+    "uiTestSource": "c052b63408afe88a76fca2255f31f6da7086c070",
+    "finalSourceUiDiff": false
+  },
+  "deployment": {
+    "localhost3200": true,
+    "httpsBeta": true,
+    "vpsChanged": false,
+    "additionalMigrations": [],
+    "privateSettingsUnchanged": true,
+    "recordRevisions": 26,
+    "themeRevisions": 5,
+    "capsules": 25,
+    "memberLedger": 29,
+    "immutableDataHashesUnchanged": true
+  },
+  "http": [
+    {
+      "url": "http://127.0.0.1:3200/api/dataset",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:3200/member/submissions",
+      "status": 200
+    },
+    {
+      "url": "https://graph-beta.isinxnisi.com/api/dataset",
+      "status": 200
+    },
+    {
+      "url": "https://graph-beta.isinxnisi.com/member/submissions",
+      "status": 200
+    }
+  ],
+  "newAiCalls": 0,
+  "translationStorageImplemented": false,
+  "translationOnlyCorrectionImplemented": false
+}
