@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-03T21:45:41.558647+00:00",
-  "phase": "outside-window",
+  "nextStartAt": "2026-11-04T01:05:39.159845+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
-    "reason": "outside-window",
-    "eligibleAt": "2026-11-04T00:00:00+00:00",
+    "reason": "interval",
+    "eligibleAt": "2026-11-04T01:05:39.159845+00:00",
     "windowEndAt": "2026-11-04T03:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-62-dot-akutami-jujutsu-20261028-batch-01",
+    "startedAt": "2026-11-04T00:00:39.159850+00:00",
+    "limitAt": "2026-11-04T00:55:39.159845+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-50-dot-endo-tista-20261027",
     "endedAt": "2026-11-03T21:35:41.558650+00:00"
@@ -43,9 +47,10 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 3,
-    "waiting-control": 43,
+    "waiting-control": 41,
     "completed": 13,
     "awaiting-recovery": 2,
+    "waiting-lock": 2,
     "retry-wait": 1
   },
   "issueIntake": {
@@ -193,5 +198,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-03T23:45:37.744711+00:00"
+  "checkedAt": "2026-11-04T00:00:45.751877+00:00"
 }
