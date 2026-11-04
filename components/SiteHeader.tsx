@@ -1,6 +1,6 @@
 "use client";
 import {AiLabEntry, AiLabRecordReturn} from "./AiLabLinks";
-import {usePersonalHash,navigatePersonalHash} from "../lib/client/personal-location";
+import {usePersonalHash,navigatePersonalHash,navigatePersonalList} from "../lib/client/personal-location";
 import { localizedPublicHref } from "../lib/domain/public-routes";
 import {useCommunitiesEnabled} from "./CommunityAvailability";
 import Link from "next/link";
@@ -71,8 +71,9 @@ export default function SiteHeader({ dataset, datasetNotice, memberTools = true,
     catch { setStorageError(true); }
   }
   function closeAccount(event: React.MouseEvent<HTMLAnchorElement>) {
+    if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
     if (onBeforeAccountNavigation && !onBeforeAccountNavigation()) { event.preventDefault(); return; }
-    const target=new URL(event.currentTarget.href,location.origin);if(target.pathname===location.pathname&&target.search===location.search&&(target.hash||location.hash)){event.preventDefault();navigatePersonalHash(target.hash);}
+    const target=new URL(event.currentTarget.href,location.origin);if(navigatePersonalList(target)){event.preventDefault();}else if(target.pathname===location.pathname&&target.search===location.search&&(target.hash||location.hash)){event.preventDefault();navigatePersonalHash(target.hash);}
     if (accountMenu.current) accountMenu.current.open = false;
     if (siteMenu.current) siteMenu.current.open = false;
   }

@@ -6,3 +6,11 @@ export function usePersonalHash(){return useSyncExternalStore(subscribe,()=>loca
 
 // Preserve the current router entry for local fragments without a route-cache restore.
 export function navigatePersonalHash(hash:string){const url=new URL(location.href);url.hash=hash;if(url.href===location.href)return;const oldURL=location.href;history.pushState(history.state,'',url);dispatchEvent(new HashChangeEvent('hashchange',{oldURL,newURL:url.href}));}
+
+export const personalSubmissionListEvent='personal:submission-list';
+// Re-selecting this menu means the list, even when the router retains the
+// client workspace that changed its own detail URL with history.replaceState.
+export function navigatePersonalList(target:URL){
+ if(target.pathname!=='/member/submissions'||target.search||target.hash||location.pathname!==target.pathname)return false;
+ history.replaceState(history.state,'',target);dispatchEvent(new Event(personalSubmissionListEvent));return true;
+}

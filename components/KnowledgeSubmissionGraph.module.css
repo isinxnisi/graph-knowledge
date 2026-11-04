@@ -5,3 +5,12 @@
 .preview>.summary{box-sizing:border-box;padding:6px 10px;min-width:0;flex-wrap:wrap}
 
 .summary>strong,.summary>small,.summary>span{white-space:nowrap;flex-shrink:0}.summary>span{flex-wrap:wrap}
+
+/* The canvas and its expandable guide are separate grid rows. A percentage
+   height around the GraphCanvas fragment used to paint the guide over items. */
+.canvas{display:grid;grid-template-rows:250px auto;height:auto;min-height:0;min-width:0}
+.canvas>div:first-child{box-sizing:border-box;height:100%;min-height:0;border-radius:0;border-inline:0}
+.canvas>div:last-child{min-width:0;margin:0;border-bottom:1px solid var(--color-border)}
+.items button{box-sizing:border-box;justify-content:flex-start;min-width:0}
+.items button>strong{min-width:0;flex:1}.items button>span{flex:none}
+@media(max-width:600px){.canvas{height:auto;grid-template-rows:195px auto}.items button>strong{white-space:normal;line-height:1.5}}
