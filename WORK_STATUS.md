@@ -1,8 +1,8 @@
 # Plunode 開発・運用の統合一覧
 
-観測：**2026-11-04T12:47:08+09:00**（JST）。30分周期・AI呼出し0。確認時点の記録です。90分以上古い場合は現在稼働を保証しません。
+観測：**2026-11-04T15:17:11+09:00**（JST）。30分周期・AI呼出し0。確認時点の記録です。90分以上古い場合は現在稼働を保証しません。
 手動の予定・名前は [WORK_SESSIONS.json](WORK_SESSIONS.json) をこのbranchで編集。自動更新はこのMarkdownだけを変更します。
-<!-- work-status:319266cbd55b58f8a374dd37beb457227b8a1882749d23abb714e30343231ee7 day:2026-11-04 -->
+<!-- work-status:4972508bb4e637b2707679d7dd7ac11848bfe679f4485f5d3a3d510b4142b052 day:2026-11-04 -->
 
 ## A. 作業セッション
 
@@ -41,12 +41,12 @@
 | 環境・用途 | 接続・配置（設定） | 観測結果 | 利用セッション |
 |---|---|---|---|
 | main worktree<br>ID: main<br>本線ソース・beta実行元<br>Next.js | port: 3200<br>[URL](https://graph-beta.isinxnisi.com/)<br>worktree: main | 3200: 待受あり・実プロセスcwd: main | AI育成ラボ<br>検索・Graph改善<br>統合管理一覧 |
-| ローカル公開KG<br>ID: kg-public<br>既存収集比較snapshot<br>Neo4j | port: 7481, 7694<br>worktree: mainのCompose（本番KGとは別） | 7481: 待受あり・プロセス未同定<br>7694: 待受あり・プロセス未同定 | データ収集・受入 |
-| beta会員DB<br>ID: member-beta<br>本番と独立したbeta会員<br>PostgreSQL | port: 55433<br>worktree: mainのCompose | 55433: 待受あり・プロセス未同定 | コミュニティ基盤 |
+| ローカル公開KG<br>ID: kg-public<br>既存収集比較snapshot<br>Neo4j | port: 7481, 7694<br>worktree: mainのCompose（本番KGとは別） | 7481: 待受なし<br>7694: 待受なし | データ収集・受入 |
+| beta会員DB<br>ID: member-beta<br>本番と独立したbeta会員<br>PostgreSQL | port: 55433<br>worktree: mainのCompose | 55433: 待受なし | コミュニティ基盤 |
 | AIラボ隔離<br>ID: lab<br>検証済み初版を保全<br>隔離worktree・公開画面はbeta | worktree: graph-ai-lab / graph-ai-lab-publication | 設定・記録のみ／現在状態未確認 | AI育成ラボ |
 | 収集runtime<br>ID: collection<br>収集・受入・レビュー<br>CollectionWorker（source互換973c7b0＋検証済み差分） | worktree: 専用runtime／mainとは別 | 設定・記録のみ／現在状態未確認 | データ収集・受入 |
 | 公開runtime<br>ID: publication<br>候補準備・署名済み配送<br>Publication Delivery | worktree: 固定インストールコード | 設定・記録のみ／現在状態未確認 | データ公開・配送 |
-| 共有Kev<br>ID: kev<br>既存の独立service（この一覧は呼出しなし）<br>Kev service | port: 8009, 8089<br>worktree: 別プロジェクト。今回変更なし | 8009: 待受あり・プロセス未同定<br>8089: 待受あり・プロセス未同定 | AI育成ラボ |
+| 共有Kev<br>ID: kev<br>既存の独立service（この一覧は呼出しなし）<br>Kev service | port: 8009, 8089<br>worktree: 別プロジェクト。今回変更なし | 8009: 待受なし<br>8089: 待受なし | AI育成ラボ |
 | コミュニティ架空試作<br>ID: community-preview<br>設定・過去の比較用（実会員とは別）<br>隔離Next prototype | port: 3275<br>[URL](https://graph-com.isinxnisi.com/)<br>worktree: prototypes/community-connected（記録） | 3275: 待受なし | コミュニティ基盤 |
 | 凍結比較環境<br>ID: frozen<br>過去の比較環境（稼働は実測参照）<br>凍結Web | port: 3210, 3211, 3212, 3213, 3214, 3215<br>worktree: 旧凍結配置／現worktree未確認 | 3210: 待受なし<br>3211: 待受なし<br>3212: 待受なし<br>3213: 待受なし<br>3214: 待受なし<br>3215: 待受なし | — |
 
@@ -54,9 +54,9 @@
 
 | 環境・用途 | 接続・配置（設定） | 観測結果 | 利用セッション |
 |---|---|---|---|
-| Windows PC<br>ID: windows<br>起動元・Task Scheduler<br>専用通常ユーザーtask | worktree: なし | Windows観測 2026-11-04T12:46:50+09:00 | 統合管理一覧 |
+| Windows PC<br>ID: windows<br>起動元・Task Scheduler<br>専用通常ユーザーtask | worktree: なし | Windows観測 2026-11-04T15:16:50+09:00 | 統合管理一覧 |
 | WSL Ubuntu<br>ID: wsl<br>Python／Git／Worker<br>既存WSL | worktree: 複数（実測表参照） | WSL観測済み（この時点のみ） | データ収集・受入<br>データ公開・配送<br>統合管理一覧 |
-| Docker Desktop／WSL<br>ID: docker<br>既存DB・共有service<br>既存container（停止分は維持） | worktree: Compose設定は既存記録参照 | 対象12稼働／0停止 | — |
+| Docker Desktop／WSL<br>ID: docker<br>既存DB・共有service<br>既存container（停止分は維持） | worktree: Compose設定は既存記録参照 | 取得失敗・未確認 | — |
 | Cloudflare Tunnel<br>ID: tunnel<br>beta公開経路<br>cloudflared（Windows／共有container） | [URL](https://graph-beta.isinxnisi.com/)<br>worktree: なし | Windows cloudflared 1プロセス／公開経路はbetaのHTTP参照 | — |
 
 
@@ -64,7 +64,7 @@
 
 | worktree名 | branch | HEAD | 所在 |
 |---|---|---|---|
-| main | main | 12b5877a | 存在 |
+| main | main | 647701c2 | 存在 |
 | graph-ai-lab | codex/ai-lab-foundation | af31afd5 | 存在 |
 | graph-ai-lab-publication | codex/ai-education-scheduled-v1 | 952c8fb5 | 存在 |
 | graph-exploration-structure-v1 | codex/exploration-structure-v1 | 2680afe2 | 存在 |
@@ -75,7 +75,7 @@
 | graph-issue41-film-collection | codex/issue41-film-collection | 2f1f6d64 | 存在 |
 | graph-issue43-film-beta | codex/issue43-film-beta | 05200a17 | 存在 |
 | graph-issue5-decision-postprocessing | codex/issue5-decision-postprocessing | 705c28a6 | 存在 |
-| graph-issue75-theme-foundation | codex/issue75-theme-foundation | 6875b9ac | 存在 |
+| graph-issue75-theme-foundation | codex/issue75-theme-foundation | 647701c2 | 存在 |
 | graph-knowledge-film-worker-manifest | codex/film-worker-compat-manifest-20261028 | ccab51a6 | 存在 |
 | graph-knowledge-publication-design-review | codex/knowledge-publication-design-review-20261028 | 8380f312 | 存在 |
 | graph-knowledge-publication-pipeline-bundle2 | codex/publication-pipeline-bundle2-20261028 | 99ae8a3c | 存在 |
@@ -93,19 +93,19 @@
 
 ## C. Worker・自動処理
 
-Windows task観測時刻：2026-11-04T12:46:50+09:00。
+Windows task観測時刻：2026-11-04T15:16:50+09:00。
 
 | 処理／目的 | task観測状態／終了結果 | 周期／次回 | 最終起動（観測時） |
 |---|---|---|---|
 | Afterglow-LoginRecovery / ログオン復帰 | Ready / 0 | Logon / None | 2026-10-30T15:15:24.0000000+09:00 |
 | GraphKnowledge-Autopilot / 自動開発 | Disabled / 0 | PT2H / None | 2026-10-10T10:00:02.0000000+09:00 |
-| Plunode-CollectionWorker / 収集／正式受入（依頼別・同一Worker） | Ready / 1 | PT1M,Logon / 2026-11-04T12:47:30.0000000+09:00 | 2026-11-04T12:46:31.0000000+09:00 |
-| Plunode-Publication-Delivery / 公開候補準備／承認済み配送 | Ready / 1 | Logon,PT5M / 2026-11-04T12:50:22.0000000+09:00 | 2026-11-04T12:45:23.0000000+09:00 |
-| Plunode-WorkStatus / 一覧の観測・差分反映（AIなし） | Running / 267009 | PT30M / 2026-11-04T13:16:46.0000000+09:00 | 2026-11-04T12:46:47.0000000+09:00 |
+| Plunode-CollectionWorker / 収集／正式受入（依頼別・同一Worker） | Ready / 1 | PT1M,Logon / 2026-11-04T15:17:30.0000000+09:00 | 2026-11-04T15:16:31.0000000+09:00 |
+| Plunode-Publication-Delivery / 公開候補準備／承認済み配送 | Ready / 1 | Logon,PT5M / 2026-11-04T15:20:22.0000000+09:00 | 2026-11-04T15:15:23.0000000+09:00 |
+| Plunode-WorkStatus / 一覧の観測・差分反映（AIなし） | Running / 267009 | PT30M / 2026-11-04T15:46:46.0000000+09:00 | 2026-11-04T15:16:47.0000000+09:00 |
 
 task結果267009は実行中を意味し、終了成功ではありません。表の次回時刻を過ぎた場合は新しい観測を待ってください。
 
-CollectionWorker記録：error（health観測 2026-11-04T03:46:39+00:00）。実処理 なし、pause なし。
+CollectionWorker記録：error（health観測 2026-11-04T06:16:41+00:00）。実処理 なし、pause なし。
 許可枠：03:00–07:00 JST / 09:00–12:00 JST / 15:00–18:00 JST、既存10分休憩を維持。
 catalog同期：blocked-review-required（固定runtimeとの差異の確認事項。自動修復しません）。
 公開候補準備の既存health：preparation-stopped（記録時刻 2026-11-04T03:20:32+09:00）。
@@ -193,5 +193,5 @@ catalog同期：blocked-review-required（固定runtimeとの差異の確認事�
 2. **収集・正式受入の判断**：既存Issue・reviewの同定／Role／scope／根拠を確認。不足資料は保留を維持
 
 
-取得失敗：http-beta。失敗した取得元は現在正常と扱いません。
+取得失敗：docker, http-beta, http-local。失敗した取得元は現在正常と扱いません。
 更新方法・制約：[運用手順](https://github.com/isinxnisi/graph-knowledge/blob/main/WORK_STATUS.md)。秘密情報・内部IP・絶対パスは掲載しません。
