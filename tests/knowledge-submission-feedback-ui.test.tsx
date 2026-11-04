@@ -14,6 +14,7 @@ it('explains an existing fact without presenting another publication or activity
  const value=result();Object.assign(value.receipt!.items[0],{state:'published',reason:'同じ知識が登録済みです。',publication:{id:'existing-fact',revision:2,state:'published',reason:'',disposition:'existing'}});
  fetcher.mockResolvedValueOnce(Response.json(value));render(<KnowledgeSubmissionFeedbackCard submissionId={submissionId} userId={user.id} currentRevision={1}/>);
  await screen.findByRole('heading',{name:'登録済みの知識です'});
+ expect(screen.queryByText(/1件公開/)).toBeNull();expect(screen.getByText(/1件登録済み/)).toBeTruthy();
  expect(screen.getAllByRole('link',{name:'登録済みの知識を開く'})[0].getAttribute('href')).toBe('/?krecord=existing-fact');
  expect(screen.getAllByText('同じ知識が登録されています。記録や活動履歴は増やしていません。').length).toBeGreaterThan(0);
 });

@@ -22,7 +22,7 @@ export const acknowledgeFeedbackSchema=z.strictObject({action:z.literal("acknowl
 export const feedbackPendingStates=new Set<string>(["queued","running","retry","quota","verifying","source-retry","accepted"]);
 export function feedbackSummary(counts:Record<string,number>,workerAvailable=true,purpose:"review"|"publish"="publish",locale="ja",cancelled=false){
  const t=(ja:string,en:string)=>locale==="en"?en:ja,n=(state:string)=>counts[state]??0;
- const total=Object.values(counts).reduce((sum,value)=>sum+value,0),published=n("published"),changes=n("needs-changes"),declined=n("declined"),attention=n("attention"),pending=[...feedbackPendingStates].reduce((sum,state)=>sum+n(state),0)+(purpose==="publish"?n("reviewed"):0);
+ const total=Object.values(counts).reduce((sum,value)=>sum+value,0),published=n("published"),existing=n("existing"),changes=n("needs-changes"),declined=n("declined"),attention=n("attention"),pending=[...feedbackPendingStates].reduce((sum,state)=>sum+n(state),0)+(purpose==="publish"?n("reviewed"):0);
  let label:string,tone:"neutral"|"attention"|"success"="neutral";
  if(changes){label=published?t("一部公開・補足が必要","Partly published · changes needed"):t("補足が必要です","Changes needed");tone="attention";}
  else if(declined){label=published?t("一部公開・公開できない項目があります","Partly published · some items not accepted"):t("公開できない項目があります","Some items were not accepted");tone="attention";}
@@ -37,10 +37,11 @@ export function feedbackSummary(counts:Record<string,number>,workerAvailable=tru
   else if(n("reviewed"))label=t("原資料の照合待ち","Waiting to check the original source");
   else label=t("確認待ち","Waiting for review");
  }
- else if(published){label=published===total?t("公開しました","Published"):t("一部公開・残りは取消済み","Partly published · remaining items cancelled");tone="success";}
+ else if(published){label=published+existing===total?t("公開しました","Published"):t("一部公開・残りは取消済み","Partly published · remaining items cancelled");tone="success";}
+ else if(existing){label=t("登録済みの知識です","Already registered");tone="success";}
  else if(n("reviewed")){label=t("確認が完了しました・未公開","Review completed · not published");tone="success";}
  else if(cancelled||n("cancelled"))label=t("取り消しました","Cancelled");
  else label=t("確認の依頼が未完了です","Review has not been requested");
- return {label,tone,total,published,changes,declined,attention,pending,needsAction:changes+declined+attention>0};
+ return {label,tone,total,published,existing,changes,declined,attention,pending,needsAction:changes+declined+attention>0};
 }
-export function feedbackCounts(items:FeedbackReceipt["items"]){return items.reduce<Record<string,number>>((counts,item)=>({...counts,[item.state]:(counts[item.state]??0)+1}),{});}
+export function feedbackCounts(items:FeedbackReceipt["items"]){return items.reduce<Record<string,number>>((counts,item)=>({...counts,[item.state==="published"&&item.publication?.disposition==="existing"?"existing":item.state]:(counts[item.state==="published"&&item.publication?.disposition==="existing"?"existing":item.state]??0)+1}),{});}
