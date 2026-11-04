@@ -1,6 +1,6 @@
 # 利用者投稿の重複対策
 
-2026-11-05。[契約](../design/KNOWLEDGE_DUPLICATES.md)。この時点では実装・隔離検証済み、配置と実Google操作は次の追記で確定する。U6全体／本番公開の完了ではない。
+2026-11-05。[契約](../design/KNOWLEDGE_DUPLICATES.md)。main／localhost:3200／HTTPS βへ反映し、実Google本人で新規投稿から登録済みの結果まで確認した。U6全体／本番公開の完了ではない。
 
 ## 実装
 
@@ -21,3 +21,25 @@
 自然言語の重複を完全に証明する仕組みではない。別IDで作ったEntityの同一性、既存の重複Recordの整理、収集／Chat経路全体への接続はU6残件。正常な同名別人を自動mergeしない。本変更を全経路の重複解消として報告しない。
 
 既存の候補が受理直前に増えた場合は再確認へ戻す。確認不能を「新規」として通さない。候補上限に達した場合も先頭分だけの照合を完了と扱わない。高並列時のlock細分化、幅広い未見言語・表現の追加評価は後続。
+
+
+## 配置・実操作
+
+- Web app source：`9e679afd0a3af2abbb397536d907ef2aba60b8f8`、build **`eltwp98MIdtjfECPyDKAt`**。最初のbackend切替は`16cba5e4`／`Et17Y33s6K6OJjmTvAoEz`で、以後は登録済みの件数表示をWebだけで修正した。review／publisher／collectionのpolicyファイルは後者から変更していない。最後のWeb切替は4 WorkerのPIDとprivate profile hashを維持した。
+- 既存3200のTOPはHTTP 200。HTTPS βでは既存Googleログインを使い、本人の新しい匿名草稿を作成。テーマ「Webbが宇宙でひらくまで」へ、既存と同じ打上げ時刻とNASAの原文を投稿した。資料URLだけ`utm_source`を追加した。
+- 本人用確認先：[検証用投稿](https://graph-beta.isinxnisi.com/member/submissions?id=7bba56c8-9d8b-444c-8838-803adf35327d)。一覧名は「【確認用】重複投稿は記録を増やさない 20261105」。現在ログインしている本人だけが読める。
+- 原資料照合とGeminiの実応答を経て`published / disposition=existing`となり、既存Record `submission:9ac202ad-e212-42f8-ae3a-dbd1b2b4ce1e:record:ca7666b1909e7cef`の版1を返した。実送信policyは`knowledge-review-gemini-v1+knowledge-duplicate-v1`、試行1件。観測入力838 token、出力の一部利用量は不明のため予約を残し、ゼロ扱いしない。
+- 結果カードと一覧に「登録済み」と表示。「1件公開」が残っていた箇所も修正し、「1件登録済み」へ統一。既存の公開先を別タブで開き、元の本文・NASA資料・内容版1・元の投稿者が保持されていることを確認した。今回の新しい貢献活動は0件。
+- 26 Record版・5 Theme版・25 Capsule・既存migration ledgerのfingerprintは、検証用投稿の前後で一致。既存ユーザーの未読7件は既読にせず、今回の検証結果だけ既読にした。
+- PC通常幅と390×844のスマホ幅で結果カードを確認。横はみ出しなし（viewport390、document scrollWidth380、カード幅348）。仮のviewportを解除し、PCの結果画面を残した。ブラウザのerror logは0件。[PC](assets/knowledge-duplicate-pc-20261105.jpg)／[スマホ](assets/knowledge-duplicate-mobile-20261105.jpg)。
+- 件数表示の追加回帰は42件成功。新たなbuildのTypeScript／lintも成功。基本会員fixture36件も成功。確認中に見つかった共有statusのテスト2件は、既に存在する`sourceAvailable:true`を厳密比較の期待値へ追加した（製品の共有動作は変更していない）。
+
+## backup・再開・範囲
+
+会員62 table、知識14 tableをPostgreSQLのexported snapshotと同じ断面からcustom dumpにし、各々別名DBへWeb roleで復元して全table fingerprintが一致した。稼働中のheartbeatがあるため、別々の時刻のlive fingerprintをdumpと比較していない。適用済みchecksumは変更せず、追加migrationなし。会員000〜028／29件、知識001/002/004を維持した。
+
+復元確認資材（private）：`/home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/submission-repair/duplicate-snapshot-2b65e657-d941-4d55-9d78-f244b5cda2a1`。backend切替直前にも両DB dumpを保存した（`/home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/submission-repair/duplicate-activation-backup-20261104T153221Z`）。最後のWeb資材backup：`/home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/submission-repair/duplicate-counter-backup-20261104T154220Z`。旧dumpでlive DBを上書きしない。
+
+既存launcherで再開する：`python3 scripts/start-local-previews.py beta --node /home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/issue75/node`。既存private profileとDB接続を引き継ぐ。共有Kev・他プロジェクトのcontainer・Cloudflaredをまとめて再起動しない。
+
+3276、本番VPS、旧KG、認証設定、AIラボ資材は今回更新していない。U6のEntity同一性／Chat取込／総合一巡、収集経路全体への重複対策、U7／U8は未完了のまま。

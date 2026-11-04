@@ -1,8 +1,10 @@
 # 現在の引継ぎ：U6cまで
 
+2026-11-05 投稿重複対策：同じ意味の利用者投稿を既存Recordへ再利用し、新根拠・別テーマだけを追加。追加なし／変更なし訂正は記録・内容版・活動履歴を増やさず、一覧と結果へ登録済みを表示。app `9e679afd` / build `eltwp98MIdtjfECPyDKAt`をmain／3200／HTTPS βへ反映。追加migrationなし。Entity同一性・既存重複整理・収集／Chat経路への全面適用はU6残件。[契約と確認結果](../verification/KNOWLEDGE_DUPLICATES_20261105.md)。
+
 2026-11-04 余白・一覧追補：Capsuleのテーマ情報を年表の余白へそろえ、上の重複罫線を除去。取消済み投稿は通常一覧から分離し、履歴・未読から参照可能にした。app `9c821d9b` / build `zkavPW2SqgLy3u-VdjgwC`、main／3200／HTTPS βへ反映。Webのみ、DB／Worker／本番VPSの変更なし。[実操作・検証・残る重複対策](../verification/CAPSULE_CONTEXT_AND_SUBMISSION_LIST_20261104.md)。以下は各時点の記録。
 
-本運用前の受入残件として、別投稿間の実質重複と変更なし訂正の抑止が不足している。回数制限・request再送防止との違いとコード確認結果は上記検証記録に残す。今回のUI修正で対応済みにしない。
+上の2026-11-04時点では別投稿間の実質重複と変更なし訂正の抑止が不足していた。2026-11-05に、正本IDが揃う利用者投稿の経路へ対策を追加した。Entity同一性と収集／Chat経路への展開は残件であり、全経路の重複解消とは扱わない。
 
 2026-11-04 投稿対象・入力案内追補：対象選び直しと図の接続、凡例と投稿色、元の内容／入力欄の区別、テーマ再選択、訂正前後、時期の区切り、日本語の入力エラーを修正。app `7f6ec682` / build `xFCZOeokDcxMdG718u_IF`をmain／3200／HTTPS βへ配置。追加migrationなし。[実操作・検証・保全・制約](../verification/KNOWLEDGE_SUBMISSION_RETARGET_20261104.md)。U6の残工程は継続。以下は各時点の記録。
 

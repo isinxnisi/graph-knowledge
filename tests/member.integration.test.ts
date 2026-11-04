@@ -231,7 +231,7 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
     const { share, token } = await issued.json();
     expect(token).toMatch(/^[A-Za-z0-9_-]{43}$/);
     const status = await (await sharing.GET(request("/", alice.cookies.value), ctx)).json();
-    expect(status).toEqual({ share, token, blocked: false, commentsClosed: false });
+    expect(status).toEqual({ share, token, blocked: false, commentsClosed: false, sourceAvailable: true });
     const rows = await memberRuntime().pool.query("SELECT * FROM member_capsule_share WHERE capsule_id = $1", [capsule.id]);
     expect(rows.rows[0].token_hash).toHaveLength(64);
     expect(JSON.stringify(rows.rows)).not.toContain(token);
@@ -277,7 +277,7 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
     expect((await revoke(rotated.share.id)).status).toBe(200);
     expect((await revoke(rotated.share.id)).status).toBe(200);
     expect((await read(rotated.token)).status).toBe(404);
-    expect(await (await sharing.GET(request("/", alice.cookies.value), ctx)).json()).toEqual({ share: null, token: null, blocked: false, commentsClosed: false });
+    expect(await (await sharing.GET(request("/", alice.cookies.value), ctx)).json()).toEqual({ share: null, token: null, blocked: false, commentsClosed: false, sourceAvailable: true });
     expect((await memberRuntime().pool.query("SELECT * FROM member_capsule_revision WHERE capsule_id = $1", [capsule.id])).rowCount).toBe(1);
     const next = await (await issue(null)).json();
     expect((await read(next.token)).status).toBe(200);
