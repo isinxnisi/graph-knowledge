@@ -9,7 +9,15 @@ export function submissionIntentIssues(content:KnowledgeSubmissionContent,contex
  for(const [index,item] of content.items.entries()){
   const prefix=`項目${index+1}：`,r=item.record,op=item.operation;
   const fail=(message:string)=>issues.push(prefix+message);
-  const parsed=knowledgeRecordContentSchema.safeParse(r);if(!parsed.success)fail(parsed.error.issues[0]?.message??"事実・対象・根拠を入力してください。");
+  const parsed=knowledgeRecordContentSchema.safeParse(r);if(!parsed.success){
+   const issue=parsed.error.issues[0],field=issue?.path[0];
+   if(field==="evidence")fail(r.evidence.length===0?"公開するには、事実を確かめた資料を1件以上追加してください。草稿は資料なしでも保存できます。":issue?.path.includes("locator")?"資料の「書かれている場所」を入力してください。":issue?.path.includes("excerpt")?"資料の「その部分の原文」は4000文字以内で入力してください。":"資料の内容を確認してください。資料は20件まで追加できます。");
+   else if(field==="assertion")fail(op==="correct-record"?"訂正後の内容を1〜4000文字で入力してください。":"登録する事実を1〜4000文字で入力してください。");
+   else if(field==="times")fail(`時期${typeof issue?.path[1]==="number"?issue.path[1]+1:""}の日付・範囲を確認してください。時期は16件まで追加できます。`);
+   else if(field==="relation")fail("矢印に表示する言葉を200文字以内で入力してください。");
+   else if(field==="scope")fail("事実の補足は3000文字以内で入力してください。");
+   else fail("事実・対象・資料・時期の入力を確認してください。");
+  }
   for(const id of [r.subjectId,r.objectId]){const e=content.entities.find(e=>e.id===id);if(e&&!knowledgeEntityContentSchema.safeParse(e.content).success)fail("人物・作品などの名前と分類を確認してください。");}
   for(const evidence of r.evidence){const source=content.sources.find(s=>s.id===evidence.source.id);if(source&&!knowledgeSourceContentSchema.safeParse(source.content).success)fail("資料名と、正しいURLまたは本の情報を記入してください。");}
   if(!op){fail("何を追加・訂正するか選んでください。");continue;}

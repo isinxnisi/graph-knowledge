@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { knowledgeSubmissionContentSchema } from "../lib/domain/knowledge-submission";
+import { submissionIntentIssues } from "../lib/domain/knowledge-submission-intent";
 import { knowledgeRecordContentSchema } from "../lib/domain/knowledge-foundation";
 import { createKnowledgeSubmissionService, migrateKnowledgeSubmissions } from "../lib/server/knowledge-submissions";
 import { ensureKnowledgeFoundationSchema } from "../lib/server/knowledge-foundation";
@@ -17,12 +18,15 @@ describe("private submission input and review boundaries", () => {
     expect(draft.items[0].record.evidence).toEqual([]);
     expect(knowledgeRecordContentSchema.safeParse(draft.items[0].record).success).toBe(false);
   });
-  it("retains relation endpoint and duplicate evidence validation in drafts", () => {
+  it("preserves unfinished endpoints in drafts but rejects them for publication and keeps duplicate evidence validation", () => {
     const input = content(); input.items[0].record.objectId = "";
     expect(knowledgeSubmissionContentSchema.safeParse(input).success).toBe(false);
     const record = { ...content().items[0].record, objectId: null };
-    expect(knowledgeSubmissionContentSchema.safeParse({ ...content(), items: [{ key: "a", record }] }).success).toBe(false);
+    expect(knowledgeSubmissionContentSchema.safeParse({ ...content(), items: [{ key: "a", record }] }).success).toBe(true);
+    const draft = knowledgeSubmissionContentSchema.parse({ ...content(), schemaVersion: 2, attribution: "profile", items: [{ key: "a", operation: "create-relation", record }] });
+    expect(submissionIntentIssues(draft).join(" ")).toContain("つながりの両端");
     const evidence = { id: "e", source: { id: "s", revision: 1 }, locator: "p.1" };
+    expect(knowledgeRecordContentSchema.safeParse({ ...record, evidence: [evidence] }).success).toBe(false);
     expect(knowledgeSubmissionContentSchema.safeParse({ ...content(), items: [{ key: "a", record: { ...content().items[0].record, evidence: [evidence, evidence] } }] }).success).toBe(false);
   });
   it("rejects duplicate item/entity identities and attempts to impersonate collection", () => {
