@@ -1,0 +1,39 @@
+{
+  "source": "1f1efd3fee5ced1075b8b5b571c88ef23cfb5396",
+  "build": "FECRlX7I0yAs_6MVqAN8P",
+  "checks": {
+    "memberOidcFixture": 48,
+    "duplicateAcceptance": 30,
+    "changedFileLint": true,
+    "nextBuildAndTypes": true
+  },
+  "deployment": {
+    "localhost3200": true,
+    "httpsBeta": true,
+    "vpsChanged": false,
+    "additionalMigrations": [],
+    "privateSettingsUnchanged": true
+  },
+  "preservation": {
+    "recordRevisions": 26,
+    "themeRevisions": 5,
+    "capsules": 25,
+    "memberLedger": 29,
+    "hashesUnchanged": true
+  },
+  "http": {
+    "localhostDatasetAndSubmissions": 200,
+    "httpsBetaDatasetAndSubmissions": 200,
+    "requestUserAgent": "Mozilla/5.0",
+    "initialPythonUrllibRequest": 403
+  },
+  "browser": {
+    "realGoogleSession": true,
+    "existingSubmissionResult": "existing",
+    "originalAuthorAndCitationVisible": true,
+    "quoteCorrectionExecuted": "isolated OIDC/source fixture only"
+  },
+  "externalAiCallsThisTurn": 0,
+  "multilingualImplementation": false,
+  "multilingualProposal": "pending user adoption"
+}

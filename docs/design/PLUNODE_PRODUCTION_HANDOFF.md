@@ -1,5 +1,7 @@
 # 現在の引継ぎ：U6cまで
 
+2026-11-05 引用訂正の回帰修正：app `1f1efd3f` / build `FECRlX7I0yAs_6MVqAN8P`、main／3200／HTTPS βへ反映。本文が同じ明示訂正でも引用・記載箇所を次版へ保持する。追加migrationなし。[検証・残件](../verification/KNOWLEDGE_QUOTE_CORRECTION_20261105.md)。以下は各時点の記録。
+
 2026-11-05 多言語：UIの日英切替と知識本文の多言語管理を区別する。[原語・翻訳・訂正の設計案](KNOWLEDGE_MULTILINGUAL_PROPOSAL.md)はユーザー採用待ち・未実装。U6のEntity同一性／Chat schemaでも原語と翻訳の分離を考慮する。引用だけ／記載箇所だけの明示訂正の回帰は独立修正。[検証・反映状態](../verification/KNOWLEDGE_QUOTE_CORRECTION_20261105.md)。
 
 2026-11-05 投稿重複対策：同じ意味の利用者投稿を既存Recordへ再利用し、新根拠・別テーマだけを追加。追加なし／変更なし訂正は記録・内容版・活動履歴を増やさず、一覧と結果へ登録済みを表示。app `9e679afd` / build `eltwp98MIdtjfECPyDKAt`をmain／3200／HTTPS βへ反映。追加migrationなし。Entity同一性・既存重複整理・収集／Chat経路への全面適用はU6残件。[契約と確認結果](../verification/KNOWLEDGE_DUPLICATES_20261105.md)。
