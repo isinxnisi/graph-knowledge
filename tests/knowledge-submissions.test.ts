@@ -18,7 +18,7 @@ describe("private submission input and review boundaries", () => {
     expect(draft.items[0].record.evidence).toEqual([]);
     expect(knowledgeRecordContentSchema.safeParse(draft.items[0].record).success).toBe(false);
   });
-  it("preserves unfinished endpoints in drafts but rejects them for publication and keeps duplicate evidence validation", () => {
+  it("checks IDs in drafts and rejects incomplete endpoints or duplicate evidence at publication", () => {
     const input = content(); input.items[0].record.objectId = "";
     expect(knowledgeSubmissionContentSchema.safeParse(input).success).toBe(false);
     const record = { ...content().items[0].record, objectId: null };
@@ -27,7 +27,7 @@ describe("private submission input and review boundaries", () => {
     expect(submissionIntentIssues(draft).join(" ")).toContain("つながりの両端");
     const evidence = { id: "e", source: { id: "s", revision: 1 }, locator: "p.1" };
     expect(knowledgeRecordContentSchema.safeParse({ ...record, evidence: [evidence] }).success).toBe(false);
-    expect(knowledgeSubmissionContentSchema.safeParse({ ...content(), items: [{ key: "a", record: { ...content().items[0].record, evidence: [evidence, evidence] } }] }).success).toBe(false);
+    expect(knowledgeRecordContentSchema.safeParse({ ...content().items[0].record, evidence: [evidence, evidence] }).success).toBe(false);
   });
   it("rejects duplicate item/entity identities and attempts to impersonate collection", () => {
     const input = content();
