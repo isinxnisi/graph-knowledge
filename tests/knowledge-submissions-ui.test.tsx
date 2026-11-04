@@ -144,3 +144,14 @@ it('does not label new correction prose with the original author language unless
  fireEvent.change(screen.getByRole('combobox',{name:'本文の言語'}),{target:{value:'en'}});fact('Another corrected statement in English.');
  expect(screen.getByRole('combobox',{name:'本文の言語'})).toHaveProperty('value','en');expect(screen.getByText('訂正前の内容').nextSibling?.textContent).toContain('公開された元の事実。');
 });
+
+
+it('opens a translation-only draft with its fixed original and an editable translation, without the factual graph or source form',async()=>{
+ const id=seed('英訳の投稿'),value=stored.get(id)!;
+ value.content=knowledgeSubmissionContentSchema.parse({schemaVersion:2,attribution:'profile',title:'英訳の投稿',items:[{key:'translation',operation:'translate-text',record:{kind:'note',assertion:original.content.assertion,evidence:[]},translation:{target:{kind:'record',id:original.id,revision:original.revision,field:'assertion'},language:'en',text:'The original fact.',expectedRevision:0}}]});
+ value.context={entities:[],sources:[],texts:[{target:{kind:'record',id:original.id,revision:original.revision,field:'assertion'},text:original.content.assertion,hash:'a'.repeat(64),content:original.content,language:{tag:'ja',basis:'declared'},translation:null}]};
+ history.replaceState({},'', '/member/submissions?id='+id);render(<KnowledgeSubmissions/>);
+ const textarea=await screen.findByRole('textbox',{name:'訳文（必須）'});expect(textarea).toHaveProperty('value','The original fact.');
+ expect(screen.getByText(original.content.assertion)).toBeTruthy();expect(screen.queryByLabelText('投稿範囲のプレビュー')).toBeNull();expect(screen.queryByRole('button',{name:'項目を追加'})).toBeNull();expect(screen.queryByRole('textbox',{name:'登録する事実'})).toBeNull();
+ fireEvent.change(textarea,{target:{value:'A revised translation.'}});expect(textarea).toHaveProperty('value','A revised translation.');expect(stored.get(id)!.content.items[0].record.assertion).toBe(original.content.assertion);
+});
