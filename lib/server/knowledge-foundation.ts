@@ -370,16 +370,26 @@ export function createKnowledgeFoundationService(pool: Pool) {
         if (cmd.action === "set-visibility" && visibility === "public") await c.query("INSERT INTO knowledge75.published_revisions(kind,id,revision) VALUES($1,$2,$3) ON CONFLICT DO NOTHING", [cmd.kind, cmd.id, h.current_revision]);
         await changed(cmd.kind, cmd.id);
         result = { kind: cmd.kind, id: cmd.id, revision: h.status_revision + 1, visibility, confirmation } satisfies KnowledgeStatus;
-      } else if (cmd.action === "set-mapping") {
-        const r = await head(c, "record", cmd.recordId, "FOR UPDATE"); expected(r.current_revision, cmd.recordRevision);
-        const existing = (await c.query("SELECT current_revision FROM knowledge75.objects WHERE kind='mapping' AND id=$1 FOR UPDATE", [cmd.recordId])).rows[0];
-        expected(existing?.current_revision ?? 0, cmd.expectedMappingRevision);
+      } else if (cmd.action === "set-mapping" || cmd.action === "set-mappings") {
+        const entries = cmd.action === "set-mapping" ? [cmd] : cmd.entries;
+        if (new Set(entries.map(e => e.recordId)).size !== entries.length) throw new KnowledgeError("同じ記録を二度選択できません");
+        // Lock records first, in a stable order: absent mapping creation and
+        // corrections serialize on the same parent. A conflict rolls back all.
+        for (const e of [...entries].sort((a,b) => a.recordId.localeCompare(b.recordId))) {
+          const r = await head(c, "record", e.recordId, "FOR UPDATE"); expected(r.current_revision, e.recordRevision);
+          if (cmd.action === "set-mappings" && !await recordReadable(c, await version(c,"record",e.recordId,e.recordRevision))) throw new KnowledgeError("公開対象が変わりました。再取得してください",409,"REFERENCE_NOT_PUBLIC");
+          const existing = (await c.query("SELECT current_revision FROM knowledge75.objects WHERE kind='mapping' AND id=$1 FOR UPDATE", [e.recordId])).rows[0];
+          expected(existing?.current_revision ?? 0, e.expectedMappingRevision);
+        }
         if (cmd.concept) {
+          await c.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))",["concept:"+cmd.concept.id+"@"+cmd.concept.revision]);
           const old = (await c.query("SELECT body FROM knowledge75.concepts WHERE id=$1 AND revision=$2", [cmd.concept.id, cmd.concept.revision])).rows[0];
           if (old && knowledgeDigest(old.body) !== knowledgeDigest(cmd.concept)) throw new KnowledgeError("同じ概念版に異なる定義を保存できません", 409, "CONCEPT_CONFLICT");
           if (!old) await c.query("INSERT INTO knowledge75.concepts(id,revision,body) VALUES($1,$2,$3)", [cmd.concept.id, cmd.concept.revision, JSON.stringify(cmd.concept)]);
         }
-        result = await put("mapping", cmd.recordId, { recordRevision: cmd.recordRevision, concept: cmd.concept }, cmd.expectedMappingRevision + 1, cmd.reason);
+        const mappings: KnowledgeMappingVersion[] = [];
+        for (const e of entries) mappings.push(await put("mapping", e.recordId, { recordRevision: e.recordRevision, concept: cmd.concept }, e.expectedMappingRevision + 1, cmd.reason));
+        result = cmd.action === "set-mapping" ? mappings[0] : { mappings };
       }
       await c.query("INSERT INTO knowledge75.operations(actor_id,request_id,actor_kind,digest,input,result) VALUES($1,$2,$3,$4,$5,$6)", [actor.id, cmd.requestId, actor.kind, digest, JSON.stringify(raw), JSON.stringify(result)]);
       if(internal)await internal.prepare();

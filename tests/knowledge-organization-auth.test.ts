@@ -1,0 +1,13 @@
+import {afterEach,beforeEach,expect,it,vi} from "vitest";
+import type {Pool} from "pg";
+vi.mock("../lib/server/member/site-operations",()=>({isSiteOperator:(id:string)=>id==="operator"}));
+vi.mock("../lib/server/knowledge-read-runtime",()=>({knowledgeReadConfiguration:()=>({databaseUrl:"postgresql://unused@127.0.0.1:1/not_used"})}));
+import {createMemberKnowledgeOrganization} from "../lib/server/member/knowledge-organization";
+const owner=vi.fn(),query=vi.fn(),connect=vi.fn(),release=vi.fn();
+const pool={connect} as unknown as Pool,origin="https://graph-beta.isinxnisi.com";
+beforeEach(()=>{vi.stubEnv("KNOWLEDGE_COLLECTION_READING_ENABLED","1");vi.stubEnv("GRAPH_DEPLOYMENT","beta");owner.mockReset();query.mockReset();connect.mockReset();release.mockReset();connect.mockResolvedValue({query,release});query.mockImplementation(async(sql:string)=>({rowCount:sql.startsWith("SELECT")?0:1,rows:[]}));});
+afterEach(()=>vi.unstubAllEnvs());
+it("does not expose operator records to a normal logged-in account",async()=>{owner.mockResolvedValue({id:"member",sessionId:"session"});await expect(createMemberKnowledgeOrganization(pool,origin,owner).list(new Request(origin))).rejects.toMatchObject({status:403});expect(connect).not.toHaveBeenCalled();});
+it("rechecks the active database session before any knowledge read or mutation",async()=>{owner.mockResolvedValue({id:"operator",sessionId:"expired"});await expect(createMemberKnowledgeOrganization(pool,origin,owner).list(new Request(origin))).rejects.toMatchObject({status:401});expect(query.mock.calls.some(([sql])=>sql.includes("FOR SHARE OF u,s"))).toBe(true);expect(query.mock.calls.some(([sql])=>sql==="ROLLBACK")).toBe(true);});
+it("rejects cross-origin requests and does not expand access on production",async()=>{const service=createMemberKnowledgeOrganization(pool,origin,owner);await expect(service.act(new Request(origin,{method:"POST",headers:{origin:"https://other.example"}}))).rejects.toMatchObject({code:"INVALID_ORIGIN"});vi.stubEnv("GRAPH_DEPLOYMENT","production");await expect(service.list(new Request(origin))).rejects.toMatchObject({status:404});expect(owner).not.toHaveBeenCalled();});
+it("accepts only the bounded batch command at this authenticated endpoint",async()=>{await expect(createMemberKnowledgeOrganization(pool,origin,owner).act(new Request(origin,{method:"POST",headers:{origin,"content-type":"application/json"},body:JSON.stringify({action:"set-mapping",requestId:"11111111-1111-4111-8111-111111111111",recordId:"r",recordRevision:1,expectedMappingRevision:0,concept:null,reason:"test"})}))).rejects.toMatchObject({status:400});expect(owner).not.toHaveBeenCalled();});
