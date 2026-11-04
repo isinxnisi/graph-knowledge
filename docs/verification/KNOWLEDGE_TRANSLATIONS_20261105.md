@@ -59,3 +59,5 @@ PCと390×844のChrome responsive幅で公開訳文、訳文入力、共有Capsu
 ![スマホの訳文入力](assets/knowledge-translations-form-mobile-20261105.jpg)
 ![共有版へ固定した訳文](assets/knowledge-translations-capsule-20261105.jpg)
 ![スマホの共有版](assets/knowledge-translations-capsule-mobile-20261105.jpg)
+
+今回の入口は共通原記録のある知識・対象・Themeの公開詳細。旧KG専用の詳細画面への翻訳UI全面展開は未対応であり、共通原記録への接続と合わせた後続範囲とする。
