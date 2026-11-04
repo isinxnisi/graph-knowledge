@@ -83,11 +83,11 @@
   "requestSha256": "71a310a43534263d75049dac65eb871806eddb610ee9f1822079a6486e9128d0",
   "kind": "collect-review",
   "phase": "waiting-lock",
-  "generation": 2757,
+  "generation": 2758,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-04T00:39:21+00:00",
+  "updatedAt": "2026-11-04T00:51:36+00:00",
   "result": {
     "jobId": "issue-58-dot-takeuchi-two-20261028-r0001-7631e34f1dc1a01a",
     "collectionUnchanged": false,
