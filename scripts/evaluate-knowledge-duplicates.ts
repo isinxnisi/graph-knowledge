@@ -45,8 +45,9 @@ try{
    let reservation:Awaited<ReturnType<typeof reserveKnowledgeAI>>;
    for(;;){const c=await pool.connect();
     try{await c.query('BEGIN');reservation=await reserveKnowledgeAI(c,config,{purpose:'evaluation',policy:DUPLICATE_POLICY,inputReserved:Buffer.byteLength(wire)+1024,outputReserved:2048});await c.query('COMMIT');}catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}
-    if(reservation.state!=='wait'||reservation.wait.getTime()-Date.now()>61000)break;
-    await new Promise(resolve=>setTimeout(resolve,Math.max(100,reservation.wait.getTime()-Date.now()+100)));
+    const waitAt=reservation.state==='wait'?reservation.wait:undefined;
+    if(!waitAt||waitAt.getTime()-Date.now()>61000)break;
+    await new Promise(resolve=>setTimeout(resolve,Math.max(100,waitAt.getTime()-Date.now()+100)));
    }
    if(reservation.state!=='reserved'){console.log(JSON.stringify({state:reservation.state,completed:results.length,wait:reservation.state==='wait'?reservation.wait:undefined}));break;}
    const attemptId=reservation.id;await writeFile(target,JSON.stringify({attemptId,wireDigest,request,state:'sending'}),{mode:0o600,flag:'wx'});
