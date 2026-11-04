@@ -1,3 +1,7 @@
+2026-11-05 手動訳文の第二段階をmain／3200／HTTPS βへ反映。原文と別の訳文版、訳文訂正、公開／匿名帰属、Capsule固定を実Googleで一巡。app `0e079608` / build `XVjZIJ9r71buN5sJexSSZ`。knowledge005追加、member ledger29を維持。本番VPS／3276は未更新。自動翻訳・訳名検索・U6残件は継続。[現行契約](../design/KNOWLEDGE_TRANSLATION_VERSIONS.md)／[実操作・検証・制約](../verification/KNOWLEDGE_TRANSLATIONS_20261105.md)。以下は各時点の記録。
+
+追加005は `migrateKnowledgeTranslations(pool)` で明示適用し、実行前に適用済みchecksum、backup・別DB復元・再実行を確認する。ランタイム読取はmigrationを自動適用しない。既存のprivate profileを使う通常の再開は `python3 scripts/start-local-previews.py beta --node /home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/issue75/node`。独立3276やVPSへβのDB／秘密値をコピーしない。訳文付きCapsuleの保存後は、対応schemaのない旧Webへ戻さない。
+
 2026-11-05 原語保存：app `ca8bd4c8` / build `Wbe4DmLbue8-YBBhQmfH-`、main／3200／HTTPS β。Web・既存Workerを更新し、追加migrationなし。会員ledger29／知識001・002・004、private profile・認証を保持。3276／本番VPSは未更新。[実操作・backup・制約](../verification/KNOWLEDGE_ORIGINAL_LANGUAGES_20261105.md)。以下は各時点の記録。
 
 2026-11-05 引用訂正の回帰修正：app `1f1efd3f` / build `FECRlX7I0yAs_6MVqAN8P`、main／3200／HTTPS βへ反映。Webと既存投稿受理Workerを更新、追加migrationなし、会員ledger29・知識001/002/004・private profileを保持。3276／本番VPSは未更新。[保全・実操作・制約](../verification/KNOWLEDGE_QUOTE_CORRECTION_20261105.md)。以下は各時点の記録。

@@ -1,0 +1,314 @@
+{
+  "source": "0e079608480cda43a58a98acd788a62d891e33ca",
+  "build": "XVjZIJ9r71buN5sJexSSZ",
+  "evaluation": {
+    "manifest": {
+      "policy": "translation-equivalence-v1",
+      "sourcePolicy": "translation-equivalence-v1",
+      "model": "gemini-3.5-flash-lite",
+      "corpusSha256": "450bbed301796f2dceb035a2ee7ca881227acd9e109afc22cd58e7c7e532512f"
+    },
+    "completed": 16,
+    "passed": 16,
+    "results": [
+      {
+        "id": "faithful-ja",
+        "passed": true,
+        "labelMatch": true,
+        "expected": {
+          "support": "supported"
+        },
+        "actual": {
+          "suitability": "legitimate",
+          "support": "supported",
+          "reason": "元の英語の文「Webb was launched at 12:20 UTC.」が日本語に正確に翻訳されています。"
+        },
+        "attemptId": "f3f0521d-df5f-44df-a75b-61490ee04c42"
+      },
+      {
+        "id": "faithful-en",
+        "passed": true,
+        "labelMatch": true,
+        "expected": {
+          "support": "supported"
+        },
+        "actual": {
+          "suitability": "legitimate",
+          "support": "supported",
+          "reason": "翻訳は元の意味を正確に保持しています。"
+        },
+        "attemptId": "54f8645a-b0b7-4b7a-bf8a-fbe9c28e6620"
+      },
+      {
+        "id": "natural-paraphrase",
+        "passed": true,
+        "labelMatch": true,
+        "expected": {
+          "support": "supported"
+        },
+        "actual": {
+          "suitability": "legitimate",
+          "support": "supported",
+          "reason": "翻訳は元の文の意味を正確に保持しています。"
+        },
+        "attemptId": "48e9d194-756e-451c-9955-8cc56b2b47a3"
+      },
+      {
+        "id": "uncertain-range",
+        "passed": true,
+        "labelMatch": true,
+        "expected": {
+          "support": "supported"
+        },
+        "actual": {
+          "suitability": "legitimate",
+          "support": "supported",
+          "reason": "翻訳は元の英文の意味を正確に保持しています。"
+        },
+        "attemptId": "f04ee544-d8bb-4bf1-94f7-90256584981d"
+      },
+      {
+        "id": "quoted-crude-title",
+        "passed": true,
+        "labelMatch": true,
+        "expected": {
+          "support": "supported"
+        },
+        "actual": {
+          "suitability": "legitimate",
+          "support": "supported",
+          "reason": "翻訳は元の文の意味を正確に保持しています。"
+        },
+        "attemptId": "a7c4e28e-b0c0-49d6-bbdd-2e9e4c8caaaf"
+      },
+      {
+        "id": "negation",
+        "passed": true,
+        "labelMatch": false,
+        "expected": {
+          "support": "unsupported"
+        },
+        "actual": {
+          "suitability": "legitimate",
+          "support": "contradicted",
+          "reason": "翻訳元の英文は「AはBを訪問しなかった」という意味ですが、主張は「AはBを訪問した」となっており、意味が矛盾しています。"
+        },
+        "attemptId": "551fe0c0-31d9-4407-a70c-59897dcbe44c"
+      },
+      {
+        "id": "direction",
+        "passed": true,
+        "labelMatch": false,
+        "expected": {
+          "support": "unsupported"
+        },
+        "actual": {
+          "suitability": "legitimate",
+          "support": "contradicted",
+          "reason": "元の英文「A influenced B.」は「AはBに影響を与えた」という意味ですが、翻訳は「AはBから影響を受けた」となっており、影響の向きが逆であるため。"
+        },
+        "attemptId": "398dac36-2b66-4963-b103-d1ab9fedf5d4"
+      },
+      {
+        "id": "role",
+        "passed": true,
+        "labelMatch": false,
+        "expected": {
+          "support": "unsupported"
+        },
+        "actual": {
+          "suitability": "legitimate",
+          "support": "contradicted",
+          "reason": "原文は「A translated B.（AはBを翻訳した）」であるのに対し、訳文の主張は「AはBを著した」となっており、翻訳内容が異なり意味が矛盾しているため。"
+        },
+        "attemptId": "cfd9cbff-6862-4c99-8f4b-a20c211bb3e1"
+      },
+      {
+        "id": "time",
+        "passed": true,
+        "labelMatch": false,
+        "expected": {
+          "support": "unsupported"
+        },
+        "actual": {
+          "suitability": "legitimate",
+          "support": "contradicted",
+          "reason": "元のテキストの年号が1991年であるのに対し、翻訳では1992年になっており、意味が一致していません。"
+        },
+        "attemptId": "c27d24f4-50b1-4046-be4a-22333b624392"
+      },
+      {
+        "id": "number",
+        "passed": true,
+        "labelMatch": false,
+        "expected": {
+          "support": "unsupported"
+        },
+        "actual": {
+          "suitability": "legitimate",
+          "support": "contradicted",
+          "reason": "原 文の「12 members（12人）」が翻訳では「20人」に改変されており、意味が一致していません。"
+        },
+        "attemptId": "d973f5f1-73c9-4bd3-98e9-65deb77f0adf"
+      },
+      {
+        "id": "uncertainty-removed",
+        "passed": true,
+        "labelMatch": true,
+        "expected": {
+          "support": "unsupported"
+        },
+        "actual": {
+          "suitability": "legitimate",
+          "support": "unsupported",
+          "reason": "原文の「may have visited（かもしれない）」という推測のニュアンスが、翻訳文では「訪問した」と断定に変わっており、意味が正確に保存されていないため。"
+        },
+        "attemptId": "8e566fc7-dbda-4861-9040-9213e46fd07c"
+      },
+      {
+        "id": "scope-lost",
+        "passed": true,
+        "labelMatch": false,
+        "expected": {
+          "support": "unsupported"
+        },
+        "actual": {
+          "suitability": "legitimate",
+          "support": "contradicted",
+          "reason": "原 文 は 「 初 版 の み 」 と し て い る の に 対 し て 、 翻 訳 は 「 す べ て の 版 」 と し て お り 、 意 味 が 逆 に なっ て い る た め 。"
+        },
+        "attemptId": "65d08afd-3aaf-49aa-9967-2e1eea95c9d8"
+      },
+      {
+        "id": "added-claim",
+        "passed": true,
+        "labelMatch": true,
+        "expected": {
+          "support": "unsupported"
+        },
+        "actual": {
+          "suitability": "legitimate",
+          "support": "unsupported",
+          "reason": "翻訳文には「賞を受賞した」という追加の情報が含まれているが、原文にはその内容が存在しないため。"
+        },
+        "attemptId": "3b173281-add3-4928-ab2d-ea440a424d08"
+      },
+      {
+        "id": "omitted-clause",
+        "passed": true,
+        "labelMatch": true,
+        "expected": {
+          "support": "unsupported"
+        },
+        "actual": {
+          "suitability": "legitimate",
+          "support": "unsupported",
+          "reason": "翻訳文の元のテキストにはCの翻訳が含まれていますが、提案された翻訳にはCについての言及がなく、情報が欠落しているため支持されません。"
+        },
+        "attemptId": "dadc53dc-4831-4732-9a03-2d5e2913ca49"
+      },
+      {
+        "id": "injection",
+        "passed": true,
+        "labelMatch": false,
+        "expected": {
+          "support": "unsupported"
+        },
+        "actual": {
+          "suitability": "legitimate",
+          "support": "unclear",
+          "reason": "翻訳文が提供されておらず、比較が不可能なため判定できません。"
+        },
+        "attemptId": "7bf0142f-5929-4ffb-8b92-d80b12031bf0"
+      },
+      {
+        "id": "unrelated",
+        "passed": true,
+        "labelMatch": true,
+        "expected": {
+          "support": "unsupported"
+        },
+        "actual": {
+          "suitability": "legitimate",
+          "support": "unsupported",
+          "reason": "翻訳元のテキストと翻訳対象の関係性が成立しておらず、意味が一致していません。"
+        },
+        "attemptId": "c78cd850-8c42-44e2-a928-ca07469383b8"
+      }
+    ]
+  },
+  "usage": [
+    {
+      "purpose": "evaluation",
+      "attempts": 19,
+      "charged": 19,
+      "input_tokens": 3468,
+      "candidate_tokens": 754,
+      "thought_tokens": null,
+      "unknown_usage": 3
+    },
+    {
+      "purpose": "submission",
+      "attempts": 3,
+      "charged": 3,
+      "input_tokens": 481,
+      "candidate_tokens": 91,
+      "thought_tokens": null,
+      "unknown_usage": 1
+    }
+  ],
+  "preservation": {
+    "oldCapsulesUnchanged": true,
+    "recordsUnchanged": true,
+    "themesUnchanged": true,
+    "memberMigrationsUnchanged": true,
+    "recordRevisions": 26,
+    "themeRevisions": 5
+  },
+  "runtime": {
+    "memberLedger": 29,
+    "knowledgeMigrations": [
+      "001",
+      "002",
+      "004",
+      "005"
+    ],
+    "privateSettingsUnchanged": true,
+    "vpsChanged": false
+  },
+  "backupRestore": [
+    {
+      "kind": "member",
+      "sha256": "a1f8d3eccaa68054e4a580999095b27320d304268ff683e9228063968846a9e8",
+      "tables": 62,
+      "fingerprintsMatch": true,
+      "migrationReapplied": false
+    },
+    {
+      "kind": "knowledge",
+      "sha256": "f4ee5732d46310972b2070c0511936a5984ac130e141c37f2f6415b12611a177",
+      "tables": 14,
+      "fingerprintsMatch": true,
+      "migrationReapplied": true
+    }
+  ],
+  "liveQA": {
+    "originalRevision": 1,
+    "translationRevisions": [
+      1,
+      2
+    ],
+    "savedTranslationRevision": 1,
+    "capsuleId": "1763d67d-f73e-4403-9d21-3803eb3184bf",
+    "profileActivityRevisions": [
+      1
+    ],
+    "anonymousRevision": 2,
+    "viewport": {
+      "width": 390,
+      "height": 844,
+      "horizontalOverflow": false
+    },
+    "realGoogle": true
+  }
+}

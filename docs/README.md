@@ -1,3 +1,5 @@
+2026-11-05 手動訳文の第二段階をmain／3200／HTTPS βへ反映。原文と別の訳文版、訳文訂正、公開／匿名帰属、Capsule固定を実Googleで一巡。app `0e079608` / build `XVjZIJ9r71buN5sJexSSZ`。knowledge005追加、member ledger29を維持。本番VPS／3276は未更新。自動翻訳・訳名検索・U6残件は継続。[現行契約](design/KNOWLEDGE_TRANSLATION_VERSIONS.md)／[実操作・検証・制約](verification/KNOWLEDGE_TRANSLATIONS_20261105.md)。以下は各時点の記録。
+
 2026-11-05 原語保存の第一段階をmain／3200／HTTPS βへ反映。app `ca8bd4c8` / build `Wbe4DmLbue8-YBBhQmfH-`。実Googleで言語を分けた草稿保存・再訪、PC／スマホを確認。追加migration・新規AI呼出なし。翻訳版／訳文訂正／自動翻訳は未完了。[検証・残件](verification/KNOWLEDGE_ORIGINAL_LANGUAGES_20261105.md)。以下は各時点の記録。
 
 2026-11-05 原語保存の第一段階：投稿文・名称・関係語・引用・資料・Themeの言語を内容版と別々に保持する。異言語の事実訂正は旧版と訂正者を残す。翻訳生成／訳文訂正は後続。[現行契約](design/KNOWLEDGE_ORIGINAL_LANGUAGES.md)／[検証](verification/KNOWLEDGE_ORIGINAL_LANGUAGES_20261105.md)。
