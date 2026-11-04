@@ -1,3 +1,4 @@
+import { submissionReviewInput } from "../lib/domain/knowledge-review-job";
 import { expect, it } from "vitest";
 import { knowledgeLanguageTagSchema, declaredTextLanguage, retainedTextLanguages } from "../lib/domain/knowledge-language";
 import { knowledgeEntityContentSchema, knowledgeSourceContentSchema, knowledgeRecordContentSchema, knowledgeThemeContentSchema, type KnowledgeSnapshot } from "../lib/domain/knowledge-foundation";
@@ -61,4 +62,13 @@ it("retains independent theme title/description languages without translating th
 it("keeps language positions aligned with aliases in one immutable revision",()=>{
  expect(knowledgeEntityContentSchema.parse({name:"A",kind:"person",aliases:["別名"],textLanguages:{aliases:[ja]}}).textLanguages?.aliases).toEqual([ja]);
  expect(knowledgeEntityContentSchema.safeParse({name:"A",kind:"person",aliases:[],textLanguages:{aliases:[ja]}}).success).toBe(false);
+});
+
+it("does not tell the reviewer that a historical Japanese default is a declared source language",()=>{
+ const content=form();content.sources[0].content.language="ja";
+ const submission={id:"10000000-0000-4000-8000-000000000001",revision:1,version:1,state:"draft" as const,content,digest:"test",createdAt:"2026-11-05T00:00:00Z",updatedAt:"2026-11-05T00:00:00Z",context:{entities:[{id:"b",revision:1,content:knowledgeEntityContentSchema.parse({name:"B",kind:"work"})}],sources:[]}};
+ const context=JSON.parse(submissionReviewInput(submission,"item").context);
+ expect(context.sourceNotes[0]).toMatchObject({language:"und",quotationLanguage:en});
+ const declared={...submission,content:setSubmissionLanguage(content,0,"document","en","s")};
+ expect(JSON.parse(submissionReviewInput(declared,"item").context).sourceNotes[0].language).toBe("en");
 });
