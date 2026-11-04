@@ -1,0 +1,478 @@
+{
+  "policy": "collection-reading-v1",
+  "model": "gemini-3.5-flash-lite",
+  "results": [
+    {
+      "id": "free-relation-window",
+      "attemptId": "2b6acd19-4ce0-4f47-adff-de97dd595a29",
+      "elapsedMs": 17354,
+      "parsed": {
+        "responseId": "v4DqavGAPIqz2roPwNjzgQg",
+        "modelVersion": "gemini-3.5-flash-lite",
+        "usage": {
+          "promptTokenCount": 563,
+          "candidatesTokenCount": 170,
+          "thoughtsTokenCount": null,
+          "cachedContentTokenCount": null,
+          "totalTokenCount": 733
+        },
+        "state": "parsed",
+        "content": {
+          "entities": [],
+          "records": [
+            {
+              "kind": "episode",
+              "assertion": "Miraは2021年3月から6月の間にAurora天文台に客員研究員として参加した",
+              "subjectId": "mira",
+              "objectId": "aurora",
+              "relation": "参加する",
+              "polarity": "affirmed",
+              "scope": "MiraのAurora天文台への参加とその時期",
+              "quote": "Mira joined Aurora Observatory as a visiting researcher sometime between March and June 2021.",
+              "locator": "Main text",
+              "timeKind": "occurrence-window",
+              "from": "2021-03",
+              "to": "2021-06",
+              "timeLabel": "between March and June 2021",
+              "timeQuote": "between March and June 2021"
+            }
+          ],
+          "reason": "MiraのAurora天文台への参加について、時期とともにエピソードとして抽出した。"
+        }
+      },
+      "plans": [
+        {
+          "state": "ready",
+          "command": {
+            "requestId": "24cbd2d7-c4f5-4b6d-acd4-a21691ad7c2d",
+            "action": "accept-record",
+            "entities": [],
+            "sources": [
+              {
+                "id": "eval-source",
+                "content": {
+                  "title": "free-relation-window",
+                  "url": "https://example.org/evaluation",
+                  "bibliography": "取得原本SHA256 449fca497a830edbfe01cb2cc25eba051341742dfe469a95467c53653d02db35 / text 449fca497a830edbfe01cb2cc25eba051341742dfe469a95467c53653d02db35",
+                  "language": "und"
+                }
+              }
+            ],
+            "entityPins": [
+              {
+                "id": "mira",
+                "revision": 1
+              },
+              {
+                "id": "aurora",
+                "revision": 1
+              }
+            ],
+            "sourcePins": [],
+            "record": {
+              "id": "collection-record:52a868d1186b80181a3ac6d87092b5b7",
+              "content": {
+                "kind": "episode",
+                "subjectId": "mira",
+                "objectId": "aurora",
+                "assertion": "Miraは2021年3月から6月の間にAurora天文台に客員研究員として参加した",
+                "relation": "参加する",
+                "polarity": "affirmed",
+                "scope": "MiraのAurora天文台への参加とその時期",
+                "times": [
+                  {
+                    "id": "time",
+                    "time": {
+                      "kind": "calendar",
+                      "from": "2021-03",
+                      "to": "2021-06",
+                      "meaning": "occurrence-window",
+                      "label": "between March and June 2021"
+                    }
+                  }
+                ],
+                "evidence": [
+                  {
+                    "id": "source-quote",
+                    "source": {
+                      "id": "eval-source",
+                      "revision": 1
+                    },
+                    "locator": "Main text",
+                    "excerpt": "Mira joined Aurora Observatory as a visiting researcher sometime between March and June 2021.",
+                    "stance": "support"
+                  }
+                ]
+              }
+            },
+            "themes": [],
+            "reason": "取得済み資料の読解・引用一致・個別の意味照合による自動登録"
+          },
+          "review": {
+            "assertion": "Miraは2021年3月から6月の間にAurora天文台に客員研究員として参加した / 種類=episode / 起点=Mira / 相手=Aurora Observatory / 関係=参加する / 肯否=affirmed / 限定=MiraのAurora天文台への参加とその時期 / 時期=[{\"id\":\"time\",\"time\":{\"kind\":\"calendar\",\"from\":\"2021-03\",\"to\":\"2021-06\",\"meaning\":\"occurrence-window\",\"label\":\"between March and June 2021\"}}]",
+            "context": "依頼範囲: Mira。以下の原文だけで、この構造化内容全体を判定。対象の同一性や時期が曖昧ならunclear。",
+            "evidence": [
+              {
+                "title": "free-relation-window",
+                "locator": "Main text",
+                "excerpt": "Mira joined Aurora Observatory as a visiting researcher sometime between March and June 2021.\nbetween March and June 2021"
+              }
+            ]
+          },
+          "candidate": {
+            "kind": "episode",
+            "assertion": "Miraは2021年3月から6月の間にAurora天文台に客員研究員として参加した",
+            "subjectId": "mira",
+            "objectId": "aurora",
+            "relation": "参加する",
+            "polarity": "affirmed",
+            "scope": "MiraのAurora天文台への参加とその時期",
+            "quote": "Mira joined Aurora Observatory as a visiting researcher sometime between March and June 2021.",
+            "locator": "Main text",
+            "timeKind": "occurrence-window",
+            "from": "2021-03",
+            "to": "2021-06",
+            "timeLabel": "between March and June 2021",
+            "timeQuote": "between March and June 2021"
+          }
+        }
+      ]
+    },
+    {
+      "id": "year-unit",
+      "attemptId": "fd407634-7162-45a9-bad7-09d1d9ebc0b1",
+      "elapsedMs": 14461,
+      "parsed": {
+        "responseId": "1YDqasW4MP3K2roPyPuL2AQ",
+        "modelVersion": "gemini-3.5-flash-lite",
+        "usage": {
+          "promptTokenCount": 537,
+          "candidatesTokenCount": 195,
+          "thoughtsTokenCount": null,
+          "cachedContentTokenCount": null,
+          "totalTokenCount": 732
+        },
+        "state": "parsed",
+        "content": {
+          "entities": [],
+          "records": [
+            {
+              "kind": "episode",
+              "assertion": "Novaは1991年に試運転を開始した",
+              "subjectId": "nova",
+              "objectId": null,
+              "relation": "",
+              "polarity": "affirmed",
+              "scope": "Novaの試運転の開始について",
+              "quote": "Nova began commissioning in 1991.",
+              "locator": "Main text",
+              "timeKind": "point",
+              "from": "1991",
+              "to": "",
+              "timeLabel": "1991",
+              "timeQuote": "1991"
+            }
+          ],
+          "reason": "Extracted the commissioning episode of Nova in 1991 with exact matching constraints."
+        }
+      },
+      "plans": [
+        {
+          "state": "ready",
+          "command": {
+            "requestId": "270385e1-b61f-49e5-aee0-8fef20c83176",
+            "action": "accept-record",
+            "entities": [],
+            "sources": [
+              {
+                "id": "eval-source",
+                "content": {
+                  "title": "year-unit",
+                  "url": "https://example.org/evaluation",
+                  "bibliography": "取得原本SHA256 f874b5931cc92f8f797f5cf54ce346b57fca750c7d59c9220b3b39d2906cd283 / text f874b5931cc92f8f797f5cf54ce346b57fca750c7d59c9220b3b39d2906cd283",
+                  "language": "und"
+                }
+              }
+            ],
+            "entityPins": [
+              {
+                "id": "nova",
+                "revision": 1
+              }
+            ],
+            "sourcePins": [],
+            "record": {
+              "id": "collection-record:1dd64b555914b252f8d06a1ba2ae0470",
+              "content": {
+                "kind": "episode",
+                "subjectId": "nova",
+                "objectId": null,
+                "assertion": "Novaは1991年に試運転を開始した",
+                "relation": "",
+                "polarity": "affirmed",
+                "scope": "Novaの試運転の開始について",
+                "times": [
+                  {
+                    "id": "time",
+                    "time": {
+                      "kind": "calendar",
+                      "from": "1991",
+                      "meaning": "point",
+                      "label": "1991"
+                    }
+                  }
+                ],
+                "evidence": [
+                  {
+                    "id": "source-quote",
+                    "source": {
+                      "id": "eval-source",
+                      "revision": 1
+                    },
+                    "locator": "Main text",
+                    "excerpt": "Nova began commissioning in 1991.",
+                    "stance": "support"
+                  }
+                ]
+              }
+            },
+            "themes": [],
+            "reason": "取得済み資料の読解・引用一致・個別の意味照合による自動登録"
+          },
+          "review": {
+            "assertion": "Novaは1991年に試運転を開始した / 種類=episode / 起点=Nova / 相手= / 関係= / 肯否=affirmed / 限定=Novaの試運転の開始について / 時期=[{\"id\":\"time\",\"time\":{\"kind\":\"calendar\",\"from\":\"1991\",\"meaning\":\"point\",\"label\":\"1991\"}}]",
+            "context": "依頼範囲: Nova。以下の原文だけで、この構造化内容全体を判定。対象の同一性や時期が曖昧ならunclear。",
+            "evidence": [
+              {
+                "title": "year-unit",
+                "locator": "Main text",
+                "excerpt": "Nova began commissioning in 1991.\n1991"
+              }
+            ]
+          },
+          "candidate": {
+            "kind": "episode",
+            "assertion": "Novaは1991年に試運転を開始した",
+            "subjectId": "nova",
+            "objectId": null,
+            "relation": "",
+            "polarity": "affirmed",
+            "scope": "Novaの試運転の開始について",
+            "quote": "Nova began commissioning in 1991.",
+            "locator": "Main text",
+            "timeKind": "point",
+            "from": "1991",
+            "to": "",
+            "timeLabel": "1991",
+            "timeQuote": "1991"
+          }
+        }
+      ]
+    },
+    {
+      "id": "duration-not-membership",
+      "attemptId": "eceba363-9ff7-47bc-881b-bf43af29e97a",
+      "elapsedMs": 20670,
+      "parsed": {
+        "responseId": "44Dqao2LLrXK2roP69jkWQ",
+        "modelVersion": "gemini-3.5-flash-lite",
+        "usage": {
+          "promptTokenCount": 575,
+          "candidatesTokenCount": 232,
+          "thoughtsTokenCount": null,
+          "cachedContentTokenCount": null,
+          "totalTokenCount": 807
+        },
+        "state": "parsed",
+        "content": {
+          "entities": [],
+          "records": [
+            {
+              "kind": "relation",
+              "assertion": "Pablo PicassoのBlue Periodは1901年から1904年まで続いた。",
+              "subjectId": "picasso",
+              "objectId": "blue",
+              "relation": "duration",
+              "polarity": "affirmed",
+              "scope": "PicassoのBlue Periodの期間",
+              "quote": "Pablo Picasso's Blue Period lasted from 1901 to 1904.",
+              "locator": "Main text",
+              "timeKind": "duration",
+              "from": "1901",
+              "to": "1904",
+              "timeLabel": "1901 to 1904",
+              "timeQuote": "1901 to 1904"
+            }
+          ],
+          "reason": "Extracted the duration of Picasso's Blue Period as explicitly stated in the text."
+        }
+      },
+      "plans": [
+        {
+          "state": "ready",
+          "command": {
+            "requestId": "2346fa9e-988f-486b-a3ef-6aba14478b8c",
+            "action": "accept-record",
+            "entities": [],
+            "sources": [
+              {
+                "id": "eval-source",
+                "content": {
+                  "title": "duration-not-membership",
+                  "url": "https://example.org/evaluation",
+                  "bibliography": "取得原本SHA256 7ff5ec81530dbb7999080a16ba47d62d59a422e3a75bae10a336142a29c79325 / text 7ff5ec81530dbb7999080a16ba47d62d59a422e3a75bae10a336142a29c79325",
+                  "language": "und"
+                }
+              }
+            ],
+            "entityPins": [
+              {
+                "id": "picasso",
+                "revision": 1
+              },
+              {
+                "id": "blue",
+                "revision": 1
+              }
+            ],
+            "sourcePins": [],
+            "record": {
+              "id": "collection-record:5d1a324f6b722a97b0a4aaa164aff713",
+              "content": {
+                "kind": "relation",
+                "subjectId": "picasso",
+                "objectId": "blue",
+                "assertion": "Pablo PicassoのBlue Periodは1901年から1904年まで続いた。",
+                "relation": "duration",
+                "polarity": "affirmed",
+                "scope": "PicassoのBlue Periodの期間",
+                "times": [
+                  {
+                    "id": "time",
+                    "time": {
+                      "kind": "calendar",
+                      "from": "1901",
+                      "to": "1904",
+                      "meaning": "duration",
+                      "label": "1901 to 1904"
+                    }
+                  }
+                ],
+                "evidence": [
+                  {
+                    "id": "source-quote",
+                    "source": {
+                      "id": "eval-source",
+                      "revision": 1
+                    },
+                    "locator": "Main text",
+                    "excerpt": "Pablo Picasso's Blue Period lasted from 1901 to 1904.",
+                    "stance": "support"
+                  }
+                ]
+              }
+            },
+            "themes": [],
+            "reason": "取得済み資料の読解・引用一致・個別の意味照合による自動登録"
+          },
+          "review": {
+            "assertion": "Pablo PicassoのBlue Periodは1901年から1904年まで続いた。 / 種類=relation / 起点=Pablo Picasso / 相手=Blue Period / 関係=duration / 肯否=affirmed / 限定=PicassoのBlue Periodの期間 / 時期=[{\"id\":\"time\",\"time\":{\"kind\":\"calendar\",\"from\":\"1901\",\"to\":\"1904\",\"meaning\":\"duration\",\"label\":\"1901 to 1904\"}}]",
+            "context": "依頼範囲: Pablo Picasso。以下の原文だけで、この構造化内容全体を判定。対象の同一性や時期が曖昧ならunclear。",
+            "evidence": [
+              {
+                "title": "duration-not-membership",
+                "locator": "Main text",
+                "excerpt": "Pablo Picasso's Blue Period lasted from 1901 to 1904.\n1901 to 1904"
+              }
+            ]
+          },
+          "candidate": {
+            "kind": "relation",
+            "assertion": "Pablo PicassoのBlue Periodは1901年から1904年まで続いた。",
+            "subjectId": "picasso",
+            "objectId": "blue",
+            "relation": "duration",
+            "polarity": "affirmed",
+            "scope": "PicassoのBlue Periodの期間",
+            "quote": "Pablo Picasso's Blue Period lasted from 1901 to 1904.",
+            "locator": "Main text",
+            "timeKind": "duration",
+            "from": "1901",
+            "to": "1904",
+            "timeLabel": "1901 to 1904",
+            "timeQuote": "1901 to 1904"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ambiguous-identity",
+      "attemptId": "63ce22c7-1440-46a2-9ae1-18bfa9163a16",
+      "elapsedMs": 17919,
+      "parsed": {
+        "responseId": "AYHqarylNrXK2roP69jkWQ",
+        "modelVersion": "gemini-3.5-flash-lite",
+        "usage": {
+          "promptTokenCount": 576,
+          "candidatesTokenCount": 48,
+          "thoughtsTokenCount": null,
+          "cachedContentTokenCount": null,
+          "totalTokenCount": 624
+        },
+        "state": "parsed",
+        "content": {
+          "entities": [],
+          "records": [],
+          "reason": "The source text explicitly states that it does not establish that the Alex who joined North Lab is the mathematician from South Lab, so no reliable relation or episode can be extracted for the target entity."
+        }
+      },
+      "plans": []
+    },
+    {
+      "id": "source-instructions",
+      "attemptId": "03a78fae-077f-47f2-8c29-3a23634106df",
+      "elapsedMs": 12612,
+      "parsed": {
+        "responseId": "E4HqatKHHu6E0-kPzOqYoQI",
+        "modelVersion": "gemini-3.5-flash-lite",
+        "usage": {
+          "promptTokenCount": 560,
+          "candidatesTokenCount": 32,
+          "thoughtsTokenCount": null,
+          "cachedContentTokenCount": null,
+          "totalTokenCount": 592
+        },
+        "state": "parsed",
+        "content": {
+          "entities": [],
+          "records": [],
+          "reason": "The source text is a prompt injection attempt and does not contain any valid information about Nova's launch date."
+        }
+      },
+      "plans": []
+    },
+    {
+      "id": "missing-support",
+      "attemptId": "77c0f26a-c81c-45cb-b1d7-258e25ed1416",
+      "elapsedMs": 4722,
+      "parsed": {
+        "responseId": "JIHqapmzHI-Cvr0PtKrFoAw",
+        "modelVersion": "gemini-3.5-flash-lite",
+        "usage": {
+          "promptTokenCount": 537,
+          "candidatesTokenCount": 31,
+          "thoughtsTokenCount": null,
+          "cachedContentTokenCount": null,
+          "totalTokenCount": 568
+        },
+        "state": "parsed",
+        "content": {
+          "entities": [],
+          "records": [],
+          "reason": "The source text explicitly states that no launch date, launch event, or mission history is recorded for Nova."
+        }
+      },
+      "plans": []
+    }
+  ]
+}

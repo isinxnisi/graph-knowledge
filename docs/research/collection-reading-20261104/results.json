@@ -1,0 +1,144 @@
+{
+  "policy": "collection-reading-v1",
+  "model": "gemini-3.5-flash-lite",
+  "results": [
+    {
+      "id": "duration-not-membership",
+      "attemptId": "2176e709-71dd-4dbb-80d7-005928eb8c20",
+      "elapsedMs": 9952,
+      "parsed": {
+        "responseId": "xIHqao2FFPLs2roP7ZuumAg",
+        "modelVersion": "gemini-3.5-flash-lite",
+        "usage": {
+          "promptTokenCount": 644,
+          "candidatesTokenCount": 234,
+          "thoughtsTokenCount": null,
+          "cachedContentTokenCount": null,
+          "totalTokenCount": 878
+        },
+        "state": "parsed",
+        "content": {
+          "entities": [],
+          "records": [
+            {
+              "kind": "note",
+              "assertion": "Pablo PicassoのBlue Periodは1901年から1904年まで続いた。",
+              "subjectId": "picasso",
+              "objectId": null,
+              "relation": "",
+              "polarity": "affirmed",
+              "scope": "blue-period-theme",
+              "quote": "Pablo Picasso's Blue Period lasted from 1901 to 1904.",
+              "locator": "Main text",
+              "timeKind": "duration",
+              "from": "1901",
+              "to": "1904",
+              "timeLabel": "1901 to 1904",
+              "timeQuote": "1901 to 1904"
+            }
+          ],
+          "reason": "Extracted the duration of Picasso's Blue Period as a note attached to the Picasso entity within the requested theme scope."
+        }
+      },
+      "plans": [
+        {
+          "state": "ready",
+          "command": {
+            "requestId": "46af266e-109a-45ce-8bc8-91b2935b1d3e",
+            "action": "accept-record",
+            "entities": [],
+            "sources": [
+              {
+                "id": "eval-source",
+                "content": {
+                  "title": "duration-not-membership",
+                  "url": "https://example.org/evaluation",
+                  "bibliography": "取得原本SHA256 7ff5ec81530dbb7999080a16ba47d62d59a422e3a75bae10a336142a29c79325 / text 7ff5ec81530dbb7999080a16ba47d62d59a422e3a75bae10a336142a29c79325",
+                  "language": "und"
+                }
+              }
+            ],
+            "entityPins": [
+              {
+                "id": "picasso",
+                "revision": 1
+              }
+            ],
+            "sourcePins": [],
+            "record": {
+              "id": "collection-record:70374ec742c69adc79d4f76bb8ad4fc0",
+              "content": {
+                "kind": "note",
+                "aboutTheme": "blue-period-theme",
+                "subjectId": "picasso",
+                "objectId": null,
+                "assertion": "Pablo PicassoのBlue Periodは1901年から1904年まで続いた。",
+                "relation": "",
+                "polarity": "affirmed",
+                "scope": "blue-period-theme",
+                "times": [
+                  {
+                    "id": "time",
+                    "time": {
+                      "kind": "calendar",
+                      "from": "1901",
+                      "to": "1904",
+                      "meaning": "duration",
+                      "label": "1901 to 1904"
+                    }
+                  }
+                ],
+                "evidence": [
+                  {
+                    "id": "source-quote",
+                    "source": {
+                      "id": "eval-source",
+                      "revision": 1
+                    },
+                    "locator": "Main text",
+                    "excerpt": "Pablo Picasso's Blue Period lasted from 1901 to 1904. Exhibition Q happened in 1902; this document does not connect that exhibition to the Blue Period.",
+                    "stance": "support"
+                  }
+                ]
+              }
+            },
+            "themes": [
+              {
+                "id": "blue-period-theme",
+                "revision": 1
+              }
+            ],
+            "reason": "取得済み資料の読解・引用一致・個別の意味照合による自動登録"
+          },
+          "review": {
+            "assertion": "Pablo PicassoのBlue Periodは1901年から1904年まで続いた。 / 種類=note / 起点=Pablo Picasso / 相手= / 関係= / 肯否=affirmed / 限定=blue-period-theme / 時期=[{\"id\":\"time\",\"time\":{\"kind\":\"calendar\",\"from\":\"1901\",\"to\":\"1904\",\"meaning\":\"duration\",\"label\":\"1901 to 1904\"}}]",
+            "context": "依頼範囲: Blue Period。以下の原文だけで、この構造化内容全体を判定。対象の同一性や時期が曖昧ならunclear。",
+            "evidence": [
+              {
+                "title": "duration-not-membership",
+                "locator": "Main text",
+                "excerpt": "Pablo Picasso's Blue Period lasted from 1901 to 1904. Exhibition Q happened in 1902; this document does not connect that exhibition to the Blue Period."
+              }
+            ]
+          },
+          "candidate": {
+            "kind": "note",
+            "assertion": "Pablo PicassoのBlue Periodは1901年から1904年まで続いた。",
+            "subjectId": "picasso",
+            "objectId": null,
+            "relation": "",
+            "polarity": "affirmed",
+            "scope": "blue-period-theme",
+            "quote": "Pablo Picasso's Blue Period lasted from 1901 to 1904.",
+            "locator": "Main text",
+            "timeKind": "duration",
+            "from": "1901",
+            "to": "1904",
+            "timeLabel": "1901 to 1904",
+            "timeQuote": "1901 to 1904"
+          }
+        }
+      ]
+    }
+  ]
+}

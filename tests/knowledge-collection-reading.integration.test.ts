@@ -49,7 +49,7 @@ describe('fixed captured reading through authenticated API and durable publicati
   await capture();expect(await claim()).toBeNull();const {input,id}=await intake();expect((await(await act(input)).json()).replayed).toBe(true);expect((await act({...input,scope:'Changed scope'})).status).toBe(409);expect((await pool().query('SELECT count(*)::int AS n FROM knowledge_collection.read_jobs WHERE id=$1',[id])).rows[0].n).toBe(1);
  });
  it('keeps valid and unsupported items separate, publishes once, and retains original proof',async()=>{
-  await intake();const lease=(await claim())!;await approve(lease,extraction([candidate(),{...candidate(),assertion:'Aは必ず成功する。',from:'',timeKind:'none',timeQuote:''}]));
+  await intake();const lease=(await claim())!;await approve(lease,extraction([candidate(),{...candidate(),assertion:'Aは必ず成功する。',from:'',timeKind:'none',timeQuote:'',timeLabel:''}]));
   const check1=(await claim())!;await approve(check1,review());const check2=(await claim())!;await approve(check2,review('unsupported'));expect(await claim()).toBeNull();
   const rows=(await pool().query('SELECT * FROM knowledge_collection.read_decisions WHERE task_id=ANY($1::uuid[])',[[check1.taskId,check2.taskId]])).rows;expect(rows).toHaveLength(1);expect(rows[0].state).toBe('applied');await core.drain();
   const record=await foundation.get({kind:'reader',id:'test'},'record',rows[0].command.record.id);expect(record.content.evidence[0].excerpt).toBe(quote);expect(record.content.times[0].time).toMatchObject({meaning:'point',from:'2030-05-04'});expect((await knowledge.query("SELECT count(*)::int AS n FROM knowledge75.operations WHERE actor_id='collection-reading-v1' AND request_id=$1",[rows[0].command.requestId])).rows[0].n).toBe(1);

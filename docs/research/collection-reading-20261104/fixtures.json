@@ -64,22 +64,12 @@
           "aliases": [],
           "language": "en"
         }
-      },
-      {
-        "id": "blue",
-        "revision": 1,
-        "content": {
-          "name": "Blue Period",
-          "kind": "period",
-          "description": "",
-          "aliases": [],
-          "language": "en"
-        }
       }
     ],
-    "target": "picasso",
+    "target": "blue-period-theme",
     "text": "Pablo Picasso's Blue Period lasted from 1901 to 1904. Exhibition Q happened in 1902; this document does not connect that exhibition to the Blue Period.",
-    "expectation": "続いた期間1901〜1904。重なる展覧会を所属させない。"
+    "expectation": "続いた期間1901〜1904。重なる展覧会を所属させない。",
+    "targetKind": "theme"
   },
   {
     "id": "ambiguous-identity",

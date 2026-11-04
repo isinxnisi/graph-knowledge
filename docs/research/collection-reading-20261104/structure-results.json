@@ -1,0 +1,299 @@
+{
+  "policy": "collection-reading-v1",
+  "model": "gemini-3.5-flash-lite",
+  "results": [
+    {
+      "id": "free-relation-window",
+      "attemptId": "4f8c91f3-4ac5-436e-8291-97b6d050e639",
+      "elapsedMs": 8185,
+      "parsed": {
+        "responseId": "UIHqav2pDpO02roPirLMiAY",
+        "modelVersion": "gemini-3.5-flash-lite",
+        "usage": {
+          "promptTokenCount": 642,
+          "candidatesTokenCount": 255,
+          "thoughtsTokenCount": null,
+          "cachedContentTokenCount": null,
+          "totalTokenCount": 897
+        },
+        "state": "parsed",
+        "content": {
+          "entities": [],
+          "records": [
+            {
+              "kind": "relation",
+              "assertion": "MiraはAurora天文台に客員研究員として参加した",
+              "subjectId": "mira",
+              "objectId": "aurora",
+              "relation": "参加する",
+              "polarity": "affirmed",
+              "scope": "MiraのAurora天文台への参加とその時期",
+              "quote": "Mira joined Aurora Observatory as a visiting researcher sometime between March and June 2021.",
+              "locator": "Main text",
+              "timeKind": "occurrence-window",
+              "from": "2021-03",
+              "to": "2021-06",
+              "timeLabel": "between March and June 2021",
+              "timeQuote": "between March and June 2021"
+            },
+            {
+              "kind": "episode",
+              "assertion": "MiraのAurora天文台への参加は一時的な研究訪問であり、常勤の職ではなかった",
+              "subjectId": "mira",
+              "objectId": null,
+              "relation": "",
+              "polarity": "affirmed",
+              "scope": "MiraのAurora天文台への参加とその時期",
+              "quote": "This was a temporary research visit, not a permanent job.",
+              "locator": "Main text",
+              "timeKind": "none",
+              "from": "",
+              "to": "",
+              "timeLabel": "",
+              "timeQuote": ""
+            }
+          ],
+          "reason": "Extracted Mira's relation to Aurora Observatory and a clarifying note about the temporary visit."
+        }
+      },
+      "plans": [
+        {
+          "state": "ready",
+          "command": {
+            "requestId": "5521a4c8-e74d-4992-96e3-d10f4887bdbb",
+            "action": "accept-record",
+            "entities": [],
+            "sources": [
+              {
+                "id": "eval-source",
+                "content": {
+                  "title": "free-relation-window",
+                  "url": "https://example.org/evaluation",
+                  "bibliography": "取得原本SHA256 449fca497a830edbfe01cb2cc25eba051341742dfe469a95467c53653d02db35 / text 449fca497a830edbfe01cb2cc25eba051341742dfe469a95467c53653d02db35",
+                  "language": "und"
+                }
+              }
+            ],
+            "entityPins": [
+              {
+                "id": "mira",
+                "revision": 1
+              },
+              {
+                "id": "aurora",
+                "revision": 1
+              }
+            ],
+            "sourcePins": [],
+            "record": {
+              "id": "collection-record:8d20e5d29b4c15641bd1926ee9711017",
+              "content": {
+                "kind": "relation",
+                "subjectId": "mira",
+                "objectId": "aurora",
+                "assertion": "MiraはAurora天文台に客員研究員として参加した",
+                "relation": "参加する",
+                "polarity": "affirmed",
+                "scope": "MiraのAurora天文台への参加とその時期",
+                "times": [
+                  {
+                    "id": "time",
+                    "time": {
+                      "kind": "calendar",
+                      "from": "2021-03",
+                      "to": "2021-06",
+                      "meaning": "occurrence-window",
+                      "label": "between March and June 2021"
+                    }
+                  }
+                ],
+                "evidence": [
+                  {
+                    "id": "source-quote",
+                    "source": {
+                      "id": "eval-source",
+                      "revision": 1
+                    },
+                    "locator": "Main text",
+                    "excerpt": "Mira joined Aurora Observatory as a visiting researcher sometime between March and June 2021.",
+                    "stance": "support"
+                  }
+                ]
+              }
+            },
+            "themes": [],
+            "reason": "取得済み資料の読解・引用一致・個別の意味照合による自動登録"
+          },
+          "review": {
+            "assertion": "MiraはAurora天文台に客員研究員として参加した / 種類=relation / 起点=Mira / 相手=Aurora Observatory / 関係=参加する / 肯否=affirmed / 限定=MiraのAurora天文台への参加とその時期 / 時期=[{\"id\":\"time\",\"time\":{\"kind\":\"calendar\",\"from\":\"2021-03\",\"to\":\"2021-06\",\"meaning\":\"occurrence-window\",\"label\":\"between March and June 2021\"}}]",
+            "context": "依頼範囲: Mira。以下の原文だけで、この構造化内容全体を判定。対象の同一性や時期が曖昧ならunclear。",
+            "evidence": [
+              {
+                "title": "free-relation-window",
+                "locator": "Main text",
+                "excerpt": "Mira joined Aurora Observatory as a visiting researcher sometime between March and June 2021.\nbetween March and June 2021"
+              }
+            ]
+          },
+          "candidate": {
+            "kind": "relation",
+            "assertion": "MiraはAurora天文台に客員研究員として参加した",
+            "subjectId": "mira",
+            "objectId": "aurora",
+            "relation": "参加する",
+            "polarity": "affirmed",
+            "scope": "MiraのAurora天文台への参加とその時期",
+            "quote": "Mira joined Aurora Observatory as a visiting researcher sometime between March and June 2021.",
+            "locator": "Main text",
+            "timeKind": "occurrence-window",
+            "from": "2021-03",
+            "to": "2021-06",
+            "timeLabel": "between March and June 2021",
+            "timeQuote": "between March and June 2021"
+          }
+        },
+        {
+          "state": "ready",
+          "command": {
+            "requestId": "238e8024-63cb-4f15-bcda-0686c9d6b767",
+            "action": "accept-record",
+            "entities": [],
+            "sources": [
+              {
+                "id": "eval-source",
+                "content": {
+                  "title": "free-relation-window",
+                  "url": "https://example.org/evaluation",
+                  "bibliography": "取得原本SHA256 449fca497a830edbfe01cb2cc25eba051341742dfe469a95467c53653d02db35 / text 449fca497a830edbfe01cb2cc25eba051341742dfe469a95467c53653d02db35",
+                  "language": "und"
+                }
+              }
+            ],
+            "entityPins": [
+              {
+                "id": "mira",
+                "revision": 1
+              }
+            ],
+            "sourcePins": [],
+            "record": {
+              "id": "collection-record:1285eb907a665d0472dca76275dd15ab",
+              "content": {
+                "kind": "episode",
+                "subjectId": "mira",
+                "objectId": null,
+                "assertion": "MiraのAurora天文台への参加は一時的な研究訪問であり、常勤の職ではなかった",
+                "relation": "",
+                "polarity": "affirmed",
+                "scope": "MiraのAurora天文台への参加とその時期",
+                "times": [],
+                "evidence": [
+                  {
+                    "id": "source-quote",
+                    "source": {
+                      "id": "eval-source",
+                      "revision": 1
+                    },
+                    "locator": "Main text",
+                    "excerpt": "This was a temporary research visit, not a permanent job.",
+                    "stance": "support"
+                  }
+                ]
+              }
+            },
+            "themes": [],
+            "reason": "取得済み資料の読解・引用一致・個別の意味照合による自動登録"
+          },
+          "review": {
+            "assertion": "MiraのAurora天文台への参加は一時的な研究訪問であり、常勤の職ではなかった / 種類=episode / 起点=Mira / 相手= / 関係= / 肯否=affirmed / 限定=MiraのAurora天文台への参加とその時期 / 時期=[]",
+            "context": "依頼範囲: Mira。以下の原文だけで、この構造化内容全体を判定。対象の同一性や時期が曖昧ならunclear。",
+            "evidence": [
+              {
+                "title": "free-relation-window",
+                "locator": "Main text",
+                "excerpt": "This was a temporary research visit, not a permanent job."
+              }
+            ]
+          },
+          "candidate": {
+            "kind": "episode",
+            "assertion": "MiraのAurora天文台への参加は一時的な研究訪問であり、常勤の職ではなかった",
+            "subjectId": "mira",
+            "objectId": null,
+            "relation": "",
+            "polarity": "affirmed",
+            "scope": "MiraのAurora天文台への参加とその時期",
+            "quote": "This was a temporary research visit, not a permanent job.",
+            "locator": "Main text",
+            "timeKind": "none",
+            "from": "",
+            "to": "",
+            "timeLabel": "",
+            "timeQuote": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "duration-not-membership",
+      "attemptId": "99d6104b-1bb5-418f-9a10-81d1ab9d12de",
+      "elapsedMs": 6917,
+      "parsed": {
+        "responseId": "V4Hqao3bLLfDvr0P8LrX0QY",
+        "modelVersion": "gemini-3.5-flash-lite",
+        "usage": {
+          "promptTokenCount": 654,
+          "candidatesTokenCount": 148,
+          "thoughtsTokenCount": null,
+          "cachedContentTokenCount": null,
+          "totalTokenCount": 802
+        },
+        "state": "parsed",
+        "content": {
+          "entities": [],
+          "records": [
+            {
+              "kind": "note",
+              "assertion": "Pablo Picasso's Blue Period lasted from 1901 to 1904",
+              "subjectId": "blue",
+              "objectId": null,
+              "relation": "",
+              "polarity": "affirmed",
+              "scope": "PicassoのBlue Periodの期間だけを登録",
+              "quote": "Pablo Picasso's Blue Period lasted from 1901 to 1904.",
+              "locator": "Main text",
+              "timeKind": "duration",
+              "from": "1901",
+              "to": "1904",
+              "timeLabel": "1901 to 1904",
+              "timeQuote": "1901 to 1904"
+            }
+          ],
+          "reason": "Blue Periodの期間について抽出しました。"
+        }
+      },
+      "plans": [
+        {
+          "state": "attention",
+          "reason": "依頼した対象の情報ではありません",
+          "candidate": {
+            "kind": "note",
+            "assertion": "Pablo Picasso's Blue Period lasted from 1901 to 1904",
+            "subjectId": "blue",
+            "objectId": null,
+            "relation": "",
+            "polarity": "affirmed",
+            "scope": "PicassoのBlue Periodの期間だけを登録",
+            "quote": "Pablo Picasso's Blue Period lasted from 1901 to 1904.",
+            "locator": "Main text",
+            "timeKind": "duration",
+            "from": "1901",
+            "to": "1904",
+            "timeLabel": "1901 to 1904",
+            "timeQuote": "1901 to 1904"
+          }
+        }
+      ]
+    }
+  ]
+}
