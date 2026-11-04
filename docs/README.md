@@ -1,3 +1,5 @@
+2026-11-04 容量不足からの復旧：[開発PCの生成物整理・DB保護・サービス復帰とU6再開時の注意](verification/STORAGE_CLEANUP_20261104.md)。3200／HTTPS β／3276は停止前の実行物へ復帰し、U6読解版の配置は未完了。
+
 U6の現在地：[有限資料取得のβ検証](verification/KNOWLEDGE_COLLECTION_U6_CAPTURE_20261104.md)／[範囲と後続契約](design/KNOWLEDGE_COLLECTION_U6.md)。取得と再開まで接続済み。読解・登録・意味整理は後続。
 
 2026-11-04 U5：受付項目への相談・取消、運営回答／再確認／例外確認、公開停止・元案件からの解除、本人通知をmain／3200／HTTPS βへ接続。限定βでのU5基本接続まで完了。一般提供条件と今回の会員新規Capsule保存再確認は残る（保存枠20件が満杯）。U6収集・U7統合受入・U8正式公開は別工程。 [検証・配置・制約](verification/KNOWLEDGE_APPEALS_U5_20261104.md)。以下は各時点の履歴。
