@@ -31,7 +31,7 @@ export function createTranslationGeneration(pool:Pool,knowledge:Pool){
  async function original(target:KnowledgeTextTarget){const c=await knowledge.connect();try{return await readKnowledgeTextOriginal(c,target,true);}finally{c.release();}}
  async function active(c:Pool|PoolClient,id:string){if((await c.query('SELECT active FROM "user" WHERE id=$1',[id])).rows[0]?.active!==true)throw new KnowledgeError('本人を確認してください',401,'UNAUTHENTICATED');}
  const interested=async(c:Pool|PoolClient,id:string)=>(await c.query('SELECT 1 FROM member_knowledge.translation_generation_requests r JOIN "user" u ON u.id=r.owner_id WHERE r.job_id=$1 AND NOT r.cancelled AND u.active LIMIT 1',[id])).rowCount===1;
- async function current(job:{target:KnowledgeTextTarget;original_hash:string}){try{return (await original(job.target)).hash===job.original_hash;}catch{return false;}}
+ async function current(job:{target:KnowledgeTextTarget;original_hash:string}){try{return (await original(job.target)).hash===job.original_hash;}catch(e){if(e instanceof KnowledgeError&&e.status<500)return false;throw e;}}
  async function status(ownerId:string,target:KnowledgeTextTarget,language:string):Promise<TranslationGenerationStatus>{
   await ensure();await active(pool,ownerId);const o=await original(target),id=translationGenerationKey(target,language,o.hash);
   const r=(await pool.query('SELECT g.*,r.cancelled FROM member_knowledge.translation_generation g JOIN member_knowledge.translation_generation_requests r ON r.job_id=g.id WHERE g.id=$1 AND r.owner_id=$2',[id,ownerId])).rows[0];

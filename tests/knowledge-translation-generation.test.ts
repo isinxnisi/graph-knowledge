@@ -59,6 +59,12 @@ describe.skipIf(!url)('translation generation with durable PostgreSQL state',()=
   expect((await core.status(alice,target,'en')).state).toBe('cancelled');expect((await core.status(bob,target,'en')).state).toBe('ready');
   expect((await request()).state).toBe('ready');
  });
+ it('does not expose another account request and retains usage after requester deletion',async()=>{
+  const third=randomUUID();await pool.query('INSERT INTO "user"(id,name,email,"emailVerified",active,locale) VALUES($1,\'third\',$2,true,true,\'ja\')',[third,third+'@example.test']);
+  await request(third);const l=(await core.claim(cfg))!;await core.finish(l,response());
+  expect((await core.status(bob,target,'en')).state).toBe('none');await expect(core.draft(bob,target,'en',l.jobId)).rejects.toThrow('読み直');
+  await pool.query('DELETE FROM "user" WHERE id=$1',[third]);expect((await pool.query('SELECT count(*)::int AS n FROM member_knowledge.translation_generation_requests')).rows[0].n).toBe(0);expect((await pool.query('SELECT sum(request_charge)::int AS n FROM member_knowledge.review_attempts')).rows[0].n).toBe(1);
+ });
  it('does not send for a suspended account and releases a proven unsent reservation',async()=>{
   await request();const l=(await core.claim(cfg))!;await pool.query('UPDATE "user" SET active=false WHERE id=$1',[alice]);
   expect(await core.canSend(l)).toBe(false);await core.finish(l,{state:'not-sent'});

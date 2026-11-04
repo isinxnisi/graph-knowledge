@@ -41,7 +41,7 @@ async function main(){
   const heartbeat=setInterval(()=>{void queue.heartbeat(config).catch(()=>{stopping=true;});},15000);heartbeat.unref();
   try{while(!stopping){const worked=await runKnowledgeReviewOnce(queue,config,lease=>callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire) as ReturnType<typeof geminiReviewRequest>}),acceptance?lease=>acceptance.validateReview(lease.jobId):undefined);const moderated=knowledge?await runKnowledgeModeration(pool,knowledge):false;const accepted=acceptance?await acceptance.run(config):false;
    let generated=false;
-   if(translations&&!worked){await translations.recover();const lease=await translations.claim(config);if(lease){generated=true;await translations.finish(lease,await translations.canSend(lease)?await callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire)}):{state:'not-sent'});}}
+   if(translations&&!worked){try{await translations.recover();const lease=await translations.claim(config);if(lease){generated=true;await translations.finish(lease,await translations.canSend(lease)?await callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire)}):{state:'not-sent'});}}catch{console.error('Translation processing temporarily unavailable; retained jobs will resume.');}}
    if(worked||accepted||moderated||generated)console.log(JSON.stringify({event:'knowledge-review-iteration',completed:true}));else await new Promise(resolve=>setTimeout(resolve,2500));if(process.argv.includes('--once'))break;}}
   finally{clearInterval(heartbeat);}
  }finally{await knowledge?.end();await pool.end();}
