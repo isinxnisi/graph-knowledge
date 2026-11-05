@@ -1,6 +1,6 @@
 # 外部パッケージの共通取込契約
 
-2026-11-05。R1の実装方針を固定する設計。**この文書のHTTP受付・永続package・配送adapterはまだ未実装**。同一性を使う重複照合と資料比較の共通関数を先行接続し、この契約からR1残件／R3を実装する。将来構想だけを理由に実装範囲を増減せず、[再計画](PLUNODE_IMPLEMENTATION_REPLAN_20261105.md)の必須範囲を維持する。
+2026-11-05。R1dで専用BearerのHTTP受付・永続package／項目receipt・共通原資料確認／意味重複照合／受理・直接配送clientを実装。配置・実接続は[検証記録](../verification/KNOWLEDGE_IMPORT_R1D_20261105.md)、設定と送信は[runbook](../runbooks/KNOWLEDGE_IMPORT.md)を参照。**定期ChatGPT配送・Issue adapter・Web貼付とEntity原文訂正は未実装**で、R1／R3の残件として維持する。将来構想だけを理由に実装範囲を増減せず、[再計画](PLUNODE_IMPLEMENTATION_REPLAN_20261105.md)の必須範囲を維持する。
 
 ## 担当と入口
 
@@ -60,7 +60,7 @@ header・資格・容量・形式版の不正は全体受付を拒否する。�
 
 状態は受付／確認待ち／処理中／再試行待ち／補足が必要／反映済み／登録済み／取消を区別する。反映先には正本ID・内容版・Theme構成版を返し、現在版へのリンクと適用した固定版を取り違えない。部分成功は項目ごとの結果で表し、受付の202を「公開済み」にしない。
 
-原本取得・外部確認をDB transactionの外で行い、固定hash・確認policy・対象版を持つdecisionを保存する。正本への最終適用で現在参照・同一性・重複を再検査し、receipt・新版・公開投影依頼を原子的に確定する。配送ACKの喪失・再送だけでは取得や推論を再実行しない。
+原本取得・外部確認をDB transactionの外で行い、固定hash・確認policy・対象版を持つdecisionを保存する。正本への最終適用で現在参照・同一性・重複を再検査し、正本操作journal・新版・Theme構成版・取得証明を知識DB transactionで確定する。別DBのreceipt確定前に停止した場合はactor＋item UUIDからjournalを回収する。取消と最終適用は受付／項目行lockで直列化し、先に適用した内容を取消表示へ変えない。配送ACKの喪失・同じ版の再送だけでは取得や推論を再実行しない。
 
 ## 共通の同一性と資料比較
 
@@ -68,7 +68,7 @@ header・資格・容量・形式版の不正は全体受付を拒否する。�
 
 資料は「同じURL」「同じ取得本文」「同じ支持箇所」を分ける。追跡parameterとfragmentを除いたURL比較はdocumentを選ぶparameterを保持する。取得先の安全性検証の代わりにURL比較keyを使わない。requested URLとredirect後URLを両方保持し、サーバーが確認した抽出方式と本文hashを比較する。方式が違うhashを同じ資料の証明にしない。Sourceの名称・引用・URL表記が変わっただけで独立した根拠として増やさず、元のSource pinと取得由来を保持する。
 
-R1bで共通関数と利用者投稿の比較に接続した。R1cで[共通取得証明・対象台帳](KNOWLEDGE_ACQUISITION_INVENTORY.md)を追加し、会員受理と収集登録の証明保存・会員側の本文比較に接続した。旧receiptの再構成も行う。外部取込の受付・共通適用と、収集の意味重複判定への全面接続は未完了であり、全経路対応済みとはしない。
+R1bで共通関数と利用者投稿の比較に接続した。R1cで[共通取得証明・対象台帳](KNOWLEDGE_ACQUISITION_INVENTORY.md)を追加し、会員受理と収集登録の証明保存・会員側の本文比較に接続した。旧receiptの再構成も行う。R1dで外部取込の受付・共通適用・証明保存と資料比較へ接続した。収集の意味重複判定への全面接続は未完了であり、全経路対応済みとはしない。
 
 ## 代替配送・予算・安全性
 
@@ -80,4 +80,12 @@ Plunode側の原本確認・整理・翻訳は既存Gemini無料projectの利用
 
 ## この契約から残る実装
 
-専用資格と配置別認可、永続package／項目receipt、厳密なschemaと部分検証、正本への共通適用、共通取得証明、直接送信または代替配送の実接続をR1残件／R3で実装・検証する。R2の全件巡回を人手の対象選択へ戻さず、双方で対象台帳・適用receipt・予算の共通部分を利用する。APIのpathを書いたことを、接続できた証拠にしない。
+R1dのHTTP入口・永続受付を再実装しない。Entity原文訂正・固定版reader・翻訳文脈／cache等のR1残件を閉じ、R3で予定実行からの直接配送またはIssue等の代替配送を実証する。新Entityの別名／説明は現行の確認契約で保証できないため黙って捨てず項目不備とし、根拠付き情報で別登録する。時期schemaは既存と共用し、周期／定性の入力と描画はR4に残す。R2の全件巡回を人手の対象選択へ戻さず、双方で対象台帳・適用receipt・予算の共通部分を利用する。APIのpathを書いたことを、接続できた証拠にしない。
+
+## R1dの実装上の境界
+
+- APIの操作名はcreate-entity／create-relation／add-information／add-evidence／correct-record／translate-text。最後は原文target＋field＋観測版＋language＋expectedRevision＋textだけを送れる。内部の会員投稿型への変換で架空の関係や根拠を作成しない。
+- JSON本体の型だけで公開しない。許可操作・対象／テーマ、依存resource、現在の公開範囲・内容版、原資料の引用、支持・意味重複を段階検査する。取消理由も受付へ保持する。
+- request／token上限は既存の無料project台帳を共用し、用途collection-checkへ配分する。取得不能な消費はnull、未送信だけ0。503・429・結果不明は間隔を空け、1項目1利用日8送信／8取得準備を超えない。管理者による通常の個別承認へ戻さない。
+- Entity／Sourceのlocal keyはnamespace内で安定させる。変更資料は新しいlocal keyにするか既存Sourceの観測版を使い、既存IDの上書きには使わない。Record keyはpackage内で安定させる。前版が処理中なら新版は409で待機し、無関係な別packageは進められる。
+- 結果に返すrevisionは適用した固定版。currentUrlは現在の公開版への導線であり、固定版readerの完成を意味しない。停止された対象やテーマのリンクは返さない。

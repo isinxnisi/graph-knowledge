@@ -40,8 +40,8 @@ function expected(actual: number, requested: number) {
 }
 function actorAllowed(actor: KnowledgeActor, action: string) {
   if (!actor.id || actor.id.length > 200) throw new KnowledgeError("認証された操作主体が必要です", 403, "FORBIDDEN");
-  if (action === "accept-translation" && actor.kind === "submission") return;
-  if (action === "accept-record") { if(actor.kind === "submission"||actor.kind === "collection")return;throw new KnowledgeError("知識投稿の内部受理処理が必要です",403,"FORBIDDEN"); }
+  if (action === "accept-translation" && (actor.kind === "submission"||actor.kind === "import")) return;
+  if (action === "accept-record") { if(actor.kind === "submission"||actor.kind === "collection"||actor.kind === "import")return;throw new KnowledgeError("知識投稿の内部受理処理が必要です",403,"FORBIDDEN"); }
   if (actor.kind === "operator") return;
   if (actor.kind === "collector" && action === "create-bundle") return;
   throw new KnowledgeError(actor.kind === "user" ? "利用者の変更は知識投稿の審査経路へ提出してください" : "この操作の権限がありません", 403, "SUBMISSION_REQUIRED");
@@ -267,7 +267,7 @@ export function createKnowledgeFoundationService(pool: Pool) {
         await changed(kind, id);
         return version(c, kind, id, revision);
       }
-      if(actor.kind==='collection'&&!internal)throw new KnowledgeError('収集の固定範囲と根拠の照合が必要です',403,'FORBIDDEN');
+      if((actor.kind==='collection'||actor.kind==='import')&&!internal)throw new KnowledgeError('収集の固定範囲と根拠の照合が必要です',403,'FORBIDDEN');
       if(internal)await internal.verify(c);
       let result: unknown;
       if(cmd.action === "accept-translation") {
@@ -325,6 +325,7 @@ export function createKnowledgeFoundationService(pool: Pool) {
         }
         if(!r.subjectId&&!r.objectId&&!r.aboutRecord&&!r.aboutTheme)throw new KnowledgeError("公開後に辿れる対象・関係・テーマが必要です");
         let revision=1,unchanged=false,themeChanged=false,retainsThemeContext=false;
+        const appliedThemes:{id:string;revision:number}[]=[];
         if(cmd.expectedRevision){const h=await head(c,"record",cmd.record.id,"FOR UPDATE");expected(h.current_revision,cmd.expectedRevision);await assertPublic(c,"record",cmd.record.id);
           const old=await version(c,'record',cmd.record.id,h.current_revision);
           retainsThemeContext=old.content.aboutTheme===r.aboutTheme;
@@ -339,7 +340,7 @@ export function createKnowledgeFoundationService(pool: Pool) {
         for(const p of [...(cmd.themes??[])].sort((a,b)=>a.id.localeCompare(b.id))){
           const h=await head(c,'theme',p.id,'FOR UPDATE');if(!internal)expected(h.current_revision,p.revision);await assertRevisionPublic(c,'theme',p.id,p.revision);
           const old=await version(c,'theme',p.id,h.current_revision);
-          if(old.content.recordPins.some(v=>v.id===cmd.record.id&&v.revision===revision))continue;
+          if(old.content.recordPins.some(v=>v.id===cmd.record.id&&v.revision===revision)){appliedThemes.push({id:p.id,revision:h.current_revision});continue;}
           themeChanged=true;
           const recordPins=old.content.recordPins.some(v=>v.id===cmd.record.id)?old.content.recordPins.map(v=>v.id===cmd.record.id?{id:v.id,revision}:v):[...old.content.recordPins,{id:cmd.record.id,revision}];
           let timeline=old.content.timeline?structuredClone(old.content.timeline):undefined;
@@ -350,8 +351,9 @@ export function createKnowledgeFoundationService(pool: Pool) {
           }
           const snapshot=await capture(c,recordPins,{timeline,initialView:old.content.initialView,publicOnly:true});
           await put('theme',p.id,{...old.content,...snapshotPins(snapshot),...(timeline?{timeline}:{})},h.current_revision+1,'確認済みの投稿をテーマへ追加');
+          appliedThemes.push({id:p.id,revision:h.current_revision+1});
         }
-        result={...(result as object),disposition:unchanged?(themeChanged?'theme-linked':'existing'):cmd.expectedRevision?'updated':'created'};
+        result={...(result as object),...(appliedThemes.length?{themes:appliedThemes}:{}),disposition:unchanged?(themeChanged?'theme-linked':'existing'):cmd.expectedRevision?'updated':'created'};
       } else if (cmd.action === "create-bundle") {
         for (const [rows, label] of [[cmd.entities, "対象"], [cmd.sources, "資料"], [cmd.records, "記録"]] as const) if (new Set(rows.map(r => r.id)).size !== rows.length) throw new KnowledgeError(label + "IDが重複しています");
         assertUnique(cmd.entityPins, "対象の観測版");

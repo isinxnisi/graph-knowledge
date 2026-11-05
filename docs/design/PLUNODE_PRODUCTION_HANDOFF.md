@@ -1,30 +1,32 @@
+2026-11-05 R1d：取込API・永続受付・共通受理と直接送信clientを実装。現在の検証・配置・未完了範囲は[記録](../verification/KNOWLEDGE_IMPORT_R1D_20261105.md)を優先。R1全体は未完了で、次はEntity原文訂正・固定版reader・翻訳文脈／cache等。R2／R3の自動巡回・定期配送を削らない。
+
 2026-11-05 Gemini 3.1 Flash-Liteを比較評価しβ標準へ採用。既存60件は58有効回答、正常20/20が受理候補、非受理想定の誤受理候補0（2件未判定）。重複・翻訳・収集と同じ実wireの7例も成功。待機中の同じ投稿は8回目の3.1で原資料照合まで完了し、既存知識を再利用・Record／活動／Capsule不変を確認。app 298cebc7 / build GJ83iMCf0BBwsL-IlJzkJ、main／3200／HTTPS βへ反映。追加migration・課金・VPS変更なし。 [実測・利用枠・再開・制約](../verification/GEMINI31_REVIEW_BETA_20261105.md)。R1全体は未完了。以下は各時点の記録。
 
 2026-11-05 R1c反映済み：app 94bcf7dc / build VgN_c2H7-gtkdB7qFcShz。知識007追加、会員029・30 ledgerは不変。共通取得証明8件とcommon71／旧KG5,711対象の全件台帳を作成し、再実行・保全・216テスト・実Google代表経路を確認。[設計](KNOWLEDGE_ACQUISITION_INVENTORY.md)／[配置・検証・再開](../verification/KNOWLEDGE_R1C_ACQUISITION_INVENTORY_20261105.md)。R1全体と初版は未完了。
 
 次は専用資格・厳密schema・永続package／項目receipt・HTTP受付／取消／結果・小さい実配送を接続する。全件列挙と取得証明は再実装せず共用する。R2の全件自動整理・R3の定期配送／収集を、手動CLIの利用で完成にしない。Entity原文訂正・固定版reader・翻訳文脈／cache等の残件も維持。
 
-同じ投稿の6回目は20:53 JSTに503、次回21:50ごろの自動再試行待ち。最終受理は未確認。元Record・全版hash・活動・Capsuleは待機前と一致。手動で成功へ変えず、同じ受付版を追う。
+同じ投稿の3.1での最終登録済み到達は確認済み。503／EAI_AGAIN調査を繰り返さず、現行の予算・再試行制御を再利用する。
 
 以下は前段の引継ぎ。
 
 現在地の入口：[Plunode進行表](../PLUNODE_PROGRESS.md)。**R1a完了、R1bは同一性→会員投稿の照合と資料比較の共通関数まで配置済み。R1全体は未完了。** app a9682921 / build xJavi_2YvZdx26ouGAToE。[R1bの検証・再開](../verification/KNOWLEDGE_R1B_IDENTITY_DUPLICATES_20261105.md)。全データ巡回・自動資料探し・定期収集・多言語利用・入力／探索接続・安全性は初版要件のまま。
 
-**受け渡しはChatGPT側でテーマ・資料URL・情報を揃える → 認証付きPlunode取込API → 原本取得・根拠確認・重複照合・登録。** Issue等は同じpackageの代替配送。URL探索APIの導入やGemini検索機能を着手条件にしない。一般投稿は当面投稿URLで確認する。[取込契約](KNOWLEDGE_IMPORT_CONTRACT.md)は具体化したが、API／永続package／配送は未実装。
+**受け渡しはChatGPT側でテーマ・資料URL・情報を揃える → 認証付きPlunode取込API → 原本取得・根拠確認・重複照合・登録。** Issue等は同じpackageの代替配送。URL探索APIの導入やGemini検索機能を着手条件にしない。一般投稿は当面投稿URLで確認する。[取込契約](KNOWLEDGE_IMPORT_CONTRACT.md)は具体化したが、R1dでAPI／永続package／直接送信clientを実装。定期ChatGPT配送・Issue adapterはR3で実証する。
 
 ## 別モデルが最初に実装する区切り
 
 1. AGENTSの指示先・[再計画](PLUNODE_IMPLEMENTATION_REPLAN_20261105.md)・R1b記録を読む。HEAD・dirty・稼働buildを照合し、review／hold／token確認。mainの`memo.txt`と作業側の`.local/`を保護する。
 2. R1aの原語訂正・Theme訂正、R1bの共有resolver・重複照合をやり直さない。最終受理は同一性の変更と排他し、元Recordの端点や固定断面を保つ。
-3. [投稿確認の一時障害対応](../verification/KNOWLEDGE_AI_RETRY_20261105.md)をβ反映。旧3回停止の同じ受付は4回目へ自動再開し、DNS EAI_AGAINを記録。現在は上限・予算付き自動再試行待ち。最終「登録済み」と受理後の原本・履歴・断面不変は未確認。直接DBで成功に変えず、同じ受付の状態を確認する。
-4. 共通の取得証明台帳と旧KG／commonの対象台帳を実装する。会員decision内だけのhash照合を全経路対応済みとせず、収集／取込も共通の最終受理と証明へ接続する。
-5. 取込契約からschema・専用資格・永続package／項目receipt・項目別結果・再送／訂正を実装。ChatGPT側との実接続を小さく確認し、直送不可ならIssue等を実際に試す。pathを書いただけ／手動貼付だけを自動配送完了にしない。
+3. Gemini3.1と自動再試行、共通取得証明・全件対象台帳は実装・β確認済み。旧待機jobは登録済みになった。R1b/cを再実装しない。
+4. R1dの専用資格・永続package／receipt・HTTP受付／取消／結果・共通受理を維持する。[取込runbook](../runbooks/KNOWLEDGE_IMPORT.md)と最新の[検証記録](../verification/KNOWLEDGE_IMPORT_R1D_20261105.md)で実装・実接続と未確認を区別する。
+5. ChatGPT予定実行からの直接配送は未接続。R3で実証し、直送不可なら同じAPIのIssue adapterを実際に試す。手動clientだけで定期配送完了とはしない。
 6. R1のEntity原文訂正、固定版reader、翻訳文脈とcache、新旧対象・配置別認可、外部遷移と未信頼AI入力の不足を閉じる。同名の対象候補が表示上区別しにくい点も対象選択の残件として扱う。
 7. 検証→日本語commit→通常push→検証済みmain／3200／HTTPS βへ反映→代表操作→hold解放。初版全体の完成条件を満たすまでは部分完了を明示する。
 
 **「初版の機能実装完了＋β統合検証」まで残り7〜12回程度（推定）**。R1残件2〜3回、R2〜R5計5〜9回。VPS切替・本番向け移行・Linux脆弱性対応・正式URL確認は別の公開工程。通常の管理者による個別承認／毎回のURL列挙へ戻さず、回数のために範囲を縮めない。新しいCodexチャット作成・自動モデル切替は行っていない。
 
-追加migrationは今回なし。知識006、会員029までのchecksum・private runtimeは維持。次のschema追加時は現行runbook通り別DB復元と再実行を確認する。旧成果・会員・コミュニティ・既存KGは保護する。3276／正式VPSは今回未更新。
+現行追加migrationは会員030。知識007まで、会員000〜029のchecksumと既存private runtimeは維持。次のschema追加時は現行runbook通り別DB復元と再実行を確認する。旧成果・会員・コミュニティ・既存KGは保護する。3276／正式VPSは今回未更新。
 
 2026-11-05 公開前の備忘：ユーザー指定により、R6／U8前にVPSのLinux脆弱性対応も含める。現時点では詳細調査・更新・再起動は不要。未調査・未対応として残し、公開前に確認・必要な対応・再起動影響・復旧と結果を記録する。[再計画の公開前確認](PLUNODE_IMPLEMENTATION_REPLAN_20261105.md#7-全体の完了条件と後続の扱い)。
 

@@ -1,3 +1,5 @@
+import {createKnowledgeImports} from '../lib/server/knowledge-import';
+import {loadImportConfiguration} from '../lib/server/knowledge-import-runtime';
 import {aiFailureDiagnostic} from '../lib/server/knowledge-ai-retry';
 import {createTranslationGeneration} from '../lib/server/knowledge-translation-generation';
 import {runKnowledgeModeration} from "../lib/server/member/knowledge-appeals";
@@ -32,6 +34,7 @@ async function main(){
  const acceptance=knowledge?createKnowledgeAcceptance(pool,knowledge):null;
  const queue=createReviewQueue(pool,acceptance?{duplicates:(value,key)=>acceptance.duplicates(value,key)}:{});
  const translations=knowledge?createTranslationGeneration(pool,knowledge):null;
+ const imports=knowledge&&process.env.KNOWLEDGE_IMPORT_ENABLED==='1'?createKnowledgeImports(pool,knowledge,async id=>(await loadImportConfiguration()).principals.find(p=>p.id===id)??null):null;
  let stopping=false;process.once('SIGTERM',()=>{stopping=true;});process.once('SIGINT',()=>{stopping=true;});
  try{
   if(process.argv.includes("--status")){console.log(JSON.stringify(await queue.usage(config)));return;}
@@ -43,7 +46,8 @@ async function main(){
   try{while(!stopping){const worked=await runKnowledgeReviewOnce(queue,config,lease=>callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire) as ReturnType<typeof geminiReviewRequest>}),acceptance?lease=>acceptance.validateReview(lease.jobId):undefined);const moderated=knowledge?await runKnowledgeModeration(pool,knowledge):false;const accepted=acceptance?await acceptance.run(config):false;
    let generated=false;
    if(translations&&!worked){try{await translations.recover();const lease=await translations.claim(config);if(lease){generated=true;await translations.finish(lease,await translations.canSend(lease)?await callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire)}):{state:'not-sent'});}}catch{console.error('Translation processing temporarily unavailable; retained jobs will resume.');}}
-   if(worked||accepted||moderated||generated)console.log(JSON.stringify({event:'knowledge-review-iteration',completed:true}));else await new Promise(resolve=>setTimeout(resolve,2500));if(process.argv.includes('--once'))break;}}
+   let imported=false;if(imports){try{imported=await imports.processNext(config,lease=>stopping?Promise.resolve({state:'not-sent' as const}):callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire)}));}catch{console.error('Import processing temporarily unavailable; retained packages will resume.');}}
+   if(worked||accepted||moderated||generated||imported)console.log(JSON.stringify({event:'knowledge-review-iteration',completed:true}));else await new Promise(resolve=>setTimeout(resolve,2500));if(process.argv.includes('--once'))break;}}
   finally{clearInterval(heartbeat);}
  }finally{await knowledge?.end();await pool.end();}
 }

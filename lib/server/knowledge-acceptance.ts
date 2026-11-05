@@ -29,15 +29,15 @@ export async function ensureAcceptanceSchema(pool:Pool){
  if((await pool.query("SELECT checksum FROM member_migration WHERE name='022-knowledge-acceptance.sql'")).rows[0]?.checksum!==checksum)throw new KnowledgeError('公開受理用の明示migrationが必要です',503,'MIGRATION_REQUIRED');
 }
 export type AcceptancePlan={command:KnowledgeCommand;references:{kind:'entity'|'source'|'record'|'theme';id:string;revision:number;content?:unknown;legacy?:boolean}[];recordId:string;operation:NonNullable<KnowledgeSubmission['content']['items'][number]['operation']>};
-export function acceptancePlan(value:KnowledgeSubmission,key:string,decisionId:string,observedRecord?:{id:string;revision:number;content:unknown}):AcceptancePlan{
+export function acceptancePlan(value:KnowledgeSubmission,key:string,decisionId:string,observedRecord?:{id:string;revision:number;content:unknown},service?:{allocate:(kind:string,id:string)=>string;reason:string}):AcceptancePlan{
  const item=value.content.items.find(i=>i.key===key);if(!item)throw new SourceCheckError('対象の項目がありません。');
- const issues=submissionIntentIssues({...value.content,items:[item]},value.context);if(issues.length)throw new SourceCheckError(issues.join(' / '));
+ const issues=submissionIntentIssues({...value.content,items:[item]},value.context,service?'service':'member');if(issues.length)throw new SourceCheckError(issues.join(' / '));
  if(item.operation==='translate-text'){
   const t=item.translation!,original=value.context!.texts!.find(v=>translationTargetKey(v.target)===translationTargetKey(t.target))!;
   return {command:knowledgeCommandSchema.parse({action:'accept-translation',requestId:decisionId,target:t.target,language:t.language,text:t.text,originalHash:original.hash,expectedRevision:t.expectedRevision,reason:'公開原文との意味一致を確認した訳文'}),references:[{kind:t.target.kind,id:t.target.id,revision:t.target.revision,content:original.content}],recordId:translationId(t.target,t.language),operation:'translate-text'};
  }
  const references:AcceptancePlan['references']=[];
- const allocate=(kind:string,id:string)=>'submission:'+(kind==='record'?decisionId:knowledgeDigest({submission:value.id,revision:value.revision}).slice(0,32))+':'+kind+':'+knowledgeDigest(id).slice(0,16);
+ const allocate=service?.allocate??((kind:string,id:string)=>'submission:'+(kind==='record'?decisionId:knowledgeDigest({submission:value.id,revision:value.revision}).slice(0,32))+':'+kind+':'+knowledgeDigest(id).slice(0,16));
  const baseline=observedRecord??value.context?.records?.find(r=>r.id===item.correction?.id&&r.revision===item.correction?.revision);
  const about=item.about?.kind==='record'?value.context?.records?.find(r=>r.id===item.about!.id&&r.revision===item.about!.revision):undefined;
  const inputRecord={...item.record,...(item.operation==='add-information'&&about?{subjectId:about.content.subjectId,objectId:about.content.objectId}:{})};
@@ -78,10 +78,10 @@ export function acceptancePlan(value:KnowledgeSubmission,key:string,decisionId:s
  const themes=item.themes??[];
  for(const p of themes){const t=value.context?.themes?.find(v=>v.id===p.id&&v.revision===p.revision);if(!t)throw new SourceCheckError('追加先テーマを選び直してください。');references.push({kind:'theme',...p,content:t.content});}
  const uniqueReferences=[...new Map(references.map(ref=>[ref.kind+':'+ref.id+'@'+ref.revision,ref])).values()];
- const command=knowledgeCommandSchema.parse({action:'accept-record',requestId:decisionId,entities,sources,legacyEntities,legacySources,legacyRecords,themes,entityPins:uniqueReferences.filter(r=>r.kind==='entity').map(({id,revision})=>({id,revision})),sourcePins:uniqueReferences.filter(r=>r.kind==='source').map(({id,revision})=>({id,revision})),record:{id,content:record},...(item.correction?{expectedRevision:item.correction.revision,preserveLegacySemantics:true}:{}),reason:'利用者投稿の内容確認・原資料照合による自動受理'});
+ const command=knowledgeCommandSchema.parse({action:'accept-record',requestId:decisionId,entities,sources,legacyEntities,legacySources,legacyRecords,themes,entityPins:uniqueReferences.filter(r=>r.kind==='entity').map(({id,revision})=>({id,revision})),sourcePins:uniqueReferences.filter(r=>r.kind==='source').map(({id,revision})=>({id,revision})),record:{id,content:record},...(item.correction?{expectedRevision:item.correction.revision,preserveLegacySemantics:true}:{}),reason:service?.reason??'利用者投稿の内容確認・原資料照合による自動受理'});
  return {command,references:uniqueReferences,recordId:id,operation:item.operation!};
 }
-async function verifyLegacyCommand(command:KnowledgeCommand){
+export async function verifyLegacyCommand(command:KnowledgeCommand){
  if(command.action!=='accept-record'||!(command.legacyEntities?.length||command.legacyRecords?.length))return;
  const entries=[...(command.legacyEntities??[]),...(command.legacyRecords??[])];const revision=entries[0].revision;
  let captured:Awaited<ReturnType<typeof readSubmissionLegacyReferences>>;try{captured=await readSubmissionLegacyReferences({revision,entityIds:command.legacyEntities?.map(e=>e.id)??[],claimIds:command.legacyRecords?.map(e=>e.id)??[]});}catch(e){if(e instanceof Error&&'status' in e&&Number(e.status)<500)throw new SourceCheckError(e.message);throw e;}
@@ -100,7 +100,7 @@ export async function verifyAcceptanceReferences(c:PoolClient,refs:AcceptancePla
   if(ref.content&&knowledgeDigest(ref.content)!==knowledgeDigest(row.content))throw new SourceCheckError('対象名・資料の取得版が原記録と異なります。取得元の内容を確認してください。');
  }
 }
-async function verifyAcceptedSemantics(c:PoolClient,plan:Pick<AcceptancePlan,'command'|'references'>){
+export async function verifyAcceptedSemantics(c:PoolClient,plan:Pick<AcceptancePlan,'command'|'references'>){
  if(plan.command.action!=='accept-record'||!plan.command.expectedRevision)return;
  const cmd=plan.command,original=plan.references.find(r=>r.kind==='record'&&r.id===cmd.record.id)?.content as Record<string,unknown>|undefined;
  const typed=cmd.legacyRecords?.some(r=>r.id===cmd.record.id)||(await c.query("SELECT 1 FROM knowledge75.legacy_links WHERE record_id=$1 AND payload ? 'claim'",[cmd.record.id])).rowCount;

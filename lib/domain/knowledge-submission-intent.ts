@@ -2,10 +2,10 @@ import {translationTargetKey} from "./knowledge-translation";
 import {translationTextLimit} from "./knowledge-translation";
 import {knowledgeEntityContentSchema,knowledgeSourceContentSchema,knowledgeRecordContentSchema,type KnowledgePin} from "./knowledge-foundation";
 import type {KnowledgeSubmissionContent,KnowledgeSubmissionContext} from "./knowledge-submission";
-export function submissionIntentIssues(content:KnowledgeSubmissionContent,context?:KnowledgeSubmissionContext):string[]{
+export function submissionIntentIssues(content:KnowledgeSubmissionContent,context?:KnowledgeSubmissionContext,origin:'member'|'service'='member'):string[]{
  const issues:string[]=[];
  if(content.schemaVersion!==2)issues.push("投稿先と操作を確認してください。現在の入力欄から申請内容を選び直せます。");
- if(content.schemaVersion===2&&!content.attribution)issues.push("公開する投稿者の表示を選んでください。");
+ if(origin==='member'&&content.schemaVersion===2&&!content.attribution)issues.push("公開する投稿者の表示を選んでください。");
  const entities=new Map(content.entities.map(e=>[e.id,e]));
  const same=(a:KnowledgePin|undefined,b:KnowledgePin|undefined)=>!!a&&!!b&&a.id===b.id&&a.revision===b.revision;
  for(const [index,item] of content.items.entries()){

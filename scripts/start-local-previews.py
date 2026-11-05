@@ -73,6 +73,15 @@ def beta_knowledge():
         if set(config) != {'workerId','tokenSha256'} or not re.fullmatch(r'[a-z0-9-]{1,80}',config['workerId']) or not re.fullmatch(r'[a-f0-9]{64}',config['tokenSha256']) or not review.exists() or not collection.exists():
             raise ValueError('Reader requires reviewed AI and capture profiles')
         values.update(KNOWLEDGE_COLLECTION_READING_ENABLED='1', KNOWLEDGE_COLLECTION_READER_CONFIG=str(reader))
+    imports = STATE / 'beta-import.json'
+    if imports.exists():
+        info = imports.lstat()
+        if imports.is_symlink() or info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) != 0o600 or info.st_size > 128000:
+            raise ValueError('Private import configuration ownership mismatch')
+        profile = json.loads(imports.read_text())
+        if profile.get('origin') != expected['KNOWLEDGE_PUBLIC_ORIGIN'] or not profile.get('principals'):
+            raise ValueError('Import origin differs from this existing beta')
+        values.update(KNOWLEDGE_IMPORT_ENABLED='1', KNOWLEDGE_IMPORT_CONFIG=str(imports))
     return {**values,'THEME_WORKBENCH_ENABLED':'0'}
 
 
