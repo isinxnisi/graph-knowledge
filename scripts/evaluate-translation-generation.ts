@@ -1,5 +1,6 @@
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import path from 'node:path';
+import {createHash} from 'node:crypto';
 import {Pool} from 'pg';
 import {z} from 'zod';
 import {reviewConfigSchema,createReviewQueue} from '../lib/server/knowledge-review-queue';
@@ -10,11 +11,14 @@ import {TRANSLATION_GENERATION_POLICY} from '../lib/domain/knowledge-translation
 const file=process.env.KNOWLEDGE_REVIEW_CONFIG;
 if(!file||!process.env.MEMBER_DATABASE_URL)throw Error('Explicit existing free project required');
 const cfg=reviewConfigSchema.parse(JSON.parse(await readFile(file,'utf8'))),pool=new Pool({connectionString:process.env.MEMBER_DATABASE_URL,max:1});
-const dir=path.resolve('.local/translation-generation-evaluation');await mkdir(dir,{recursive:true,mode:0o700});
-const cases=z.array(z.object({id:z.string().regex(/^[a-z-]+$/),text:z.string(),language:z.enum(['ja','en']),sourceLanguage:z.string(),check:z.string()})).max(6).parse(JSON.parse(await readFile('data/knowledge-translation-generation-cases.json','utf8')));
+const caseFile=path.resolve(process.argv[2]??'data/knowledge-translation-generation-cases.json');
+if(!caseFile.startsWith(path.resolve('data')+path.sep)||!caseFile.endsWith('.json'))throw Error('Repository data fixture required');
+const caseWire=await readFile(caseFile,'utf8');
+const dir=path.resolve('.local/translation-generation-evaluation',TRANSLATION_GENERATION_POLICY,createHash('sha256').update(caseWire).digest('hex').slice(0,12));await mkdir(dir,{recursive:true,mode:0o700});
+const cases=z.array(z.object({id:z.string().regex(/^[a-z-]+$/),text:z.string(),language:z.enum(['ja','en']),sourceLanguage:z.string(),context:z.record(z.string(),z.unknown()).optional(),check:z.string()})).max(6).parse(JSON.parse(caseWire));
 try{const key=(await readFile(cfg.apiKeyFile,'utf8')).trim();
  for(const item of cases){const dest=path.join(dir,item.id+'.json');try{await readFile(dest);continue;}catch(e){if((e as NodeJS.ErrnoException).code!=='ENOENT')throw e;}
-  const wire=translationGenerationRequest(item.text,item.language,item.sourceLanguage),c=await pool.connect();let attempt:string;
+  const wire=translationGenerationRequest(item.text,item.language,item.sourceLanguage,item.context),c=await pool.connect();let attempt:string;
   try{await c.query('BEGIN');const r=await reserveKnowledgeAI(c,cfg,{purpose:'translation-evaluation',policy:TRANSLATION_GENERATION_POLICY,inputReserved:Buffer.byteLength(JSON.stringify(wire))+1024,outputReserved:4096});await c.query('COMMIT');if(r.state!=='reserved'){console.log(JSON.stringify({state:r.state,reason:r.state==='wait'?r.reason:null}));break;}attempt=r.id;}catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}
   await writeFile(dest,JSON.stringify({id:item.id,attempt,state:'sending'}),{mode:0o600,flag:'wx'});
   const result=await callGeminiReview({apiKey:key,model:cfg.model,request:wire}),parsed=result.state==='received'?parseGeminiJson(result.raw):null,u=parsed?.usage;

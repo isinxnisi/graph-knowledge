@@ -14,7 +14,7 @@ it('does not generate on opening and requires explicit consent',async()=>{
  await waitFor(()=>expect(mocks.request).toHaveBeenCalledTimes(1));
  expect(mocks.request.mock.calls[0][2].body.action).toBe('status');expect((screen.getByText('訳文を自動で下書き') as HTMLButtonElement).disabled).toBe(true);
  fireEvent.click(screen.getByRole('checkbox'));fireEvent.click(screen.getByText('訳文を自動で下書き'));
- await waitFor(()=>expect(mocks.request).toHaveBeenCalledTimes(2));expect(mocks.request.mock.calls[1][2].body).toMatchObject({action:'request',target,language:'en',profileId:'google-gemini-free-translation-v1'});
+ await waitFor(()=>expect(mocks.request).toHaveBeenCalledTimes(2));expect(mocks.request.mock.calls[1][2].body).toMatchObject({action:'request',target,language:'en',profileId:'google-gemini-free-translation-context-v2'});
 });
 it('shows a cached editable draft and carries its exact generation ID',async()=>{
  mocks.request.mockResolvedValue(state({state:'ready',text:'Translated name'}));render(<Generate target={target} language="en" en={false}/>);
