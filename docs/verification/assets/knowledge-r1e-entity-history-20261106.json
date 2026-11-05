@@ -1,0 +1,105 @@
+{
+  "checkedAt": "2026-11-05T15:50:05Z",
+  "source": "151279031d54b61247ed047249886a4a8514f68f",
+  "build": "EzloeT0Q_uvvVuE-f0Zyx",
+  "releaseHead": "71f090c1fb6815d6ecd2ac801cace3576028d9e7",
+  "additionalMigrations": [],
+  "memberLedger": 31,
+  "backupAndActivationRowChecks": true,
+  "protectedMemberTables": 40,
+  "protectedMemberTablesUnchanged": true,
+  "excludedRuntimeTables": [
+    "knowledge_collection.commands",
+    "knowledge_collection.read_workers",
+    "knowledge_collection.workers"
+  ],
+  "knowledgeCoreTablesUnchanged": true,
+  "privateSettingsUnchanged": true,
+  "services": {
+    "beta": true,
+    "knowledge-review-worker": true,
+    "knowledge-beta-worker": true,
+    "knowledge-collection-worker": true,
+    "knowledge-collection-reader": true
+  },
+  "submissionId": "5eb13dbb-0605-409f-82c6-8b05b19d537d",
+  "pending": {
+    "state": "quota",
+    "reason": "本日の無料利用枠を待っています。",
+    "notBefore": "2026-11-06T08:00:00+00:00",
+    "attempts": 0,
+    "chargedRequests": 0
+  },
+  "http": [
+    {
+      "origin": "http://127.0.0.1:3200",
+      "revision": 1,
+      "status": 200,
+      "currentRevision": 2,
+      "basis": "published-generation",
+      "cacheControl": "private, no-store"
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "revision": 2,
+      "status": 200,
+      "currentRevision": 2,
+      "basis": "published-generation",
+      "cacheControl": "private, no-store"
+    },
+    {
+      "origin": "http://localhost:3200",
+      "revision": 1,
+      "status": 200,
+      "currentRevision": 2,
+      "basis": "published-generation",
+      "cacheControl": "private, no-store"
+    },
+    {
+      "origin": "http://localhost:3200",
+      "revision": 2,
+      "status": 200,
+      "currentRevision": 2,
+      "basis": "published-generation",
+      "cacheControl": "private, no-store"
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "revision": 1,
+      "status": 200,
+      "currentRevision": 2,
+      "basis": "published-generation",
+      "cacheControl": "private, no-store"
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "revision": 2,
+      "status": 200,
+      "currentRevision": 2,
+      "basis": "published-generation",
+      "cacheControl": "private, no-store"
+    }
+  ],
+  "tests": {
+    "imports": 33,
+    "member": 57,
+    "units": 51,
+    "skippedDatabaseOnlyUnits": 6
+  },
+  "browser": {
+    "googleSession": true,
+    "draftSavedAndReopened": true,
+    "submittedWithExplicitConsent": true,
+    "fixedRevisions": [
+      1,
+      2
+    ],
+    "currentExplorerLink": true,
+    "entityCorrectionEntry": true,
+    "mobileWidth": 390,
+    "mobileDocumentWidth": 380,
+    "iosDeviceTest": false
+  },
+  "vpsChanged": false,
+  "preview3276Changed": false
+}

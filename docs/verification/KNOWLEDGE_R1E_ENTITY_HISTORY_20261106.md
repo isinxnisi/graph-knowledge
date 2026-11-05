@@ -15,7 +15,23 @@
 
 ## 配置と実操作
 
-ソースcommit後のbuild、3200／HTTPS βへの反映、実Googleセッションの操作結果をここへ追記する。追加migrationはない。正式VPSと3276を更新しない。
+appソース 151279031d54b61247ed047249886a4a8514f68f、build EzloeT0Q_uvvVuE-f0Zyx。後続のテストcommit 71f090c1 は実行コード差分なし。main／3200／HTTPS βへ配置済み。正式VPS／3276は未更新。
+
+- 切替前に会員DB・知識DBをdumpし、停止中の全table fingerprintが切替前後で一致。追加migrationなし、会員ledger31／知識001・002・004・005・006・007とchecksumを維持。
+- backup：.local/submission-repair/r1e-activation-backup-20261105T154029Z。秘密値やdumpをGitへ含めない。
+- Web、確認、公開投影、資料取得、資料読解の5サービスの復帰を確認。private設定11ファイルと既存の取込資格は不変。
+- 実操作後も知識のobjects／revisions／journal／旧KG対応／migration、会員・Capsule・コミュニティ等の40保護tableは不変。新しい投稿受付・処理待ちとWorker heartbeat／commandは通常の変更として区別した。
+- localhost／127.0.0.1／HTTPS βで固定Record版1/2を200で取得し、no-storeを確認。初回のPython既定User-AgentのHTTPS取得はCloudflare 1010。ブラウザと通常User-Agentでは取得成功し、アプリ障害とは扱わない。
+
+実Googleログイン済みChromeで、通常探索の対象詳細→訂正入口、説明・原語・理由・NASA資料の入力、草稿保存→リロードして再読→明示同意して受付まで確認。PC幅と390px幅（document幅380px）で確認し、横方向のはみ出しはなし。iPhone実機／iOS固有のキーボード挙動は未確認。
+
+[確認投稿（本人用）](https://graph-beta.isinxnisi.com/member/submissions?id=5eb13dbb-0605-409f-82c6-8b05b19d537d) はAriane 5の説明追加。受付版1、state=quota、attempts=0、課金対象request=0、次回利用枠は2026-11-06 17:00 JST。元のEntityと公開知識は変更していない。実Geminiによるこの新訂正方針の判定・自動受理は未確認で、通常Workerが自動で再開する。管理者の承認や再送を待たない。
+
+[当時の内容版1](https://graph-beta.isinxnisi.com/records?id=submission%3Ab68bc162-6a51-4282-8282-54381405332b%3Arecord%3A310d43a1a577fd4d&revision=1) と内容版2の別本文・根拠を確認。旧版画面に「現在は内容版2」を表示し、「現在の知識を探索で開く」で現在版へ切替できる。
+
+再開はmainで既存Node24を指定して python3 scripts/start-local-previews.py beta --node /home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/issue75/node。private runtimeを継承し、無料枠・課金・資格を変更しない。
+
+[機械検証の要約](assets/knowledge-r1e-entity-history-20261106.json)／[スマホでの受付状態](assets/knowledge-r1e-entity-correction-mobile.png)。実装15127903・テスト71f090c1は日本語commit・通常push済み。この文書と進行表の更新は後続の記録commitへ残す。最終push／hold解放の結果は完了報告で区別する。
 
 ## 残件
 

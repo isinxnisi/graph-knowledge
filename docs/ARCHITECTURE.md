@@ -1,3 +1,5 @@
+2026-11-06 R1e：共通Entityの原文訂正と公開Recordの固定版読取をmain／3200／HTTPS βへ接続。app 15127903／build EzloeT0Q_uvvVuE-f0Zyx。141テスト成功、旧版・ID・帰属・既存保存を保持。実Googleで訂正の保存・再訪・受付と旧版読取を確認。新しい訂正は無料枠による自動再開待ちで、実AIでの最終受理は未確認。[設計](design/KNOWLEDGE_ENTITY_CORRECTION.md)／[検証・再開](verification/KNOWLEDGE_R1E_ENTITY_HISTORY_20261106.md)。R1全体は未完了。
+
 2026-11-05 R1d：外部サービス取込を会員投稿と別のknowledge_import schema・専用Bearer資格へ分離し、原資料取得／意味重複／acceptancePlan／foundation受理を共用する。actor.kind=importと正本journalで再開・由来を追い、会員や公開投稿者を偽装しない。正本適用と別DB receiptのACK喪失はjournal回収で整合させる。[契約](design/KNOWLEDGE_IMPORT_CONTRACT.md)／[検証](verification/KNOWLEDGE_IMPORT_R1D_20261105.md)。
 
 # 現在の正本と配置境界（2026-11-05）
@@ -6,7 +8,7 @@
 
 - βの新方式はPostgreSQLの独立した知識DB／`knowledge75`の原記録・版を正本とし、Neo4jの専用label／公開世代を探索投影に使う。会員DBの認証・投稿／処理queueと責務・資格を分ける。詳細は[共通原本](design/KNOWLEDGE_FOUNDATION_U1.md)と[公開投影](design/KNOWLEDGE_PUBLIC_READ_U2.md)。
 - 既存の旧KGは並行して読む。本文中の「Neo4jが正本」「投稿flowは将来」等は旧KG／当時の構成の記録で、新方式の契約を取り消すものではない。旧KG由来も巡回・検索対象から落とさず、対応と切替を確認する。
-- main／3200／HTTPS βには新方式が段階配置済み。最後の機能配置はapp 94bcf7dc／build VgN_c2H7-gtkdB7qFcShz（[取得証明・対象台帳](verification/KNOWLEDGE_R1C_ACQUISITION_INVENTORY_20261105.md)）。追加007で証明と新旧全件列挙を共用する。自動整理と取込APIは未完了。正式VPSへの新方式切替はR6／旧U8で、β成功と正式公開を区別する。R1cは追加migration007とWeb／Workerを更新。本番実機は今回再確認していない。
+- main／3200／HTTPS βには新方式が段階配置済み。最後の機能配置はapp 15127903／build EzloeT0Q_uvvVuE-f0Zyx（[原文訂正・固定版読取](verification/KNOWLEDGE_R1E_ENTITY_HISTORY_20261106.md)）。取得証明と新旧全件列挙は知識007、取込APIは会員030で接続済み。全件自動整理と定期配送は未完了。正式VPSへの新方式切替はR6／旧U8で、β成功と正式公開を区別する。R1eは追加migrationなしでWeb／Workerを更新。本番実機は今回再確認していない。
 - 原語・訳文・意味対応・同一性・原資料・固定断面を分け、根拠付きの自動適用と任意管理を接続する。下記の旧提案・段階的な制限を、最新の要件から機能を除外する根拠にしない。
 
 以下は各時点の配置履歴と旧構成の詳細。現在の実装順と不足は上記の再計画を優先する。

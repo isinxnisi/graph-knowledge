@@ -1,3 +1,7 @@
+2026-11-06 R1e：Entity原文訂正・固定版readerをmain／3200／HTTPS βへ接続。app 15127903／build EzloeT0Q_uvvVuE-f0Zyx。次は新訂正方針の実AI確認（無料枠待ち）、翻訳文脈／cache、対象識別・新旧接続／配置別認可・安全境界の残件。R1と初版全体は未完了。[現在の検証と再開](../verification/KNOWLEDGE_R1E_ENTITY_HISTORY_20261106.md)。
+
+## 前段の到達記録
+
 2026-11-05 R1d：取込API・永続受付・共通受理と直接送信clientを実装。app6eb03db5／build mo4S9Ce_4UXLiGNfVWlZfをmain／3200／HTTPS βへ配置。現在の検証・未完了範囲は[記録](../verification/KNOWLEDGE_IMPORT_R1D_20261105.md)を優先。R1全体は未完了で、次はEntity原文訂正・固定版reader・翻訳文脈／cache等。R2／R3の自動巡回・定期配送を削らない。
 
 2026-11-05 Gemini 3.1 Flash-Liteを比較評価しβ標準へ採用。既存60件は58有効回答、正常20/20が受理候補、非受理想定の誤受理候補0（2件未判定）。重複・翻訳・収集と同じ実wireの7例も成功。待機中の同じ投稿は8回目の3.1で原資料照合まで完了し、既存知識を再利用・Record／活動／Capsule不変を確認。app 298cebc7 / build GJ83iMCf0BBwsL-IlJzkJ、main／3200／HTTPS βへ反映。追加migration・課金・VPS変更なし。 [実測・利用枠・再開・制約](../verification/GEMINI31_REVIEW_BETA_20261105.md)。R1全体は未完了。以下は各時点の記録。
@@ -21,7 +25,7 @@
 3. Gemini3.1と自動再試行、共通取得証明・全件対象台帳は実装・β確認済み。旧待機jobは登録済みになった。R1b/cを再実装しない。
 4. R1dの専用資格・永続package／receipt・HTTP受付／取消／結果・共通受理を維持する。[取込runbook](../runbooks/KNOWLEDGE_IMPORT.md)と最新の[検証記録](../verification/KNOWLEDGE_IMPORT_R1D_20261105.md)で実装・実接続と未確認を区別する。
 5. ChatGPT予定実行からの直接配送は未接続。R3で実証し、直送不可なら同じAPIのIssue adapterを実際に試す。手動clientだけで定期配送完了とはしない。
-6. R1のEntity原文訂正、固定版reader、翻訳文脈とcache、新旧対象・配置別認可、外部遷移と未信頼AI入力の不足を閉じる。同名の対象候補が表示上区別しにくい点も対象選択の残件として扱う。
+6. R1eのEntity原文訂正と固定版readerを維持し、新訂正方針の実AI確認・翻訳文脈とcache・新旧対象と配置別認可・外部遷移と未信頼AI入力の不足を閉じる。同名の対象候補が表示上区別しにくい点も対象選択の残件として扱う。
 7. 検証→日本語commit→通常push→検証済みmain／3200／HTTPS βへ反映→代表操作→hold解放。初版全体の完成条件を満たすまでは部分完了を明示する。
 
 **「初版の機能実装完了＋β統合検証」まで残り6〜11回程度（推定）**。R1残件1〜2回、R2〜R5計5〜9回。VPS切替・本番向け移行・Linux脆弱性対応・正式URL確認は別の公開工程。通常の管理者による個別承認／毎回のURL列挙へ戻さず、回数のために範囲を縮めない。新しいCodexチャット作成・自動モデル切替は行っていない。

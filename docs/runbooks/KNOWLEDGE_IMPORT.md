@@ -71,3 +71,9 @@ Bearerをコマンド引数・URL・Issueへ書かない。clientはredirectを�
 202は受付。各itemのstate／reason／nextAttemptAt／result／usageを見る。queued・running・retry・quotaは自動処理待ち、needs-changesは対象・根拠等を修正して新版で送る。declinedは不適切内容、appliedは原記録反映済み・投影待ち、published／existingは反映完了／既存再利用。cancelは未反映分だけを停止する。以前反映した知識の公開停止や削除にはしない。
 
 worker再開は通常のlauncherでよく、receiptの人手承認は不要。受信済みAI結果・正本journalを回収するため、再起動だけで二重推論・二重登録を行わない。ただし送信結果不明の試行は消費予約を残して再試行する。無料枠が尽きた場合は利用日の切替まで待つ。別key・有料fallbackへ切り替えない。
+
+## R1eの補足
+
+共通Entity原文の訂正はcorrect-entityで送り、資格のoperationsへの明示許可が必要。既存資格は自動拡張しない。[訂正の契約](../design/KNOWLEDGE_ENTITY_CORRECTION.md)を使い、IDや観測版を替えて訂正を再試行しない。
+
+R1eの配置はコードのみで追加migrationなし。既存の11 private設定・送信資格・無料枠を維持し、Webと4 Workerを通常launcherで復帰する。過去のmigration適用／資格新規作成用の一回用scriptを再実行しない。最新build・backup・無料枠待ちの確認投稿は[記録](../verification/KNOWLEDGE_R1E_ENTITY_HISTORY_20261106.md)へ。再起動で受付や利用枠をリセットしない。

@@ -1,3 +1,5 @@
+2026-11-06 R1e：共通Entityの原文訂正と公開Recordの固定版読取をmain／3200／HTTPS βへ接続。app 15127903／build EzloeT0Q_uvvVuE-f0Zyx。141テスト成功、旧版・ID・帰属・既存保存を保持。実Googleで訂正の保存・再訪・受付と旧版読取を確認。新しい訂正は無料枠による自動再開待ちで、実AIでの最終受理は未確認。[設計](design/KNOWLEDGE_ENTITY_CORRECTION.md)／[検証・再開](verification/KNOWLEDGE_R1E_ENTITY_HISTORY_20261106.md)。R1全体は未完了。
+
 2026-11-05 R1d：外部packageの認証付きAPI・永続receipt・共通確認／受理・直接送信をmain／3200／HTTPS βへ反映。[検証と再開](verification/KNOWLEDGE_IMPORT_R1D_20261105.md)／[送信runbook](runbooks/KNOWLEDGE_IMPORT.md)。R1・初版全体は未完了、定期配送はR3へ。
 
 2026-11-05 Gemini 3.1 Flash-Liteを比較評価しβ標準へ採用。既存60件は58有効回答、正常20/20が受理候補、非受理想定の誤受理候補0（2件未判定）。重複・翻訳・収集と同じ実wireの7例も成功。待機中の同じ投稿は8回目の3.1で原資料照合まで完了し、既存知識を再利用・Record／活動／Capsule不変を確認。app 298cebc7 / build GJ83iMCf0BBwsL-IlJzkJ、main／3200／HTTPS βへ反映。追加migration・課金・VPS変更なし。 [実測・利用枠・再開・制約](verification/GEMINI31_REVIEW_BETA_20261105.md)。R1全体は未完了。以下は各時点の記録。

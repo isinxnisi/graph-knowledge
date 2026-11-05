@@ -1,10 +1,12 @@
+2026-11-06 R1e：共通Entityの原文訂正と公開Recordの固定版読取をmain／3200／HTTPS βへ接続。app 15127903／build EzloeT0Q_uvvVuE-f0Zyx。141テスト成功、旧版・ID・帰属・既存保存を保持。実Googleで訂正の保存・再訪・受付と旧版読取を確認。新しい訂正は無料枠による自動再開待ちで、実AIでの最終受理は未確認。[設計](design/KNOWLEDGE_ENTITY_CORRECTION.md)／[検証・再開](verification/KNOWLEDGE_R1E_ENTITY_HISTORY_20261106.md)。R1全体は未完了。
+
 2026-11-05 R1d：外部取込API・専用資格・永続package／receipt・共通原資料／重複確認をmain／3200／HTTPS βへ接続。NASAの実API送信・再送・取消を確認、元の知識全版・会員保存・活動を保持。会員030追加、app6eb03db5／build mo4S9Ce_4UXLiGNfVWlZf。R1残件とR2〜R5を維持、本番VPS未更新。[現行記録](verification/KNOWLEDGE_IMPORT_R1D_20261105.md)。
 
 # 現在の実装方針（2026-11-05）
 
 現在から先の計画は[文脈照合と再計画](design/PLUNODE_IMPLEMENTATION_REPLAN_20261105.md)、現在地は[進行表](PLUNODE_PROGRESS.md)。途中で加わった要件も継承し、過去の部分完成や工数見込みを、初版の範囲を小さくする理由にしない。通常の登録・公開・整理に管理者の個別承認／毎回の対象指定を必須にしない。テーマ・範囲・利用上限の設定後は資料探し・定期収集も自動継続し、登録済み全知識データの巡回・自動整理とは別に成立させる。
 
-受け渡しは、ChatGPT側で揃えたテーマ・資料URL・情報を認証付きPlunode取込APIへ渡す方式が第一候補。GitHub Issue等を同じpackageの代替配送とし、別のURL探索APIの導入は必須にしない。一般投稿は当面、投稿URLの資料で確認し不足時に補足依頼とする。[R1aに続きR1bをβ反映](verification/KNOWLEDGE_R1B_IDENTITY_DUPLICATES_20261105.md)。同一性を会員投稿の重複照合へ接続し、資料比較の共通関数と[取込契約](design/KNOWLEDGE_IMPORT_CONTRACT.md)を追加した。取込API・共通取得証明・対象台帳は未完了で、[引継ぎのR1残件](design/PLUNODE_PRODUCTION_HANDOFF.md#別モデルが最初に実装する区切り)へ進む。
+受け渡しは、ChatGPT側で揃えたテーマ・資料URL・情報を認証付きPlunode取込APIへ渡す方式が第一候補。GitHub Issue等を同じpackageの代替配送とし、別のURL探索APIの導入は必須にしない。一般投稿は当面、投稿URLの資料で確認し不足時に補足依頼とする。[R1aに続きR1bをβ反映](verification/KNOWLEDGE_R1B_IDENTITY_DUPLICATES_20261105.md)。同一性を会員投稿の重複照合へ接続し、資料比較の共通関数と[取込契約](design/KNOWLEDGE_IMPORT_CONTRACT.md)を追加した。取込API・共通取得証明・対象台帳はR1c/dで接続済みで、[引継ぎのR1残件](design/PLUNODE_PRODUCTION_HANDOFF.md#別モデルが最初に実装する区切り)へ進む。
 
 利用者の入力・訂正・匿名帰属、具体的な意味と原語／訳文、通常探索・年表・Capsule・共有までを一巡させる。リンクのフィッシングや取得先・AIインジェクションには一般的な最低限の対策を揃え、独自の完全防御基盤を先行構築しない。できないと判断する場合は実測・制約・代案・体験への影響を示し、無断で対象外にしない。
 
