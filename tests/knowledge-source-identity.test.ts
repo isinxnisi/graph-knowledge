@@ -3,6 +3,7 @@ import {canonicalSourceUrl,sourceDocumentKey,verifiedSourceDocumentKey,proofMatc
 
 it('compares documents without modifying the submitted source, or discarding document-selecting parameters',()=>{
  const source={url:'https://EXAMPLE.org/article?b=2&utm_source=x&a=1#section',bibliography:'原書'};
+ expect(canonicalSourceUrl(source.url)).toBe('https://example.org/article?a=1&b=2');
  expect(sourceDocumentKey(source)).toBe('url:https://example.org/article?a=1&b=2');
  expect(source.url).toContain('utm_source=x');
  expect(sourceDocumentKey({...source,url:'https://example.org/article?a=3&b=2'})).not.toBe(sourceDocumentKey(source));
