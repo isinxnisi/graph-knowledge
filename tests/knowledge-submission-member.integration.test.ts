@@ -1,8 +1,10 @@
+import {readTranslationGenerationInput} from "../lib/server/knowledge-translation-context";
+import {GEMINI_TRANSLATION_POLICY} from "../lib/server/gemini-knowledge-review";
 import {entityCorrectionSummary} from '../lib/domain/knowledge-entity-correction';
 import {readKnowledgeRecordVersion} from '../lib/server/knowledge-record-version';
 import {migrateKnowledgeIdentities} from '../lib/server/knowledge-identity-migrate';
 import {afterAll,beforeAll,describe,expect,it,vi} from "vitest";
-import {randomUUID} from "node:crypto";
+import {randomUUID,createHash} from "node:crypto";
 import {spawnSync} from "node:child_process";
 import {mkdir,writeFile} from "node:fs/promises";
 import {Pool} from "pg";
@@ -24,8 +26,8 @@ import {memberConfig} from "../lib/server/member/config";
 import {memberPool} from "../lib/server/member/auth";
 import {operateMember} from "../lib/server/member/operations";
 import {startMemberOidc} from "./support/member-oidc";
-const publicRead=vi.hoisted(()=>({dto:null as unknown,detail:null as null|((id:string)=>Promise<unknown>),entities:null as null|((id:string)=>Promise<unknown>),translationById:null as null|((id:string,revision?:number)=>Promise<unknown>),graph:null as null|((ids:string[])=>Promise<unknown>),recordVersion:null as null|((id:string,revision:number)=>Promise<unknown>),textOriginal:null as null|((target:unknown)=>Promise<unknown>),textTranslation:null as null|((target:unknown,language:string)=>Promise<unknown>)}));
-vi.mock("../lib/server/knowledge-publication-preview",()=>({knowledgePublicationPreview:async()=>({detail:async(q:{recordId:string})=>(publicRead.dto as {record?:{id:string}}|null)?.record?.id===q.recordId?({generation:"fixture",record:publicRead.dto}):publicRead.detail!(q.recordId),entities:async(q:{entityId:string})=>publicRead.entities!(q.entityId),recordVersion:async(id:string,revision:number)=>publicRead.recordVersion!(id,revision),graph:async(q:{recordIds:string[]})=>publicRead.graph!(q.recordIds),translationById:async(id:string,revision?:number)=>publicRead.translationById!(id,revision),textOriginal:async(t:unknown)=>publicRead.textOriginal!(t),textTranslation:async(t:unknown,l:string)=>publicRead.textTranslation!(t,l)})}));
+const publicRead=vi.hoisted(()=>({dto:null as unknown,detail:null as null|((id:string)=>Promise<unknown>),entities:null as null|((id:string)=>Promise<unknown>),translationById:null as null|((id:string,revision?:number)=>Promise<unknown>),graph:null as null|((ids:string[])=>Promise<unknown>),recordVersion:null as null|((id:string,revision:number)=>Promise<unknown>),textReview:null as null|((target:unknown)=>Promise<unknown>),textOriginal:null as null|((target:unknown)=>Promise<unknown>),textTranslation:null as null|((target:unknown,language:string)=>Promise<unknown>)}));
+vi.mock("../lib/server/knowledge-publication-preview",()=>({knowledgeTranslationReviewOriginal:async(t:unknown)=>publicRead.textReview!(t),knowledgePublicationPreview:async()=>({detail:async(q:{recordId:string})=>(publicRead.dto as {record?:{id:string}}|null)?.record?.id===q.recordId?({generation:"fixture",record:publicRead.dto}):publicRead.detail!(q.recordId),entities:async(q:{entityId:string})=>publicRead.entities!(q.entityId),recordVersion:async(id:string,revision:number)=>publicRead.recordVersion!(id,revision),graph:async(q:{recordIds:string[]})=>publicRead.graph!(q.recordIds),translationById:async(id:string,revision?:number)=>publicRead.translationById!(id,revision),textOriginal:async(t:unknown)=>publicRead.textOriginal!(t),textTranslation:async(t:unknown,l:string)=>publicRead.textTranslation!(t,l)})}));
 vi.mock("server-only",()=>({}));
 import {memberRuntime} from "../lib/server/member/runtime";
 import * as authRoute from "../app/api/auth/[...all]/route";
@@ -82,7 +84,8 @@ beforeAll(async()=>{
  const foundation=createKnowledgeFoundationService(acceptanceKnowledge);
  publicRead.detail=async id=>{const record=await foundation.get({kind:'reader',id:'public'},'record',id),all=await foundation.list({kind:'reader',id:'public'});return {generation:'fixture',record:buildKnowledgePublishedRecord(record,{entities:all.entities.filter(e=>e.id===record.content.subjectId||e.id===record.content.objectId),sources:all.sources.filter(source=>record.content.evidence.some(e=>e.source.id===source.id)),mappings:[]})};};
  publicRead.translationById=async(id,revision)=>{const c=await acceptanceKnowledge.connect();try{return await readKnowledgeTranslationById(c,id,revision);}finally{c.release();}};
- publicRead.textOriginal=async target=>{const c=await acceptanceKnowledge.connect();try{return await readKnowledgeTextOriginal(c,target as import('../lib/domain/knowledge-translation').KnowledgeTextTarget,true);}finally{c.release();}};
+   publicRead.textReview=async target=>{const c=await acceptanceKnowledge.connect();try{return await readTranslationGenerationInput(c,target as import('../lib/domain/knowledge-translation').KnowledgeTextTarget);}finally{c.release();}};
+publicRead.textOriginal=async target=>{const c=await acceptanceKnowledge.connect();try{return await readKnowledgeTextOriginal(c,target as import('../lib/domain/knowledge-translation').KnowledgeTextTarget,true);}finally{c.release();}};
  publicRead.textTranslation=async(target,language)=>{const c=await acceptanceKnowledge.connect();try{return await readKnowledgeTranslation(c,target as import('../lib/domain/knowledge-translation').KnowledgeTextTarget,language);}finally{c.release();}};
  publicRead.recordVersion=async(id,revision)=>{const c=await acceptanceKnowledge.connect();try{return await readKnowledgeRecordVersion(c,{id,revision});}finally{c.release();}};
  publicRead.graph=async ids=>({records:await Promise.all(ids.map(async id=>(await publicRead.detail!(id) as {record:unknown}).record))});
@@ -346,6 +349,7 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
   const target={kind:'record',id:rid,revision:1,field:'assertion'},id=randomUUID(),captured=await post({action:'capture-translation',requestId:randomUUID(),id,expectedVersion:0,target,language:'en'});
   expect(captured.status).toBe(200);const draft=knowledgeSubmissionSchema.parse((await captured.json()).submission);
   expect(draft.context?.texts?.[0].text).toBe('この人物は2003年に設立した。');
+  expect(draft.context?.texts?.[0].reviewContext).toMatchObject({surrounding:{record:{subjectId:eid,assertion:'この人物は2003年に設立した。'}}});expect(draft.context?.texts?.[0].reviewContextHash).toMatch(/^[a-f0-9]{64}$/);
   expect((await current(id,bob.cookies.value,bobId)).status).toBe(404);
   draft.content.items[0].translation!.text='This person founded it in 2003.';
   const before=await knowledgeCount(),{command,cfg}=await acceptedCandidate(draft.content);
@@ -364,6 +368,48 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
    expect((await (await read()).json()).contributors[0]).toMatchObject({anonymous:true,person:null});
   }finally{process.env.KNOWLEDGE_RUNTIME=oldRuntime;process.env.KNOWLEDGE_PUBLICATION_ENABLED=oldEnabled;process.env.KNOWLEDGE_PUBLIC_ORIGIN=oldOrigin;}
 
+ });
+ async function translationCandidate(){
+  const suffix=randomUUID(),rid='context-record-'+suffix,eid='context-person-'+suffix,sid='context-source-'+suffix,foundation=createKnowledgeFoundationService(acceptanceKnowledge);
+  await foundation.execute({kind:'operator',id:'fixture'},{action:'create-bundle',requestId:randomUUID(),reason:'文脈の固定確認',entities:[{id:eid,content:{name:'原点の人',kind:'person'}}],sources:[{id:sid,content:{title:'原資料',url:'https://example.org/context'}}],records:[{id:rid,content:{kind:'note',subjectId:eid,assertion:'原点の人が制作を率いた。',textLanguages:{assertion:{tag:'ja',basis:'declared'}},evidence:[{id:'q',source:{id:sid,revision:1},locator:'本文',excerpt:'原点の人が制作を率いた。'}]}}]});
+  await acceptanceKnowledge.query("INSERT INTO knowledge75.published_revisions(kind,id,revision) SELECT kind,id,current_revision FROM knowledge75.objects WHERE id=ANY($1::text[]) ON CONFLICT DO NOTHING",[[eid,sid,rid]]);
+  const target={kind:'record',id:rid,revision:1,field:'assertion'},id=randomUUID(),response=await post({action:'capture-translation',requestId:randomUUID(),id,expectedVersion:0,target,language:'en'});
+  expect(response.status).toBe(200);const draft=knowledgeSubmissionSchema.parse((await response.json()).submission);draft.content.items[0].translation!.text='The origin person led the production.';
+  const accepted=await acceptedCandidate(draft.content);await memberRuntime().pool.query("UPDATE member_knowledge.submission_requests SET created_at=clock_timestamp()-interval '20 minutes' WHERE owner_id=$1",[aliceId]);return {...accepted,target,rid,eid,sid,draft};
+ }
+ it('retains the exact public context in the review wire and accepted proof',async()=>{
+  const {command,cfg,draft}=await translationCandidate(),before=await knowledgeCount();
+  const attempt=(await memberRuntime().pool.query("SELECT a.policy,p.wire FROM member_knowledge.review_attempts a JOIN member_knowledge.review_payloads p ON p.attempt_id=a.id WHERE a.job_id=(SELECT id FROM member_knowledge.review_jobs WHERE submission_id=$1)",[command.id])).rows[0];
+  const material=JSON.parse(JSON.parse(attempt.wire).contents[0].parts[0].text);expect(attempt.policy).toBe(GEMINI_TRANSLATION_POLICY);expect(material.translation.publicContext).toEqual(draft.context!.texts![0].reviewContext);expect(material.translation.contextHash).toBe(draft.context!.texts![0].reviewContextHash);
+  const engine=createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify);expect(await engine.run(cfg)).toBe(true);expect(await knowledgeCount()).toBe(before);
+  const proof=(await memberRuntime().pool.query("SELECT proofs FROM member_knowledge.publication_decisions WHERE job_id=(SELECT id FROM member_knowledge.review_jobs WHERE submission_id=$1)",[command.id])).rows[0].proofs;
+  expect(proof.translationReview.reviewContextHash).toBe(material.translation.contextHash);expect(proof.translationReview.policy).toBe(GEMINI_TRANSLATION_POLICY);
+ });
+ it('stops before send and before acceptance when a contextual source is hidden',async()=>{
+  const {command,cfg,sid,rid}=await translationCandidate(),before=await knowledgeCount(),engine=createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify);
+  await acceptanceKnowledge.query("UPDATE knowledge75.objects SET visibility='private' WHERE kind='source' AND id=$1",[sid]);
+  const job=(await memberRuntime().pool.query('SELECT id FROM member_knowledge.review_jobs WHERE submission_id=$1',[command.id])).rows[0];expect(await engine.validateReview(job.id)).toMatchObject({retryable:false});
+  await engine.run(cfg);expect((await (await current(command.id)).json()).submission.review.items[0].state).toBe('needs-changes');expect(await knowledgeCount()).toBe(before);
+  expect((await acceptanceKnowledge.query("SELECT count(*)::int AS n FROM knowledge75.text_translation_heads WHERE target->>'id'=$1",[rid])).rows[0].n).toBe(0);
+ });
+ it('does not accept an old equivalence result without the current context policy',async()=>{
+  const {command,cfg}=await translationCandidate(),engine=createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify);
+  await memberRuntime().pool.query("UPDATE member_knowledge.review_attempts SET policy='translation-equivalence-v1' WHERE job_id=(SELECT id FROM member_knowledge.review_jobs WHERE submission_id=$1)",[command.id]);
+  await engine.run(cfg);expect((await (await current(command.id)).json()).submission.review.items[0]).toMatchObject({state:'needs-changes',reason:expect.stringContaining('公開文脈を確認した結果')});
+ });
+ it('binds the equivalence result to the requested target language',async()=>{
+  const {command,cfg}=await translationCandidate(),pool=memberRuntime().pool;
+  const payload=(await pool.query('SELECT p.* FROM member_knowledge.review_payloads p JOIN member_knowledge.review_jobs j ON j.id=p.job_id WHERE j.submission_id=$1',[command.id])).rows[0],request=JSON.parse(payload.wire),input=JSON.parse(request.contents[0].parts[0].text);
+  input.translation.targetLanguage='fr';request.contents[0].parts[0].text=JSON.stringify(input);const wire=JSON.stringify(request);
+  await pool.query('UPDATE member_knowledge.review_payloads SET wire=$2,wire_digest=$3 WHERE attempt_id=$1',[payload.attempt_id,wire,createHash('sha256').update(wire).digest('hex')]);
+  await createKnowledgeAcceptance(pool,acceptanceKnowledge,{},fixtureVerify).run(cfg);
+  expect((await (await current(command.id)).json()).submission.review.items[0]).toMatchObject({state:'needs-changes',reason:expect.stringContaining('公開文脈を確認した結果')});
+ });
+ it('rechecks retained context when replaying a pending translation after process loss',async()=>{
+  const {command,cfg,eid}=await translationCandidate();await createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{afterPrepare:async()=>{throw Error('lost after prepare');}},fixtureVerify).run(cfg);
+  await acceptanceKnowledge.query("UPDATE knowledge75.objects SET visibility='private' WHERE kind='entity' AND id=$1",[eid]);
+  await createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify).run(cfg);
+  const decision=(await memberRuntime().pool.query("SELECT state FROM member_knowledge.publication_decisions WHERE job_id=(SELECT id FROM member_knowledge.review_jobs WHERE submission_id=$1)",[command.id])).rows[0];expect(decision.state).toBe('blocked');
  });
  it('publishes a new person with the submitted classification and a source-backed note',async()=>{
   const v=reviewContent();Object.assign(v,{entities:[{id:'new-person',content:{name:'架空の人物',kind:'人物',description:'',aliases:[],language:'ja'}}]});Object.assign(v.items[0].record,{subjectId:'new-person',assertion:'架空の人物はこの観測所の設立者。'});v.items[0].record.evidence[0].excerpt='架空の人物はこの観測所の設立者。';

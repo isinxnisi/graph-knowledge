@@ -17,7 +17,8 @@ export function submissionReviewInput(submission:KnowledgeSubmission,key:string,
  if(item.operation==='translate-text'){
   const t=item.translation,original=submission.context?.texts?.find(v=>t&&translationTargetKey(v.target)===translationTargetKey(t.target));
   if(!t||!original||!t.text.trim())throw Error('翻訳対象と訳文を確認してください');
-  return knowledgeReviewInputSchema.parse({assertion:t.text,translation:{originalText:original.text,sourceLanguage:original.language?.tag,targetLanguage:t.language},context:JSON.stringify({field:t.target.field,kind:t.target.kind}),evidence:[]});
+  if(!original.reviewContext||!original.reviewContextHash||!original.reviewReferences?.length)throw Error('TRANSLATION_REVIEW_CONTEXT_REQUIRED');
+  return knowledgeReviewInputSchema.parse({assertion:t.text,translation:{originalText:original.text,sourceLanguage:original.language?.tag,targetLanguage:t.language,publicContext:original.reviewContext,contextHash:original.reviewContextHash},context:JSON.stringify({field:t.target.field,kind:t.target.kind}),evidence:[]});
  }
  const r=item.record;
  const entity=(id:string|null)=>id===null?null:submission.content.entities.find(e=>e.id===id)?.content.name??submission.context?.entities.find(e=>e.id===id)?.content.name??null;

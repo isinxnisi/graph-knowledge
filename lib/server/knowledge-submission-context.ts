@@ -2,7 +2,7 @@ import type {KnowledgeRecordVersion} from "../domain/knowledge-foundation";
 import {knowledgeSubmissionContentSchema,type KnowledgeSubmissionContent,type KnowledgeSubmissionContext,type submissionSelectionContextSchema} from "../domain/knowledge-submission";
 import {z} from "zod";
 import {KnowledgeError,knowledgeDigest} from "./knowledge-foundation";
-import {knowledgePublicationPreview} from "./knowledge-publication-preview";
+import {knowledgePublicationPreview,knowledgeTranslationReviewOriginal} from "./knowledge-publication-preview";
 import {readSubmissionLegacyReferences} from "./knowledge-submission-legacy";
 
 const unique=<T extends {id:string;revision?:number}>(values:T[])=>[...new Map(values.map(v=>[v.id+"@"+(v.revision??1),v])).values()];
@@ -14,8 +14,8 @@ export async function resolveSubmissionContext(content:KnowledgeSubmissionConten
  const service=()=>knowledgePublicationPreview();
  for(const item of content.items.filter(i=>i.operation==='translate-text')){
   if(!item.translation)throw new KnowledgeError('翻訳対象を選んでください');
-  const v=item.translation,original=await (await service()).textOriginal(v.target),current=await (await service()).textTranslation(v.target,v.language);
-  captured.texts??=[];captured.texts.push({...original,translation:current.translation});
+  const v=item.translation,original=await knowledgeTranslationReviewOriginal(v.target),current=await (await service()).textTranslation(v.target,v.language);
+  captured.texts??=[];captured.texts.push({target:original.target,text:original.text,hash:original.hash,language:original.language,content:original.content,reviewContext:original.context,reviewContextHash:original.contextHash,reviewReferences:original.references,translation:current.translation});
  }
  const recordPins=unique(content.items.flatMap(i=>[...(i.correction?[i.correction]:[]),...(i.about?.kind==='record'?[i.about]:[]),...(i.record.aboutRecord?[i.record.aboutRecord]:[])]));
  for(const p of recordPins){

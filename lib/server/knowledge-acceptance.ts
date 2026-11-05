@@ -1,3 +1,5 @@
+import {verifyTranslationReviewContext} from "./knowledge-translation-context";
+import {GEMINI_TRANSLATION_POLICY} from "./gemini-knowledge-review";
 import {knownSourceDocuments,retainSourceAcquisitions} from './knowledge-source-registry';
 import {proofMatchesSourceUrl,verifiedSourceDocumentKey} from '../domain/knowledge-source-identity';
 import {translationTargetKey} from "../domain/knowledge-translation";
@@ -188,6 +190,11 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
  async function deliver(decision:QueryResultRow,prepare:(result:unknown)=>Promise<void>=async()=>{}){
   await verifyLegacyCommand(decision.command);
   const result=await foundation.execute({kind:'submission',id:'member-submission-v1'},decision.command,{verify:async c=>{
+   if(decision.command.action==='accept-translation'){
+    const proof=decision.proofs?.translationReview;
+    if(proof?.policy!==GEMINI_TRANSLATION_POLICY)throw new KnowledgeError('翻訳の公開文脈を更新するため、草稿を保存して確認を依頼し直してください。',409,'TRANSLATION_CONTEXT_CHANGED');
+    await verifyTranslationReviewContext(c,decision.command.target,proof,true);
+   }
    const guard=decision.proofs?.duplicates;
    if(guard){const current=(await commonDuplicatePins(c,guard.record)).map(r=>({id:r.id,revision:r.revision,digest:knowledgeDigest(r.content)}));if(knowledgeDigest(current)!==knowledgeDigest(guard.common))throw new KnowledgeError('既存の知識が増えたため重複を確認し直します',409,'DUPLICATE_REVIEW_REQUIRED');}
    await verifyAcceptanceReferences(c,decision.references_json);await verifyAcceptedSemantics(c,{command:decision.command,references:decision.references_json});},retain:async(c,result)=>{if(decision.command.action==='accept-record')await retainSourceAcquisitions(c,{actorId:'member-submission-v1',requestId:decision.command.requestId,result,proofs:decision.proofs?.sources??[]});},prepare});
@@ -214,8 +221,10 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
    const observed=value.context?.records?.find((r:{id:string})=>r.id===item.correction?.id);
    const plan=acceptancePlan(value,item.key,jobId,observed);
    await verifyLegacyCommand(plan.command);
-   await c.query('BEGIN READ ONLY');await verifyAcceptanceReferences(c,plan.references,false);await verifyAcceptedSemantics(c,plan);await c.query('COMMIT');return null;
-  }catch(e){await c.query('ROLLBACK');return {reason:e instanceof SourceCheckError?e.message:'取得元の公開状態を確認できません。時間をおいて再試行します。',retryable:!(e instanceof SourceCheckError)||e.retryable};}finally{c.release();}
+   await c.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
+    if(item.operation==='translate-text'){const original=value.context?.texts?.find(v=>translationTargetKey(v.target)===translationTargetKey(item.translation!.target));await verifyTranslationReviewContext(c,item.translation!.target,original??{});}
+    await verifyAcceptanceReferences(c,plan.references,false);await verifyAcceptedSemantics(c,plan);await c.query('COMMIT');return null;
+  }catch(e){await c.query('ROLLBACK');return {reason:e instanceof SourceCheckError||e instanceof KnowledgeError&&e.status<500?e.message:'取得元の公開状態を確認できません。時間をおいて再試行します。',retryable:e instanceof KnowledgeError&&e.status<500?false:!(e instanceof SourceCheckError)||e.retryable};}finally{c.release();}
  },
  async run(config:ReviewConfig){
   await ensure();
@@ -243,7 +252,15 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
    try{
     const value=material(lease.s),item=value.content.items.find(i=>i.key===lease.j.item_key)!;
     if(item.operation==='translate-text'){
-     const plan=acceptancePlan(value,item.key,lease.j.id),retainedProofs={translationEquivalence:true,review:lease.j.result,operatorConfirmationId:lease.j.operator_confirmation_id??null,consent:lease.j.consent_version};
+     const original=value.context?.texts?.find(v=>translationTargetKey(v.target)===translationTargetKey(item.translation!.target));
+      if(!original?.reviewContext||!original.reviewContextHash||!original.reviewReferences?.length)throw new KnowledgeError('翻訳の公開文脈を更新するため、草稿を保存して確認を依頼し直してください。',409,'TRANSLATION_CONTEXT_CHANGED');
+      if(!lease.j.operator_confirmation_id){
+       const attempt=(await pool.query("SELECT a.policy,p.wire,p.wire_digest FROM member_knowledge.review_attempts a JOIN member_knowledge.review_payloads p ON p.attempt_id=a.id WHERE a.job_id=$1 AND a.state='received' ORDER BY a.started_at DESC,a.id DESC LIMIT 1",[lease.j.id])).rows[0];
+       let input:ReturnType<typeof import('../domain/knowledge-review-job').submissionReviewInput>|undefined;
+       try{if(attempt&&createHash('sha256').update(attempt.wire).digest('hex')===attempt.wire_digest)input=JSON.parse(JSON.parse(attempt.wire).contents[0].parts[0].text);}catch{}
+       if(attempt?.policy!==GEMINI_TRANSLATION_POLICY||input?.assertion!==item.translation!.text||input?.translation?.originalText!==original.text||input?.translation?.targetLanguage!==item.translation!.language||input?.translation?.sourceLanguage!==original.language?.tag||input?.translation?.contextHash!==original.reviewContextHash||!input?.translation?.publicContext||knowledgeDigest(input.translation.publicContext)!==original.reviewContextHash)throw new KnowledgeError('翻訳の公開文脈を確認した結果がありません。草稿を保存して確認を依頼し直してください。',409,'TRANSLATION_REVIEW_REQUIRED');
+      }
+      const plan=acceptancePlan(value,item.key,lease.j.id),retainedProofs={translationEquivalence:true,translationReview:{policy:GEMINI_TRANSLATION_POLICY,reviewContext:original.reviewContext,reviewContextHash:original.reviewContextHash,reviewReferences:original.reviewReferences},review:lease.j.result,operatorConfirmationId:lease.j.operator_confirmation_id??null,consent:lease.j.consent_version};
      const decision={id:lease.j.id,job_id:lease.j.id,command:plan.command,digest:knowledgeDigest(plan.command),references_json:plan.references,proofs:retainedProofs};
      await deliver(decision,async result=>{
       const accepted=await locked(lease.j.id,async(c,s,j)=>{

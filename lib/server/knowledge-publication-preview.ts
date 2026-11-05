@@ -1,3 +1,5 @@
+import {readTranslationGenerationInput} from "./knowledge-translation-context";
+import type {KnowledgeTextTarget} from "../domain/knowledge-translation";
 import { Pool } from "pg";
 import neo4j, { type Driver } from "neo4j-driver";
 import { ThemeError } from "./theme-workbench";
@@ -29,4 +31,11 @@ export async function verifyKnowledgeReadSchema(target:Pool){
   const row=(await target.query("SELECT checksum FROM knowledge75.migrations WHERE name=$1",[name])).rows[0];
   if(row?.checksum!==checksum)throw new ThemeError("知識DBの明示migrationを確認してください",503);
  }
+}
+
+/** Same bounded public snapshot as translation generation; no client context. */
+export async function knowledgeTranslationReviewOriginal(target:KnowledgeTextTarget){
+ await knowledgePublicationPreview();const c=await pool!.connect();
+ try{await c.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');const value=await readTranslationGenerationInput(c,target);await c.query('COMMIT');return value;}
+ catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}
 }

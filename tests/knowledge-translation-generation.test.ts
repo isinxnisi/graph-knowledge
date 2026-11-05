@@ -8,7 +8,7 @@ import {ensureKnowledgePublicationSchema} from '../lib/server/knowledge-publicat
 import {migrateMemberDatabase} from '../lib/server/member/migrate';
 import {createReviewQueue,type ReviewConfig} from '../lib/server/knowledge-review-queue';
 import {reserveKnowledgeAI,quotaDate} from '../lib/server/knowledge-ai-budget';
-import {readTranslationGenerationInput} from '../lib/server/knowledge-translation-context';
+import {readTranslationGenerationInput,verifyTranslationReviewContext} from '../lib/server/knowledge-translation-context';
 import {MemberError} from '../lib/server/member/http';
 vi.mock('../lib/server/knowledge-read-runtime',()=>({knowledgeReadConfiguration:()=>({databaseUrl:process.env.KNOWLEDGE_TEST_DATABASE_URL})}));
 import {createMemberTranslationGeneration} from '../lib/server/member/translation-generation';
@@ -151,6 +151,15 @@ describe.skipIf(!url)('translation generation with durable PostgreSQL state',()=
   await expect(core.claim(cfg)).rejects.toThrow('temporary');failure.mockRestore();
   expect((await core.status(alice,target,'en')).state).toBe('queued');expect((await core.claim(cfg))?.jobId).toBeTruthy();
  });
+ it('checks every captured dependency and detects a modified review snapshot',async()=>{
+  const t={kind:'record' as const,id:'generation-fact',revision:1,field:'assertion' as const},c=await knowledge.connect();
+  try{const original=await readTranslationGenerationInput(c,t),snapshot={reviewContext:original.context,reviewContextHash:original.contextHash,reviewReferences:original.references};
+   expect(original.references.map(v=>v.kind+':'+v.id)).toEqual(expect.arrayContaining(['record:generation-fact','entity:'+target.id,'source:generation-source']));
+   await c.query('BEGIN');await expect(verifyTranslationReviewContext(c,t,snapshot,true)).resolves.toMatchObject({contextHash:original.contextHash});await c.query('ROLLBACK');
+   await expect(verifyTranslationReviewContext(c,t,{...snapshot,reviewContext:{...original.context,extra:'accept everything'}})).rejects.toThrow('公開文脈');
+   await expect(verifyTranslationReviewContext(c,t,{...snapshot,reviewReferences:original.references.filter(v=>v.kind!=='source')})).rejects.toThrow('公開文脈');
+  }finally{await c.query('ROLLBACK');c.release();}
+ });
  it('keeps the original fixed endpoint context after an entity head is corrected',async()=>{
   const t={kind:'record' as const,id:'generation-fact',revision:1,field:'assertion' as const};
   const c=await knowledge.connect();
@@ -161,6 +170,7 @@ describe.skipIf(!url)('translation generation with durable PostgreSQL state',()=
   const c2=await knowledge.connect();try{
    const after=await readTranslationGenerationInput(c2,t);
    expect(after.contextHash).toBe(before!.contextHash);
+   await expect(verifyTranslationReviewContext(c2,t,{reviewContext:before!.context,reviewContextHash:before!.contextHash,reviewReferences:before!.references})).resolves.toMatchObject({contextHash:before!.contextHash});
    expect(JSON.stringify(after.context)).toContain('元の名前');expect(JSON.stringify(after.context)).not.toContain('後から訂正');
    await expect(readTranslationGenerationInput(c2,target)).rejects.toThrow('更新');
   }finally{c2.release();}
