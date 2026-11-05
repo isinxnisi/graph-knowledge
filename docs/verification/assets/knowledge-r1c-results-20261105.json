@@ -151,5 +151,24 @@
     "R1 Entity correction/fixed reader/translation context and cache",
     "R2 periodic scanning/candidate verification/automatic application",
     "R3-R5 agreed initial functions and integrated beta acceptance"
-  ]
+  ],
+  "currentRequestManualCheck": {
+    "at": "2026-11-05T12:38:04.729Z",
+    "source": "f8becae595303387378b434c855259ee3fbf0f89",
+    "model": "gemini-3.5-flash-lite",
+    "wireBytes": 5639,
+    "wireSha256": "07520346427c8b53b7e232cf3c505457d66bd99680919356b58eafd86f98ba8a",
+    "durationMs": 6745,
+    "state": "http-error",
+    "status": 503,
+    "providerCode": "UNAVAILABLE",
+    "providerMessage": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "commonBudgetChargedRequests": 1,
+    "tokenUsage": null,
+    "automaticJobModified": false,
+    "normalQueueCooldownPreserved": true,
+    "originalRecordsAndActivitiesAndCapsulesUnchanged": true,
+    "successVerified": false,
+    "decision": "Treat as temporary service unavailability; stop expanding root-cause investigation"
+  }
 }

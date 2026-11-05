@@ -58,3 +58,15 @@ R1cは部分完了。次は取込契約の専用資格・厳密schema・永続pa
 通常再起動は既存の `scripts/start-local-previews.py beta --node /home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/issue75/node`。private stateを引き継ぎ、Web3200と専用Workerを復帰する。証明・対象台帳だけの再実行方法は設計書に記載。
 
 作業branchは `codex/issue75-theme-foundation`。コードcommit `94bcf7dc`。検証・進行表は後続の日本語commitへ記録し、branchとmainの通常push、最後にholdを解放する。最終結果は進行表・完了報告にも残す。
+
+## ユーザー指示による変更後リクエストの単発確認
+
+ユーザーから「変更後で成功するか確認し、それ以上は不毛な調査を長引かせない」と指示があったため、変更後の現在コードを使い、同じ保存wireを1回だけ送信した。5,639 bytes、同じmodel・同じrequest hash。約6.8秒でHTTP503／UNAVAILABLE。Googleの応答本文は「This model is currently experiencing high demand.」と需要集中を明示していた。
+
+- 新しい投稿・公開依頼・原本変更は行っていない。通常jobは6試行・次回21:50ごろの予定を維持。
+- 共通の無料project／利用量台帳で評価1回を予約・計上。日月の回数・token枠・分間制限は共用し、欠測tokenはnullのまま。key・project・モデルの切替は行っていない。
+- 手動確認に限り、10分以上前の503・Retry-After指定なしを確認したうえで、ローカルで設定した一時的なproject cooldownだけを予約transaction内で例外にした。cooldownはcommit前に元へ戻し、通常Workerの待ち・設定は変更していない。提供元のRetry-Afterや無料利用上限を迂回した確認ではない。
+- 元Record・全原本の版hash・投稿者活動・Capsuleは待機前baselineと一致。
+- 成功はまだ実証できていない。ユーザー方針に従い、一時的なサービス不調として扱い、DNSやHTTP clientの調査をこれ以上広げない。通常の自動再試行は維持する。
+
+文書・検証記録のみ更新。app source 94bcf7dc／build VgN_c2H7-gtkdB7qFcShz、main／3200／HTTPS βの実行物は不変。3276／正式VPS／共有サービスの変更なし。
