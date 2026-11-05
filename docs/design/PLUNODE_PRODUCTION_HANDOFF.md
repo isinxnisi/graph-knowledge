@@ -1,10 +1,10 @@
-2026-11-05 R1d：取込API・永続受付・共通受理と直接送信clientを実装。現在の検証・配置・未完了範囲は[記録](../verification/KNOWLEDGE_IMPORT_R1D_20261105.md)を優先。R1全体は未完了で、次はEntity原文訂正・固定版reader・翻訳文脈／cache等。R2／R3の自動巡回・定期配送を削らない。
+2026-11-05 R1d：取込API・永続受付・共通受理と直接送信clientを実装。app6eb03db5／build mo4S9Ce_4UXLiGNfVWlZfをmain／3200／HTTPS βへ配置。現在の検証・未完了範囲は[記録](../verification/KNOWLEDGE_IMPORT_R1D_20261105.md)を優先。R1全体は未完了で、次はEntity原文訂正・固定版reader・翻訳文脈／cache等。R2／R3の自動巡回・定期配送を削らない。
 
 2026-11-05 Gemini 3.1 Flash-Liteを比較評価しβ標準へ採用。既存60件は58有効回答、正常20/20が受理候補、非受理想定の誤受理候補0（2件未判定）。重複・翻訳・収集と同じ実wireの7例も成功。待機中の同じ投稿は8回目の3.1で原資料照合まで完了し、既存知識を再利用・Record／活動／Capsule不変を確認。app 298cebc7 / build GJ83iMCf0BBwsL-IlJzkJ、main／3200／HTTPS βへ反映。追加migration・課金・VPS変更なし。 [実測・利用枠・再開・制約](../verification/GEMINI31_REVIEW_BETA_20261105.md)。R1全体は未完了。以下は各時点の記録。
 
 2026-11-05 R1c反映済み：app 94bcf7dc / build VgN_c2H7-gtkdB7qFcShz。知識007追加、会員029・30 ledgerは不変。共通取得証明8件とcommon71／旧KG5,711対象の全件台帳を作成し、再実行・保全・216テスト・実Google代表経路を確認。[設計](KNOWLEDGE_ACQUISITION_INVENTORY.md)／[配置・検証・再開](../verification/KNOWLEDGE_R1C_ACQUISITION_INVENTORY_20261105.md)。R1全体と初版は未完了。
 
-次は専用資格・厳密schema・永続package／項目receipt・HTTP受付／取消／結果・小さい実配送を接続する。全件列挙と取得証明は再実装せず共用する。R2の全件自動整理・R3の定期配送／収集を、手動CLIの利用で完成にしない。Entity原文訂正・固定版reader・翻訳文脈／cache等の残件も維持。
+専用資格・厳密schema・永続package／項目receipt・HTTP受付／取消／結果・小さい実配送はR1dで接続済み。次はEntity原文訂正・固定版reader・翻訳文脈／cache等のR1残件を進める。全件列挙と取得証明は再実装せず共用する。R2の全件自動整理・R3の定期配送／収集を、手動CLIの利用で完成にしない。Entity原文訂正・固定版reader・翻訳文脈／cache等の残件も維持。
 
 同じ投稿の3.1での最終登録済み到達は確認済み。503／EAI_AGAIN調査を繰り返さず、現行の予算・再試行制御を再利用する。
 
@@ -24,7 +24,7 @@
 6. R1のEntity原文訂正、固定版reader、翻訳文脈とcache、新旧対象・配置別認可、外部遷移と未信頼AI入力の不足を閉じる。同名の対象候補が表示上区別しにくい点も対象選択の残件として扱う。
 7. 検証→日本語commit→通常push→検証済みmain／3200／HTTPS βへ反映→代表操作→hold解放。初版全体の完成条件を満たすまでは部分完了を明示する。
 
-**「初版の機能実装完了＋β統合検証」まで残り7〜12回程度（推定）**。R1残件2〜3回、R2〜R5計5〜9回。VPS切替・本番向け移行・Linux脆弱性対応・正式URL確認は別の公開工程。通常の管理者による個別承認／毎回のURL列挙へ戻さず、回数のために範囲を縮めない。新しいCodexチャット作成・自動モデル切替は行っていない。
+**「初版の機能実装完了＋β統合検証」まで残り6〜11回程度（推定）**。R1残件1〜2回、R2〜R5計5〜9回。VPS切替・本番向け移行・Linux脆弱性対応・正式URL確認は別の公開工程。通常の管理者による個別承認／毎回のURL列挙へ戻さず、回数のために範囲を縮めない。新しいCodexチャット作成・自動モデル切替は行っていない。
 
 現行追加migrationは会員030。知識007まで、会員000〜029のchecksumと既存private runtimeは維持。次のschema追加時は現行runbook通り別DB復元と再実行を確認する。旧成果・会員・コミュニティ・既存KGは保護する。3276／正式VPSは今回未更新。
 

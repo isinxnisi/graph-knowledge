@@ -1,0 +1,164 @@
+{
+  "checkedAt": "2026-11-05T14:11:30.483Z",
+  "receiptId": "b3029e36-8e32-4187-8e1b-b62f2c9c13f1",
+  "firstResult": {
+    "httpStatus": 200,
+    "receiptId": "b3029e36-8e32-4187-8e1b-b62f2c9c13f1",
+    "namespace": "beta-r1d",
+    "packageId": "webb-launch-20261105",
+    "revision": 1,
+    "digest": "0545f8ab338498881eda688db87bdca5cc6fe1a9b9bc3589892b7584b4a136bc",
+    "createdAt": "2026-11-05T14:09:15.377Z",
+    "cancellation": null,
+    "state": "completed-with-issues",
+    "resourceIssues": [],
+    "items": [
+      {
+        "ordinal": 1,
+        "key": "launch",
+        "state": "existing",
+        "reason": "同じ知識が登録済みです。記録や活動履歴は増やしていません。",
+        "nextAttemptAt": null,
+        "issues": [],
+        "result": {
+          "id": "submission:b68bc162-6a51-4282-8282-54381405332b:record:310d43a1a577fd4d",
+          "revision": 2,
+          "disposition": "existing",
+          "available": true,
+          "themes": [],
+          "currentUrl": "/?krecord=submission%3Ab68bc162-6a51-4282-8282-54381405332b%3Arecord%3A310d43a1a577fd4d"
+        },
+        "usage": {
+          "requests": 1,
+          "inputTokens": 1431,
+          "outputTokens": 270,
+          "unknownAttempts": 0,
+          "retainedInputReservation": 0,
+          "retainedOutputReservation": 0
+        }
+      },
+      {
+        "ordinal": 2,
+        "key": "incomplete",
+        "state": "needs-changes",
+        "reason": "この送信資格では指定した操作を利用できません。",
+        "nextAttemptAt": null,
+        "issues": [],
+        "result": null,
+        "usage": {
+          "requests": 0,
+          "inputTokens": null,
+          "outputTokens": null,
+          "unknownAttempts": 0,
+          "retainedInputReservation": 0,
+          "retainedOutputReservation": 0
+        }
+      }
+    ],
+    "externalUsage": {
+      "basis": "sender-declared",
+      "value": {
+        "provider": "manual delivery verification",
+        "inputTokens": null,
+        "outputTokens": null
+      }
+    }
+  },
+  "replaySameReceipt": true,
+  "conflictStatus": 409,
+  "cancelledReceipt": "5bfbc5af-74f1-4e0a-a121-82a56b2f958a",
+  "cancelledState": "cancelled",
+  "cancelledUsage": {
+    "requests": 0,
+    "inputTokens": null,
+    "outputTokens": null,
+    "unknownAttempts": 0,
+    "retainedInputReservation": 0,
+    "retainedOutputReservation": 0
+  },
+  "attempts": [
+    {
+      "model": "gemini-3.1-flash-lite",
+      "state": "received",
+      "input_actual": 1431,
+      "output_actual": 270,
+      "request_charge": 1,
+      "proofs": [
+        {
+          "url": "https://science.nasa.gov/mission/webb/launch/",
+          "checkedAt": "2026-11-05T14:09:16.450Z",
+          "extractor": "public-text-v1",
+          "bodySha256": "14c73fbc5d8a4f5e4420415818c6e0a3d173a0ef9c4b105ca4a54f415e250130",
+          "textSha256": "0a3d60a43855ef296816d749776421a5d47ab0f2dde39c6afac686b21337dd70",
+          "requestedUrl": "https://science.nasa.gov/mission/webb/launch/",
+          "excerptSha256": "256a3d17053c68492bfafce394aeb5f22913ffc6161c7081ca59532144ee9b60"
+        }
+      ]
+    }
+  ],
+  "budget": [
+    {
+      "quota_day": "2026-11-05",
+      "requests": 80,
+      "input": 24908,
+      "output": 12318
+    }
+  ],
+  "recordRevisions": 2,
+  "source": "6eb03db52a169f54395b3db0030c37cf5a6b182b",
+  "build": "mo4S9Ce_4UXLiGNfVWlZf",
+  "dataPreservation": {
+    "allKnowledgeObjectAndContentRowsUnchanged": true,
+    "protectedMemberTableCount": 13,
+    "protectedMemberRowsUnchanged": true,
+    "changedTables": {
+      "member": [
+        "knowledge_collection.commands",
+        "knowledge_collection.read_workers",
+        "knowledge_collection.workers",
+        "knowledge_import.attempts",
+        "knowledge_import.bindings",
+        "knowledge_import.items",
+        "knowledge_import.packages",
+        "member_knowledge.review_attempts",
+        "member_knowledge.review_projects"
+      ],
+      "knowledge": [
+        "knowledge75.operations",
+        "knowledge75.source_acquisition_links",
+        "knowledge75.source_acquisitions"
+      ]
+    }
+  },
+  "migrationRehearsal": [
+    {
+      "kind": "member",
+      "tables": 65,
+      "dumpSha256": "f4b7c37de29b5c49c7c07346d8f9d707a341d93cea71e5e179c863e05bfb14e6",
+      "restoreAndReapply": true,
+      "oldRowValuesPreserved": true
+    },
+    {
+      "kind": "knowledge",
+      "tables": 23,
+      "dumpSha256": "a7beaca8e13eb8dd1b81b5f0def5a7d0cd0d714334888276b97c03cf6a17187d",
+      "restoreAndReapply": true,
+      "oldRowValuesPreserved": true
+    }
+  ],
+  "withoutCredentials": {
+    "local3200": 401,
+    "httpsBeta": 401,
+    "cacheControl": "private, no-store"
+  },
+  "tests": {
+    "importIntegration": 27,
+    "memberSubmissionIntegration": 56,
+    "collectionReadingIntegration": 11,
+    "otherUnit": 36,
+    "otherSkipped": 13,
+    "typecheck": true,
+    "targetedLint": true,
+    "build": true
+  }
+}

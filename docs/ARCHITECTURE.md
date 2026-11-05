@@ -1,3 +1,5 @@
+2026-11-05 R1d：外部サービス取込を会員投稿と別のknowledge_import schema・専用Bearer資格へ分離し、原資料取得／意味重複／acceptancePlan／foundation受理を共用する。actor.kind=importと正本journalで再開・由来を追い、会員や公開投稿者を偽装しない。正本適用と別DB receiptのACK喪失はjournal回収で整合させる。[契約](design/KNOWLEDGE_IMPORT_CONTRACT.md)／[検証](verification/KNOWLEDGE_IMPORT_R1D_20261105.md)。
+
 # 現在の正本と配置境界（2026-11-05）
 
 今後の実装は[文脈照合と再計画](design/PLUNODE_IMPLEMENTATION_REPLAN_20261105.md)と[進行表](PLUNODE_PROGRESS.md)を入口にする。全データ巡回・通常の自動整理、設定後の資料探し・定期収集、新旧検索・多言語・年表入力・Capsuleへの接続、安全なリンク・取得・未信頼AI入力に残件があり、本運用初版は未完了。
