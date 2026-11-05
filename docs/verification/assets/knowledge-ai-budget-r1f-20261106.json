@@ -1,0 +1,49 @@
+{
+  "source": "c9e5512119c9930db6b49d6b74bf407371e09222",
+  "build": "Q8tWL8ZC-xDKMN_5bTqHO",
+  "providerObserved": {
+    "tier": "free",
+    "rpm": 15,
+    "inputTpm": 250000,
+    "rpd": 500,
+    "source": "https://aistudio.google.com/rate-limit",
+    "usageIsSevenDayPeakNotRemaining": true
+  },
+  "localLimits": {
+    "requestsPerDay": 400,
+    "requestsPerMonth": 12400,
+    "rpm": 12,
+    "tokensPerMinute": 200000,
+    "inputTokensPerDay": 2000000,
+    "outputTokensPerDay": 2000000,
+    "inputTokensPerMonth": 62000000,
+    "outputTokensPerMonth": 62000000
+  },
+  "purposeDailyLimits": {
+    "collection": 133,
+    "translation": 66,
+    "evaluation": 100
+  },
+  "previousAttemptsPreserved": true,
+  "providerPausePreserved": true,
+  "additionalMigrations": [],
+  "tests": {
+    "importsAndBudget": 35,
+    "member": 57,
+    "collectionReading": 11
+  },
+  "resumedSubmission": {
+    "state": "published",
+    "attempts": 1,
+    "model": "gemini-3.1-flash-lite",
+    "requests": 1,
+    "inputTokens": 651,
+    "outputTokens": 187,
+    "recordId": "submission:b3875679-c1fa-46f1-8765-e02a43f0e58b:record:f5ad26ed2e311d25",
+    "revision": 1
+  },
+  "entityRevision": 2,
+  "oldFixedEntityRevision": 1,
+  "browserPublishedAndContributorVisible": true,
+  "vpsChanged": false
+}

@@ -1,3 +1,5 @@
+2026-11-06 R1f：サービス400回／日へ見直し、旧設定上限で待機したEntity原文訂正を実Geminiの1回で自動受理・公開まで確認。R1eの実AI未確認は、この正常例で解消。[検証と次の残件](../verification/KNOWLEDGE_AI_BUDGET_R1F_20261106.md)。R1全体は未完了で、翻訳文脈／cache・対象識別・新旧接続／認可・安全境界の残件へ進む。
+
 2026-11-06 R1e：Entity原文訂正・固定版readerをmain／3200／HTTPS βへ接続。app 15127903／build EzloeT0Q_uvvVuE-f0Zyx。次は新訂正方針の実AI確認（無料枠待ち）、翻訳文脈／cache、対象識別・新旧接続／配置別認可・安全境界の残件。R1と初版全体は未完了。[現在の検証と再開](../verification/KNOWLEDGE_R1E_ENTITY_HISTORY_20261106.md)。
 
 ## 前段の到達記録

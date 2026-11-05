@@ -1,3 +1,5 @@
+2026-11-06 AI利用上限は[現行契約](../design/KNOWLEDGE_AI_BUDGET.md)を優先：サービス400回／日、収集133・翻訳66・評価100を内数にし、Google側のRPD500と区別する。課金・keyは変更しない。過去の80回は旧サービス設定であり無料枠そのものではない。
+
 2026-11-05 R1a：原語のみの訂正・本文編集時の言語継承・既存Themeの情報訂正を修正。103件と実Googleで確認し、app `117eb865` / build `uPWWdnHXPI_CAwfJa0T1O`をmain／3200／HTTPS βへ反映。追加migrationなし、3276／VPSは未更新。R1全体は未完了。[実操作・保全・再開・残件](../verification/KNOWLEDGE_R1A_LANGUAGES_20261105.md)。
 
 2026-11-05 追補：対象整理の追加migration 006-entity-identities.sql は migrateKnowledgeIdentities(pool)（lib/server/knowledge-identity-migrate.ts）で明示適用する。適用前に知識DBのbackup、別DB復元、006適用・再実行で既存行が変わらないことを確認する。既適用checksumは変更しない。Webの読取初期化は006のchecksumも検証する。会員DBへの追加migrationはない。既存の認証・private profileを引き継ぐ。

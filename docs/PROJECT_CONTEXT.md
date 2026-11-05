@@ -1,3 +1,5 @@
+2026-11-06 R1f：サービス上限を80→400回／日へ変更。Google側の確認値500回とは別の上限として扱う。評価は内数100回まで。R1eの待機訂正が実Gemini 3.1の1回で自動公開され、Entity版2・旧版1・投稿者表示を確認。app c9e55121／build Q8tWL8ZC-xDKMN_5bTqHO。追加migrationなし。R1全体は未完了。[上限の契約](design/KNOWLEDGE_AI_BUDGET.md)／[検証](verification/KNOWLEDGE_AI_BUDGET_R1F_20261106.md)。
+
 2026-11-06 R1e：共通Entityの原文訂正と公開Recordの固定版読取をmain／3200／HTTPS βへ接続。app 15127903／build EzloeT0Q_uvvVuE-f0Zyx。141テスト成功、旧版・ID・帰属・既存保存を保持。実Googleで訂正の保存・再訪・受付と旧版読取を確認。新しい訂正は当時のサービス設定上限（80回／日）による自動再開待ちで、実AIでの最終受理は未確認。[設計](design/KNOWLEDGE_ENTITY_CORRECTION.md)／[検証・再開](verification/KNOWLEDGE_R1E_ENTITY_HISTORY_20261106.md)。R1全体は未完了。
 
 2026-11-05 R1d：外部取込API・専用資格・永続package／receipt・共通原資料／重複確認をmain／3200／HTTPS βへ接続。NASAの実API送信・再送・取消を確認、元の知識全版・会員保存・活動を保持。会員030追加、app6eb03db5／build mo4S9Ce_4UXLiGNfVWlZf。R1残件とR2〜R5を維持、本番VPS未更新。[現行記録](verification/KNOWLEDGE_IMPORT_R1D_20261105.md)。
