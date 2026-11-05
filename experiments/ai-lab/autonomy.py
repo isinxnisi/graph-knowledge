@@ -228,9 +228,10 @@ def worker_state(home):
         proc=Path('/proc')/str(record['pid'])
         try:
             args=(proc/'cmdline').read_bytes().decode().rstrip('\0').split('\0')
-            running=((proc/'cwd').resolve()==ROOT and len(args)>=2 and args[1]==str(HERE/'autonomy.py')
-                     and '--home' in args and args[args.index('--home')+1]==str(home)
-                     and any(c in args for c in ['serve','scheduled-tick']))
+            arguments=args[1:]
+            if arguments[:1]==['-B']:arguments=arguments[1:]
+            running=((proc/'cwd').resolve()==ROOT and any(arguments==[str(HERE/'autonomy.py'),'--home',str(home),command]
+                     for command in ['serve','scheduled-tick']))
         except (OSError,ValueError,IndexError):pass
     return {'running':running,'record':record,'stalePid':bool(record) and not running}
 
@@ -255,7 +256,7 @@ def scheduled_tick(home):
         try:
             try:result=tick(home)
             except Exception as error:result={'status':'deferred','reason':'scheduler-error','errorType':type(error).__name__,'at':now()}
-            result={**result,'executionMode':'windows-task','workerPid':os.getpid()}
+            result={**result,'executionMode':'windows-task','workerPid':os.getpid(),'processVerified':worker_state(home)['running']}
             atomic(home/'scheduler-status.json',result)
             return result
         finally:

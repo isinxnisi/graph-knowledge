@@ -42,10 +42,11 @@ class ScheduledStartupTests(unittest.TestCase):
         self.assertEqual(a.intents(self.home),[])
     def test_real_foreground_invocations_recover_stale_pid_and_leave_no_daemon(self):
         a.atomic(self.home/'worker.pid',{'pid':2147483647})
-        command=[sys.executable,str(a.HERE/'autonomy.py'),'--home',str(self.home),'scheduled-tick']
+        command=[sys.executable,'-B',str(a.HERE/'autonomy.py'),'--home',str(self.home),'scheduled-tick']
         for _ in range(2):
             r=subprocess.run(command,cwd=a.ROOT,text=True,capture_output=True,check=True,timeout=15)
             self.assertEqual(json.loads(r.stdout)['reason'],'paused')
+            self.assertTrue(json.loads(r.stdout)['processVerified'])
             self.assertFalse((self.home/'worker.pid').exists())
         self.assertEqual(len(list((self.home/'worker-history').glob('*.json'))),1)
         self.assertEqual(a.intents(self.home),[])
