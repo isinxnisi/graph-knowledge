@@ -1,0 +1,43 @@
+{
+  "submissionId": "3ee28b84-30c2-4cfd-a60a-1e5b1fb0afa6",
+  "revision": 2,
+  "finalState": "attention",
+  "liveAcceptanceConfirmed": false,
+  "reviewPolicy": "knowledge-duplicate-v2",
+  "candidatePins": [
+    {
+      "id": "submission:b68bc162-6a51-4282-8282-54381405332b:record:310d43a1a577fd4d",
+      "revision": 2
+    }
+  ],
+  "identityMap": {
+    "submission:47181407aa48fae85513c57ff2d92fa1:entity:a1a2003878f456ff": "submission:47181407aa48fae85513c57ff2d92fa1:entity:a1a2003878f456ff",
+    "submission:47181407aa48fae85513c57ff2d92fa1:entity:3b8d31737c458f1c": "submission:47181407aa48fae85513c57ff2d92fa1:entity:3b8d31737c458f1c",
+    "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726": "submission:47181407aa48fae85513c57ff2d92fa1:entity:3b8d31737c458f1c"
+  },
+  "exactExistingMeaning": true,
+  "attempts": [
+    {
+      "state": "delivery-unknown",
+      "requestCharge": 1,
+      "totalTokens": null
+    },
+    {
+      "state": "http-error",
+      "requestCharge": 1,
+      "totalTokens": null
+    },
+    {
+      "state": "delivery-unknown",
+      "requestCharge": 1,
+      "totalTokens": null
+    }
+  ],
+  "whileAwaitingAcceptanceUnchanged": {
+    "record": true,
+    "objects": true,
+    "revisions": true,
+    "contributions": true,
+    "capsules": true
+  }
+}

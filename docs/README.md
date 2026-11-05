@@ -1,3 +1,5 @@
+2026-11-05 R1b：同一性を会員投稿の重複照合へ接続し、資料比較を共通化。[外部取込契約](design/KNOWLEDGE_IMPORT_CONTRACT.md)を具体化したが、API／永続package／配送は未実装。app `616f1840` / build `AQsmThdwxZZSYkAt7EMg0`をmain／3200／HTTPS βへ反映。[実操作・検証・残件](verification/KNOWLEDGE_R1B_IDENTITY_DUPLICATES_20261105.md)／[現在の進行表](PLUNODE_PROGRESS.md)。**初版の機能実装完了＋β統合検証は未達**。以下は各時点の履歴。
+
 2026-11-05 R1a：原語のみの訂正・本文編集時の言語継承・既存Themeの情報訂正を修正。103件と実Googleで確認し、app `117eb865` / build `uPWWdnHXPI_CAwfJa0T1O`をmain／3200／HTTPS βへ反映。追加migrationなし、3276／VPSは未更新。R1全体は未完了。[実操作・保全・再開・残件](verification/KNOWLEDGE_R1A_LANGUAGES_20261105.md)。
 
 # 現在の進行状態

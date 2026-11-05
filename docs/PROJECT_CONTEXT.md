@@ -2,11 +2,11 @@
 
 現在から先の計画は[文脈照合と再計画](design/PLUNODE_IMPLEMENTATION_REPLAN_20261105.md)、現在地は[進行表](PLUNODE_PROGRESS.md)。途中で加わった要件も継承し、過去の部分完成や工数見込みを、初版の範囲を小さくする理由にしない。通常の登録・公開・整理に管理者の個別承認／毎回の対象指定を必須にしない。テーマ・範囲・利用上限の設定後は資料探し・定期収集も自動継続し、登録済み全知識データの巡回・自動整理とは別に成立させる。
 
-受け渡しは、ChatGPT側で揃えたテーマ・資料URL・情報を認証付きPlunode取込APIへ渡す方式が第一候補。GitHub Issue等を同じpackageの代替配送とし、別のURL探索APIの導入は必須にしない。一般投稿は当面、投稿URLの資料で確認し不足時に補足依頼とする。[R1aは修正・β検証済み](verification/KNOWLEDGE_R1A_LANGUAGES_20261105.md)。次は[引継ぎのR1残件](design/PLUNODE_PRODUCTION_HANDOFF.md#別モデルが最初に実装する区切り)へ進む。
+受け渡しは、ChatGPT側で揃えたテーマ・資料URL・情報を認証付きPlunode取込APIへ渡す方式が第一候補。GitHub Issue等を同じpackageの代替配送とし、別のURL探索APIの導入は必須にしない。一般投稿は当面、投稿URLの資料で確認し不足時に補足依頼とする。[R1aに続きR1bをβ反映](verification/KNOWLEDGE_R1B_IDENTITY_DUPLICATES_20261105.md)。同一性を会員投稿の重複照合へ接続し、資料比較の共通関数と[取込契約](design/KNOWLEDGE_IMPORT_CONTRACT.md)を追加した。取込API・共通取得証明・対象台帳は未完了で、[引継ぎのR1残件](design/PLUNODE_PRODUCTION_HANDOFF.md#別モデルが最初に実装する区切り)へ進む。
 
 利用者の入力・訂正・匿名帰属、具体的な意味と原語／訳文、通常探索・年表・Capsule・共有までを一巡させる。リンクのフィッシングや取得先・AIインジェクションには一般的な最低限の対策を揃え、独自の完全防御基盤を先行構築しない。できないと判断する場合は実測・制約・代案・体験への影響を示し、無断で対象外にしない。
 
-本運用初版は未完了。新共通原本の正本は知識PG、Neo4jは探索投影で、既存の旧KGとの接続・正式切替は残る。現在の境界は[ARCHITECTURE](ARCHITECTURE.md)冒頭を参照。以下は過去時点の記録として維持する。
+初版の機能実装完了＋β統合検証は未達。VPS切替・本番移行・Linux脆弱性対応・正式URL確認は後の公開工程であり、必要機能の未実装をそこへ移さない。新共通原本の正本は知識PG、Neo4jは探索投影で、既存の旧KGとの接続・正式切替は残る。現在の境界は[ARCHITECTURE](ARCHITECTURE.md)冒頭を参照。以下は過去時点の記録として維持する。
 
 2026-11-04 U6c：公開後の意味整理・候補確認・一括適用／解除をmain／3200／HTTPS βへ接続。元の具体語・26記録版・5テーマ版・25 Capsuleを保持し、実NASA・漫画の2群で確認。app `1a00a448` / build `cUVfr_QUPOYX9Ucm63sEv`。U6全体は未完了、同一性整理・Chat取込・総合一巡が残る。[実操作・配置・制約・再開](verification/KNOWLEDGE_ORGANIZATION_U6_20261104.md)。以下は各時点の履歴。
 
