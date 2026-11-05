@@ -1,3 +1,5 @@
+import {backfillAcquisitionPage} from '../lib/server/knowledge-acquisition-backfill';
+import {knownSourceDocuments} from '../lib/server/knowledge-source-registry';
 import {afterAll,beforeAll,beforeEach,describe,expect,it,vi} from 'vitest';
 import {randomUUID,randomBytes,createHash} from 'node:crypto';
 import {mkdtemp,writeFile,rm,mkdir} from 'node:fs/promises';
@@ -53,7 +55,18 @@ describe('fixed captured reading through authenticated API and durable publicati
   await intake();const lease=(await claim())!;await approve(lease,extraction([candidate(),{...candidate(),assertion:'Aは必ず成功する。',from:'',timeKind:'none',timeQuote:'',timeLabel:''}]));
   const check1=(await claim())!;await approve(check1,review());const check2=(await claim())!;await approve(check2,review('unsupported'));expect(await claim()).toBeNull();
   const rows=(await pool().query('SELECT * FROM knowledge_collection.read_decisions WHERE task_id=ANY($1::uuid[])',[[check1.taskId,check2.taskId]])).rows;expect(rows).toHaveLength(1);expect(rows[0].state).toBe('applied');await core.drain();
-  const record=await foundation.get({kind:'reader',id:'test'},'record',rows[0].command.record.id);expect(record.content.evidence[0].excerpt).toBe(quote);expect(record.content.times[0].time).toMatchObject({meaning:'point',from:'2030-05-04'});expect((await knowledge.query("SELECT count(*)::int AS n FROM knowledge75.operations WHERE actor_id='collection-reading-v1' AND request_id=$1",[rows[0].command.requestId])).rows[0].n).toBe(1);
+  const record=await foundation.get({kind:'reader',id:'test'},'record',rows[0].command.record.id);expect(record.content.evidence[0].excerpt).toBe(quote);expect(await knownSourceDocuments(knowledge,{id:record.id,revision:record.revision})).toHaveLength(1);
+  const revisions=(await knowledge.query('SELECT kind,id,revision,content FROM knowledge75.revisions ORDER BY kind,id,revision')).rows;
+  await knowledge.query('DELETE FROM knowledge75.source_acquisition_links WHERE record_id=$1',[record.id]);
+  await knowledge.query("DELETE FROM knowledge75.source_acquisitions WHERE actor_id='collection-reading-v1' AND request_id=$1",[rows[0].command.requestId]);
+  expect(await knownSourceDocuments(knowledge,{id:record.id,revision:record.revision})).toEqual([]);
+  await backfillAcquisitionPage(pool(),knowledge,'collection');
+  expect(await knownSourceDocuments(knowledge,{id:record.id,revision:record.revision})).toHaveLength(1);
+  const ledger=(await knowledge.query('SELECT * FROM knowledge75.source_acquisitions ORDER BY id')).rows;
+  await backfillAcquisitionPage(pool(),knowledge,'collection');
+  expect((await knowledge.query('SELECT * FROM knowledge75.source_acquisitions ORDER BY id')).rows).toEqual(ledger);
+  expect((await knowledge.query('SELECT kind,id,revision,content FROM knowledge75.revisions ORDER BY kind,id,revision')).rows).toEqual(revisions);
+expect(record.content.times[0].time).toMatchObject({meaning:'point',from:'2030-05-04'});expect((await knowledge.query("SELECT count(*)::int AS n FROM knowledge75.operations WHERE actor_id='collection-reading-v1' AND request_id=$1",[rows[0].command.requestId])).rows[0].n).toBe(1);
  });
  it('refuses edited wire, fabricated quote, orphan and outside-target records',async()=>{
   await intake();const lease=(await claim())!;expect((await work({action:'begin',requestId:randomUUID(),lease:{...lease,wire:lease.wire+' '}})).status).toBe(409);await approve(lease,extraction([{...candidate(),quote:'A is unrelated to this passage.'},{...candidate(),subjectId:null}]));expect(await claim()).toBeNull();const tasks=(await pool().query("SELECT state FROM knowledge_collection.read_tasks WHERE job_id=$1 AND purpose='check'",[lease.jobId])).rows;expect(tasks.map(t=>t.state)).toEqual(['attention','attention']);

@@ -1,3 +1,4 @@
+import {retainSourceAcquisitions} from './knowledge-source-registry';
 import {createHash,randomUUID} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import path from 'node:path';
@@ -6,7 +7,7 @@ import {readingOperatorSchema,readingWorkerSchema,READING_POLICY,sourceChunks,ty
 import {createKnowledgeFoundationService,knowledgeDigest,KnowledgeError} from './knowledge-foundation';
 import {readingPlans,readingRequest,readingCheckRequest,readingProblemMessage,type ReadingContext} from './knowledge-collection-plan';
 import {verifyAcceptanceReferences} from './knowledge-acceptance';
-import {normalizeSourceText,sourceText,SourceCheckError} from './knowledge-source-verification';
+import {normalizeSourceText,sourceText,matchSourceExcerpt,SourceCheckError} from './knowledge-source-verification';
 import {parseGeminiJson,parseGeminiReview} from './gemini-knowledge-review';
 import {reserveKnowledgeAI} from './knowledge-ai-budget';
 import type {ReviewConfig} from './knowledge-review-queue';
@@ -124,8 +125,9 @@ export function createCollectionReading(pool:Pool,knowledge:Pool,cfg:ReviewConfi
     if(prior){await c.query("UPDATE knowledge_collection.read_decisions SET state='applied',result=$2 WHERE id=$1",[d.id,prior.result]);await c.query("UPDATE knowledge_collection.read_tasks SET state='done',reason='登録しました。検索・図へ反映しています。' WHERE id=$1",[d.task_id]);return true;}
     try{
      if(!await active(c,j))throw new KnowledgeError('取り消した依頼の残りは登録しません',409,'CANCELLED');
-     const t=(await c.query('SELECT * FROM knowledge_collection.read_tasks WHERE id=$1',[d.task_id])).rows[0];await source(c,t.source_id);
-     const result=await foundation.execute({kind:'collection',id:'collection-reading-v1'},d.command,{prepare:async()=>{},verify:async k=>{await verifyAcceptanceReferences(k,j.context.references);}});
+     const t=(await c.query('SELECT * FROM knowledge_collection.read_tasks WHERE id=$1',[d.task_id])).rows[0],captured=await source(c,t.source_id);
+      const proofs=d.command.record.content.evidence.map((e:{excerpt:string})=>({...matchSourceExcerpt({url:captured.document.url,type:captured.document.type,body:captured.body},e.excerpt),requestedUrl:captured.url,checkedAt:iso(captured.fetched_at)}));
+     const result=await foundation.execute({kind:'collection',id:'collection-reading-v1'},d.command,{prepare:async()=>{},retain:async(k,result)=>{await retainSourceAcquisitions(k,{actorId:'collection-reading-v1',requestId:d.command.requestId,result,proofs});},verify:async k=>{await verifyAcceptanceReferences(k,j.context.references);}});
      await c.query("UPDATE knowledge_collection.read_decisions SET state='applied',result=$2 WHERE id=$1",[d.id,result]);await c.query("UPDATE knowledge_collection.read_tasks SET state='done',reason='登録しました。検索・図へ反映しています。' WHERE id=$1",[d.task_id]);
     }catch(e){if(e instanceof KnowledgeError&&e.status<500||e instanceof SourceCheckError){await c.query("UPDATE knowledge_collection.read_decisions SET state='blocked',reason=$2 WHERE id=$1",[d.id,(e as Error).message]);await c.query("UPDATE knowledge_collection.read_tasks SET state=$3,reason=$2 WHERE id=$1",[d.task_id,(e as Error).message,e instanceof KnowledgeError&&e.code==='CANCELLED'?'cancelled':'attention']);}else throw e;}return true;
    });

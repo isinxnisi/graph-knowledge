@@ -64,12 +64,13 @@ export async function ensureKnowledgeFoundationSchema(pool: Pool) {
       await c.query(sql);
       await c.query("INSERT INTO knowledge75.migrations(name,checksum) VALUES($1,$2)", ["001-records.sql", checksum]);
     }
-    const referenceName="004-submission-references.sql";
-    const referenceSql=await readFile(path.join(process.cwd(),"migrations/knowledge-foundation",referenceName),"utf8");
-    const referenceChecksum=createHash("sha256").update(referenceSql).digest("hex");
-    const referenceOld=(await c.query("SELECT checksum FROM knowledge75.migrations WHERE name=$1",[referenceName])).rows[0];
-    if(referenceOld&&referenceOld.checksum!==referenceChecksum)throw new KnowledgeError("参照migrationのchecksumが変わっています",503,"MIGRATION_CHANGED");
-    if(!referenceOld){await c.query(referenceSql);await c.query("INSERT INTO knowledge75.migrations(name,checksum) VALUES($1,$2)",[referenceName,referenceChecksum]);}
+    for(const referenceName of ["004-submission-references.sql","007-acquisition-inventory.sql"]){
+      const referenceSql=await readFile(path.join(process.cwd(),"migrations/knowledge-foundation",referenceName),"utf8");
+      const referenceChecksum=createHash("sha256").update(referenceSql).digest("hex");
+      const referenceOld=(await c.query("SELECT checksum FROM knowledge75.migrations WHERE name=$1",[referenceName])).rows[0];
+      if(referenceOld&&referenceOld.checksum!==referenceChecksum)throw new KnowledgeError("参照migrationのchecksumが変わっています",503,"MIGRATION_CHANGED");
+      if(!referenceOld){await c.query(referenceSql);await c.query("INSERT INTO knowledge75.migrations(name,checksum) VALUES($1,$2)",[referenceName,referenceChecksum]);}
+    }
     await c.query("COMMIT");
     return { name: "001-records.sql", checksum, applied: !old };
   } catch (e) { await c.query("ROLLBACK"); throw e; } finally { c.release(); }
@@ -235,7 +236,7 @@ export function createKnowledgeFoundationService(pool: Pool) {
     }
     return result;
   }
-  async function execute(actor: KnowledgeActor, raw: unknown, internal?:{verify:(c:PoolClient)=>Promise<void>;prepare:(result:unknown)=>Promise<void>}): Promise<unknown> {
+  async function execute(actor: KnowledgeActor, raw: unknown, internal?:{verify:(c:PoolClient)=>Promise<void>;prepare:(result:unknown)=>Promise<void>;retain?:(c:PoolClient,result:unknown)=>Promise<void>}): Promise<unknown> {
     const cmd = knowledgeCommandSchema.parse(raw);
     actorAllowed(actor, cmd.action);
     if (actor.kind === "collector" && cmd.action === "create-bundle" && (cmd.legacyLinks.length || cmd.visibility !== "public")) throw new KnowledgeError("収集実行者にはこの操作を許可していません", 403, "FORBIDDEN");
@@ -423,6 +424,7 @@ export function createKnowledgeFoundationService(pool: Pool) {
         result = cmd.action === "set-mapping" ? mappings[0] : { mappings };
       }
       await c.query("INSERT INTO knowledge75.operations(actor_id,request_id,actor_kind,digest,input,result) VALUES($1,$2,$3,$4,$5,$6)", [actor.id, cmd.requestId, actor.kind, digest, JSON.stringify(raw), JSON.stringify(result)]);
+      if(internal?.retain)await internal.retain(c,result);
       if(internal)await internal.prepare(result);
       await c.query("COMMIT"); return result;
     } catch (e) {

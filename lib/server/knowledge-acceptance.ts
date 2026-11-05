@@ -1,3 +1,4 @@
+import {knownSourceDocuments,retainSourceAcquisitions} from './knowledge-source-registry';
 import {proofMatchesSourceUrl,verifiedSourceDocumentKey} from '../domain/knowledge-source-identity';
 import {translationTargetKey} from "../domain/knowledge-translation";
 import {translationId} from "./knowledge-translation-storage";
@@ -189,7 +190,7 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
   const result=await foundation.execute({kind:'submission',id:'member-submission-v1'},decision.command,{verify:async c=>{
    const guard=decision.proofs?.duplicates;
    if(guard){const current=(await commonDuplicatePins(c,guard.record)).map(r=>({id:r.id,revision:r.revision,digest:knowledgeDigest(r.content)}));if(knowledgeDigest(current)!==knowledgeDigest(guard.common))throw new KnowledgeError('既存の知識が増えたため重複を確認し直します',409,'DUPLICATE_REVIEW_REQUIRED');}
-   await verifyAcceptanceReferences(c,decision.references_json);await verifyAcceptedSemantics(c,{command:decision.command,references:decision.references_json});},prepare});
+   await verifyAcceptanceReferences(c,decision.references_json);await verifyAcceptedSemantics(c,{command:decision.command,references:decision.references_json});},retain:async(c,result)=>{if(decision.command.action==='accept-record')await retainSourceAcquisitions(c,{actorId:'member-submission-v1',requestId:decision.command.requestId,result,proofs:decision.proofs?.sources??[]});},prepare});
   await hooks.afterDecision?.();await delivered(decision,result);
  }
  return {
@@ -268,7 +269,7 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
     const exact=capture.review.candidates.some(c=>knowledgeDigest(c.meaning)===knowledgeDigest(capture.review.proposed));
     if(capture.review.candidates.length&&!exact&&knowledgeDigest(capture.review)!==knowledgeDigest(lease.j.result?.duplicateCheck??null))throw new KnowledgeError('既存の知識が増えたため重複を確認し直します',409,'DUPLICATE_REVIEW_REQUIRED');
     const match=originalPlan.command.expectedRevision?capture.candidates.find(r=>r.id===originalPlan.recordId):duplicateMatch(capture,lease.j.result?.duplicate);
-    const known=match?(await pool.query("SELECT proofs->'sources' AS sources FROM member_knowledge.publication_decisions WHERE state='published' AND (command->'record'->>'id'=$1 OR result->>'id'=$1)",[match.id])).rows.flatMap(r=>(r.sources??[]).map((s:SourceProof)=>verifiedSourceDocumentKey(s)).filter((key:string|null):key is string=>key!==null)):[];
+    const known=match?await knownSourceDocuments(knowledge,match):[];
     const plan=await reuseDuplicatePlan(knowledge,originalPlan,capture,lease.j.result?.duplicate,proofs,known);
     const retainedProofs={sources:proofs,review:lease.j.result,operatorConfirmationId:lease.j.operator_confirmation_id??null,consent:lease.j.consent_version,duplicates:{record:originalPlan.command.record.content,common:capture.common}};
     const decision={id:lease.j.id,job_id:lease.j.id,command:plan.command,digest:knowledgeDigest(plan.command),references_json:plan.references,proofs:retainedProofs};
