@@ -1,4 +1,4 @@
-現在地の入口： [Plunode進行表](../PLUNODE_PROGRESS.md)。U6は途中。U6d「同じ対象の関連付け」はmain／3200／HTTPS βへ反映・実Googleで確認済み（app 1533a9fd / build QoUVviDCX8He2jvYcdER7）。[実操作・保全・再開](../verification/KNOWLEDGE_ENTITY_IDENTITIES_20261105.md)。U6eの外部取込、U6fの通し確認を残す。詳細は[現行契約](KNOWLEDGE_ENTITY_IDENTITIES.md)。
+現在地の入口： [Plunode進行表](../PLUNODE_PROGRESS.md)。U6は途中。**全データ巡回・整理の自動化は初版の必須残件**であり、初版対象外という説明は撤回した。[スコープ訂正・完成条件・コード差分](KNOWLEDGE_ORGANIZATION_AUTOMATION.md)を最優先する。U6d「同じ対象の関連付け」は任意管理画面としてmain／3200／HTTPS βへ反映・実Googleで確認済み（app 1533a9fd / build QoUVviDCX8He2jvYcdER7）。[実操作・保全・再開](../verification/KNOWLEDGE_ENTITY_IDENTITIES_20261105.md)。外部取込と通し確認も未完了。以下の人手中心の区切り・旧回数見込みを、初版全体の完成条件にしない。
 
 2026-11-05 明示依頼の自動翻訳草稿・再利用・用途別利用量をmain／3200／HTTPS βへ反映。実Googleで生成→編集→意味一致確認→公開、再訪での再利用を確認。app `bb0e1543` / build `2ic3u8M0Jz1beaSj3Ra6X`。member029、原記録と既存Capsuleを保持。本番VPS／3276は未更新。訳名検索・Graphラベル言語切替・U6残件は継続。[現行契約](KNOWLEDGE_TRANSLATION_GENERATION.md)／[実操作・再開・制約](../verification/KNOWLEDGE_TRANSLATION_GENERATION_20261105.md)。以下は各時点の記録。
 

@@ -1,5 +1,7 @@
 # 現在の進行状態
 
+2026-11-05 スコープ訂正：全データ巡回を初版から除外する判断は撤回。巡回・候補生成・根拠確認・条件を満たす自動適用は未完了で、U6の必須残件。任意管理画面の完成を自動化の完成に代えない。[現行の完成条件・実装との差分](design/KNOWLEDGE_ORGANIZATION_AUTOMATION.md)。文書のみの変更でアプリの再build・DB変更は行っていない。
+
 全体の現在地・完了した範囲・残り回数の見込みは [Plunode進行表](PLUNODE_PROGRESS.md) を参照してください。今回のU6dはmain／3200／HTTPS βへ反映・実Googleで確認済みです（app 1533a9fd / build QoUVviDCX8He2jvYcdER7）。[検証・再開](verification/KNOWLEDGE_ENTITY_IDENTITIES_20261105.md)。以下は配置時点ごとの記録です。
 
 2026-11-05 明示依頼の自動翻訳草稿・再利用・用途別利用量をmain／3200／HTTPS βへ反映。実Googleで生成→編集→意味一致確認→公開、再訪での再利用を確認。app `bb0e1543` / build `2ic3u8M0Jz1beaSj3Ra6X`。member029、原記録と既存Capsuleを保持。本番VPS／3276は未更新。訳名検索・Graphラベル言語切替・U6残件は継続。[現行契約](design/KNOWLEDGE_TRANSLATION_GENERATION.md)／[実操作・再開・制約](verification/KNOWLEDGE_TRANSLATION_GENERATION_20261105.md)。以下は各時点の記録。
