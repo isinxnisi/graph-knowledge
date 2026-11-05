@@ -36,7 +36,16 @@
           "kind": "person"
         },
         "polarity": "uncertain",
-        "scope": "The source reports a possibility; it does not establish influence."
+        "scope": "The source reports a possibility; it does not establish influence.",
+        "assertion": "Artist A possibly influenced Artist B.",
+        "relation": "possibly influenced",
+        "subjectId": "artist-a",
+        "objectId": "artist-b",
+        "direction": "subjectId -> relation -> objectId (do not reverse the participants)"
+      },
+      "target": {
+        "kind": "record",
+        "field": "relation"
       }
     },
     "check": "Preserve uncertainty and direction. Translate only the label; no new assertion of definite influence."

@@ -31,6 +31,7 @@ export async function readTranslationGenerationInput(c:PoolClient,target:Knowled
    id:value.record.id,revision:value.record.revision,kind:value.record.content.kind,
    assertion:value.record.content.assertion,relation:value.record.content.relation,
    polarity:value.record.content.polarity,scope:value.record.content.scope,
+   direction:'subjectId -> relation -> objectId (do not reverse the participants)',
    subjectId:value.record.content.subjectId,objectId:value.record.content.objectId,
    entities:value.entities.map(entity),textLanguages:value.record.content.textLanguages,
   });
