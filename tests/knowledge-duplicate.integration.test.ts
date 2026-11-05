@@ -1,8 +1,11 @@
+import {verifiedSourceDocumentKey} from '../lib/domain/knowledge-source-identity';
 import {afterAll,beforeAll,describe,expect,it} from 'vitest';
 import {randomUUID} from 'node:crypto';
 import {Pool} from 'pg';
 import {knowledgeCommandSchema,knowledgeRecordContentSchema,type KnowledgeRecordVersion} from '../lib/domain/knowledge-foundation';
 import {createKnowledgeFoundationService,ensureKnowledgeFoundationSchema,knowledgeDigest,KnowledgeError} from '../lib/server/knowledge-foundation';
+import {migrateKnowledgeIdentities} from '../lib/server/knowledge-identity-migrate';
+import {createKnowledgeIdentity} from '../lib/server/knowledge-identity';
 import {captureDuplicates,commonDuplicatePins} from '../lib/server/knowledge-duplicates';
 import {reuseDuplicatePlan,type AcceptancePlan} from '../lib/server/knowledge-acceptance';
 const connectionString=process.env.KNOWLEDGE_TEST_DATABASE_URL;
@@ -15,8 +18,30 @@ describe.skipIf(!connectionString)('duplicate acceptance on isolated PostgreSQL'
   const record=content(prefix);record.evidence[0].source={id:prefix+'submitted-source',revision:1};
   return {recordId:prefix+'new',references:[],operation:'create-relation',command:knowledgeCommandSchema.parse({action:'accept-record',requestId:randomUUID(),reason:'確認済み投稿',entities:[],sources:[{id:prefix+'submitted-source',content:{title:'題名だけ変更',url:'https://example.org/'+prefix+'?utm_source=retry'}}],entityPins:[{id:prefix+'a',revision:1},{id:prefix+'b',revision:1}],sourcePins:[],record:{id:prefix+'new',content:record}})};
  }
- beforeAll(async()=>{expect((await pool.query('SELECT current_database() AS name')).rows[0].name).toMatch(/^plunode_knowledge75_test_/);await ensureKnowledgeFoundationSchema(pool);},30000);
+ beforeAll(async()=>{expect((await pool.query('SELECT current_database() AS name')).rows[0].name).toMatch(/^plunode_knowledge75_test_/);await ensureKnowledgeFoundationSchema(pool);await migrateKnowledgeIdentities(pool);},30000);
  afterAll(async()=>{await pool.end();});
+  it('reuses a fact through current reviewed endpoint identities without replacing original endpoints or snapshots',async()=>{
+   const p='identity-duplicate-';await seed(p);
+   await run({action:'create-bundle',requestId:randomUUID(),reason:'同じ対象の別登録',entities:[{id:p+'alias-a',content:{name:'A',kind:'person'}},{id:p+'alias-b',content:{name:'B',kind:'work'}}],records:[{id:p+'alias-note',content:{kind:'note',subjectId:p+'alias-a',assertion:'別登録の名称',evidence:content(p).evidence}}],sources:[]});
+   const unlinked={...content(p),subjectId:p+'alias-a',objectId:p+'alias-b'};
+   expect((await captureDuplicates(pool,unlinked)).review.candidates).toEqual([]);
+   const identity=createKnowledgeIdentity(pool),link=(left:string,right:string)=>({requestId:randomUUID(),left:{id:left,revision:1},right:{id:right,revision:1},expectedRevision:0,state:'same',reason:'固定した資料で同じ対象と確認',reference:'https://example.org/identity',locator:'同一性の記載'});
+   await identity.act('operator',link(p+'a',p+'alias-a'));await identity.act('operator',link(p+'b',p+'alias-b'));
+   await run({action:'create-theme',requestId:randomUUID(),id:p+'theme',title:'固定版',recordPins:[{id:p+'original',revision:1}]});
+   const before=await foundation.resolveTheme({kind:'reader',id:'reader'},p+'theme'),plan=proposed(p);if(plan.command.action!=='accept-record')throw Error('fixture');
+   plan.command.record.content.subjectId=p+'alias-a';plan.command.record.content.objectId=p+'alias-b';plan.command.entityPins=[{id:p+'alias-a',revision:1},{id:p+'alias-b',revision:1}];
+   const capture=await captureDuplicates(pool,plan.command.record.content);expect(capture.review.candidates.map(v=>v.id)).toContain(p+'original');
+   const reuse=await reuseDuplicatePlan(pool,plan,capture,null);
+   expect(await foundation.execute(actor,reuse.command)).toMatchObject({id:p+'original',revision:1,disposition:'existing',content:{subjectId:p+'a',objectId:p+'b'}});
+   expect(await foundation.resolveTheme({kind:'reader',id:'reader'},p+'theme')).toEqual(before);
+   await identity.act('operator',{...link(p+'a',p+'alias-a'),expectedRevision:1,state:'withdrawn'});
+   expect((await captureDuplicates(pool,plan.command.record.content)).review.candidates).toEqual([]);
+   await expect(foundation.execute(actor,{...reuse.command,requestId:randomUUID()},{verify:async c=>{const current=(await commonDuplicatePins(c,plan.command.action==='accept-record'?plan.command.record.content:unlinked)).map(r=>({id:r.id,revision:r.revision,digest:knowledgeDigest(r.content)}));if(knowledgeDigest(current)!==knowledgeDigest(capture.common))throw new KnowledgeError('同一性の変更を再確認',409,'DUPLICATE_REVIEW_REQUIRED');},prepare:async()=>{}})).rejects.toMatchObject({code:'DUPLICATE_REVIEW_REQUIRED'});
+  });
+  it('holds identity decisions stable throughout a final record transaction',async()=>{
+   const p='identity-lock-';await seed(p);const c=await pool.connect();
+   try{await c.query('BEGIN');await foundation.execute(actor,proposed(p).command,{verify:async()=>{expect((await c.query('SELECT pg_try_advisory_xact_lock(7500600) AS acquired')).rows[0].acquired).toBe(false);},prepare:async()=>{}});expect((await c.query('SELECT pg_try_advisory_xact_lock(7500600) AS acquired')).rows[0].acquired).toBe(true);}finally{await c.query('ROLLBACK');c.release();}
+  });
   it('versions a language-only correction and treats an exact retry or unchanged correction as existing',async()=>{
    const p='language-only-';await seed(p);
    const original=await foundation.get({kind:'reader',id:'reader'},'record',p+'original');
@@ -110,8 +135,8 @@ describe.skipIf(!connectionString)('duplicate acceptance on isolated PostgreSQL'
  it('does not inflate sources by arbitrary URL parameters returning the same already-verified text',async()=>{
   const p='duplicate-document-';await seed(p);const plan=proposed(p);if(plan.command.action!=='accept-record')throw Error('fixture');
   const url='https://example.org/'+p+'?arbitrary=another';plan.command.sources[0].content.url=url;
-  const proof={url,bodySha256:'body',textSha256:'same-verified-document',excerptSha256:'quote',extractor:'fixture',checkedAt:new Date().toISOString()};
-  const reuse=await reuseDuplicatePlan(pool,plan,await captureDuplicates(pool,plan.command.record.content),null,[proof],['same-verified-document']);
+   const proof={url:'https://publisher.example.org/final',requestedUrl:url,bodySha256:'body',textSha256:'a'.repeat(64),excerptSha256:'quote',extractor:'fixture',checkedAt:new Date().toISOString()};
+  const reuse=await reuseDuplicatePlan(pool,plan,await captureDuplicates(pool,plan.command.record.content),null,[proof],[verifiedSourceDocumentKey(proof)!]);
   expect(await foundation.execute(actor,reuse.command)).toMatchObject({revision:1,disposition:'existing'});
  });
  it('serializes the final candidate recheck so two simultaneous submissions cannot both create the fact',async()=>{

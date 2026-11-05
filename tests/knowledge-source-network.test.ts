@@ -4,7 +4,7 @@ import {PassThrough} from 'node:stream';
 const mock=vi.hoisted(()=>({lookups:vi.fn(),requests:vi.fn(),responses:[] as {status:number;headers:Record<string,string>;body:string}[]}));
 vi.mock('node:dns/promises',()=>({lookup:mock.lookups}));
 vi.mock('node:https',()=>({request:mock.requests}));
-import {publicSourceDocument} from '../lib/server/knowledge-source-verification';
+import {publicSourceDocument,verifySourceExcerpt} from '../lib/server/knowledge-source-verification';
 beforeEach(()=>{
  vi.clearAllMocks();mock.responses=[];mock.lookups.mockResolvedValue([{address:'8.8.8.8',family:4}]);
  mock.requests.mockImplementation((_url,options,cb)=>{
@@ -14,6 +14,11 @@ beforeEach(()=>{
  });
 });
 describe('source network boundary',()=>{
+ it('retains requested and final URLs only after a safe redirect and exact quote match',async()=>{
+  mock.responses.push({status:302,headers:{location:'https://publisher.example.org/final'},body:''},{status:200,headers:{'content-type':'text/plain'},body:'A verified quote.'});
+  expect(await verifySourceExcerpt('https://example.org/start#quote','verified quote')).toMatchObject({requestedUrl:'https://example.org/start',url:'https://publisher.example.org/final',textSha256:expect.stringMatching(/^[a-f0-9]{64}$/)});
+  expect(mock.lookups).toHaveBeenCalledTimes(2);
+ });
  it('pins the checked address and transmits no cookies or authorization',async()=>{
   mock.responses.push({status:200,headers:{'content-type':'text/html'},body:'<p>A public source.</p>'});const result=await publicSourceDocument('https://example.org/source');expect(result.body.toString()).toContain('public source');
   const options=mock.requests.mock.calls[0][1];expect(options.family).toBe(4);expect(options.headers.Authorization).toBeUndefined();expect(options.headers.Cookie).toBeUndefined();expect(mock.lookups).toHaveBeenCalledTimes(1);

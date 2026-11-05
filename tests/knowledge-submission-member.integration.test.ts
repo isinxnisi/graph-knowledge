@@ -1,3 +1,4 @@
+import {migrateKnowledgeIdentities} from '../lib/server/knowledge-identity-migrate';
 import {afterAll,beforeAll,describe,expect,it,vi} from "vitest";
 import {randomUUID} from "node:crypto";
 import {spawnSync} from "node:child_process";
@@ -74,7 +75,7 @@ const post=(body:unknown,cookie=alice.cookies.value,user=aliceId,headers:Record<
 const current=async(id:string,cookie=alice.cookies.value,user=aliceId)=>item.GET(request("/api/member/knowledge-submissions/"+id,cookie,"GET",undefined,{"x-member-user":user}),ctx(id));
 beforeAll(async()=>{
  const config=memberConfig();if(!config||config.provider.kind!=="fixture"||process.env.KNOWLEDGE_SUBMISSIONS_ENABLED!=="1")throw Error("Use the disposable --submissions harness");
- acceptanceKnowledge=new Pool({connectionString:process.env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL});await ensureKnowledgePublicationSchema(acceptanceKnowledge);await migrateKnowledgeTranslations(acceptanceKnowledge);
+ acceptanceKnowledge=new Pool({connectionString:process.env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL});await ensureKnowledgePublicationSchema(acceptanceKnowledge);await migrateKnowledgeIdentities(acceptanceKnowledge);await migrateKnowledgeTranslations(acceptanceKnowledge);
  fixture=await startMemberOidc();const pool=memberPool(config);
  const foundation=createKnowledgeFoundationService(acceptanceKnowledge);
  publicRead.detail=async id=>{const record=await foundation.get({kind:'reader',id:'public'},'record',id),all=await foundation.list({kind:'reader',id:'public'});return {generation:'fixture',record:buildKnowledgePublishedRecord(record,{entities:all.entities.filter(e=>e.id===record.content.subjectId||e.id===record.content.objectId),sources:all.sources.filter(source=>record.content.evidence.some(e=>e.source.id===source.id)),mappings:[]})};};

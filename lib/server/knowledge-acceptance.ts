@@ -1,3 +1,4 @@
+import {proofMatchesSourceUrl,verifiedSourceDocumentKey} from '../domain/knowledge-source-identity';
 import {translationTargetKey} from "../domain/knowledge-translation";
 import {translationId} from "./knowledge-translation-storage";
 import {readKnowledgeTextOriginal} from "./knowledge-foundation";
@@ -16,7 +17,7 @@ import {createKnowledgeFoundationService,knowledgeDigest,KnowledgeError} from ".
 import {verifySourceExcerpt,sourceURL,SourceCheckError,type SourceProof} from "./knowledge-source-verification";
 import type {ReviewConfig} from "./knowledge-review-queue";
 import {captureDuplicates,commonDuplicatePins,duplicateMatch,type DuplicateCapture,type DuplicateReview} from './knowledge-duplicates';
-import {duplicateMeaning,duplicateSourceURL,mergeDuplicateEvidence} from '../domain/knowledge-duplicate';
+import {mergeDuplicateEvidence} from '../domain/knowledge-duplicate';
 
 export const acceptanceEnabled=()=>process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED==='1';
 export async function ensureAcceptanceSchema(pool:Pool){
@@ -131,6 +132,14 @@ export async function reuseDuplicatePlan(knowledge:Pool,plan:AcceptancePlan,capt
   const ids=new Set(legacy.content.evidence.map(e=>e.source.id));
   for(const s of capture.legacy!.sources.filter(s=>ids.has(s.id)))if(!cmd.legacySources?.some(v=>v.id===s.id))cmd.legacySources=[...(cmd.legacySources??[]),{id:s.id,content:s.content}];
  }
+  // A reviewed identity may match a record whose original endpoint IDs differ
+  // from the submitted IDs. Pin those existing endpoints; never rewrite them.
+  if(!legacy)for(const id of [match.content.subjectId,match.content.objectId].filter((v):v is string=>!!v)){
+   if(cmd.entityPins.some(p=>p.id===id))continue;
+   const e=await createKnowledgeFoundationService(knowledge).get({kind:'reader',id:'duplicate-endpoints'},'entity',id);
+   cmd.entityPins.push({id:e.id,revision:e.revision});
+   if(!refs.some(r=>r.kind==='entity'&&r.id===id))refs.push({kind:'entity',id:e.id,revision:e.revision,content:e.content});
+  }
  const oldSources:import("../domain/knowledge-duplicate").DuplicateSource[]=[];
  for(const p of match.content.evidence.map(e=>e.source)){
   const imported=capture.legacy?.sources.find(s=>s.id===p.id&&s.revision===p.revision);
@@ -145,8 +154,8 @@ export async function reuseDuplicatePlan(knowledge:Pool,plan:AcceptancePlan,capt
  // this proof in the decision; do not strip meaningful query parameters.
  const incoming={...cmd.record.content,evidence:cmd.record.content.evidence.filter(e=>{
   const source=allSources.find(s=>s.id===e.source.id&&s.revision===e.source.revision);
-  const proof=source?.content.url?proofs.find(p=>duplicateSourceURL(p.url)===duplicateSourceURL(source.content.url!)):undefined;
-  return !proof||!knownDocuments.includes(proof.textSha256)||oldSources.some(s=>s.id===e.source.id&&s.revision===e.source.revision);
+  const proof=source?.content.url?proofs.find(p=>proofMatchesSourceUrl(p,source.content.url!)):undefined;
+  return !proof||!knownDocuments.includes(verifiedSourceDocumentKey(proof)??'')||oldSources.some(s=>s.id===e.source.id&&s.revision===e.source.revision);
  })};
  cmd.record={id:match.id,content:mergeDuplicateEvidence(match.content,incoming,allSources)};
  if(cmd.record.content.evidence.length>20)throw new SourceCheckError('この知識の根拠が20件を超えます。既存の資料を確認し、必要なら運営へ相談してください。');
@@ -256,10 +265,10 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
     const originalPlan=acceptancePlan(value,item.key,lease.j.id,value.context?.records?.find((r:{id:string})=>r.id===item.correction?.id));
     if(originalPlan.command.action!=='accept-record')throw Error('Unexpected publication action');
     const capture=await captureDuplicates(knowledge,originalPlan.command.record.content,originalPlan.command.expectedRevision?originalPlan.recordId:undefined);
-    const exact=capture.review.candidates.some(c=>knowledgeDigest(c.meaning)===knowledgeDigest(duplicateMeaning(originalPlan.command.action==='accept-record'?originalPlan.command.record.content:item.record)));
+    const exact=capture.review.candidates.some(c=>knowledgeDigest(c.meaning)===knowledgeDigest(capture.review.proposed));
     if(capture.review.candidates.length&&!exact&&knowledgeDigest(capture.review)!==knowledgeDigest(lease.j.result?.duplicateCheck??null))throw new KnowledgeError('既存の知識が増えたため重複を確認し直します',409,'DUPLICATE_REVIEW_REQUIRED');
     const match=originalPlan.command.expectedRevision?capture.candidates.find(r=>r.id===originalPlan.recordId):duplicateMatch(capture,lease.j.result?.duplicate);
-    const known=match?(await pool.query("SELECT proofs->'sources' AS sources FROM member_knowledge.publication_decisions WHERE state='published' AND (command->'record'->>'id'=$1 OR result->>'id'=$1)",[match.id])).rows.flatMap(r=>(r.sources??[]).map((s:SourceProof)=>s.textSha256)):[];
+    const known=match?(await pool.query("SELECT proofs->'sources' AS sources FROM member_knowledge.publication_decisions WHERE state='published' AND (command->'record'->>'id'=$1 OR result->>'id'=$1)",[match.id])).rows.flatMap(r=>(r.sources??[]).map((s:SourceProof)=>verifiedSourceDocumentKey(s)).filter((key:string|null):key is string=>key!==null)):[];
     const plan=await reuseDuplicatePlan(knowledge,originalPlan,capture,lease.j.result?.duplicate,proofs,known);
     const retainedProofs={sources:proofs,review:lease.j.result,operatorConfirmationId:lease.j.operator_confirmation_id??null,consent:lease.j.consent_version,duplicates:{record:originalPlan.command.record.content,common:capture.common}};
     const decision={id:lease.j.id,job_id:lease.j.id,command:plan.command,digest:knowledgeDigest(plan.command),references_json:plan.references,proofs:retainedProofs};

@@ -248,6 +248,9 @@ export function createKnowledgeFoundationService(pool: Pool) {
       // candidate recheck with record creation/correction/withdrawal, including
       // collection writes; never hold this lock during an AI or source fetch.
       await c.query("SELECT pg_advisory_xact_lock(hashtextextended('knowledge-record-writes-v1',0))");
+      // Identity decisions use the exclusive form of this lock. Hold the shared
+      // lock through final duplicate recheck and commit, before any entity rows.
+      await c.query("SELECT pg_advisory_xact_lock_shared(7500600)");
       await c.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))", [actor.id + ":" + cmd.requestId]);
       const prior = (await c.query("SELECT digest,result FROM knowledge75.operations WHERE actor_id=$1 AND request_id=$2", [actor.id, cmd.requestId])).rows[0];
       if (prior) { if (prior.digest !== digest) throw new KnowledgeError("再送IDと内容が一致しません", 409, "REQUEST_CONFLICT"); await c.query("COMMIT"); return prior.result; }

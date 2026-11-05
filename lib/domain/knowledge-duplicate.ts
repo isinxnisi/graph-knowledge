@@ -1,16 +1,13 @@
 import type {KnowledgeRecordContent, KnowledgeSourceContent} from './knowledge-foundation';
+import {canonicalSourceUrl,sourceDocumentKey} from './knowledge-source-identity';
 
 // Normalization removes presentation differences, never dates, negation or scope.
 export const duplicateText=(text:string)=>text.normalize('NFKC').trim().replace(/\s+/gu,' ').toLocaleLowerCase();
-export function duplicateSourceURL(raw:string){
- const url=new URL(raw);url.hash='';
- for(const key of [...url.searchParams.keys()])if(/^(utm_.+|fbclid|gclid|dclid|msclkid|mc_cid|mc_eid)$/i.test(key))url.searchParams.delete(key);
- url.searchParams.sort();return url.href;
-}
+export const duplicateSourceURL=canonicalSourceUrl;
 export function duplicateAnchors(r:KnowledgeRecordContent){return {kind:r.kind,subjectId:r.subjectId,objectId:r.objectId,aboutRecord:r.aboutRecord?.id??null,aboutTheme:r.aboutTheme??null};}
 export function duplicateQualifiers(r:KnowledgeRecordContent){return {...duplicateAnchors(r),...(r.aboutRecord?{aboutRecordRevision:r.aboutRecord.revision}:{}),polarity:r.polarity,scope:duplicateText(r.scope),times:r.times.map(t=>t.time).sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b)))};}
 export function duplicateMeaning(r:KnowledgeRecordContent){return {...duplicateQualifiers(r),assertion:duplicateText(r.assertion),relation:duplicateText(r.relation)};}
-export function duplicateDocument(source:KnowledgeSourceContent){return source.url?duplicateSourceURL(source.url):duplicateText(source.bibliography);}
+export const duplicateDocument=sourceDocumentKey;
 export type DuplicateSource={id:string;revision:number;content:KnowledgeSourceContent};
 export function duplicateEvidenceKey(e:KnowledgeRecordContent['evidence'][number],sources:DuplicateSource[]){
  const source=sources.find(s=>s.id===e.source.id&&s.revision===e.source.revision);

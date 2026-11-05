@@ -1,3 +1,4 @@
+import {migrateKnowledgeIdentities} from '../lib/server/knowledge-identity-migrate';
 import {ensureKnowledgePublicationSchema} from "../lib/server/knowledge-publication";
 import {afterAll,beforeAll,describe,expect,it,vi} from "vitest";
 import {randomUUID} from "node:crypto";
@@ -37,7 +38,7 @@ const foundation=createKnowledgeFoundationService(knowledge),actor={kind:'operat
 beforeAll(async()=>{
  const config=memberConfig();if(!config||config.provider.kind!=='fixture'||!process.env.MEMBER_TEST_CONTAINER?.startsWith('gk-member-test-'))throw Error('Use isolated --appeals harness');
  const setup=memberPool(config);try{await migrateMemberDatabase(setup,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true);const ledger=(await setup.query('SELECT name,checksum FROM member_migration ORDER BY name')).rows;await migrateMemberDatabase(setup,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true);expect((await setup.query('SELECT name,checksum FROM member_migration ORDER BY name')).rows).toEqual(ledger);}finally{await setup.end();}
- await ensureKnowledgeFoundationSchema(knowledge);await ensureKnowledgePublicationSchema(knowledge);await foundation.execute(actor,{action:'create-bundle',requestId:randomUUID(),entities:[{id:entity,content:{name:'Fixture subject',kind:'person'}}],sources:[{id:source,content:{title:'Fixture source',url:'https://example.org/source'}}],records:[{id:'appeal:seed',content:{kind:'note',subjectId:entity,assertion:'Fixture fact',evidence:[{id:'e',source:{id:source,revision:1},locator:'Body',excerpt:'Fixture fact'}]}}],reason:'isolated fixture'});
+ await ensureKnowledgeFoundationSchema(knowledge);await ensureKnowledgePublicationSchema(knowledge);await migrateKnowledgeIdentities(knowledge);await foundation.execute(actor,{action:'create-bundle',requestId:randomUUID(),entities:[{id:entity,content:{name:'Fixture subject',kind:'person'}}],sources:[{id:source,content:{title:'Fixture source',url:'https://example.org/source'}}],records:[{id:'appeal:seed',content:{kind:'note',subjectId:entity,assertion:'Fixture fact',evidence:[{id:'e',source:{id:source,revision:1},locator:'Body',excerpt:'Fixture fact'}]}}],reason:'isolated fixture'});
  fixture=await startMemberOidc();alice=await login('alice');bob=await login('bob');
  process.env.SITE_OPERATOR_USER_IDS=alice.id;process.env.KNOWLEDGE_REVIEW_ENABLED='1';process.env.KNOWLEDGE_REVIEW_ALLOWED_USERS=[alice.id,bob.id].join(',');process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='1';
 },30000);

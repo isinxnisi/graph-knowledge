@@ -54,6 +54,12 @@ describe('knowledge novelty, not request idempotency',()=>{
   const calls:unknown[]=[];
   const read:SubmissionLegacyDependencies['read']=async run=>run({run:(async(query:string,parameters:unknown)=>{calls.push({query,parameters});return {records:Array.from({length:21},(_,i)=>({get:()=>String(i)}))};}) as never});
   await expect(readLegacyDuplicateReferences(a,b,{read})).rejects.toMatchObject({status:422});
-  expect(calls).toHaveLength(1);expect(calls[0]).toMatchObject({query:expect.stringContaining("c.visibility='published'"),parameters:{subjectId:a,objectId:b}});
+  expect(calls).toHaveLength(1);expect(calls[0]).toMatchObject({query:expect.stringContaining("c.visibility='published'"),parameters:{subjectIds:[a],objectIds:[b]}});
  });
+  it('queries linked legacy endpoint groups once and excludes new IDs from the legacy query',async()=>{
+   const a='11111111-1111-4111-8111-111111111111',b='22222222-2222-4222-8222-222222222222',calls:unknown[]=[];
+   const read:SubmissionLegacyDependencies['read']=async run=>run({run:(async(query:string,parameters:unknown)=>{calls.push({query,parameters});return {records:[]};}) as never});
+   expect(await readLegacyDuplicateReferences(['new:local',a,a],[b,'new:other'],{read})).toBeNull();
+   expect(calls).toEqual([{query:expect.stringContaining('subject.id IN $subjectIds'),parameters:{subjectIds:[a],objectIds:[b]}}]);
+  });
 });

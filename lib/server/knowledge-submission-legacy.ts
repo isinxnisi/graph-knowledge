@@ -23,10 +23,11 @@ async function read<T>(action: (tx: ReadTx) => Promise<T>): Promise<T> {
 
 /** Bounded, read-only duplicate candidates on the same directed KG endpoints.
  * Never confuse a partial first page with a complete duplicate check. */
-export async function readLegacyDuplicateReferences(subjectId:string|null,objectId:string|null,dependencies:SubmissionLegacyDependencies={read}){
- if(!z.uuidv4().safeParse(subjectId).success||!z.uuidv4().safeParse(objectId).success)return null;
+export async function readLegacyDuplicateReferences(subjectId:string|string[]|null,objectId:string|string[]|null,dependencies:SubmissionLegacyDependencies={read}){
+ const publicIds=(value:string|string[]|null)=>[...new Set((Array.isArray(value)?value:[value]).filter((id):id is string=>z.uuidv4().safeParse(id).success))].sort();
+ const subjectIds=publicIds(subjectId),objectIds=publicIds(objectId);if(!subjectIds.length||!objectIds.length)return null;
  const ids=await dependencies.read(async tx=>{
-  const result=await tx.run("MATCH (c:Claim)-[:SUBJECT]->(:Entity {id:$subjectId}), (c)-[:OBJECT]->(:Entity {id:$objectId}) WHERE c.visibility='published' RETURN c.id AS id ORDER BY id LIMIT 21",{subjectId,objectId});
+  const result=await tx.run("MATCH (c:Claim)-[:SUBJECT]->(subject:Entity), (c)-[:OBJECT]->(object:Entity) WHERE c.visibility='published' AND subject.id IN $subjectIds AND object.id IN $objectIds RETURN c.id AS id ORDER BY id LIMIT 21",{subjectIds,objectIds});
   return result.records.map(r=>String(r.get('id')));
  });
  if(ids.length>20)throw new ApiError(422,'INVALID_ARGUMENT','同じ対象間の知識が多いため、既存の知識を選んで根拠を追加してください。');

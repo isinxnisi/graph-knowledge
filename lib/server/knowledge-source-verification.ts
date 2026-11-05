@@ -7,7 +7,7 @@ import {parse,type DefaultTreeAdapterMap} from "parse5";
 
 export const SOURCE_EXTRACTOR = "public-text-v1";
 export type SourceDocument = {url:string;type:string;body:Buffer};
-export type SourceProof = {url:string;bodySha256:string;textSha256:string;excerptSha256:string;extractor:string;checkedAt:string};
+export type SourceProof = {url:string;requestedUrl?:string;bodySha256:string;textSha256:string;excerptSha256:string;extractor:string;checkedAt:string};
 export class SourceCheckError extends Error {
  constructor(message:string,readonly retryable=false,readonly retryAfterMs=120000){super(message);}
 }
@@ -73,5 +73,5 @@ export function matchSourceExcerpt(document:SourceDocument,excerpt:string):Sourc
  return {url:document.url,bodySha256:hash(document.body),textSha256:hash(normalized),excerptSha256:hash(quote),extractor:SOURCE_EXTRACTOR,checkedAt:new Date().toISOString()};
 }
 export async function verifySourceExcerpt(url:string,excerpt:string){
- try{return matchSourceExcerpt(await publicSourceDocument(url),excerpt);}catch(e){if(e instanceof SourceCheckError)throw e;throw new SourceCheckError("原資料との接続を確認できません。時間をおいて再試行します。",true);}
+  try{return {...matchSourceExcerpt(await publicSourceDocument(url),excerpt),requestedUrl:sourceURL(url).href};}catch(e){if(e instanceof SourceCheckError)throw e;throw new SourceCheckError("原資料との接続を確認できません。時間をおいて再試行します。",true);}
 }
