@@ -2,7 +2,7 @@
 
 2026-10-29 / `ai-education-scheduled-001 / r01`。単発scheduledのGitHub読書き・再実行no-opは[実証済み](https://github.com/isinxnisi/graph-knowledge/issues/36#issuecomment-6472415518)。capability-probeを繰り返さない。以下を**既存タスクの指示へ差し替える**。新タスクを重複登録しない。
 
-時刻候補：毎日23:30、Asia/Tokyo。ローカルCPU教育は20:00–23:00、実intentを失敗も含め1日1回まで。初回は既存タスクでこの実評価を1回実行し、実行画面・投稿URLを確認してWorker受入口を登録する。タスクの登録・次回予定はChatGPT側で確認する。Codexのローカルcronへ置き換えない。
+毎日08:30、Asia/Tokyo（[運営者のr02指示](https://github.com/isinxnisi/graph-knowledge/issues/36#issuecomment-6474605589)で更新済みと報告された時刻）。ローカルCPU教育は05:00–08:00、開始間隔5分以上、実intentを失敗も含め暫定1日最大4回。日次評価は保存された複数cycleをまとめて扱う。提案の`maxRealCycles=1`は既存契約のままとし、Worker全体の教育回数とは混同しない。初回は実評価の実行画面・投稿URLを確認してWorker受入口を登録する。タスクの有効状態・次回予定はChatGPT側で確認する。Codexのローカルcronへ置き換えない。
 
 ## タスクへ渡す指示
 

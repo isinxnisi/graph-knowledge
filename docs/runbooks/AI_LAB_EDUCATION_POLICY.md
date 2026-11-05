@@ -33,7 +33,7 @@ python3 experiments/ai-lab/mentorship.py reset --token TOKEN
 python3 experiments/ai-lab/education_github.py disable --token TOKEN
 ```
 
-bridge設定はenabled。CPU WorkerはJST 20:00–23:00・1日1回で運転する。実行前に新着方針を検証し、保存結果の後でreportを同期する。時間外も有効中は最大1時間ごとに共通guard内で同期・方針の公開投影を行う。pause/stop中は行わない。共通ロック中は延期し、通信失敗では1時間後に保存結果から同期を試す。モデルの再生成・不明POSTの再送はしない。新しい結果・選択コードがなければ同じreport hashを使い、既存コメントを再利用する。code hashが変わった後は従来通り`enable`で再固定する。
+bridge設定はenabled。CPU WorkerはJST 05:00–08:00・5分以上の開始間隔・暫定1日最大4回で運転する。日次評価の頻度と教育の試行数は別予算とする。実行前に新着方針を検証し、保存結果の後でreportを同期する。朝窓と08:35／09:00、ログオン時に既存の最大1時間ごとの同期判定を使い、共通guard内で方針の公開投影を行う。24時間の毎分起動は行わない。pause/stop中は行わない。共通ロックや通信障害で同期できなければ次の予定で保存結果から再判定し、その日に必ず受信できたとは扱わない。モデルの再生成・不明POSTの再送はしない。新しい結果・選択コードがなければ同じreport hashを使い、既存コメントを再利用する。code hashが変わった後は従来通り`enable`で再固定する。
 
 POSTはoutbox intentを先にsealし、単回のみ。timeout／送信後不明を自動再送しない。次のsyncで同じmarker/body/authorを見つけた場合だけreconciliationを追記し、元の不明receiptは保持する。確認できなければ`unknown-no-resend`として調査対象にする。GitHub停止や認証失敗でモデル結果を再生成しない。
 
@@ -53,4 +53,6 @@ v4公開artifactはv1〜v3のrun/cycleを変更せず教師記録を追記する
 
 [日次実評価プロンプト](AI_LAB_DAILY_REVIEW_PROMPT.md)を既存タスクへ差し替え、最新reportを読んだ本物のscheduled proposalを1件保存する。ローカルPCやprivate homeを読める前提を置かない。この実装セッションではChatGPTタスクを編集できる接続がなく、利用可能なブラウザも未ログインだった。ユーザーはChatGPT側チャットで設定を進めると明示した。実planと実行証跡を受け取って初回経路登録を行うまでは、受入口はawaiting-first-plan-attestationである。
 
-日次時刻は23:30 JSTを候補とし、実設定・次回予定はChatGPT側で確認する。新reportなし、又は同reportへのplan/proposalありならno-op。PC停止中もGitHubの報告は残るが、ローカルWorkerの取得・教育・beta配信は停止し、時間外に追い掛け教育をしない。追加の有料API呼出し・新規クラウド課金・日次Codex呼出しはない。停止・失敗・旧報告・GitHub制限はprivate運転記録で区別し、公開UIの運転欄は保存時点の観測として表示する。
+日次評価は08:30 JSTへ更新済みという[運営者のr02指示](https://github.com/isinxnisi/graph-knowledge/issues/36#issuecomment-6474605589)に合わせる。今回CodexからCloudタスクを変更・重複登録しておらず、現在の有効状態・次回予定を実行面で再確認したわけではない。新reportなし、又は同reportへのplan/proposalありならno-op。PC停止中もGitHubの報告は残るが、ローカルWorkerの取得・教育・beta配信は停止し、時間外に追い掛け教育をしない。追加の有料API呼出し・新規クラウド課金・日次Codex呼出しはない。停止・失敗・旧報告・GitHub制限はprivate運転記録で区別し、公開UIの運転欄は保存時点の観測として表示する。
+
+既存planの`maxRealCycles=1`は一つの提案の適用範囲であり、Worker全体の1日上限ではない。追加の教育は元のカテゴリ巡回で進む。現状は固定元モデルから始まる独立実験で、候補間の累積学習は未実装。提案を複数回へ適用したことや、回数だけを根拠に能力が成長したことを記録しない。

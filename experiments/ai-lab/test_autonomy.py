@@ -64,5 +64,27 @@ class AutonomyTests(unittest.TestCase):
     def test_strict_configuration_and_explicit_code_refresh(self):
         c=self.config;c['dailyMax']=True;a.atomic(self.home/'config.json',c)
         with self.assertRaisesRegex(ValueError,'budget'):a.configuration(self.home)
+    def test_morning_cycles_can_run_five_minutes_apart_without_resetting_daily_budget(self):
+        c={**self.config,'enabled':True,'windowStart':'05:00','windowEnd':'08:00','intervalMinutes':5,'dailyMax':4}
+        a.atomic(self.home/'config.json',c);self.assertEqual(a.configuration(self.home),c)
+        at=datetime(2026,11,6,5,0,tzinfo=a.JST);rows=[{'mode':'dry','startedAt':at.isoformat()}]
+        self.assertEqual(a.due(c,rows,at-timedelta(seconds=1)),'outside-window')
+        for number in range(4):
+            start=at+timedelta(minutes=5*number)
+            self.assertIsNone(a.due(c,rows,start))
+            rows.append({'mode':'real','startedAt':start.isoformat(),'status':'failed' if number==0 else 'completed'})
+            self.assertEqual(a.due(c,rows,start+timedelta(seconds=299)),'daily-budget' if number==3 else 'cooldown')
+        self.assertEqual(a.due(c,rows,at+timedelta(minutes=20)),'daily-budget')
+        # Re-enabling the configuration cannot erase consumed real intents.
+        a.atomic(self.home/'config.json',c)
+        self.assertEqual(a.due(a.configuration(self.home),rows,at+timedelta(hours=2)),'daily-budget')
+        self.assertEqual(a.due(c,rows,at.replace(hour=8)),'outside-window')
+        self.assertIsNone(a.due(c,rows,at+timedelta(days=1)))
+    def test_shorter_interval_does_not_remove_configuration_limits_or_change_legacy_settings(self):
+        a.atomic(self.home/'config.json',self.config)
+        self.assertEqual(a.configuration(self.home)['intervalMinutes'],60)
+        for field,value in [('intervalMinutes',4),('intervalMinutes',True),('dailyMax',5)]:
+            a.atomic(self.home/'config.json',{**self.config,field:value})
+            with self.assertRaisesRegex(ValueError,'budget'):a.configuration(self.home)
 
 if __name__=='__main__':unittest.main()

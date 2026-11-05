@@ -53,7 +53,7 @@ def configuration(home):
     require(c['version']==1 and type(c['enabled']) is bool and type(c['publish']) is bool,'config_type')
     for key in ['windowStart','windowEnd']:
         value=datetime.strptime(c[key],'%H:%M');require(value.strftime('%H:%M')==c[key],'time_window')
-    require(c['windowStart']!=c['windowEnd'] and type(c['intervalMinutes']) is int and type(c['dailyMax']) is int and 60<=c['intervalMinutes']<=1440 and 1<=c['dailyMax']<=4,'budget')
+    require(c['windowStart']!=c['windowEnd'] and type(c['intervalMinutes']) is int and type(c['dailyMax']) is int and 5<=c['intervalMinutes']<=1440 and 1<=c['dailyMax']<=4,'budget')
     require(c['provider']=='cpu-independent' and Path(c['artifactDirectory']).is_absolute() and Path(c['node']).is_absolute(),'provider_config')
     return c
 

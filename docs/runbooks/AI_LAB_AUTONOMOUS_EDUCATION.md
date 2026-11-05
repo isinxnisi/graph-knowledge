@@ -2,9 +2,11 @@
 
 ## 現在の自動起動（2026-11-06）
 
-Windowsの専用予定`Plunode-AI-Education`が、ログオン時と1分ごとにWSLの既存`autonomy.py scheduled-tick`をforegroundで呼ぶ。Windowsはcron相当の起動入口だけで、教育の判定・実行はPython／独立CPUコンテナが担当する。常駐daemonの生存に依存しない。`IgnoreNew`と既存daemon lockで重複を排除し、終了済みPIDの記録は履歴へ保全する。別プロセスへ再利用されたPIDも終了させない。
+Windowsの専用予定`Plunode-AI-Education`が、毎日05:00 JSTから3時間だけ5分間隔で、WSLの既存`autonomy.py scheduled-tick`をforegroundで呼ぶ。08:35／09:00には保存結果・教育方針の同期、ログオン時には復帰確認を行う。24時間毎分の起動は行わない。Windowsはcron相当の起動入口だけで、教育の判定・実行はPython／独立CPUコンテナが担当する。常駐daemonの生存に依存しない。`IgnoreNew`と既存daemon lockで重複を排除し、終了済みPIDの記録は履歴へ保全する。別プロセスへ再利用されたPIDも終了させない。
 
-時刻窓20:00–23:00 JST・1日最大1回・共通Autopilot guard・既存のCPU/RAM/180秒上限を維持する。予定が1分ごとに動くことは、1分ごとの学習を意味しない。pause/stopや失敗後の無効化、コード指紋の差異、未完intentを自動解除しない。
+CPU教育は05:00–08:00 JST、開始間隔5分以上、失敗も含む実intentを暫定で1日最大4回とする。05時開始とCloud評価08:30は[Issue #36 r02](https://github.com/isinxnisi/graph-knowledge/issues/36#issuecomment-6474605589)に基づき、11月6日の追加指示で旧1日1回を変更した。日次評価1回は教育1回を要求しない。各回の共通Autopilot guard・既存CPU/RAM/180秒上限は維持する。前回が動作中なら重複せず、ロック競合は次の予定へ延期する。pause/stopや失敗後の無効化、コード指紋の差異、未完intentを自動解除しない。
+
+通常の定期判定は朝窓の最大37回（08:00境界を含む）＋評価後2回で、旧1,440回／日から削減した。実モデル処理は最大4回×180秒の枠、同時CPU2・RAM6GiB。起動・照合・同期はこの時間枠の積算外。漫画収集の03:00–07:00と重なるため共通ロックを尊重し、他Workerを停止しない。4回は能力向上を保証する値でも恒久的な最適値でもない。
 
 ```powershell
 # Windows側。既存mainのrepository rootで実行する。全体の実行ポリシーは変更しない。
@@ -40,10 +42,10 @@ WSLでmainのrepository rootから実行する。既存Python標準ライブラ�
 ```sh
 python3 experiments/ai-lab/autonomy.py init
 python3 experiments/ai-lab/autonomy.py status
-# JSTで指定。1日1回、最低60分間隔。明示enableでコードhashを固定する。
+# 現在の運転設定。明示enableでコードhashを固定する。
 python3 experiments/ai-lab/autonomy.py enable \
-  --window-start 20:00 --window-end 23:00 --interval-minutes 60 --daily-max 1 --publish
-python3 experiments/ai-lab/autonomy.py start
+  --window-start 05:00 --window-end 08:00 --interval-minutes 5 --daily-max 4 --publish
+# Windows予定が有効ならstartは不要。別の常駐daemonを重ねない。
 # 次のサイクルだけを延期。進行中の処理は完了させる。
 python3 experiments/ai-lab/autonomy.py pause
 # 次を無効化し、進行中なら自分のCPUコンテナだけを停止させる。
@@ -51,12 +53,11 @@ python3 experiments/ai-lab/autonomy.py stop
 python3 experiments/ai-lab/autonomy.py status
 # 同じコード・設定で再開。stop後にworkerが終了したことをstatusで確認する。
 python3 experiments/ai-lab/autonomy.py resume
-python3 experiments/ai-lab/autonomy.py start
 ```
 
-`pause`中にworkerが残る場合、再開は`resume`だけでよい。`start`を重ねない。`stop`はstop要求を永続化し、1秒ごとの監視で自分のlabelとcontainer名を照合して停止する。共有Kev・他container・Autopilotを終了しない。2026-11-06からローカルの起動入口は上記Windows予定へ接続した。無期限のGPU運転・クラウド登録は行わない。日次CPU教育は**20:00–23:00 JST・1日最大1回・公開投影あり**。ChatGPT側の実方針・日次設定は[別接点](AI_LAB_EDUCATION_POLICY.md)として区別する。
+`pause`中にworkerが残る場合、再開は`resume`だけでよい。`start`を重ねない。`stop`はstop要求を永続化し、1秒ごとの監視で自分のlabelとcontainer名を照合して停止する。共有Kev・他container・Autopilotを終了しない。日次CPU教育は**05:00–08:00 JST・5分間隔・暫定1日最大4回・公開投影あり**。ChatGPT側の実方針・日次設定は[別接点](AI_LAB_EDUCATION_POLICY.md)として区別する。
 
-workerは60秒ごとにJSTの時間窓・日次回数・間隔を確認する。実行時だけ既存`autopilot.py guard`で共通ロックを取得し、親PIDとtokenを照合する。ロック使用中は延期する。手動hold中にguardを重ねない。1日の予算には失敗したreal intentも含め、停止直後の再開で同一試行をやり直さない。Pythonコード変更後は自動続行せず、設定を再確認して`enable`する。
+定期呼出し時にJSTの時間窓・日次回数・間隔を確認する。旧`serve`常駐方式を別環境で使う場合だけ内部60秒pollになる。実行時だけ既存`autopilot.py guard`で共通ロックを取得し、親PIDとtokenを照合する。ロック使用中は延期する。手動hold中にguardを重ねない。1日の予算には失敗したreal intentも含め、停止直後の再開で同一試行をやり直さない。Pythonコード変更後は自動続行せず、設定を再確認して`enable`する。既存の20–23時・60分・1回設定は互換として読めるが、明示enableせず勝手に変更しない。
 
 ## 1サイクルの境界
 

@@ -33,15 +33,34 @@ if ($Mode -eq 'Install') {
     Copy-Item -LiteralPath $PSCommandPath -Destination $runner -Force
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'ai-education-launcher.wsf') -Destination $launcher -Force
     [IO.File]::WriteAllText((Join-Path $folder 'runner.json'),(@{distribution=$Distribution;script=$ScriptPath;home=$WorkerHome}|ConvertTo-Json),(New-Object Text.UTF8Encoding($false)))
+    # Daily JST morning window, not a 24-hour minute poll. Python still owns all
+    # admission decisions, budgets and locks; an overlapping invocation is skipped.
+    $jstDate = [TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::UtcNow, 'Tokyo Standard Time').ToString('yyyy-MM-dd')
+    $morning = New-ScheduledTaskTrigger -Daily -At '05:00'
+    $morning.StartBoundary = $jstDate + 'T05:00:00+09:00'
+    $morning.Repetition = (New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-TimeSpan -Minutes 5) -RepetitionDuration (New-TimeSpan -Hours 3)).Repetition
+    $morning.Repetition.StopAtDurationEnd = $false
+    # Receive the 08:30 cloud review; 09:00 is a bounded fallback for the existing
+    # hourly maintenance throttle or a busy common lock. Neither starts education.
+    $review = New-ScheduledTaskTrigger -Daily -At '08:35'
+    $review.StartBoundary = $jstDate + 'T08:35:00+09:00'
+    $fallback = New-ScheduledTaskTrigger -Daily -At '09:00'
+    $fallback.StartBoundary = $jstDate + 'T09:00:00+09:00'
+    $logon = New-ScheduledTaskTrigger -AtLogOn -User ([Security.Principal.WindowsIdentity]::GetCurrent().Name)
+    $triggers = @($morning,$review,$fallback,$logon)
     if (-not $existing) {
         $action = New-ScheduledTaskAction -Execute $hostExecutable -Argument $arguments -WorkingDirectory $folder
-        $repeat = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes 1)
-        $logon = New-ScheduledTaskTrigger -AtLogOn -User ([Security.Principal.WindowsIdentity]::GetCurrent().Name)
         $principal = New-ScheduledTaskPrincipal -UserId ([Security.Principal.WindowsIdentity]::GetCurrent().Name) -LogonType Interactive -RunLevel Limited
         $settings = New-ScheduledTaskSettingsSet -MultipleInstances IgnoreNew -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Minutes 10)
-        Register-ScheduledTask -TaskName $taskName -Action $action -Trigger @($repeat,$logon) -Settings $settings -Principal $principal -Description 'Plunode AI education: finite local CPU polls; existing limits and common lock; no shared Kev changes.' | Out-Null
+        Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $triggers -Settings $settings -Principal $principal -Description 'Plunode AI education: finite local CPU polls; existing limits and common lock; no shared Kev changes.' | Out-Null
+    } else {
+        # Update only our verified task's triggers, preserving its settings and
+        # enabled/disabled state. Reinstall must also replace the old minute poll.
+        Set-ScheduledTask -TaskPath '\' -TaskName $taskName -Trigger $triggers | Out-Null
     }
-    Start-ScheduledTask -TaskName $taskName
+    if (-not $existing -or $existing.State -ne 'Disabled') {
+        Start-ScheduledTask -TaskName $taskName
+    }
 } elseif ($Mode -eq 'Enable') {
     if (-not $existing) { throw 'Install the task first' }
     Enable-ScheduledTask -TaskName $taskName | Out-Null
@@ -54,5 +73,5 @@ if ($Mode -eq 'Install') {
 $task = Get-ScheduledTask -TaskName $taskName
 $info = Get-ScheduledTaskInfo -TaskName $taskName
 [pscustomobject]@{TaskName=$task.TaskName;State=[string]$task.State;LastRunTime=$info.LastRunTime;LastTaskResult=$info.LastTaskResult;NextRunTime=$info.NextRunTime;
-    Triggers=@($task.Triggers | ForEach-Object {if($_.CimClass.CimClassName -eq 'MSFT_TaskLogonTrigger'){'Logon'}else{$_.Repetition.Interval}});
+    Triggers=@($task.Triggers | ForEach-Object {[pscustomobject]@{Type=$_.CimClass.CimClassName;Start=$_.StartBoundary;Interval=$_.Repetition.Interval;Duration=$_.Repetition.Duration}});
     MultipleInstances=[string]$task.Settings.MultipleInstances;WakeToRun=$task.Settings.WakeToRun;ExecutionTimeLimit=$task.Settings.ExecutionTimeLimit} | ConvertTo-Json -Compress
