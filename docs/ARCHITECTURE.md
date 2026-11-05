@@ -1,3 +1,14 @@
+# 現在の正本と配置境界（2026-11-05）
+
+今後の実装は[文脈照合と再計画](design/PLUNODE_IMPLEMENTATION_REPLAN_20261105.md)と[進行表](PLUNODE_PROGRESS.md)を入口にする。全データ巡回・通常の自動整理、設定後の資料探し・定期収集、新旧検索・多言語・年表入力・Capsuleへの接続、安全なリンク・取得・未信頼AI入力に残件があり、本運用初版は未完了。
+
+- βの新方式はPostgreSQLの独立した知識DB／`knowledge75`の原記録・版を正本とし、Neo4jの専用label／公開世代を探索投影に使う。会員DBの認証・投稿／処理queueと責務・資格を分ける。詳細は[共通原本](design/KNOWLEDGE_FOUNDATION_U1.md)と[公開投影](design/KNOWLEDGE_PUBLIC_READ_U2.md)。
+- 既存の旧KGは並行して読む。本文中の「Neo4jが正本」「投稿flowは将来」等は旧KG／当時の構成の記録で、新方式の契約を取り消すものではない。旧KG由来も巡回・検索対象から落とさず、対応と切替を確認する。
+- main／3200／HTTPS βには新方式が段階配置済み。最後の機能配置はapp `1533a9fd`／build `QoUVviDCX8He2jvYcdER7`。正式VPSへの新方式切替はR6／旧U8で、β成功と正式公開を区別する。今回の再計画は文書だけで、本番実機は再確認していない。
+- 原語・訳文・意味対応・同一性・原資料・固定断面を分け、根拠付きの自動適用と任意管理を接続する。下記の旧提案・段階的な制限を、最新の要件から機能を除外する根拠にしない。
+
+以下は各時点の配置履歴と旧構成の詳細。現在の実装順と不足は上記の再計画を優先する。
+
 2026-11-04 U6c：公開後の意味整理・候補確認・一括適用／解除をmain／3200／HTTPS βへ接続。元の具体語・26記録版・5テーマ版・25 Capsuleを保持し、実NASA・漫画の2群で確認。app `1a00a448` / build `cUVfr_QUPOYX9Ucm63sEv`。U6全体は未完了、同一性整理・Chat取込・総合一巡が残る。[実操作・配置・制約・再開](verification/KNOWLEDGE_ORGANIZATION_U6_20261104.md)。以下は各時点の履歴。
 
 2026-11-04 U6b：取得済み資料の読解・個別支持確認・共通原記録への自動登録をmain／3200／HTTPS βへ接続。実NASA資料からTheme追記とThemeなしの2関係を登録し、旧Theme版を保持。app `fca14761` / build `6e-oR7REeDvKQEgoaaU1g`。U6全体は未完了で、後追い意味整理・パッケージ取込・総合一巡は後続。[実操作・利用量・制約・再開](verification/KNOWLEDGE_COLLECTION_U6_READING_20261104.md)。以下は各時点の履歴。

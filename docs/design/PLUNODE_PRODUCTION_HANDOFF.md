@@ -1,8 +1,12 @@
-現在地の入口： [Plunode進行表](../PLUNODE_PROGRESS.md)。U6は途中。**全データ巡回・整理の自動化は初版の必須残件**であり、初版対象外という説明は撤回した。[スコープ訂正・完成条件・コード差分](KNOWLEDGE_ORGANIZATION_AUTOMATION.md)を最優先する。U6d「同じ対象の関連付け」は任意管理画面としてmain／3200／HTTPS βへ反映・実Googleで確認済み（app 1533a9fd / build QoUVviDCX8He2jvYcdER7）。[実操作・保全・再開](../verification/KNOWLEDGE_ENTITY_IDENTITIES_20261105.md)。外部取込と通し確認も未完了。以下の人手中心の区切り・旧回数見込みを、初版全体の完成条件にしない。
+現在地の入口：[Plunode進行表](../PLUNODE_PROGRESS.md)。**次の作業は[11月5日の再計画](PLUNODE_IMPLEMENTATION_REPLAN_20261105.md)のR1**。監査基準は `76e6ea36`、稼働app `1533a9fd` / build `QoUVviDCX8He2jvYcdER7`。全データ巡回、自動資料探し・定期収集、同一性と重複、多言語利用、時期フォーム、通常検索と焦点、安全なリンク／取得／AI入力に不足があり、本運用初版は未完了。以下の旧U6順序・回数や3276主入口を、現在の実装順として使わない。
+
+R1の先行確認は、追加課金なしの資料発見接続、Recordの言語だけの訂正判定とoperatorの旧言語継承、同一性を重複・対象選択へ反映する共通契約。資料探索は現free Gemini審査APIで実行可能と未実証で、公式料金条件にも差がある。自動収集を手動へ縮小せず、不成立時は証拠・代案・影響を提示する。独立する整合修正・対象台帳は並行して進められる。
+
+会員DB追加migration・知識DB版・private runtimeは現行runbookと実物から照合し、適用済みchecksumを書換えない。未追跡mainの`memo.txt`、作業側の`.local/`、旧成果・会員・独立コミュニティ・既存KGを保護する。画面・機能変更は検証済みmainを3200／HTTPS βへ反映する。今回の再計画は文書のみで、DB・アプリ・VPSは変更していない。
 
 2026-11-05 明示依頼の自動翻訳草稿・再利用・用途別利用量をmain／3200／HTTPS βへ反映。実Googleで生成→編集→意味一致確認→公開、再訪での再利用を確認。app `bb0e1543` / build `2ic3u8M0Jz1beaSj3Ra6X`。member029、原記録と既存Capsuleを保持。本番VPS／3276は未更新。訳名検索・Graphラベル言語切替・U6残件は継続。[現行契約](KNOWLEDGE_TRANSLATION_GENERATION.md)／[実操作・再開・制約](../verification/KNOWLEDGE_TRANSLATION_GENERATION_20261105.md)。以下は各時点の記録。
 
-# 現在の引継ぎ：U6cまで
+# 過去時点の引継ぎ記録
 
 2026-11-05 手動訳文の第二段階をmain／3200／HTTPS βへ反映。原文と別の訳文版、訳文訂正、公開／匿名帰属、Capsule固定を実Googleで一巡。app `0e079608` / build `XVjZIJ9r71buN5sJexSSZ`。knowledge005追加、member ledger29を維持。本番VPS／3276は未更新。自動翻訳・訳名検索・U6残件は継続。[現行契約](KNOWLEDGE_TRANSLATION_VERSIONS.md)／[実操作・検証・制約](../verification/KNOWLEDGE_TRANSLATIONS_20261105.md)。以下は各時点の記録。
 

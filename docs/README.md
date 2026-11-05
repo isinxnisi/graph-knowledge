@@ -1,5 +1,7 @@
 # 現在の進行状態
 
+**2026-11-05 現在から先の実装計画は[文脈照合と再計画](design/PLUNODE_IMPLEMENTATION_REPLAN_20261105.md)。** 全データ巡回に加え、設定後の資料探し・定期収集、同一性／重複／原語・訳文、検索・年表入力・Capsuleの接続、安全な外部リンク・取得・AI入力を初版の残件へ整理しました。部分β確認を全体完成と扱わず、R1から整合修正・能力確認を進めます。[現在地・回数見込み](PLUNODE_PROGRESS.md)。以下は過去時点の配置・確認記録です。
+
 2026-11-05 スコープ訂正：全データ巡回を初版から除外する判断は撤回。巡回・候補生成・根拠確認・条件を満たす自動適用は未完了で、U6の必須残件。任意管理画面の完成を自動化の完成に代えない。[現行の完成条件・実装との差分](design/KNOWLEDGE_ORGANIZATION_AUTOMATION.md)。文書のみの変更でアプリの再build・DB変更は行っていない。
 
 全体の現在地・完了した範囲・残り回数の見込みは [Plunode進行表](PLUNODE_PROGRESS.md) を参照してください。今回のU6dはmain／3200／HTTPS βへ反映・実Googleで確認済みです（app 1533a9fd / build QoUVviDCX8He2jvYcdER7）。[検証・再開](verification/KNOWLEDGE_ENTITY_IDENTITIES_20261105.md)。以下は配置時点ごとの記録です。
