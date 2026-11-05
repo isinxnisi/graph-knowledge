@@ -72,6 +72,6 @@ export function matchSourceExcerpt(document:SourceDocument,excerpt:string):Sourc
  if(!normalized.includes(quote))throw new SourceCheckError("抜粋を原資料の本文に見つけられませんでした。要約ではなく、資料から引用した文章を確認してください。");
  return {url:document.url,bodySha256:hash(document.body),textSha256:hash(normalized),excerptSha256:hash(quote),extractor:SOURCE_EXTRACTOR,checkedAt:new Date().toISOString()};
 }
-export async function verifySourceExcerpt(url:string,excerpt:string){
+export async function verifySourceExcerpt(url:string,excerpt:string):Promise<SourceProof>{
   try{return {...matchSourceExcerpt(await publicSourceDocument(url),excerpt),requestedUrl:sourceURL(url).href};}catch(e){if(e instanceof SourceCheckError)throw e;throw new SourceCheckError("原資料との接続を確認できません。時間をおいて再試行します。",true);}
 }
