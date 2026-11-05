@@ -1,0 +1,79 @@
+{
+  "source": "1533a9fd1da9d04c6480f65278af251ec1390b55",
+  "build": "QoUVviDCX8He2jvYcdER7",
+  "immutableTables": {
+    "knowledge75.revisions": {
+      "count": 76,
+      "md5": "d785edc43b2c0e4b62152188c711b9f8"
+    },
+    "public.member_capsule": {
+      "count": 26,
+      "md5": "a3d4ecdbc65cdfe2cb99e9c5ffeb8a5c"
+    }
+  },
+  "originalsAndCapsulesUnchanged": true,
+  "identity": {
+    "links": 1,
+    "versions": 3,
+    "ledger": [
+      "001-records.sql",
+      "002-publication.sql",
+      "004-submission-references.sql",
+      "005-text-translations.sql",
+      "006-entity-identities.sql"
+    ]
+  },
+  "memberLedger": 30,
+  "localhostHttp": [
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/api/knowledge/public?mode=entities&q=Webb&limit=50",
+      "status": 200
+    },
+    {
+      "path": "/api/knowledge/identities?id=submission%3A47181407aa48fae85513c57ff2d92fa1%3Aentity%3A3b8d31737c458f1c",
+      "status": 200,
+      "peerCount": 1
+    },
+    {
+      "path": "/api/entities/2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "status": 200
+    },
+    {
+      "path": "/api/site-operations/knowledge-identity",
+      "status": 401
+    }
+  ],
+  "httpsBeta": {
+    "realGoogleBrowser": "link / explore peer / withdraw / revisit / relink verified",
+    "pcAnd390pxBrowser": true,
+    "pythonAnonymousHttpStatus": 403
+  },
+  "workers": {
+    "beta": {
+      "running": true,
+      "cwd": "main"
+    },
+    "knowledge-review-worker": {
+      "running": true,
+      "cwd": "main"
+    },
+    "knowledge-beta-worker": {
+      "running": true,
+      "cwd": "main"
+    },
+    "knowledge-collection-worker": {
+      "running": true,
+      "cwd": "main"
+    },
+    "knowledge-collection-reader": {
+      "running": true,
+      "cwd": "main"
+    }
+  },
+  "vpsChanged": false,
+  "newAiCalls": 0
+}
