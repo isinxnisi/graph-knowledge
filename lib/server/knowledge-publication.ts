@@ -1,4 +1,6 @@
 import {readKnowledgeTextOriginal,readKnowledgeTranslation,readKnowledgeTranslationById} from "./knowledge-foundation";
+import {identitySearchIds} from './knowledge-identity';
+import {migrateKnowledgeIdentities} from './knowledge-identity-migrate';
 import type {KnowledgeTextTarget} from "../domain/knowledge-translation";
 import { createHash, randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
@@ -23,6 +25,7 @@ const schemaVersion = "002-publication.sql";
 
 export async function ensureKnowledgePublicationSchema(pool: Pool) {
   await ensureKnowledgeFoundationSchema(pool);
+  await migrateKnowledgeIdentities(pool);
   const sql = await readFile(path.join(process.cwd(),"migrations/knowledge-foundation",schemaVersion),"utf8");
   const checksum = createHash("sha256").update(sql).digest("hex");
   const c = await pool.connect();
@@ -258,13 +261,14 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
     }),
     entities:(raw:unknown={})=>read(async c=>{
       const q=knowledgeEntityQuerySchema.parse(raw);const cursor=decodeCursor(q.cursor);const actual=await generation(c,q.generation??cursor?.generation);
-      const filter=knowledgeDigest({kind:"entities",q:normalize(q.q),entityKind:q.kind??null,entityId:q.entityId??null,entityIds:q.entityIds??null,limit:q.limit});
+      const identities=await identitySearchIds(c,q.q,actual.id);
+      const filter=knowledgeDigest({kind:"entities",q:normalize(q.q),identities,entityKind:q.kind??null,entityId:q.entityId??null,entityIds:q.entityIds??null,limit:q.limit});
       if(cursor&&(cursor.generation!==actual.id||cursor.filter!==filter))throw new KnowledgeError("対象の検索条件と続きの取得条件が一致しません",400,"CURSOR_MISMATCH");
       const values:unknown[]=[actual.id,cursor?.after??""];const conditions=["e.generation=$1","e.id>$2","o.visibility='public'","p.id IS NOT NULL"];
       if(q.entityId){values.push(q.entityId);conditions.push(`e.id=$${values.length}`);}
       if(q.entityIds){values.push(q.entityIds);conditions.push(`e.id=ANY($${values.length}::text[])`);}
       if(q.kind){values.push(q.kind);conditions.push(`e.body#>>'{content,kind}'=$${values.length}`);}
-      if(q.q){values.push("%"+normalize(q.q).replace(/[\\%_]/g,"\\$&")+"%");conditions.push(`lower(normalize(concat_ws(' ',e.body#>>'{content,name}',(e.body#>'{content,aliases}')::text),NFKC)) LIKE $${values.length} ESCAPE E'\\\\'`);}
+      if(q.q){values.push("%"+normalize(q.q).replace(/[\\%_]/g,"\\$&")+"%");const textIndex=values.length;values.push(identities);conditions.push(`(lower(normalize(concat_ws(' ',e.body#>>'{content,name}',(e.body#>'{content,aliases}')::text),NFKC)) LIKE $${textIndex} ESCAPE E'\\\\' OR e.id=ANY($${values.length}::text[]))`);}
       values.push(q.limit+1);
       const rows=(await c.query(`SELECT e.id,e.body FROM knowledge75.publication_entities e LEFT JOIN knowledge75.objects o ON o.kind='entity' AND o.id=e.id LEFT JOIN knowledge75.published_revisions p ON p.kind='entity' AND p.id=e.id AND p.revision=e.revision WHERE ${conditions.join(" AND ")} ORDER BY e.id LIMIT $${values.length}`,values)).rows;
       const hasMore=rows.length>q.limit;const selected=rows.slice(0,q.limit);
@@ -272,12 +276,13 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
     }),
     search:(raw:unknown)=>read(async c=>{
       const q=knowledgePublicationQuerySchema.parse(raw);const cursor=decodeCursor(q.cursor);const actual=await generation(c,q.generation??cursor?.generation);
+      const identities=await identitySearchIds(c,q.q,actual.id);
       const {cursor:_cursor,generation:_generation,...filters}=q;void _cursor;void _generation;
-      const filter=knowledgeDigest({kind:"search",...filters,q:normalize(q.q??"")});
+      const filter=knowledgeDigest({kind:"search",...filters,q:normalize(q.q??""),identities});
       if(cursor&&(cursor.generation!==actual.id||cursor.filter!==filter))throw new KnowledgeError("検索条件と続きの取得条件が一致しません",400,"CURSOR_MISMATCH");
       const values:unknown[]=[actual.id,cursor?.after??""];const where=["r.generation=$1","r.id>$2",readableSql()];
       const equal=(column:string,v:unknown)=>{if(v!==undefined&&v!==""){values.push(v);where.push(`r.${column}=$${values.length}`);}};
-      if(q.q){values.push("%"+normalize(q.q).replace(/[\\%_]/g,"\\$&")+"%");where.push(`r.search_text LIKE $${values.length} ESCAPE E'\\\\'`);}
+      if(q.q){values.push("%"+normalize(q.q).replace(/[\\%_]/g,"\\$&")+"%");const textIndex=values.length;values.push(identities);where.push(`(r.search_text LIKE $${textIndex} ESCAPE E'\\\\' OR r.subject_id=ANY($${values.length}::text[]) OR r.object_id=ANY($${values.length}::text[]))`);}
       if(q.entityId){values.push(q.entityId);where.push(`(r.subject_id=$${values.length} OR r.object_id=$${values.length})`);}
       for(const [column,v] of [["relation_label",q.relationLabel],["polarity",q.polarity],["concept_id",q.conceptId],["predicate",q.predicate],["role_id",q.roleId],["isbn13",q.isbn13],["organization_position_id",q.organizationPositionId],["event_role_id",q.eventRoleId],["event_id",q.eventId]] as const)equal(column,v);
       if(q.eventDay){values.push(q.eventDay);where.push(`r.event_from <= $${values.length}::date AND r.event_to >= $${values.length}::date`);}

@@ -24,7 +24,7 @@ export async function closeKnowledgePublicationPreview() {
 
 /** Beta Web never performs migrations as a side effect of opening the TOP. */
 export async function verifyKnowledgeReadSchema(target:Pool){
- for(const name of ["001-records.sql","002-publication.sql"]){
+ for(const name of ["001-records.sql","002-publication.sql","006-entity-identities.sql"]){
   const checksum=createHash("sha256").update(await readFile(path.join(process.cwd(),"migrations/knowledge-foundation",name),"utf8")).digest("hex");
   const row=(await target.query("SELECT checksum FROM knowledge75.migrations WHERE name=$1",[name])).rows[0];
   if(row?.checksum!==checksum)throw new ThemeError("知識DBの明示migrationを確認してください",503);

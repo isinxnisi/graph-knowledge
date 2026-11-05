@@ -5,6 +5,7 @@ import { Pool } from "pg";
 import neo4j from "neo4j-driver";
 import { createKnowledgeFoundationService } from "../lib/server/knowledge-foundation";
 import { createKnowledgePublicationService, ensureKnowledgePublicationSchema } from "../lib/server/knowledge-publication";
+import {createKnowledgeIdentity} from '../lib/server/knowledge-identity';
 import { adaptLegacyKnowledge } from "../lib/domain/knowledge-legacy";
 import type { KnowledgeActor } from "../lib/domain/knowledge-foundation";
 
@@ -30,6 +31,22 @@ describe.skipIf(!url||!password)("publication PostgreSQL indexes and real Neo4j 
   const publish=async()=>{const result=await publication.publishPending();expect(result.active).not.toBeNull();return result.active!.id;};
   beforeAll(async()=>{expect((await pool.query("SELECT current_database() AS n")).rows[0].n).toMatch(/^plunode_knowledge75_test_/);await driver.verifyConnectivity();await ensureKnowledgePublicationSchema(pool);},30000);
   afterAll(async()=>{await pool.end();await driver.close();});
+  it('searches reviewed identity names while retaining endpoints, and invalidates a changed identity cursor',async()=>{
+    await seed('identity-public-');const generation=await publish(),identities=createKnowledgeIdentity(pool);
+    const cmd={requestId:randomUUID(),left:{id:'identity-public-a',revision:1},right:{id:'identity-public-b',revision:1},expectedRevision:0,state:'same',reason:'隔離データの同一性検証',reference:'https://example.com/proof',locator:'本文'};
+    expect((await publication.search({generation,q:'identity-public-a'})).records.map(r=>r.record.id)).not.toContain('identity-public-r1');
+    await identities.act(operator.id,cmd);
+    const result=await publication.search({generation,q:'identity-public-a'});expect(result.records.map(r=>r.record.id)).toContain('identity-public-r1');expect(result.records.find(r=>r.record.id==='identity-public-r1')?.record.content.subjectId).toBe('identity-public-b');
+    const page=await publication.entities({generation,q:'identity-public-a',limit:1});expect(page.hasMore).toBe(true);
+    await identities.act(operator.id,{...cmd,requestId:randomUUID(),expectedRevision:1,state:'withdrawn'});
+    await expect(publication.entities({q:'identity-public-a',limit:1,cursor:page.nextCursor!})).rejects.toMatchObject({code:'CURSOR_MISMATCH'});
+    expect((await publication.search({generation,q:'identity-public-a'})).records.map(r=>r.record.id)).not.toContain('identity-public-r1');
+    const before=await foundation.get(operator,'entity','identity-public-b');
+    await run('correct',{kind:'entity',id:before.id,expectedRevision:1,content:{...before.content,description:'内容の訂正'}});
+    await identities.act(operator.id,{...cmd,requestId:randomUUID(),expectedRevision:2,right:{id:before.id,revision:2}});
+    expect((await publication.search({generation,q:'identity-public-a'})).records.map(r=>r.record.id)).not.toContain('identity-public-r1');
+    const latest=await publish();expect((await publication.search({generation:latest,q:'identity-public-a'})).records.map(r=>r.record.id)).toContain('identity-public-r1');
+  });
   it("creates indexed immutable rows, serves concrete language and follows actual Neo4j relations",async()=>{await seed("basic-");const generation=await publish();const page=await publication.search({generation,q:"basic-別名",limit:2});expect(page.records).toHaveLength(2);expect(page.nextCursor).not.toBeNull();expect(page.records[0].label).toBe("basic-観測した");expect(page.records[0].record.content.evidence[0].locator).toBe("第1章");const near=await publication.neighbors({generation,entityId:"basic-a"});expect(near.records.map(r=>r.record.id)).toEqual(["basic-r0","basic-r2"]);const paths=await publication.paths({generation,fromEntityId:"basic-a",toEntityId:"basic-c",maxDepth:2});expect(paths.paths).toContainEqual({recordIds:["basic-r0","basic-r1"],entityIds:["basic-a","basic-b","basic-c"]});expect(paths.paths).toContainEqual({recordIds:["basic-r2"],entityIds:["basic-a","basic-c"]});const indexes=(await pool.query("SELECT indexdef FROM pg_indexes WHERE schemaname='knowledge75' AND tablename='publication_records'")).rows.map(r=>r.indexdef).join(" ");expect(indexes).toContain("gin_trgm_ops");expect(indexes).toContain("concept_id");expect(indexes).toContain("role_id");});
   it("uses a GIN trigram plan for a bounded substring query",async()=>{const c=await pool.connect();try{await c.query("BEGIN");await c.query("SET LOCAL enable_seqscan=off");const plan=JSON.stringify((await c.query("EXPLAIN (FORMAT JSON) SELECT id FROM knowledge75.publication_records WHERE search_text LIKE '%観測%'" )).rows);expect(plan).toContain("knowledge75_publication_search");await c.query("ROLLBACK");}finally{c.release();}});
   it("binds cursor to generation and all filters while active moves forward",async()=>{await seed("cursor-");const old=await publish();const first=await publication.search({generation:old,q:"cursor-",limit:1});expect(first.nextCursor).not.toBeNull();await seed("cursor-new-");const current=await publish();expect(current).not.toBe(old);const second=await publication.search({q:"cursor-",limit:1,cursor:first.nextCursor!});expect(second.generation).toBe(old);expect(second.records[0].record.id).toBe("cursor-r1");await expect(publication.search({q:"basic-",limit:1,cursor:first.nextCursor!})).rejects.toMatchObject({code:"CURSOR_MISMATCH"});await expect(publication.search({q:"cursor-",limit:2,cursor:first.nextCursor!})).rejects.toMatchObject({code:"CURSOR_MISMATCH"});await expect(publication.search({generation:current,q:"cursor-",limit:1,cursor:first.nextCursor!})).rejects.toMatchObject({code:"CURSOR_MISMATCH"});});

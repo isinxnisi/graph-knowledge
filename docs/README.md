@@ -1,3 +1,7 @@
+# 現在の進行状態
+
+全体の現在地・完了した範囲・残り回数の見込みは [Plunode進行表](PLUNODE_PROGRESS.md) を参照してください。以下は配置時点ごとの記録です。
+
 2026-11-05 明示依頼の自動翻訳草稿・再利用・用途別利用量をmain／3200／HTTPS βへ反映。実Googleで生成→編集→意味一致確認→公開、再訪での再利用を確認。app `bb0e1543` / build `2ic3u8M0Jz1beaSj3Ra6X`。member029、原記録と既存Capsuleを保持。本番VPS／3276は未更新。訳名検索・Graphラベル言語切替・U6残件は継続。[現行契約](design/KNOWLEDGE_TRANSLATION_GENERATION.md)／[実操作・再開・制約](verification/KNOWLEDGE_TRANSLATION_GENERATION_20261105.md)。以下は各時点の記録。
 
 2026-11-05 手動訳文の第二段階をmain／3200／HTTPS βへ反映。原文と別の訳文版、訳文訂正、公開／匿名帰属、Capsule固定を実Googleで一巡。app `0e079608` / build `XVjZIJ9r71buN5sJexSSZ`。knowledge005追加、member ledger29を維持。本番VPS／3276は未更新。自動翻訳・訳名検索・U6残件は継続。[現行契約](design/KNOWLEDGE_TRANSLATION_VERSIONS.md)／[実操作・検証・制約](verification/KNOWLEDGE_TRANSLATIONS_20261105.md)。以下は各時点の記録。

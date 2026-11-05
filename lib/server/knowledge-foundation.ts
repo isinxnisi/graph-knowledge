@@ -103,7 +103,7 @@ async function revisionPublic(c: PoolClient, kind: KnowledgeKind, id: string, re
 async function assertRevisionPublic(c: PoolClient, kind: KnowledgeKind, id: string, revision: number) {
   if (!await revisionPublic(c, kind, id, revision)) throw new KnowledgeError("公開されていない版は閲覧できません", 403, "REVISION_NOT_PUBLIC");
 }
-async function recordReadable(c: PoolClient, r: KnowledgeRecordVersion) {
+export async function recordReadable(c: PoolClient, r: KnowledgeRecordVersion) {
   if (!await revisionPublic(c, "record", r.id, r.revision)) return false;
   for (const id of references(r)) if (!await visible(c, "entity", id)) return false;
   for (const e of r.content.evidence) if (!await revisionPublic(c, "source", e.source.id, e.source.revision)) return false;

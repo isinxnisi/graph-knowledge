@@ -1,3 +1,5 @@
+2026-11-05 追補：U6dは[同じ対象の関連付け](KNOWLEDGE_ENTITY_IDENTITIES.md)。破壊的統合をせず、内容版に結び付いた判断と解除を残す。U6e外部取込・U6f実テーマ通し確認は未完了。進行表は[こちら](../PLUNODE_PROGRESS.md)。
+
 # U6：有限収集と後追い整理
 
 2026-11-04。採用済み[統合計画](PLUNODE_PRODUCTION_INTEGRATION.md)のU6/P3。U5の投稿審査と区別し、既存の収集Workerを切り替えず、新経路をHTTPS βの専用データへ段階接続する。

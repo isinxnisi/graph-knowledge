@@ -1,3 +1,5 @@
+2026-11-05 追補：対象整理の追加migration 006-entity-identities.sql は migrateKnowledgeIdentities(pool)（lib/server/knowledge-identity-migrate.ts）で明示適用する。適用前に知識DBのbackup、別DB復元、006適用・再実行で既存行が変わらないことを確認する。既適用checksumは変更しない。Webの読取初期化は006のchecksumも検証する。会員DBへの追加migrationはない。既存の認証・private profileを引き継ぐ。
+
 2026-11-05 手動訳文の第二段階をmain／3200／HTTPS βへ反映。原文と別の訳文版、訳文訂正、公開／匿名帰属、Capsule固定を実Googleで一巡。app `0e079608` / build `XVjZIJ9r71buN5sJexSSZ`。knowledge005追加、member ledger29を維持。本番VPS／3276は未更新。自動翻訳・訳名検索・U6残件は継続。[現行契約](../design/KNOWLEDGE_TRANSLATION_VERSIONS.md)／[実操作・検証・制約](../verification/KNOWLEDGE_TRANSLATIONS_20261105.md)。以下は各時点の記録。
 
 追加005は `migrateKnowledgeTranslations(pool)` で明示適用し、実行前に適用済みchecksum、backup・別DB復元・再実行を確認する。ランタイム読取はmigrationを自動適用しない。既存のprivate profileを使う通常の再開は `python3 scripts/start-local-previews.py beta --node /home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/issue75/node`。独立3276やVPSへβのDB／秘密値をコピーしない。訳文付きCapsuleの保存後は、対応schemaのない旧Webへ戻さない。
