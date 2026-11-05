@@ -1,0 +1,67 @@
+{
+  "id": "67a28c1d-48e3-488d-840d-38cd0b3c60a5",
+  "state": "retry",
+  "attempts": 4,
+  "reason": "確認サービスとの通信が一時的に不安定です。時間をおいて自動で再試行します。投稿し直す必要はありません。",
+  "nextAttemptAt": "2026-11-05T11:19:40.433+00:00",
+  "submissionRevision": 2,
+  "attemptsDetail": [
+    {
+      "id": "a020915b-b778-4c25-b2f8-fbee6307e221",
+      "startedAt": "2026-11-05T10:25:20.576116+00:00",
+      "state": "delivery-unknown",
+      "requestCharge": 1,
+      "totalTokens": null,
+      "diagnostic": null
+    },
+    {
+      "id": "19989a19-8f9d-4d7b-8204-b9d6fde67da4",
+      "startedAt": "2026-11-05T10:27:32.664379+00:00",
+      "state": "http-error",
+      "requestCharge": 1,
+      "totalTokens": null,
+      "diagnostic": null
+    },
+    {
+      "id": "7136c30c-ea24-4a9d-bf80-2d48117a92ac",
+      "startedAt": "2026-11-05T10:29:41.511164+00:00",
+      "state": "delivery-unknown",
+      "requestCharge": 1,
+      "totalTokens": null,
+      "diagnostic": null
+    },
+    {
+      "id": "d787f484-256a-4834-8edd-3608778e9498",
+      "startedAt": "2026-11-05T11:02:29.33751+00:00",
+      "state": "delivery-unknown",
+      "requestCharge": 1,
+      "totalTokens": null,
+      "diagnostic": {
+        "kind": "attempt-failure",
+        "state": "delivery-unknown",
+        "version": 1,
+        "category": "dns",
+        "transportCode": "EAI_AGAIN"
+      }
+    }
+  ],
+  "decisions": [],
+  "observedAtJST": "2026-11-05T20:06:48.777346+09:00",
+  "preservedWhileRetrying": {
+    "record": true,
+    "objects": true,
+    "revisions": true,
+    "contributions": true,
+    "capsules": true
+  },
+  "currentDnsChecks": {
+    "windows": true,
+    "wslPython": true,
+    "workerNodeLookup": true,
+    "workerNodeResolve4": true,
+    "configurationChanged": false
+  },
+  "source": "a9682921eaa3f3f44c3e5d18073e3f1297c48b6f",
+  "build": "xJavi_2YvZdx26ouGAToE",
+  "liveAcceptanceConfirmed": false
+}

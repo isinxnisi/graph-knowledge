@@ -1,4 +1,4 @@
-現在地の入口：[Plunode進行表](../PLUNODE_PROGRESS.md)。**R1a完了、R1bは同一性→会員投稿の照合と資料比較の共通関数まで配置済み。R1全体は未完了。** app `616f1840` / build `AQsmThdwxZZSYkAt7EMg0`。[R1bの検証・再開](../verification/KNOWLEDGE_R1B_IDENTITY_DUPLICATES_20261105.md)。全データ巡回・自動資料探し・定期収集・多言語利用・入力／探索接続・安全性は初版要件のまま。
+現在地の入口：[Plunode進行表](../PLUNODE_PROGRESS.md)。**R1a完了、R1bは同一性→会員投稿の照合と資料比較の共通関数まで配置済み。R1全体は未完了。** app a9682921 / build xJavi_2YvZdx26ouGAToE。[R1bの検証・再開](../verification/KNOWLEDGE_R1B_IDENTITY_DUPLICATES_20261105.md)。全データ巡回・自動資料探し・定期収集・多言語利用・入力／探索接続・安全性は初版要件のまま。
 
 **受け渡しはChatGPT側でテーマ・資料URL・情報を揃える → 認証付きPlunode取込API → 原本取得・根拠確認・重複照合・登録。** Issue等は同じpackageの代替配送。URL探索APIの導入やGemini検索機能を着手条件にしない。一般投稿は当面投稿URLで確認する。[取込契約](KNOWLEDGE_IMPORT_CONTRACT.md)は具体化したが、API／永続package／配送は未実装。
 
@@ -6,7 +6,7 @@
 
 1. AGENTSの指示先・[再計画](PLUNODE_IMPLEMENTATION_REPLAN_20261105.md)・R1b記録を読む。HEAD・dirty・稼働buildを照合し、review／hold／token確認。mainの`memo.txt`と作業側の`.local/`を保護する。
 2. R1aの原語訂正・Theme訂正、R1bの共有resolver・重複照合をやり直さない。最終受理は同一性の変更と排他し、元Recordの端点や固定断面を保つ。
-3. β確認投稿は外部AI接続3回未成功でattention。既存の再確認経路で再開し、最終「登録済み」と受理後の原本・履歴・断面不変を確認する。失敗を直接DBで成功に変えない。
+3. [投稿確認の一時障害対応](../verification/KNOWLEDGE_AI_RETRY_20261105.md)をβ反映。旧3回停止の同じ受付は4回目へ自動再開し、DNS EAI_AGAINを記録。現在は上限・予算付き自動再試行待ち。最終「登録済み」と受理後の原本・履歴・断面不変は未確認。直接DBで成功に変えず、同じ受付の状態を確認する。
 4. 共通の取得証明台帳と旧KG／commonの対象台帳を実装する。会員decision内だけのhash照合を全経路対応済みとせず、収集／取込も共通の最終受理と証明へ接続する。
 5. 取込契約からschema・専用資格・永続package／項目receipt・項目別結果・再送／訂正を実装。ChatGPT側との実接続を小さく確認し、直送不可ならIssue等を実際に試す。pathを書いただけ／手動貼付だけを自動配送完了にしない。
 6. R1のEntity原文訂正、固定版reader、翻訳文脈とcache、新旧対象・配置別認可、外部遷移と未信頼AI入力の不足を閉じる。同名の対象候補が表示上区別しにくい点も対象選択の残件として扱う。
