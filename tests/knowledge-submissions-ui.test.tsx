@@ -164,7 +164,7 @@ it('distinguishes same-name subjects with their descriptions, aliases and regist
  const choices=await screen.findAllByRole('button',{name:/田中一郎/});expect(choices).toHaveLength(2);
  expect(choices[0].textContent).toContain('版画家');expect(choices[1].textContent).toContain('宇宙工学');
  const rows=screen.getAllByRole('listitem');fireEvent.click(within(rows[0]).getByText('候補の詳細'));
- expect(within(rows[0]).getByText(/Ichiro Tanaka/)).toBeTruthy();expect(within(rows[0]).getByText('same-name-artist')).toBeTruthy();
+ expect(await within(rows[0]).findByText(/Ichiro Tanaka/)).toBeTruthy();expect(within(rows[0]).getByText('same-name-artist')).toBeTruthy();
  fireEvent.click(choices[1]);expect(choose).toHaveBeenCalledWith(expect.objectContaining({id:'same-name-scientist',revision:2}));
 });
 it('shows the fixed selection description again after reopening a draft',()=>{
@@ -177,4 +177,17 @@ it('reports a complete common-only search failure without implying another sourc
  render(<KnowledgeSubmissionTarget kinds={['entity']} commonOnly label='対象' locale='ja' onChoose={()=>{}}/>);
  expect(await screen.findByText('検索できませんでした。')).toBeTruthy();
  expect(screen.queryByText('一部の候補を取得できていません。')).toBeNull();
+});
+
+it('loads a bounded public neighborhood only after candidate details are opened',async()=>{
+ const fetcher=vi.mocked(fetch);fetcher.mockImplementation(async(path)=>{
+  if(String(path).includes('mode=neighbors'))return Response.json({records:[{record:{content:{assertion:'この対象を見分けるための関連記録。'}}}]});
+  return String(path).startsWith('/api/knowledge/public')?Response.json({entities:[a]}):Response.json({revision:'kg-release',items:[]});
+ });
+ render(<KnowledgeSubmissionTarget kinds={['entity']} commonOnly label='対象' locale='ja' onChoose={()=>{}}/>);
+ await screen.findByRole('button',{name:/既存の人物A/});
+ expect(fetcher.mock.calls.some(([v])=>String(v).includes('mode=neighbors'))).toBe(false);
+ fireEvent.click(screen.getByText('候補の詳細'));
+ expect(await screen.findByText('この対象を見分けるための関連記録。')).toBeTruthy();
+ expect(fetcher.mock.calls.some(([v])=>String(v).includes('mode=neighbors')&&String(v).includes('limit=3'))).toBe(true);
 });
