@@ -324,7 +324,9 @@ export function createKnowledgeFoundationService(pool: Pool) {
         let revision=1,unchanged=false,themeChanged=false;
         if(cmd.expectedRevision){const h=await head(c,"record",cmd.record.id,"FOR UPDATE");expected(h.current_revision,cmd.expectedRevision);await assertPublic(c,"record",cmd.record.id);
           const old=await version(c,'record',cmd.record.id,h.current_revision);
-          unchanged=knowledgeDigest(duplicateMeaning(old.content))===knowledgeDigest(duplicateMeaning(r))&&knowledgeDigest(old.content.evidence)===knowledgeDigest(r.evidence);
+          // Language metadata does not make a new fact, but correcting it does
+          // require a content revision. Keep semantic duplicate reuse separate.
+          unchanged=knowledgeDigest(duplicateMeaning(old.content))===knowledgeDigest(duplicateMeaning(r))&&knowledgeDigest(old.content.evidence)===knowledgeDigest(r.evidence)&&knowledgeDigest(old.content.textLanguages??null)===knowledgeDigest(r.textLanguages??null);
           revision=unchanged?h.current_revision:h.current_revision+1;
         }
         await validateRecord(c,{...cmd.record,revision,createdAt:"",reason:cmd.reason},entityPins,true);

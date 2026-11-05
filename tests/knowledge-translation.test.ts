@@ -36,6 +36,24 @@ describe.skipIf(!url)('independent translation versions on isolated PostgreSQL',
   await pool.query("INSERT INTO knowledge75.published_revisions(kind,id,revision) VALUES('entity',$1,1) ON CONFLICT DO NOTHING",[target.id]);
  },30000);
  afterAll(()=>pool.end());
+  it('keeps original prose, a translation and fixed Theme/Capsule snapshots across language-only acceptance',async()=>{
+   const id='language-metadata-original',recordTarget={kind:'record' as const,id,revision:1,field:'assertion' as const};
+   await run({action:'create-bundle',requestId:randomUUID(),reason:'原語訂正の試験',entityPins:[{id:target.id,revision:1}],sources:[],records:[{id,content:{kind:'note',subjectId:target.id,assertion:'資料に名前が載っている',textLanguages:{assertion:{tag:'ja',basis:'declared'}},evidence:[{id:'quote',source:{id:'translation-source',revision:1},locator:'本文',excerpt:'元の名前'}]}}]});
+   await run({action:'create-theme',requestId:randomUUID(),id:'language-metadata-theme',title:'固定した原語',recordPins:[{id,revision:1}]});
+   await pool.query("INSERT INTO knowledge75.published_revisions(kind,id,revision) VALUES('record',$1,1) ON CONFLICT DO NOTHING",[id]);
+   const translation=await run({action:'accept-translation',requestId:randomUUID(),target:recordTarget,language:'en',text:'The source lists the name.',originalHash:translationHash('資料に名前が載っている'),expectedRevision:0,reason:'原語と別の訳文'}) as {id:string};
+   const c=await pool.connect();let pinned;try{pinned=await readKnowledgeTranslationById(c,translation.id,1);}finally{c.release();}
+   const before=await foundation.resolveTheme({kind:'reader',id:'reader'},'language-metadata-theme');
+   const capsule=captureKnowledgeCapsule({title:'原語訂正前',snapshot:{...before.snapshot,translations:[pinned]}}),saved=JSON.stringify(capsule);
+   const original=before.snapshot.records[0];
+   const corrected=await foundation.execute({kind:'submission',id:'metadata-corrector'},{action:'accept-record',requestId:randomUUID(),reason:'原語の指定のみを訂正',entities:[],sources:[],expectedRevision:1,entityPins:[{id:target.id,revision:1}],sourcePins:[{id:'translation-source',revision:1}],record:{id,content:{...original.content,textLanguages:{assertion:{tag:'mul',basis:'declared'}}}}});
+   expect(corrected).toMatchObject({revision:2,disposition:'updated',content:{assertion:original.content.assertion,textLanguages:{assertion:{tag:'mul',basis:'declared'}}}});
+   expect(await foundation.get({kind:'reader',id:'reader'},'record',id,1)).toEqual(original);
+   expect((await foundation.resolveTheme({kind:'reader',id:'reader'},'language-metadata-theme')).snapshot).toEqual(before.snapshot);
+   const after=await pool.connect();try{expect(await readKnowledgeTranslationById(after,translation.id,1)).toEqual(pinned);}finally{after.release();}
+   expect(JSON.stringify(capsule)).toBe(saved);
+   expect(capsuleKnowledgeSchema.parse(JSON.parse(JSON.stringify(capsule.document!.knowledge)))).toEqual(capsule.document!.knowledge);
+  });
  it('applies the additive migration idempotently and keeps the original untouched',async()=>{
   expect((await migrateKnowledgeTranslations(pool)).applied).toBe(false);
   const before=await pool.query('SELECT content FROM knowledge75.revisions WHERE id=$1',[target.id]);

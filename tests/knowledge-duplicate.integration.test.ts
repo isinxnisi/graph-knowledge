@@ -17,6 +17,25 @@ describe.skipIf(!connectionString)('duplicate acceptance on isolated PostgreSQL'
  }
  beforeAll(async()=>{expect((await pool.query('SELECT current_database() AS name')).rows[0].name).toMatch(/^plunode_knowledge75_test_/);await ensureKnowledgeFoundationSchema(pool);},30000);
  afterAll(async()=>{await pool.end();});
+  it('versions a language-only correction and treats an exact retry or unchanged correction as existing',async()=>{
+   const p='language-only-';await seed(p);
+   const original=await foundation.get({kind:'reader',id:'reader'},'record',p+'original');
+   const command=knowledgeCommandSchema.parse({action:'accept-record',requestId:randomUUID(),reason:'原語の指定を訂正',entities:[],sources:[],entityPins:[{id:p+'a',revision:1},{id:p+'b',revision:1}],sourcePins:[{id:p+'s',revision:1}],expectedRevision:1,record:{id:original.id,content:{...original.content,textLanguages:{assertion:{tag:'ja',basis:'declared'},relation:{tag:'ja',basis:'declared'}}}}});
+   const saved=await foundation.execute(actor,command) as KnowledgeRecordVersion;
+   expect(saved).toMatchObject({revision:2,disposition:'updated',content:{textLanguages:{assertion:{tag:'ja',basis:'declared'}}}});
+   expect(await foundation.execute(actor,command)).toEqual(saved);
+   expect(await foundation.get({kind:'reader',id:'reader'},'record',original.id,1)).toEqual(original);
+   expect(await foundation.execute(actor,{...command,requestId:randomUUID(),expectedRevision:2})).toMatchObject({revision:2,disposition:'existing'});
+   expect(await foundation.execute(actor,{...command,requestId:randomUUID(),expectedRevision:2,record:{id:original.id,content:original.content}})).toMatchObject({revision:3,disposition:'updated'});
+   expect((await foundation.get({kind:'reader',id:'reader'},'record',original.id)).content.textLanguages).toBeUndefined();
+  });
+  it.each(['excerpt','locator'] as const)('preserves a deliberate %s-only correction through duplicate reuse',async field=>{
+   const p='correct-'+field+'-';await seed(p);const original=content(p),corrected=structuredClone(original);corrected.evidence[0][field]='明示して訂正した引用・箇所';
+   const plan:AcceptancePlan={recordId:p+'original',references:[],operation:'correct-record',command:knowledgeCommandSchema.parse({action:'accept-record',requestId:randomUUID(),reason:'引用の訂正',entities:[],sources:[],entityPins:[{id:p+'a',revision:1},{id:p+'b',revision:1}],sourcePins:[{id:p+'s',revision:1}],expectedRevision:1,record:{id:p+'original',content:corrected}})};
+   const prepared=await reuseDuplicatePlan(pool,plan,await captureDuplicates(pool,corrected,p+'original'),null);
+   expect(await foundation.execute(actor,prepared.command)).toMatchObject({revision:2,disposition:'updated',content:corrected});
+   expect((await foundation.get({kind:'reader',id:'reader'},'record',p+'original',1)).content).toEqual(original);
+  });
  it('reuses an existing fact without another record, revision, source or public change',async()=>{
   const p='duplicate-once-';await seed(p);const plan=proposed(p);if(plan.command.action!=='accept-record')throw Error('fixture');
   const before=(await pool.query('SELECT count(*)::int AS n FROM knowledge75.changes WHERE id LIKE $1',[p+'%'])).rows[0].n;

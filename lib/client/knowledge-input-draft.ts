@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { knowledgeIdSchema, knowledgePinSchema, knowledgeRecordContentSchema, type KnowledgeRecordVersion } from "../domain/knowledge-foundation";
+import { retainedTextLanguages } from "../domain/knowledge-language";
 
 export const knowledgeInputDraftKey = "plunode:knowledge75:operator-input:v1";
 const fields = ["subjectName", "subjectKind", "objectName", "objectKind", "relation", "assertion", "polarity", "scope", "from", "to", "sourceTitle", "sourceUrl", "bibliography", "locator", "excerpt", "reason"] as const;
@@ -28,7 +29,11 @@ export function writeKnowledgeInputDraft(storage: Pick<Storage, "setItem" | "rem
 }
 export function knowledgeInputCommand(draft: KnowledgeInputDraft): Record<string, unknown> {
   const v = (field: KnowledgeInputField) => draft.values[field].trim();
-  if (draft.mode === "correct") return { action: "correct", kind: "record", id: draft.base.id, expectedRevision: draft.base.revision, content: { ...draft.base.content, assertion: v("assertion"), relation: draft.base.content.kind === "relation" ? v("relation") : draft.base.content.relation }, reason: v("reason") };
+  if (draft.mode === "correct") {
+    const content = { ...draft.base.content, assertion: v("assertion"), relation: draft.base.content.kind === "relation" ? v("relation") : draft.base.content.relation };
+    content.textLanguages = retainedTextLanguages(draft.base.content, content, draft.base.content.textLanguages);
+    return { action: "correct", kind: "record", id: draft.base.id, expectedRevision: draft.base.revision, content, reason: v("reason") };
+  }
   const entities: { id: string; content: { name: string; aliases: string[]; kind: string; description: string; language: string } }[] = [];
   const entityPins: { id: string; revision: number }[] = [];
   const endpoint = (side: "subject" | "object") => {
