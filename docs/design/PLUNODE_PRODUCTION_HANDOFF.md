@@ -1,3 +1,5 @@
+2026-11-05 Gemini 3.1 Flash-Liteを比較評価しβ標準へ採用。既存60件は58有効回答、正常20/20が受理候補、非受理想定の誤受理候補0（2件未判定）。重複・翻訳・収集と同じ実wireの7例も成功。待機中の同じ投稿は8回目の3.1で原資料照合まで完了し、既存知識を再利用・Record／活動／Capsule不変を確認。app 298cebc7 / build GJ83iMCf0BBwsL-IlJzkJ、main／3200／HTTPS βへ反映。追加migration・課金・VPS変更なし。 [実測・利用枠・再開・制約](../verification/GEMINI31_REVIEW_BETA_20261105.md)。R1全体は未完了。以下は各時点の記録。
+
 2026-11-05 R1c反映済み：app 94bcf7dc / build VgN_c2H7-gtkdB7qFcShz。知識007追加、会員029・30 ledgerは不変。共通取得証明8件とcommon71／旧KG5,711対象の全件台帳を作成し、再実行・保全・216テスト・実Google代表経路を確認。[設計](KNOWLEDGE_ACQUISITION_INVENTORY.md)／[配置・検証・再開](../verification/KNOWLEDGE_R1C_ACQUISITION_INVENTORY_20261105.md)。R1全体と初版は未完了。
 
 次は専用資格・厳密schema・永続package／項目receipt・HTTP受付／取消／結果・小さい実配送を接続する。全件列挙と取得証明は再実装せず共用する。R2の全件自動整理・R3の定期配送／収集を、手動CLIの利用で完成にしない。Entity原文訂正・固定版reader・翻訳文脈／cache等の残件も維持。
