@@ -1,5 +1,6 @@
 import {beforeAll,beforeEach,afterAll,describe,it,expect,vi} from 'vitest';
 import {Pool} from 'pg';
+import {reserveKnowledgeAI,quotaDate} from '../lib/server/knowledge-ai-budget';
 import {entityCorrectionSummary} from '../lib/domain/knowledge-entity-correction';
 import {readKnowledgeRecordVersion} from '../lib/server/knowledge-record-version';
 import {randomBytes,randomUUID,createHash} from 'node:crypto';
@@ -258,5 +259,18 @@ describe('historical publication visibility',()=>{
   expect(await fixed()).toMatchObject({contextBasis:'published-generation',record:{entities:[{content:{name:'A'}}]}});
   await foundation.execute({kind:'operator',id:'fixture'},{action:'set-visibility',requestId:randomUUID(),kind:'source',id:'baseline-source',expectedStatusRevision:1,visibility:'hidden',reason:'stop source'});
   await expect(fixed()).rejects.toMatchObject({status:404});
+ });
+});
+
+describe('reviewed local AI budget',()=>{
+ const reserve=async(config:typeof cfg,purpose:'submission'|'evaluation'|'collection-evaluation'='submission')=>{const c=await pool.connect();try{await c.query('BEGIN');const r=await reserveKnowledgeAI(c,config,{purpose,policy:'budget-fixture',inputReserved:100,outputReserved:100});await c.query('COMMIT');return r;}catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}};
+ const seed=async(config:typeof cfg,n:number,purpose:string)=>{const day=quotaDate(new Date());await pool.query("INSERT INTO member_knowledge.review_attempts(id,project_id,provider,model,policy,purpose,state,quota_day,quota_month,input_reserved,output_reserved,input_actual,output_actual,started_at,request_charge) SELECT gen_random_uuid(),$1,'gemini',$2,'fixture',$3,'received',$4,$5,1,1,1,1,clock_timestamp()-interval '2 minutes',1 FROM generate_series(1,$6)",[config.projectId,config.model,purpose,day,day.slice(0,7),n]);};
+ it('permits 400/day and stops at the configured boundary without claiming provider exhaustion',async()=>{
+  const config=reviewConfigSchema.parse({...cfg,projectId:'budget-'+randomUUID(),requestsPerDay:400,requestsPerMonth:12400});expect(reviewConfigSchema.safeParse({...config,requestsPerDay:401}).success).toBe(false);await createReviewQueue(pool).heartbeat(config);await seed(config,399,'submission');
+  expect((await reserve(config)).state).toBe('reserved');const stopped=await reserve(config);expect(stopped.state).toBe('wait');if(stopped.state==='wait'){expect(stopped.reason).toContain('400回');expect(stopped.reason).not.toContain('無料');}
+ });
+ it('caps all development evaluations together without blocking ordinary submissions',async()=>{
+  const config=reviewConfigSchema.parse({...cfg,projectId:'evaluation-budget-'+randomUUID(),requestsPerDay:400,requestsPerMonth:12400});await createReviewQueue(pool).heartbeat(config);await seed(config,99,'evaluation');await seed(config,1,'collection-evaluation');
+  const stopped=await reserve(config,'evaluation');expect(stopped.state).toBe('wait');if(stopped.state==='wait')expect(stopped.reason).toContain('開発評価用');expect((await reserve(config)).state).toBe('reserved');
  });
 });

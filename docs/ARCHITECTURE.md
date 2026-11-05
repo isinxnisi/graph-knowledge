@@ -1,4 +1,4 @@
-2026-11-06 R1e：共通Entityの原文訂正と公開Recordの固定版読取をmain／3200／HTTPS βへ接続。app 15127903／build EzloeT0Q_uvvVuE-f0Zyx。141テスト成功、旧版・ID・帰属・既存保存を保持。実Googleで訂正の保存・再訪・受付と旧版読取を確認。新しい訂正は無料枠による自動再開待ちで、実AIでの最終受理は未確認。[設計](design/KNOWLEDGE_ENTITY_CORRECTION.md)／[検証・再開](verification/KNOWLEDGE_R1E_ENTITY_HISTORY_20261106.md)。R1全体は未完了。
+2026-11-06 R1e：共通Entityの原文訂正と公開Recordの固定版読取をmain／3200／HTTPS βへ接続。app 15127903／build EzloeT0Q_uvvVuE-f0Zyx。141テスト成功、旧版・ID・帰属・既存保存を保持。実Googleで訂正の保存・再訪・受付と旧版読取を確認。新しい訂正は当時のサービス設定上限（80回／日）による自動再開待ちで、実AIでの最終受理は未確認。[設計](design/KNOWLEDGE_ENTITY_CORRECTION.md)／[検証・再開](verification/KNOWLEDGE_R1E_ENTITY_HISTORY_20261106.md)。R1全体は未完了。
 
 2026-11-05 R1d：外部サービス取込を会員投稿と別のknowledge_import schema・専用Bearer資格へ分離し、原資料取得／意味重複／acceptancePlan／foundation受理を共用する。actor.kind=importと正本journalで再開・由来を追い、会員や公開投稿者を偽装しない。正本適用と別DB receiptのACK喪失はjournal回収で整合させる。[契約](design/KNOWLEDGE_IMPORT_CONTRACT.md)／[検証](verification/KNOWLEDGE_IMPORT_R1D_20261105.md)。
 

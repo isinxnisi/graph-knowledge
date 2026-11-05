@@ -18,7 +18,7 @@ import {SourceCheckError} from './knowledge-source-verification';
 export const reviewConfigSchema=z.strictObject({
  projectId:z.string().min(1),billingTier:z.literal("free"),verifiedAt:z.string().datetime({offset:true}),
  model:z.enum(["gemini-3.5-flash-lite","gemini-3.1-flash-lite"]),rpm:z.number().int().min(1).max(15),tokensPerMinute:z.number().int().positive(),
- requestsPerDay:z.number().int().positive().max(80),requestsPerMonth:z.number().int().positive(),
+ requestsPerDay:z.number().int().positive().max(400),requestsPerMonth:z.number().int().positive(),
  inputTokensPerDay:z.number().int().positive(),outputTokensPerDay:z.number().int().positive(),
  inputTokensPerMonth:z.number().int().positive(),outputTokensPerMonth:z.number().int().positive(),
  apiKeyFile:z.string().min(1),allowedUsers:z.array(z.uuidv4()).min(1).max(10),
@@ -193,7 +193,7 @@ export function createReviewQueue(pool:Pool,options:{duplicates?:(value:Knowledg
     FROM member_knowledge.review_attempts WHERE project_id=$1`,[config.projectId,day,month])).rows[0];
    const project=(await pool.query("SELECT paused_until,pause_reason,heartbeat_at FROM member_knowledge.review_projects WHERE project_id=$1",[config.projectId])).rows[0]??null;
    const byPurpose=(await pool.query(`SELECT purpose,policy,sum(request_charge)::int AS requests,COALESCE(sum(input_actual),0)::bigint AS observed_input,COALESCE(sum(candidates_actual),0)::bigint AS observed_output,count(*) FILTER(WHERE input_actual IS NULL OR output_actual IS NULL)::int AS missing_usage FROM member_knowledge.review_attempts WHERE project_id=$1 AND quota_day=$2 GROUP BY purpose,policy ORDER BY purpose,policy`,[config.projectId,day])).rows;
-   return {provider:'gemini',projectId:config.projectId,model:config.model,day,month,localLimits:{rpm:config.rpm,tokensPerMinute:config.tokensPerMinute,requestsPerDay:config.requestsPerDay,requestsPerMonth:config.requestsPerMonth,inputTokensPerDay:config.inputTokensPerDay,outputTokensPerDay:config.outputTokensPerDay,translationRequestsPerDay:Math.floor(config.requestsPerDay/6),translationRequestsPerMonth:Math.floor(config.requestsPerMonth/6)},usage:row,byPurpose,project,providerRemainingUnknown:true};
+   return {provider:'gemini',projectId:config.projectId,model:config.model,day,month,localLimits:{rpm:config.rpm,tokensPerMinute:config.tokensPerMinute,requestsPerDay:config.requestsPerDay,requestsPerMonth:config.requestsPerMonth,inputTokensPerDay:config.inputTokensPerDay,outputTokensPerDay:config.outputTokensPerDay,collectionRequestsPerDay:Math.floor(config.requestsPerDay/3),evaluationRequestsPerDay:Math.floor(config.requestsPerDay/4),translationRequestsPerDay:Math.floor(config.requestsPerDay/6),translationRequestsPerMonth:Math.floor(config.requestsPerMonth/6)},usage:row,byPurpose,project,providerRemainingUnknown:true};
   },
   async importEvaluation(raw:unknown,digest:string,config:ReviewConfig){
    const ledger=z.object({projectId:z.string(),attempts:z.record(z.string(),z.object({day:z.string(),state:z.string(),startedAt:z.string(),inputReserved:z.number().int(),outputReserved:z.number().int(),inputActual:z.number().int().nullable(),outputActual:z.number().int().nullable()}))}).parse(raw);

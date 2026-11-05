@@ -166,7 +166,7 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
    let state='retry',reason='確認サービスとの接続を待っています。',next=reviewRetryAt(l.item.attempts+1,result.state==='http-error'?result.retryAfter:null);
    if(parsed){if(parsed.state==='reviewed'&&parsed.modelVersion===model){state=parsed.review.suitability==='abuse'?'declined':'needs-changes';reason=parsed.review.reason;}else{reason='確認結果の形式・モデルを確認できませんでした。内容を保持し、自動で再試行します。';}}
    else if(result.state==='http-error'){
-    if(result.category==='rate-limit'){state='quota';reason='確認サービスの無料利用枠を待っています。';}
+    if(result.category==='rate-limit'){state='quota';reason='外部AIの利用制限が解除されるまで待っています。';}
     else if(result.category==='authorization'||result.category==='invalid-request'){state='needs-changes';reason='確認サービスの接続設定を確認しています。内容の不受理ではありません。';}
     else reason='確認サービスが一時的に混雑しています。自動で再試行します。';
    }

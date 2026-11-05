@@ -57,7 +57,7 @@ export function createTranslationGeneration(pool:Pool,knowledge:Pool){
     else{state='attention';reason='生成結果を確認できませんでした。手入力で訳文を投稿できます。';}
    }else if(parsed){state='attention';reason='生成結果を確認できませんでした。手入力で訳文を投稿できます。';}
    else if(result.state==='http-error'){
-    if(result.category==='rate-limit'){state='quota';const n=Number(result.retryAfter),date=Date.parse(result.retryAfter??'');wait=new Date(Date.now()+Math.min(86400000,Math.max(120000,Number.isFinite(n)&&n>0?n*1000:Number.isFinite(date)?date-Date.now():120000)));reason='無料利用枠の再開を待っています。';}
+    if(result.category==='rate-limit'){state='quota';const n=Number(result.retryAfter),date=Date.parse(result.retryAfter??'');wait=new Date(Date.now()+Math.min(86400000,Math.max(120000,Number.isFinite(n)&&n>0?n*1000:Number.isFinite(date)?date-Date.now():120000)));reason='外部AIの利用制限が解除されるまで待っています。';}
     else if(['authorization','invalid-request'].includes(result.category)){state='attention';reason='接続設定の確認を待っています。手入力で投稿できます。';}
     if(['rate-limit','authorization','invalid-request'].includes(result.category))await c.query('UPDATE member_knowledge.review_projects SET paused_until=$2,pause_reason=$3 WHERE project_id=(SELECT project_id FROM member_knowledge.review_attempts WHERE id=$1)',[lease.attemptId,state==='quota'?wait:new Date(Date.now()+86400000),reason]);
    }
