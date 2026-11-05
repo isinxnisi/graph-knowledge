@@ -1,3 +1,4 @@
+import {readKnowledgeRecordVersion} from './knowledge-record-version';
 import {readKnowledgeTextOriginal,readKnowledgeTranslation,readKnowledgeTranslationById} from "./knowledge-foundation";
 import {identitySearchIds} from './knowledge-identity';
 import {migrateKnowledgeIdentities} from './knowledge-identity-migrate';
@@ -292,6 +293,7 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
     }),
     facets:(raw:{generation?:string}={})=>read(async c=>{const q=z.strictObject({generation:generationSchema.optional()}).parse(raw);const actual=await generation(c,q.generation);const concepts=(await c.query(`SELECT DISTINCT r.concept_id AS id,r.body->'semantics'->'concept'->>'label' AS label FROM knowledge75.publication_records r WHERE r.generation=$1 AND r.concept_id IS NOT NULL AND ${readableSql()} ORDER BY id`,[actual.id])).rows as {id:string;label:string}[];const relations=(await c.query(`SELECT DISTINCT r.relation_label AS label FROM knowledge75.publication_records r WHERE r.generation=$1 AND ${readableSql()} ORDER BY label`,[actual.id])).rows;return {generation:actual.id,concepts,relationLabels:relations.map(r=>String(r.label))};}),
     translationById:(id:string,revision?:number)=>read(c=>readKnowledgeTranslationById(c,id,revision)),
+    recordVersion:(id:string,revision:number)=>read(c=>readKnowledgeRecordVersion(c,{id,revision})),
     textOriginal:(target:KnowledgeTextTarget)=>read(c=>readKnowledgeTextOriginal(c,target,true)),
     textTranslation:(target:KnowledgeTextTarget,language:string,revision?:number)=>read(c=>readKnowledgeTranslation(c,target,language,revision)),
     detail:(raw:{generation?:string;recordId:string})=>read(async c=>{const q=z.strictObject({generation:generationSchema.optional(),recordId:z.string().min(1).max(120)}).parse(raw);const actual=await generation(c,q.generation);const records=await allowedRows(c,actual.id,[q.recordId]);if(!records[0])throw new KnowledgeError("この記録は閲覧できません",404,"NOT_FOUND");return {generation:actual.id,record:records[0]};}),

@@ -21,8 +21,8 @@ export function submissionGraphPreview(content: KnowledgeSubmissionContent, cont
   for(const record of baseline)relation("baseline:"+record.id,record.content);
   content.items.forEach((item,index)=>{
     const operation=item.operation??(item.correction?"correct-record":item.record.kind==="relation"?"create-relation":"add-information");
-    const state:ProposalState=operation==="add-evidence"?"evidence":operation==="correct-record"?"change":"create";
-    const marker=`${index+1} · ${operation==="create-entity"?"新しい対象":operation==="create-relation"?"新しい関係":operation==="add-evidence"?"根拠を追加":operation==="correct-record"?"訂正":"情報を追加"}`;
+    const state:ProposalState=operation==="add-evidence"?"evidence":(operation==="correct-record"||operation==="correct-entity")?"change":"create";
+    const marker=`${index+1} · ${operation==="create-entity"?"新しい対象":operation==="create-relation"?"新しい関係":operation==="add-evidence"?"根拠を追加":(operation==="correct-record"||operation==="correct-entity")?"訂正":"情報を追加"}`;
     const keys:string[]=[];
     if(item.record.kind==="relation"&&item.record.subjectId&&item.record.objectId){
       const id="proposal:"+item.key;
@@ -31,7 +31,7 @@ export function submissionGraphPreview(content: KnowledgeSubmissionContent, cont
       relation(id,item.record,state,marker);owners[id]=item.key;keys.push(id);
     }else{
       const entityId=item.about?.kind==="entity"?item.about.id:item.record.subjectId;
-      if(entityId){ensureNode(entityId);const node=nodes.get(entityId)!;nodes.set(entityId,{...node,badge:marker,proposalState:state});owners[entityId]=item.key;keys.push(entityId);}
+      if(entityId){ensureNode(entityId);const node=nodes.get(entityId)!;nodes.set(entityId,{...node,...(item.entityCorrection?.content.name?{label:item.entityCorrection.content.name}:{}),badge:marker,proposalState:state});owners[entityId]=item.key;keys.push(entityId);}
       if(item.about?.kind==="record"){
         const id="baseline:"+item.about.id,edge=relations[id];
         if(edge){relations[id]={...edge,proposalState:state,badge:marker};owners[id]=item.key;keys.push(id);}

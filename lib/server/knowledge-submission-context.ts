@@ -26,7 +26,7 @@ export async function resolveSubmissionContext(content:KnowledgeSubmissionConten
  }
  const themePins=unique(content.items.flatMap(i=>[...(i.themes??[]),...(i.about?.kind==='theme'?[i.about]:[])]));
  for(const p of themePins){const dto=await (await service()).theme({themeId:p.id});if(dto.theme.revision!==p.revision)throw new KnowledgeError("追加先のテーマが更新されました。最新版を選び直してください",409,"REFERENCE_CONFLICT");captured.themes!.push(dto.theme);}
- for(const p of content.entityPins){
+ for(const p of unique([...content.entityPins,...content.items.flatMap(i=>i.entityCorrection?[i.entityCorrection.target]:[])])){
   const found=captured.entities.find(v=>v.id===p.id&&(v.revision??1)===p.revision);if(found)continue;
   const dto=await (await service()).entities({entityId:p.id,limit:1});const e=dto.entities[0];
   if(!e||e.revision!==p.revision)throw new KnowledgeError("参照する対象が更新されたか、公開されていません。選び直してください",409,"REFERENCE_CONFLICT");captured.entities.push(e);

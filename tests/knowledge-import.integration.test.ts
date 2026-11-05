@@ -1,5 +1,7 @@
 import {beforeAll,beforeEach,afterAll,describe,it,expect,vi} from 'vitest';
 import {Pool} from 'pg';
+import {entityCorrectionSummary} from '../lib/domain/knowledge-entity-correction';
+import {readKnowledgeRecordVersion} from '../lib/server/knowledge-record-version';
 import {randomBytes,randomUUID,createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import {migrateMemberDatabase} from '../lib/server/member/migrate';
@@ -46,7 +48,7 @@ beforeEach(async()=>{
  await foundation.execute({kind:'operator',id:'fixture'},{action:'create-bundle',requestId:randomUUID(),entities:[{id:'a',content:{name:'A',kind:'organization'}},{id:'b',content:{name:'B',kind:'work'}}],sources:[{id:'baseline-source',content:{title:'Baseline',url:'https://example.org/baseline'}}],records:[{id:'baseline',content:{kind:'note',subjectId:'a',assertion:'Aという名前が記録された。',evidence:[{id:'old',source:{id:'baseline-source',revision:1},locator:'冒頭',excerpt:'Aという名前が記録された。'}]}}],reason:'isolated fixture'});
  await migrateKnowledgeTranslations(knowledge);await migrateKnowledgeIdentities(knowledge);await ensureKnowledgePublicationSchema(knowledge);
  await foundation.execute({kind:'operator',id:'fixture'},{action:'create-theme',requestId:randomUUID(),id:'theme',title:'Fixture theme',recordPins:[{id:'baseline',revision:1}],initialView:'graph'});
- p=importConfigurationSchema.parse({origin,principals:[{id:'fixture-sender',namespace:'fixture',tokenSha256:sha(token),expiresAt:new Date(Date.now()+86400000).toISOString(),operations:['create-entity','create-relation','add-information','add-evidence','correct-record','translate-text'],targets:{entities:'*',records:'*',themes:['theme']},allowNewEntities:true,packagesPerDay:100,itemsPerDay:1000,pendingItems:1000}]}).principals[0];
+ p=importConfigurationSchema.parse({origin,principals:[{id:'fixture-sender',namespace:'fixture',tokenSha256:sha(token),expiresAt:new Date(Date.now()+86400000).toISOString(),operations:['create-entity','create-relation','add-information','add-evidence','correct-record','correct-entity','translate-text'],targets:{entities:'*',records:'*',themes:['theme']},allowNewEntities:true,packagesPerDay:100,itemsPerDay:1000,pendingItems:1000}]}).principals[0];
  core=service();api=http();verify.mockClear();dispatch.mockClear();await createReviewQueue(pool).heartbeat(cfg);
 },30000);
 afterAll(async()=>{await pool.end();await knowledge.end();});
@@ -192,4 +194,69 @@ describe('authenticated immutable external knowledge packages',()=>{
   expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.text_translation_revisions")).rows[0].n).toBe(1);
  });
 
+});
+
+const fixed=async(id='baseline',revision=1)=>{const c=await knowledge.connect();try{return await readKnowledgeRecordVersion(c,{id,revision});}finally{c.release();}};
+async function entityCorrectionPackage(){
+ const before=await foundation.get({kind:'reader',id:'fixture'},'entity','a',1);
+ const after={...before.content,name:'Alpha',aliases:['A'],description:'A was recorded as Alpha.'};
+ return {...payload(),entityPins:[{id:'a',revision:1}],items:[{key:'entity-correction',operation:'correct-entity',about:{kind:'entity',id:'a',revision:1},entityCorrection:{target:{id:'a',revision:1},content:after,reason:'Correct the original name using the source.'},record:{kind:'note',subjectId:'a',assertion:entityCorrectionSummary(before.content,after),evidence:item().record.evidence}}]};
+}
+describe('original Entity correction and fixed published reader',()=>{
+ it('atomically corrects one subject without changing its identity or old versions and recovers an acknowledgement loss',async()=>{
+  const old=await fixed(),v=await entityCorrectionPackage(),id=await send(v);
+  core=service({afterKnowledgeCommit:async()=>{throw Error('fixture lost ack');}});await core.processNext(cfg,dispatch);core=service();await core.processNext(cfg,dispatch);
+  const result=(await status(id)).items[0];expect(result.state).toBe('applied');expect(dispatch).toHaveBeenCalledTimes(1);
+  expect((await foundation.get({kind:'reader',id:'fixture'},'entity','a')).content).toEqual(v.items[0].entityCorrection.content);
+  expect((await foundation.get({kind:'reader',id:'fixture'},'entity','a',1)).content.name).toBe('A');
+  expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.revisions WHERE kind='entity' AND id='a'")).rows[0].n).toBe(2);
+  const op=(await knowledge.query("SELECT input FROM knowledge75.operations WHERE actor_kind='import'")).rows[0].input;expect(op.entityPins).toContainEqual({id:'a',revision:1});
+  const shown=await fixed(result.result!.id,result.result!.revision);expect(shown.record.entities[0].revision).toBe(2);
+  expect((await fixed()).record).toEqual(old.record);
+  const wire=JSON.parse(JSON.parse(dispatch.mock.calls[0][0].wire).contents[0].parts[0].text);
+  expect(wire.entityCorrection).toMatchObject({before:{name:'A'},after:{name:'Alpha'},reason:v.items[0].entityCorrection.reason});
+ });
+ it('rejects reclassification, unchanged content and missing reasons before inference',async()=>{
+  for(const mode of ['kind','unchanged','reason']){
+   const v=await entityCorrectionPackage();
+   if(mode==='kind')v.items[0].entityCorrection.content.kind='person';
+   if(mode==='reason')v.items[0].entityCorrection.reason='';
+   if(mode==='unchanged')v.items[0].entityCorrection.content=(await foundation.get({kind:'reader',id:'fixture'},'entity','a',1)).content as (typeof v.items)[0]['entityCorrection']['content'];
+   const id=await send(v);await core.processNext(cfg,dispatch);expect((await status(id)).items[0].state).toBe('needs-changes');
+  }
+  expect(dispatch).not.toHaveBeenCalled();expect((await foundation.get({kind:'reader',id:'fixture'},'entity','a')).revision).toBe(1);
+ });
+ it('rejects a stale Entity after review and does not commit its audit record',async()=>{
+  const id=await send(await entityCorrectionPackage());
+  await core.processNext(cfg,async l=>{await foundation.execute({kind:'operator',id:'fixture'},{action:'correct',requestId:randomUUID(),kind:'entity',id:'a',expectedRevision:1,content:{name:'A newer',kind:'organization'},reason:'concurrent edit'});return response(l.wire);});
+  expect((await status(id)).items[0].state).toBe('needs-changes');expect((await foundation.get({kind:'reader',id:'fixture'},'entity','a')).content.name).toBe('A newer');
+  expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.operations WHERE actor_kind='import'")).rows[0].n).toBe(0);
+ });
+ it('keeps old facts and subject labels separate from the latest revision and denies stopped dependencies',async()=>{
+  const old=await fixed();await foundation.execute({kind:'operator',id:'fixture'},{action:'correct',requestId:randomUUID(),kind:'entity',id:'a',expectedRevision:1,content:{name:'Alpha',kind:'organization'},reason:'name correction'});
+  await foundation.execute({kind:'operator',id:'fixture'},{action:'correct',requestId:randomUUID(),kind:'record',id:'baseline',expectedRevision:1,entityPins:[{id:'a',revision:2}],content:{...old.record.record.content,assertion:'Alpha was recorded.'},reason:'fact correction'});
+  const current=await fixed('baseline',2),historical=await fixed();expect(historical.record.record.content.assertion).toBe('Aという名前が記録された。');expect(historical.record.entities[0].content.name).toBe('A');expect(historical.currentRevision).toBe(2);expect(current.record.entities[0].content.name).toBe('Alpha');
+  await foundation.execute({kind:'operator',id:'fixture'},{action:'set-visibility',requestId:randomUUID(),kind:'entity',id:'a',expectedStatusRevision:(await foundation.list({kind:'operator',id:'fixture'})).statuses.find(v=>v.kind==='entity'&&v.id==='a')!.revision,visibility:'hidden',reason:'stop'});
+  await expect(fixed()).rejects.toMatchObject({status:404});
+ });
+ it('does not turn a private historical revision public when only a later revision was published',async()=>{
+  await knowledge.query("DELETE FROM knowledge75.published_revisions WHERE kind='record' AND id='baseline' AND revision=1");
+  const old=await foundation.get({kind:'operator',id:'fixture'},'record','baseline',1);
+  await foundation.execute({kind:'operator',id:'fixture'},{action:'correct',requestId:randomUUID(),kind:'record',id:'baseline',expectedRevision:1,entityPins:[{id:'a',revision:1}],content:{...old.content,assertion:'Public version'},reason:'public version'});
+  await expect(fixed()).rejects.toMatchObject({status:404});expect((await fixed('baseline',2)).record.record.content.assertion).toBe('Public version');
+ });
+});
+
+describe('historical publication visibility',()=>{
+ it('uses only an activated snapshot and preserves its original subject labels',async()=>{
+  const first=await fixed(),dto=first.record;
+  async function store(id:string,published:boolean,body:unknown){await knowledge.query("INSERT INTO knowledge75.publication_generations(id,state,source_sequence,digest,record_count,published_at) VALUES($1,$2,1,'fixture',1,$3)",[id,published?'ready':'staged',published?new Date():null]);await knowledge.query("INSERT INTO knowledge75.publication_records(generation,id,revision,body,dependencies,search_text,relation_label,polarity) VALUES($1,'baseline',1,$2,'[]','fixture','','affirmed')",[id,JSON.stringify(body)]);}
+  await store('staged',false,{...dto,record:{...dto.record,content:{...dto.record.content,assertion:'Never published capture'}}});
+  expect((await fixed()).record.record.content.assertion).toBe(dto.record.content.assertion);
+  await store('public',true,dto);
+  await foundation.execute({kind:'operator',id:'fixture'},{action:'correct',requestId:randomUUID(),kind:'entity',id:'a',expectedRevision:1,content:{name:'Changed now',kind:'organization'},reason:'new name'});
+  expect(await fixed()).toMatchObject({contextBasis:'published-generation',record:{entities:[{content:{name:'A'}}]}});
+  await foundation.execute({kind:'operator',id:'fixture'},{action:'set-visibility',requestId:randomUUID(),kind:'source',id:'baseline-source',expectedStatusRevision:1,visibility:'hidden',reason:'stop source'});
+  await expect(fixed()).rejects.toMatchObject({status:404});
+ });
 });

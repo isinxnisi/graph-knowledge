@@ -78,7 +78,7 @@ export function acceptancePlan(value:KnowledgeSubmission,key:string,decisionId:s
  const themes=item.themes??[];
  for(const p of themes){const t=value.context?.themes?.find(v=>v.id===p.id&&v.revision===p.revision);if(!t)throw new SourceCheckError('追加先テーマを選び直してください。');references.push({kind:'theme',...p,content:t.content});}
  const uniqueReferences=[...new Map(references.map(ref=>[ref.kind+':'+ref.id+'@'+ref.revision,ref])).values()];
- const command=knowledgeCommandSchema.parse({action:'accept-record',requestId:decisionId,entities,sources,legacyEntities,legacySources,legacyRecords,themes,entityPins:uniqueReferences.filter(r=>r.kind==='entity').map(({id,revision})=>({id,revision})),sourcePins:uniqueReferences.filter(r=>r.kind==='source').map(({id,revision})=>({id,revision})),record:{id,content:record},...(item.correction?{expectedRevision:item.correction.revision,preserveLegacySemantics:true}:{}),reason:service?.reason??'利用者投稿の内容確認・原資料照合による自動受理'});
+ const command=knowledgeCommandSchema.parse({action:'accept-record',...(item.entityCorrection?{entityCorrection:{id:item.entityCorrection.target.id,expectedRevision:item.entityCorrection.target.revision,content:item.entityCorrection.content,reason:item.entityCorrection.reason}}:{}),requestId:decisionId,entities,sources,legacyEntities,legacySources,legacyRecords,themes,entityPins:uniqueReferences.filter(r=>r.kind==='entity').map(({id,revision})=>({id,revision})),sourcePins:uniqueReferences.filter(r=>r.kind==='source').map(({id,revision})=>({id,revision})),record:{id,content:record},...(item.correction?{expectedRevision:item.correction.revision,preserveLegacySemantics:true}:{}),reason:service?.reason??'利用者投稿の内容確認・原資料照合による自動受理'});
  return {command,references:uniqueReferences,recordId:id,operation:item.operation!};
 }
 export async function verifyLegacyCommand(command:KnowledgeCommand){
@@ -119,7 +119,7 @@ export async function reuseDuplicatePlan(knowledge:Pool,plan:AcceptancePlan,capt
  // A deliberate correction can change only an existing quote or locator, with
  // identical factual meaning. Do not turn that replacement into an append-only
  // evidence merge. Foundation still treats a fully unchanged correction as a no-op.
- if(plan.operation==='correct-record')return plan;
+ if(plan.operation==='correct-record'||plan.operation==='correct-entity')return plan;
  const refs=[...plan.references];
  const legacy=capture.legacy?.records.find(r=>r.id===match.id);
  if(legacy){

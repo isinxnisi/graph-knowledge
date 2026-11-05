@@ -3,7 +3,7 @@ import {translationProposalSchema} from './knowledge-translation';
 import {knowledgeIdSchema} from './knowledge-foundation';
 import {knowledgeSubmissionContentSchema,submissionLegacySchema} from './knowledge-submission';
 const key=z.string().regex(/^[a-z0-9][a-z0-9._:-]{0,127}$/);
-export const importOperations=['create-entity','create-relation','add-information','add-evidence','correct-record','translate-text'] as const;
+export const importOperations=['create-entity','create-relation','add-information','add-evidence','correct-record','correct-entity','translate-text'] as const;
 const commonItem=knowledgeSubmissionContentSchema.shape.items.element.extend({
  operation:z.enum(importOperations),reason:z.string().trim().max(4000).optional(),
 }).superRefine((v,c)=>{if(v.operation==='correct-record'&&!v.reason)c.addIssue({code:'custom',path:['reason'],message:'訂正する理由が必要です。'});});
@@ -25,7 +25,7 @@ const scope=z.union([z.literal('*'),z.array(knowledgeIdSchema).max(1000)]);
 export const importPrincipalSchema=z.strictObject({
  id:key,namespace:key,tokenSha256:z.string().regex(/^[a-f0-9]{64}$/),
  expiresAt:z.iso.datetime({offset:true}),disabled:z.boolean().default(false),
- operations:z.array(z.enum(importOperations)).min(1).max(6),
+ operations:z.array(z.enum(importOperations)).min(1).max(7),
  targets:z.strictObject({entities:scope,records:scope,sources:scope.default([]),themes:z.array(knowledgeIdSchema).max(1000)}),
  allowNewEntities:z.boolean(),packagesPerDay:z.number().int().min(1).max(500),
  itemsPerDay:z.number().int().min(1).max(10000),pendingItems:z.number().int().min(1).max(10000),

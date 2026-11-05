@@ -1,3 +1,4 @@
+import {entityCorrectionSummary} from './knowledge-entity-correction';
 import {translationTargetKey} from "./knowledge-translation";
 import {translationTextLimit} from "./knowledge-translation";
 import {knowledgeEntityContentSchema,knowledgeSourceContentSchema,knowledgeRecordContentSchema,type KnowledgePin} from "./knowledge-foundation";
@@ -18,6 +19,7 @@ export function submissionIntentIssues(content:KnowledgeSubmissionContent,contex
    else{if(!v.text.trim()||v.text.length>translationTextLimit(v.target))fail('訳文の内容と文字数を確認してください。');if(original.language?.tag===v.language)fail('原文と異なる訳文の言語を選んでください。');if((original.translation?.revision??0)!==v.expectedRevision)fail('訳文の最新版を読み直してください。');}
    continue;
   }
+  if(item.entityCorrection&&op!=='correct-entity')fail('対象情報の訂正は、専用の操作を選んでください。');
   if(item.translation)fail('訳文の投稿は翻訳の入口から行ってください。');
   const parsed=knowledgeRecordContentSchema.safeParse(r);if(!parsed.success){
    const issue=parsed.error.issues[0],field=issue?.path[0];
@@ -41,6 +43,16 @@ export function submissionIntentIssues(content:KnowledgeSubmissionContent,contex
    if(a.kind==='entity'&&(r.subjectId!==a.id||r.objectId))fail("選択した対象に情報を結び付けてください。");
    if(a.kind==='record'&&!same(r.aboutRecord,a))fail("補足する関係の参照を確認してください。");
    if(a.kind==='theme'&&(r.aboutTheme!==a.id||!item.themes?.some(t=>same(t,a))))fail("追加先のテーマを確認してください。");
+  }else if(op==='correct-entity'){
+   const v=item.entityCorrection,old=v&&context?.entities.find(e=>same({...e,revision:e.revision??1},v.target));
+   if(!v||!old||!same(item.about?.kind==='entity'?item.about:undefined,v?.target))fail('訂正する対象の取得版を選んでください。');
+   else{
+    if(!knowledgeEntityContentSchema.safeParse(v.content).success)fail('名前・別名・説明の内容を確認してください。');
+    if(v.content.kind!==old.content.kind)fail('分類・対象の付替えは、この訂正には含められません。');
+    if(!v.reason.trim())fail('訂正する理由を入力してください。');
+    if(JSON.stringify(v.content)===JSON.stringify(old.content))fail('名前・別名・説明・原文の言語の変更がありません。');
+    if(r.kind!=='note'||r.subjectId!==v.target.id||r.objectId||r.aboutRecord||r.aboutTheme||r.assertion!==entityCorrectionSummary(old.content,v.content))fail('訂正する対象と内容を確認してください。');
+   }
   }else{
    if(!item.correction||!same(item.correction,item.about?.kind==='record'?item.about:undefined))fail("追加・訂正する元の関係を選んでください。");
    const old=context?.records?.find(v=>same(v,item.correction));

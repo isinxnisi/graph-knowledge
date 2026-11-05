@@ -43,6 +43,7 @@ export function normalizeImportItem(pkg:KnowledgeImportPackage,raw:unknown){
   else if(pin){if(!pin.value||!same(pin.value,ref))error(pin.reason||'資料の参照版が一致しません。');if(!sourcePins.some(v=>same(v,ref)))sourcePins.push(ref);}
   else error('根拠に使う資料の内容または公開参照が必要です。');
  }
+ if(item.entityCorrection&&!entityPins.some(e=>e.id===item.entityCorrection!.target.id))entityPins.push(item.entityCorrection.target);
  if(item.about?.kind==='entity'&&!entities.some(e=>e.id===item.about!.id)&&!entityPins.some(e=>e.id===item.about!.id))entityPins.push({id:item.about.id,revision:item.about.revision});
  const {reason,...normalized}=item;void reason;
  return knowledgeSubmissionContentSchema.parse({schemaVersion:2,title:pkg.packageId,entities,entityPins,sources,sourcePins,items:[normalized],...(pkg.legacy?{legacy:pkg.legacy}:{})});

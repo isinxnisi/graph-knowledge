@@ -20,6 +20,7 @@ export async function GET(request: Request) {
     else if (mode === "theme") result = await service.theme({ themeId: params.get("themeId") ?? "", ...(params.has("revision") ? { revision: Number(params.get("revision")) } : {}) });
     else if (mode === "entities") result = await service.entities({ generation, ...(params.has("entityId") ? { entityId: params.get("entityId")! } : {}), ...(params.has("entityIds") ? { entityIds: (params.get("entityIds") ?? "").split(",").filter(Boolean) } : {}), ...(params.has("q") ? { q: params.get("q")! } : {}), ...(params.has("kind") ? { kind: params.get("kind")! } : {}), limit: Number(params.get("limit") ?? 20), ...(params.has("cursor") ? { cursor: params.get("cursor")! } : {}) });
     else if (mode === "facets") result = await service.facets({ generation });
+    else if (mode === "record-version") result = await service.recordVersion(params.get("recordId")??"",Number(params.get("revision")));
     else if (mode === "record") result = await service.detail({ generation, recordId: params.get("recordId") ?? "" });
     else if (mode === "graph") result = await service.graph({ generation, recordIds: (params.get("recordIds") ?? "").split(",").filter(Boolean) });
     else if (mode === "neighbors") {

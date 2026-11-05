@@ -50,6 +50,7 @@ export function createKnowledgeContributors(pool:Pool){
    const factIds=[...new Set(page.filter(r=>r.operation!=='translate-text').map(r=>r.record_id as string))];
    const records=factIds.length?(await knowledge.graph({recordIds:factIds})).records:[];
    const visible=new Map(records.map(r=>[r.record.id,r.record]));
+   const historical=new Map<string,typeof records[number]['record']>();for(const row of page.filter(r=>r.operation!=='translate-text')){try{historical.set(row.decision_id,(await knowledge.recordVersion(row.record_id,row.record_revision)).record.record);}catch{/* A fixed unpublished or stopped version grants no access. */}}
     const translations=new Map<string,Awaited<ReturnType<typeof knowledge.translationById>>>();
     for(const r of page.filter(r=>r.operation==='translate-text')){try{translations.set(r.decision_id,await knowledge.translationById(r.record_id,r.record_revision));}catch{/* Public read excludes withdrawn originals and translations. */}}
    const fresh=(await pool.query(columns+` WHERE c.decision_id=ANY($1::uuid[]) AND c.owner_id=$2 AND c.activity_public AND c.attribution='profile' AND c.published_at IS NOT NULL`,[page.map(r=>r.decision_id),profile.user_id])).rows;
@@ -57,7 +58,7 @@ export function createKnowledgeContributors(pool:Pool){
    // lock is held while waiting on the KG, and no provider identity is returned.
    if(!publicProfilesEnabled()||!(await pool.query('SELECT 1 FROM public_profile p JOIN "user" u ON u.id=p.user_id WHERE p.handle=$1 AND p.user_id=$2 AND u.active=true AND p.timeline_public=true',[v.handle,profile.user_id])).rowCount)return unavailable();
    const byId=new Map(fresh.map(r=>[r.decision_id,r]));
-   const activities=page.flatMap(row=>{const r=byId.get(row.decision_id),record=visible.get(row.record_id),translation=translations.get(row.decision_id);if(r&&translation&&translation.revision>=r.record_revision)return [{...dto(r),title:'翻訳 · '+translation.text,href:'/translations?'+new URLSearchParams({id:translation.id,revision:String(r.record_revision)})}];return r&&record&&record.revision>=r.record_revision?[{...dto(r),title:record.content.assertion,href:'/?krecord='+encodeURIComponent(r.record_id)}]:[];});
+   const activities=page.flatMap(row=>{const r=byId.get(row.decision_id),record=visible.get(row.record_id),translation=translations.get(row.decision_id);if(r&&translation&&translation.revision>=r.record_revision)return [{...dto(r),title:'翻訳 · '+translation.text,href:'/translations?'+new URLSearchParams({id:translation.id,revision:String(r.record_revision)})}];return r&&record&&historical.has(row.decision_id)&&record.revision>=r.record_revision?[{...dto(r),title:historical.get(row.decision_id)?.content.assertion??record.content.assertion,href:'/records?'+new URLSearchParams({id:r.record_id,revision:String(r.record_revision)})}]:[];});
    const last=page.at(-1);return memberJson({available:true,activities,nextCursor:rows.length>20&&last?Buffer.from(JSON.stringify({handle:v.handle,time:last.published_time,id:last.decision_id})).toString('base64url'):null});
   }
   if(!v.id)throw new MemberError(400,'INVALID_ARGUMENT');
@@ -71,7 +72,7 @@ export function createKnowledgeContributors(pool:Pool){
   let selectedRevision=v.revision,themeRevision:number|undefined,themeRecords:Map<string,number>|null=null;
   const qualify=async()=>{
    if(v.kind==='record'){
-    const value=(await knowledge.detail({recordId:v.id!})).record;if(selectedRevision&&selectedRevision>value.record.revision)throw new MemberError(404,'NOT_FOUND');selectedRevision??=value.record.revision;
+    const value=selectedRevision?(await knowledge.recordVersion(v.id!,selectedRevision)).record:(await knowledge.detail({recordId:v.id!})).record;if(selectedRevision&&selectedRevision>value.record.revision)throw new MemberError(404,'NOT_FOUND');selectedRevision??=value.record.revision;
    }else if(v.kind==='entity'){
     if(!(await knowledge.entities({entityId:v.id!,limit:1})).entities.some(e=>e.id===v.id))throw new MemberError(404,'NOT_FOUND');
    }else{

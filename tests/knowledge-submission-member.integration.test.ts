@@ -1,3 +1,5 @@
+import {entityCorrectionSummary} from '../lib/domain/knowledge-entity-correction';
+import {readKnowledgeRecordVersion} from '../lib/server/knowledge-record-version';
 import {migrateKnowledgeIdentities} from '../lib/server/knowledge-identity-migrate';
 import {afterAll,beforeAll,describe,expect,it,vi} from "vitest";
 import {randomUUID} from "node:crypto";
@@ -22,8 +24,8 @@ import {memberConfig} from "../lib/server/member/config";
 import {memberPool} from "../lib/server/member/auth";
 import {operateMember} from "../lib/server/member/operations";
 import {startMemberOidc} from "./support/member-oidc";
-const publicRead=vi.hoisted(()=>({dto:null as unknown,detail:null as null|((id:string)=>Promise<unknown>),entities:null as null|((id:string)=>Promise<unknown>),translationById:null as null|((id:string,revision?:number)=>Promise<unknown>),textOriginal:null as null|((target:unknown)=>Promise<unknown>),textTranslation:null as null|((target:unknown,language:string)=>Promise<unknown>)}));
-vi.mock("../lib/server/knowledge-publication-preview",()=>({knowledgePublicationPreview:async()=>({detail:async(q:{recordId:string})=>(publicRead.dto as {record?:{id:string}}|null)?.record?.id===q.recordId?({generation:"fixture",record:publicRead.dto}):publicRead.detail!(q.recordId),entities:async(q:{entityId:string})=>publicRead.entities!(q.entityId),translationById:async(id:string,revision?:number)=>publicRead.translationById!(id,revision),textOriginal:async(t:unknown)=>publicRead.textOriginal!(t),textTranslation:async(t:unknown,l:string)=>publicRead.textTranslation!(t,l)})}));
+const publicRead=vi.hoisted(()=>({dto:null as unknown,detail:null as null|((id:string)=>Promise<unknown>),entities:null as null|((id:string)=>Promise<unknown>),translationById:null as null|((id:string,revision?:number)=>Promise<unknown>),recordVersion:null as null|((id:string,revision:number)=>Promise<unknown>),textOriginal:null as null|((target:unknown)=>Promise<unknown>),textTranslation:null as null|((target:unknown,language:string)=>Promise<unknown>)}));
+vi.mock("../lib/server/knowledge-publication-preview",()=>({knowledgePublicationPreview:async()=>({detail:async(q:{recordId:string})=>(publicRead.dto as {record?:{id:string}}|null)?.record?.id===q.recordId?({generation:"fixture",record:publicRead.dto}):publicRead.detail!(q.recordId),entities:async(q:{entityId:string})=>publicRead.entities!(q.entityId),recordVersion:async(id:string,revision:number)=>publicRead.recordVersion!(id,revision),translationById:async(id:string,revision?:number)=>publicRead.translationById!(id,revision),textOriginal:async(t:unknown)=>publicRead.textOriginal!(t),textTranslation:async(t:unknown,l:string)=>publicRead.textTranslation!(t,l)})}));
 vi.mock("server-only",()=>({}));
 import {memberRuntime} from "../lib/server/member/runtime";
 import * as authRoute from "../app/api/auth/[...all]/route";
@@ -82,6 +84,7 @@ beforeAll(async()=>{
  publicRead.translationById=async(id,revision)=>{const c=await acceptanceKnowledge.connect();try{return await readKnowledgeTranslationById(c,id,revision);}finally{c.release();}};
  publicRead.textOriginal=async target=>{const c=await acceptanceKnowledge.connect();try{return await readKnowledgeTextOriginal(c,target as import('../lib/domain/knowledge-translation').KnowledgeTextTarget,true);}finally{c.release();}};
  publicRead.textTranslation=async(target,language)=>{const c=await acceptanceKnowledge.connect();try{return await readKnowledgeTranslation(c,target as import('../lib/domain/knowledge-translation').KnowledgeTextTarget,language);}finally{c.release();}};
+ publicRead.recordVersion=async(id,revision)=>{const c=await acceptanceKnowledge.connect();try{return await readKnowledgeRecordVersion(c,{id,revision});}finally{c.release();}};
  publicRead.entities=async id=>({generation:'fixture',entities:[await foundation.get({kind:'reader',id:'public'},'entity',id)]});
  try{await migrateMemberDatabase(pool,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true);}finally{await pool.end();}
  alice=await login("alice");bob=await login("bob");
@@ -316,7 +319,12 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
   const command=save(randomUUID(),0,value);expect((await post(command)).status).toBe(200);await post({action:'submit',id:command.id,requestId:randomUUID(),expectedVersion:1});
   expect((await post({action:'review',id:command.id,requestId:randomUUID(),expectedVersion:2,consentVersion:REVIEW_CONSENT_VERSION})).status).toBe(409);
   expect((await post({action:'review',id:command.id,requestId:randomUUID(),expectedVersion:2,consentVersion:PUBLICATION_CONSENT_VERSION})).status).toBe(200);
-  const cfg=reviewConfig();await runKnowledgeReviewOnce(createReviewQueue(memberRuntime().pool),cfg,async()=>reviewedResponse());
+  const cfg=reviewConfig(),entityCorrection=JSON.stringify(value).includes('"correct-entity"'),engine=createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify);
+  await runKnowledgeReviewOnce(createReviewQueue(memberRuntime().pool,entityCorrection?{duplicates:(v,key)=>engine.duplicates(v,key)}:{}),cfg,async lease=>{
+   const result=reviewedResponse(),material=JSON.parse(JSON.parse(lease.wire).contents[0].parts[0].text);
+   if(material.duplicateCheck)result.raw.candidates[0].content.parts[0].text=JSON.stringify({suitability:'legitimate',support:'supported',reason:'Fixture evidence agrees',duplicate:{sameAs:null,reason:'An explicit original correction'}});
+   return result;
+  });
   return {command,cfg};
  }
  const fixtureVerify=async(url:string,excerpt:string)=>matchSourceExcerpt({url,type:'text/html',body:Buffer.from('<article><p>'+excerpt+'</p></article>')},excerpt);
@@ -486,6 +494,20 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
    await createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify).run(cfg);expect(await knowledgeCount()).toBe(before+1);
    const accepted=(await memberRuntime().pool.query('SELECT command FROM member_knowledge.publication_decisions ORDER BY created_at DESC LIMIT 1')).rows[0];expect(JSON.stringify(accepted)).not.toContain(owner);
   }finally{process.env.KNOWLEDGE_REVIEW_ALLOWED_USERS=old;process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='0';}
+ });
+ it('keeps a member original-Entity correction attributable while preserving subject identity and history',async()=>{
+  await memberRuntime().pool.query("UPDATE member_knowledge.submission_requests SET created_at=clock_timestamp()-interval '20 minutes' WHERE owner_id=$1",[aliceId]);
+  const eid='entity-correction-'+randomUUID(),foundation=createKnowledgeFoundationService(acceptanceKnowledge);
+  await foundation.execute({kind:'operator',id:'fixture'},{action:'create-bundle',requestId:randomUUID(),reason:'fixture',entities:[{id:eid,content:{name:'Original subject',kind:'person'}}],sources:[{id:eid+'-source',content:{title:'Original source',url:'https://example.org/original'}}],records:[{id:eid+'-record',content:{kind:'note',subjectId:eid,assertion:'Original subject is recorded.',evidence:[{id:'q',source:{id:eid+'-source',revision:1},locator:'Opening',excerpt:'Original subject'}]}}]});
+  const before=await foundation.get({kind:'reader',id:'fixture'},'entity',eid,1),after={...before.content,name:'Correct subject',description:'The source describes this subject.'},base=reviewContent();
+  const value={...base,attribution:'profile',entities:[],entityPins:[{id:eid,revision:1}],items:[{...base.items[0],operation:'correct-entity',about:{kind:'entity',id:eid,revision:1},entityCorrection:{target:{id:eid,revision:1},content:after,reason:'Official spelling'},record:{...base.items[0].record,kind:'note',subjectId:eid,objectId:null,relation:'',assertion:entityCorrectionSummary(before.content,after)}}]};
+  const {command,cfg}=await acceptedCandidate(value);expect(await createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify).run(cfg)).toBe(true);
+  expect((await memberRuntime().pool.query('SELECT state,reason FROM member_knowledge.review_jobs WHERE submission_id=$1',[command.id])).rows).toMatchObject([{state:'accepted'}]);
+  expect((await foundation.get({kind:'reader',id:'fixture'},'entity',eid)).content.name).toBe('Correct subject');expect((await foundation.get({kind:'reader',id:'fixture'},'entity',eid,1)).content.name).toBe('Original subject');
+  const contribution=(await memberRuntime().pool.query('SELECT owner_id,operation,attribution,entity_ids FROM member_knowledge.publication_contributors WHERE submission_id=$1',[command.id])).rows[0];
+  expect(contribution).toMatchObject({owner_id:aliceId,operation:'correct-entity',attribution:'profile'});expect(contribution.entity_ids).toContain(eid);
+  const policy=(await memberRuntime().pool.query("SELECT policy FROM member_knowledge.review_attempts WHERE job_id=(SELECT id FROM member_knowledge.review_jobs WHERE submission_id=$1)",[command.id])).rows[0].policy;expect(policy).toBe('entity-original-correction-v1');
+  await memberRuntime().pool.query("UPDATE member_knowledge.submission_requests SET created_at=clock_timestamp()-interval '20 minutes' WHERE owner_id=$1",[aliceId]);
  });
  it("restores the migrated database separately and reapplies checksums unchanged",async()=>{
   const container=process.env.MEMBER_TEST_CONTAINER!;expect(container).toMatch(/^gk-member-test-[a-f0-9-]+$/);

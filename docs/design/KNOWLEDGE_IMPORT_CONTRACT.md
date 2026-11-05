@@ -1,6 +1,6 @@
 # 外部パッケージの共通取込契約
 
-2026-11-05。R1dで専用BearerのHTTP受付・永続package／項目receipt・共通原資料確認／意味重複照合／受理・直接配送clientを実装。配置・実接続は[検証記録](../verification/KNOWLEDGE_IMPORT_R1D_20261105.md)、設定と送信は[runbook](../runbooks/KNOWLEDGE_IMPORT.md)を参照。**定期ChatGPT配送・Issue adapter・Web貼付とEntity原文訂正は未実装**で、R1／R3の残件として維持する。将来構想だけを理由に実装範囲を増減せず、[再計画](PLUNODE_IMPLEMENTATION_REPLAN_20261105.md)の必須範囲を維持する。
+2026-11-05。R1dで専用BearerのHTTP受付・永続package／項目receipt・共通原資料確認／意味重複照合／受理・直接配送clientを実装。配置・実接続は[検証記録](../verification/KNOWLEDGE_IMPORT_R1D_20261105.md)、設定と送信は[runbook](../runbooks/KNOWLEDGE_IMPORT.md)を参照。**定期ChatGPT配送・Issue adapter・Web貼付は未実装**で、R1／R3の残件として維持する。将来構想だけを理由に実装範囲を増減せず、[再計画](PLUNODE_IMPLEMENTATION_REPLAN_20261105.md)の必須範囲を維持する。
 
 ## 担当と入口
 
@@ -46,7 +46,7 @@ ChatGPT側がテーマ・資料URL・情報を揃える。Plunodeが、許可範
 | 出来事／背景の追加 | Entity、固定Record版、またはThemeへの明示参照。初回のTheme情報はThemeへの追加と同時に公開 |
 | 根拠の追加 | 対象Recordの観測版。本文・意味・原語を新投稿の文で置換せず、既存根拠を保持 |
 | Recordの訂正 | 訂正元の観測版と訂正理由。言語指定だけ、引用だけの訂正も内容版へ保持。別の意味にする場合は関係の追加と区別 |
-| Entity原文の訂正 | 対象の観測版、変更する名称／別名／説明等と根拠。別対象への付替えや訳文だけの変更と区別（一般投稿側の接続もR1残件） |
+| Entity原文の訂正 | 対象の観測版、変更する名称／別名／説明等と根拠。別対象への付替えや訳文だけの変更と区別（R1eで一般投稿・取込の共通受理へ接続。[契約](KNOWLEDGE_ENTITY_CORRECTION.md)） |
 
 訳文は原文の指定版・field・訳先言語を参照する別の履歴を共用する。原文訂正と訳文訂正を同じ操作へ潰さない。すべての新操作で共通の正規化を二重実装しない。
 
@@ -80,7 +80,7 @@ Plunode側の原本確認・整理・翻訳は既存Gemini無料projectの利用
 
 ## この契約から残る実装
 
-R1dのHTTP入口・永続受付を再実装しない。Entity原文訂正・固定版reader・翻訳文脈／cache等のR1残件を閉じ、R3で予定実行からの直接配送またはIssue等の代替配送を実証する。新Entityの別名／説明は現行の確認契約で保証できないため黙って捨てず項目不備とし、根拠付き情報で別登録する。時期schemaは既存と共用し、周期／定性の入力と描画はR4に残す。R2の全件巡回を人手の対象選択へ戻さず、双方で対象台帳・適用receipt・予算の共通部分を利用する。APIのpathを書いたことを、接続できた証拠にしない。
+R1dのHTTP入口・永続受付を再実装しない。R1eのEntity原文訂正・固定版readerを維持し、翻訳文脈／cache等のR1残件を閉じ、R3で予定実行からの直接配送またはIssue等の代替配送を実証する。新Entityの別名／説明は現行の確認契約で保証できないため黙って捨てず項目不備とし、根拠付き情報で別登録する。時期schemaは既存と共用し、周期／定性の入力と描画はR4に残す。R2の全件巡回を人手の対象選択へ戻さず、双方で対象台帳・適用receipt・予算の共通部分を利用する。APIのpathを書いたことを、接続できた証拠にしない。
 
 ## R1dの実装上の境界
 
@@ -89,3 +89,5 @@ R1dのHTTP入口・永続受付を再実装しない。Entity原文訂正・固�
 - request／token上限は既存の無料project台帳を共用し、用途collection-checkへ配分する。取得不能な消費はnull、未送信だけ0。503・429・結果不明は間隔を空け、1項目1利用日8送信／8取得準備を超えない。管理者による通常の個別承認へ戻さない。
 - Entity／Sourceのlocal keyはnamespace内で安定させる。変更資料は新しいlocal keyにするか既存Sourceの観測版を使い、既存IDの上書きには使わない。Record keyはpackage内で安定させる。前版が処理中なら新版は409で待機し、無関係な別packageは進められる。
 - 結果に返すrevisionは適用した固定版。currentUrlは現在の公開版への導線であり、固定版readerの完成を意味しない。停止された対象やテーマのリンクは返さない。
+
+R1eのcorrect-entityは、aboutとentityCorrection.targetに同じ既存Entityの観測版を指定し、entityCorrection.contentに訂正後の全内容、reasonに理由を含める。Recordは同じ対象に結び付く定型の訂正記録と根拠で、変更する原文そのものは構造化されたbefore/afterで確認する。ID付替えや分類変更は不可。[詳細](KNOWLEDGE_ENTITY_CORRECTION.md)。

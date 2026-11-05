@@ -280,7 +280,7 @@ export function createKnowledgeFoundationService(pool: Pool) {
         if(cmd.visibility==='public')await readKnowledgeTextOriginal(c,h.target);
         await c.query('UPDATE knowledge75.text_translation_heads SET visibility=$2,status_revision=status_revision+1 WHERE id=$1',[cmd.id,cmd.visibility]);result={id:cmd.id,revision:h.status_revision+1,visibility:cmd.visibility};
       } else if(cmd.action === "accept-record") {
-        const entityPins=[...cmd.entityPins];
+        const entityPins=cmd.entityPins.map(pin=>({...pin}));
         async function acceptedReference(kind:"entity"|"source",value:{id:string;content:unknown}){
           const old=(await c.query("SELECT o.*,r.content FROM knowledge75.objects o JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=1 WHERE o.kind=$1 AND o.id=$2 FOR SHARE OF o",[kind,value.id])).rows[0];
           if(old){if(old.visibility!=="public"||(kind==="entity"&&old.current_revision!==1)||knowledgeDigest(old.content)!==knowledgeDigest(value.content))throw new KnowledgeError("投稿内の共有対象・資料が変わりました",409,"CONFLICT");return;}
@@ -311,6 +311,15 @@ export function createKnowledgeFoundationService(pool: Pool) {
           if(!identity)await c.query("INSERT INTO knowledge75.legacy_identity(kind,id,dataset,legacy_id,publication_revision,payload,sha256) VALUES('record',$1,'public-kg',$1,$2,$3,$4)",[original.id,original.revision,JSON.stringify(original.payload),original.sha256]);
           const link=(await c.query("SELECT * FROM knowledge75.legacy_links WHERE record_id=$1",[original.id])).rows[0];
           if(!link)await c.query("INSERT INTO knowledge75.legacy_links(dataset,legacy_claim_id,record_id,imported_revision,payload,sha256) VALUES('public-kg',$1,$1,1,$2,$3)",[original.id,JSON.stringify(original.payload),original.sha256]);
+        }
+        if(cmd.entityCorrection){
+          if(!internal)throw new KnowledgeError('対象情報の訂正には根拠・内容の照合が必要です',403,'FORBIDDEN');
+          const correction=cmd.entityCorrection,h=await head(c,'entity',correction.id,'FOR UPDATE');expected(h.current_revision,correction.expectedRevision);await assertRevisionPublic(c,'entity',correction.id,correction.expectedRevision);
+          const old=await version(c,'entity',correction.id,correction.expectedRevision);
+          if(old.content.kind!==correction.content.kind||cmd.record.content.kind!=='note'||cmd.record.content.subjectId!==correction.id||cmd.record.content.objectId||!correction.reason.trim())throw new KnowledgeError('対象の訂正範囲を確認してください',409,'ENTITY_CORRECTION_CONFLICT');
+          if(knowledgeDigest(old.content)===knowledgeDigest(correction.content))throw new KnowledgeError('対象の内容は既に同じです',409,'UNCHANGED_ENTITY');
+          await put('entity',correction.id,correction.content,correction.expectedRevision+1,correction.reason);
+          const pin=entityPins.find(p=>p.id===correction.id);if(pin)pin.revision=correction.expectedRevision+1;else entityPins.push({id:correction.id,revision:correction.expectedRevision+1});
         }
         for(const pin of cmd.sourcePins){await head(c,"source",pin.id,"FOR SHARE");await version(c,"source",pin.id,pin.revision);await assertRevisionPublic(c,"source",pin.id,pin.revision);}
         const r=structuredClone(cmd.record.content);

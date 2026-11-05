@@ -65,7 +65,7 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
    for(const [ordinal,v] of normalized.entries()){
     const item=pkg.items[ordinal],key=item&&typeof item==='object'&&!Array.isArray(item)&&typeof item.key==='string'?item.key:null;
     const old=key?(await c.query('SELECT * FROM knowledge_import.bindings WHERE namespace=$1 AND package_key=$2 AND item_key=$3',[pkg.namespace,pkg.packageId,key])).rows[0]:null;
-    const op=v.content?.items[0],reason=old&&v.content&&knowledgeDigest(item)!==old.input_digest&&!['correct-record','add-evidence','translate-text'].includes(op!.operation!)?'前の版で反映した項目の変更は、対象の内容版を指定して訂正・根拠追加してください。':old&&op?.correction&&op.correction.id!==old.record_id?'前の版と異なる対象です。別のitem keyを使ってください。':v.reason;
+    const op=v.content?.items[0],reason=old&&v.content&&knowledgeDigest(item)!==old.input_digest&&!['correct-record','correct-entity','add-evidence','translate-text'].includes(op!.operation!)?'前の版で反映した項目の変更は、対象の内容版を指定して訂正・根拠追加してください。':old&&op?.correction&&op.correction.id!==old.record_id?'前の版と異なる対象です。別のitem keyを使ってください。':v.reason;
     await c.query('INSERT INTO knowledge_import.items(id,package_id,ordinal,item_key,input_digest,normalized,state,reason) VALUES($1,$2,$3,$4,$5,$6,$7,$8)',[randomUUID(),id,ordinal,key,knowledgeDigest(item),v.content,reason?'needs-changes':'queued',reason]);
    }return {receiptId:id,replayed:false};
   });

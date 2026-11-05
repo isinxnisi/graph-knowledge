@@ -15,7 +15,7 @@ it('explains an existing fact without presenting another publication or activity
  fetcher.mockResolvedValueOnce(Response.json(value));render(<KnowledgeSubmissionFeedbackCard submissionId={submissionId} userId={user.id} currentRevision={1}/>);
  await screen.findByRole('heading',{name:'登録済みの知識です'});
  expect(screen.queryByText(/1件公開/)).toBeNull();expect(screen.getByText(/1件登録済み/)).toBeTruthy();
- expect(screen.getAllByRole('link',{name:'登録済みの知識を開く'})[0].getAttribute('href')).toBe('/?krecord=existing-fact');
+ expect(screen.getAllByRole('link',{name:'登録済みの知識を開く'})[0].getAttribute('href')).toBe('/records?id=existing-fact&revision=2');
  expect(screen.getAllByText('同じ知識が登録されています。記録や活動履歴は増やしていません。').length).toBeGreaterThan(0);
 });
 it("actionable feedback is visible above details; simply reading does not mark it read",async()=>{
@@ -71,9 +71,9 @@ it("published feedback exposes a public-record link above collapsed details and 
  const data=result();data.receipt!.items=[{key:"one",assertion:"公開された事実1",state:"published",reason:"公開しました",nextAttemptAt:null,publication:{id:"public:record-one",revision:2,state:"published",reason:""}},{key:"two",assertion:"公開された事実2",state:"published",reason:"公開しました",nextAttemptAt:null,publication:{id:"public:record-two",revision:4,state:"published",reason:""}}];
  fetcher.mockResolvedValueOnce(Response.json(data));const view=render(<KnowledgeSubmissionFeedbackCard submissionId={submissionId} userId={user.id} currentRevision={1}/>);await screen.findByRole("heading",{name:"公開しました"});
  expect([...view.container.querySelectorAll("a")].filter(a=>!a.closest("details"))).toHaveLength(1);expect(view.container.querySelector("details")?.open).toBe(false);expect(screen.getByText(/ほか1件は項目ごとの結果から/)).toBeTruthy();
- const links=[...view.container.querySelectorAll<HTMLAnchorElement>('a')];expect(links).toHaveLength(3);expect(links.map(a=>a.getAttribute("href"))).toContain("/?krecord=public%3Arecord-two");
- for(const link of links){expect(link.target).toBe("_blank");expect(link.rel).toContain("noopener");expect(link.rel).toContain("noreferrer");expect(new URL(link.href).searchParams.has("revision")).toBe(false);}
- expect(screen.getByText(/公開先では現在の内容を表示します/)).toBeTruthy();expect(view.container.textContent).toContain("公開した内容版 2");expect(view.container.textContent).toContain("公開した内容版 4");
+ const links=[...view.container.querySelectorAll<HTMLAnchorElement>('a')];expect(links).toHaveLength(3);expect(links.map(a=>a.getAttribute("href"))).toContain("/records?id=public%3Arecord-two&revision=4");
+ for(const link of links){expect(link.target).toBe("_blank");expect(link.rel).toContain("noopener");expect(link.rel).toContain("noreferrer");expect(new URL(link.href).searchParams.has("revision")).toBe(true);}
+ expect(screen.getByText(/公開した当時の内容版を開きます/)).toBeTruthy();expect(view.container.textContent).toContain("公開した内容版 2");expect(view.container.textContent).toContain("公開した内容版 4");
 });
 it("a prepared publication is not presented as a readable public result",async()=>{
  const data=result();data.receipt!.items[0]={...data.receipt!.items[0],state:"accepted",reason:"公開へ反映中",publication:{id:"not-yet-public",revision:1,state:"pending",reason:""}};

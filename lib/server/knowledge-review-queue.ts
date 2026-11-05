@@ -10,7 +10,7 @@ import {Pool,type PoolClient,type QueryResultRow} from "pg";
 import {z} from "zod";
 import {knowledgeSubmissionContentSchema,type KnowledgeSubmission} from "../domain/knowledge-submission";
 import {knowledgeReviewCommandSchema,REVIEW_CONSENT_VERSION,PUBLICATION_CONSENT_VERSION,type KnowledgeReviewStatus,submissionReviewInput} from "../domain/knowledge-review-job";
-import {geminiReviewRequest,GEMINI_REVIEW_POLICY,GEMINI_TRANSLATION_POLICY,parseGeminiReview,type callGeminiReview} from "./gemini-knowledge-review";
+import {geminiReviewRequest,GEMINI_ENTITY_CORRECTION_POLICY,GEMINI_REVIEW_POLICY,GEMINI_TRANSLATION_POLICY,parseGeminiReview,type callGeminiReview} from "./gemini-knowledge-review";
 import {knowledgeDigest,KnowledgeError} from "./knowledge-foundation";
 import {DUPLICATE_POLICY,duplicateAdviceSchema,type DuplicateReview} from './knowledge-duplicates';
 import {geminiDuplicateReviewRequest} from './gemini-knowledge-review';
@@ -153,17 +153,17 @@ export function createReviewQueue(pool:Pool,options:{duplicates?:(value:Knowledg
     if(!disclosure||disclosure.providerId!=='google-gemini'||j.consent_profile_id!==disclosure.profileId||authorization?.consent_profile_id!==disclosure.profileId){await c.query("UPDATE member_knowledge.review_jobs SET state='attention',reason='送信先の確認内容が変わりました。内容を確認して依頼し直してください。' WHERE id=$1",[j.id]);return null;}
     const day=new Date(),sent=Number((await c.query("SELECT COALESCE(sum(request_charge),0)::int AS n FROM member_knowledge.review_attempts WHERE job_id=$1 AND quota_day=$2",[j.id,quotaDate(day)])).rows[0].n);
     if(sent>=REVIEW_SENDS_PER_ITEM_DAY){await c.query("UPDATE member_knowledge.review_jobs SET state='quota',reason='この項目の本日の再試行上限に達しました。翌日の利用枠で自動で再開します。',not_before=$2,updated_at=clock_timestamp() WHERE id=$1",[j.id,nextQuotaDay(day)]);return null;}
-    let wire:string,withDuplicates=false,translation=false;
+    let wire:string,withDuplicates=false,translation=false,entityCorrection=false;
     try{
      const value=submission(s),issues=submissionIntentIssues(value.content,value.context);
      if(issues.length){await c.query("UPDATE member_knowledge.review_jobs SET state='needs-changes',reason=$2 WHERE id=$1",[j.id,issues.slice(0,3).join(' ')+' 受付時の内容は保持しています。新しい草稿で投稿先と操作を確認してから依頼し直してください。']);return null;}
-     const input=submissionReviewInput(value,j.item_key,j.consent_version===PUBLICATION_CONSENT_VERSION);translation=!!input.translation;
+     const input=submissionReviewInput(value,j.item_key,j.consent_version===PUBLICATION_CONSENT_VERSION);translation=!!input.translation;entityCorrection=!!input.entityCorrection;
      const duplicates=j.consent_version===PUBLICATION_CONSENT_VERSION?await options.duplicates?.(value,j.item_key):undefined;
      withDuplicates=!!duplicates?.candidates.length;
      wire=JSON.stringify(duplicates?.candidates.length?geminiDuplicateReviewRequest(input,duplicates):geminiReviewRequest(input));
     }
     catch(e){const bad=e instanceof SourceCheckError;await c.query("UPDATE member_knowledge.review_jobs SET state=$2,reason=$3,not_before=clock_timestamp()+interval '120 seconds' WHERE id=$1",[j.id,bad&&!e.retryable?'needs-changes':'retry',bad?e.message:'既存の知識を確認できません。時間をおいて再試行します。']);return null;}
-    const reservation=await reserveKnowledgeAI(c,cfg,{purpose:'submission',policy:translation?GEMINI_TRANSLATION_POLICY:withDuplicates?GEMINI_REVIEW_POLICY+'+'+DUPLICATE_POLICY:GEMINI_REVIEW_POLICY,inputReserved:Buffer.byteLength(wire)+1024,outputReserved:2048,jobId:j.id});
+    const reservation=await reserveKnowledgeAI(c,cfg,{purpose:'submission',policy:translation?GEMINI_TRANSLATION_POLICY:entityCorrection?GEMINI_ENTITY_CORRECTION_POLICY:withDuplicates?GEMINI_REVIEW_POLICY+'+'+DUPLICATE_POLICY:GEMINI_REVIEW_POLICY,inputReserved:Buffer.byteLength(wire)+1024,outputReserved:2048,jobId:j.id});
     if(reservation.state==='oversize'){await c.query("UPDATE member_knowledge.review_jobs SET state='needs-changes',reason='一度に確認できる量を超えています。項目の本文や根拠を短くしてください。' WHERE id=$1",[j.id]);return null;}
     if(reservation.state==='wait'){await c.query("UPDATE member_knowledge.review_jobs SET state='quota',reason=$2,not_before=$3,updated_at=clock_timestamp() WHERE id=$1",[j.id,reservation.reason,reservation.wait]);return null;}
     const attemptId=reservation.id,token=randomUUID(),wireDigest=createHash('sha256').update(wire).digest('hex');

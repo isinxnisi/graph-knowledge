@@ -1,3 +1,4 @@
+import {entityCorrectionSchema} from './knowledge-entity-correction';
 import { z } from "zod";
 import {knowledgeTextTargetSchema,translationProposalSchema,knowledgeTranslationVersionSchema} from "./knowledge-translation";
 import {knowledgeTextLanguageSchema} from "./knowledge-language";
@@ -10,7 +11,7 @@ const draftEntity=z.strictObject({...knowledgeEntityContentSchema.shape,name:z.s
 const draftSource=z.strictObject({...knowledgeSourceContentSchema.shape,title:z.string().trim().max(300),url:z.string().max(2000).nullable().default(null)});
 const draftEvidence=z.strictObject({...knowledgeEvidenceSchema.shape,locator:z.string().trim().max(1000)});
 const draftRecord = z.strictObject({...knowledgeRecordContentSchema.shape,assertion:z.string().trim().max(4000),evidence:z.array(draftEvidence).max(20)});
-export const submissionOperationSchema=z.enum(["create-entity","create-relation","add-information","add-evidence","correct-record","translate-text"]);
+export const submissionOperationSchema=z.enum(["create-entity","create-relation","add-information","add-evidence","correct-record","correct-entity","translate-text"]);
 export const submissionAboutSchema=z.strictObject({kind:z.enum(["entity","record","theme"]),id:knowledgeIdSchema,revision:z.number().int().positive()});
 export const submissionLegacySchema=z.strictObject({revision:z.string().min(1).max(200),entityIds:z.array(knowledgeIdSchema).max(40),claimIds:z.array(knowledgeIdSchema).max(20)});
 export const submissionSelectionContextSchema=z.strictObject({dataset:z.literal("public-kg"),revision:z.string().min(1).max(200).optional(),entityIds:z.array(knowledgeIdSchema).max(40).default([]),claimIds:z.array(knowledgeIdSchema).max(20).default([]),entityPins:z.array(knowledgePinSchema).max(40).default([]),recordPins:z.array(knowledgePinSchema).max(20).default([]),themePin:knowledgePinSchema.optional()});
@@ -22,7 +23,7 @@ export const knowledgeSubmissionContentSchema = z.strictObject({
   sourcePins: z.array(knowledgePinSchema).max(80).default([]),
   sources: z.array(z.strictObject({ id: knowledgeIdSchema, content: draftSource })).max(40).default([]),
   items: z.array(z.strictObject({ key: knowledgeIdSchema, record: draftRecord,
-    translation:translationProposalSchema.optional(), correction: knowledgePinSchema.optional(), operation:submissionOperationSchema.optional(),about:submissionAboutSchema.optional(),themes:z.array(knowledgePinSchema).max(8).optional(),
+    entityCorrection:entityCorrectionSchema.optional(),translation:translationProposalSchema.optional(), correction: knowledgePinSchema.optional(), operation:submissionOperationSchema.optional(),about:submissionAboutSchema.optional(),themes:z.array(knowledgePinSchema).max(8).optional(),
   })).min(1).max(20),
 }).superRefine((value, ctx) => {
   for (const [label, ids] of [

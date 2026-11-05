@@ -1,9 +1,11 @@
+import {knowledgeEntityContentSchema} from './knowledge-foundation';
 import { z } from "zod";
 
 // A review is advice about one immutable input, never a publication command.
 // Source text is untrusted material, not an instruction or verified fact.
 export const knowledgeReviewInputSchema = z.strictObject({
   assertion: z.string().trim().min(1).max(4000),
+  entityCorrection:z.strictObject({before:knowledgeEntityContentSchema,after:knowledgeEntityContentSchema,reason:z.string().max(4000)}).optional(),
   translation: z.strictObject({originalText:z.string().min(1).max(4000),sourceLanguage:z.string().optional(),targetLanguage:z.string().min(1).max(100)}).optional(),
   context: z.string().max(16000).default(""),
   evidence: z.array(z.strictObject({
