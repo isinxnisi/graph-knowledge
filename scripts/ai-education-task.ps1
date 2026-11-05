@@ -14,9 +14,10 @@ $hostExecutable = Join-Path $env:SystemRoot 'System32\wscript.exe'
 $arguments = '//B //NoLogo "' + $launcher + '"'
 if ($Mode -eq 'Run') {
     $config = Get-Content -LiteralPath (Join-Path $folder 'runner.json') -Raw | ConvertFrom-Json
+    $repository = $config.script.Substring(0, $config.script.Length - '/experiments/ai-lab/autonomy.py'.Length)
     # Foreground, finite invocation: wsl.exe stays alive for the complete guarded job.
     # No shell, daemon PID dependency, credential export, model or budget overrides.
-    & wsl.exe -d $config.distribution --exec /usr/bin/python3 -B $config.script --home $config.home scheduled-tick *> (Join-Path $folder 'last-run.log')
+    & wsl.exe -d $config.distribution --cd $repository --exec /usr/bin/python3 -B $config.script --home $config.home scheduled-tick *> (Join-Path $folder 'last-run.log')
     exit $LASTEXITCODE
 }
 $existing = Get-ScheduledTask -TaskPath '\' -TaskName $taskName -ErrorAction SilentlyContinue
