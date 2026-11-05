@@ -1,0 +1,155 @@
+{
+  "date": "2026-11-05",
+  "scope": "R1c partial; R1 and initial beta implementation incomplete",
+  "source": "94bcf7dce341bc8aea1364296c166c9de9611e60",
+  "build": "VgN_c2H7-gtkdB7qFcShz",
+  "tests": {
+    "foundationSourceInventory": 151,
+    "memberSubmissionReferences": 54,
+    "collectionReadingBackfill": 11,
+    "total": 216,
+    "failed": 0,
+    "skipped": 0,
+    "eslint": true,
+    "typescript": true,
+    "publicWebpackBuild": true
+  },
+  "migration": {
+    "additional": [
+      "007-acquisition-inventory.sql"
+    ],
+    "previousChecksumsPreserved": true,
+    "memberLedgerEntries": 30,
+    "knowledgeMigrations": [
+      "001",
+      "002",
+      "004",
+      "005",
+      "006",
+      "007"
+    ],
+    "restoreRehearsal": {
+      "migration": "007-acquisition-inventory.sql",
+      "checksumsPreserved": true,
+      "repeatedUnchanged": true,
+      "originalTablesPreserved": true,
+      "memberUnchanged": true,
+      "backfills": [
+        {
+          "origin": "submission",
+          "receipts": 6
+        },
+        {
+          "origin": "collection",
+          "receipts": 2
+        }
+      ],
+      "proofs": 8,
+      "links": 8,
+      "scans": [
+        {
+          "origin": "common",
+          "entries": 71,
+          "id": "42bd76d9-6a52-4900-b8f8-345c5c32d23c"
+        },
+        {
+          "origin": "public-kg",
+          "entries": 5711,
+          "id": "4c531384-940f-4100-9de1-01ea1c8ed2b4"
+        }
+      ]
+    },
+    "dumpSha256": {
+      "KNOWLEDGE_DATABASE_URL.dump": "bd0aa1a8a5da04243199c786cb2cfa14df4a548e5c1a364ce3436440b4d575e2",
+      "MEMBER_DATABASE_URL.dump": "ba8301b1a8129d2a42bed47294e55091685e81d1d50cd831986a8c456d4cfb1d"
+    }
+  },
+  "activation": {
+    "allOriginalRowsPreservedBeforeRestart": true,
+    "privateSettingsUnchanged": true,
+    "legacyKgUnchanged": true,
+    "vpsChanged": false,
+    "backupSha256": {
+      "knowledge.dump": "abe59f409aa6c67f3cacfa8da944fb41d60c7428b41e1394d246e778ec2a35c9",
+      "member.dump": "e158c4732c6ed251c8aa39b0ea1ab75cd9a915519de5ea5596dee53c96638776"
+    }
+  },
+  "retry": {
+    "submissionRevision": 2,
+    "state": "retry",
+    "nextAttemptUTC": "2026-11-05T12:50:56.508+00:00",
+    "attempts": [
+      {
+        "startedUTC": "2026-11-05T10:25:20.576116+00:00",
+        "state": "delivery-unknown",
+        "diagnostic": null
+      },
+      {
+        "startedUTC": "2026-11-05T10:27:32.664379+00:00",
+        "state": "http-error",
+        "diagnostic": null
+      },
+      {
+        "startedUTC": "2026-11-05T10:29:41.511164+00:00",
+        "state": "delivery-unknown",
+        "diagnostic": null
+      },
+      {
+        "startedUTC": "2026-11-05T11:02:29.33751+00:00",
+        "state": "delivery-unknown",
+        "diagnostic": {
+          "kind": "attempt-failure",
+          "state": "delivery-unknown",
+          "version": 1,
+          "category": "dns",
+          "transportCode": "EAI_AGAIN"
+        }
+      },
+      {
+        "startedUTC": "2026-11-05T11:19:40.614554+00:00",
+        "state": "http-error",
+        "diagnostic": {
+          "kind": "attempt-failure",
+          "state": "http-error",
+          "version": 1,
+          "category": "unavailable",
+          "httpStatus": 503,
+          "retryAfter": null
+        }
+      },
+      {
+        "startedUTC": "2026-11-05T11:53:06.062203+00:00",
+        "state": "http-error",
+        "diagnostic": {
+          "kind": "attempt-failure",
+          "state": "http-error",
+          "version": 1,
+          "category": "unavailable",
+          "httpStatus": 503,
+          "retryAfter": null
+        }
+      }
+    ],
+    "originalRecordAndActivitiesAndCapsulesUnchanged": true,
+    "finalAcceptanceVerified": false
+  },
+  "browser": {
+    "realGoogleBeta": true,
+    "receiptWaitReasonAndNextTime": true,
+    "themeGraphAndFixedEvidence": true,
+    "returnToExploreAndLegacyPluto": true,
+    "newCapsuleSaveOrShareThisTurn": false
+  },
+  "http": {
+    "localhost3200": 200,
+    "betaInChrome": "successfully rendered and interacted",
+    "betaFromWslUrllib": 403
+  },
+  "remaining": [
+    "Dedicated import auth and permanent package/item receipts and actual delivery",
+    "Cross-route normalization and semantic duplicates",
+    "R1 Entity correction/fixed reader/translation context and cache",
+    "R2 periodic scanning/candidate verification/automatic application",
+    "R3-R5 agreed initial functions and integrated beta acceptance"
+  ]
+}

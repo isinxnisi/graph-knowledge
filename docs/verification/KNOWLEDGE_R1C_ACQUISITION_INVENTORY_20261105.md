@@ -1,6 +1,6 @@
 # R1c：取得証明・新旧対象台帳の検証
 
-2026-11-05。R1の部分実装。[設計と再開方法](../design/KNOWLEDGE_ACQUISITION_INVENTORY.md)。配置識別・最終結果は検証完了後に追記する。
+2026-11-05。R1の部分実装。[設計と再開方法](../design/KNOWLEDGE_ACQUISITION_INVENTORY.md)。app `94bcf7dce341bc8aea1364296c166c9de9611e60`／build `VgN_c2H7-gtkdB7qFcShz`をmain・localhost:3200・HTTPS βへ反映済み。
 
 ## 実装した範囲
 
@@ -27,4 +27,34 @@
 
 ## 再試行の実測
 
-同じ投稿・受付版2・jobの自動再試行を継続して確認した。4回目はDNS `EAI_AGAIN`、5回目（20:19 JST）はHTTP503／unavailable。過去の3試行は詳細が保存されておらず、すべて503とは断定しない。上限・無料予算を守る待機を続け、DBで成功へ書き換えたり、手動で再投稿したりしていない。最終状態は終了前の確認結果を追記する。
+同じ投稿・受付版2・jobの自動再試行を継続して確認した。4回目はDNS `EAI_AGAIN`、5回目（20:19 JST）はHTTP503／unavailable。過去の3試行は詳細が保存されておらず、すべて503とは断定しない。上限・無料予算を守る待機を続け、DBで成功へ書き換えたり、手動で再投稿したりしていない。6回目の結果と次回予定は後段の最終確認に記載する。
+
+## 検証と実際の配置
+
+- 基盤・取得・重複・台帳151件、会員投稿／参照54件、収集／証明backfill11件、**計216件成功・skip0**。lint、型検査、public webpack build成功。
+- β切替前にWeb／専用Worker5プロセスを停止し、会員・知識の新しいdumpをprivate保存。移行・2回のbackfill・全件scan後に、既存全テーブルのfingerprintを再照合した。追加migration台帳以外の原本・会員行は一致。
+- 追加は知識007のみ。旧checksum保持、知識001/002/004/005/006/007、会員000〜029の30件を維持。証明8／対応8、common71／旧KG5,711の台帳を実βにも作成。
+- private runtimeの8ファイルhashは不変。Google認証、DB接続、共有Kev、Cloudflared、3276、正式VPSへ設定変更なし。
+- 配置前build `xJavi_2YvZdx26ouGAToE`とdumpはprivate backupに保存。追加007は既存テーブルを変えない移行。復旧で古いdumpを現行DBへ上書きする手順は採らない。
+- localhost:3200はHTTP200、紹介テーマは初期HTMLに存在。HTTPS βは実Chromeで成功。WSLのPython HTTP確認は403であり、CLI側も200だったとは報告しない。
+
+実Chromeで、同じ受付版2の待機理由／次回予定、TOP→Webb年表・関係図→Record内容版1の根拠→探索へ戻る→既存PLUTOの4対象・6主張を確認した。未読通知は既読にしていない。新しいCapsuleの保存／共有や、本番URLでの操作はこの回には行っていない。
+
+![同じ投稿の待機理由と次回予定](assets/r1c-retry-beta-20261105.jpg)
+![年表・関係図・固定版の根拠](assets/r1c-theme-beta-20261105.jpg)
+
+## 再試行の最終確認
+
+6回目（20:53 JST）もHTTP503。次回は**11月5日21:50 JSTごろ**、上限・無料予算を守って同じjobが自動再試行する。最終の「登録済み」は未確認。投稿本文・対象・受付版は保持され、比較対象Recordの版とhash、全原本の件数／版hash、投稿者活動、Capsule関連テーブルは待機前baselineと一致した。
+
+取得証明／対象台帳はAI応答を待たずに検証できたが、実AIによる同じ投稿の最終再利用まで成功したことにはしない。[機械判定可能な結果](assets/knowledge-r1c-results-20261105.json)に区別して保存する。
+
+## 次の作業と再開
+
+R1cは部分完了。次は取込契約の専用資格・厳密schema・永続package／項目receipt・部分結果・取消と再送をHTTPへ接続し、小さい実配送を確認する。外部データを人間の投稿者へ偽装しない。Entity原文訂正、固定版reader、翻訳文脈／cache、参照・公開範囲・配置別認可と安全境界もR1残件として維持する。
+
+全件列挙ができたことをR2の全件自動整理完成と混同しない。周期巡回・候補生成・支持確認・通常分の自動適用は初版に含むまま未接続。管理者がCLIを毎回実行する前提へ戻さない。
+
+通常再起動は既存の `scripts/start-local-previews.py beta --node /home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/issue75/node`。private stateを引き継ぎ、Web3200と専用Workerを復帰する。証明・対象台帳だけの再実行方法は設計書に記載。
+
+作業branchは `codex/issue75-theme-foundation`。コードcommit `94bcf7dc`。検証・進行表は後続の日本語commitへ記録し、branchとmainの通常push、最後にholdを解放する。最終結果は進行表・完了報告にも残す。

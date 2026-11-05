@@ -1,3 +1,5 @@
+2026-11-05 R1c：共通取得証明と新旧対象台帳を実装し、追加007をmain／3200／HTTPS βへ反映。証明8・common71／旧KG5,711を検証。app 94bcf7dc / build VgN_c2H7-gtkdB7qFcShz。[契約](design/KNOWLEDGE_ACQUISITION_INVENTORY.md)／[検証・再開・残件](verification/KNOWLEDGE_R1C_ACQUISITION_INVENTORY_20261105.md)。同じ投稿の6回目は503、自動再試行継続。API・全件自動整理・R1全体は未完了。以下は履歴。
+
 2026-11-05 投稿確認の一時障害：503等と認証・設定エラーを分け、安全な診断と上限付き自動再開を接続。旧3回停止の同じ投稿が4回目へ自動再開し、DNS EAI_AGAINを記録した。実AIの最終受理は未確認で、Workerが再試行を継続する。app a9682921 / build xJavi_2YvZdx26ouGAToEをmain／3200／HTTPS βへ反映。[契約](design/KNOWLEDGE_AI_FAILURES.md)／[実測・検証・保全・残件](verification/KNOWLEDGE_AI_RETRY_20261105.md)。以下は各時点の記録。
 
 2026-11-05 R1b：同一性を会員投稿の重複照合へ接続し、資料比較を共通化。[外部取込契約](design/KNOWLEDGE_IMPORT_CONTRACT.md)を具体化したが、API／永続package／配送は未実装。app `616f1840` / build `AQsmThdwxZZSYkAt7EMg0`をmain／3200／HTTPS βへ反映。[実操作・検証・残件](verification/KNOWLEDGE_R1B_IDENTITY_DUPLICATES_20261105.md)／[現在の進行表](PLUNODE_PROGRESS.md)。**初版の機能実装完了＋β統合検証は未達**。以下は各時点の履歴。

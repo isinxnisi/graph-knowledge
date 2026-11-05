@@ -1,3 +1,11 @@
+2026-11-05 R1c反映済み：app 94bcf7dc / build VgN_c2H7-gtkdB7qFcShz。知識007追加、会員029・30 ledgerは不変。共通取得証明8件とcommon71／旧KG5,711対象の全件台帳を作成し、再実行・保全・216テスト・実Google代表経路を確認。[設計](KNOWLEDGE_ACQUISITION_INVENTORY.md)／[配置・検証・再開](../verification/KNOWLEDGE_R1C_ACQUISITION_INVENTORY_20261105.md)。R1全体と初版は未完了。
+
+次は専用資格・厳密schema・永続package／項目receipt・HTTP受付／取消／結果・小さい実配送を接続する。全件列挙と取得証明は再実装せず共用する。R2の全件自動整理・R3の定期配送／収集を、手動CLIの利用で完成にしない。Entity原文訂正・固定版reader・翻訳文脈／cache等の残件も維持。
+
+同じ投稿の6回目は20:53 JSTに503、次回21:50ごろの自動再試行待ち。最終受理は未確認。元Record・全版hash・活動・Capsuleは待機前と一致。手動で成功へ変えず、同じ受付版を追う。
+
+以下は前段の引継ぎ。
+
 現在地の入口：[Plunode進行表](../PLUNODE_PROGRESS.md)。**R1a完了、R1bは同一性→会員投稿の照合と資料比較の共通関数まで配置済み。R1全体は未完了。** app a9682921 / build xJavi_2YvZdx26ouGAToE。[R1bの検証・再開](../verification/KNOWLEDGE_R1B_IDENTITY_DUPLICATES_20261105.md)。全データ巡回・自動資料探し・定期収集・多言語利用・入力／探索接続・安全性は初版要件のまま。
 
 **受け渡しはChatGPT側でテーマ・資料URL・情報を揃える → 認証付きPlunode取込API → 原本取得・根拠確認・重複照合・登録。** Issue等は同じpackageの代替配送。URL探索APIの導入やGemini検索機能を着手条件にしない。一般投稿は当面投稿URLで確認する。[取込契約](KNOWLEDGE_IMPORT_CONTRACT.md)は具体化したが、API／永続package／配送は未実装。

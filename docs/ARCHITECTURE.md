@@ -4,7 +4,7 @@
 
 - βの新方式はPostgreSQLの独立した知識DB／`knowledge75`の原記録・版を正本とし、Neo4jの専用label／公開世代を探索投影に使う。会員DBの認証・投稿／処理queueと責務・資格を分ける。詳細は[共通原本](design/KNOWLEDGE_FOUNDATION_U1.md)と[公開投影](design/KNOWLEDGE_PUBLIC_READ_U2.md)。
 - 既存の旧KGは並行して読む。本文中の「Neo4jが正本」「投稿flowは将来」等は旧KG／当時の構成の記録で、新方式の契約を取り消すものではない。旧KG由来も巡回・検索対象から落とさず、対応と切替を確認する。
-- main／3200／HTTPS βには新方式が段階配置済み。最後の機能配置はapp a9682921／build xJavi_2YvZdx26ouGAToE（[一時障害対応](verification/KNOWLEDGE_AI_RETRY_20261105.md)）。正式VPSへの新方式切替はR6／旧U8で、β成功と正式公開を区別する。R1bは追加migrationなしでβのWeb／Workerを更新。本番実機は今回再確認していない。
+- main／3200／HTTPS βには新方式が段階配置済み。最後の機能配置はapp 94bcf7dc／build VgN_c2H7-gtkdB7qFcShz（[取得証明・対象台帳](verification/KNOWLEDGE_R1C_ACQUISITION_INVENTORY_20261105.md)）。追加007で証明と新旧全件列挙を共用する。自動整理と取込APIは未完了。正式VPSへの新方式切替はR6／旧U8で、β成功と正式公開を区別する。R1cは追加migration007とWeb／Workerを更新。本番実機は今回再確認していない。
 - 原語・訳文・意味対応・同一性・原資料・固定断面を分け、根拠付きの自動適用と任意管理を接続する。下記の旧提案・段階的な制限を、最新の要件から機能を除外する根拠にしない。
 
 以下は各時点の配置履歴と旧構成の詳細。現在の実装順と不足は上記の再計画を優先する。
