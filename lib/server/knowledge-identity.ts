@@ -39,13 +39,17 @@ export function createKnowledgeIdentity(pool:Pool){
  async act(actorId:string,raw:unknown){const cmd=identityCommandSchema.parse(raw),pins=[cmd.left,cmd.right].sort((a,b)=>a.id<b.id?-1:1),[left,right]=pins,id='identity:'+knowledgeDigest(pins.map(p=>p.id)).slice(0,48),digest=knowledgeDigest(cmd),c=await pool.connect();try{
   await c.query('BEGIN');await assertIdentitySchema(c);await c.query('SELECT pg_advisory_xact_lock(7500600)');
   const receipt=(await c.query('SELECT digest,result FROM knowledge75.entity_identity_requests WHERE actor_id=$1 AND request_id=$2',[actorId,cmd.requestId])).rows[0];if(receipt){if(receipt.digest!==digest)throw new KnowledgeError('同じ操作IDの内容が違います',409,'REQUEST_CONFLICT');await c.query('COMMIT');return receipt.result;}
-  const entities=[];for(const p of pins){const e=await entity(c,p.id,true);if(e.revision!==p.revision)throw new KnowledgeError('対象の内容が変わりました。比較し直してください',409,'REVISION_CONFLICT');entities.push(e);}
+  for(const p of pins){const e=await entity(c,p.id,true);if(e.revision!==p.revision)throw new KnowledgeError('対象の内容が変わりました。比較し直してください',409,'REVISION_CONFLICT');}
   const old=(await c.query('SELECT current_revision FROM knowledge75.entity_identity_links WHERE id=$1',[id])).rows[0];if((old?.current_revision??0)!==cmd.expectedRevision)throw new KnowledgeError('関連付けが変わりました。再取得してください',409,'REVISION_CONFLICT');
   if(cmd.state==='withdrawn'&&!old)throw new KnowledgeError('解除する関連付けがありません');
   if(cmd.state==='same'){
-   const kinds:Record<string,string>={人物:'person',作品:'work',組織:'organization',出来事:'event'};const kind=(s:string)=>kinds[s]??s;
-   if(kind(entities[0].content.kind)!==kind(entities[1].content.kind))throw new KnowledgeError('分類が異なります。対象の内容を確認・訂正してから関連付けてください',409,'KIND_MISMATCH');
-   if((await group(c,pins.map(p=>p.id))).length>20)throw new KnowledgeError('関連付けは一組20件までです。対象を見直してください',409,'GROUP_LIMIT');
+   const kinds:Record<string,string>={人物:'person',person:'person',作品:'work',work:'work',組織:'organization',organization:'organization',出来事:'event',event:'event'};
+   const members=await group(c,pins.map(p=>p.id));
+   if(members.length>20)throw new KnowledgeError('関連付けは一組20件までです。対象を見直してください',409,'GROUP_LIMIT');
+   const classifications=(await c.query(`SELECT v.content->>'kind' AS kind ${currentEntities} AND o.id=ANY($1::text[])`,[members])).rows.map(r=>kinds[r.kind]).filter(Boolean);
+   // Free detailed classifications (e.g. “対象” / “宇宙望遠鏡”) need not be
+   // redefined just to link two proven observations of the same subject.
+   if(new Set(classifications).size>1)throw new KnowledgeError('基本分類が異なります。対象の内容を確認・訂正してから関連付けてください',409,'KIND_MISMATCH');
   }
   const revision=(old?.current_revision??0)+1;
   await c.query('INSERT INTO knowledge75.entity_identity_links(id,left_id,right_id,current_revision) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET current_revision=EXCLUDED.current_revision',[id,left.id,right.id,revision]);
