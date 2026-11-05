@@ -4,6 +4,8 @@ R1の先行確認は、追加課金なしの資料発見接続、Recordの言語
 
 会員DB追加migration・知識DB版・private runtimeは現行runbookと実物から照合し、適用済みchecksumを書換えない。未追跡mainの`memo.txt`、作業側の`.local/`、旧成果・会員・独立コミュニティ・既存KGを保護する。画面・機能変更は検証済みmainを3200／HTTPS βへ反映する。今回の再計画は文書のみで、DB・アプリ・VPSは変更していない。
 
+2026-11-05 公開前の備忘：ユーザー指定により、R6／U8前にVPSのLinux脆弱性対応も含める。現時点では詳細調査・更新・再起動は不要。未調査・未対応として残し、公開前に確認・必要な対応・再起動影響・復旧と結果を記録する。[再計画の公開前確認](PLUNODE_IMPLEMENTATION_REPLAN_20261105.md#7-全体の完了条件と後続の扱い)。
+
 2026-11-05 明示依頼の自動翻訳草稿・再利用・用途別利用量をmain／3200／HTTPS βへ反映。実Googleで生成→編集→意味一致確認→公開、再訪での再利用を確認。app `bb0e1543` / build `2ic3u8M0Jz1beaSj3Ra6X`。member029、原記録と既存Capsuleを保持。本番VPS／3276は未更新。訳名検索・Graphラベル言語切替・U6残件は継続。[現行契約](KNOWLEDGE_TRANSLATION_GENERATION.md)／[実操作・再開・制約](../verification/KNOWLEDGE_TRANSLATION_GENERATION_20261105.md)。以下は各時点の記録。
 
 # 過去時点の引継ぎ記録
