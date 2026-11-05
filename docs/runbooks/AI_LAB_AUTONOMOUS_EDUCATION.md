@@ -1,5 +1,36 @@
 # 自動教育v1のローカル運転
 
+## 現在の自動起動（2026-11-06）
+
+Windowsの専用予定`Plunode-AI-Education`が、ログオン時と1分ごとにWSLの既存`autonomy.py scheduled-tick`をforegroundで呼ぶ。Windowsはcron相当の起動入口だけで、教育の判定・実行はPython／独立CPUコンテナが担当する。常駐daemonの生存に依存しない。`IgnoreNew`と既存daemon lockで重複を排除し、終了済みPIDの記録は履歴へ保全する。別プロセスへ再利用されたPIDも終了させない。
+
+時刻窓20:00–23:00 JST・1日最大1回・共通Autopilot guard・既存のCPU/RAM/180秒上限を維持する。予定が1分ごとに動くことは、1分ごとの学習を意味しない。pause/stopや失敗後の無効化、コード指紋の差異、未完intentを自動解除しない。
+
+```powershell
+# Windows側。既存mainのrepository rootで実行する。全体の実行ポリシーは変更しない。
+powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .\scripts\ai-education-task.ps1 -Mode Install
+powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .\scripts\ai-education-task.ps1 -Mode Status
+# 自動起動の入口だけを無効化。実行中の処理は強制終了しない。
+powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .\scripts\ai-education-task.ps1 -Mode Disable
+# 起動入口を再有効化。Python側の停止・予算は解除しない。
+powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .\scripts\ai-education-task.ps1 -Mode Enable
+```
+
+Windows予定が有効なら、Python側の再開は`resume`だけで次の定期起動を待てばよい。通常運転では下の旧`start`常駐方式を重ねない。
+
+```sh
+python3 experiments/ai-lab/autonomy.py status
+python3 experiments/ai-lab/autonomy.py pause
+python3 experiments/ai-lab/autonomy.py stop
+python3 experiments/ai-lab/autonomy.py resume
+```
+
+`status`の`worker=null`は定期呼出しの間なら正常。`scheduler.executionMode=windows-task`、判定日時・理由とWindows予定の最終結果を合わせて確認する。Windows予定の結果0は起動判定の成功であり、学習成功ではない。異常終了でPIDだけ残っても次の呼出しを妨げない。途中のモデル処理が不明なら従来どおり未完intentで止め、再送しない。
+
+非管理者・ログオン中のユーザーとして動かし、PCをsleepから起こす設定は追加しない。電源off・ログアウト・sleep中は実行されず、復帰後の予定で判定する。WSL全体・他Worker・WindowsのAutopilot設定を変更しない。Linux環境へ移す場合は同じ`scheduled-tick`をcron等から起動でき、認証・private保存先はその環境で設定する。[実機検証と反映範囲](../verification/AI_EDUCATION_STARTUP_20261106.md)。
+
+## 既存の手動起動・実行境界
+
 2026-10-27。Issue #36のCPU教育・有限運転とGPU運転条件見直しを実装。正本は受入済みmainの`experiments/ai-lab/autonomy.py`。Webは公開artifactを読むだけで、教育を開始するAPIやモデル管理権限を持たない。[実測](../verification/AI_LAB_AUTONOMOUS_20261027.md)
 
 ## 開始・停止・再開
@@ -23,7 +54,7 @@ python3 experiments/ai-lab/autonomy.py resume
 python3 experiments/ai-lab/autonomy.py start
 ```
 
-`pause`中にworkerが残る場合、再開は`resume`だけでよい。`start`を重ねない。`stop`はstop要求を永続化し、1秒ごとの監視で自分のlabelとcontainer名を照合して停止する。共有Kev・他container・Autopilotを終了しない。OS起動時の自動起動、無期限のGPU運転、クラウド登録は行っていない。2026-10-29の指示では、日次CPU教育を**20:00–23:00 JST・1日最大1回・公開投影あり**で有効化する。ChatGPT側の実方針・日次設定は[別接点](AI_LAB_EDUCATION_POLICY.md)として区別する。
+`pause`中にworkerが残る場合、再開は`resume`だけでよい。`start`を重ねない。`stop`はstop要求を永続化し、1秒ごとの監視で自分のlabelとcontainer名を照合して停止する。共有Kev・他container・Autopilotを終了しない。2026-11-06からローカルの起動入口は上記Windows予定へ接続した。無期限のGPU運転・クラウド登録は行わない。日次CPU教育は**20:00–23:00 JST・1日最大1回・公開投影あり**。ChatGPT側の実方針・日次設定は[別接点](AI_LAB_EDUCATION_POLICY.md)として区別する。
 
 workerは60秒ごとにJSTの時間窓・日次回数・間隔を確認する。実行時だけ既存`autopilot.py guard`で共通ロックを取得し、親PIDとtokenを照合する。ロック使用中は延期する。手動hold中にguardを重ねない。1日の予算には失敗したreal intentも含め、停止直後の再開で同一試行をやり直さない。Pythonコード変更後は自動続行せず、設定を再確認して`enable`する。
 
