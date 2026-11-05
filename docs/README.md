@@ -1,3 +1,5 @@
+2026-11-06 R1g：翻訳草稿に公開版の文脈を添え、文脈hashを含む再利用と公開停止時の読取停止を接続。66テスト、実AI修正後3例、実Googleの生成・編集引継ぎ・再訪を確認。送信1回のまま再利用。会員031追加、app83dd4081／build dgujqpNWl8Q-yJiuYC9sd。R1全体は未完了。[設計](design/KNOWLEDGE_TRANSLATION_GENERATION.md)／[検証と残件](verification/KNOWLEDGE_TRANSLATION_CONTEXT_R1G_20261106.md)。
+
 2026-11-06 R1f：サービス上限を80→400回／日へ変更。Google側の確認値500回とは別の上限として扱う。評価は内数100回まで。R1eの待機訂正が実Gemini 3.1の1回で自動公開され、Entity版2・旧版1・投稿者表示を確認。app c9e55121／build Q8tWL8ZC-xDKMN_5bTqHO。追加migrationなし。R1全体は未完了。[上限の契約](design/KNOWLEDGE_AI_BUDGET.md)／[検証](verification/KNOWLEDGE_AI_BUDGET_R1F_20261106.md)。
 
 2026-11-06 R1e：共通Entityの原文訂正と公開Recordの固定版読取をmain／3200／HTTPS βへ接続。app 15127903／build EzloeT0Q_uvvVuE-f0Zyx。141テスト成功、旧版・ID・帰属・既存保存を保持。実Googleで訂正の保存・再訪・受付と旧版読取を確認。新しい訂正は当時のサービス設定上限（80回／日）による自動再開待ちで、実AIでの最終受理は未確認。[設計](design/KNOWLEDGE_ENTITY_CORRECTION.md)／[検証・再開](verification/KNOWLEDGE_R1E_ENTITY_HISTORY_20261106.md)。R1全体は未完了。

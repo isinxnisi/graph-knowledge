@@ -1,3 +1,5 @@
+2026-11-06 R1g：公開文脈付き翻訳とcacheをmain／3200／HTTPS βへ反映。66テスト、最終実AI3例、実Googleの生成・草稿引継ぎ・再訪を確認。会員031、app83dd4081／build dgujqpNWl8Q-yJiuYC9sd。R1全体は未完了。[検証と再開](../verification/KNOWLEDGE_TRANSLATION_CONTEXT_R1G_20261106.md)。
+
 2026-11-06 R1f：サービス400回／日へ見直し、旧設定上限で待機したEntity原文訂正を実Geminiの1回で自動受理・公開まで確認。R1eの実AI未確認は、この正常例で解消。[検証と次の残件](../verification/KNOWLEDGE_AI_BUDGET_R1F_20261106.md)。R1全体は未完了で、翻訳文脈／cache・対象識別・新旧接続／認可・安全境界の残件へ進む。
 
 2026-11-06 R1e：Entity原文訂正・固定版readerをmain／3200／HTTPS βへ接続。app 15127903／build EzloeT0Q_uvvVuE-f0Zyx。次は新訂正方針の実AI確認（無料枠待ち）、翻訳文脈／cache、対象識別・新旧接続／配置別認可・安全境界の残件。R1と初版全体は未完了。[現在の検証と再開](../verification/KNOWLEDGE_R1E_ENTITY_HISTORY_20261106.md)。
@@ -27,12 +29,12 @@
 3. Gemini3.1と自動再試行、共通取得証明・全件対象台帳は実装・β確認済み。旧待機jobは登録済みになった。R1b/cを再実装しない。
 4. R1dの専用資格・永続package／receipt・HTTP受付／取消／結果・共通受理を維持する。[取込runbook](../runbooks/KNOWLEDGE_IMPORT.md)と最新の[検証記録](../verification/KNOWLEDGE_IMPORT_R1D_20261105.md)で実装・実接続と未確認を区別する。
 5. ChatGPT予定実行からの直接配送は未接続。R3で実証し、直送不可なら同じAPIのIssue adapterを実際に試す。手動clientだけで定期配送完了とはしない。
-6. R1eのEntity原文訂正と固定版readerを維持し、新訂正方針の実AI確認・翻訳文脈とcache・新旧対象と配置別認可・外部遷移と未信頼AI入力の不足を閉じる。同名の対象候補が表示上区別しにくい点も対象選択の残件として扱う。
+6. R1eのEntity原文訂正と固定版readerを維持し、正常な訂正の実AI受理はR1f、翻訳文脈とcacheはR1gで確認済み。次は新旧対象と配置別認可・外部遷移と未信頼AI入力の不足を閉じる。同名の対象候補が表示上区別しにくい点も対象選択の残件として扱う。
 7. 検証→日本語commit→通常push→検証済みmain／3200／HTTPS βへ反映→代表操作→hold解放。初版全体の完成条件を満たすまでは部分完了を明示する。
 
 **「初版の機能実装完了＋β統合検証」まで残り6〜11回程度（推定）**。R1残件1〜2回、R2〜R5計5〜9回。VPS切替・本番向け移行・Linux脆弱性対応・正式URL確認は別の公開工程。通常の管理者による個別承認／毎回のURL列挙へ戻さず、回数のために範囲を縮めない。新しいCodexチャット作成・自動モデル切替は行っていない。
 
-現行追加migrationは会員030。知識007まで、会員000〜029のchecksumと既存private runtimeは維持。次のschema追加時は現行runbook通り別DB復元と再実行を確認する。旧成果・会員・コミュニティ・既存KGは保護する。3276／正式VPSは今回未更新。
+現行追加migrationは会員031。知識007まで、会員000〜030のchecksumと既存private runtimeは維持。次のschema追加時は現行runbook通り別DB復元と再実行を確認する。旧成果・会員・コミュニティ・既存KGは保護する。3276／正式VPSは今回未更新。
 
 2026-11-05 公開前の備忘：ユーザー指定により、R6／U8前にVPSのLinux脆弱性対応も含める。現時点では詳細調査・更新・再起動は不要。未調査・未対応として残し、公開前に確認・必要な対応・再起動影響・復旧と結果を記録する。[再計画の公開前確認](PLUNODE_IMPLEMENTATION_REPLAN_20261105.md#7-全体の完了条件と後続の扱い)。
 
