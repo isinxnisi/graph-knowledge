@@ -155,3 +155,26 @@ it('opens a translation-only draft with its fixed original and an editable trans
  expect(screen.getByText(original.content.assertion)).toBeTruthy();expect(screen.queryByLabelText('投稿範囲のプレビュー')).toBeNull();expect(screen.queryByRole('button',{name:'項目を追加'})).toBeNull();expect(screen.queryByRole('textbox',{name:'登録する事実'})).toBeNull();
  fireEvent.change(textarea,{target:{value:'A revised translation.'}});expect(textarea).toHaveProperty('value','A revised translation.');expect(stored.get(id)!.content.items[0].record.assertion).toBe(original.content.assertion);
 });
+
+it('distinguishes same-name subjects with their descriptions, aliases and registration details',async()=>{
+ const first={...a,id:'same-name-artist',content:{...a.content,name:'田中一郎',description:'版画家。1950年代から木版画を制作。',aliases:['Ichiro Tanaka']}},
+ second={...a,id:'same-name-scientist',content:{...a.content,name:'田中一郎',description:'宇宙工学の研究者。望遠鏡の設計を担当。'}};
+ vi.mocked(fetch).mockImplementation(async(path)=>String(path).startsWith('/api/knowledge/public')?Response.json({entities:[first,second]}):Response.json({revision:'kg-release',items:[]}));
+ const choose=vi.fn();render(<KnowledgeSubmissionTarget kinds={['entity']} label='対象' locale='ja' onChoose={choose}/>);
+ const choices=await screen.findAllByRole('button',{name:/田中一郎/});expect(choices).toHaveLength(2);
+ expect(choices[0].textContent).toContain('版画家');expect(choices[1].textContent).toContain('宇宙工学');
+ const rows=screen.getAllByRole('listitem');fireEvent.click(within(rows[0]).getByText('候補の詳細'));
+ expect(within(rows[0]).getByText(/Ichiro Tanaka/)).toBeTruthy();expect(within(rows[0]).getByText('same-name-artist')).toBeTruthy();
+ fireEvent.click(choices[1]);expect(choose).toHaveBeenCalledWith(expect.objectContaining({id:'same-name-scientist',revision:2}));
+});
+it('shows the fixed selection description again after reopening a draft',()=>{
+ render(<KnowledgeSubmissionTarget kinds={['entity']} value={{kind:'entity',id:a.id,revision:2}} label='対象' locale='ja' context={{entities:[{...a,content:{...a.content,description:'同名の別人ではなく、この人の説明。'}}],sources:[],records:[]}} onChoose={()=>{}}/>);
+ expect(screen.getByText(/同名の別人ではなく/)).toBeTruthy();
+});
+
+it('reports a complete common-only search failure without implying another source succeeded',async()=>{
+ vi.mocked(fetch).mockResolvedValue(new Response('',{status:503}));
+ render(<KnowledgeSubmissionTarget kinds={['entity']} commonOnly label='対象' locale='ja' onChoose={()=>{}}/>);
+ expect(await screen.findByText('検索できませんでした。')).toBeTruthy();
+ expect(screen.queryByText('一部の候補を取得できていません。')).toBeNull();
+});

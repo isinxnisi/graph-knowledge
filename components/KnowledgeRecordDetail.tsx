@@ -1,4 +1,5 @@
 "use client";
+import ExternalSourceLink from "./ExternalSourceLink";
 import KnowledgeTranslationPanel from "./KnowledgeTranslationPanel";
 import type {KnowledgeTranslationVersion} from "../lib/domain/knowledge-translation";
 import { themeTimeLabel } from "../lib/domain/theme-time";
@@ -33,7 +34,7 @@ export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme,o
     {dto.semantics.status === "current" && dto.semantics.concept && <p className={css.meta}>{en ? "Meaning" : "意味対応"}：{dto.semantics.concept.label}</p>}
     {dto.semantics.status === "stale" && <p className={css.meta}>{en ? "This meaning mapping belongs to an earlier content revision." : "意味対応は旧内容へのものです。現在の意味条件には含めません。"}</p>}
     {r.evidence.map((e) => { const s = dto.sources.find((s) => s.id === e.source.id && s.revision === e.source.revision); return <div className={css.source} key={e.id}>
-      {s?.content.url ? <a href={s.content.url} target="_blank" rel="noreferrer">{s.content.title} ↗</a> : <strong>{s?.content.title ?? (en ? "Source" : "資料")}</strong>}
+      {s?.content.url ? <ExternalSourceLink href={s.content.url} label={s.content.title} locale={locale}/> : <strong>{s?.content.title ?? (en ? "Source" : "資料")}</strong>}
       <div className={css.meta}>{en ? "Source revision" : "資料版"} {e.source.revision} · {e.locator} · {en ? e.stance : ({ support: "支持", refute: "反証", background: "背景" })[e.stance]}</div>
       {s?.content.bibliography && <KnowledgeSourceBibliography value={s.content.bibliography} className={css.meta} locale={locale}/>}
       {e.excerpt && <blockquote lang={e.textLanguages?.excerpt?.tag}>{e.excerpt}</blockquote>}

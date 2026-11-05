@@ -1,4 +1,5 @@
 "use client";
+import ExternalSourceLink from "./ExternalSourceLink";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { claimDetailSchema, entityDetailSchema, type ClaimDetail, type EntityDetail, type NeighborsResponse } from "../lib/domain/api";
 import { capsuleRelationSchema, type CapsuleDocument, type CapsuleNode } from "../lib/domain/capsule-document";
@@ -512,7 +513,7 @@ export default function CapsuleStudio({ submissionHref, externalFocus, onFocusKe
         <strong className={css.evidenceTitle}>{e.title}</strong>
         <div className={css.evidenceMeta}><span className={css.badge}>{evidenceSupports[e.supports]}</span><span className={css.badge}>{evidenceStances[e.stance]}</span></div>
         {e.locator && <p className={css.evidenceLocator}>{e.locator}</p>}{e.note && <p className={css.evidenceNote}>{e.note}</p>}
-        {(e.url || editing) && <footer className={css.evidenceActions}>{e.url && <a href={e.url} target="_blank" rel="noopener noreferrer"><Icon name="link"/>{t("資料を開く", "Open source")}</a>}
+        {(e.url || editing) && <footer className={css.evidenceActions}>{e.url && <ExternalSourceLink href={e.url} label={t("資料を開く","Open source")} locale={locale}/>}
           {editing && <><button className={css.iconButton} title={t("根拠を編集", "Edit evidence")} aria-label={t("根拠を編集", "Edit evidence")} onClick={() => { const draft={ ...blankEditor("evidence", [e.key]), title:e.title, description:e.note, url:e.url ?? "", locator:e.locator, supports:e.supports, stance:e.stance }; setEditorBaseline(capsuleClone(draft)); setEditor(draft); setError(null); }}><Icon name="edit"/></button><button className={css.quietButton} onClick={() => changeDocument({ ...current().document!, evidence: contentDocument.evidence.filter(item => item.key !== e.key) })}>{t("外す", "Remove")}</button></>}
         </footer>}
       </article>)}

@@ -1,5 +1,6 @@
 "use client";
 
+import ExternalSourceLink from "./ExternalSourceLink";
 import { useId, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import type {
   ThemeTimelineConfig,
@@ -460,9 +461,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                     {record.evidence.map((e, i) => (
                       <div key={i} className={css.evidence} data-source-id={e.sourceId} data-source-revision={e.sourceRevision}>
                         {e.url ? (
-                          <a href={e.url} target="_blank" rel="noreferrer">
-                            {e.title} <span aria-hidden="true">↗</span>
-                          </a>
+                          <ExternalSourceLink href={e.url} label={e.title}/>
                         ) : <span>{e.title}</span>}
                         {e.sourceRevision !== undefined && (
                           <p className={css.meta}>資料版 {e.sourceRevision}{e.stance ? ` · ${{ support: "支持", refute: "反証", background: "背景" }[e.stance]}` : ""}</p>

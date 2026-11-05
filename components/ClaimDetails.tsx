@@ -1,4 +1,5 @@
 "use client";
+import ExternalSourceLink from "./ExternalSourceLink";
 import { useFilmTrialClaim } from "../lib/client/film-trial";
 import { trackPublicEvent } from "../lib/client/public-events";
 import { useEffect, useId, useRef, useState } from "react";
@@ -89,7 +90,7 @@ export function ClaimCard({ claim, nodes, title, dataset, referenceDataset = dat
       <h5>{citation.source.title}</h5>
       <p className={styles.sourceLocator}>{ui.locator}：{citation.locator}</p>
       {citation.source.url && <p>{usableUrl(citation.source)
-        ? <a href={citation.source.url} target="_blank" rel="noopener noreferrer" aria-label={ui.openSource} onClick={() => trackPublicEvent("source_open")}>{text.openSource}<span aria-hidden="true"> ↗</span></a>
+        ? <ExternalSourceLink href={citation.source.url} label={text.openSource} locale={locale} ariaLabel={ui.openSource} onOpen={() => trackPublicEvent("source_open")}/>
         : <span>{ui.demoUrl}：{citation.source.url}</span>}</p>}
       {citation.eventParticipationEvidence && <p><strong>{eventText.evidence}：</strong>{citation.eventParticipationEvidence.originalText}<br />{eventText.language}：{citation.eventParticipationEvidence.language}</p>}
       {citation.positionEvidence && <p><strong>{positionText.evidence}：</strong>{citation.positionEvidence.originalText}<br />{positionText.language}：{citation.positionEvidence.language}</p>}

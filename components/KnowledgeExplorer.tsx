@@ -1,4 +1,5 @@
 "use client";
+import ExternalSourceLink from "./ExternalSourceLink";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import GraphCanvas, { type CanvasContent } from "./GraphCanvas";
@@ -41,7 +42,7 @@ function Detail({ dto, onEntity }: { dto: KnowledgePublishedRecord; onEntity: (i
     {dto.semantics.status === "current" && dto.semantics.concept && <p className={css.meta}>意味対応：{dto.semantics.concept.label}</p>}
     {dto.semantics.status === "stale" && <p className={css.meta}>意味対応は旧内容へのものです。現在の意味条件には含めません。</p>}
     {r.evidence.map((e) => { const s = dto.sources.find((s) => s.id === e.source.id && s.revision === e.source.revision); return <div className={css.source} key={e.id}>
-      {s?.content.url ? <a href={s.content.url} target="_blank" rel="noreferrer">{s.content.title} ↗</a> : <strong>{s?.content.title ?? "資料"}</strong>}
+      {s?.content.url ? <ExternalSourceLink href={s.content.url} label={s.content.title}/> : <strong>{s?.content.title ?? "資料"}</strong>}
       <div className={css.meta}>資料版 {e.source.revision} · {e.locator} · {({ support: "支持", refute: "反証", background: "背景" })[e.stance]}</div>
       {s?.content.bibliography && <KnowledgeSourceBibliography value={s.content.bibliography} className={css.meta}/>}
       {e.excerpt && <blockquote lang={e.textLanguages?.excerpt?.tag}>{e.excerpt}</blockquote>}

@@ -1,4 +1,5 @@
 "use client";
+import ExternalSourceLink from "./ExternalSourceLink";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -130,9 +131,7 @@ function Evidence({ record }: { record: ThemeRecord }) {
       </p>
       {record.evidence.map((e, i) => (
         <div className={css.evidence} key={i}>
-          <Link href={e.url} target="_blank" rel="noreferrer">
-            {e.title} ↗
-          </Link>
+          <ExternalSourceLink href={e.url} label={e.title}/>
           <p>{e.locator}</p>
           <p>{e.excerpt}</p>
         </div>

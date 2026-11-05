@@ -1,4 +1,5 @@
 "use client";
+import ExternalSourceLink from "./ExternalSourceLink";
 import {useEffect,useRef,useState} from "react";
 import {z} from "zod";
 import {appealPublicSchema,appealReplySchema,appealActions} from "../lib/domain/knowledge-appeal";
@@ -47,7 +48,7 @@ export function KnowledgeOperations({userId,authorized,registerGuard}:{userId:st
  {error&&<p role="alert">{error}</p>}{message&&<p role="status">{message}</p>}
  {caseData?<section className={css.detail}><button onClick={()=>{if(reason.trim()&&!window.confirm(t('入力中の回答を閉じますか？','Close the unfinished reply?')))return;setCaseData(null);pending.current=null;draftCase.current=null;setReason('');setUnknown(false);}}>{t('← 相談一覧へ','← Back to cases')}</button><h2>{t('相談された項目','Shared item')}</h2><p>{t(`受付版 ${caseData.current.submittedRevision}`,`Submitted version ${caseData.current.submittedRevision}`)} · #{caseData.case.id.slice(0,8)}</p>
  {caseData.snapshot.item.translation?<><h3>{t('翻訳元の原文','Original text')}</h3><p>{caseData.snapshot.item.record.assertion}</p><h3>{t('投稿された訳文','Proposed translation')} · {caseData.snapshot.item.translation.language}</h3><p lang={caseData.snapshot.item.translation.language}>{caseData.snapshot.item.translation.text}</p></>:<p>{caseData.snapshot.item.record.assertion}</p>}<p>{caseData.snapshot.entities.map(e=>e.content.name).join(' → ')}</p><h3>{t('元の確認結果','Original result')}</h3><p>{caseData.snapshot.review.reason}</p><h3>{t('相談内容','Request')}</h3><p>{caseData.case.detail}</p>
- <details><summary>{t('資料と原文を確認','Sources and quotations')}</summary>{caseData.snapshot.sources.map((s,i)=><p key={i}>{s.content.url?<a href={s.content.url} target="_blank" rel="noreferrer">{s.content.title} ↗</a>:s.content.title}{s.content.bibliography}</p>)}{caseData.snapshot.item.record.evidence.map((e,i)=><div key={i}><small>{e.locator}</small><blockquote>{e.excerpt}</blockquote></div>)}</details>
+ <details><summary>{t('資料と原文を確認','Sources and quotations')}</summary>{caseData.snapshot.sources.map((s,i)=><p key={i}>{s.content.url?<ExternalSourceLink href={s.content.url} label={s.content.title} locale={locale}/>:s.content.title}{s.content.bibliography}</p>)}{caseData.snapshot.item.record.evidence.map((e,i)=><div key={i}><small>{e.locator}</small><blockquote>{e.excerpt}</blockquote></div>)}</details>
  {caseData.moderation&&<p role="status">{caseData.moderation.state==='pending'?t('公開先への処置の適用待ちです。','Waiting for delivery to the public record.'):caseData.moderation.state==='blocked'?caseData.moderation.reason:caseData.moderation.visibility==='hidden'?t('公開停止を適用済みです。','Public visibility is blocked.'):t('この案件による公開停止を解除しました。','This case’s visibility block was removed.')}</p>}
  {caseData.case.replies.map((r,i)=><p key={i}>{r.reason}</p>)}
  <details><summary>{t('確認・処置の履歴','Access and action history')}</summary>{caseData.history?.map((h,i)=><p key={i}>{label(h.action)} · {h.reason}</p>)}</details>
