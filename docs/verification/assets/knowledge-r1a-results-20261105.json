@@ -1,0 +1,84 @@
+{
+  "source": "117eb865294e9d2386dd6f32f4275ff3706893ae",
+  "build": "uPWWdnHXPI_CAwfJa0T1O",
+  "tests": {
+    "files": 10,
+    "passed": 103,
+    "skipped": 0
+  },
+  "realGoogle": true,
+  "recordBefore": [
+    {
+      "revision": 1,
+      "assertion": "Webbの打ち上げ時刻は12:20 UTCだった。",
+      "languages": null,
+      "digest": "de3fb2253fa00ddef5cb63f63dd41fe733048643ce1a239a65a342dcf15a5559"
+    }
+  ],
+  "recordAfter": [
+    {
+      "revision": 1,
+      "assertion": "Webbの打ち上げ時刻は12:20 UTCだった。",
+      "languages": null,
+      "digest": "de3fb2253fa00ddef5cb63f63dd41fe733048643ce1a239a65a342dcf15a5559"
+    },
+    {
+      "revision": 2,
+      "assertion": "Webbの打ち上げ時刻は12:20 UTCだった。",
+      "languages": {
+        "assertion": {
+          "tag": "ja",
+          "basis": "declared"
+        }
+      },
+      "digest": "278c176a5b3782fdfa41e9cde59dce151e4f3bdd5c47a439932d5a3126d0cfdd"
+    }
+  ],
+  "unchangedThemeVersions": [
+    {
+      "revision": 1,
+      "digest": "22b952d8fa2abadef50c3af4e18f40e17bc56d1abace7c995632034943788c90"
+    },
+    {
+      "revision": 2,
+      "digest": "9dbd943a628ce0c1824ca2618f48f3e6cf88b04c0907f0fc20e28e4084828466"
+    }
+  ],
+  "unchangedTranslations": [
+    {
+      "id": "translation:eaf20176e618a2ce1ab61188cfaf7b328861a1fff03ac0f7",
+      "revision": 1,
+      "digest": "4468ad30b0abba005576dca90a34a427df59cc0261534628e468f0deb38025be"
+    },
+    {
+      "id": "translation:ec10d1b68c69dfb62d2067ddb8a93c23e44d46e0857d909b",
+      "revision": 1,
+      "digest": "e095db45815a5c71af77b6b8556e1768d2a747504ab2ed95413b26f7d76fd512"
+    },
+    {
+      "id": "translation:ec10d1b68c69dfb62d2067ddb8a93c23e44d46e0857d909b",
+      "revision": 2,
+      "digest": "92c71b68821e251642d186120198d66c7d4349462067ea18c522c3ad243a2f8b"
+    }
+  ],
+  "unchangedMemberCapsuleTables": [
+    "public.community_capsule_audience",
+    "public.community_capsule_listing",
+    "public.member_capsule",
+    "public.member_capsule_post",
+    "public.member_capsule_publication",
+    "public.member_capsule_request",
+    "public.member_capsule_revision",
+    "public.member_capsule_share",
+    "public.member_capsule_thread",
+    "public.member_capsule_update_request"
+  ],
+  "migrationAdded": false,
+  "privateSettingsUnchanged": true,
+  "externalRetry": {
+    "firstAttempt": "http-error",
+    "secondAttempt": "received",
+    "automaticPublication": true,
+    "administratorIntervention": false
+  }
+}

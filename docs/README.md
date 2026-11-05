@@ -1,3 +1,5 @@
+2026-11-05 R1a：原語のみの訂正・本文編集時の言語継承・既存Themeの情報訂正を修正。103件と実Googleで確認し、app `117eb865` / build `uPWWdnHXPI_CAwfJa0T1O`をmain／3200／HTTPS βへ反映。追加migrationなし、3276／VPSは未更新。R1全体は未完了。[実操作・保全・再開・残件](verification/KNOWLEDGE_R1A_LANGUAGES_20261105.md)。
+
 # 現在の進行状態
 
 2026-11-05 最新採用方針：ChatGPT側で揃えた資料URL・情報を、Plunodeの認証付き取込APIへ渡す方式が第一候補。Issue等は代替配送。URL探索APIの導入を必須とした前提は撤回し、[別モデル向け引継ぎ](design/PLUNODE_PRODUCTION_HANDOFF.md#別モデルが最初に実装する区切り)に最初の実装区切りR1aを明記した。機能実装はまだ行っていない。

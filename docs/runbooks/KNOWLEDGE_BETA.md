@@ -1,3 +1,5 @@
+2026-11-05 R1a：原語のみの訂正・本文編集時の言語継承・既存Themeの情報訂正を修正。103件と実Googleで確認し、app `117eb865` / build `uPWWdnHXPI_CAwfJa0T1O`をmain／3200／HTTPS βへ反映。追加migrationなし、3276／VPSは未更新。R1全体は未完了。[実操作・保全・再開・残件](../verification/KNOWLEDGE_R1A_LANGUAGES_20261105.md)。
+
 2026-11-05 追補：対象整理の追加migration 006-entity-identities.sql は migrateKnowledgeIdentities(pool)（lib/server/knowledge-identity-migrate.ts）で明示適用する。適用前に知識DBのbackup、別DB復元、006適用・再実行で既存行が変わらないことを確認する。既適用checksumは変更しない。Webの読取初期化は006のchecksumも検証する。会員DBへの追加migrationはない。既存の認証・private profileを引き継ぐ。
 
 2026-11-05 手動訳文の第二段階をmain／3200／HTTPS βへ反映。原文と別の訳文版、訳文訂正、公開／匿名帰属、Capsule固定を実Googleで一巡。app `0e079608` / build `XVjZIJ9r71buN5sJexSSZ`。knowledge005追加、member ledger29を維持。本番VPS／3276は未更新。自動翻訳・訳名検索・U6残件は継続。[現行契約](../design/KNOWLEDGE_TRANSLATION_VERSIONS.md)／[実操作・検証・制約](../verification/KNOWLEDGE_TRANSLATIONS_20261105.md)。以下は各時点の記録。
