@@ -36,6 +36,22 @@ describe.skipIf(!connectionString)('duplicate acceptance on isolated PostgreSQL'
    expect(await foundation.execute(actor,prepared.command)).toMatchObject({revision:2,disposition:'updated',content:corrected});
    expect((await foundation.get({kind:'reader',id:'reader'},'record',p+'original',1)).content).toEqual(original);
   });
+  it('corrects an existing theme context without republishing its fixed snapshot, but still guards new or moved contexts',async()=>{
+   const p='theme-context-';await seed(p);
+   for(const name of ['one','two'])await run({action:'create-theme',requestId:randomUUID(),id:p+name,title:name,recordPins:[{id:p+'original',revision:1}]});
+   const note=knowledgeRecordContentSchema.parse({kind:'note',aboutTheme:p+'one',assertion:'このテーマの背景',evidence:content(p).evidence});
+   const create={action:'accept-record',requestId:randomUUID(),reason:'テーマの背景',entities:[],sources:[],entityPins:[],sourcePins:[{id:p+'s',revision:1}],record:{id:p+'note',content:note}};
+   await expect(foundation.execute(actor,create)).rejects.toThrow('同時に');
+   await foundation.execute(actor,{...create,themes:[{id:p+'one',revision:1}]});
+   const before=await foundation.resolveTheme({kind:'reader',id:'reader'},p+'one');
+   const correction={...create,requestId:randomUUID(),expectedRevision:1,record:{id:p+'note',content:{...note,textLanguages:{assertion:{tag:'ja',basis:'declared'}}}}};
+   expect(await foundation.execute(actor,correction)).toMatchObject({revision:2,disposition:'updated'});
+   expect(await foundation.resolveTheme({kind:'reader',id:'reader'},p+'one')).toEqual(before);
+   await expect(foundation.execute(actor,{...correction,requestId:randomUUID(),expectedRevision:2,record:{id:p+'note',content:{...note,aboutTheme:p+'two'}}})).rejects.toThrow('同時に');
+   await run({action:'set-visibility',requestId:randomUUID(),kind:'theme',id:p+'one',expectedStatusRevision:2,visibility:'hidden',reason:'非公開の文脈を公開しない'});
+   await expect(foundation.execute(actor,{...correction,requestId:randomUUID(),expectedRevision:2})).rejects.toMatchObject({status:403});
+   expect((await foundation.get({kind:'operator',id:'operator'},'record',p+'note')).revision).toBe(2);
+  });
  it('reuses an existing fact without another record, revision, source or public change',async()=>{
   const p='duplicate-once-';await seed(p);const plan=proposed(p);if(plan.command.action!=='accept-record')throw Error('fixture');
   const before=(await pool.query('SELECT count(*)::int AS n FROM knowledge75.changes WHERE id LIKE $1',[p+'%'])).rows[0].n;

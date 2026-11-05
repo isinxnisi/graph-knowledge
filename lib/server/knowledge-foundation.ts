@@ -320,15 +320,16 @@ export function createKnowledgeFoundationService(pool: Pool) {
           }
         }
         if(!r.subjectId&&!r.objectId&&!r.aboutRecord&&!r.aboutTheme)throw new KnowledgeError("公開後に辿れる対象・関係・テーマが必要です");
-        if(r.aboutTheme&&!cmd.themes?.some(t=>t.id===r.aboutTheme))throw new KnowledgeError("テーマへの追加と情報の公開を同時に行ってください");
-        let revision=1,unchanged=false,themeChanged=false;
+        let revision=1,unchanged=false,themeChanged=false,retainsThemeContext=false;
         if(cmd.expectedRevision){const h=await head(c,"record",cmd.record.id,"FOR UPDATE");expected(h.current_revision,cmd.expectedRevision);await assertPublic(c,"record",cmd.record.id);
           const old=await version(c,'record',cmd.record.id,h.current_revision);
+          retainsThemeContext=old.content.aboutTheme===r.aboutTheme;
           // Language metadata does not make a new fact, but correcting it does
           // require a content revision. Keep semantic duplicate reuse separate.
           unchanged=knowledgeDigest(duplicateMeaning(old.content))===knowledgeDigest(duplicateMeaning(r))&&knowledgeDigest(old.content.evidence)===knowledgeDigest(r.evidence)&&knowledgeDigest(old.content.textLanguages??null)===knowledgeDigest(r.textLanguages??null);
           revision=unchanged?h.current_revision:h.current_revision+1;
         }
+        if(r.aboutTheme&&!retainsThemeContext&&!cmd.themes?.some(t=>t.id===r.aboutTheme))throw new KnowledgeError("テーマへの追加と情報の公開を同時に行ってください");
         await validateRecord(c,{...cmd.record,revision,createdAt:"",reason:cmd.reason},entityPins,true);
         result=unchanged?await version(c,'record',cmd.record.id,revision):await put("record",cmd.record.id,r,revision,cmd.reason);
         for(const p of [...(cmd.themes??[])].sort((a,b)=>a.id.localeCompare(b.id))){
