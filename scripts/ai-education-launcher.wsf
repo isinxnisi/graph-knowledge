@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<job id="PlunodeAiEducation">
+  <script language="JScript"><![CDATA[
+var shell = new ActiveXObject("WScript.Shell");
+var files = new ActiveXObject("Scripting.FileSystemObject");
+shell.CurrentDirectory = files.GetParentFolderName(WScript.ScriptFullName);
+var executable = shell.ExpandEnvironmentStrings("%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe");
+var runner = files.BuildPath(shell.CurrentDirectory, "runner.ps1");
+// GUI entry point and hidden child creation, with synchronous exit propagation.
+WScript.Quit(shell.Run('"' + executable + '" -NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File "' + runner + '" -Mode Run', 0, true));
+  ]]></script>
+</job>

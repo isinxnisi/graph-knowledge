@@ -221,10 +221,50 @@ def tick(home):
         atomic(home/'mentorship/maintenance-status.json',{**state,'status':'exchange-unavailable','retryInference':False})
     return state
 
+def worker_state(home):
+    """A PID file alone is not evidence of a running Worker (including PID reuse)."""
+    path=home/'worker.pid';record=read_json(path) if path.exists() else None;running=False
+    if record and type(record.get('pid')) is int and record['pid']>1:
+        proc=Path('/proc')/str(record['pid'])
+        try:
+            args=(proc/'cmdline').read_bytes().decode().rstrip('\0').split('\0')
+            running=((proc/'cwd').resolve()==ROOT and len(args)>=2 and args[1]==str(HERE/'autonomy.py')
+                     and '--home' in args and args[args.index('--home')+1]==str(home)
+                     and any(c in args for c in ['serve','scheduled-tick']))
+        except (OSError,ValueError,IndexError):pass
+    return {'running':running,'record':record,'stalePid':bool(record) and not running}
+
+def scheduled_tick(home):
+    """One foreground Windows-task invocation; no dependency on a persistent daemon.
+
+    The existing daemon lock excludes manual serve(), and tick() retains the common
+    Autopilot guard, time window, real-intent budget, stop and incomplete-run gates.
+    A killed invocation leaves a PID receipt, not a reason to replay model work.
+    """
+    with (home/'.daemon.lock').open('a') as lock:
+        try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        except BlockingIOError:
+            return {'status':'deferred','reason':'existing-daemon','at':now(),'executionMode':'windows-task'}
+        path=home/'worker.pid'
+        if path.exists():
+            old=worker_state(home)
+            sealed_write(home/'worker-history'/(str(uuid.uuid4())+'.json'),
+                         {'at':now(),'reason':'unlocked-pid-metadata','previous':old['record'],'processMatched':old['running'],'processSignalled':False})
+        instance=str(uuid.uuid4())
+        atomic(path,{'pid':os.getpid(),'sourceSha256':code_hash(),'instanceId':instance,'executionMode':'windows-task','startedAt':now()})
+        try:
+            try:result=tick(home)
+            except Exception as error:result={'status':'deferred','reason':'scheduler-error','errorType':type(error).__name__,'at':now()}
+            result={**result,'executionMode':'windows-task','workerPid':os.getpid()}
+            atomic(home/'scheduler-status.json',result)
+            return result
+        finally:
+            if path.exists() and read_json(path).get('instanceId')==instance:path.unlink()
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--home',type=Path,default=HOME)
     sub=parser.add_subparsers(dest='command',required=True)
-    for name in ['init','status','pause','stop','start','serve','tick','resume']:sub.add_parser(name)
+    for name in ['init','status','pause','stop','start','serve','tick','scheduled-tick','resume']:sub.add_parser(name)
     p=sub.add_parser('maintenance');p.add_argument('--token')
     enable=sub.add_parser('enable');enable.add_argument('--window-start',required=True);enable.add_argument('--window-end',required=True)
     enable.add_argument('--interval-minutes',type=int,default=60);enable.add_argument('--daily-max',type=int,default=1);enable.add_argument('--publish',action='store_true')
@@ -247,6 +287,7 @@ def main():
     elif args.command=='maintenance':print(wire(maintain(home,args.token or guarded_token())));return
     elif args.command=='run-once':print(wire(execute(home,args)));return
     elif args.command=='tick':print(wire(tick(home)));return
+    elif args.command=='scheduled-tick':print(wire(scheduled_tick(home)));return
     elif args.command=='start':
         require(not (home/'worker.pid').exists(),'worker_pid_exists_inspect_status')
         (home/'stop.requested').unlink(missing_ok=True)
@@ -266,6 +307,8 @@ def main():
             finally:
                 if (home/'worker.pid').exists() and read_json(home/'worker.pid')['pid']==os.getpid():(home/'worker.pid').unlink()
     print(wire({'config':configuration(home),'worker':read_json(home/'worker.pid') if (home/'worker.pid').exists() else None,
+                'workerState':worker_state(home),
+                'scheduler':read_json(home/'scheduler-status.json') if (home/'scheduler-status.json').exists() else None,
                 'last':read_json(home/'last-status.json') if (home/'last-status.json').exists() else None}))
 
 if __name__=='__main__':main()
