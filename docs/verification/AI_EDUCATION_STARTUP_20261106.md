@@ -6,6 +6,7 @@
 
 - 設定はenabled=true・20–23時JST・1日1回のままだったが、旧daemon PID369350は存在しなかった。最後の判定は10月30日14:29 JST。常駐起動だけでOS/WSL再起動後の入口がなかった。
 - 固定実装`40289cf69ce5370bf2b41ece923d3f88525836c4`をmainへ受入。Windowsの新規専用予定`Plunode-AI-Education`がログオンと毎分、`autonomy.py scheduled-tick`を有界・foregroundで起動する。常駐PIDへの依存をなくした。
+- 最終実装`498ac7bc7969858dc73b86df5dda123f86869971`では起動cwdをrepositoryへ固定し、Pythonの`-B`を含む実コマンドでprocess同一性を照合する。実Windows呼出しの`processVerified=true`を確認した。
 - PythonにWindows APIを持ち込まず、Windowsはcron相当の起動アダプターだけとした。既存`tick()`の時間窓・実intent日次上限・共通guard・pause/stop・コード指紋・未完処理の再送禁止を再利用する。
 - `IgnoreNew`とdaemon lockで多重起動を抑止。終了済み・再利用PIDの記録は履歴へ保存し、他processへsignalを送らない。有限呼出しの終了後はPIDを残さず、`status`は実プロセスの照合結果と最後の定期判定を返す。
 - Windowsは現在ユーザーのInteractive／Limited、WakeToRun=false。launcherは非表示で作成し、実行ポリシーの全体設定は変えていない。実行上限10分は起動・同期を含む外側の上限で、学習の180秒上限は変更しない。

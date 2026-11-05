@@ -62,5 +62,17 @@
   "pythonTests": 57,
   "nodeAndCpuImageAvailable": true,
   "globalOsRestartPerformed": false,
-  "vpsChanged": false
+  "vpsChanged": false,
+  "finalSourceCommit": "498ac7bc7969858dc73b86df5dda123f86869971",
+  "finalInvocation": {
+    "status": "deferred",
+    "operation": "maintenance",
+    "reason": "common-lock",
+    "exitCode": 75,
+    "at": "2026-11-05T16:53:10.598866+00:00",
+    "executionMode": "windows-task",
+    "workerPid": 528119,
+    "processVerified": true
+  },
+  "repositoryWorkingDirectoryVerified": true
 }
