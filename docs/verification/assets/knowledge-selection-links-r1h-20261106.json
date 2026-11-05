@@ -1,0 +1,88 @@
+{
+  "date": "2026-11-06",
+  "phase": "R1h",
+  "r1Complete": false,
+  "applicationSource": "c70aa3c05cb395f3c610aa2d79b6607a5fb7312a",
+  "build": "CCFcwQNpAsu6DO5SpjnZU",
+  "deployment": {
+    "previousBuild": "6dNzlh9IwfQycN0MSSFpy",
+    "additionalMigrations": [],
+    "memberSchemaThrough": "031",
+    "knowledgeSchema": "001/002/004/005/006/007",
+    "memberLedger": 32,
+    "existingRowsPreservedBeforeRestart": true,
+    "oldPrivateSettingsUnchanged": true,
+    "existingImportCredentialUnchanged": true,
+    "legacyKgUnchanged": true,
+    "vpsChanged": false
+  },
+  "backup": ".local/submission-repair/r1h3-activation-backup-20261105T182252Z",
+  "tests": {
+    "passed": 187,
+    "files": {
+      "knowledge-submissions-ui": 32,
+      "ui-state": 104,
+      "external-source-link": 22,
+      "knowledge-source-network": 6,
+      "knowledge-source-verification": 20,
+      "knowledge-submission-retarget": 3
+    },
+    "lint": "passed",
+    "productionBuildAndTypes": "passed"
+  },
+  "browser": {
+    "origin": "https://graph-beta.isinxnisi.com",
+    "authentication": "existing real Google session",
+    "desktop": true,
+    "mobileViewport": {
+      "width": 390,
+      "height": 844,
+      "documentScrollWidth": 380
+    },
+    "realIphone": false,
+    "sameNameCandidatesCompared": 2,
+    "retargetAndPrivateDraftReload": true,
+    "privateDraftId": "e5a5ab54-e6e0-405e-91fe-0faf3c56a13c",
+    "publicSubmissionMade": false,
+    "source": {
+      "host": "science.nasa.gov",
+      "target": "_blank",
+      "rel": "noopener noreferrer nofollow ugc",
+      "referrerPolicy": "no-referrer"
+    },
+    "unusualUrlConfirmation": "component tests, no malicious links visited"
+  },
+  "http": [
+    {
+      "url": "http://localhost:3200/",
+      "status": 200,
+      "html": true,
+      "buildIdInHtml": true
+    },
+    {
+      "url": "https://graph-beta.isinxnisi.com/",
+      "status": 200,
+      "html": true,
+      "buildIdInHtml": true
+    }
+  ],
+  "aiRequestsThisTurn": 0,
+  "newPaidServices": false,
+  "remainingR1": [
+    "deployment-specific read/member/operator/worker authorization capabilities",
+    "fixed surrounding public context in translation equivalence review and acceptance recheck",
+    "cross-check untrusted AI data against actor, budget, fetch and publication privileges"
+  ],
+  "preservedFirstReleaseScope": [
+    "R2 full registered-data automatic patrol and organization",
+    "R3 scheduled delivery and collection after setup",
+    "R4 exploration/input/multilingual connection",
+    "R5 full beta end-to-end"
+  ],
+  "untouched": [
+    "production VPS",
+    "3276",
+    "shared Kev",
+    "AI education runtime"
+  ]
+}

@@ -1,3 +1,5 @@
+2026-11-06 R1h：同名候補に分類・説明・関係端点と任意の関連知識を表示し、8画面の資料リンクに実host表示と危険URLの抑止を共通化。187テスト、実Googleの対象変更・草稿保存／再訪と390px幅を確認。app c70aa3c0／build CCFcwQNpAsu6DO5SpjnZU。追加migrationなし。R1全体は未完了で、配置別認可と訳文の意味一致確認に公開文脈を固定する処理が残る。[設計](design/KNOWLEDGE_SELECTION_AND_SOURCE_LINKS.md)／[検証・再開](verification/KNOWLEDGE_SELECTION_LINKS_R1H_20261106.md)。
+
 2026-11-06 R1g：翻訳草稿に公開版の文脈を添え、文脈hashを含む再利用と公開停止時の読取停止を接続。66テスト、実AI修正後3例、実Googleの生成・編集引継ぎ・再訪を確認。送信1回のまま再利用。会員031追加、app83dd4081／build dgujqpNWl8Q-yJiuYC9sd。R1全体は未完了。[設計](design/KNOWLEDGE_TRANSLATION_GENERATION.md)／[検証と残件](verification/KNOWLEDGE_TRANSLATION_CONTEXT_R1G_20261106.md)。
 
 2026-11-06 R1f：サービス上限を80→400回／日へ変更。Google側の確認値500回とは別の上限として扱う。評価は内数100回まで。R1eの待機訂正が実Gemini 3.1の1回で自動公開され、Entity版2・旧版1・投稿者表示を確認。app c9e55121／build Q8tWL8ZC-xDKMN_5bTqHO。追加migrationなし。R1全体は未完了。[上限の契約](design/KNOWLEDGE_AI_BUDGET.md)／[検証](verification/KNOWLEDGE_AI_BUDGET_R1F_20261106.md)。
