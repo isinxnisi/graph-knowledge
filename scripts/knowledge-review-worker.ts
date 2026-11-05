@@ -1,3 +1,4 @@
+import {aiFailureDiagnostic} from '../lib/server/knowledge-ai-retry';
 import {createTranslationGeneration} from '../lib/server/knowledge-translation-generation';
 import {runKnowledgeModeration} from "../lib/server/member/knowledge-appeals";
 import {lstat,readFile} from "node:fs/promises";
@@ -16,7 +17,7 @@ export async function runKnowledgeReviewOnce(queue:ReturnType<typeof createRevie
  const rejected=await beforeSend?.(lease);if(rejected){await queue.rejectBeforeSend(lease,rejected.reason,rejected.retryable);return true;}
  if(createHash('sha256').update(lease.wire).digest('hex')!==lease.wireDigest)throw Error('Review wire differs from retained attempt');
  if(!await queue.canSend(lease)){await queue.finish(lease,{state:'not-sent'});return true;}
- const response=await dispatch(lease);await queue.finish(lease,response);return true;
+ const response=await dispatch(lease);await queue.finish(lease,response);const diagnostic=aiFailureDiagnostic(response);if(diagnostic)console.info(JSON.stringify({event:"knowledge-review-attempt-failed",attemptId:lease.attemptId,...diagnostic}));return true;
 }
 async function privateText(file:string,max:number){const info=await lstat(file);if(!info.isFile()||info.isSymbolicLink()||info.uid!==process.getuid?.()||(info.mode&0o777)!==0o600||info.size>max)throw Error('Review private file ownership or mode differs');return readFile(file,'utf8');}
 async function main(){

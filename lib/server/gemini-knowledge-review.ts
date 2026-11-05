@@ -82,7 +82,8 @@ export function parseGeminiReview(raw:unknown){
 /** One HTTP attempt only. The caller owns quotas, durable attempts and retry.
  * No SDK retries, provider fallback, tools, URL fetches or publication writes.
  */
-export async function callGeminiReview(options: { apiKey: string; model: string; request: {systemInstruction: unknown;contents:unknown;generationConfig:unknown}; fetcher?: typeof fetch; timeoutMs?: number }) {
+export type GeminiCallResult={state:'received';status:number;raw:unknown}|{state:'http-error';status:number;raw:unknown;retryAfter:string|null;category:'rate-limit'|'unavailable'|'authorization'|'invalid-request'}|{state:'delivery-unknown';transport?:{category:string;code:string}};
+export async function callGeminiReview(options: { apiKey: string; model: string; request: {systemInstruction: unknown;contents:unknown;generationConfig:unknown}; fetcher?: typeof fetch; timeoutMs?: number }):Promise<GeminiCallResult> {
   if (!/^gemini-[a-z0-9.-]+$/.test(options.model) || !options.apiKey.trim()) throw new Error("Invalid Gemini configuration");
   const wire = JSON.stringify(options.request);
   if (Buffer.byteLength(wire) > 128_000) throw new Error("Review request exceeds 128KB");
@@ -95,10 +96,15 @@ export async function callGeminiReview(options: { apiKey: string; model: string;
       body: wire, signal: AbortSignal.timeout(timeoutMs),
     });
     const raw: unknown = await response.json().catch(() => null);
-    if (!response.ok) return { state: "http-error" as const, status: response.status, raw, retryAfter: response.headers.get("retry-after"), category: response.status === 429 ? "rate-limit" : response.status >= 500 ? "unavailable" : response.status === 401 || response.status === 403 ? "authorization" : "invalid-request" };
+    if (!response.ok) return { state: "http-error" as const, status: response.status, raw, retryAfter: response.headers.get("retry-after"), category: response.status === 429 ? "rate-limit" : [408,500,502,503,504].includes(response.status) ? "unavailable" : response.status === 401 || response.status === 403 ? "authorization" : "invalid-request" };
     return { state: "received" as const, status: response.status, raw };
-  } catch {
-    // Sending may have succeeded. Never assume no consumption or resend here.
-    return { state: "delivery-unknown" as const };
+  } catch (error) {
+    // Never retain the raw exception: URLs/messages may contain private data.
+    const e=error as {name?:unknown;code?:unknown;cause?:{code?:unknown}};
+    const raw=e?.cause?.code??e?.code;
+    const code=typeof raw==='string'&&['ENOTFOUND','EAI_AGAIN','ECONNRESET','ECONNABORTED','EPIPE','UND_ERR_SOCKET','ECONNREFUSED','ETIMEDOUT','EHOSTUNREACH','ENETUNREACH','UND_ERR_CONNECT_TIMEOUT','UND_ERR_HEADERS_TIMEOUT','UND_ERR_BODY_TIMEOUT','CERT_HAS_EXPIRED','ERR_TLS_CERT_ALTNAME_INVALID','UNABLE_TO_VERIFY_LEAF_SIGNATURE'].includes(raw)?raw:e?.name==='TimeoutError'?'TIMEOUT':e?.name==='AbortError'?'ABORTED':'UNKNOWN';
+    const category=code==='ENOTFOUND'||code==='EAI_AGAIN'?'dns':code.includes('TIMEOUT')||code==='ETIMEDOUT'?'timeout':code.includes('CERT')||code==='UNABLE_TO_VERIFY_LEAF_SIGNATURE'?'tls':code==='ABORTED'?'aborted':code==='UNKNOWN'?'network':'connection';
+    // Sending may have succeeded. Charge the attempt; never retry here.
+    return { state: "delivery-unknown" as const,transport:{category,code} };
   }
 }

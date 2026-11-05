@@ -55,8 +55,18 @@ describe("one-attempt Gemini transport", () => {
   });
   it("retains delivery uncertainty instead of treating timeouts as zero consumption", async () => {
     const fetcher = vi.fn(async () => { throw new Error("network failure"); });
-    expect(await callGeminiReview({ ...options, fetcher })).toEqual({ state: "delivery-unknown" });
+    expect(await callGeminiReview({ ...options, fetcher })).toMatchObject({ state: "delivery-unknown",transport:{category:"network",code:"UNKNOWN"} });
     expect(fetcher).toHaveBeenCalledOnce();
+  });
+  it.each([{name:'TimeoutError',category:'timeout',code:'TIMEOUT'},{name:'TypeError',cause:{code:'ENOTFOUND'},category:'dns',code:'ENOTFOUND'},{name:'TypeError',cause:{code:'ECONNRESET'},category:'connection',code:'ECONNRESET'}])("retains a safe transport category for $code without retaining exception text",async data=>{
+    const fetcher=vi.fn(async()=>{throw Object.assign(new Error('secret-key and private-url'),data);});
+    const result=await callGeminiReview({...options,fetcher});
+    expect(result).toMatchObject({state:'delivery-unknown',transport:{category:data.category,code:data.code}});
+    expect(JSON.stringify(result)).not.toContain('secret');expect(fetcher).toHaveBeenCalledOnce();
+  });
+  it("distinguishes a transient 503 from configuration errors",async()=>{
+    const fetcher=vi.fn(async()=>Response.json({error:{status:'UNAVAILABLE',message:'private text'}},{status:503,headers:{'retry-after':'120'}}));
+    expect(await callGeminiReview({...options,fetcher})).toMatchObject({state:'http-error',status:503,category:'unavailable',retryAfter:'120'});expect(fetcher).toHaveBeenCalledOnce();
   });
   it("does not retry authorization failures or accept model path injection", async () => {
     const fetcher = vi.fn(async () => new Response(null, { status: 403 }));

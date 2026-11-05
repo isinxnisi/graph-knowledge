@@ -1,4 +1,5 @@
-import {quotaDate,reserveKnowledgeAI} from './knowledge-ai-budget';
+import {aiFailureDiagnostic,reviewRetryAt,REVIEW_SENDS_PER_ITEM_DAY} from './knowledge-ai-retry';
+import {quotaDate,nextQuotaDay,reserveKnowledgeAI} from './knowledge-ai-budget';
 import {submissionIntentIssues} from "../domain/knowledge-submission-intent";
 import {reviewDisclosureForConsent} from "../domain/knowledge-submission-feedback";
 import {ensureSubmissionFeedbackSchema} from "./member/knowledge-submission-feedback";
@@ -62,10 +63,12 @@ export function createReviewQueue(pool:Pool,options:{duplicates?:(value:Knowledg
    const usage=parsed?.usage;
    await pool.query(`UPDATE member_knowledge.review_attempts SET state=$2,finished_at=clock_timestamp(),request_charge=$3,input_actual=$4,output_actual=$5,thoughts_actual=$6,cached_actual=$7,total_actual=$8,candidates_actual=$9 WHERE id=$1 AND state IN('sending','delivery-unknown')`,[lease.attemptId,result.state,result.state==='not-sent'?0:1,result.state==='not-sent'?0:usage?.promptTokenCount??null,result.state==='not-sent'?0:usage?.candidatesTokenCount!==null&&usage?.candidatesTokenCount!==undefined&&usage.thoughtsTokenCount!==null?usage.candidatesTokenCount+usage.thoughtsTokenCount:null,usage?.thoughtsTokenCount??null,usage?.cachedContentTokenCount??null,usage?.totalTokenCount??null,usage?.candidatesTokenCount??null]);
    // The payload row is absent after account deletion; never recreate it.
-   if(result.state==='received')await pool.query("UPDATE member_knowledge.review_payloads SET response=$2 WHERE attempt_id=$1",[lease.attemptId,result.raw]);
+   const diagnostic=aiFailureDiagnostic(result);
+   if(result.state==='received'||diagnostic)await pool.query("UPDATE member_knowledge.review_payloads SET response=$2 WHERE attempt_id=$1",[lease.attemptId,result.state==='received'?result.raw:diagnostic]);
    return jobTransaction(lease.jobId,async(c,j,active)=>{
     if(j.state!=='running'||j.consent_profile_id!==lease.consentProfileId||j.lease_token!==lease.token||!active||j.submission.state!=='queued'||j.submission.current_revision!==j.revision||j.submission.digest!==j.submitted_digest)return false;
-    let state='retry',reason='AIとの接続を再確認しています。',notBefore=new Date(Date.now()+120000),advice:unknown=null;
+    let state='retry',reason='確認サービスとの通信が一時的に不安定です。時間をおいて自動で再試行します。投稿し直す必要はありません。',advice:unknown=null;
+    const notBefore=reviewRetryAt(j.attempts,result.state==='http-error'?result.retryAfter:null);
     if(result.state==='not-sent'){state='cancelled';reason='submission-changed';}
     else if(parsed?.state==='reviewed'){
      if(parsed.modelVersion!==lease.model){state='attention';reason='評価済みのモデルと応答が異なるため、接続を確認しています。';}
@@ -77,12 +80,15 @@ export function createReviewQueue(pool:Pool,options:{duplicates?:(value:Knowledg
      }
     }else if(parsed){state='attention';reason='AIの回答形式を確認できませんでした。内容への不受理判定ではありません。';}
     else if(result.state==='http-error'){
-     const retry=Number(result.retryAfter),date=Date.parse(result.retryAfter??'');const ms=Number.isFinite(retry)&&retry>0?retry*1000:Number.isFinite(date)?Math.max(60000,date-Date.now()):60000;
-     if(result.category==='rate-limit'){state='quota';reason='AIの無料利用枠が混雑しています。枠の再開後に再試行します。';notBefore=new Date(Date.now()+Math.min(86400000,ms));}
-     else if(result.category==='authorization'||result.category==='invalid-request'){state='attention';reason='AI接続の設定を確認しています。';}
-     if(['rate-limit','authorization','invalid-request'].includes(result.category))await c.query("UPDATE member_knowledge.review_projects SET paused_until=$2,pause_reason=$3 WHERE project_id=(SELECT project_id FROM member_knowledge.review_attempts WHERE id=$1)",[lease.attemptId,result.category==='rate-limit'?notBefore:new Date(Date.now()+86400000),reason]);
+     if(result.category==='rate-limit'){state='quota';reason='確認サービスの利用枠が混雑しています。枠の再開後に自動で再試行します。';}
+     else if(result.category==='unavailable')reason='確認サービスが一時的に混雑しています。時間をおいて自動で再試行します。投稿し直す必要はありません。';
+     else if(result.category==='authorization'||result.category==='invalid-request'){state='attention';reason='確認サービスの接続設定を確認しています。投稿内容の不受理ではありません。';}
     }
-    if(j.attempts>=3&&['retry','quota'].includes(state)){state='attention';reason='送信を3回試しました。AI接続の確認を待っています。';}
+    // Pause this project as well, so another item cannot bypass the cooldown.
+    if(result.state==='delivery-unknown'||result.state==='http-error'){
+     const until=state==='attention'?new Date(Date.now()+86400000):notBefore;
+     await c.query("UPDATE member_knowledge.review_projects SET paused_until=GREATEST(COALESCE(paused_until,$2),$2),pause_reason=CASE WHEN paused_until>$2 THEN pause_reason ELSE $3 END WHERE project_id=(SELECT project_id FROM member_knowledge.review_attempts WHERE id=$1)",[lease.attemptId,until,reason]);
+    }
     await c.query("UPDATE member_knowledge.review_jobs SET state=$2,reason=$3,result=$4,not_before=$5,lease_token=NULL,lease_until=NULL,updated_at=clock_timestamp() WHERE id=$1",[j.id,state,reason,advice,notBefore]);return true;
    });
   }
@@ -112,15 +118,27 @@ export function createReviewQueue(pool:Pool,options:{duplicates?:(value:Knowledg
   async reserveAdvice(ownerId:string){return tx(async c=>{if(!await ownerLock(c,ownerId))throw new KnowledgeError("本人を確認してください",401,"UNAUTHENTICATED");const n=Number((await c.query("SELECT count(*) AS n FROM member_knowledge.advice_requests WHERE owner_id=$1 AND created_at>clock_timestamp()-interval '10 minutes'",[ownerId])).rows[0].n);if(n>=4)throw new KnowledgeError("ヒントの確認が続いています",429,"RATE_LIMITED");await c.query("INSERT INTO member_knowledge.advice_requests(id,owner_id) VALUES($1,$2)",[randomUUID(),ownerId]);});},
   async heartbeat(raw:ReviewConfig){const cfg=reviewConfigSchema.parse(raw);await ensure();const digest=knowledgeDigest({...cfg,apiKeyFile:undefined});await pool.query("INSERT INTO member_knowledge.review_projects(project_id,config_digest) VALUES($1,$2) ON CONFLICT DO NOTHING",[cfg.projectId,digest]);const r=await pool.query("UPDATE member_knowledge.review_projects SET heartbeat_at=clock_timestamp() WHERE project_id=$1 AND config_digest=$2",[cfg.projectId,digest]);if(r.rowCount!==1)throw Error("Review project configuration changed; explicitly restart with a reviewed configuration");},
   async recoverExpired(){
-   await ensure();const rows=(await pool.query("SELECT id FROM member_knowledge.review_jobs WHERE state='running' AND lease_until<clock_timestamp() LIMIT 20")).rows;
+   await ensure();
+   // Adopt only stops created by the former transient three-attempt cap.
+   // Never revive content decisions, explicit cancellations or configuration errors.
+   const legacyStops=['送信を3回試しました。AI接続の確認を待っています。','前の送信結果を確認できません。重複を避けて間隔を空けて再試行します。'];
+   const stopped=(await pool.query("SELECT id FROM member_knowledge.review_jobs WHERE state='attention' AND result IS NULL AND reason=ANY($1::text[]) ORDER BY updated_at LIMIT 20",[legacyStops])).rows;
+   for(const r of stopped)await jobTransaction(r.id,async(c,j,active)=>{
+    if(j.state!=='attention'||j.result!==null||!legacyStops.includes(j.reason))return;
+    if(!active||j.submission.state!=='queued'||j.submission.current_revision!==j.revision||j.submission.digest!==j.submitted_digest){await c.query("UPDATE member_knowledge.review_jobs SET state='cancelled',reason='submission-changed' WHERE id=$1",[j.id]);return;}
+    const last=(await c.query("SELECT state FROM member_knowledge.review_attempts WHERE job_id=$1 ORDER BY started_at DESC LIMIT 1",[j.id])).rows[0];
+    if(!last||!['http-error','delivery-unknown'].includes(last.state))return;
+    await c.query("UPDATE member_knowledge.review_jobs SET state='retry',reason='一時的な接続停止から自動で再開します。投稿し直す必要はありません。',updated_at=clock_timestamp() WHERE id=$1",[j.id]);
+   });const rows=(await pool.query("SELECT id FROM member_knowledge.review_jobs WHERE state='running' AND lease_until<clock_timestamp() LIMIT 20")).rows;
    for(const r of rows){
     const completed=(await pool.query(`SELECT j.lease_token,j.consent_profile_id,a.id AS attempt_id,a.model,p.wire,p.wire_digest,p.response FROM member_knowledge.review_jobs j JOIN member_knowledge.review_attempts a ON a.job_id=j.id JOIN member_knowledge.review_payloads p ON p.attempt_id=a.id WHERE j.id=$1 AND a.state='received' AND p.response IS NOT NULL ORDER BY a.started_at DESC LIMIT 1`,[r.id])).rows[0];
     if(completed){await finish({jobId:r.id,attemptId:completed.attempt_id,token:completed.lease_token,model:completed.model,wire:completed.wire,wireDigest:completed.wire_digest,consentProfileId:completed.consent_profile_id},{state:'received',status:200,raw:completed.response});continue;}
     await jobTransaction(r.id,async(c,j,active)=>{
     if(j.state!=='running'||new Date(j.lease_until).getTime()>=Date.now())return;
-    await c.query("UPDATE member_knowledge.review_attempts SET state='delivery-unknown',finished_at=clock_timestamp() WHERE job_id=$1 AND state='sending'",[j.id]);
+    const expired=(await c.query("UPDATE member_knowledge.review_attempts SET state='delivery-unknown',finished_at=clock_timestamp() WHERE job_id=$1 AND state='sending' RETURNING id",[j.id])).rows;
+    for(const a of expired)await c.query("UPDATE member_knowledge.review_payloads SET response=COALESCE(response,$2) WHERE attempt_id=$1",[a.id,{kind:'attempt-failure',version:1,state:'delivery-unknown',category:'worker-recovery',transportCode:'LEASE_EXPIRED'}]);
     const stale=!active||j.submission.state!=='queued'||j.submission.current_revision!==j.revision||j.submission.digest!==j.submitted_digest;
-    await c.query("UPDATE member_knowledge.review_jobs SET state=$2,reason=$3,not_before=clock_timestamp()+interval '120 seconds',lease_token=NULL,lease_until=NULL,updated_at=clock_timestamp() WHERE id=$1",[j.id,stale?'cancelled':j.attempts>=3?'attention':'retry',stale?'submission-changed':'前の送信結果を確認できません。重複を避けて間隔を空けて再試行します。']);
+    await c.query("UPDATE member_knowledge.review_jobs SET state=$2,reason=$3,not_before=$4,lease_token=NULL,lease_until=NULL,updated_at=clock_timestamp() WHERE id=$1",[j.id,stale?'cancelled':'retry',stale?'submission-changed':'前の送信結果を確認できません。間隔を空けて自動で再試行します。',reviewRetryAt(j.attempts)]);
    });}
   },
   async claim(raw:ReviewConfig):Promise<ReviewLease|null>{
@@ -133,7 +151,8 @@ export function createReviewQueue(pool:Pool,options:{duplicates?:(value:Knowledg
     const disclosure=reviewDisclosureForConsent(j.consent_version);
     const authorization=(await c.query('SELECT consent_profile_id FROM member_knowledge.review_authorizations WHERE submission_id=$1 AND revision=$2',[j.submission_id,j.revision])).rows[0];
     if(!disclosure||disclosure.providerId!=='google-gemini'||j.consent_profile_id!==disclosure.profileId||authorization?.consent_profile_id!==disclosure.profileId){await c.query("UPDATE member_knowledge.review_jobs SET state='attention',reason='送信先の確認内容が変わりました。内容を確認して依頼し直してください。' WHERE id=$1",[j.id]);return null;}
-    if(j.attempts>=3){await c.query("UPDATE member_knowledge.review_jobs SET state='attention',reason='送信を3回試しました。AI接続の確認を待っています。' WHERE id=$1",[j.id]);return null;}
+    const day=new Date(),sent=Number((await c.query("SELECT COALESCE(sum(request_charge),0)::int AS n FROM member_knowledge.review_attempts WHERE job_id=$1 AND quota_day=$2",[j.id,quotaDate(day)])).rows[0].n);
+    if(sent>=REVIEW_SENDS_PER_ITEM_DAY){await c.query("UPDATE member_knowledge.review_jobs SET state='quota',reason='この項目の本日の再試行上限に達しました。翌日の利用枠で自動で再開します。',not_before=$2,updated_at=clock_timestamp() WHERE id=$1",[j.id,nextQuotaDay(day)]);return null;}
     let wire:string,withDuplicates=false,translation=false;
     try{
      const value=submission(s),issues=submissionIntentIssues(value.content,value.context);

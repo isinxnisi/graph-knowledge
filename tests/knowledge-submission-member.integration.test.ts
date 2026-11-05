@@ -231,10 +231,47 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
   await runKnowledgeReviewOnce(queue,cfg,async()=>reviewedResponse('unclear'));
   const results=(await (await current(command.id)).json()).submission.review.items;expect(results.map((r:{state:string})=>r.state).sort()).toEqual(['needs-changes','reviewed']);
  });
- it('stops after three uncertain attempts without changing the content outcome',async()=>{
-  await enqueueReview();const cfg=reviewConfig(),queue=createReviewQueue(memberRuntime().pool);await queue.heartbeat(cfg);let jobId='';
-  for(let i=0;i<3;i++){const lease=(await queue.claim(cfg))!;expect(lease).not.toBeNull();jobId=lease.jobId;await queue.finish(lease,{state:'delivery-unknown'});await memberRuntime().pool.query("UPDATE member_knowledge.review_jobs SET not_before=clock_timestamp()-interval '1 second' WHERE id=$1",[jobId]);await memberRuntime().pool.query("UPDATE member_knowledge.review_attempts SET started_at=clock_timestamp()-interval '2 minutes' WHERE project_id=$1",[cfg.projectId]);}
-  expect(await queue.claim(cfg)).toBeNull();expect((await memberRuntime().pool.query('SELECT state,result,attempts FROM member_knowledge.review_jobs WHERE id=$1',[jobId])).rows[0]).toMatchObject({state:'attention',result:null,attempts:3});
+ it('continues transient 503 retries beyond three attempts and then accepts a normal reply',async()=>{
+  await enqueueReview();const cfg=reviewConfig(),queue=createReviewQueue(memberRuntime().pool),pool=memberRuntime().pool;await queue.heartbeat(cfg);let jobId='';
+  for(let i=0;i<3;i++){
+   const lease=(await queue.claim(cfg))!;expect(lease).not.toBeNull();jobId=lease.jobId;
+   await queue.finish(lease,{state:'http-error',status:503,category:'unavailable',retryAfter:'600',raw:{error:{message:'private upstream echo'}}});
+   const j=(await pool.query('SELECT state,result,not_before FROM member_knowledge.review_jobs WHERE id=$1',[jobId])).rows[0];expect(j).toMatchObject({state:'retry',result:null});expect(new Date(j.not_before).getTime()).toBeGreaterThan(Date.now()+599000);
+   const diag=(await pool.query('SELECT response FROM member_knowledge.review_payloads WHERE attempt_id=$1',[lease.attemptId])).rows[0].response;
+   expect(diag).toMatchObject({kind:'attempt-failure',httpStatus:503,category:'unavailable'});expect(JSON.stringify(diag)).not.toContain('private');
+   expect(await queue.claim(cfg)).toBeNull();
+   await pool.query("UPDATE member_knowledge.review_jobs SET not_before=clock_timestamp()-interval '1 second' WHERE id=$1",[jobId]);
+   await pool.query("UPDATE member_knowledge.review_projects SET paused_until=NULL WHERE project_id=$1",[cfg.projectId]);
+   await pool.query("UPDATE member_knowledge.review_attempts SET started_at=clock_timestamp()-interval '2 minutes' WHERE project_id=$1",[cfg.projectId]);
+  }
+  const lease=(await queue.claim(cfg))!;expect(lease).not.toBeNull();await queue.finish(lease,reviewedResponse());
+  expect((await pool.query('SELECT state,attempts FROM member_knowledge.review_jobs WHERE id=$1',[jobId])).rows[0]).toMatchObject({state:'reviewed',attempts:4});
+ });
+ it('waits for the next quota day after eight uncertain sends and never marks the content declined',async()=>{
+  await enqueueReview();const cfg=reviewConfig(),queue=createReviewQueue(memberRuntime().pool),pool=memberRuntime().pool;await queue.heartbeat(cfg);let jobId='';
+  for(let i=0;i<8;i++){const lease=(await queue.claim(cfg))!;expect(lease).not.toBeNull();jobId=lease.jobId;await queue.finish(lease,{state:'delivery-unknown',transport:{category:'timeout',code:'TIMEOUT'}});await pool.query("UPDATE member_knowledge.review_jobs SET not_before=clock_timestamp()-interval '1 second' WHERE id=$1",[jobId]);await pool.query("UPDATE member_knowledge.review_projects SET paused_until=NULL WHERE project_id=$1",[cfg.projectId]);await pool.query("UPDATE member_knowledge.review_attempts SET started_at=clock_timestamp()-interval '2 minutes' WHERE project_id=$1",[cfg.projectId]);}
+  expect(await queue.claim(cfg)).toBeNull();expect((await pool.query('SELECT state,result,attempts,not_before FROM member_knowledge.review_jobs WHERE id=$1',[jobId])).rows[0]).toMatchObject({state:'quota',result:null,attempts:8});
+  expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.review_attempts WHERE job_id=$1',[jobId])).rows[0].n).toBe(8);
+  await pool.query("UPDATE member_knowledge.review_attempts SET quota_day=$2 WHERE job_id=$1",[jobId,quotaDate(new Date(Date.now()-86400000))]);await pool.query("UPDATE member_knowledge.review_jobs SET not_before=clock_timestamp()-interval '1 second' WHERE id=$1",[jobId]);
+  const next=(await queue.claim(cfg))!;expect(next).not.toBeNull();await queue.finish(next,reviewedResponse());
+  expect((await pool.query('SELECT state FROM member_knowledge.review_jobs WHERE id=$1',[jobId])).rows[0].state).toBe('reviewed');
+ });
+ it.each(['送信を3回試しました。AI接続の確認を待っています。','前の送信結果を確認できません。重複を避けて間隔を空けて再試行します。'])('automatically resumes only a former transient stop: %s',async legacyReason=>{
+  await enqueueReview();const cfg=reviewConfig(),queue=createReviewQueue(memberRuntime().pool),pool=memberRuntime().pool;await queue.heartbeat(cfg);
+  const lease=(await queue.claim(cfg))!;await queue.finish(lease,{state:'delivery-unknown'});
+  await pool.query("UPDATE member_knowledge.review_jobs SET state='attention',reason=$2,attempts=3,not_before=clock_timestamp()-interval '1 second' WHERE id=$1",[lease.jobId,legacyReason]);
+  await queue.recoverExpired();expect((await pool.query('SELECT state FROM member_knowledge.review_jobs WHERE id=$1',[lease.jobId])).rows[0].state).toBe('retry');
+  await pool.query("UPDATE member_knowledge.review_projects SET paused_until=NULL WHERE project_id=$1",[cfg.projectId]);await pool.query("UPDATE member_knowledge.review_attempts SET started_at=clock_timestamp()-interval '2 minutes' WHERE project_id=$1",[cfg.projectId]);
+  const next=(await queue.claim(cfg))!;expect(next).not.toBeNull();await queue.finish(next,{state:'http-error',status:403,category:'authorization',retryAfter:null,raw:{error:'credential secret'}});
+  await queue.recoverExpired();expect((await pool.query('SELECT state FROM member_knowledge.review_jobs WHERE id=$1',[lease.jobId])).rows[0].state).toBe('attention');expect(await queue.claim(cfg)).toBeNull();
+ });
+ it('recovers an expired uncertain lease beyond three attempts with backoff and safe diagnostics',async()=>{
+  await enqueueReview();const cfg=reviewConfig(),queue=createReviewQueue(memberRuntime().pool),pool=memberRuntime().pool;await queue.heartbeat(cfg);
+  const lease=(await queue.claim(cfg))!;await pool.query("UPDATE member_knowledge.review_jobs SET attempts=3,lease_until=clock_timestamp()-interval '1 second' WHERE id=$1",[lease.jobId]);
+  await queue.recoverExpired();
+  expect((await pool.query('SELECT state,result,not_before FROM member_knowledge.review_jobs WHERE id=$1',[lease.jobId])).rows[0]).toMatchObject({state:'retry',result:null});
+  expect((await pool.query('SELECT response FROM member_knowledge.review_payloads WHERE attempt_id=$1',[lease.attemptId])).rows[0].response).toMatchObject({kind:'attempt-failure',transportCode:'LEASE_EXPIRED'});
+  expect(await queue.claim(cfg)).toBeNull();
  });
  it('invalidates an in-flight review on suspension and does not revive it on resume',async()=>{
   await memberRuntime().pool.query("UPDATE member_knowledge.review_jobs SET state='cancelled',lease_token=NULL WHERE state IN('queued','running','retry','quota')");
