@@ -17,7 +17,7 @@ import {geminiDuplicateReviewRequest} from './gemini-knowledge-review';
 import {SourceCheckError} from './knowledge-source-verification';
 export const reviewConfigSchema=z.strictObject({
  projectId:z.string().min(1),billingTier:z.literal("free"),verifiedAt:z.string().datetime({offset:true}),
- model:z.literal("gemini-3.5-flash-lite"),rpm:z.number().int().min(1).max(15),tokensPerMinute:z.number().int().positive(),
+ model:z.enum(["gemini-3.5-flash-lite","gemini-3.1-flash-lite"]),rpm:z.number().int().min(1).max(15),tokensPerMinute:z.number().int().positive(),
  requestsPerDay:z.number().int().positive().max(80),requestsPerMonth:z.number().int().positive(),
  inputTokensPerDay:z.number().int().positive(),outputTokensPerDay:z.number().int().positive(),
  inputTokensPerMonth:z.number().int().positive(),outputTokensPerMonth:z.number().int().positive(),

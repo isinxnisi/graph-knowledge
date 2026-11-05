@@ -50,7 +50,7 @@ def beta_knowledge():
         config = json.loads(review.read_text())
         import re
         users = config.get('allowedUsers', [])
-        if config.get('billingTier') != 'free' or config.get('model') != 'gemini-3.5-flash-lite' or not users or any(not isinstance(u,str) or not re.fullmatch(r'[a-f0-9-]{36}',u) for u in users):
+        if config.get('billingTier') != 'free' or config.get('model') not in {'gemini-3.5-flash-lite','gemini-3.1-flash-lite'} or not users or any(not isinstance(u,str) or not re.fullmatch(r'[a-f0-9-]{36}',u) for u in users):
             raise ValueError('Unexpected beta review profile')
         values.update(KNOWLEDGE_REVIEW_ENABLED='1', KNOWLEDGE_REVIEW_ALLOWED_USERS=','.join(users), KNOWLEDGE_REVIEW_CONFIG=str(review))
     collection = STATE / 'beta-collection.json'

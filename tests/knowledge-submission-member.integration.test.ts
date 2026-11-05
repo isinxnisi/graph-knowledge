@@ -4,7 +4,7 @@ import {randomUUID} from "node:crypto";
 import {spawnSync} from "node:child_process";
 import {mkdir,writeFile} from "node:fs/promises";
 import {Pool} from "pg";
-import {createReviewQueue,quotaDate,type ReviewConfig} from "../lib/server/knowledge-review-queue";
+import {createReviewQueue,reviewConfigSchema,quotaDate,type ReviewConfig} from "../lib/server/knowledge-review-queue";
 import {knowledgeSubmissionSchema} from "../lib/domain/knowledge-submission";
 import {buildKnowledgePublishedRecord} from "../lib/domain/knowledge-publication";
 import {captureKnowledgeCapsule} from "../lib/client/capsule-knowledge";
@@ -202,6 +202,22 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
   expect((await post(save(command.id,2,content('編集した別の内容')))).status).toBe(200);expect(await queue.canSend(lease)).toBe(false);expect(await queue.finish(lease,reviewedResponse())).toBe(false);
   expect((await (await current(command.id)).json()).submission).toMatchObject({state:'draft',revision:2});expect((await (await current(command.id)).json()).submission.review).toBeUndefined();
   expect((await memberRuntime().pool.query('SELECT state FROM member_knowledge.review_jobs WHERE id=$1',[lease.jobId])).rows[0].state).toBe('cancelled');
+ });
+ it('uses the explicitly configured 3.1 model and charges its attempt to the same project',async()=>{
+  await enqueueReview();const cfg=reviewConfig({model:'gemini-3.1-flash-lite'}),queue=createReviewQueue(memberRuntime().pool),pool=memberRuntime().pool;
+  expect(reviewConfigSchema.parse(cfg).model).toBe('gemini-3.1-flash-lite');
+  expect(reviewConfigSchema.safeParse({...cfg,model:'gemini-unreviewed'}).success).toBe(false);
+  await queue.heartbeat(cfg);const lease=(await queue.claim(cfg))!;expect(lease.model).toBe(cfg.model);
+  expect((await pool.query('SELECT project_id,model,request_charge FROM member_knowledge.review_attempts WHERE id=$1',[lease.attemptId])).rows[0]).toMatchObject({project_id:cfg.projectId,model:cfg.model,request_charge:1});
+  const response=reviewedResponse();response.raw.modelVersion=cfg.model;await queue.finish(lease,response);
+  expect((await pool.query('SELECT state FROM member_knowledge.review_jobs WHERE id=$1',[lease.jobId])).rows[0].state).toBe('reviewed');
+ });
+ it('does not accept a 3.5 response as a 3.1 result or silently replace a live project profile',async()=>{
+  await enqueueReview();const cfg=reviewConfig({model:'gemini-3.1-flash-lite'}),queue=createReviewQueue(memberRuntime().pool),pool=memberRuntime().pool;
+  await queue.heartbeat(cfg);await expect(queue.heartbeat({...cfg,model:'gemini-3.5-flash-lite'})).rejects.toThrow();
+  const lease=(await queue.claim(cfg))!;await queue.finish(lease,reviewedResponse());
+  expect((await pool.query('SELECT state,result FROM member_knowledge.review_jobs WHERE id=$1',[lease.jobId])).rows[0]).toMatchObject({state:'attention',result:null});
+  expect((await pool.query('SELECT model,request_charge FROM member_knowledge.review_attempts WHERE id=$1',[lease.attemptId])).rows[0]).toMatchObject({model:cfg.model,request_charge:1});
  });
  it('retains uncertain consumption across a crash and observes Retry-After without approving',async()=>{
   await enqueueReview();const cfg=reviewConfig(),queue=createReviewQueue(memberRuntime().pool);await queue.heartbeat(cfg);const first=(await queue.claim(cfg))!;
