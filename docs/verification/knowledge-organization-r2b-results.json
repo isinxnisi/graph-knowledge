@@ -146,5 +146,128 @@
       "knowledge-collection-reader": true,
       "knowledge-patrol-worker": true
     }
+  },
+  "normalBetaPublicationConfirmation": {
+    "appSource": "7dd6e0dc2292e15bfda01ed4c865822f5add6890",
+    "build": "fbcBuqYLDLopQ63ecPKsr",
+    "normalWorkerExample": {
+      "candidate_id": "214ffb5a3c93fca1c56a481de5b177cba2fa3547e1259c9ca9b251f83148f58b",
+      "record_id": "u3:a508eb51cfd248dd:record:5080090b7de26fde2547",
+      "original_assertion": "WebbはNIRSpecを搭載する。",
+      "decision": {
+        "kind": "ai",
+        "policy": "knowledge-organization-v1",
+        "reason": "提案されたカテゴリ「機器の搭載」は、記録内の「Webb宇宙望遠鏡がNIRSpecを搭載する」という構造的な関係を正確に記述しており、提供された既存のカテゴリよりも適切です。",
+        "wireHash": "0dd18000a7e5a1bad583490a380da0501cf4e4bdd4371e966f3887ef5a1dd5c2",
+        "attemptId": "d0d0a5a6-ef8d-4f5a-a456-02ebe78ba7cb"
+      },
+      "updated_at": "2026-11-06T05:29:14.99574+00:00",
+      "active_generation": "k75-95240354bb832ceec0036195428c4922",
+      "state": "ready",
+      "published_at": "2026-11-06T06:20:51.570033+00:00",
+      "concept_id": "concept:auto:000ef625884b4a2b3ae2b351fbec52eb2fe10ad0",
+      "published_semantics": {
+        "status": "current",
+        "concept": {
+          "id": "concept:auto:000ef625884b4a2b3ae2b351fbec52eb2fe10ad0",
+          "label": "機器の搭載",
+          "language": {
+            "tag": "und",
+            "basis": "generated"
+          },
+          "revision": 1,
+          "definition": "観測機器や部品が宇宙望遠鏡や衛星などのプラットフォームに搭載される関係。"
+        },
+        "recordRevision": 1,
+        "mappingRevision": 1
+      }
+    },
+    "api": [
+      {
+        "origin": "http://localhost:3200",
+        "mode": "record",
+        "status": 200,
+        "recordId": "u3:a508eb51cfd248dd:record:5080090b7de26fde2547",
+        "concept": {
+          "id": "concept:auto:000ef625884b4a2b3ae2b351fbec52eb2fe10ad0",
+          "label": "機器の搭載",
+          "language": {
+            "tag": "und",
+            "basis": "generated"
+          },
+          "revision": 1,
+          "definition": "観測機器や部品が宇宙望遠鏡や衛星などのプラットフォームに搭載される関係。"
+        },
+        "generation": "k75-95240354bb832ceec0036195428c4922",
+        "originalAssertionPreserved": true
+      },
+      {
+        "origin": "https://graph-beta.isinxnisi.com",
+        "mode": "record",
+        "status": 200,
+        "recordId": "u3:a508eb51cfd248dd:record:5080090b7de26fde2547",
+        "concept": {
+          "id": "concept:auto:000ef625884b4a2b3ae2b351fbec52eb2fe10ad0",
+          "label": "機器の搭載",
+          "language": {
+            "tag": "und",
+            "basis": "generated"
+          },
+          "revision": 1,
+          "definition": "観測機器や部品が宇宙望遠鏡や衛星などのプラットフォームに搭載される関係。"
+        },
+        "generation": "k75-95240354bb832ceec0036195428c4922",
+        "originalAssertionPreserved": true
+      },
+      {
+        "origin": "https://graph-beta.isinxnisi.com",
+        "mode": "search",
+        "status": 200,
+        "conceptFilterFindsRecord": true
+      }
+    ],
+    "candidateCounts": [
+      {
+        "kind": "identity",
+        "state": "unresolved",
+        "count": 1
+      },
+      {
+        "kind": "meaning",
+        "state": "applied",
+        "count": 1844
+      },
+      {
+        "kind": "meaning",
+        "state": "quota",
+        "count": 16
+      },
+      {
+        "kind": "meaning",
+        "state": "superseded",
+        "count": 106
+      },
+      {
+        "kind": "meaning",
+        "state": "unresolved",
+        "count": 6
+      }
+    ],
+    "taskCounts": [
+      {
+        "origin": "common",
+        "state": "planned",
+        "count": 7595
+      },
+      {
+        "origin": "public-kg",
+        "state": "planned",
+        "count": 5711
+      }
+    ],
+    "browser": {
+      "verified": false,
+      "reason": "Browser restart did not resolve the Windows Computer Use current-URL confidence safety stop. No further browser input was attempted."
+    }
   }
 }

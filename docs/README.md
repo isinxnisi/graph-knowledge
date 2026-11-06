@@ -1,3 +1,5 @@
+2026-11-06 R2b追補：β通常Workerの自動適用→既存publisherのready世代→localhost:3200／HTTPS βの公開APIと分類検索を確認。元Record本文は保持。ブラウザ再起動後もWindows側のURL安全判定で操作が停止したため、**PC／スマホの実画面確認だけ残る**。app／buildは `7dd6e0dc`／`fbcBuqYLDLopQ63ecPKsr`を継続。[通常公開の記録](verification/KNOWLEDGE_ORGANIZATION_R2B_20261106.md#追補通常workerの自動適用公開検索を確認)。
+
 2026-11-06 R2b：新旧全件の候補生成・意味／同一対象の自動整理をβへ配置。91テスト、別DB復元・知識009／会員032、実Gemini4例、型検査込みbuildを確認。app `7dd6e0dc`／build `fbcBuqYLDLopQ63ecPKsr`。**実画面とβ通常公開の最終確認が残る**。ブラウザURLの安全判定停止を成功扱いにしない。[実装・保全・再開](verification/KNOWLEDGE_ORGANIZATION_R2B_20261106.md)。
 
 2026-11-06 R2a：新旧全登録データの周期巡回・永続cursor・変更追従と整理入力の保存を接続。実データ73＋5,711件を欠落0で走査し、原本行を保持。58件・別DB復元／追加008・実Googleの運営集計・PC／390pxを確認。app `1465ba59`／build `1_7iOyUf0rEluxMxmbNDV`、main／3200／HTTPS βへ反映。**R2a完了、候補確認・自動適用／公開のR2bと本運用初版全体は未完了。** [設計](design/KNOWLEDGE_PATROL_R2.md)／[検証・再開](verification/KNOWLEDGE_PATROL_R2A_20261106.md)。全件AI完了や全結果の目視確認は開発完了条件にせず、機能範囲は維持する。
