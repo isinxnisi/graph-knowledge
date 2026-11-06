@@ -1,0 +1,95 @@
+{
+  "source": "1465ba597ddc7867a9e45d3de7f55eadb4132886",
+  "build": "1_7iOyUf0rEluxMxmbNDV",
+  "cycles": [
+    {
+      "origin": "common",
+      "phase": "idle",
+      "scanned": 73,
+      "total": 73,
+      "completed_at": "2026-11-06T02:59:13.016475+00:00",
+      "elapsed_seconds": 6,
+      "error_code": null
+    },
+    {
+      "origin": "public-kg",
+      "phase": "idle",
+      "scanned": 5711,
+      "total": 5711,
+      "completed_at": "2026-11-06T03:04:22.477068+00:00",
+      "elapsed_seconds": 315,
+      "error_code": null
+    }
+  ],
+  "coverage": [
+    {
+      "origin": "common",
+      "inventory": 73,
+      "visited": 73,
+      "missing": 0,
+      "pending": 73
+    },
+    {
+      "origin": "public-kg",
+      "inventory": 5711,
+      "visited": 5711,
+      "missing": 0,
+      "pending": 5711
+    }
+  ],
+  "originalsPreserved": true,
+  "originalTablesCompared": [
+    "knowledge75.objects",
+    "knowledge75.revisions",
+    "knowledge75.operations"
+  ],
+  "migrationLedgerCount": 7,
+  "restore": {
+    "backup": "/home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/submission-repair/r2a-before-20261106T025444Z",
+    "dumpSha256": "e0a58f07f23872feda497e859a07f87b57d459e4230785c66c8760d8dc8b2335",
+    "restoredIntoSeparateDatabase": true,
+    "oldTableCount": 22,
+    "oldRowsPreserved": true,
+    "oldChecksumsPreserved": true,
+    "migration": "008-organization-patrol.sql",
+    "repeatedUnchanged": true,
+    "migrationResult": [
+      "{\"name\":\"008-organization-patrol.sql\",\"checksum\":\"d23765250aba5925b66fd814efe13c92063c125f541ceb786143afc5d9b6408b\",\"applied\":true}",
+      "{\"name\":\"008-organization-patrol.sql\",\"checksum\":\"d23765250aba5925b66fd814efe13c92063c125f541ceb786143afc5d9b6408b\",\"applied\":false}"
+    ]
+  },
+  "activation": {
+    "source": "1465ba597ddc7867a9e45d3de7f55eadb4132886",
+    "build": "1_7iOyUf0rEluxMxmbNDV",
+    "directory": "/home/isinxnisi/.cache/plunode-builds/submission-repair-f0245dfa",
+    "previousBuild": "2QST9Iieq0L0g-6y3nJDa",
+    "backup": "/home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/submission-repair/r2a-activation-backup-20261106T025813Z",
+    "migration": "008-organization-patrol.sql",
+    "memberRowsUnchanged": true,
+    "knowledgeOriginalRowsUnchanged": true,
+    "privateChanges": [
+      "beta-deployment.json: patrol capability only"
+    ],
+    "otherPrivateFilesUnchanged": true,
+    "recovery": "Additive patrol tables; do not overwrite the current DB with a dump."
+  },
+  "tests": {
+    "passed": 58,
+    "files": 5,
+    "patrolBoundaryTests": 8,
+    "eslint": "passed",
+    "typescript": "passed",
+    "build": "passed"
+  },
+  "browser": {
+    "httpsBeta": "real existing Google session, operations > meaning organization > patrol summary",
+    "localhost": "TOP and existing theme entries rendered",
+    "widths": [
+      1920,
+      390
+    ],
+    "overflow": false
+  },
+  "aiCallsByPatrol": 0,
+  "r2Status": "partial: R2a complete; candidate verification and automatic application/publication remain R2b"
+}

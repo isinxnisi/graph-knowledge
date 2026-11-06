@@ -1,4 +1,4 @@
-2026-11-06 R1j：配置profileと用途別capability、送信・公開・再開時の認可を共通化。βの許可会員・既存資格は維持。外部翻訳取込も公開文脈／wire／attemptの照合へ接続した。208件・型検査込みbuildと実Googleの草稿作成・保存・再訪、PC／390pxを確認。app `db9303fe`／build `2QST9Iieq0L0g-6y3nJDa`、追加migrationなし。**R1の共通契約は完了、次はR2の全データ巡回・自動整理。本運用初版全体は未完了。** [設計](design/KNOWLEDGE_DEPLOYMENT_AUTHORIZATION.md)／[検証・残件](verification/KNOWLEDGE_DEPLOYMENT_R1J_20261106.md)
+2026-11-06 R2a：新旧全登録データの周期巡回・永続cursor・変更追従と整理入力の保存を接続。実データ73＋5,711件を欠落0で走査し、原本行を保持。58件・別DB復元／追加008・実Googleの運営集計・PC／390pxを確認。app `1465ba59`／build `1_7iOyUf0rEluxMxmbNDV`、main／3200／HTTPS βへ反映。**R2a完了、候補確認・自動適用／公開のR2bと本運用初版全体は未完了。** [設計](design/KNOWLEDGE_PATROL_R2.md)／[検証・再開](verification/KNOWLEDGE_PATROL_R2A_20261106.md)。全件AI完了や全結果の目視確認は開発完了条件にせず、機能範囲は維持する。
 
 2026-11-06 R1i：訳文の意味一致確認に固定した公開文脈・hash・依存版を接続し、送信前／受理／再開時に再検査。152テスト、実AIの補修後最終3例と実Googleの確認1回→自動公開を確認。原文2版・Record28版を保持。app 949dcf1b／build igP4lAgYwqySRsHBZpIUB、追加migrationなし。R1全体は未完了で、次は配置別認可と境界照合。[設計](design/KNOWLEDGE_TRANSLATION_REVIEW.md)／[実操作・残件](verification/KNOWLEDGE_TRANSLATION_REVIEW_R1I_20261106.md)。
 

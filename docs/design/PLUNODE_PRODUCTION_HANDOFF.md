@@ -1,28 +1,27 @@
-# 現在の再開点：R2へ（2026-11-06）
+# 現在の再開点：R2bへ（2026-11-06）
 
-2026-11-06 R1j：配置profileと用途別capability、送信・公開・再開時の認可を共通化。βの許可会員・既存資格は維持。外部翻訳取込も公開文脈／wire／attemptの照合へ接続した。208件・型検査込みbuildと実Googleの草稿作成・保存・再訪、PC／390pxを確認。app `db9303fe`／build `2QST9Iieq0L0g-6y3nJDa`、追加migrationなし。**R1の共通契約は完了、次はR2の全データ巡回・自動整理。本運用初版全体は未完了。** [今回の結果と固定条件](../verification/KNOWLEDGE_DEPLOYMENT_R1J_20261106.md)／[配置別認可](KNOWLEDGE_DEPLOYMENT_AUTHORIZATION.md)。
+R2aの周期巡回・変更追従・整理入力の永続化をmain／3200／HTTPS βへ接続。共通73件・従来KG5,711件の台帳／走査対象を照合し欠落0、原本行不変。58件・追加008の別DB復元／再実行と、実Googleの集計・PC／390pxを確認。**R2a完了、R2全体と本運用初版は未完了。** [設計](KNOWLEDGE_PATROL_R2.md)／[今回の実測・再開](../verification/KNOWLEDGE_PATROL_R2A_20261106.md)。R1の共通契約は再実装せず使う。
 
 ## 次担当の作業
 
-1. AGENTSの参照先、[再計画](PLUNODE_IMPLEMENTATION_REPLAN_20261105.md)、[進行表](../PLUNODE_PROGRESS.md)、R1j記録を確認し、review／hold／tokenを取得する。mainのmemo.txtと作業側の.localを保護する。
-2. **R2の全登録データ巡回・自動整理へ進む。** R1cの新旧全件対象台帳・取得証明、共通原本、同一性resolver、意味対応、既存AI予約／再試行、R1jの認可を再利用する。対象数を過去の観測値へ固定しない。2026-11-06合意の[成立を裏付ける検証基準](KNOWLEDGE_ORGANIZATION_AUTOMATION.md#2026-11-06-合意成立を裏付ける検証で区切る)を守る。実データ全件の機械的走査と代表例の実AI処理を使い、全件AI完了・全結果の目視・理由のない再検証を待たない。R2aの巡回基盤だけでR2全体完了としない。
-3. 永続cursor・版変更追従・再開、候補生成、根拠／意味／同一性の確認、許されたcommandだけの自動適用・公開を一連にする。曖昧・不正・通信失敗の一部を待機／未解決へ分け、全体巡回を止めない。通常分の管理者の必須選択・承認を0にする。元ID・原語・具体語・根拠・旧Theme／Capsule断面を維持する。
-4. 新しいAI wireと自動適用の攻撃例・停止再開・実AI・旧KGを含む全件到達を、その工程の完了条件として検証する。既存の予算を迂回せず、原資料／AI文を権限や任意の更新命令へ昇格しない。
-5. R3の定期ChatGPT配送／収集、R4の新旧検索・多言語・入力／年表・Capsule接続、R5のβ全体一巡を縮小しない。R1jの部分検証をこれらの完成と数えない。
+1. AGENTS、再計画、進行表、上記R2a記録を確認し、review／hold／tokenを取得する。mainのmemo.txtと作業側の.localを保護する。自動候補を一括受入しない。
+2. **R2bの候補生成・根拠／文脈確認・自動適用／公開へ進む。** `knowledge-patrol.ts`／知識008の`patrol_targets`・`patrol_tasks`を入口に使う。pendingは判断前の入力で、整理済み・AI受理ではない。Entity／Record／Source／Theme／Mappingの変更から依存する候補も追う。旧KG未移入対象を除外しない。
+3. 名前・別名・根拠・具体語・近傍・言語等で比較先を絞る。全件を無条件にAIへ送らず、意味未対応／古い対応、同一性、意味重複を区別する。R1の原本・取得証明・同一性resolver・shared budget／retryを使う。送信前・適用前に現在版／公開依存／配置資格を再確認する。許されたcommandだけを、AI判断であることが追える実行主体とreceiptで適用する。
+4. 未解決・枠待ち・一時障害・解除後の再適用を扱い、通常分の管理者必須操作0を維持。元ID・原語・具体語・根拠・帰属・旧Theme／Capsule断面を上書きしない。
+5. **2026-11-06合意の有限な検証範囲を守る。** 構造と境界テスト、実データの機械的走査、代表例の実AI→自動適用／公開で裏付ける。全件AI完了・全結果の目視・複数日の枠消化・理由のない再検証を待たない。R2aの巡回だけでR2全体完了にもしない。
+6. R3の設定後のChatGPT資料探し・定期配送／収集、R4の新旧検索・多言語・入力／年表・Capsule、R5のβ全体一巡を縮小しない。R2bは目安1回、R2b〜R5で5〜8回、正式公開R6はさらに1〜2回の推定。
 
 ## 配置と再開
 
-現在はmainと作業branch `codex/issue75-theme-foundation`。アプリsource `db9303fe282bb4c4afc9d01a4e2d5e8cf409872b`／build `2QST9Iieq0L0g-6y3nJDa`、3200とHTTPS βへ反映済み。正式VPS／3276／共有Kevは未更新。会員000〜031、知識001/002/004/005/006/007。既存11設定＋新deployment profileの12 privateファイルを保持する。
+mainと作業branch `codex/issue75-theme-foundation`。アプリsource `1465ba597ddc7867a9e45d3de7f55eadb4132886`／build `1_7iOyUf0rEluxMxmbNDV`。会員000〜031、知識001/002/004/005/006/007/008。正式VPS／3276／共有Kevは未更新。
 
-既存環境の再開はmainで次を使う。今回のための再buildやmigration再適用は不要。
+通常再開はmainで既存launcherを使う。追加migration・再buildは不要。
 
 ~~~sh
 python3 scripts/start-local-previews.py beta --node /home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/issue75/node
 ~~~
 
-profileは `~/.local/state/plunode-previews/beta-deployment.json`、0600。現在のβの会員allowlistを維持し、一般提供modeや本番資格へ勝手に切り替えない。5サービスが同じprofileを読み込む。正式用の実資格・DB GRANT・Linux対応はR6で現物確認する。
-
-**初版の機能実装完了＋β統合検証まで5〜9回程度、正式公開はさらに1〜2回の推定。** 通常の管理者承認や毎回のURL列挙を利用者へ戻さない。
+private `~/.local/state/plunode-previews/beta-deployment.json` は0600。既存の会員allowlistと全接続先は不変で、patrol capabilityだけを追加した。Webと既存4Worker＋巡回Workerの計6サービスを起動する。巡回は200件／tick、原本の変更sequence／旧KGの1時間更新を追い、エラーは30秒後に再試行する。AI呼出・原本変更・公開はまだ行わない。R2bで新しい用途・lease・適用経路を接続するまでこの境界を維持する。
 
 # 以下は過去時点の引継ぎ記録
 

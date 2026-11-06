@@ -37,6 +37,7 @@ profile未指定時は既存βのorigin／DB／指定会員と3276の隔離guard
 | collection / collection-reading | 操作する運営者の認可、有限job・取得資料・固定leaseと支持確認 |
 | review-worker / publisher | 配置origin、前記の固定受付・公開条件。AIの承認だけで任意commandを実行しない |
 | collector / reader | 私有clientのHTTPS originを同じprofileへ固定。サーバーは用途別tokenとjob leaseを検査。collector資格でreaderや運営操作を使えない |
+| patrol（R2a） | 明示有効化・同じprivate配置profile／知識専用DB・各tickでの再認可。新旧の対象metadataの列挙と整理入力の保存のみ。本文取得・AI送信・原本変更・公開を許可するcapabilityではない |
 
 公開readerのread-onlyは接続のtransaction設定で、正式VPSのDBユーザー別GRANTの最終確認を済ませた意味ではない。専用DB資格・ネットワーク制限・Linux対応を含むR6の現物確認を残す。
 
