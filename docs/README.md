@@ -1,3 +1,5 @@
+2026-11-06 R2完了：通常Workerの自動適用・公開・分類指定API検索に加え、Chrome専用接続で実Googleセッションの運営集計と通常GraphをPC／390pxで確認。R2a・bを完了し、次はR3。全件AI完了を意味せず、R3〜R5の機能接続・β統合とR6の正式公開は残る。app `7dd6e0dc`／build `fbcBuqYLDLopQ63ecPKsr`は変更なし。[実画面と接続障害の経緯](verification/KNOWLEDGE_ORGANIZATION_R2B_20261106.md#追補chrome接続の再取得と実画面確認を完了)。以下は各時点の履歴。
+
 2026-11-06 R2b追補：β通常Workerの自動適用→既存publisherのready世代→localhost:3200／HTTPS βの公開APIと分類検索を確認。元Record本文は保持。ブラウザ再起動後もWindows側のURL安全判定で操作が停止したため、**PC／スマホの実画面確認だけ残る**。app／buildは `7dd6e0dc`／`fbcBuqYLDLopQ63ecPKsr`を継続。[通常公開の記録](verification/KNOWLEDGE_ORGANIZATION_R2B_20261106.md#追補通常workerの自動適用公開検索を確認)。
 
 2026-11-06 R2b：新旧全件の候補生成・意味／同一対象の自動整理をβへ配置。91テスト、別DB復元・知識009／会員032、実Gemini4例、型検査込みbuildを確認。app `7dd6e0dc`／build `fbcBuqYLDLopQ63ecPKsr`。**実画面とβ通常公開の最終確認が残る**。ブラウザURLの安全判定停止を成功扱いにしない。[実装・保全・再開](verification/KNOWLEDGE_ORGANIZATION_R2B_20261106.md)。

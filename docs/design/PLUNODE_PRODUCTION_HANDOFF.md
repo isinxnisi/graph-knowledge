@@ -1,4 +1,25 @@
-# 現在の再開点：R2bへ（2026-11-06）
+# 現在の再開点：R3へ（2026-11-06）
+
+**R2a・b完了、次はR3｜R2はbまで｜全体はR6まで。** 候補生成・二段階確認・意味対応／同一対象の自動整理を接続し、通常Workerの自動適用→ready世代への公開→分類指定API検索と、実GoogleセッションのPC／390px画面を確認した。全件のAI処理完了や全結果の人手確認を意味しない。[R2bの検証・配置・接続障害の経緯](../verification/KNOWLEDGE_ORGANIZATION_R2B_20261106.md)を優先する。
+
+## 次担当の作業
+
+1. AGENTS、再計画、進行表、上記R2b記録を確認し、review／hold／tokenを取得する。mainのmemo.txtと作業側の.localを保護し、自動候補を一括受入しない。
+2. **R3：テーマ・範囲・利用上限の設定後、ChatGPT側の資料探し・定期配送を認証付きPlunode取込APIへ接続する。** 直接配送が難しい場合は同じpackageのIssue adapterを実証する。別のURL探索APIや有料サービスを必須にしない。手動clientでの一回の送信だけを定期収集の完成としない。
+3. R1の取込API・資格・receipt・資料取得証明・重複照合と、R2の周期巡回・自動整理・共通予算／retryを使う。通常分で管理者の個別承認や毎回の手動指定を必須にしない。停止・再開・上限・二重配送を扱う。
+4. R4の新旧検索・多言語・入力／年表・Capsule、R5のβ全体一巡、R6の正式公開を縮小しない。初版機能＋β統合までR3〜R5で4〜7回、正式公開R6は別に1〜2回の粗い推定。
+
+## 現在の配置と再開
+
+mainと作業branch `codex/issue75-theme-foundation`。アプリsource `7dd6e0dc2292e15bfda01ed4c865822f5add6890`／build `fbcBuqYLDLopQ63ecPKsr`。知識009／会員032まで追加済み。正式VPS／3276／共有Kevは未更新。既存の認証・private設定を引き継ぎ、通常再開はmainで次を使う。起動時にmigrationしない。
+
+~~~sh
+python3 scripts/start-local-previews.py beta --node /home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/issue75/node
+~~~
+
+Web／publisher／review／collector／reader／patrolの6サービスを継続。patrolとorganizeを接続済みで、条件を満たす整理は通常Workerが自動適用する。R2の検証を理由なく全件からやり直さない。ブラウザ専用接続を取得すれば現時点でChromeのURL／画面を読めるが、初回に専用接続が使えなくなった原因は未特定。古い接続IDを固定して再試行しない。
+
+# 以下はR2a完了時点の引継ぎ（履歴）
 
 R2aの周期巡回・変更追従・整理入力の永続化をmain／3200／HTTPS βへ接続。共通73件・従来KG5,711件の台帳／走査対象を照合し欠落0、原本行不変。58件・追加008の別DB復元／再実行と、実Googleの集計・PC／390pxを確認。**R2a完了、R2全体と本運用初版は未完了。** [設計](KNOWLEDGE_PATROL_R2.md)／[今回の実測・再開](../verification/KNOWLEDGE_PATROL_R2A_20261106.md)。R1の共通契約は再実装せず使う。
 

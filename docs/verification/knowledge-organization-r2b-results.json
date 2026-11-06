@@ -269,5 +269,38 @@
       "verified": false,
       "reason": "Browser restart did not resolve the Windows Computer Use current-URL confidence safety stop. No further browser input was attempted."
     }
+  },
+  "browserUiConfirmation": {
+    "date": "2026-11-06",
+    "verified": true,
+    "connection": "Chrome extension browser connection reacquired from current inventory",
+    "initialConnectionFailureRootCauseKnown": false,
+    "securitySettingsChanged": false,
+    "authentication": "Existing real Google session; no new Google sign-in performed",
+    "desktop": [
+      "Operations semantic organization summary expanded and collapsed",
+      "Automatic applications 1848; waiting candidates 12; held candidates 7 distinguished",
+      "Legacy KG patrol 5711/5711, input waiting 0; common enumeration displayed as incomplete",
+      "Identity organization list loaded",
+      "Normal krecord Graph retained relation, assertion, ESA source and added semantic classification"
+    ],
+    "mobileViewport": { "width": 390, "height": 844 },
+    "mobile": [
+      "Operations controls and summary readable without text overlap",
+      "Graph loaded vertically when first opened at narrow width",
+      "Details switch displayed original assertion, semantic classification and ESA source"
+    ],
+    "publicRecordId": "u3:a508eb51cfd248dd:record:5080090b7de26fde2547",
+    "assertion": "WebbはNIRSpecを搭載する。",
+    "classification": "機器の搭載",
+    "classificationSearchVerification": "Public API confirmed previously; full normal-search UI integration remains R4",
+    "legacyReviewSearchRoute": "/themes/explore returns 404 in beta; not counted as normal search UI verification",
+    "viewportReset": true,
+    "additionalAiRequests": 0,
+    "newKnowledgePosts": 0,
+    "manualApplications": 0,
+    "applicationBuildChanged": false,
+    "r2Complete": true,
+    "productionInitialReleaseComplete": false
   }
 }

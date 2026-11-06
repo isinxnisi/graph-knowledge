@@ -1,10 +1,11 @@
 # R2b 自動整理の実装・β配置記録（2026-11-06）
 
-**R2a完了・bは通常公開まで確認済み、実画面確認だけ残る｜R2はbまで｜全体はR6まで。** 本運用初版全体やR2の最終受入を完了とはしない。Windows Computer Useが現在のブラウザURLを十分な確度で判定できず、操作を停止したため、このturnの実ブラウザ確認は未完了。別手段でUI操作を続けていない。
+**R2a・b完了｜R2はbまで｜全体はR6まで。** 通常Workerの自動適用・公開・検索に続き、Chrome専用接続でPC／390pxの実画面を確認した。R3〜R5の機能接続とβ統合、R6の正式公開は残る。全件のAI処理完了や全結果の人手確認を意味しない。下記の初回停止記録は経緯として保持する。
 
 ## 確認先と再開
 
-- [HTTPS β・意味整理](https://graph-beta.isinxnisi.com/operations#organization)：運営ログイン後、「意味整理」の「自動巡回・整理」を開く。集計の閲覧は実行条件ではなく、通常の管理者操作・個別承認は不要。
+- [HTTPS β・意味整理](https://graph-beta.isinxnisi.com/operations#semantics)：運営ログイン後、「知識の意味整理」の「自動巡回・整理」を開く。集計の閲覧は実行条件ではなく、通常の管理者操作・個別承認は不要。
+- [通常Graphの確認例](https://graph-beta.isinxnisi.com/?krecord=u3%3Aa508eb51cfd248dd%3Arecord%3A5080090b7de26fde2547)：関係を選ぶと、詳細に元の具体語・本文・ESAの根拠と意味対応「機器の搭載」が表示される。スマホ幅は上部の「詳細」で読む。
 - [localhost:3200](http://localhost:3200/)とHTTPS βは同じapp source `7dd6e0dc2292e15bfda01ed4c865822f5add6890`、build `fbcBuqYLDLopQ63ecPKsr`へ配置。両originのTOPと当該buildのmanifestをHTTP200で確認した。これは実画面の操作確認とは区別する。
 - 6サービス（Web／publisher／review／collector／reader／patrol）を復帰。既存起動は `python3 scripts/start-local-previews.py beta --node /home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/issue75/node`。主作業repoで実行し、既存private設定を引き継ぐ。起動時にmigrationしない。
 - 正式VPS・3276・共有Kevは変更しない。既存認証・許可会員・API key・endpoint・他private設定を保持し、配置profileへ`organize` capabilityだけを追加した。
@@ -35,7 +36,7 @@ private backupはworktreeの `.local/r2b-before-20261106T051146Z/`、切替直�
 
 初回のサーバ観測時は索引3316件、common73件・旧KG3213件が索引済みで、旧KG2498件は入力待ちだった。Workerは継続中。候補生成を初期索引の後に行うため、この時点の候補は0件。これを全データの整理済みとは報告しない。全件AI完了・全結果の目視確認・無料枠の複数日消化は開発完了条件にしない。
 
-次回はブラウザ操作が可能かを確認し、PC／スマホ幅の運営集計と通常探索を確認してR2bを閉じる。β通常Workerの代表例の自動適用→公開→HTTPS検索は下記の追補で確認済み。既に成功した91件・全件走査・全AI評価を理由なく最初からやり直さない。その後はR3の設定後のChatGPT資料探索・定期配送へ進む。R4・R5・R6の範囲は維持。
+初回停止時はPC／スマホ幅の運営集計と通常探索が残ったが、下記の追補で確認を補完しR2bを閉じた。既に成功した91件・全件走査・全AI評価は理由なく再実行していない。次はR3の設定後のChatGPT資料探索・定期配送へ進む。R4・R5・R6の範囲は維持。
 
 詳細値は[結果JSON](knowledge-organization-r2b-results.json)。
 
@@ -50,3 +51,14 @@ private backupはworktreeの `.local/r2b-before-20261106T051146Z/`、切替直�
 検証HTTPクライアントの初回標準User-AgentはCloudflareの1010で拒否された。用途を明示した `Plunode-R2b-Verification` とJSON Acceptで通常取得に成功した。WAF・認証・公開範囲の設定は変更していない。
 
 今回は記録だけを更新し、新しいbuild／migration／VPS更新は不要。app source `7dd6e0dc`／build `fbcBuqYLDLopQ63ecPKsr`を継続する。R2bの残件は実画面確認だけ。
+
+## 追補：Chrome接続の再取得と実画面確認を完了
+
+2026-11-06、履歴からR2aではChrome拡張のブラウザ専用接続、直後の失敗時はWindows画面操作を使っていたことを確認した。Windows側は現在URLを判定できず安全確認で停止していた。現在の接続一覧では旧Chrome接続3がなく、新しい接続4が存在した。現在の接続を選択すると、URLと画面を取得できた。ブラウザ・アプリ・権限・安全設定は変更していない。最初に専用接続が利用できなくなった原因は未特定で、Chrome更新や特定の故障を原因と断定しない。
+
+- 既存の実Googleログインを使い、運営の「知識の意味整理」で自動巡回欄の開閉を操作。自動反映1,848件、候補待ち12件、保留7件を区別し、索引済み13,306件、従来KG 5,711/5,711件・入力待ち0を表示した。共通原記録の列挙中は件数確認中と表示し、全件の整理完了とはしていない。
+- 既定PC幅と390×844のChrome viewportで運営集計を確認。狭い幅では操作欄が縦に並び、文字の重なり・横へのはみ出しは見られなかった。同一対象の整理の一覧も取得できた。
+- 通常の `?krecord=` 経路で、Webb→NIRSpecのGraph、元の「搭載する」「WebbはNIRSpecを搭載する。」、意味対応「機器の搭載」、ESA根拠リンクを確認。390pxで初めて読み込むと縦方向のGraphとなり、上部の「詳細」で同じ本文・分類・根拠を読めた。検証用viewportは解除した。
+- 分類指定の検索は前項の公開APIで確認済み。旧U2検証用の `/themes/explore` はβでは404であり、一般検索UIの統合を完了したとはしない。通常検索への全面接続は既定のR4へ残す。
+
+実iPhoneでの確認やGoogleへの新規ログインを行ったという意味ではない。今回、追加AI送信・新しい知識投稿・管理者による適用はしていない。コード／build／migrationを変えず、実操作の記録と現在地だけを更新した。R2完了、次はR3。本運用初版全体は未完了。
