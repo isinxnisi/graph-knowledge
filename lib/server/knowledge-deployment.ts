@@ -3,7 +3,7 @@ import path from "node:path";
 import {z} from "zod";
 import {KnowledgeError} from "./knowledge-foundation";
 
-export const knowledgeCapabilities = ["public-read","submissions","review","publish","translation","import","operator","collection","collection-reading","review-worker","publisher","collector","reader","patrol","organize"] as const;
+export const knowledgeCapabilities = ["public-read","submissions","review","publish","translation","import","operator","collection","collection-reading","review-worker","publisher","collector","reader","patrol","organize","missions"] as const;
 export type KnowledgeCapability = typeof knowledgeCapabilities[number];
 export const knowledgeHttpsOrigin = z.string().refine(value => {
   try { const u=new URL(value); return u.protocol==="https:" && u.origin===value && !u.username && !u.password; } catch { return false; }

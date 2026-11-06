@@ -29,11 +29,11 @@ export async function ensureImportSchema(pool:Pool){
  const name='030-knowledge-import.sql',hash=createHash('sha256').update(await readFile(path.join(process.cwd(),'db/member',name))).digest('hex');
  if((await pool.query('SELECT checksum FROM member_migration WHERE name=$1',[name])).rows[0]?.checksum!==hash)throw new KnowledgeError('取込用の明示migrationが必要です',503,'MIGRATION_REQUIRED');
 }
-export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:string)=>Promise<ImportPrincipal|null>,options:{verify?:typeof verifySourceExcerpt;afterKnowledgeCommit?:()=>Promise<void>}={}){
+export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:string,client?:PoolClient)=>Promise<ImportPrincipal|null>,options:{verify?:typeof verifySourceExcerpt;afterKnowledgeCommit?:()=>Promise<void>}={}){
  const foundation=createKnowledgeFoundationService(knowledge),verify=options.verify??verifySourceExcerpt;
  let ready:Promise<void>|undefined;const ensure=()=>ready??=ensureImportSchema(pool).catch(e=>{ready=undefined;throw e;});
  async function tx<T>(f:(c:PoolClient)=>Promise<T>){await ensure();const c=await pool.connect();try{await c.query('BEGIN');const v=await f(c);await c.query('COMMIT');return v;}catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}}
- async function active(id:string){const p=await principal(id);return p&&!p.disabled&&Date.parse(p.expiresAt)>Date.now()?p:null;}
+ async function active(id:string,client?:PoolClient){const p=await principal(id,client);return p&&!p.disabled&&Date.parse(p.expiresAt)>Date.now()?p:null;}
  async function lock(c:PoolClient,id:string){const seed=(await c.query('SELECT package_id FROM knowledge_import.items WHERE id=$1',[id])).rows[0];if(!seed)return null;
   const pkg=(await c.query('SELECT * FROM knowledge_import.packages WHERE id=$1 FOR UPDATE',[seed.package_id])).rows[0];
   const item=(await c.query('SELECT * FROM knowledge_import.items WHERE id=$1 FOR UPDATE',[id])).rows[0];return {pkg,item};}
@@ -56,7 +56,7 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
   const resources=importResources(pkg),resourceIssues=Object.values(resources).flatMap(v=>v.issues);
   return tx(async c=>{
    await c.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))",['knowledge-import:'+p.id]);
-   if(!await active(p.id))throw new KnowledgeError('送信資格を確認してください',401,'UNAUTHENTICATED');
+   if(!await active(p.id,c))throw new KnowledgeError('送信資格を確認してください',401,'UNAUTHENTICATED');
    const prior=(await c.query('SELECT * FROM knowledge_import.packages WHERE namespace=$1 AND package_id=$2 AND revision=$3',[pkg.namespace,pkg.packageId,pkg.revision])).rows[0];
    if(prior){if(prior.principal_id!==p.id||prior.digest!==digest)throw new KnowledgeError('同じpackage版に異なる内容は送れません',409,'PACKAGE_CONFLICT');return {receiptId:prior.id,replayed:true};}
    if((await c.query('SELECT 1 FROM knowledge_import.packages WHERE namespace=$1 AND package_id=$2 AND revision>$3',[pkg.namespace,pkg.packageId,pkg.revision])).rowCount)throw new KnowledgeError('新しいpackage版が既にあります',409,'REVISION_CONFLICT');
@@ -89,7 +89,7 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
  }
  async function cancel(p:ImportPrincipal,id:string,reason?:string){return tx(async c=>{
   const pkg=(await c.query('SELECT * FROM knowledge_import.packages WHERE id=$1 AND principal_id=$2 AND namespace=$3 FOR UPDATE',[id,p.id,p.namespace])).rows[0];if(!pkg)throw new KnowledgeError('受付がありません',404,'NOT_FOUND');
-  if(!await active(p.id))throw new KnowledgeError('送信資格を確認してください',401,'UNAUTHENTICATED');
+  if(!await active(p.id,c))throw new KnowledgeError('送信資格を確認してください',401,'UNAUTHENTICATED');
   for(const item of (await c.query('SELECT * FROM knowledge_import.items WHERE package_id=$1 ORDER BY ordinal FOR UPDATE',[id])).rows)if(!terminal.includes(item.state)&&item.state!=='applied'&&!await recoverApplied(c,pkg,item))await c.query("UPDATE knowledge_import.items SET state='cancelled',reason='未反映分を取り消しました。',lease_token=NULL,lease_until=NULL WHERE id=$1",[item.id]);
   await c.query('UPDATE knowledge_import.packages SET cancelled_at=COALESCE(cancelled_at,clock_timestamp()),cancel_reason=COALESCE(cancel_reason,$2) WHERE id=$1',[id,reason??null]);return {receiptId:id};
  });}
@@ -100,7 +100,7 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
     const locked=await lock(c,candidate.id);if(!locked)return null;const {pkg,item}=locked;
     if(terminal.includes(item.state)||item.state==='applied'||item.state==='running'&&new Date(item.lease_until)>new Date()||new Date(item.next_attempt)>new Date())return null;
     if(await recoverApplied(c,pkg,item))return null;
-    const p=await active(pkg.principal_id);
+    const p=await active(pkg.principal_id,c);
     if(!p||p.namespace!==pkg.namespace||pkg.cancelled_at){await c.query("UPDATE knowledge_import.items SET state='cancelled',reason='受付または送信資格が停止されています。',lease_token=NULL,lease_until=NULL WHERE id=$1",[item.id]);return null;}
     let retained=!!item.decision;
     if(item.state==='running'&&item.current_attempt){
@@ -114,11 +114,11 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
    });if(l)return l;
   }return null;
  }
- async function stillCurrent(c:PoolClient,l:NonNullable<Awaited<ReturnType<typeof lease>>>){const locked=await lock(c,l.item.id);if(!locked||locked.pkg.cancelled_at||locked.item.state!=='running'||locked.item.lease_token!==l.token||new Date(locked.item.lease_until)<=new Date())return null;const p=await active(locked.pkg.principal_id);if(!p||p.namespace!==locked.pkg.namespace){await c.query("UPDATE knowledge_import.items SET state='cancelled',reason='送信資格が停止されました。',lease_token=NULL,lease_until=NULL WHERE id=$1",[l.item.id]);return null;}assertImportScope(p,knowledgeSubmissionContentSchema.parse(locked.item.normalized),(locked.item.prepared as Prepared|null)?.value.context);return {...locked,p};}
+ async function stillCurrent(c:PoolClient,l:NonNullable<Awaited<ReturnType<typeof lease>>>){const locked=await lock(c,l.item.id);if(!locked||locked.pkg.cancelled_at||locked.item.state!=='running'||locked.item.lease_token!==l.token||new Date(locked.item.lease_until)<=new Date())return null;const p=await active(locked.pkg.principal_id,c);if(!p||p.namespace!==locked.pkg.namespace){await c.query("UPDATE knowledge_import.items SET state='cancelled',reason='送信資格が停止されました。',lease_token=NULL,lease_until=NULL WHERE id=$1",[l.item.id]);return null;}assertImportScope(p,knowledgeSubmissionContentSchema.parse(locked.item.normalized),(locked.item.prepared as Prepared|null)?.value.context);return {...locked,p};}
  async function failure(l:NonNullable<Awaited<ReturnType<typeof lease>>>,e:unknown){await tx(async c=>{
   const v=await lock(c,l.item.id);if(!v||v.item.lease_token!==l.token||v.item.state!=='running')return;
   if(await recoverApplied(c,v.pkg,v.item))return;
-  const activeNow=await active(v.pkg.principal_id),bad=e instanceof SourceCheckError&&!e.retryable||e instanceof KnowledgeError&&e.status<500&&e.code!=='DUPLICATE_REVIEW_REQUIRED';
+  const activeNow=await active(v.pkg.principal_id,c),bad=e instanceof SourceCheckError&&!e.retryable||e instanceof KnowledgeError&&e.status<500&&e.code!=='DUPLICATE_REVIEW_REQUIRED';
   await c.query("UPDATE knowledge_import.items SET state=$2,reason=$3,next_attempt=$4,lease_token=NULL,lease_until=NULL,decision=CASE WHEN $5 THEN NULL ELSE decision END,current_attempt=CASE WHEN $5 THEN NULL ELSE current_attempt END,prepared=CASE WHEN $5 THEN NULL ELSE prepared END WHERE id=$1",[l.item.id,v.pkg.cancelled_at||!activeNow?'cancelled':bad?'needs-changes':'retry',errorReason(e),reviewRetryAt(l.item.attempts+1),e instanceof KnowledgeError&&e.code==='DUPLICATE_REVIEW_REQUIRED']);
  });}
  async function translationSnapshot(prepared:Prepared,c:PoolClient,lock=false){
@@ -162,7 +162,7 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
       if(d.guard){const pins=(await commonDuplicatePins(k,d.guard.record as Parameters<typeof commonDuplicatePins>[1])).map(r=>({id:r.id,revision:r.revision,digest:knowledgeDigest(r.content)}));if(knowledgeDigest(pins)!==knowledgeDigest(d.guard.common))throw new KnowledgeError('既存の知識が変わりました。重複を再確認します',409,'DUPLICATE_REVIEW_REQUIRED');}
      await verifyAcceptanceReferences(k,d.plan.references);await verifyAcceptedSemantics(k,d.plan);},
     retain:async(k,value)=>{await retainSourceAcquisitions(k,{actorId:importActor(current.p),requestId:l.item.id,result:value,proofs:d.proofs});},
-    prepare:async()=>{const p=await active(current.pkg.principal_id);if(!p||p.namespace!==current.pkg.namespace)throw new KnowledgeError('送信資格が停止されました',409,'CANCELLED');assertImportScope(p,knowledgeSubmissionContentSchema.parse(current.item.normalized),(current.item.prepared as Prepared).value.context);
+    prepare:async()=>{const p=await active(current.pkg.principal_id,c);if(!p||p.namespace!==current.pkg.namespace)throw new KnowledgeError('送信資格が停止されました',409,'CANCELLED');assertImportScope(p,knowledgeSubmissionContentSchema.parse(current.item.normalized),(current.item.prepared as Prepared).value.context);
      for(const ref of d.plan.references){const kind=ref.kind==='entity'?'entities':ref.kind==='record'?'records':ref.kind==='theme'?'themes':null;if(kind&&p.targets[kind]!=='*'&&!p.targets[kind].includes(ref.id))throw new KnowledgeError('再利用先が送信資格の許可範囲外です。',403,'TARGET_FORBIDDEN');}},
    });await options.afterKnowledgeCommit?.();await finishApplied(c,current.pkg,current.item,result);
   });

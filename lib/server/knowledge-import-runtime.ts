@@ -1,13 +1,15 @@
 import {knowledgeCapability} from "./knowledge-deployment";
+import {missionImportPrincipal} from './knowledge-mission-principal';
 import {lstat,readFile} from 'node:fs/promises';
 import path from 'node:path';
-import {Pool} from 'pg';
+import {Pool,type PoolClient} from 'pg';
 import {importConfigurationSchema,type ImportConfiguration} from '../domain/knowledge-import';
 import {KnowledgeError} from './knowledge-foundation';
 import {createKnowledgeImports} from './knowledge-import';
 import {createKnowledgeImportHttp} from './knowledge-import-http';
 import {memberConfig} from './member/config';
 import {knowledgeReadConfiguration} from './knowledge-read-runtime';
+export async function resolveImportPrincipal(pool:Pool,id:string,client?:PoolClient){return id.startsWith('mission:')?missionImportPrincipal(pool,id,client):(await loadImportConfiguration()).principals.find(p=>p.id===id)??null;}
 export async function loadImportConfiguration():Promise<ImportConfiguration>{
  const file=process.env.KNOWLEDGE_IMPORT_CONFIG;
  if(process.env.KNOWLEDGE_IMPORT_ENABLED!=='1'||!knowledgeCapability('import')||!file||!path.isAbsolute(file))throw new KnowledgeError('受付がありません',404,'NOT_FOUND');
@@ -22,6 +24,6 @@ export function knowledgeImportHttp(){
   if(service)return service;
   await loadImportConfiguration();
   const pool=new Pool({connectionString:member.databaseUrl,max:4}),knowledge=new Pool({connectionString:knowledgeReadConfiguration().databaseUrl,max:3});
-  service=createKnowledgeImports(pool,knowledge,async id=>(await loadImportConfiguration()).principals.find(p=>p.id===id)??null);return service;
+  service=createKnowledgeImports(pool,knowledge,(id,client)=>resolveImportPrincipal(pool,id,client));return service;
  });return api;
 }

@@ -1,4 +1,5 @@
 import {createMemberTranslationGeneration} from './translation-generation';
+import {createMemberKnowledgeMissions} from './knowledge-missions';
 import {createMemberKnowledgeOrganization} from "./knowledge-organization";
 import {createMemberKnowledgeIdentity} from "./knowledge-identity";
 import {createMemberCollectionReading} from "./knowledge-collection-reading";
@@ -51,6 +52,7 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
     translationGeneration:createMemberTranslationGeneration(pool,config.origin,owner),
     submissions: createMemberKnowledgeSubmissions(pool,config.origin,owner,dataset),
     collection: createKnowledgeCollection(pool,config.origin,owner),
+    missions:createMemberKnowledgeMissions(pool,config.origin,owner),
     collectionReading: createMemberCollectionReading(pool,config.origin,owner),
     knowledgeOrganization: createMemberKnowledgeOrganization(pool,config.origin,owner),
     knowledgeIdentity: createMemberKnowledgeIdentity(pool,config.origin,owner),

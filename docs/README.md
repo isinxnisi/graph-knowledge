@@ -1,3 +1,5 @@
+2026-11-06 R3a：テーマに沿う収集計画と期限付き配送APIを実装・検証中。[現行設計](design/KNOWLEDGE_MISSIONS_R3.md)／[運用と配送client](runbooks/KNOWLEDGE_MISSIONS.md)。R3はa（計画・配送）／b（予定実行の実接続）／c（差分更新・通し確認）、全体はR6まで。予定実行の接続やR3全体完了とは混同しない。
+
 2026-11-06 R2完了：通常Workerの自動適用・公開・分類指定API検索に加え、Chrome専用接続で実Googleセッションの運営集計と通常GraphをPC／390pxで確認。R2a・bを完了し、次はR3。全件AI完了を意味せず、R3〜R5の機能接続・β統合とR6の正式公開は残る。app `7dd6e0dc`／build `fbcBuqYLDLopQ63ecPKsr`は変更なし。[実画面と接続障害の経緯](verification/KNOWLEDGE_ORGANIZATION_R2B_20261106.md#追補chrome接続の再取得と実画面確認を完了)。以下は各時点の履歴。
 
 2026-11-06 R2b追補：β通常Workerの自動適用→既存publisherのready世代→localhost:3200／HTTPS βの公開APIと分類検索を確認。元Record本文は保持。ブラウザ再起動後もWindows側のURL安全判定で操作が停止したため、**PC／スマホの実画面確認だけ残る**。app／buildは `7dd6e0dc`／`fbcBuqYLDLopQ63ecPKsr`を継続。[通常公開の記録](verification/KNOWLEDGE_ORGANIZATION_R2B_20261106.md#追補通常workerの自動適用公開検索を確認)。

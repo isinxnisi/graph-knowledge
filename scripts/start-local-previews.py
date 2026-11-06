@@ -83,6 +83,16 @@ def beta_knowledge():
         if profile.get('origin') != expected['KNOWLEDGE_PUBLIC_ORIGIN'] or not profile.get('principals'):
             raise ValueError('Import origin differs from this existing beta')
         values.update(KNOWLEDGE_IMPORT_ENABLED='1', KNOWLEDGE_IMPORT_CONFIG=str(imports))
+    missions = STATE / 'beta-missions.json'
+    if missions.exists():
+        info = missions.lstat()
+        if missions.is_symlink() or info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) != 0o600 or info.st_size > 4000:
+            raise ValueError('Private mission configuration ownership mismatch')
+        config = json.loads(missions.read_text())
+        import re
+        if set(config) != {'workerId','tokenSha256'} or not re.fullmatch(r'[a-z0-9-]{1,80}',config['workerId']) or not re.fullmatch(r'[a-f0-9]{64}',config['tokenSha256']) or not imports.exists() or not review.exists():
+            raise ValueError('Missions require the existing import and review profiles')
+        values.update(KNOWLEDGE_MISSIONS_ENABLED='1', KNOWLEDGE_MISSIONS_CONFIG=str(missions))
     deployment = STATE / 'beta-deployment.json'
     if deployment.exists():
         info = deployment.lstat()

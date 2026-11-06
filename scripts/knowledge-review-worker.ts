@@ -1,6 +1,6 @@
 import {assertKnowledgeWorker,reviewMemberScope} from "../lib/server/knowledge-deployment";
 import {createKnowledgeImports} from '../lib/server/knowledge-import';
-import {loadImportConfiguration} from '../lib/server/knowledge-import-runtime';
+import {resolveImportPrincipal} from '../lib/server/knowledge-import-runtime';
 import {aiFailureDiagnostic} from '../lib/server/knowledge-ai-retry';
 import {createTranslationGeneration} from '../lib/server/knowledge-translation-generation';
 import {runKnowledgeModeration} from "../lib/server/member/knowledge-appeals";
@@ -34,7 +34,7 @@ async function main(){
  const acceptance=knowledge?createKnowledgeAcceptance(pool,knowledge):null;
  const queue=createReviewQueue(pool,acceptance?{duplicates:(value,key)=>acceptance.duplicates(value,key)}:{});
  const translations=knowledge?createTranslationGeneration(pool,knowledge):null;
- const imports=knowledge&&process.env.KNOWLEDGE_IMPORT_ENABLED==='1'?createKnowledgeImports(pool,knowledge,async id=>(await loadImportConfiguration()).principals.find(p=>p.id===id)??null):null;
+ const imports=knowledge&&process.env.KNOWLEDGE_IMPORT_ENABLED==='1'?createKnowledgeImports(pool,knowledge,(id,client)=>resolveImportPrincipal(pool,id,client)):null;
  let stopping=false;process.once('SIGTERM',()=>{stopping=true;});process.once('SIGINT',()=>{stopping=true;});
  try{
   if(process.argv.includes("--status")){console.log(JSON.stringify(await queue.usage(config)));return;}

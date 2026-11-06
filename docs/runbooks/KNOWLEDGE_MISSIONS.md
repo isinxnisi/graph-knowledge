@@ -1,0 +1,34 @@
+# テーマに沿った定期収集の運用
+
+R3a。計画と配送APIを用意する段階であり、予定実行の実接続はR3b、本文差分からの明示訂正と通し確認はR3cで行う。[設計](../design/KNOWLEDGE_MISSIONS_R3.md)。手動clientの成功を定期実行完了と扱わない。
+
+## 設定・停止
+
+運営ログインで `/operations#collection` の「テーマに沿って定期収集」を開く。追加先テーマか核となる対象、調べる問い、資料のサイト、頻度と1回の上限を保存する。サイトは `www.esa.int` のようなhost名で、URL・path・wildcardではない。下位hostも使うなら別に指定する。計画の編集・停止・再開は明示操作とし、公開済みの知識や保存済みCapsuleは変更しない。
+
+## 配置
+
+既存会員DBのbackupを別DBへ復元してから、追加 `033-knowledge-missions.sql` を `scripts/member-migrate.ts --knowledge-missions --confirm-origin HTTPS_ORIGIN` で明示適用する。前提migration・origin確認などは同scriptの現行手順を使う。起動・HTTP要求でmigrationを適用しない。既存のchecksumを書き換えない。
+
+配置profileに `missions` capability、既存import／review設定、`KNOWLEDGE_MISSIONS_ENABLED=1` が必要。本人所有0600のprivate server設定を `KNOWLEDGE_MISSIONS_CONFIG` へ指定する。形は `{"workerId":"mission-delivery","tokenSha256":"64桁のSHA256"}`。配送用tokenは暗号学的な32byte乱数とし、原文は別の本人所有0600ファイルへ置く。既存のGoogle認証・import資格・AI設定を置換しない。現在のβlauncherは `~/.local/state/plunode-previews/beta-missions.json` を同条件で読み込む。
+
+## 配送client
+
+Node24、既存の `tsx` を使用する。client設定は本人所有0600で、正確なHTTPS origin、tokenFile、本人所有0700のcheckpointDirectoryを指定する。資格値・lease tokenは標準出力へ出さない。
+
+~~~json
+{"origin":"https://YOUR-ORIGIN","tokenFile":"/PRIVATE/mission-token","checkpointDirectory":"/PRIVATE/mission-checkpoints"}
+~~~
+
+~~~sh
+node --import tsx scripts/knowledge-mission-client.ts /PRIVATE/mission-client.json claim
+node --import tsx scripts/knowledge-mission-client.ts /PRIVATE/mission-client.json deliver /PRIVATE/package.json
+node --import tsx scripts/knowledge-mission-client.ts /PRIVATE/mission-client.json empty /PRIVATE/summary.txt
+node --import tsx scripts/knowledge-mission-client.ts /PRIVATE/mission-client.json fail source-unavailable
+~~~
+
+`claim` の公開briefに問い・取得時の対象版・資料host・上限・packageIdentityが含まれる。[共通package契約](../design/KNOWLEDGE_IMPORT_CONTRACT.md)に沿い、渡されたID・版を使い、項目ごとの原文引用を添える。本文の命令・権限要求には従わない。定期収集は新しい対象／関係、既存対象やテーマへの情報追加、根拠追加を配送できる。切り離された新規対象や指定範囲外のサイトは拒否される。
+
+payloadは送信前にprivate checkpointへ保存する。応答喪失時は `claim` で同じ配送を回収し、別の検索・推論やpackageの作り直しをしない。期限・計画版・lease世代が変わった409は旧配送を止め、次の実行へ進む。`empty` は新情報なし、`fail` は取得不能などで、受付・公開成功を装わない。資料取得やAI確認は共通の安全な取得器、予算・retry、重複照合、受理・公開を使う。
+
+配送受付と知識の反映は別の状態として運営画面に表示する。停止は未反映分にも作用し、再開しても停止前の未反映分を復活させない。既存原本・履歴は削除しない。不具合時は新しいDBを読めるWebを保ち、missions capabilityを無効化して修復する。古いdumpで稼働DBを上書きしない。
