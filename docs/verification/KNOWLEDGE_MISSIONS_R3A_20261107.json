@@ -1,0 +1,72 @@
+{
+  "source": "a6b2e2eaf37a9d09876c7bde76e813ac24fb8aa7",
+  "build": "zLg4ZAkesFvHBwwc8A6H_",
+  "migration": {
+    "success": true,
+    "additionalMigrations": [
+      "033-knowledge-missions.sql"
+    ],
+    "memberTablesBefore": 69,
+    "knowledgeCoreTables": 3,
+    "oldRowsPreserved": true,
+    "knowledgeCoreUnchanged": true,
+    "knowledgeDatabaseNotMigrated": true,
+    "largeMutableCacheFullHashOmitted": true,
+    "existingChecksumsPreserved": true,
+    "repeatedUnchanged": true,
+    "ledgerBefore": 33,
+    "ledgerAfter": 34
+  },
+  "restoredDatabaseRehearsal": {
+    "success": true,
+    "backupRestored": true,
+    "existingTables": 69,
+    "addedTables": [
+      "knowledge_missions.commands",
+      "knowledge_missions.plans",
+      "knowledge_missions.runs",
+      "knowledge_missions.workers"
+    ],
+    "oldRowsPreserved": true,
+    "existingChecksumsPreserved": true,
+    "repeatedUnchanged": true,
+    "ledgerBefore": 33,
+    "ledgerAfter": 34,
+    "dumpSha256": "42697cde14e462b3d377c3b8472db1d5933df94ba50b6243cd66b6054bf5dddc",
+    "temporaryDatabaseRemoved": true
+  },
+  "backupDumpSha256": {
+    "knowledge.dump": "483167d9dd4de6d60c74d6aaedcb50736b0b8c23e9092bd57748a86f988b2b82",
+    "member.dump": "2e230c36f66acb5f22cbbb80b271fb710a00989f6b563ff5c4f33a0f835f078f"
+  },
+  "existingPrivateSettingsPreserved": true,
+  "newCredentialsOwnerOnly": true,
+  "scheduledTaskInstalled": false,
+  "fixtureTests": 52,
+  "existingImportTests": 37,
+  "typecheckAndLint": "passed before build; build also passed typecheck",
+  "buildNodeHeapMiB": 3072,
+  "buildSeconds": 115.1,
+  "windowsCMinimumDuringBuild": 14573309952,
+  "realChecks": [
+    "Google login",
+    "create/edit/discard/revisit plan",
+    "pause/resume",
+    "390px form and no horizontal overflow",
+    "unauthenticated operator 401",
+    "worker without token 401",
+    "credentialed worker receives no paused plan"
+  ],
+  "data": {
+    "plans": [
+      {
+        "revision": 5,
+        "state": "paused",
+        "title": "Webbの打上げと展開を追う",
+        "creator_recorded": true
+      }
+    ],
+    "runs": 0,
+    "workers": 1
+  }
+}

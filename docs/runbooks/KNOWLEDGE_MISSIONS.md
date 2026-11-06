@@ -1,6 +1,6 @@
 # テーマに沿った定期収集の運用
 
-R3a。計画と配送APIを用意する段階であり、予定実行の実接続はR3b、本文差分からの明示訂正と通し確認はR3cで行う。[設計](../design/KNOWLEDGE_MISSIONS_R3.md)。手動clientの成功を定期実行完了と扱わない。
+R3a。計画と配送APIをβへ接続済みであり、予定実行の実接続はR3b、本文差分からの明示訂正と通し確認はR3cで行う。[設計](../design/KNOWLEDGE_MISSIONS_R3.md)。手動clientの成功を定期実行完了と扱わない。
 
 ## 設定・停止
 
@@ -32,3 +32,7 @@ node --import tsx scripts/knowledge-mission-client.ts /PRIVATE/mission-client.js
 payloadは送信前にprivate checkpointへ保存する。応答喪失時は `claim` で同じ配送を回収し、別の検索・推論やpackageの作り直しをしない。期限・計画版・lease世代が変わった409は旧配送を止め、次の実行へ進む。`empty` は新情報なし、`fail` は取得不能などで、受付・公開成功を装わない。資料取得やAI確認は共通の安全な取得器、予算・retry、重複照合、受理・公開を使う。
 
 配送受付と知識の反映は別の状態として運営画面に表示する。停止は未反映分にも作用し、再開しても停止前の未反映分を復活させない。既存原本・履歴は削除しない。不具合時は新しいDBを読めるWebを保ち、missions capabilityを無効化して修復する。古いdumpで稼働DBを上書きしない。
+
+## 2026-11-07 βの現在地
+
+app `a6b2e2ea`／build `zLg4ZAkesFvHBwwc8A6H_`、会員033追加済み。[配置・保全・実操作](../verification/KNOWLEDGE_MISSIONS_R3A_20261107.md)。既存launcherでWebと5 Workerを再開する。配送元の最終接続は手動clientの確認で、予定実行は未接続。Webbの計画は停止状態で保存した。再起動でmigration・資格・利用枠を作り直さない。

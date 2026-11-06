@@ -1,3 +1,15 @@
+# 2026-11-07 現在地：R3a完了、次はR3b
+
+**R3a完了、次はR3b｜R3はcまで｜全体はR6まで。** [今回の検証と再開](../verification/KNOWLEDGE_MISSIONS_R3A_20261107.md)を最優先する。app `a6b2e2eaf37a9d09876c7bde76e813ac24fb8aa7`／build `zLg4ZAkesFvHBwwc8A6H_`をmain／3200／HTTPS βへ配置済み。会員033まで、知識DBの追加なし。既存認証・12 private設定を維持し、missions capabilityと配送専用資格を追加した。新たな予定実行はまだ作っていない。
+
+次はR3b：ChatGPTの実際の予定実行から、private clientのclaim→資料探索→配送へ接続する。API直送を優先し、Issueは同じpackageの代替配送。別のURL探索API・有料AIを必須にしない。実行上限後の再開でnextDueが取得可能時刻より前に見える点もR3bで揃える。R3cには本文hash差分・明示訂正・入力拡充（EntityなしThemeへの背景収集を含む）・実資料の通し確認を残す。
+
+実Googleで保存・編集・破棄・再訪・停止／再開、PC／390pxと専用資格のHTTPS接続を確認した。Webbの計画は版5で停止中、実行0件。手動接続の最終時刻を定期実行の成功と扱わない。52件＋既存取込37件と復元検証を理由なく反復せず、必要な実接続を確認する。現在の知識DBキャッシュをstring_aggで全文連結する監査は約1GiBのPostgreSQL上限に達するため使わない。原本・対象DBを中心に有限の保全確認を行う。
+
+通常再開はmainの既存launcher。private資格は `~/.local/state/plunode-previews/beta-missions-client.json`、実行checkpointは同stateの `beta-missions-checkpoints/`。tokenを表示・Issueへ転載しない。Windows Cの実空きを確認し、buildはNode heap3072MiBと10GiB停止監視を使う。正式VPS・3276・共有Kevは未変更。
+
+# 以下は再起動直後の履歴
+
 # 2026-11-07 現在地：R3a実装済み・β配置待ち、再起動から復帰
 
 現在地を先に報告する：**R3a実装・対象テスト済み、β配置待ち｜R3はcまで｜全体はR6まで。** [復帰記録と再開](../verification/REBOOT_RECOVERY_20261107.md)を最優先する。作業branchのR3a sourceは `a5ae031f089ab4c4e64660245cf48d1971050703`。C空き0／WSL readonlyで公開buildが中断し、main統合・033の稼働DB適用・β反映は未実施。アプリは以前の `7dd6e0dc`／build `fbcBuqYLDLopQ63ecPKsr`のWebと5 Workerを復帰済み。
