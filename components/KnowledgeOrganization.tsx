@@ -26,6 +26,15 @@ export function KnowledgeOrganization({userId,authorized,registerGuard}:{userId:
  function prepare(){setDone("");try{const target=choice==="remove"?null:choice==="new"?{id:"concept:"+crypto.randomUUID(),revision:1,label,definition}:concept;if(target===undefined)return;setIntent(knowledgeCommandSchema.parse({action:"set-mappings",requestId:crypto.randomUUID(),entries:selected.map(r=>({recordId:r.id,recordRevision:r.revision,expectedMappingRevision:r.mappingRevision})),concept:target,reason}) as Batch);setError("");}catch{setError("記録・分類の名前と定義・整理の理由を確認してください。");}}
  async function send(){if(!authorized||!intent||sending.current)return;sending.current=true;setBusy(true);setError("");try{const result=await memberRequest("/api/site-operations/knowledge-organization",z.object({mappings:z.array(z.object({id:z.string(),revision:z.number()}))}),{method:"POST",body:intent,user:userId});if(belongs()){setDone(result.mappings.length+"件の意味対応を保存しました。検索・公開表示には通常の公開処理後に反映されます。");setIntent(null);setSelected([]);setUnknown(false);setChoice("");setLabel("");setDefinition("");setReason("");setTick(n=>n+1);}}catch(e){if(belongs()){const ambiguous=!(e instanceof MemberClientError)||e.status>=500;setUnknown(ambiguous);setError(ambiguous?"結果を確認できません。同じ操作を再送して確認してください。":e instanceof MemberClientError&&e.status===409?"選択後に内容または意味対応が変わりました。今回は全件適用していません。閉じて再取得し、選び直してください。":"適用できません。入力と現在の権限を確認してください。");}}finally{sending.current=false;if(belongs())setBusy(false);}}
  return <section hidden={!authorized} className={css.root} aria-label="知識の意味整理"><p className={css.intro}>具体的な言葉と根拠を残して、検索でまとめられる意味を付けます。通常の登録・公開はこの整理を待ちません。</p>
+ {page?.patrol&&<details className={css.patrol}>
+  <summary>自動巡回<span>新旧の登録データ · 整理待ち {page.patrol.origins.reduce((n,o)=>n+o.pending,0)}件</span></summary>
+  <p>巡回と整理候補の確認は別の処理です。現在は巡回・差分追従まで接続済みで、候補の確認・自動適用は準備中です。</p>
+  {page.patrol.origins.map(o=><p key={o.origin}>
+   <strong>{o.origin==='common'?'共通原記録':'従来のKG'}</strong> · {o.phase==='idle'?'巡回済み':o.phase==='scanning'?'対象を列挙中':'整理対象を記録中'}
+   {' · '}{o.scanned} / {o.phase==='scanning'?'取得中':o.total}件{' · '}整理待ち {o.pending}件
+   {o.errorCode&&' · 一時停止中。自動で再試行します。'}
+  </p>)}
+ </details>}
  {done&&<p ref={notice} tabIndex={-1} role="status" className={css.notice}>{done}</p>}
  <form className={css.filters} onSubmit={e=>{e.preventDefault();setSearch(query);setAfter(null);}}><label className={css.query}>知識・関係・対象の名前<input value={query} onChange={e=>setQuery(e.target.value)} maxLength={200} placeholder="例：Webb、打ち上げ、制作"/></label><label>意味対応<select value={filter} onChange={e=>{setFilter(e.target.value);setAfter(null);}}><option value="all">すべて</option><option value="unmapped">未整理・解除済み</option><option value="mapped">現在版に対応済み</option><option value="stale">内容の訂正後・要見直し</option></select></label><button>検索</button><button type="button" onClick={()=>{setError("");setTick(n=>n+1);}}>再取得</button></form>
  {error&&!intent&&<p role="alert">{error}</p>}

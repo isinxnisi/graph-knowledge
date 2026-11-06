@@ -3,6 +3,7 @@ import {Pool} from "pg";
 import {knowledgeCommandSchema} from "../../domain/knowledge-foundation";
 import {createKnowledgeFoundationService} from "../knowledge-foundation";
 import {createKnowledgeOrganization} from "../knowledge-organization";
+import {createKnowledgePatrol} from "../knowledge-patrol";
 import {knowledgeReadConfiguration} from "../knowledge-read-runtime";
 import {MemberError,assertMemberOrigin,memberInput,memberJson} from "./http";
 import {memberTransaction} from "./operations";
@@ -19,7 +20,14 @@ export function createMemberKnowledgeOrganization(pool:Pool,origin:string,owner:
   });
  }
  return {
-  list:(r:Request)=>operator(r,async(_id,k)=>memberJson(await createKnowledgeOrganization(k).list(Object.fromEntries(new URL(r.url).searchParams)))),
+  list:(r:Request)=>operator(r,async(_id,k)=>{
+   const page=await createKnowledgeOrganization(k).list(Object.fromEntries(new URL(r.url).searchParams));
+   // Operational summary only, behind the existing operator/session boundary.
+   // Do not expose unpublished target IDs or depend on opening this page to run.
+   const patrol=process.env.KNOWLEDGE_PATROL_ENABLED==='1'&&knowledgeCapability('patrol',origin)
+    ?await createKnowledgePatrol(k,async()=>{throw Error('Read-only status');}).status():undefined;
+   return memberJson({...page,...(patrol?{patrol}:{})});
+  }),
   async act(r:Request){assertMemberOrigin(r,origin);const cmd=await memberInput(r,knowledgeCommandSchema,32000);if(cmd.action!=="set-mappings")throw new MemberError(400,"INVALID_ARGUMENT");return operator(r,async(id,k)=>memberJson(await createKnowledgeFoundationService(k).execute({kind:"operator",id},cmd)));}
  };
 }

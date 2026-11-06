@@ -92,6 +92,8 @@ def beta_knowledge():
         if profile.get('environment') != 'beta' or profile.get('origin') != expected['KNOWLEDGE_PUBLIC_ORIGIN'] or profile.get('reviewMembers') != {'mode':'allowlist','ids':users}:
             raise ValueError('Beta deployment must preserve the existing admission list')
         values['KNOWLEDGE_DEPLOYMENT_CONFIG'] = str(deployment)
+        if 'patrol' in profile.get('capabilities', []):
+            values['KNOWLEDGE_PATROL_ENABLED'] = '1'
     return {**values,'THEME_WORKBENCH_ENABLED':'0'}
 
 
@@ -171,6 +173,21 @@ def start_knowledge_reader(node, env):
 
 
 
+def start_knowledge_patrol(node, env):
+    if env.get('KNOWLEDGE_PATROL_ENABLED') != '1': return
+    pidfile = STATE / 'knowledge-patrol-worker.pid'
+    if pidfile.exists():
+        proc = Path('/proc') / pidfile.read_text().strip()
+        if (proc/'cmdline').exists() and (proc/'cmdline').read_bytes():
+            if (proc/'cwd').resolve() != ROOT or b'scripts/knowledge-patrol-worker.ts' not in (proc/'cmdline').read_bytes():
+                raise ValueError('Patrol PID belongs to another process')
+            return
+    with (STATE/'knowledge-patrol-worker.log').open('ab') as log:
+        os.chmod(STATE/'knowledge-patrol-worker.log', 0o600)
+        child = subprocess.Popen([node, '--import', 'tsx', 'scripts/knowledge-patrol-worker.ts'], cwd=ROOT, env=env, stdin=subprocess.DEVNULL, stdout=log, stderr=log, start_new_session=True)
+    pidfile.write_text(str(child.pid)); pidfile.chmod(0o600)
+
+
 def start(name, node):
     port, args = SERVICES[name]
     if listening(port):
@@ -204,6 +221,7 @@ def start(name, node):
         start_knowledge_reviewer(node, publisher_env)
         start_knowledge_collector(node, publisher_env)
         start_knowledge_reader(node, publisher_env)
+        start_knowledge_patrol(node, {**publisher_env, **film, 'GRAPH_DATASET':'public-kg'})
     log = STATE / f'{name}.log'
     pidfile = STATE / f'{name}.pid'
     pid = os.fork()

@@ -3,7 +3,7 @@ import path from "node:path";
 import {z} from "zod";
 import {KnowledgeError} from "./knowledge-foundation";
 
-export const knowledgeCapabilities = ["public-read","submissions","review","publish","translation","import","operator","collection","collection-reading","review-worker","publisher","collector","reader"] as const;
+export const knowledgeCapabilities = ["public-read","submissions","review","publish","translation","import","operator","collection","collection-reading","review-worker","publisher","collector","reader","patrol"] as const;
 export type KnowledgeCapability = typeof knowledgeCapabilities[number];
 export const knowledgeHttpsOrigin = z.string().refine(value => {
   try { const u=new URL(value); return u.protocol==="https:" && u.origin===value && !u.username && !u.password; } catch { return false; }
@@ -69,7 +69,7 @@ export function validateKnowledgeDatabase(profile:KnowledgeDeployment,connection
     return u.toString();
   }catch{throw unavailable();}
 }
-export function assertKnowledgeWorker(capability:"review-worker"|"publisher"|"collector"|"reader",origin:string){
+export function assertKnowledgeWorker(capability:"review-worker"|"publisher"|"collector"|"reader"|"patrol",origin:string){
   assertKnowledgeCapability(capability,origin);
 }
 
