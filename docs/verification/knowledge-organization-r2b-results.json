@@ -1,0 +1,75 @@
+{
+  "tests": {
+    "passed": 91,
+    "files": 7,
+    "newBoundaryCases": 10
+  },
+  "migrationRehearsal": {
+    "backupRestored": true,
+    "oldKnowledgeTables": 26,
+    "oldMemberTables": 69,
+    "oldRowsPreserved": true,
+    "existingChecksumsPreserved": true,
+    "repeatedUnchanged": true,
+    "knowledgeMigration": "009-organization-automation.sql",
+    "knowledgeLedger": 8,
+    "memberLedger": 33
+  },
+  "realAI": {
+    "model": "gemini-3.1-flash-lite",
+    "isolatedKnowledge": true,
+    "centralUsageLedger": true,
+    "results": [
+      {
+        "label": "real-public-relation",
+        "state": "applied",
+        "stage": "check",
+        "next_attempt": "2026-11-06T05:17:56.132Z",
+        "reason": "確認した整理を自動反映しました",
+        "sends": 2
+      },
+      {
+        "label": "real-nasa-identity",
+        "state": "applied",
+        "stage": "check",
+        "next_attempt": "2026-11-06T05:18:03.838Z",
+        "reason": "確認した整理を自動反映しました",
+        "sends": 2
+      },
+      {
+        "label": "same-alias-different-telescope",
+        "state": "rejected",
+        "stage": "propose",
+        "next_attempt": "2026-11-06T05:18:07.515Z",
+        "reason": "左側の「James Webb Space Telescope」と右側の「Hubble Space Telescope」は、提供された記述において異なる望遠鏡であると明示されており、同一のエンティティではありません。",
+        "sends": 1
+      },
+      {
+        "label": "real-legacy-canonical-capture",
+        "expected": "applied",
+        "state": "applied",
+        "stage": "check",
+        "next_attempt": "2026-11-06T05:20:17.855Z",
+        "reason": "確認した整理を自動反映しました",
+        "sends": 2
+      }
+    ],
+    "attempts": [
+      {
+        "id": "cbab739b-477f-46d0-b104-7c7a2cb70061",
+        "stage": "propose",
+        "model": "gemini-3.1-flash-lite",
+        "state": "received",
+        "wire_hash": "f0cca2c88b6430fa923d5cfbd0b74e2d1d5d60806ff1e10cddb52f2a1b99442f"
+      },
+      {
+        "id": "a3644a9f-1961-4c1f-aacf-1085475bef50",
+        "stage": "check",
+        "model": "gemini-3.1-flash-lite",
+        "state": "received",
+        "wire_hash": "fa8342498d78c3498023680a0fc133cf406561ec8e82014e1398e7919701db7e"
+      }
+    ],
+    "note": "最終4例の成立は7送信（通常意味2、同一対象2、別対象1、旧KG2）。最初の3例は前の独立DBで確認済みの結果を保持し、残る旧KG例だけ再確認した。attemptsは最後の旧KG再確認分のみ。初期の指示調整で保留した結果もあり、自動適用されたとは数えない。"
+  }
+}
