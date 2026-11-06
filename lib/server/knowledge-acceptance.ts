@@ -1,3 +1,4 @@
+import {knowledgeCapability,deploymentMemberAllowed,reviewMemberScope} from "./knowledge-deployment";
 import {verifyTranslationReviewContext} from "./knowledge-translation-context";
 import {GEMINI_TRANSLATION_POLICY} from "./gemini-knowledge-review";
 import {knownSourceDocuments,retainSourceAcquisitions} from './knowledge-source-registry';
@@ -22,7 +23,7 @@ import type {ReviewConfig} from "./knowledge-review-queue";
 import {captureDuplicates,commonDuplicatePins,duplicateMatch,type DuplicateCapture,type DuplicateReview} from './knowledge-duplicates';
 import {mergeDuplicateEvidence} from '../domain/knowledge-duplicate';
 
-export const acceptanceEnabled=()=>process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED==='1';
+export const acceptanceEnabled=()=>process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED==='1'&&knowledgeCapability('publish');
 export async function ensureAcceptanceSchema(pool:Pool){
  await ensurePublicationContributorSchema(pool);
  const referenceChecksum=createHash('sha256').update(await readFile(path.join(process.cwd(),'db/member/023-knowledge-submission-contexts.sql'))).digest('hex');
@@ -176,7 +177,7 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
   const c=await pool.connect();try{await c.query('BEGIN');const active=(await c.query('SELECT active FROM "user" WHERE id=$1 FOR UPDATE',[seed.owner_id])).rows[0]?.active;
    const s=(await c.query('SELECT s.*,r.content,r.digest,r.source_capsule,r.reference_context FROM member_knowledge.submissions s JOIN member_knowledge.submission_revisions r ON r.submission_id=s.id AND r.revision=s.current_revision WHERE s.id=$1 FOR UPDATE OF s',[seed.id])).rows[0];
    const j=(await c.query('SELECT * FROM member_knowledge.review_jobs WHERE id=$1 FOR UPDATE',[jobId])).rows[0];
-   if(!active||!s||!j||s.state!=='queued'||s.current_revision!==j.revision||s.digest!==j.submitted_digest){await c.query('ROLLBACK');return null;}
+   if(!active||!deploymentMemberAllowed(seed.owner_id)||!knowledgeCapability('publish')||!s||!j||s.state!=='queued'||s.current_revision!==j.revision||s.digest!==j.submitted_digest){await c.query('ROLLBACK');return null;}
    const result=await action(c,s,j);await c.query('COMMIT');return result;
   }catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}
  }
@@ -188,6 +189,9 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
   const c=await pool.connect();try{await c.query('BEGIN');await c.query("UPDATE member_knowledge.publication_decisions SET state='published',result=$2,published_at=clock_timestamp(),reason=$3 WHERE id=$1",[decision.id,result,reason]);await c.query("UPDATE member_knowledge.review_jobs SET state='accepted',reason=$2,lease_token=NULL,lease_until=NULL WHERE id=$1 AND state='accepted'",[decision.job_id,reason]);await finalizePublicationContributor(c,decision.id,result as {id:string;revision:number});await c.query('COMMIT');}catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}
  }
  async function deliver(decision:QueryResultRow,prepare:(result:unknown)=>Promise<void>=async()=>{}){
+  if(!acceptanceEnabled())return;
+  const owner=(await pool.query("SELECT s.owner_id FROM member_knowledge.review_jobs j JOIN member_knowledge.submissions s ON s.id=j.submission_id WHERE j.id=$1",[decision.job_id])).rows[0];
+  if(owner&&!deploymentMemberAllowed(owner.owner_id))return;
   await verifyLegacyCommand(decision.command);
   const result=await foundation.execute({kind:'submission',id:'member-submission-v1'},decision.command,{verify:async c=>{
    if(decision.command.action==='accept-translation'){
@@ -227,6 +231,7 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
   }catch(e){await c.query('ROLLBACK');return {reason:e instanceof SourceCheckError||e instanceof KnowledgeError&&e.status<500?e.message:'取得元の公開状態を確認できません。時間をおいて再試行します。',retryable:e instanceof KnowledgeError&&e.status<500?false:!(e instanceof SourceCheckError)||e.retryable};}finally{c.release();}
  },
  async run(config:ReviewConfig){
+   if(!acceptanceEnabled())return false;const scope=reviewMemberScope(config);
   await ensure();
   const indexed=(await pool.query("SELECT d.id,d.job_id,d.result,d.command FROM member_knowledge.publication_decisions d JOIN member_knowledge.review_jobs j ON j.id=d.job_id WHERE d.state='published' AND j.state='accepted' LIMIT 20")).rows;
   for(const d of indexed){
@@ -239,7 +244,7 @@ export function createKnowledgeAcceptance(pool:Pool,knowledge:Pool,hooks:{afterD
    try{await deliver(pending);}catch(e){const blocked=e instanceof SourceCheckError||e instanceof KnowledgeError&&e.status<500;await pool.query("UPDATE member_knowledge.publication_decisions SET state=$2,attempts=attempts+1,reason=$3,not_before=clock_timestamp()+interval '120 seconds' WHERE id=$1",[pending.id,blocked?'blocked':'pending',blocked?(e as Error).message:'公開処理との接続を再試行しています。受理内容は保存されています。']);if(blocked)await pool.query("UPDATE member_knowledge.review_jobs SET state='needs-changes',reason=$2 WHERE id=$1 AND state='accepted'",[pending.job_id,(e as Error).message]);}
    return true;
   }
-  const candidates=(await pool.query(`SELECT j.id FROM member_knowledge.review_jobs j LEFT JOIN member_knowledge.source_checks s ON s.job_id=j.id JOIN member_knowledge.submissions p ON p.id=j.submission_id WHERE j.consent_version=$1 AND p.owner_id=ANY($2::uuid[]) AND (j.state='reviewed' OR j.state='source-retry' AND s.not_before<=clock_timestamp() OR j.state='verifying' AND s.lease_until<clock_timestamp()) ORDER BY j.created_at LIMIT 8`,[PUBLICATION_CONSENT_VERSION,config.allowedUsers])).rows;
+  const candidates=(await pool.query(`SELECT j.id FROM member_knowledge.review_jobs j LEFT JOIN member_knowledge.source_checks s ON s.job_id=j.id JOIN member_knowledge.submissions p ON p.id=j.submission_id WHERE j.consent_version=$1 AND ($2::uuid[] IS NULL OR p.owner_id=ANY($2::uuid[])) AND (j.state='reviewed' OR j.state='source-retry' AND s.not_before<=clock_timestamp() OR j.state='verifying' AND s.lease_until<clock_timestamp()) ORDER BY j.created_at LIMIT 8`,[PUBLICATION_CONSENT_VERSION,scope])).rows;
   for(const candidate of candidates){
    const token=randomUUID();const lease=await locked(candidate.id,async(c,s,j)=>{
     if(!['reviewed','source-retry','verifying'].includes(j.state)||j.consent_version!==PUBLICATION_CONSENT_VERSION||!j.operator_confirmation_id&&(j.result?.suitability!=='legitimate'||j.result?.support!=='supported'))return null;

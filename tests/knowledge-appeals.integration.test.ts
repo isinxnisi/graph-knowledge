@@ -20,7 +20,7 @@ import {knowledgeSubmissionContentSchema} from "../lib/domain/knowledge-submissi
 import {createKnowledgeFoundationService,ensureKnowledgeFoundationSchema,knowledgeDigest} from "../lib/server/knowledge-foundation";
 import {createKnowledgeAcceptance} from "../lib/server/knowledge-acceptance";
 import {runKnowledgeModeration} from "../lib/server/member/knowledge-appeals";
-import {SourceCheckError} from "../lib/server/knowledge-source-verification";
+import {SourceCheckError,matchSourceExcerpt} from "../lib/server/knowledge-source-verification";
 import type {ReviewConfig} from "../lib/server/knowledge-review-queue";
 const origin="http://127.0.0.1:3221",endpoint="/api/member/knowledge-submissions/appeals";
 const request=(path:string,cookie="",method="GET",body?:unknown,headers:Record<string,string>={})=>new Request(origin+path,{method,headers:{cookie,origin,"content-type":"application/json",...headers},...(body===undefined?{}:{body:JSON.stringify(body)})});
@@ -99,7 +99,7 @@ describe('receipt-bound appeals, real PostgreSQL and OIDC',()=>{
  });
  it('confirmed content can publish only after source and reference checks, then stops and restores by the same case',async()=>{
   const x=await open('declined');await inspect(x.appeal.id);expect((await op(action(x.appeal.id,1,'confirm-content'))).status).toBe(200);
-  const verify=vi.fn(async()=>({url:'https://example.org/source',bodySha256:'proof',textSha256:'proof',excerptSha256:'proof',extractor:'fixture',checkedAt:new Date().toISOString()}));await createKnowledgeAcceptance(pool(),knowledge,{},verify).run(cfg());
+  const verify=vi.fn(async(url:string,excerpt:string)=>matchSourceExcerpt({url,type:'text/html',body:Buffer.from('<article>'+excerpt+'</article>')},excerpt));await createKnowledgeAcceptance(pool(),knowledge,{},verify).run(cfg());
   const d=(await pool().query('SELECT * FROM member_knowledge.publication_decisions WHERE job_id=$1',[x.job])).rows[0];expect(d.state).toBe('published');const record=d.command.record.id;
   let detail=await inspect(x.appeal.id);const hide=action(x.appeal.id,detail.case.revision,'hide',{statusRevision:detail.current.publication.status_revision});expect((await op(hide)).status).toBe(200);expect((await op(hide)).status).toBe(200);expect((await knowledge.query("SELECT visibility FROM knowledge75.objects WHERE kind='record' AND id=$1",[record])).rows[0].visibility).toBe('public');
   const delivery=(await pool().query("SELECT * FROM member_knowledge.moderation_decisions WHERE state='pending' ORDER BY created_at LIMIT 1")).rows[0];const applied=await foundation.execute({kind:'operator',id:'site-knowledge-operations'},delivery.command);await pool().query("UPDATE member_knowledge.moderation_decisions SET state='applied',result=$2 WHERE id=$1",[delivery.id,applied]);expect(await runKnowledgeModeration(pool(),knowledge)).toBe(true);expect((await pool().query('SELECT notified_at FROM member_knowledge.moderation_decisions WHERE id=$1',[delivery.id])).rows[0].notified_at).toBeTruthy();await expect(foundation.get({kind:'reader',id:'reader'},'record',record)).rejects.toThrow();detail=await inspect(x.appeal.id);expect(detail.moderation.state).toBe('applied');expect(detail.current.publication.visibility).toBe('hidden');

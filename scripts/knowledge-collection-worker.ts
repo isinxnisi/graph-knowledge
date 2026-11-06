@@ -1,3 +1,4 @@
+import {assertKnowledgeWorker,knowledgeHttpsOrigin} from "../lib/server/knowledge-deployment";
 import {lstat,readFile,mkdir,writeFile,rename,unlink} from 'node:fs/promises';
 import path from 'node:path';
 import {randomUUID,createHash} from 'node:crypto';
@@ -5,7 +6,7 @@ import {pathToFileURL} from 'node:url';
 import {z} from 'zod';
 import {collectionLeaseSchema,collectionWorkerCommandSchema,collectionDocumentSchema,type CollectionLease} from '../lib/domain/knowledge-collection';
 import {publicSourceDocument,normalizeSourceText,sourceText,SourceCheckError} from '../lib/server/knowledge-source-verification';
-export const collectionClientConfig=z.strictObject({origin:z.literal('https://graph-beta.isinxnisi.com'),token:z.string().regex(/^[a-f0-9]{64}$/),stateDirectory:z.string()});
+export const collectionClientConfig=z.strictObject({origin:knowledgeHttpsOrigin,token:z.string().regex(/^[a-f0-9]{64}$/),stateDirectory:z.string()});
 const digest=(s:string|Buffer)=>createHash('sha256').update(s).digest('hex');
 const reply=z.object({result:z.object({lease:collectionLeaseSchema.nullable().optional(),state:z.string().optional()}),replayed:z.boolean()});
 export async function captureCollectionSource(lease:CollectionLease){
@@ -43,10 +44,11 @@ export function createCollectionWorker(stateDirectory:string,send:(body:z.infer<
 async function main(){
  const index=process.argv.indexOf('--config');if(index<0||!process.argv[index+1]||!path.isAbsolute(process.argv[index+1]))throw Error('Use --config with an absolute private file');
  const config=collectionClientConfig.parse(JSON.parse(await privateCollectionFile(process.argv[index+1],8000)));
+ assertKnowledgeWorker("collector",config.origin);
  if(!path.isAbsolute(config.stateDirectory))throw Error('Absolute private state directory required');
  await mkdir(config.stateDirectory,{recursive:true,mode:0o700});
  const worker=createCollectionWorker(config.stateDirectory,async body=>{
-  const r=await fetch(config.origin+'/api/knowledge-collection/worker',{method:'POST',headers:{authorization:'Bearer '+config.token,'content-type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(30000),redirect:'error'});
+  assertKnowledgeWorker("collector",config.origin);const r=await fetch(config.origin+'/api/knowledge-collection/worker',{method:'POST',headers:{authorization:'Bearer '+config.token,'content-type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(30000),redirect:'error'});
   if(!r.ok){const e=Object.assign(new Error('Collection API unavailable'),{status:r.status});throw e;}return r.json();
  });
  let stopping=false;process.once('SIGTERM',()=>{stopping=true;});process.once('SIGINT',()=>{stopping=true;});

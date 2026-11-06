@@ -1,3 +1,4 @@
+import {knowledgeCapability,knowledgeDeployment} from "../knowledge-deployment";
 import {createHash,randomUUID} from "node:crypto";
 import {readFile} from "node:fs/promises";
 import path from "node:path";
@@ -40,14 +41,14 @@ export async function readAppeal(c:PoolClient,id:string){
 export function createKnowledgeAppeals(pool:Pool,origin:string,owner:(r:Request)=>Promise<{id:string;sessionId:string}>,knowledgePool?:Pool){
  let ready:Promise<void>|undefined,kpool=knowledgePool;
  const ensure=()=>ready??=ensureKnowledgeAppeals(pool).catch(e=>{ready=undefined;throw e;});
- const enabled=()=>{if(process.env.KNOWLEDGE_SUBMISSIONS_ENABLED!=='1')throw new MemberError(404,'NOT_FOUND');};
+ const enabled=()=>{if(process.env.KNOWLEDGE_SUBMISSIONS_ENABLED!=='1'||!knowledgeCapability('submissions',origin))throw new MemberError(404,'NOT_FOUND');};
  const knowledge=()=>kpool??=new Pool({connectionString:knowledgeReadConfiguration().databaseUrl,max:2,statement_timeout:15000});
  async function operator(c:PoolClient,u:{id:string;sessionId:string}){
-  if(!isSiteOperator(u.id))throw new MemberError(403,'OPERATOR_REQUIRED');
+  if(!knowledgeCapability('operator',origin))throw new MemberError(404,'NOT_FOUND');if(!isSiteOperator(u.id))throw new MemberError(403,'OPERATOR_REQUIRED');
   if(!(await c.query('SELECT 1 FROM "user" u JOIN session s ON s."userId"=u.id WHERE u.id=$1 AND u.active AND s.id=$2 AND s."expiresAt">clock_timestamp() FOR SHARE OF u,s',[u.id,u.sessionId])).rowCount)throw new MemberError(401,'UNAUTHENTICATED');
  }
  async function access(request:Request,run:(c:PoolClient,u:{id:string;sessionId:string})=>Promise<unknown>,caseId?:string){
-  enabled();await ensure();const u=await owner(request);if(!isSiteOperator(u.id))throw new MemberError(403,'OPERATOR_REQUIRED');
+  enabled();await ensure();const u=await owner(request);if(!knowledgeCapability('operator',origin))throw new MemberError(404,'NOT_FOUND');if(!isSiteOperator(u.id))throw new MemberError(403,'OPERATOR_REQUIRED');
   return memberTransaction(pool,async c=>{
    if(caseId){const target=(await c.query('SELECT s.owner_id FROM member_knowledge.appeals a JOIN member_knowledge.review_jobs j ON j.id=a.job_id JOIN member_knowledge.submissions s ON s.id=j.submission_id WHERE a.id=$1',[caseId])).rows[0];
     // Stable user -> submission -> job -> appeal ordering, including self cases.
@@ -144,6 +145,7 @@ export function createKnowledgeAppeals(pool:Pool,origin:string,owner:(r:Request)
 
 /** Durable public visibility delivery. Replays the same command after any crash. */
 export async function runKnowledgeModeration(pool:Pool,knowledge:Pool){
+ if(knowledgeDeployment()&&(!knowledgeCapability("operator")||!knowledgeCapability("review-worker")))return false;
  await ensureKnowledgeAppeals(pool);
  const d=(await pool.query("SELECT * FROM member_knowledge.moderation_decisions WHERE (state='pending' AND not_before<=clock_timestamp()) OR (state IN ('applied','blocked') AND notified_at IS NULL) ORDER BY created_at,id LIMIT 1")).rows[0];if(!d)return false;
  let state=d.state==='pending'?'applied':d.state,reason=d.reason,result:unknown=d.result;

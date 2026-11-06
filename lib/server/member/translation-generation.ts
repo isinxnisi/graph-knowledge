@@ -1,3 +1,4 @@
+import {knowledgeCapability} from "../knowledge-deployment";
 import type {Pool} from 'pg';
 import {translationGenerationInputSchema,translationGenerationDisclosure} from '../../domain/knowledge-translation-generation';
 import {createTranslationGeneration} from '../knowledge-translation-generation';
@@ -10,7 +11,7 @@ export function createMemberTranslationGeneration(pool:Pool,origin:string,owner:
  const service=()=>queue??=createTranslationGeneration(pool,new PgPool({connectionString:knowledgeReadConfiguration().databaseUrl,max:2,options:'-c default_transaction_read_only=on'}));
  return {
   queue:service,
-  async command(request:Request){assertMemberOrigin(request,origin);if(!request.headers.has('x-member-user'))throw new MemberError(400,'INVALID_ARGUMENT');const user=await owner(request);if(!reviewEnabledFor(user.id)||process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED!=='1')throw new MemberError(404,'NOT_FOUND');
+  async command(request:Request){assertMemberOrigin(request,origin);if(!request.headers.has('x-member-user'))throw new MemberError(400,'INVALID_ARGUMENT');const user=await owner(request);if(!knowledgeCapability("translation",origin)||!reviewEnabledFor(user.id)||process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED!=='1')throw new MemberError(404,'NOT_FOUND');
    const v=await memberInput(request,translationGenerationInputSchema);
    const status=v.action==='request'?await service().request(user.id,v.target,v.language,v.profileId??''):v.action==='cancel'?await service().cancel(user.id,v.target,v.language):await service().status(user.id,v.target,v.language);
    return memberJson({generation:status,disclosure:translationGenerationDisclosure});

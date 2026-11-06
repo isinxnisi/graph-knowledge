@@ -1,3 +1,4 @@
+import {assertKnowledgeCapability} from "./knowledge-deployment";
 import {readTranslationGenerationInput} from "./knowledge-translation-context";
 import type {KnowledgeTextTarget} from "../domain/knowledge-translation";
 import { Pool } from "pg";
@@ -10,18 +11,27 @@ import path from "node:path";
 import { createKnowledgePublicationService, ensureKnowledgePublicationSchema } from "./knowledge-publication";
 
 let pool: Pool | undefined;
+let writerPool: Pool | undefined;
 let driver: Driver | undefined;
 let initialized: Promise<void> | undefined;
+let writerInitialized: Promise<void> | undefined;
 export async function knowledgePublicationPreview(publisher=false) {
   const config=knowledgeReadConfiguration();
-  pool ??= new Pool({ connectionString:config.databaseUrl,max:4,statement_timeout:15000,...(config.beta&&!publisher?{options:"-c default_transaction_read_only=on"}:{}) });
+  if(publisher&&config.managed)assertKnowledgeCapability("publisher");
   driver ??= neo4j.driver(config.neo,neo4j.auth.basic("neo4j",config.password),{maxConnectionPoolSize:3,connectionAcquisitionTimeout:10000});
-  initialized ??= (config.beta ? verifyKnowledgeReadSchema(pool) : ensureKnowledgePublicationSchema(pool)).then(()=>undefined).catch(error=>{initialized=undefined;throw error;});
+  if(publisher){
+    writerPool ??= new Pool({connectionString:config.databaseUrl,max:3,statement_timeout:15000});
+    writerInitialized ??= (config.managed?verifyKnowledgeReadSchema(writerPool):ensureKnowledgePublicationSchema(writerPool)).then(()=>undefined).catch(error=>{writerInitialized=undefined;throw error;});
+    await writerInitialized;
+    return createKnowledgePublicationService(writerPool,driver,{}, {prepareSchema:()=>writerInitialized!});
+  }
+  pool ??= new Pool({connectionString:config.databaseUrl,max:4,statement_timeout:15000,...(config.managed?{options:"-c default_transaction_read_only=on"}:{})});
+  initialized ??= (config.managed?verifyKnowledgeReadSchema(pool):ensureKnowledgePublicationSchema(pool)).then(()=>undefined).catch(error=>{initialized=undefined;throw error;});
   await initialized;
-  return createKnowledgePublicationService(pool, driver, {}, {prepareSchema:()=>initialized!});
+  return createKnowledgePublicationService(pool,driver,{}, {prepareSchema:()=>initialized!});
 }
 export async function closeKnowledgePublicationPreview() {
-  await driver?.close(); await pool?.end(); driver = undefined; pool = undefined; initialized = undefined;
+  await driver?.close();await pool?.end();await writerPool?.end();driver=undefined;pool=undefined;writerPool=undefined;initialized=undefined;writerInitialized=undefined;
 }
 
 /** Beta Web never performs migrations as a side effect of opening the TOP. */

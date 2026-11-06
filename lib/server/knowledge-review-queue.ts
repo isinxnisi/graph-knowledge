@@ -1,3 +1,4 @@
+import {knowledgeCapability,knowledgeDeployment,deploymentMemberAllowed,reviewMemberScope} from "./knowledge-deployment";
 import {aiFailureDiagnostic,reviewRetryAt,REVIEW_SENDS_PER_ITEM_DAY} from './knowledge-ai-retry';
 import {quotaDate,nextQuotaDay,reserveKnowledgeAI} from './knowledge-ai-budget';
 import {submissionIntentIssues} from "../domain/knowledge-submission-intent";
@@ -21,10 +22,10 @@ export const reviewConfigSchema=z.strictObject({
  requestsPerDay:z.number().int().positive().max(400),requestsPerMonth:z.number().int().positive(),
  inputTokensPerDay:z.number().int().positive(),outputTokensPerDay:z.number().int().positive(),
  inputTokensPerMonth:z.number().int().positive(),outputTokensPerMonth:z.number().int().positive(),
- apiKeyFile:z.string().min(1),allowedUsers:z.array(z.uuidv4()).min(1).max(10),
+ apiKeyFile:z.string().min(1),allowedUsers:z.array(z.uuidv4()).min(1).max(10000).nullable(),
 });
 export type ReviewConfig=z.infer<typeof reviewConfigSchema>;
-export const reviewEnabledFor=(id:string)=>(process.env.MEMBER_ORIGIN==="https://graph-beta.isinxnisi.com"||process.env.NODE_ENV==="test")&&process.env.KNOWLEDGE_REVIEW_ENABLED==="1"&&(process.env.KNOWLEDGE_REVIEW_ALLOWED_USERS??"").split(",").includes(id);
+export const reviewEnabledFor=(id:string)=>process.env.KNOWLEDGE_REVIEW_ENABLED==="1"&&knowledgeCapability("review")&&(knowledgeDeployment()?deploymentMemberAllowed(id):(process.env.KNOWLEDGE_REVIEW_ALLOWED_USERS??"").split(",").includes(id));
 const iso=(v:unknown)=>v instanceof Date?v.toISOString():String(v);
 export async function ensureReviewSchema(pool:Pool){
  const checksum=createHash("sha256").update(await readFile(path.join(process.cwd(),"db/member/021-knowledge-review-jobs.sql"))).digest("hex");
@@ -56,7 +57,7 @@ export function createReviewQueue(pool:Pool,options:{duplicates?:(value:Knowledg
  async function jobTransaction<T>(id:string,run:(c:PoolClient,row:QueryResultRow,active:boolean)=>Promise<T>){
   const seed=(await pool.query("SELECT s.owner_id,s.id FROM member_knowledge.review_jobs j JOIN member_knowledge.submissions s ON s.id=j.submission_id WHERE j.id=$1",[id])).rows[0];
   if(!seed)return null;
-  return tx(async c=>{const active=await ownerLock(c,seed.owner_id);const s=await current(c,seed.id);const j=(await c.query("SELECT * FROM member_knowledge.review_jobs WHERE id=$1 FOR UPDATE",[id])).rows[0];if(!s||!j)return null;return run(c,{...j,submission:s},active);});
+  return tx(async c=>{const active=await ownerLock(c,seed.owner_id)&&deploymentMemberAllowed(seed.owner_id);const s=await current(c,seed.id);const j=(await c.query("SELECT * FROM member_knowledge.review_jobs WHERE id=$1 FOR UPDATE",[id])).rows[0];if(!s||!j)return null;return run(c,{...j,submission:s},active);});
  }
   async function finish(lease:ReviewLease,result:WireResult|{state:'not-sent'}){
    await ensure();const parsed=result.state==='received'?parseGeminiReview(result.raw):null;
@@ -95,7 +96,8 @@ export function createReviewQueue(pool:Pool,options:{duplicates?:(value:Knowledg
 
  return {
   async authorize(ownerId:string,raw:unknown){
-   const command=knowledgeReviewCommandSchema.parse(raw),digest=knowledgeDigest(raw),disclosure=reviewDisclosureForConsent(command.consentVersion);
+    if(!deploymentMemberAllowed(ownerId))throw new KnowledgeError("この機能は利用できません",404,"NOT_FOUND");
+    const command=knowledgeReviewCommandSchema.parse(raw),digest=knowledgeDigest(raw),disclosure=reviewDisclosureForConsent(command.consentVersion);
     if(!disclosure||command.profileId!==undefined&&command.profileId!==disclosure.profileId)throw new KnowledgeError("送信先への確認内容が変わりました",409,"CONSENT_CHANGED");
    return tx(async c=>{
     if(!await ownerLock(c,ownerId))throw new KnowledgeError("本人を確認してください",401,"UNAUTHENTICATED");
@@ -143,7 +145,7 @@ export function createReviewQueue(pool:Pool,options:{duplicates?:(value:Knowledg
   },
   async claim(raw:ReviewConfig):Promise<ReviewLease|null>{
    const cfg=reviewConfigSchema.parse(raw);await ensure();
-   const candidates=(await pool.query("SELECT j.id FROM member_knowledge.review_jobs j JOIN member_knowledge.submissions s ON s.id=j.submission_id WHERE j.state IN('queued','retry','quota') AND j.not_before<=clock_timestamp() AND s.owner_id=ANY($1::uuid[]) ORDER BY j.not_before,j.created_at LIMIT 8",[cfg.allowedUsers])).rows;
+   const candidates=(await pool.query("SELECT j.id FROM member_knowledge.review_jobs j JOIN member_knowledge.submissions s ON s.id=j.submission_id WHERE j.state IN('queued','retry','quota') AND j.not_before<=clock_timestamp() AND ($1::uuid[] IS NULL OR s.owner_id=ANY($1::uuid[])) ORDER BY j.not_before,j.created_at LIMIT 8",[reviewMemberScope(cfg)])).rows;
    for(const candidate of candidates){const lease=await jobTransaction(candidate.id,async(c,j,active)=>{
     if(!['queued','retry','quota'].includes(j.state)||new Date(j.not_before).getTime()>Date.now())return null;
     const s=j.submission;
@@ -174,7 +176,7 @@ export function createReviewQueue(pool:Pool,options:{duplicates?:(value:Knowledg
    });if(lease)return lease;}
    return null;
   },
-  async canSend(lease:ReviewLease){await ensure();return (await pool.query(`SELECT 1 FROM member_knowledge.review_jobs j JOIN member_knowledge.submissions s ON s.id=j.submission_id JOIN "user" u ON u.id=s.owner_id JOIN member_knowledge.review_authorizations a ON a.submission_id=j.submission_id AND a.revision=j.revision WHERE j.id=$1 AND j.lease_token=$2 AND j.consent_profile_id=$3 AND a.consent_profile_id=$3 AND j.state='running' AND j.lease_until>clock_timestamp() AND u.active AND s.state='queued' AND s.current_revision=j.revision`,[lease.jobId,lease.token,lease.consentProfileId])).rowCount===1;},
+  async canSend(lease:ReviewLease){await ensure();const profile=knowledgeDeployment();if(profile&&(!knowledgeCapability("review-worker")||!knowledgeCapability("review")))return false;const scope=profile?.reviewMembers.mode==="allowlist"?profile.reviewMembers.ids:null;return (await pool.query(`SELECT 1 FROM member_knowledge.review_jobs j JOIN member_knowledge.submissions s ON s.id=j.submission_id JOIN "user" u ON u.id=s.owner_id JOIN member_knowledge.review_authorizations a ON a.submission_id=j.submission_id AND a.revision=j.revision WHERE j.id=$1 AND j.lease_token=$2 AND j.consent_profile_id=$3 AND a.consent_profile_id=$3 AND j.state='running' AND j.lease_until>clock_timestamp() AND u.active AND ($4::uuid[] IS NULL OR s.owner_id=ANY($4::uuid[])) AND s.state='queued' AND s.current_revision=j.revision`,[lease.jobId,lease.token,lease.consentProfileId,scope])).rowCount===1;},
   finish,
   async rejectBeforeSend(lease:ReviewLease,reason:string,retryable:boolean){
    await finish(lease,{state:'not-sent'});

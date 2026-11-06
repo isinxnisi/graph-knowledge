@@ -1,3 +1,4 @@
+import {knowledgeDeployment,knowledgeCapability} from "./knowledge-deployment";
 import {createHash,randomUUID} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import path from 'node:path';
@@ -33,7 +34,11 @@ export function createTranslationGeneration(pool:Pool,knowledge:Pool){
  async function tx<T>(fn:(c:PoolClient)=>Promise<T>){await ensure();const c=await pool.connect();try{await c.query('BEGIN');const r=await fn(c);await c.query('COMMIT');return r;}catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}}
  async function original(target:KnowledgeTextTarget){const c=await knowledge.connect();try{await c.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');const value=await readTranslationGenerationInput(c,target);await c.query('COMMIT');return value;}catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}}
  async function active(c:Pool|PoolClient,id:string){if((await c.query('SELECT active FROM "user" WHERE id=$1',[id])).rows[0]?.active!==true)throw new KnowledgeError('本人を確認してください',401,'UNAUTHENTICATED');}
- const interested=async(c:Pool|PoolClient,id:string)=>(await c.query('SELECT 1 FROM member_knowledge.translation_generation_requests r JOIN "user" u ON u.id=r.owner_id WHERE r.job_id=$1 AND NOT r.cancelled AND u.active LIMIT 1',[id])).rowCount===1;
+ const interested=async(c:Pool|PoolClient,id:string)=>{
+   const profile=knowledgeDeployment();if(profile&&(!knowledgeCapability("translation")||!knowledgeCapability("review")||!knowledgeCapability("review-worker")))return false;
+   const scope=profile?.reviewMembers.mode==="allowlist"?profile.reviewMembers.ids:null;
+   return (await c.query('SELECT 1 FROM member_knowledge.translation_generation_requests r JOIN "user" u ON u.id=r.owner_id WHERE r.job_id=$1 AND NOT r.cancelled AND u.active AND ($2::uuid[] IS NULL OR r.owner_id=ANY($2::uuid[])) LIMIT 1',[id,scope])).rowCount===1;
+  };
  async function current(job:{target:KnowledgeTextTarget;original_hash:string;context_hash:string|null;context:Record<string,unknown>|null;policy:string}){try{if(job.policy!==TRANSLATION_GENERATION_POLICY||!job.context_hash||!job.context||knowledgeDigest(job.context)!==job.context_hash)return false;const o=await original(job.target);return o.hash===job.original_hash&&o.contextHash===job.context_hash;}catch(e){if(e instanceof KnowledgeError&&e.status<500)return false;throw e;}}
  async function status(ownerId:string,target:KnowledgeTextTarget,language:string):Promise<TranslationGenerationStatus>{
   await ensure();await active(pool,ownerId);const o=await original(target),id=translationGenerationKey(target,language,o.hash,o.contextHash);

@@ -1,3 +1,4 @@
+import {knowledgeCapability} from "../knowledge-deployment";
 import {createMemberTranslationGeneration} from './translation-generation';
 import {capsuleSubmissionSelection} from "../../domain/knowledge-submission-selection";
 import {captureSubmissionCapsule} from "../../domain/knowledge-submission-capsule";
@@ -34,7 +35,7 @@ export function createMemberKnowledgeSubmissions(pool:Pool,origin:string,owner:(
  const generation=createMemberTranslationGeneration(pool,origin,owner);
  let acceptanceReady:Promise<void>|undefined;
  const readyAcceptance=async(id:string)=>{if(reviewEnabledFor(id)&&process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED==='1'){acceptanceReady??=ensureAcceptanceSchema(pool).catch(e=>{acceptanceReady=undefined;throw e;});await acceptanceReady;}};
- const enabled=()=>{if(process.env.KNOWLEDGE_SUBMISSIONS_ENABLED!=="1")throw new MemberError(404,"NOT_FOUND");};
+ const enabled=()=>{if(process.env.KNOWLEDGE_SUBMISSIONS_ENABLED!=="1"||!knowledgeCapability("submissions",origin))throw new MemberError(404,"NOT_FOUND");};
  return {
   async list(request:Request){enabled();const user=await owner(request);await readyAcceptance(user.id);const submissions=await store.list(user.id);
    if(reviewEnabledFor(user.id)){const counts=(await pool.query(process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED==='1'?"SELECT s.id,CASE WHEN j.state='published' AND d.result->>'disposition'='existing' THEN 'existing' ELSE j.state END AS state,count(*)::int AS n FROM member_knowledge.submissions s JOIN member_knowledge.review_jobs j ON j.submission_id=s.id AND j.revision=s.current_revision LEFT JOIN member_knowledge.publication_decisions d ON d.job_id=j.id WHERE s.owner_id=$1 GROUP BY s.id,CASE WHEN j.state='published' AND d.result->>'disposition'='existing' THEN 'existing' ELSE j.state END":"SELECT s.id,j.state,count(*)::int AS n FROM member_knowledge.submissions s JOIN member_knowledge.review_jobs j ON j.submission_id=s.id AND j.revision=s.current_revision WHERE s.owner_id=$1 GROUP BY s.id,j.state",[user.id])).rows;for(const value of submissions)Object.assign(value,{reviewCounts:Object.fromEntries(counts.filter(c=>c.id===value.id).map(c=>[c.state,c.n]))});}

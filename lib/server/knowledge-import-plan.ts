@@ -1,10 +1,11 @@
+import {readTranslationGenerationInput} from "./knowledge-translation-context";
 import {z} from 'zod';
 import type {Pool} from 'pg';
 import {importItemSchema,type ImportPrincipal,type KnowledgeImportPackage} from '../domain/knowledge-import';
 import {knowledgeEntityContentSchema,knowledgeSourceContentSchema,knowledgePinSchema,type KnowledgePin} from '../domain/knowledge-foundation';
 import {knowledgeSubmissionContentSchema,type KnowledgeSubmission,type KnowledgeSubmissionContext,type KnowledgeSubmissionContent} from '../domain/knowledge-submission';
 import {submissionIntentIssues} from '../domain/knowledge-submission-intent';
-import {createKnowledgeFoundationService,knowledgeDigest,KnowledgeError,readKnowledgeTextOriginal,readKnowledgeTranslation} from './knowledge-foundation';
+import {createKnowledgeFoundationService,knowledgeDigest,KnowledgeError,readKnowledgeTranslation} from './knowledge-foundation';
 import {readSubmissionLegacyReferences} from './knowledge-submission-legacy';
 import {acceptancePlan} from './knowledge-acceptance';
 const newEntity=z.strictObject({id:z.string().min(1).max(200),content:knowledgeEntityContentSchema});
@@ -53,6 +54,7 @@ export function assertImportScope(p:ImportPrincipal,content:KnowledgeSubmissionC
  if(content.entities.length&&!p.allowNewEntities)error('この送信資格では新しい対象を追加できません。');
  const allows=(kind:'entities'|'records'|'sources'|'themes',id:string)=>p.targets[kind]==='*'||p.targets[kind].includes(id);
  for(const pin of content.entityPins)if(!allows('entities',pin.id))error('許可範囲外の対象です。');
+ for(const ref of context?.texts?.flatMap(t=>t.reviewReferences??[])??[]){const kind=ref.kind==='entity'?'entities':ref.kind==='source'?'sources':ref.kind==='theme'?'themes':'records';if(!allows(kind,ref.id))error('翻訳の公開文脈が送信資格の許可範囲外です。');}
  for(const e of context?.entities??[])if(!allows('entities',e.id))error('参照する知識の対象が許可範囲外です。');
  for(const pin of [item.correction,item.record.aboutRecord,item.about?.kind==='record'?item.about:undefined].filter((v):v is KnowledgePin=>!!v))if(!allows('records',pin.id))error('許可範囲外の知識です。');
  if(item.record.aboutTheme&&(!allows('themes',item.record.aboutTheme)||!item.themes?.some(p=>p.id===item.record.aboutTheme)))error('許可されたテーマの内容版を指定してください。');
@@ -74,7 +76,12 @@ export async function resolveImportContext(pool:Pool,content:KnowledgeSubmission
    for(const e of record.content.evidence)await addSource(e.source);
   }
   for(const p of [...item.themes??[],...(item.about?.kind==='theme'?[item.about]:[])])if(!context.themes!.some(v=>same(v,p)))context.themes!.push(await foundation.get(reader,'theme',p.id,p.revision));
-  if(item.translation){const c=await pool.connect();try{const original=await readKnowledgeTextOriginal(c,item.translation.target,true);context.texts=[{...original,translation:(await readKnowledgeTranslation(c,item.translation.target,item.translation.language)).translation}];}finally{c.release();}}
+  if(item.translation){const c=await pool.connect();try{
+    await c.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
+    const original=await readTranslationGenerationInput(c,item.translation.target);
+    context.texts=[{target:original.target,text:original.text,hash:original.hash,language:original.language,content:original.content,reviewContext:original.context,reviewContextHash:original.contextHash,reviewReferences:original.references,translation:(await readKnowledgeTranslation(c,item.translation.target,item.translation.language)).translation}];
+    await c.query('COMMIT');
+   }catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}}
  }
  for(const p of content.entityPins)await addEntity(p);
  for(const p of content.sourcePins)await addSource(p);

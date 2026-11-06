@@ -1,3 +1,4 @@
+import {knowledgeCapability} from "./knowledge-deployment";
 import "server-only";
 import Explorer from "../../components/Explorer";
 import PublicDiscovery from "../../components/PublicDiscovery";
@@ -18,7 +19,7 @@ export async function discoveryMetadata(locale: PublicLocale, stateful: boolean,
 }
 export async function ExplorationPage({ locale, id }: { locale: PublicLocale; id?: string }) {
   const knowledgeOperatorEnabled=process.env.THEME_WORKBENCH_ENABLED === "1";
-  const knowledgeEnabled=(knowledgeOperatorEnabled||process.env.KNOWLEDGE_RUNTIME === "beta") && process.env.KNOWLEDGE_WORKSPACE_ENABLED === "1";
+  const knowledgeEnabled=(()=>{try{return (knowledgeOperatorEnabled||knowledgeCapability("public-read")) && process.env.KNOWLEDGE_WORKSPACE_ENABLED === "1";}catch{return false;}})();
   const dataset = datasetMode(process.env.GRAPH_DATASET), subject = dataset === "public-kg" && id ? await publicSubject(id) : undefined;
   if (dataset === "public-kg" && id && !subject) notFound();
   const overview = subject ? <PublicDiscovery locale={locale} subject={subject} /> : undefined;

@@ -1,3 +1,4 @@
+import {assertKnowledgeWorker,knowledgeHttpsOrigin} from "../lib/server/knowledge-deployment";
 import {lstat,mkdir,writeFile,rename,unlink} from 'node:fs/promises';
 import path from 'node:path';
 import {randomUUID,createHash} from 'node:crypto';
@@ -6,7 +7,7 @@ import {z} from 'zod';
 import {readingLeaseSchema,readingWorkerSchema,type ReadingLease} from '../lib/domain/knowledge-collection-reading';
 import {callGeminiReview} from '../lib/server/gemini-knowledge-review';
 import {privateCollectionFile} from './knowledge-collection-worker';
-const configSchema=z.strictObject({origin:z.literal('https://graph-beta.isinxnisi.com'),token:z.string().regex(/^[a-f0-9]{64}$/),stateDirectory:z.string(),apiKeyFile:z.string()});
+const configSchema=z.strictObject({origin:knowledgeHttpsOrigin,token:z.string().regex(/^[a-f0-9]{64}$/),stateDirectory:z.string(),apiKeyFile:z.string()});
 const responseSchema=z.object({result:z.object({lease:readingLeaseSchema.nullable().optional(),send:z.boolean().optional(),state:z.string().optional()}),replayed:z.boolean()});
 const workSchema=z.strictObject({lease:readingLeaseSchema,stage:z.enum(['claimed','sending','response']),result:z.unknown().optional()});
 type Command=ReturnType<typeof readingWorkerSchema.parse>;
@@ -41,8 +42,9 @@ export function createCollectionReader(directory:string,send:(body:Command)=>Pro
 }
 async function main(){
  const at=process.argv.indexOf('--config');if(at<0||!path.isAbsolute(process.argv[at+1]??''))throw Error('Absolute private configuration required');const cfg=configSchema.parse(JSON.parse(await privateCollectionFile(process.argv[at+1],8000)));
+ assertKnowledgeWorker("reader",cfg.origin);
  if(!path.isAbsolute(cfg.stateDirectory)||!path.isAbsolute(cfg.apiKeyFile))throw Error('Private absolute paths required');await mkdir(cfg.stateDirectory,{recursive:true,mode:0o700});const key=(await privateCollectionFile(cfg.apiKeyFile,8192)).trim();
- const worker=createCollectionReader(cfg.stateDirectory,async command=>{const r=await fetch(cfg.origin+'/api/knowledge-collection/reading-worker',{method:'POST',redirect:'error',headers:{authorization:'Bearer '+cfg.token,'content-type':'application/json'},body:JSON.stringify(command),signal:AbortSignal.timeout(30000)});if(!r.ok)throw Error('Reader delivery unavailable');return r.json();},lease=>callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire)}));
+ const worker=createCollectionReader(cfg.stateDirectory,async command=>{assertKnowledgeWorker("reader",cfg.origin);const r=await fetch(cfg.origin+'/api/knowledge-collection/reading-worker',{method:'POST',redirect:'error',headers:{authorization:'Bearer '+cfg.token,'content-type':'application/json'},body:JSON.stringify(command),signal:AbortSignal.timeout(30000)});if(!r.ok)throw Error('Reader delivery unavailable');return r.json();},lease=>{assertKnowledgeWorker("reader",cfg.origin);return callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire)});});
  let stop=false;process.once('SIGTERM',()=>{stop=true;});process.once('SIGINT',()=>{stop=true;});do{try{if(await worker.run())console.log(JSON.stringify({event:'collection-reading',completed:true}));}catch{console.error('Reader delivery pending. Private checkpoints and usage reservations are retained.');if(process.argv.includes('--once')){process.exitCode=1;break;}}if(process.argv.includes('--once'))break;await new Promise(resolve=>setTimeout(resolve,5000));}while(!stop);
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href)main().catch(()=>{console.error('Collection reader stopped. Check its private configuration and retained state.');process.exitCode=1;});

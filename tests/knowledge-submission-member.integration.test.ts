@@ -1,3 +1,7 @@
+import {knowledgeCapabilities,type KnowledgeDeployment} from "../lib/server/knowledge-deployment";
+import {mkdtempSync,writeFileSync,rmSync} from "node:fs";
+import {tmpdir} from "node:os";
+import path from "node:path";
 import {readTranslationGenerationInput} from "../lib/server/knowledge-translation-context";
 import {GEMINI_TRANSLATION_POLICY} from "../lib/server/gemini-knowledge-review";
 import {entityCorrectionSummary} from '../lib/domain/knowledge-entity-correction';
@@ -333,6 +337,35 @@ describe("private knowledge submission with real OIDC and PostgreSQL",()=>{
  }
  const fixtureVerify=async(url:string,excerpt:string)=>matchSourceExcerpt({url,type:'text/html',body:Buffer.from('<article><p>'+excerpt+'</p></article>')},excerpt);
  const knowledgeCount=async()=>Number((await acceptanceKnowledge.query("SELECT count(*) AS n FROM knowledge75.objects WHERE kind='record'")).rows[0].n);
+ async function managedProfile(run:(profile:KnowledgeDeployment,save:()=>void)=>Promise<void>){
+  const dir=mkdtempSync(path.join(tmpdir(),'plunode-managed-member-')),file=path.join(dir,'deployment.json');
+  const env={KNOWLEDGE_DEPLOYMENT_CONFIG:file,KNOWLEDGE_RUNTIME:'beta',KNOWLEDGE_PUBLIC_ORIGIN:'https://graph-beta.isinxnisi.com',GRAPH_DEPLOYMENT:'preview',MEMBER_STORAGE_ENABLED:'0'};
+  const before=Object.fromEntries(Object.keys(env).map(k=>[k,process.env[k]]));
+  const profile:KnowledgeDeployment={schemaVersion:1,id:'member-fixture',environment:'beta',origin:env.KNOWLEDGE_PUBLIC_ORIGIN,hosts:['graph-beta.isinxnisi.com'],database:{host:'127.0.0.1',port:55476,database:'fixture',user:'fixture'},neo4j:'bolt://127.0.0.1:7699',capabilities:[...knowledgeCapabilities],reviewMembers:{mode:'authenticated'}};
+  const save=()=>writeFileSync(file,JSON.stringify(profile),{mode:0o600});
+  try{Object.assign(process.env,env);save();await run(profile,save);}finally{for(const [k,v] of Object.entries(before)){if(v===undefined)delete process.env[k];else process.env[k]=v;}rmSync(dir,{recursive:true,force:true});}
+ }
+ it('uses an explicit authenticated deployment for review and automatic acceptance without a member allowlist',async()=>{
+  process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='1';
+  await memberRuntime().pool.query("UPDATE member_knowledge.review_jobs SET state='cancelled',lease_token=NULL WHERE state IN('queued','running','retry','quota','reviewed')");
+  const command=save(randomUUID(),0,reviewContent());await post(command);await post({action:'submit',id:command.id,requestId:randomUUID(),expectedVersion:1});await post({action:'review',id:command.id,requestId:randomUUID(),expectedVersion:2,consentVersion:PUBLICATION_CONSENT_VERSION});
+  const pool=memberRuntime().pool,queue=createReviewQueue(pool),cfg=reviewConfig({allowedUsers:null}),before=await knowledgeCount();
+  await managedProfile(async()=>{
+   expect(await runKnowledgeReviewOnce(queue,cfg,async()=>reviewedResponse())).toBe(true);
+   expect(await createKnowledgeAcceptance(pool,acceptanceKnowledge,{},fixtureVerify).run(cfg)).toBe(true);
+   expect(await knowledgeCount()).toBe(before+1);
+  });
+ });
+ it('does not send or use an in-flight response after deployment member revocation',async()=>{
+  process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED='1';
+  await memberRuntime().pool.query("UPDATE member_knowledge.review_jobs SET state='cancelled',lease_token=NULL WHERE state IN('queued','running','retry','quota','reviewed')");
+  const command=save(randomUUID(),0,reviewContent());await post(command);await post({action:'submit',id:command.id,requestId:randomUUID(),expectedVersion:1});await post({action:'review',id:command.id,requestId:randomUUID(),expectedVersion:2,consentVersion:PUBLICATION_CONSENT_VERSION});
+  const queue=createReviewQueue(memberRuntime().pool),cfg=reviewConfig({allowedUsers:null}),before=await knowledgeCount();
+  await managedProfile(async(profile,save)=>{
+   await queue.heartbeat(cfg);const lease=(await queue.claim(cfg))!;expect(lease).not.toBeNull();expect(await queue.canSend(lease)).toBe(true);
+   profile.reviewMembers={mode:'allowlist',ids:[bobId]};save();expect(await queue.canSend(lease)).toBe(false);expect(await queue.finish(lease,reviewedResponse())).toBe(false);expect(await knowledgeCount()).toBe(before);
+  });
+ });
  it('automatically accepts verified public material and uses the same receipt on retry',async()=>{
   const {command,cfg}=await acceptedCandidate(),before=await knowledgeCount();const engine=createKnowledgeAcceptance(memberRuntime().pool,acceptanceKnowledge,{},fixtureVerify);
   expect(await engine.run(cfg)).toBe(true);expect(await knowledgeCount()).toBe(before+1);

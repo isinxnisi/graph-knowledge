@@ -1,3 +1,4 @@
+import {knowledgeCapability} from "../knowledge-deployment";
 import {createHash,randomBytes,randomUUID,timingSafeEqual} from 'node:crypto';
 import {readFile,lstat} from 'node:fs/promises';
 import path from 'node:path';
@@ -28,10 +29,10 @@ export async function collectionWorkerIdentity(request:Request,environmentKey='K
 function allowedURL(raw:string){let u:URL;try{u=sourceURL(raw);}catch{throw new MemberError(400,'PUBLIC_SOURCE_REQUIRED');}const host=u.hostname.replace(/^\[|\]$/g,'');if(host==='localhost'||host.endsWith('.localhost')||isIP(host)&&!publicSourceAddress(host))throw new MemberError(400,'PUBLIC_SOURCE_REQUIRED');return u.href;}
 export function createKnowledgeCollection(pool:Pool,origin:string,owner:(r:Request)=>Promise<{id:string;sessionId:string}>){
  let ready:Promise<void>|undefined;
- const enabled=()=>{if(process.env.KNOWLEDGE_COLLECTION_ENABLED!=='1'||process.env.GRAPH_DEPLOYMENT==='production'||origin!=='https://graph-beta.isinxnisi.com'&&process.env.NODE_ENV!=='test')throw new MemberError(404,'NOT_FOUND');};
+ const enabled=()=>{if(process.env.KNOWLEDGE_COLLECTION_ENABLED!=='1'||!knowledgeCapability("collection",origin))throw new MemberError(404,'NOT_FOUND');};
  const ensure=()=>ready??=ensureCollectionSchema(pool).catch(e=>{ready=undefined;throw e;});
  async function operator(request:Request,run:(c:PoolClient,u:{id:string;sessionId:string})=>Promise<Response>){
-  enabled();const u=await owner(request);if(!isSiteOperator(u.id))throw new MemberError(403,'OPERATOR_REQUIRED');await ensure();return memberTransaction(pool,async c=>{
+  enabled();if(!knowledgeCapability("operator",origin))throw new MemberError(404,"NOT_FOUND");const u=await owner(request);if(!isSiteOperator(u.id))throw new MemberError(403,'OPERATOR_REQUIRED');await ensure();return memberTransaction(pool,async c=>{
    if(!isSiteOperator(u.id)||(await c.query('SELECT 1 FROM "user" u JOIN session s ON s."userId"=u.id WHERE u.id=$1 AND u.active AND s.id=$2 AND s."expiresAt">clock_timestamp() FOR SHARE OF u,s',[u.id,u.sessionId])).rowCount!==1)throw new MemberError(401,'UNAUTHENTICATED');
    return run(c,u);
   });
@@ -64,7 +65,7 @@ export function createKnowledgeCollection(pool:Pool,origin:string,owner:(r:Reque
    const id=randomUUID();await c.query("INSERT INTO knowledge_collection.jobs(id,creator_id,title,scope,policy) VALUES($1,$2,$3,$4,'source-capture-v1')",[id,u.id,input.title,input.scope]);for(const [n,url] of urls.entries())await c.query('INSERT INTO knowledge_collection.items(id,job_id,ordinal,url) VALUES($1,$2,$3,$4)',[randomUUID(),id,n,url]);return {id};
   })));},
   async worker(request:Request,identity=collectionWorkerIdentity){
-   enabled();const worker=await identity(request);await ensure();const input=await memberInput(request,collectionWorkerCommandSchema,3300000);
+   enabled();if(!knowledgeCapability("collector",origin))throw new MemberError(404,"NOT_FOUND");const worker=await identity(request);await ensure();const input=await memberInput(request,collectionWorkerCommandSchema,3300000);
    return memberTransaction(pool,async c=>{await c.query('INSERT INTO knowledge_collection.workers(id) VALUES($1) ON CONFLICT(id) DO UPDATE SET last_seen=clock_timestamp()',[worker]);return memberJson(await once(c,'worker:'+worker,input.requestId,input.action,input,async()=>{
     if(input.action==='claim'){
      // Serialize claims and cancellation with job first; old generations never regain their lease.

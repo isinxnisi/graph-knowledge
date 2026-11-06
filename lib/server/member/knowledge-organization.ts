@@ -1,3 +1,4 @@
+import {knowledgeCapability} from "../knowledge-deployment";
 import {Pool} from "pg";
 import {knowledgeCommandSchema} from "../../domain/knowledge-foundation";
 import {createKnowledgeFoundationService} from "../knowledge-foundation";
@@ -8,7 +9,7 @@ import {memberTransaction} from "./operations";
 import {isSiteOperator} from "./site-operations";
 export function createMemberKnowledgeOrganization(pool:Pool,origin:string,owner:(r:Request)=>Promise<{id:string;sessionId:string}>){
  let knowledge:Pool|undefined;
- function enabled(){if(process.env.KNOWLEDGE_COLLECTION_READING_ENABLED!=="1"||process.env.GRAPH_DEPLOYMENT==="production"||origin!=="https://graph-beta.isinxnisi.com"&&process.env.NODE_ENV!=="test")throw new MemberError(404,"NOT_FOUND");}
+ function enabled(){if(process.env.KNOWLEDGE_COLLECTION_READING_ENABLED!=="1"||!knowledgeCapability("operator",origin))throw new MemberError(404,"NOT_FOUND");}
  async function operator(r:Request,run:(userId:string,k:Pool)=>Promise<Response>){
   enabled();const u=await owner(r);if(!isSiteOperator(u.id))throw new MemberError(403,"OPERATOR_REQUIRED");
   knowledge??=new Pool({connectionString:knowledgeReadConfiguration().databaseUrl,max:3,statement_timeout:10000});

@@ -42,6 +42,7 @@ def beta_knowledge():
     url = urlsplit(values['KNOWLEDGE_DATABASE_URL'])
     if (url.scheme,url.hostname,url.port,url.path) != ('postgresql','127.0.0.1',55476,'/plunode_knowledge75_beta') or not values['KNOWLEDGE_NEO4J_PASSWORD']:
         raise ValueError('Dedicated knowledge beta databases required')
+    users = []
     review = STATE / 'beta-review.json'
     if review.exists():
         info = review.lstat()
@@ -82,6 +83,15 @@ def beta_knowledge():
         if profile.get('origin') != expected['KNOWLEDGE_PUBLIC_ORIGIN'] or not profile.get('principals'):
             raise ValueError('Import origin differs from this existing beta')
         values.update(KNOWLEDGE_IMPORT_ENABLED='1', KNOWLEDGE_IMPORT_CONFIG=str(imports))
+    deployment = STATE / 'beta-deployment.json'
+    if deployment.exists():
+        info = deployment.lstat()
+        if deployment.is_symlink() or info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) != 0o600 or info.st_size > 32000:
+            raise ValueError('Private deployment profile ownership mismatch')
+        profile = json.loads(deployment.read_text())
+        if profile.get('environment') != 'beta' or profile.get('origin') != expected['KNOWLEDGE_PUBLIC_ORIGIN'] or profile.get('reviewMembers') != {'mode':'allowlist','ids':users}:
+            raise ValueError('Beta deployment must preserve the existing admission list')
+        values['KNOWLEDGE_DEPLOYMENT_CONFIG'] = str(deployment)
     return {**values,'THEME_WORKBENCH_ENABLED':'0'}
 
 

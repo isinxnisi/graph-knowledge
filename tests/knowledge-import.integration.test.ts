@@ -189,11 +189,24 @@ describe('authenticated immutable external knowledge packages',()=>{
  });
 
  it('accepts a translation with a pinned original without requiring a fake relation or evidence',async()=>{
+  p.targets.sources=['baseline-source'];
   const v=payload();const id=await send({...v,sources:[],entityPins:[],items:[{key:'translation',operation:'translate-text',translation:{target:{kind:'record',id:'baseline',revision:1,field:'assertion'},language:'en',text:'The name A was recorded.',expectedRevision:0}}]});
-  await core.processNext(cfg,dispatch);const result=await status(id);expect(result.items[0].state).toBe('applied');expect(verify).not.toHaveBeenCalled();
+  await core.processNext(cfg,async l=>{const material=JSON.parse(JSON.parse(l.wire).contents[0].parts[0].text);expect(material.translation.publicContext.surrounding.record.subjectId).toBe('a');expect(material.translation.contextHash).toMatch(/^[a-f0-9]{64}$/);return response(l.wire);});const result=await status(id);expect(result.items[0].state,result.items[0].reason).toBe('applied');expect(verify).not.toHaveBeenCalled();
+  const proof=(await pool.query("SELECT decision->'translationReview' AS proof FROM knowledge_import.items WHERE package_id=$1",[id])).rows[0].proof;expect(proof.policy).toBe('translation-equivalence-v2-context');expect(proof.snapshot.reviewReferences.some((v:{kind:string})=>v.kind==='entity')).toBe(true);
   expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.revisions WHERE kind='record'")).rows[0].n).toBe(1);
   expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.text_translation_revisions")).rows[0].n).toBe(1);
  });
+ it('does not send contextual sources outside the import principal scope',async()=>{
+  const v=payload(),id=await send({...v,sources:[],entityPins:[],items:[{key:'translation',operation:'translate-text',translation:{target:{kind:'record',id:'baseline',revision:1,field:'assertion'},language:'en',text:'The name A was recorded.',expectedRevision:0}}]});
+  await core.processNext(cfg,dispatch);const result=await status(id);expect(result.items[0].state).toBe('needs-changes');expect(result.items[0].reason).toContain('送信資格の許可範囲外');expect(dispatch).not.toHaveBeenCalled();
+ });
+ it('rejects an imported translation if its contextual subject is stopped during inference',async()=>{
+  p.targets.sources=['baseline-source'];
+  const v=payload(),id=await send({...v,sources:[],entityPins:[],items:[{key:'translation',operation:'translate-text',translation:{target:{kind:'record',id:'baseline',revision:1,field:'assertion'},language:'en',text:'The name A was recorded.',expectedRevision:0}}]});
+  const infer=vi.fn(async(l:{wire:string})=>{await foundation.execute({kind:'operator',id:'fixture'},{action:'set-visibility',requestId:randomUUID(),kind:'entity',id:'a',expectedStatusRevision:1,visibility:'hidden',reason:'stop translation context'});return response(l.wire);});await core.processNext(cfg,infer);expect(infer).toHaveBeenCalledTimes(1);
+  expect((await status(id)).items[0].state).toBe('needs-changes');expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.text_translation_revisions")).rows[0].n).toBe(0);
+ });
+
 
 });
 

@@ -1,4 +1,5 @@
 /** Dedicated local publisher. It projects stored knowledge; it does not collect data. */
+import {assertKnowledgeCapability,knowledgeDeployment} from "../lib/server/knowledge-deployment";
 import { knowledgePublicationPreview, closeKnowledgePublicationPreview } from "../lib/server/knowledge-publication-preview";
 
 const args = new Set(process.argv.slice(2));
@@ -11,6 +12,7 @@ try {
   const publication = await knowledgePublicationPreview(true);
   while (!stopping) {
     try {
+      if(knowledgeDeployment())assertKnowledgeCapability("publisher");
       const result = await publication.publishPending({ force: args.has("--force") });
       if (result.state === "published") console.log(JSON.stringify({ at: new Date().toISOString(), event: "publication", result }));
       if (args.has("--once")) {
