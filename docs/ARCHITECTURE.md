@@ -1,3 +1,5 @@
+2026-11-06 R1i：訳文の意味一致確認に固定した公開文脈・hash・依存版を接続し、送信前／受理／再開時に再検査。152テスト、実AIの補修後最終3例と実Googleの確認1回→自動公開を確認。原文2版・Record28版を保持。app 949dcf1b／build igP4lAgYwqySRsHBZpIUB、追加migrationなし。R1全体は未完了で、次は配置別認可と境界照合。[設計](design/KNOWLEDGE_TRANSLATION_REVIEW.md)／[実操作・残件](verification/KNOWLEDGE_TRANSLATION_REVIEW_R1I_20261106.md)。
+
 2026-11-06 R1h：同名候補に分類・説明・関係端点と任意の関連知識を表示し、8画面の資料リンクに実host表示と危険URLの抑止を共通化。187テスト、実Googleの対象変更・草稿保存／再訪と390px幅を確認。app c70aa3c0／build CCFcwQNpAsu6DO5SpjnZU。追加migrationなし。R1全体は未完了で、配置別認可と訳文の意味一致確認に公開文脈を固定する処理が残る。[設計](design/KNOWLEDGE_SELECTION_AND_SOURCE_LINKS.md)／[検証・再開](verification/KNOWLEDGE_SELECTION_LINKS_R1H_20261106.md)。
 
 2026-11-06 R1g：翻訳草稿に公開版の文脈を添え、文脈hashを含む再利用と公開停止時の読取停止を接続。66テスト、実AI修正後3例、実Googleの生成・編集引継ぎ・再訪を確認。送信1回のまま再利用。会員031追加、app83dd4081／build dgujqpNWl8Q-yJiuYC9sd。R1全体は未完了。[設計](design/KNOWLEDGE_TRANSLATION_GENERATION.md)／[検証と残件](verification/KNOWLEDGE_TRANSLATION_CONTEXT_R1G_20261106.md)。
@@ -14,7 +16,7 @@
 
 - βの新方式はPostgreSQLの独立した知識DB／`knowledge75`の原記録・版を正本とし、Neo4jの専用label／公開世代を探索投影に使う。会員DBの認証・投稿／処理queueと責務・資格を分ける。詳細は[共通原本](design/KNOWLEDGE_FOUNDATION_U1.md)と[公開投影](design/KNOWLEDGE_PUBLIC_READ_U2.md)。
 - 既存の旧KGは並行して読む。本文中の「Neo4jが正本」「投稿flowは将来」等は旧KG／当時の構成の記録で、新方式の契約を取り消すものではない。旧KG由来も巡回・検索対象から落とさず、対応と切替を確認する。
-- main／3200／HTTPS βには新方式が段階配置済み。最後の機能配置はapp c70aa3c0／build CCFcwQNpAsu6DO5SpjnZU（[対象識別・資料リンク](verification/KNOWLEDGE_SELECTION_LINKS_R1H_20261106.md)）。取得証明と新旧全件列挙は知識007、取込APIは会員030で接続済み。全件自動整理と定期配送は未完了。正式VPSへの新方式切替はR6／旧U8で、β成功と正式公開を区別する。R1eは追加migrationなしでWeb／Workerを更新。本番実機は今回再確認していない。
+- main／3200／HTTPS βには新方式が段階配置済み。最後の機能配置はapp 949dcf1b／build igP4lAgYwqySRsHBZpIUB（[訳文意味確認](verification/KNOWLEDGE_TRANSLATION_REVIEW_R1I_20261106.md)）。取得証明と新旧全件列挙は知識007、取込APIは会員030で接続済み。全件自動整理と定期配送は未完了。正式VPSへの新方式切替はR6／旧U8で、β成功と正式公開を区別する。R1eは追加migrationなしでWeb／Workerを更新。本番実機は今回再確認していない。
 - 原語・訳文・意味対応・同一性・原資料・固定断面を分け、根拠付きの自動適用と任意管理を接続する。下記の旧提案・段階的な制限を、最新の要件から機能を除外する根拠にしない。
 
 以下は各時点の配置履歴と旧構成の詳細。現在の実装順と不足は上記の再計画を優先する。

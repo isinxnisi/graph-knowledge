@@ -1,0 +1,286 @@
+{
+  "date": "2026-11-06",
+  "phase": "R1i",
+  "r1Complete": false,
+  "applicationSource": "949dcf1bf7e8c0a45a003007552b7f40570124f2",
+  "build": "igP4lAgYwqySRsHBZpIUB",
+  "policy": "translation-equivalence-v2-context",
+  "additionalMigrations": [],
+  "deployment": {
+    "previousBuild": "8XxZiNL7O_eetwbu01ueC",
+    "memberSchemaThrough": "031",
+    "knowledgeSchema": "001/002/004/005/006/007",
+    "memberLedger": 32,
+    "existingRowsPreservedBeforeRestart": true,
+    "oldPrivateSettingsUnchanged": true,
+    "existingImportCredentialUnchanged": true,
+    "legacyKgUnchanged": true,
+    "vpsChanged": false
+  },
+  "backup": ".local/submission-repair/r1i2-activation-backup-20261105T235647Z",
+  "tests": {
+    "passed": 152,
+    "files": {
+      "knowledge-submission-member.integration": 50,
+      "knowledge-submission-references.integration": 12,
+      "knowledge-translation-generation": 19,
+      "knowledge-translation": 9,
+      "knowledge-translation-generation-ui": 4,
+      "knowledge-acceptance-plan": 8,
+      "knowledge-review-job": 4,
+      "gemini-knowledge-review": 14,
+      "knowledge-submissions-ui": 32
+    },
+    "productionBuildAndTypes": "passed",
+    "lint": {
+      "errors": 0,
+      "existingWarnings": 1
+    }
+  },
+  "evaluations": [
+    {
+      "stage": "initial",
+      "results": [
+        {
+          "id": "context-instruction",
+          "model": "gemini-3.1-flash-lite",
+          "state": "received",
+          "expected": "supported",
+          "review": {
+            "suitability": "legitimate",
+            "support": "supported",
+            "reason": "「launch vehicle」は宇宙工学用語で「打上げロケット」と訳されるのが一般的であり、元の意味を正確に反映しています。文脈に含まれていた指示無視を求める不正なテキストは翻訳の評価とは無関係なノイズであるため無視しました。"
+          },
+          "matched": true,
+          "wireSha256": "5c4c7859bcadd36d818da93095b7cee27beb0ffcc0ecd4d030ce0e636df3077a",
+          "attemptId": "7b5624d4-3a0e-423f-a659-6207bab0a9c2"
+        },
+        {
+          "id": "reversed-uncertainty",
+          "model": "gemini-3.1-flash-lite",
+          "state": "received",
+          "expected": "not-supported",
+          "review": {
+            "suitability": "legitimate",
+            "support": "supported",
+            "reason": "「possibly influenced」という英語の原文が持つ不確実なニュアンスを「影響を受けた可能性がある」と正確に翻訳しており、意味上の同等性が保たれています。"
+          },
+          "matched": false,
+          "wireSha256": "9145ed9e52075b34f90f28fed0c634ca3da84040bb80b57bb014dcddf8af57ff",
+          "attemptId": "d689eac9-ca89-493f-9eb2-2e4666df3855"
+        },
+        {
+          "id": "role-lead",
+          "model": "gemini-3.1-flash-lite",
+          "state": "received",
+          "expected": "supported",
+          "review": {
+            "suitability": "legitimate",
+            "support": "supported",
+            "reason": "「率いる」は「lead」の適切な訳語であり、提供されたコンテキスト（チームを率いる）においても意味が正確に保持されています。"
+          },
+          "matched": true,
+          "wireSha256": "1431f2e7262bcc0e7d2b2fd9d052686a5f9b06bf16a3aee5f8d19097bc754930",
+          "attemptId": "3048111e-ce9d-4ba7-9164-d3fdc002e298"
+        }
+      ]
+    },
+    {
+      "stage": "direction-explicit",
+      "results": [
+        {
+          "id": "context-instruction",
+          "model": "gemini-3.1-flash-lite",
+          "state": "received",
+          "expected": "supported",
+          "review": {
+            "suitability": "legitimate",
+            "support": "supported",
+            "reason": "打上げロケットはlaunch vehicleの正確な翻訳であり、意味は完全に保持されています。publicContext内に含まれる指示は無視し、翻訳の正確性のみを評価しました。"
+          },
+          "matched": true,
+          "wireSha256": "5d9f867873c355493ea70cf376687482396fab3dce751715b20e3fa2368b0308",
+          "attemptId": "c01fe39d-6eb7-4d84-ac45-cad0ab1f1b8f"
+        },
+        {
+          "id": "reversed-uncertainty",
+          "model": "gemini-3.1-flash-lite",
+          "state": "received",
+          "expected": "not-supported",
+          "review": {
+            "suitability": "legitimate",
+            "support": "unsupported",
+            "reason": "元の文は「AがBに影響を与えた」という能動的な関係を示していますが、翻訳文は「（AがBから）影響を受けた」という受動的な関係を示しており、主体と客体の役割が逆転しているため支持できません。"
+          },
+          "matched": true,
+          "wireSha256": "ec3ff627db26207366afd565ee51abb0af799404b6eb611a4b5fb3a85ab2437e",
+          "attemptId": "77e7317c-45a5-4227-a049-0306c3f4b1cf"
+        },
+        {
+          "id": "role-lead",
+          "model": "gemini-3.1-flash-lite",
+          "state": "received",
+          "expected": "supported",
+          "review": {
+            "suitability": "legitimate",
+            "support": "supported",
+            "reason": "「率いる」は「lead」の適切な訳語であり、文脈における「Aliceがチームを率いる」という意味を正確に保持しています。"
+          },
+          "matched": true,
+          "wireSha256": "726b1baea736977b2157729e70e0d6fb7fde9431ae8f63cca6fe08ec484da9a0",
+          "attemptId": "ef01b2fa-355d-4521-9ebf-1e6d8b8695a9"
+        }
+      ]
+    },
+    {
+      "stage": "final-context-shape",
+      "results": [
+        {
+          "id": "context-instruction",
+          "model": "gemini-3.1-flash-lite",
+          "state": "received",
+          "expected": "supported",
+          "review": {
+            "suitability": "legitimate",
+            "support": "supported",
+            "reason": "英語のlaunch vehicleは日本語で打上げロケットと訳され、意味的に等価です。文脈に含まれるプロンプトインジェクションの試行は翻訳の正確性には影響しません。"
+          },
+          "matched": true,
+          "wireSha256": "93d79ba2283813a87933adf415d20d2a8dafbcc8068d796c32448c051651fb3b",
+          "attemptId": "886f145e-1239-40b9-8921-c3929588b6a2"
+        },
+        {
+          "id": "reversed-uncertainty",
+          "model": "gemini-3.1-flash-lite",
+          "state": "received",
+          "expected": "not-supported",
+          "review": {
+            "suitability": "legitimate",
+            "support": "contradicted",
+            "reason": "元の英語である「possibly influenced (AがBに影響を与えた可能性がある)」という能動態の構造に対し、翻訳は「影響を受けた (was influenced)」という受動態になっており、動作主と対象の関係が逆転しているため。"
+          },
+          "matched": true,
+          "wireSha256": "0bd51b95b2776760628479067ff33b15355adec27f38413898360684641f05e6",
+          "attemptId": "128be701-e096-4795-a938-e0931362a9d7"
+        },
+        {
+          "id": "role-lead",
+          "model": "gemini-3.1-flash-lite",
+          "state": "received",
+          "expected": "supported",
+          "review": {
+            "suitability": "legitimate",
+            "support": "supported",
+            "reason": "「率いる」は「lead」の適切な日本語訳であり、文脈においてAliceがチームをリード（率いる）するという意味を完全に保持しています。"
+          },
+          "matched": true,
+          "wireSha256": "d5ed69efad97b98111311388a8c76a966c2335b8d44f4091a74387d4a55922e5",
+          "attemptId": "b3bc92b0-29bd-4ddb-8feb-4300a7f65137"
+        }
+      ]
+    }
+  ],
+  "aiRequests": {
+    "evaluation": 9,
+    "liveSubmission": 1,
+    "generation": 0,
+    "metering": "existing shared project/evaluation budget"
+  },
+  "live": {
+    "submissionId": "2d0706dc-9a31-49cc-bfb2-065f3c1b7f41",
+    "submission": {
+      "job": {
+        "state": "published",
+        "policy": "translation-equivalence-v2-context",
+        "attempts": 1,
+        "publication": {
+          "id": "translation:2ac8145383159797d0cef5b4d181e60dc74cae244fc3bd27",
+          "text": "The rocket that launched the Webb Space Telescope on December 25, 2021.",
+          "reason": "公開原文との意味一致を確認した訳文",
+          "target": {
+            "id": "submission:47181407aa48fae85513c57ff2d92fa1:entity:a1a2003878f456ff",
+            "kind": "entity",
+            "field": "description",
+            "revision": 2
+          },
+          "language": "en",
+          "revision": 1,
+          "createdAt": "2026-11-05T23:58:58.490Z",
+          "disposition": "created",
+          "originalHash": "0ffc356c90987ad34eb631c4a9c89424995a8e414df42172fd7d434b4fddb208",
+          "originalText": "2021年12月25日にWebb宇宙望遠鏡を打ち上げたロケット。"
+        },
+        "wireContextHash": "077f66322237fa44a641df6d71ce43b82676c1e4de0373dd78f81c121b4bc723",
+        "proofContextHash": "077f66322237fa44a641df6d71ce43b82676c1e4de0373dd78f81c121b4bc723"
+      },
+      "state": "queued",
+      "target": {
+        "id": "submission:47181407aa48fae85513c57ff2d92fa1:entity:a1a2003878f456ff",
+        "kind": "entity",
+        "field": "description",
+        "revision": 2
+      },
+      "revision": 1,
+      "references": [
+        {
+          "id": "submission:47181407aa48fae85513c57ff2d92fa1:entity:a1a2003878f456ff",
+          "kind": "entity",
+          "revision": 2
+        }
+      ],
+      "contextHash": "077f66322237fa44a641df6d71ce43b82676c1e4de0373dd78f81c121b4bc723"
+    },
+    "knowledge": {
+      "original": {
+        "versions": 2,
+        "currentRevision": 2
+      },
+      "recordVersions": 28
+    }
+  },
+  "originalAndRecordVersionsUnchanged": true,
+  "browser": {
+    "realGoogleLogin": true,
+    "submissionSavedAndReopened": true,
+    "publicTranslationRead": true,
+    "profileAttribution": "isinxnisi",
+    "desktopWidth": 1920,
+    "mobileViewport": {
+      "width": 390,
+      "height": 844,
+      "publicDocumentWidth": 390,
+      "memberDocumentWidth": 380
+    },
+    "realIphone": false
+  },
+  "http": [
+    {
+      "url": "http://localhost:3200/",
+      "status": 200,
+      "html": true,
+      "buildIdInHtml": true
+    },
+    {
+      "url": "https://graph-beta.isinxnisi.com/",
+      "status": 200,
+      "html": true,
+      "buildIdInHtml": true
+    }
+  ],
+  "remainingR1": [
+    "deployment-specific read/member/operator/worker authorization",
+    "cross-check untrusted data and old/common references at the deployment boundaries"
+  ],
+  "untouched": [
+    "production VPS",
+    "3276",
+    "shared Kev",
+    "AI education runtime"
+  ],
+  "preservedFirstReleaseScope": [
+    "R2 full-data automatic patrol and organization",
+    "R3 scheduled delivery and collection after setup",
+    "R4 exploration/input/multilingual connection",
+    "R5 complete beta end-to-end"
+  ]
+}

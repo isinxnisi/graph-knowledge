@@ -1,3 +1,5 @@
+2026-11-06 R1i：訳文の意味一致確認に固定した公開文脈・hash・依存版を接続し、送信前／受理／再開時に再検査。152テスト、実AIの補修後最終3例と実Googleの確認1回→自動公開を確認。原文2版・Record28版を保持。app 949dcf1b／build igP4lAgYwqySRsHBZpIUB、追加migrationなし。R1全体は未完了で、次は配置別認可と境界照合。[現在の検証・再開](../verification/KNOWLEDGE_TRANSLATION_REVIEW_R1I_20261106.md)。過去時点の差分表を最新の未実装一覧として使わない。
+
 2026-11-06 R1e追補：共通Entityの原文訂正と固定版readerをβへ接続。専用訂正方針の実AI受理は無料枠待ちで未確認。R1全体・初版全体は未完了。[契約](KNOWLEDGE_ENTITY_CORRECTION.md)／[検証](../verification/KNOWLEDGE_R1E_ENTITY_HISTORY_20261106.md)。残件や全件自動巡回・定期収集を縮小しない。
 
 2026-11-05 R1d追補：認証付き取込API・永続受付・直接配送clientをβ実証。R1全体・初版全体は未完了で、残件の縮小はしない。[現行の実装・配置・再開](../verification/KNOWLEDGE_IMPORT_R1D_20261105.md)。

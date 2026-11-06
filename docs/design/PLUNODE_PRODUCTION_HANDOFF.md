@@ -1,3 +1,5 @@
+2026-11-06 R1i：訳文の意味一致確認に固定した公開文脈・hash・依存版を接続し、送信前／受理／再開時に再検査。152テスト、実AIの補修後最終3例と実Googleの確認1回→自動公開を確認。原文2版・Record28版を保持。app 949dcf1b／build igP4lAgYwqySRsHBZpIUB、追加migrationなし。R1全体は未完了で、次は配置別認可と境界照合。[検証と再開](../verification/KNOWLEDGE_TRANSLATION_REVIEW_R1I_20261106.md)。
+
 2026-11-06 R1h：同名候補に分類・説明・関係端点と任意の関連知識を表示し、8画面の資料リンクに実host表示と危険URLの抑止を共通化。187テスト、実Googleの対象変更・草稿保存／再訪と390px幅を確認。app c70aa3c0／build CCFcwQNpAsu6DO5SpjnZU。追加migrationなし。R1全体は未完了で、配置別認可と訳文の意味一致確認に公開文脈を固定する処理が残る。[検証と再開](../verification/KNOWLEDGE_SELECTION_LINKS_R1H_20261106.md)。
 
 2026-11-06 R1g：公開文脈付き翻訳とcacheをmain／3200／HTTPS βへ反映。66テスト、最終実AI3例、実Googleの生成・草稿引継ぎ・再訪を確認。会員031、app83dd4081／build dgujqpNWl8Q-yJiuYC9sd。R1全体は未完了。[検証と再開](../verification/KNOWLEDGE_TRANSLATION_CONTEXT_R1G_20261106.md)。
@@ -31,7 +33,7 @@
 3. Gemini3.1と自動再試行、共通取得証明・全件対象台帳は実装・β確認済み。旧待機jobは登録済みになった。R1b/cを再実装しない。
 4. R1dの専用資格・永続package／receipt・HTTP受付／取消／結果・共通受理を維持する。[取込runbook](../runbooks/KNOWLEDGE_IMPORT.md)と最新の[検証記録](../verification/KNOWLEDGE_IMPORT_R1D_20261105.md)で実装・実接続と未確認を区別する。
 5. ChatGPT予定実行からの直接配送は未接続。R3で実証し、直送不可なら同じAPIのIssue adapterを実際に試す。手動clientだけで定期配送完了とはしない。
-6. R1eのEntity原文訂正と固定版readerを維持し、正常な訂正の実AI受理はR1f、翻訳草稿生成の公開文脈とcacheはR1g、同名候補の比較と共通資料リンクはR1hで接続済み。次は新旧対象と配置別認可、訳文の意味一致確認への公開文脈固定・受理時再検査、未信頼AI入力の権限境界を閉じる。生成の文脈接続だけで、意味一致確認も完成したと扱わない。
+6. R1eのEntity原文訂正と固定版readerを維持し、正常な訂正の実AI受理はR1f、翻訳草稿生成の公開文脈とcacheはR1g、同名候補の比較と共通資料リンクはR1hで接続済み。訳文の意味一致確認への公開文脈固定・受理時再検査はR1iで接続済み。次は新旧対象と配置別認可、未信頼AI入力の権限境界を閉じる。R1i検証記録の実装先と残件を入口にする。
 7. 検証→日本語commit→通常push→検証済みmain／3200／HTTPS βへ反映→代表操作→hold解放。初版全体の完成条件を満たすまでは部分完了を明示する。
 
 **「初版の機能実装完了＋β統合検証」まで残り6〜11回程度（推定）**。R1残件1〜2回、R2〜R5計5〜9回。VPS切替・本番向け移行・Linux脆弱性対応・正式URL確認は別の公開工程。通常の管理者による個別承認／毎回のURL列挙へ戻さず、回数のために範囲を縮めない。新しいCodexチャット作成・自動モデル切替は行っていない。
