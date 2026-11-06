@@ -1,3 +1,5 @@
+2026-11-06 R1j：配置profileと用途別capability、送信・公開・再開時の認可を共通化。βの許可会員・既存資格は維持。外部翻訳取込も公開文脈／wire／attemptの照合へ接続した。208件・型検査込みbuildと実Googleの草稿作成・保存・再訪、PC／390pxを確認。app `db9303fe`／build `2QST9Iieq0L0g-6y3nJDa`、追加migrationなし。**R1の共通契約は完了、次はR2の全データ巡回・自動整理。本運用初版全体は未完了。** [配置・実操作・保全](../verification/KNOWLEDGE_DEPLOYMENT_R1J_20261106.md)。通常再開は既存launcherを使う。private stateのbeta-deployment.json（0600）を全5サービスへ渡し、既存reviewのallowlistとの一致を検査する。profile不正時に外して有効化を迂回しない。最終配置でも既存12 privateファイルとDBの全行・ledgerを保持した。以下は過去時点の配置記録。
+
 2026-11-06 AI利用上限は[現行契約](../design/KNOWLEDGE_AI_BUDGET.md)を優先：サービス400回／日、収集133・翻訳66・評価100を内数にし、Google側のRPD500と区別する。課金・keyは変更しない。過去の80回は旧サービス設定であり無料枠そのものではない。
 
 2026-11-05 R1a：原語のみの訂正・本文編集時の言語継承・既存Themeの情報訂正を修正。103件と実Googleで確認し、app `117eb865` / build `uPWWdnHXPI_CAwfJa0T1O`をmain／3200／HTTPS βへ反映。追加migrationなし、3276／VPSは未更新。R1全体は未完了。[実操作・保全・再開・残件](../verification/KNOWLEDGE_R1A_LANGUAGES_20261105.md)。

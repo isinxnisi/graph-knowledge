@@ -1,6 +1,6 @@
 # 外部知識packageの受付・再開
 
-R1d。認証付きAPIへの直接配送まで。予定実行・資料探索・Issue配送はR3で接続する。[契約](../design/KNOWLEDGE_IMPORT_CONTRACT.md)／[検証](../verification/KNOWLEDGE_IMPORT_R1D_20261105.md)。
+R1d／R1j。認証付きAPIへの直接配送と、配置認可・公開文脈付き翻訳取込まで。予定実行・資料探索・Issue配送はR3で接続する。[契約](../design/KNOWLEDGE_IMPORT_CONTRACT.md)／[検証](../verification/KNOWLEDGE_IMPORT_R1D_20261105.md)。
 
 ## 配置するもの
 
@@ -26,7 +26,7 @@ server設定の形（secret値そのものは保存しない）：
 }
 ~~~
 
-entities／records／sourcesは必要なら明示的に「*」を許せる。themesは明示IDだけ。sourcesの権限は資料の訳文対象用。通常の資料引用は公開Source pinで参照する。新Entity追加を許すときだけallowNewEntitiesとcreate-entityを追加する。資格の停止・期限・範囲はworkerの送信前と最終反映でも再検査する。範囲縮小をpayloadで解除できない。
+entities／records／sourcesは必要なら明示的に「*」を許せる。themesは明示IDだけ。sourcesの権限は資料の訳文対象と、外部翻訳の確認に送る公開文脈の資料用。通常の資料引用は公開Source pinで参照する。新Entity追加を許すときだけallowNewEntitiesとcreate-entityを追加する。資格の停止・期限・範囲はworkerの送信前と最終反映でも再検査する。範囲縮小をpayloadで解除できない。
 
 ## package
 
@@ -77,3 +77,9 @@ worker再開は通常のlauncherでよく、receiptの人手承認は不要。�
 共通Entity原文の訂正はcorrect-entityで送り、資格のoperationsへの明示許可が必要。既存資格は自動拡張しない。[訂正の契約](../design/KNOWLEDGE_ENTITY_CORRECTION.md)を使い、IDや観測版を替えて訂正を再試行しない。
 
 R1eの配置はコードのみで追加migrationなし。既存の11 private設定・送信資格・無料枠を維持し、Webと4 Workerを通常launcherで復帰する。過去のmigration適用／資格新規作成用の一回用scriptを再実行しない。最新build・backup・無料枠待ちの確認投稿は[記録](../verification/KNOWLEDGE_R1E_ENTITY_HISTORY_20261106.md)へ。再起動で受付や利用枠をリセットしない。
+
+## R1jの配置と翻訳再開
+
+[配置認可](../design/KNOWLEDGE_DEPLOYMENT_AUTHORIZATION.md)のimport／review-worker capabilityと既存enabled flag・principal資格を全て必要とする。profileは送信元やpayloadで選ばせない。翻訳の公開文脈はサーバーが取得し、必要な対象・知識・資料・Themeがprincipalの許可集合に入ることを確認する。許可なしの資料文脈はAIへ送らず、内容不備をreceiptへ返す。既存資格の集合を自動で広げない。
+
+文脈なしの旧翻訳attempt／decisionを現行の意味一致確認として再利用せず、新しいpackage版で取り直す。文脈hash・参照版・wire／digest／attemptを送信前と公開前、再開時にも照合する。既にcommit済みの受理は既存operation IDで回収し、重複適用しない。元の内容版と公開訳文版を別に保つ。

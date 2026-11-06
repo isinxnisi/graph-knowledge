@@ -1,3 +1,33 @@
+# 現在の再開点：R2へ（2026-11-06）
+
+2026-11-06 R1j：配置profileと用途別capability、送信・公開・再開時の認可を共通化。βの許可会員・既存資格は維持。外部翻訳取込も公開文脈／wire／attemptの照合へ接続した。208件・型検査込みbuildと実Googleの草稿作成・保存・再訪、PC／390pxを確認。app `db9303fe`／build `2QST9Iieq0L0g-6y3nJDa`、追加migrationなし。**R1の共通契約は完了、次はR2の全データ巡回・自動整理。本運用初版全体は未完了。** [今回の結果と固定条件](../verification/KNOWLEDGE_DEPLOYMENT_R1J_20261106.md)／[配置別認可](KNOWLEDGE_DEPLOYMENT_AUTHORIZATION.md)。
+
+## 次担当の作業
+
+1. AGENTSの参照先、[再計画](PLUNODE_IMPLEMENTATION_REPLAN_20261105.md)、[進行表](../PLUNODE_PROGRESS.md)、R1j記録を確認し、review／hold／tokenを取得する。mainのmemo.txtと作業側の.localを保護する。
+2. **R2の全登録データ巡回・自動整理へ進む。** R1cの新旧全件対象台帳・取得証明、共通原本、同一性resolver、意味対応、既存AI予約／再試行、R1jの認可を再利用する。対象数を過去の観測値へ固定しない。
+3. 永続cursor・版変更追従・再開、候補生成、根拠／意味／同一性の確認、許されたcommandだけの自動適用・公開を一連にする。曖昧・不正・通信失敗の一部を待機／未解決へ分け、全体巡回を止めない。通常分の管理者の必須選択・承認を0にする。元ID・原語・具体語・根拠・旧Theme／Capsule断面を維持する。
+4. 新しいAI wireと自動適用の攻撃例・停止再開・実AI・旧KGを含む全件到達を、その工程の完了条件として検証する。既存の予算を迂回せず、原資料／AI文を権限や任意の更新命令へ昇格しない。
+5. R3の定期ChatGPT配送／収集、R4の新旧検索・多言語・入力／年表・Capsule接続、R5のβ全体一巡を縮小しない。R1jの部分検証をこれらの完成と数えない。
+
+## 配置と再開
+
+現在はmainと作業branch `codex/issue75-theme-foundation`。アプリsource `db9303fe282bb4c4afc9d01a4e2d5e8cf409872b`／build `2QST9Iieq0L0g-6y3nJDa`、3200とHTTPS βへ反映済み。正式VPS／3276／共有Kevは未更新。会員000〜031、知識001/002/004/005/006/007。既存11設定＋新deployment profileの12 privateファイルを保持する。
+
+既存環境の再開はmainで次を使う。今回のための再buildやmigration再適用は不要。
+
+~~~sh
+python3 scripts/start-local-previews.py beta --node /home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/issue75/node
+~~~
+
+profileは `~/.local/state/plunode-previews/beta-deployment.json`、0600。現在のβの会員allowlistを維持し、一般提供modeや本番資格へ勝手に切り替えない。5サービスが同じprofileを読み込む。正式用の実資格・DB GRANT・Linux対応はR6で現物確認する。
+
+**初版の機能実装完了＋β統合検証まで5〜9回程度、正式公開はさらに1〜2回の推定。** 通常の管理者承認や毎回のURL列挙を利用者へ戻さない。
+
+# 以下は過去時点の引継ぎ記録
+
+上の現在地と再開手順を優先する。以下の「次」「未実装」は記載時点の経緯であり、R1を再実装する指示ではない。
+
 2026-11-06 R1i：訳文の意味一致確認に固定した公開文脈・hash・依存版を接続し、送信前／受理／再開時に再検査。152テスト、実AIの補修後最終3例と実Googleの確認1回→自動公開を確認。原文2版・Record28版を保持。app 949dcf1b／build igP4lAgYwqySRsHBZpIUB、追加migrationなし。R1全体は未完了で、次は配置別認可と境界照合。[検証と再開](../verification/KNOWLEDGE_TRANSLATION_REVIEW_R1I_20261106.md)。
 
 2026-11-06 R1h：同名候補に分類・説明・関係端点と任意の関連知識を表示し、8画面の資料リンクに実host表示と危険URLの抑止を共通化。187テスト、実Googleの対象変更・草稿保存／再訪と390px幅を確認。app c70aa3c0／build CCFcwQNpAsu6DO5SpjnZU。追加migrationなし。R1全体は未完了で、配置別認可と訳文の意味一致確認に公開文脈を固定する処理が残る。[検証と再開](../verification/KNOWLEDGE_SELECTION_LINKS_R1H_20261106.md)。

@@ -1,0 +1,58 @@
+{
+  "source": "db9303fe282bb4c4afc9d01a4e2d5e8cf409872b",
+  "build": "2QST9Iieq0L0g-6y3nJDa",
+  "deployment": "knowledge-beta-r1j",
+  "tests": 208,
+  "testFiles": 11,
+  "additionalMigrations": [],
+  "privateSettingsPreserved": 12,
+  "reviewMemberScopePreserved": true,
+  "tablesCompared": {
+    "member": 69,
+    "knowledge": 23
+  },
+  "draftAudit": {
+    "member": {
+      "draftState": "draft",
+      "draftRevision": 3,
+      "contextHashPresent": true,
+      "reviewJobs": 0
+    },
+    "knowledge": {
+      "recordVersions": 28,
+      "entityCurrentRevision": 2,
+      "translationCurrentRevision": 1
+    }
+  },
+  "httpBoundaries": [
+    {
+      "host": "localhost:3200",
+      "status": 200,
+      "themes": 3
+    },
+    {
+      "host": "attacker.example",
+      "status": 403
+    },
+    {
+      "unauthenticatedRoute": "/api/member/knowledge-submissions",
+      "status": 401
+    },
+    {
+      "unauthenticatedRoute": "/api/site-operations/knowledge",
+      "status": 401
+    },
+    {
+      "unauthenticatedRoute": "/api/knowledge-collection/worker",
+      "status": 401
+    },
+    {
+      "unauthenticatedRoute": "/api/knowledge-import/packages",
+      "status": 401
+    }
+  ],
+  "realGoogle": "existing beta owner session; draft create/edit/save/revisit; no new OAuth",
+  "newAiRequestsForVerification": 0,
+  "vpsChanged": false,
+  "next": "R2 full registered-data patrol and automatic organization"
+}

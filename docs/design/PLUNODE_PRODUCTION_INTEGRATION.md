@@ -1,3 +1,5 @@
+2026-11-06 R1j：配置profileと用途別capability、送信・公開・再開時の認可を共通化。βの許可会員・既存資格は維持。外部翻訳取込も公開文脈／wire／attemptの照合へ接続した。208件・型検査込みbuildと実Googleの草稿作成・保存・再訪、PC／390pxを確認。app `db9303fe`／build `2QST9Iieq0L0g-6y3nJDa`、追加migrationなし。**R1の共通契約は完了、次はR2の全データ巡回・自動整理。本運用初版全体は未完了。** [進行表](../PLUNODE_PROGRESS.md)／[今回の区切り](../verification/KNOWLEDGE_DEPLOYMENT_R1J_20261106.md)。以降のU番号の経緯と、現在のR工程を区別する。
+
 2026-11-04 U6資料取得：有限依頼・HTTPS API・PC取得・artifact／配送checkpoint・取消をmain／3200／HTTPS βへ接続し、実NASA2資料を確認。U6全体は未完了で、読解・通常自動登録・意味整理・AI枠の接続は後続。U5の保存枠による新規Capsule保存・共有未確認は解消。[配置・実操作・残件](../verification/KNOWLEDGE_COLLECTION_U6_CAPTURE_20261104.md)。以下は各時点の履歴。
 
 2026-11-04 U5：受付項目への相談・取消、運営回答／再確認／例外確認、公開停止・元案件からの解除、本人通知をmain／3200／HTTPS βへ接続。限定βでのU5基本接続まで完了。一般提供条件と今回の会員新規Capsule保存再確認は残る（保存枠20件が満杯）。U6収集・U7統合受入・U8正式公開は別工程。 [検証・配置・制約](../verification/KNOWLEDGE_APPEALS_U5_20261104.md)。以下は各時点の履歴。

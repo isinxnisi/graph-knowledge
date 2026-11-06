@@ -1,3 +1,5 @@
+2026-11-06 R1j：配置profileと用途別capability、送信・公開・再開時の認可を共通化。βの許可会員・既存資格は維持。外部翻訳取込も公開文脈／wire／attemptの照合へ接続した。208件・型検査込みbuildと実Googleの草稿作成・保存・再訪、PC／390pxを確認。app `db9303fe`／build `2QST9Iieq0L0g-6y3nJDa`、追加migrationなし。**R1の共通契約は完了、次はR2の全データ巡回・自動整理。本運用初版全体は未完了。** [設計](design/KNOWLEDGE_DEPLOYMENT_AUTHORIZATION.md)／[検証・残件](verification/KNOWLEDGE_DEPLOYMENT_R1J_20261106.md)
+
 2026-11-06 R1i：訳文の意味一致確認に固定した公開文脈・hash・依存版を接続し、送信前／受理／再開時に再検査。152テスト、実AIの補修後最終3例と実Googleの確認1回→自動公開を確認。原文2版・Record28版を保持。app 949dcf1b／build igP4lAgYwqySRsHBZpIUB、追加migrationなし。R1全体は未完了で、次は配置別認可と境界照合。[設計](design/KNOWLEDGE_TRANSLATION_REVIEW.md)／[実操作・残件](verification/KNOWLEDGE_TRANSLATION_REVIEW_R1I_20261106.md)。
 
 2026-11-06 R1h：同名候補に分類・説明・関係端点と任意の関連知識を表示し、8画面の資料リンクに実host表示と危険URLの抑止を共通化。187テスト、実Googleの対象変更・草稿保存／再訪と390px幅を確認。app c70aa3c0／build CCFcwQNpAsu6DO5SpjnZU。追加migrationなし。R1全体は未完了で、配置別認可と訳文の意味一致確認に公開文脈を固定する処理が残る。[設計](design/KNOWLEDGE_SELECTION_AND_SOURCE_LINKS.md)／[検証・再開](verification/KNOWLEDGE_SELECTION_LINKS_R1H_20261106.md)。
