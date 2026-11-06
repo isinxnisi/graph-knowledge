@@ -1,3 +1,4 @@
+import {knowledgePublishingEnabled,knowledgeCapability} from "../knowledge-deployment";
 import {readAppeal} from "./knowledge-appeals";
 import {createHash} from "node:crypto";
 import {readFile} from "node:fs/promises";
@@ -10,7 +11,7 @@ import {KnowledgeError} from "../knowledge-foundation";
 import {assertMemberOrigin,MemberError,memberId,memberInput,memberJson} from "./http";
 import {activeMember,memberTransaction} from "./operations";
 
-export function currentReviewDisclosure(){return reviewDisclosureForConsent(process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED==='1'?PUBLICATION_CONSENT_VERSION:REVIEW_CONSENT_VERSION)!;}
+export function currentReviewDisclosure(){return reviewDisclosureForConsent(knowledgePublishingEnabled()?PUBLICATION_CONSENT_VERSION:REVIEW_CONSENT_VERSION)!;}
 export async function ensureSubmissionFeedbackSchema(pool:Pool){
  const checksum=createHash('sha256').update(await readFile(path.join(process.cwd(),'db/member/024-knowledge-submission-feedback.sql'))).digest('hex');
  if((await pool.query("SELECT checksum FROM member_migration WHERE name='024-knowledge-submission-feedback.sql'")).rows[0]?.checksum!==checksum)throw new KnowledgeError('結果通知用の明示migrationが必要です',503,'MIGRATION_REQUIRED');
@@ -26,7 +27,7 @@ export async function submissionNotificationSummary(c:Pool|PoolClient,ownerId:st
 }
 export function createMemberSubmissionFeedback(pool:Pool,origin:string,owner:(request:Request)=>Promise<{id:string}>){
  let ready:Promise<void>|undefined;
- const enabled=()=>{if(process.env.KNOWLEDGE_SUBMISSIONS_ENABLED!=='1')throw new MemberError(404,'NOT_FOUND');};
+ const enabled=()=>{if(process.env.KNOWLEDGE_SUBMISSIONS_ENABLED!=='1'||!knowledgeCapability('submissions',origin))throw new MemberError(404,'NOT_FOUND');};
  const ensure=()=>ready??=ensureSubmissionFeedbackSchema(pool).catch(e=>{ready=undefined;throw e;});
  const withOwner=async<T>(id:string,run:(c:PoolClient)=>Promise<T>)=>{await ensure();return memberTransaction(pool,async c=>{await activeMember(c,id);return run(c);});};
  return {

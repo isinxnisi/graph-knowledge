@@ -2,7 +2,7 @@ import {afterEach,beforeEach,expect,it,vi} from "vitest";
 import {mkdtempSync,writeFileSync,chmodSync,rmSync,symlinkSync} from "node:fs";
 import {tmpdir} from "node:os";
 import path from "node:path";
-import {knowledgeDeployment,knowledgeDeploymentSchema,knowledgeCapability,knowledgeCapabilities,assertKnowledgeWorker,deploymentMemberAllowed,reviewMemberScope,validateKnowledgeDatabase,type KnowledgeDeployment} from "../lib/server/knowledge-deployment";
+import {knowledgeDeployment,knowledgeDeploymentSchema,knowledgeCapability,knowledgeSubmissionsAvailable,knowledgePublishingEnabled,knowledgeCapabilities,assertKnowledgeWorker,deploymentMemberAllowed,reviewMemberScope,validateKnowledgeDatabase,type KnowledgeDeployment} from "../lib/server/knowledge-deployment";
 import {knowledgeReadGuard,knowledgeReadConfiguration} from "../lib/server/knowledge-read-runtime";
 import {reviewEnabledFor} from "../lib/server/knowledge-review-queue";
 import {acceptanceEnabled} from "../lib/server/knowledge-acceptance";
@@ -64,4 +64,13 @@ it("never lets a worker private destination select another deployment",()=>{
 });
 it.each(["http://plunode.net","https://user:password@plunode.net","https://plunode.net/route","https://plunode.net?target=other"])("rejects noncanonical origin %s",origin=>{
  expect(knowledgeDeploymentSchema.safeParse({...profile,origin}).success).toBe(false);
+});
+
+it("keeps the page, navigation, notification and publishing mode consistent with capabilities",()=>{
+ vi.stubEnv("KNOWLEDGE_SUBMISSIONS_ENABLED","1");expect(knowledgeSubmissionsAvailable()).toBe(true);expect(knowledgePublishingEnabled()).toBe(true);
+ profile.capabilities=["public-read","submissions","review"];save();expect(knowledgeSubmissionsAvailable()).toBe(true);expect(knowledgePublishingEnabled()).toBe(false);
+ profile.capabilities=["public-read"];save();expect(knowledgeSubmissionsAvailable()).toBe(false);
+});
+it("hides only the knowledge entry when the supplied profile is invalid",()=>{
+ vi.stubEnv("KNOWLEDGE_SUBMISSIONS_ENABLED","1");writeFileSync(file,"invalid");expect(knowledgeSubmissionsAvailable()).toBe(false);expect(()=>knowledgeCapability("submissions")).toThrow();
 });

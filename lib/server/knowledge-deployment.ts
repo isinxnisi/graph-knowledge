@@ -72,3 +72,7 @@ export function validateKnowledgeDatabase(profile:KnowledgeDeployment,connection
 export function assertKnowledgeWorker(capability:"review-worker"|"publisher"|"collector"|"reader",origin:string){
   assertKnowledgeCapability(capability,origin);
 }
+
+export const knowledgePublishingEnabled=()=>process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED==="1"&&knowledgeCapability("publish");
+/** A disabled/misconfigured knowledge feature must not break the ordinary KG shell. */
+export function knowledgeSubmissionsAvailable(){try{return process.env.KNOWLEDGE_SUBMISSIONS_ENABLED==="1"&&knowledgeCapability("submissions");}catch{return false;}}

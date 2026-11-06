@@ -1,3 +1,4 @@
+import {knowledgePublishingEnabled} from "../knowledge-deployment";
 import {knowledgeCapability,knowledgeDeployment} from "../knowledge-deployment";
 import {createHash,randomUUID} from "node:crypto";
 import {readFile} from "node:fs/promises";
@@ -117,7 +118,7 @@ export function createKnowledgeAppeals(pool:Pool,origin:string,owner:(r:Request)
     if(input.action==='recheck'||input.action==='confirm-content'){
      if(a.status!=='open'||s.current_revision!==j.revision||s.digest!==j.submitted_digest||s.state!=='queued'||!['needs-changes','declined','attention'].includes(j.state))throw new MemberError(409,'RESULT_CHANGED');
      const disclosure=reviewDisclosureForConsent(j.consent_version),authorization=(await c.query('SELECT consent_profile_id FROM member_knowledge.review_authorizations WHERE submission_id=$1 AND revision=$2',[s.id,j.revision])).rows[0];
-     if(!reviewEnabledFor(s.owner_id)||process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED!=='1'||j.consent_version!==PUBLICATION_CONSENT_VERSION||disclosure?.profileId!==j.consent_profile_id||authorization?.consent_profile_id!==disclosure?.profileId)throw new MemberError(409,'CONSENT_CHANGED');
+     if(!reviewEnabledFor(s.owner_id)||!knowledgePublishingEnabled()||j.consent_version!==PUBLICATION_CONSENT_VERSION||disclosure?.profileId!==j.consent_profile_id||authorization?.consent_profile_id!==disclosure?.profileId)throw new MemberError(409,'CONSENT_CHANGED');
      if((await c.query('SELECT 1 FROM member_knowledge.publication_decisions WHERE job_id=$1',[j.id])).rowCount)throw new MemberError(409,'NEW_SUBMISSION_REQUIRED');
      await c.query("UPDATE member_knowledge.review_jobs SET state=$2,reason=$3,result=CASE WHEN $2='queued' THEN NULL ELSE result END,operator_confirmation_id=$4,attempts=0,not_before=clock_timestamp(),lease_token=NULL,lease_until=NULL,updated_at=clock_timestamp() WHERE id=$1",[j.id,input.action==='recheck'?'queued':'reviewed',input.action==='recheck'?'運営への相談を受け、内容を再確認します。':'運営で内容を確認しました。原資料と公開条件を照合します。',input.action==='confirm-content'?opId:null]);
      await c.query('DELETE FROM member_knowledge.source_checks WHERE job_id=$1',[j.id]);

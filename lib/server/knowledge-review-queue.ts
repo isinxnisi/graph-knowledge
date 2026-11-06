@@ -1,3 +1,4 @@
+import {knowledgePublishingEnabled} from "./knowledge-deployment";
 import {knowledgeCapability,knowledgeDeployment,deploymentMemberAllowed,reviewMemberScope} from "./knowledge-deployment";
 import {aiFailureDiagnostic,reviewRetryAt,REVIEW_SENDS_PER_ITEM_DAY} from './knowledge-ai-retry';
 import {quotaDate,nextQuotaDay,reserveKnowledgeAI} from './knowledge-ai-budget';
@@ -35,7 +36,7 @@ export async function ensureReviewSchema(pool:Pool){
 export async function reviewStatus(c:Pool|PoolClient,ownerId:string,id:string,revision:number):Promise<KnowledgeReviewStatus|undefined>{
  const rows=(await c.query(`SELECT j.* FROM member_knowledge.review_jobs j JOIN member_knowledge.submissions s ON s.id=j.submission_id WHERE j.submission_id=$1 AND s.owner_id=$2 AND j.revision=$3 ORDER BY j.created_at,j.item_key`,[id,ownerId,revision])).rows;
  if(!rows.length)return undefined;
- if(process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED==='1'){
+ if(knowledgePublishingEnabled()){
   const decisions=(await c.query("SELECT job_id,state,reason,result,command FROM member_knowledge.publication_decisions WHERE job_id=ANY($1::uuid[])",[rows.map(r=>r.id)])).rows;
   for(const row of rows){const d=decisions.find(d=>d.job_id===row.id);if(d)row.publication={kind:d.command.action==='accept-translation'?'translation':'record',id:d.result?.id??d.command.record?.id,revision:d.result?.revision??(d.command.expectedRevision??0)+1,state:d.state,reason:d.reason,...(d.result?.disposition?{disposition:d.result.disposition}:{})};}
  }
@@ -149,7 +150,7 @@ export function createReviewQueue(pool:Pool,options:{duplicates?:(value:Knowledg
    for(const candidate of candidates){const lease=await jobTransaction(candidate.id,async(c,j,active)=>{
     if(!['queued','retry','quota'].includes(j.state)||new Date(j.not_before).getTime()>Date.now())return null;
     const s=j.submission;
-    if(!active||s.state!=='queued'||s.current_revision!==j.revision||s.digest!==j.submitted_digest||![REVIEW_CONSENT_VERSION,...(process.env.KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED==='1'?[PUBLICATION_CONSENT_VERSION]:[])].includes(j.consent_version)){await c.query("UPDATE member_knowledge.review_jobs SET state='cancelled',reason='submission-changed' WHERE id=$1",[j.id]);return null;}
+    if(!active||s.state!=='queued'||s.current_revision!==j.revision||s.digest!==j.submitted_digest||![REVIEW_CONSENT_VERSION,...(knowledgePublishingEnabled()?[PUBLICATION_CONSENT_VERSION]:[])].includes(j.consent_version)){await c.query("UPDATE member_knowledge.review_jobs SET state='cancelled',reason='submission-changed' WHERE id=$1",[j.id]);return null;}
     const disclosure=reviewDisclosureForConsent(j.consent_version);
     const authorization=(await c.query('SELECT consent_profile_id FROM member_knowledge.review_authorizations WHERE submission_id=$1 AND revision=$2',[j.submission_id,j.revision])).rows[0];
     if(!disclosure||disclosure.providerId!=='google-gemini'||j.consent_profile_id!==disclosure.profileId||authorization?.consent_profile_id!==disclosure.profileId){await c.query("UPDATE member_knowledge.review_jobs SET state='attention',reason='送信先の確認内容が変わりました。内容を確認して依頼し直してください。' WHERE id=$1",[j.id]);return null;}

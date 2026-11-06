@@ -13,6 +13,7 @@ vi.mock("../lib/server/knowledge-publication-preview",async()=>{
  const missing=()=>new KnowledgeError("not public",404,"NOT_FOUND"),dto=(id:string)=>{const r=publicRead.records.get(id);if(!r)throw missing();return {record:{id,revision:r.revision,content:{assertion:r.assertion}}};};
  return {knowledgePublicationPreview:async()=>({
   detail:async({recordId}:{recordId:string})=>({record:dto(recordId)}),
+  recordVersion:async(id:string,revision:number)=>{const value=dto(id);if(value.record.revision!==revision)throw missing();return {record:value};},
   graph:async({recordIds}:{recordIds:string[]})=>{const records=recordIds.filter(id=>publicRead.records.has(id)).map(dto);const hook=publicRead.afterGraph;publicRead.afterGraph=null;await hook?.();return {records};},
   entities:async({entityId}:{entityId:string})=>({entities:publicRead.entities.has(entityId)?[{id:entityId}]:[]}),
   theme:async({themeId,revision}:{themeId:string;revision?:number})=>{const r=publicRead.themes.get(themeId);if(!r||revision&&revision!==r.revision)throw missing();return {theme:{id:themeId,revision:r.revision},snapshot:{records:r.records}};},
