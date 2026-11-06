@@ -40,6 +40,8 @@ function expected(actual: number, requested: number) {
 }
 function actorAllowed(actor: KnowledgeActor, action: string) {
   if (!actor.id || actor.id.length > 200) throw new KnowledgeError("認証された操作主体が必要です", 403, "FORBIDDEN");
+  if(action==='capture-legacy'){if(actor.kind==='organizer')return;throw new KnowledgeError('旧KGの正本照合を伴う内部処理が必要です',403,'FORBIDDEN');}
+  if(actor.kind==='organizer'&&action==='set-mappings')return;
   if (action === "accept-translation" && (actor.kind === "submission"||actor.kind === "import")) return;
   if (action === "accept-record") { if(actor.kind === "submission"||actor.kind === "collection"||actor.kind === "import")return;throw new KnowledgeError("知識投稿の内部受理処理が必要です",403,"FORBIDDEN"); }
   if (actor.kind === "operator") return;
@@ -267,10 +269,41 @@ export function createKnowledgeFoundationService(pool: Pool) {
         await changed(kind, id);
         return version(c, kind, id, revision);
       }
-      if((actor.kind==='collection'||actor.kind==='import')&&!internal)throw new KnowledgeError('収集の固定範囲と根拠の照合が必要です',403,'FORBIDDEN');
+      if((actor.kind==='collection'||actor.kind==='import'||actor.kind==='organizer')&&!internal)throw new KnowledgeError('固定範囲と根拠の内部照合が必要です',403,'FORBIDDEN');
       if(internal)await internal.verify(c);
       let result: unknown;
-      if(cmd.action === "accept-translation") {
+      if(cmd.action==='capture-legacy'){
+        const pins:KnowledgePin[]=[];
+        async function captured(kind:'entity'|'source',v:{id:string;content:unknown}){
+          const old=(await c.query('SELECT o.*,v.content FROM knowledge75.objects o JOIN knowledge75.revisions v ON v.kind=o.kind AND v.id=o.id AND v.revision=1 WHERE o.kind=$1 AND o.id=$2 FOR SHARE OF o',[kind,v.id])).rows[0];
+          if(old){if(old.visibility!=='public'||knowledgeDigest(old.content)!==knowledgeDigest(v.content))throw new KnowledgeError('旧KGと共通原本の内容が異なります',409,'CONFLICT');return old.current_revision as number;}
+          if(kind==='entity')await put('entity',v.id,knowledgeEntityContentSchema.parse(v.content),1,cmd.reason);
+          else await put('source',v.id,knowledgeSourceContentSchema.parse(v.content),1,cmd.reason);
+          return 1;
+        }
+        for(const e of [...cmd.entities].sort((a,b)=>a.id.localeCompare(b.id))){
+          await c.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['legacy-entity:'+e.id]);
+          if(knowledgeDigest(e.payload)!==e.sha256)throw new KnowledgeError('旧KG対象の原本hashが異なります');
+          const revision=await captured('entity',e);pins.push({id:e.id,revision});
+          const old=(await c.query("SELECT payload FROM knowledge75.legacy_identity WHERE kind='entity' AND id=$1",[e.id])).rows[0];
+          if(old&&knowledgeDigest(old.payload.entity)!==knowledgeDigest((e.payload as {entity:unknown}).entity))throw new KnowledgeError('旧KG対象の原本が更新されています',409,'CONFLICT');
+          if(!old)await c.query("INSERT INTO knowledge75.legacy_identity(kind,id,dataset,legacy_id,publication_revision,payload,sha256) VALUES('entity',$1,'public-kg',$1,$2,$3,$4)",[e.id,e.revision,JSON.stringify(e.payload),e.sha256]);
+        }
+        for(const s of cmd.sources)await captured('source',s);
+        for(const r of [...cmd.records].sort((a,b)=>a.id.localeCompare(b.id))){
+          await c.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['legacy-record:'+r.id]);
+          if(knowledgeDigest(r.payload)!==r.sha256)throw new KnowledgeError('旧KG知識の原本hashが異なります');
+          const old=(await c.query("SELECT o.visibility,v.content FROM knowledge75.objects o JOIN knowledge75.revisions v ON v.kind=o.kind AND v.id=o.id AND v.revision=1 WHERE o.kind='record' AND o.id=$1 FOR SHARE OF o",[r.id])).rows[0];
+          if(old){if(old.visibility!=='public'||knowledgeDigest(old.content)!==knowledgeDigest(r.content))throw new KnowledgeError('旧KG知識と共通原本が異なります',409,'CONFLICT');}
+          else{await validateRecord(c,{id:r.id,revision:1,content:r.content,createdAt:'',reason:cmd.reason},pins,true);await put('record',r.id,r.content,1,cmd.reason);}
+          const prior=(await c.query("SELECT payload FROM knowledge75.legacy_identity WHERE kind='record' AND id=$1",[r.id])).rows[0];
+          const canonical=(v:{canonical?:Record<string,unknown>})=>{if(!v.canonical)return null;const {revision:_release,...body}=v.canonical;void _release;return body;};
+          if(prior&&knowledgeDigest(canonical(prior.payload))!==knowledgeDigest(canonical(r.payload as {canonical?:Record<string,unknown>})))throw new KnowledgeError('旧KG知識の原本が更新されています',409,'CONFLICT');
+          if(!prior)await c.query("INSERT INTO knowledge75.legacy_identity(kind,id,dataset,legacy_id,publication_revision,payload,sha256) VALUES('record',$1,'public-kg',$1,$2,$3,$4)",[r.id,r.revision,JSON.stringify(r.payload),r.sha256]);
+          await c.query("INSERT INTO knowledge75.legacy_links(dataset,legacy_claim_id,record_id,imported_revision,payload,sha256) VALUES('public-kg',$1,$1,1,$2,$3) ON CONFLICT DO NOTHING",[r.id,JSON.stringify(r.payload),r.sha256]);
+        }
+        result={entities:pins,records:cmd.records.map(r=>({id:r.id,revision:1}))};
+      }else if(cmd.action === "accept-translation") {
         await assertTranslationSchema(c);if(actor.kind==='submission'&&!internal)throw new KnowledgeError('翻訳投稿の確認が必要です',403,'SUBMISSION_REQUIRED');
         const original=await readKnowledgeTextOriginal(c,cmd.target,true,true);
         try{result=await putTranslation(c,cmd,actor,original.content);}catch(e){throw new KnowledgeError((e as Error).message,409,'TRANSLATION_CONFLICT');}

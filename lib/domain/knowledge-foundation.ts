@@ -46,7 +46,7 @@ export const knowledgeRecordContentSchema = z.strictObject({
   if (new Set(r.times.map(t => t.id)).size !== r.times.length || new Set(r.evidence.map(e => e.id)).size !== r.evidence.length)
     c.addIssue({ code: "custom", message: "時間注釈・根拠のIDが重複しています" });
 });
-export const knowledgeConceptSchema = z.strictObject({ id: knowledgeIdSchema, revision: knowledgeRevisionSchema, label: text.max(200), definition: text.max(4000) });
+export const knowledgeConceptSchema = z.strictObject({ id: knowledgeIdSchema, revision: knowledgeRevisionSchema, label: text.max(200), definition: text.max(4000), language: originalLanguage.optional() });
 export const knowledgeMappingContentSchema = z.strictObject({ recordRevision: knowledgeRevisionSchema, concept: knowledgeConceptSchema.nullable() });
 export const knowledgeTimelineSchema = z.strictObject({
   version: z.literal(1),
@@ -76,7 +76,7 @@ export type KnowledgeMappingVersion = KnowledgeVersion<KnowledgeMappingContent>;
 export type KnowledgeThemeVersion = KnowledgeVersion<KnowledgeThemeContent>;
 export type KnowledgeContentByKind = { entity: KnowledgeEntityContent; source: KnowledgeSourceContent; record: KnowledgeRecordContent; theme: KnowledgeThemeContent; mapping: KnowledgeMappingContent };
 export type KnowledgeStatus = { kind: KnowledgeKind; id: string; revision: number; visibility: "private" | "public" | "hidden"; confirmation: "unreviewed" | "checked" | "disputed" };
-export type KnowledgeActor = { kind: "operator" | "collector" | "collection" | "import" | "submission" | "user" | "reader"; id: string };
+export type KnowledgeActor = { kind: "operator" | "collector" | "collection" | "import" | "submission" | "user" | "reader" | "organizer"; id: string };
 export type KnowledgeList = { entities: KnowledgeEntityVersion[]; sources: KnowledgeSourceVersion[]; records: KnowledgeRecordVersion[]; themes: KnowledgeThemeVersion[]; statuses: KnowledgeStatus[] };
 export type KnowledgeSnapshot = { translations?:import("./knowledge-translation").KnowledgeTranslationVersion[]; schemaVersion: 1; entities: KnowledgeEntityVersion[]; sources: KnowledgeSourceVersion[]; records: KnowledgeRecordVersion[]; mappings: KnowledgeMappingVersion[]; timeline?: KnowledgeTimeline; initialView: "graph" | "timeline" | "split" };
 export type KnowledgeThemeResolved = { theme: KnowledgeThemeVersion; snapshot: KnowledgeSnapshot };
@@ -89,6 +89,10 @@ const entityNew = z.strictObject({ id: knowledgeIdSchema, content: knowledgeEnti
 const sourceNew = z.strictObject({ id: knowledgeIdSchema, content: knowledgeSourceContentSchema });
 const recordNew = z.strictObject({ id: knowledgeIdSchema, content: knowledgeRecordContentSchema });
 export const knowledgeCommandSchema = z.discriminatedUnion("action", [
+  z.strictObject({...base,action:z.literal('capture-legacy'),
+    entities:z.array(z.strictObject({id:knowledgeIdSchema,content:knowledgeEntityContentSchema,revision:z.string(),payload:z.unknown(),sha256:z.string().regex(/^[a-f0-9]{64}$/)})).max(80),
+    sources:z.array(sourceNew).max(80),
+    records:z.array(z.strictObject({id:knowledgeIdSchema,content:knowledgeRecordContentSchema,revision:z.string(),payload:z.unknown(),sha256:z.string().regex(/^[a-f0-9]{64}$/)})).max(40),reason}),
   z.strictObject({...base,...translationCommandShape,reason}),
   z.strictObject({...base,action:z.literal("set-translation-visibility"),id:knowledgeIdSchema,expectedStatusRevision:knowledgeRevisionSchema,visibility:z.enum(["public","hidden"]),reason}),
   z.strictObject({...base,action:z.literal("accept-record"),entities:z.array(entityNew).max(40),sources:z.array(sourceNew).max(40),entityPins:z.array(knowledgePinSchema).max(40),sourcePins:z.array(knowledgePinSchema).max(40),record:recordNew,entityCorrection:z.strictObject({id:knowledgeIdSchema,expectedRevision:knowledgeRevisionSchema,content:knowledgeEntityContentSchema,reason}).optional(),expectedRevision:knowledgeRevisionSchema.optional(),themes:z.array(knowledgePinSchema).max(8).optional(),preserveLegacySemantics:z.boolean().optional(),legacyEntities:z.array(z.strictObject({id:knowledgeIdSchema,content:knowledgeEntityContentSchema,revision:z.string(),payload:z.unknown(),sha256:z.string().regex(/^[a-f0-9]{64}$/)})).max(40).optional(),legacySources:z.array(z.strictObject({id:knowledgeIdSchema,content:knowledgeSourceContentSchema})).max(80).optional(),legacyRecords:z.array(z.strictObject({id:knowledgeIdSchema,content:knowledgeRecordContentSchema,revision:z.string(),payload:z.unknown(),sha256:z.string().regex(/^[a-f0-9]{64}$/)})).max(20).optional(),reason}),

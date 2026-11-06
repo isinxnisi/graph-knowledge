@@ -32,8 +32,9 @@ export function createKnowledgeIdentity(pool:Pool){
   const records=[];for(const row of candidates){const content=knowledgeRecordContentSchema.parse(row.content);if(!await recordReadable(c,{id:row.id,revision:row.revision,content,createdAt:'',reason:''}))continue;const sources=[];for(const proof of content.evidence.slice(0,3)){const s=(await c.query(`SELECT content FROM knowledge75.revisions WHERE kind='source' AND id=$1 AND revision=$2`,[proof.source.id,proof.source.revision])).rows[0].content;sources.push({title:s.title,url:s.url,locator:proof.locator,excerpt:proof.excerpt});}records.push({id:row.id,assertion:content.assertion,sources});if(records.length===5)break;}
   return identityDetailSchema.parse({entity:e,records,links:current.map(link),peers:await Promise.all(ids.map(v=>entity(c,v))),history:raw.map(link)});
  }),
- async act(actorId:string,raw:unknown){const cmd=identityCommandSchema.parse(raw),pins=[cmd.left,cmd.right].sort((a,b)=>a.id<b.id?-1:1),[left,right]=pins,id='identity:'+knowledgeDigest(pins.map(p=>p.id)).slice(0,48),digest=knowledgeDigest(cmd),c=await pool.connect();try{
+ async act(actorId:string,raw:unknown,internal?:{verify:(c:PoolClient)=>Promise<void>;retain:(c:PoolClient,result:unknown)=>Promise<void>}){const cmd=identityCommandSchema.parse(raw),pins=[cmd.left,cmd.right].sort((a,b)=>a.id<b.id?-1:1),[left,right]=pins,id='identity:'+knowledgeDigest(pins.map(p=>p.id)).slice(0,48),digest=knowledgeDigest(cmd),c=await pool.connect();try{
   await c.query('BEGIN');await assertIdentitySchema(c);await c.query('SELECT pg_advisory_xact_lock(7500600)');
+  if(internal)await internal.verify(c);
   const receipt=(await c.query('SELECT digest,result FROM knowledge75.entity_identity_requests WHERE actor_id=$1 AND request_id=$2',[actorId,cmd.requestId])).rows[0];if(receipt){if(receipt.digest!==digest)throw new KnowledgeError('同じ操作IDの内容が違います',409,'REQUEST_CONFLICT');await c.query('COMMIT');return receipt.result;}
   for(const p of pins){const e=await entity(c,p.id,true);if(e.revision!==p.revision)throw new KnowledgeError('対象の内容が変わりました。比較し直してください',409,'REVISION_CONFLICT');}
   const old=(await c.query('SELECT current_revision FROM knowledge75.entity_identity_links WHERE id=$1',[id])).rows[0];if((old?.current_revision??0)!==cmd.expectedRevision)throw new KnowledgeError('関連付けが変わりました。再取得してください',409,'REVISION_CONFLICT');
@@ -50,7 +51,7 @@ export function createKnowledgeIdentity(pool:Pool){
   const revision=(old?.current_revision??0)+1;
   await c.query('INSERT INTO knowledge75.entity_identity_links(id,left_id,right_id,current_revision) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO UPDATE SET current_revision=EXCLUDED.current_revision',[id,left.id,right.id,revision]);
   await c.query('INSERT INTO knowledge75.entity_identity_revisions(link_id,revision,left_id,left_revision,right_id,right_revision,state,reason,reference,locator,actor_id) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)',[id,revision,left.id,left.revision,right.id,right.revision,cmd.state,cmd.reason,cmd.reference,cmd.locator,actorId]);
-  const result={id,revision,state:cmd.state,members:await group(c,[left.id])};await c.query('INSERT INTO knowledge75.entity_identity_requests(actor_id,request_id,digest,result) VALUES($1,$2,$3,$4)',[actorId,cmd.requestId,digest,result]);await c.query('COMMIT');return result;
+  const result={id,revision,state:cmd.state,members:await group(c,[left.id])};await c.query('INSERT INTO knowledge75.entity_identity_requests(actor_id,request_id,digest,result) VALUES($1,$2,$3,$4)',[actorId,cmd.requestId,digest,result]);if(internal)await internal.retain(c,result);await c.query('COMMIT');return result;
  }catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}}
  };
 }

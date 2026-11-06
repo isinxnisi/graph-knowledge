@@ -27,11 +27,12 @@ export function KnowledgeOrganization({userId,authorized,registerGuard}:{userId:
  async function send(){if(!authorized||!intent||sending.current)return;sending.current=true;setBusy(true);setError("");try{const result=await memberRequest("/api/site-operations/knowledge-organization",z.object({mappings:z.array(z.object({id:z.string(),revision:z.number()}))}),{method:"POST",body:intent,user:userId});if(belongs()){setDone(result.mappings.length+"件の意味対応を保存しました。検索・公開表示には通常の公開処理後に反映されます。");setIntent(null);setSelected([]);setUnknown(false);setChoice("");setLabel("");setDefinition("");setReason("");setTick(n=>n+1);}}catch(e){if(belongs()){const ambiguous=!(e instanceof MemberClientError)||e.status>=500;setUnknown(ambiguous);setError(ambiguous?"結果を確認できません。同じ操作を再送して確認してください。":e instanceof MemberClientError&&e.status===409?"選択後に内容または意味対応が変わりました。今回は全件適用していません。閉じて再取得し、選び直してください。":"適用できません。入力と現在の権限を確認してください。");}}finally{sending.current=false;if(belongs())setBusy(false);}}
  return <section hidden={!authorized} className={css.root} aria-label="知識の意味整理"><p className={css.intro}>具体的な言葉と根拠を残して、検索でまとめられる意味を付けます。通常の登録・公開はこの整理を待ちません。</p>
  {page?.patrol&&<details className={css.patrol}>
-  <summary>自動巡回<span>新旧の登録データ · 整理待ち {page.patrol.origins.reduce((n,o)=>n+o.pending,0)}件</span></summary>
-  <p>巡回と整理候補の確認は別の処理です。現在は巡回・差分追従まで接続済みで、候補の確認・自動適用は準備中です。</p>
+  <summary>自動巡回・整理<span>新旧の登録データ{page.patrol.organization?' · 自動反映 '+page.patrol.organization.applied+'件':' · 入力待ち '+page.patrol.origins.reduce((n,o)=>n+o.pending,0)+'件'}</span></summary>
+  <p>{page.patrol.organization?'候補の確認と反映を自動で進めます。判断がつかない候補は保留し、他の整理を続けます。通常の登録・公開は待ちません。':'巡回・差分追従まで接続済みです。候補の確認・自動適用は、この環境では有効になっていません。'}</p>
+  {page.patrol.organization&&<p>索引済み {page.patrol.organization.indexed}件 · 候補待ち {page.patrol.organization.waiting}件 · 保留 {page.patrol.organization.unresolved}件 · 別対象 {page.patrol.organization.rejected}件</p>}
   {page.patrol.origins.map(o=><p key={o.origin}>
    <strong>{o.origin==='common'?'共通原記録':'従来のKG'}</strong> · {o.phase==='idle'?'巡回済み':o.phase==='scanning'?'対象を列挙中':'整理対象を記録中'}
-   {' · '}{o.scanned} / {o.phase==='scanning'?'取得中':o.total}件{' · '}整理待ち {o.pending}件
+   {' · '}{o.phase==='scanning'?'件数を確認中':o.scanned+' / '+o.total+'件'}{' · '}入力待ち {o.pending}件
    {o.errorCode&&' · 一時停止中。自動で再試行します。'}
   </p>)}
  </details>}

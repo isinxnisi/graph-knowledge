@@ -94,6 +94,8 @@ def beta_knowledge():
         values['KNOWLEDGE_DEPLOYMENT_CONFIG'] = str(deployment)
         if 'patrol' in profile.get('capabilities', []):
             values['KNOWLEDGE_PATROL_ENABLED'] = '1'
+        if 'organize' in profile.get('capabilities', []):
+            values['KNOWLEDGE_ORGANIZATION_ENABLED'] = '1'
     return {**values,'THEME_WORKBENCH_ENABLED':'0'}
 
 

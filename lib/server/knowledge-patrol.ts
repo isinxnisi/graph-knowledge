@@ -29,7 +29,7 @@ export function createKnowledgePatrol(pool:Pool,legacy:LegacyInventoryReader){
    visibility=EXCLUDED.visibility,eligible=EXCLUDED.eligible,present=true,generation=EXCLUDED.generation,checked_at=clock_timestamp()`,
    [origin,entry.kind,entry.id,run,entry.revision,entry.statusRevision,entry.digest,digest,entry.visibility,entry.eligible,generation]);
   if(changed||!entry.eligible)await c.query(`UPDATE knowledge75.patrol_tasks SET state='superseded',reason=$4,updated_at=clock_timestamp()
-   WHERE origin=$1 AND kind=$2 AND target_id=$3 AND state='pending'`,[origin,entry.kind,entry.id,entry.eligible?'対象の内容・状態・巡回方針が更新されました':'現在公開対象ではありません']);
+   WHERE origin=$1 AND kind=$2 AND target_id=$3 AND state<>'superseded'`,[origin,entry.kind,entry.id,entry.eligible?'対象の内容・状態・巡回方針が更新されました':'現在公開対象ではありません']);
   if(changed&&entry.eligible){
    const id=knowledgeDigest({origin,kind:entry.kind,id:entry.id,generation,fingerprint:digest});
    await c.query(`INSERT INTO knowledge75.patrol_tasks(id,origin,kind,target_id,target_generation,fingerprint,policy,state,reason)
@@ -55,7 +55,7 @@ export function createKnowledgePatrol(pool:Pool,legacy:LegacyInventoryReader){
     // Only a complete generation permits absence reconciliation. An incomplete
     // or failed scan must never withdraw an unseen input.
     await c.query(`UPDATE knowledge75.patrol_tasks t SET state='superseded',reason='完了した対象台帳に存在しません',updated_at=clock_timestamp()
-     FROM knowledge75.patrol_targets p WHERE p.origin=$1 AND p.inventory_run<>$2 AND t.origin=p.origin AND t.kind=p.kind AND t.target_id=p.id AND t.state='pending'`,[origin,run]);
+     FROM knowledge75.patrol_targets p WHERE p.origin=$1 AND p.inventory_run<>$2 AND t.origin=p.origin AND t.kind=p.kind AND t.target_id=p.id AND t.state<>'superseded'`,[origin,run]);
     await c.query(`UPDATE knowledge75.patrol_targets SET present=false,eligible=false,checked_at=clock_timestamp()
      WHERE origin=$1 AND inventory_run<>$2 AND present`,[origin,run]);
    }

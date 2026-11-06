@@ -2,8 +2,14 @@ import {z} from 'zod';
 
 export const patrolOriginSchema=z.enum(['common','public-kg']);
 export type PatrolOrigin=z.infer<typeof patrolOriginSchema>;
+export const organizationStatusSchema=z.object({
+ indexed:z.number().int().nonnegative(),waiting:z.number().int().nonnegative(),
+ applied:z.number().int().nonnegative(),unresolved:z.number().int().nonnegative(),rejected:z.number().int().nonnegative(),
+ nextAttemptAt:z.string().nullable(),
+});
 export const patrolStatusSchema=z.object({
  policy:z.string(),
+ organization:organizationStatusSchema.optional(),
  origins:z.array(z.object({
   origin:patrolOriginSchema,
   phase:z.enum(['scanning','queueing','idle']),
