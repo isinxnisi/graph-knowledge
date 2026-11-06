@@ -71,5 +71,80 @@
       }
     ],
     "note": "最終4例の成立は7送信（通常意味2、同一対象2、別対象1、旧KG2）。最初の3例は前の独立DBで確認済みの結果を保持し、残る旧KG例だけ再確認した。attemptsは最後の旧KG再確認分のみ。初期の指示調整で保留した結果もあり、自動適用されたとは数えない。"
+  },
+  "deployment": {
+    "source": "7dd6e0dc2292e15bfda01ed4c865822f5add6890",
+    "build": "fbcBuqYLDLopQ63ecPKsr",
+    "previousBuild": "1_7iOyUf0rEluxMxmbNDV",
+    "migrations": [
+      "009-organization-automation.sql",
+      "032-organization-budget.sql"
+    ],
+    "migrationReplayedUnchanged": true,
+    "memberAndKnowledgeRowsPreservedAtSwitch": true,
+    "privateChanges": [
+      "beta-deployment.json: organize capability only"
+    ],
+    "otherPrivateFilesUnchanged": true,
+    "recovery": "Keep the new readable Web. Disable organize capability while repairing; never overwrite the current DB with an old dump."
+  },
+  "runtimeAtFirstObservation": {
+    "source": "7dd6e0dc2292e15bfda01ed4c865822f5add6890",
+    "build": "fbcBuqYLDLopQ63ecPKsr",
+    "http": [
+      {
+        "url": "http://localhost:3200/",
+        "status": 200,
+        "bytes": 85755
+      },
+      {
+        "url": "http://localhost:3200/_next/static/fbcBuqYLDLopQ63ecPKsr/_buildManifest.js",
+        "status": 200,
+        "bytes": 3819
+      },
+      {
+        "url": "https://graph-beta.isinxnisi.com/",
+        "status": 200,
+        "bytes": 86122
+      },
+      {
+        "url": "https://graph-beta.isinxnisi.com/_next/static/fbcBuqYLDLopQ63ecPKsr/_buildManifest.js",
+        "status": 200,
+        "bytes": 3819
+      }
+    ],
+    "tasks": [
+      {
+        "origin": "common",
+        "state": "indexed",
+        "count": 73
+      },
+      {
+        "origin": "public-kg",
+        "state": "indexed",
+        "count": 3213
+      },
+      {
+        "origin": "public-kg",
+        "state": "pending",
+        "count": 2498
+      }
+    ],
+    "candidates": [],
+    "organizationIndexes": {
+      "count": 3316
+    },
+    "browser": {
+      "verified": false,
+      "reason": "Windows Computer Use could not determine the current browser URL with sufficient confidence and stopped input. No retry or alternate UI control."
+    },
+    "processes": {
+      "beta": true,
+      "knowledge-beta-worker": true,
+      "knowledge-review-worker": true,
+      "knowledge-collection-worker": true,
+      "knowledge-collection-reader": true,
+      "knowledge-patrol-worker": true
+    }
   }
 }

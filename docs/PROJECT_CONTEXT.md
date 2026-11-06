@@ -1,3 +1,5 @@
+2026-11-06 R2b：新旧全件の候補生成・意味／同一対象の自動整理をβへ配置。91テスト、別DB復元・知識009／会員032、実Gemini4例、型検査込みbuildを確認。app `7dd6e0dc`／build `fbcBuqYLDLopQ63ecPKsr`。**実画面とβ通常公開の最終確認が残る**。ブラウザURLの安全判定停止を成功扱いにしない。[実装・保全・再開](verification/KNOWLEDGE_ORGANIZATION_R2B_20261106.md)。
+
 2026-11-06 R2a：新旧全登録データの周期巡回・永続cursor・変更追従と整理入力の保存を接続。実データ73＋5,711件を欠落0で走査し、原本行を保持。58件・別DB復元／追加008・実Googleの運営集計・PC／390pxを確認。app `1465ba59`／build `1_7iOyUf0rEluxMxmbNDV`、main／3200／HTTPS βへ反映。**R2a完了、候補確認・自動適用／公開のR2bと本運用初版全体は未完了。** [設計](design/KNOWLEDGE_PATROL_R2.md)／[検証・再開](verification/KNOWLEDGE_PATROL_R2A_20261106.md)。全件AI完了や全結果の目視確認は開発完了条件にせず、機能範囲は維持する。
 
 2026-11-06 R1i：訳文の意味一致確認に固定した公開文脈・hash・依存版を接続し、送信前／受理／再開時に再検査。152テスト、実AIの補修後最終3例と実Googleの確認1回→自動公開を確認。原文2版・Record28版を保持。app 949dcf1b／build igP4lAgYwqySRsHBZpIUB、追加migrationなし。R1全体は未完了で、次は配置別認可と境界照合。[設計](design/KNOWLEDGE_TRANSLATION_REVIEW.md)／[実操作・残件](verification/KNOWLEDGE_TRANSLATION_REVIEW_R1I_20261106.md)。
