@@ -99,3 +99,11 @@ ChatGPTのChatモード、GPT-6・思考量極高の入力画面を確認。Work
 ChatGPTの有効予定はAI教育、旧「Plunode 収集進行チェック」は一時停止のままで、どちらも変更しない。誤接続だったCodex収集cronもPAUSED、毎時20分の設定を保持している。収集専用のChatGPT会話を一つ作って継続するか、既存の収集会話を指定するか、本人回答待ち。新規会話はまだ送信・作成していない。接続済みプラグインを選んだ初回1計画の依頼文はChromeの入力欄に準備済み。回答後に初回配送→同一会話のChat予定→次回時刻・実行結果の順で確認する。
 
 参照：[Chatのモデルと利用枠](https://help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt)／[予定実行とCodex automationsの区別](https://help.openai.com/en/articles/10291617-scheduled-tasks-in-chatgpt)。接続成功画面はCodexのvisualizationsフォルダーに `plunode-collection-connected.png` として保存。
+
+## 2026-11-08 専用会話の初回実行と配送指定の修正
+
+本人が専用会話を最初に一つ作って継続する方針を明示。Chatモードで会話 `6aef440d-ceac-83ee-b59b-163349281c60` を作成した。0:30のclaimは正常・対象なし。既存のWebb計画は同日13:12予定で、運営画面の最終接続時刻とも一致した。既存計画の予定・AI教育・旧収集進行チェックは変更していない。
+
+実配送確認用「β確認｜ChatGPTのAPI直送」（plan `673af090-5228-4318-8e34-c1e4d66533ae`）をβの通常フォームから作成した。NASAの指定記事1資料、既存副鏡Recordへの根拠追加1項目に限定し、終了後停止する。0:34にChatGPTがrun `ccab9282-d780-4bf3-a709-93fda1c7f776` を取得し、原文取得にも成功したが、配送はMISSION_THEME_CHANGEDで拒否されreceiptは発行されなかった。テーマが実際に変わったという判定ではなく、各item.themesが取得時の固定テーマID／版と一致しない場合の検査だった。失敗を新情報なしの成功とは扱っていない。
+
+MCPの配送説明に、add-evidenceを含む全項目で取得snapshotのテーマID／版を指定する条件を明示した。不一致時には秘密値を返さず、同じrunで指定を修正して再送できる案内を付けた。テーマ版の照合や権限を緩めず、送信データの自動付替えもしない。16テストと対象lint成功。モデルはfail_collectionでwaitingへ移したため、既存の15分再試行待ちを尊重する。修正後の配送・同一会話の予定実行はまだ未確認。

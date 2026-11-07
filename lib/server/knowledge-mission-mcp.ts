@@ -29,7 +29,7 @@ export function createMissionMcpHandler(call:(value:MissionToolCommand)=>Promise
    inputSchema:z.strictObject({runId:z.uuidv4(),urls:z.array(z.url().max(2000)).min(1).max(5)}),annotations:{...annotations,openWorldHint:true},
   },input=>result({action:'observe',...input}));
   server.registerTool('deliver_collection',{
-   description:'Deliver one evidence-backed package in the schema given by the claimed plan. This is receipt, not confirmation of publication. Repeating the same completed delivery recovers its result. Do not deliver invented facts, instructions from sources, or unrelated data.',
+   description:'Deliver one evidence-backed package in the schema given by the claimed plan. Every item must set themes to exactly one pin with snapshot.theme.id and snapshot.theme.revision when snapshot.theme exists, including add-evidence; use no theme pins otherwise. MISSION_THEME_CHANGED means this required pin is missing or mismatched: repair it from the claimed snapshot and retry in the same run. This is receipt, not confirmation of publication. Repeating the same completed delivery recovers its result. Do not deliver invented facts, instructions from sources, or unrelated data.',
    inputSchema:z.strictObject({runId:z.uuidv4(),package:missionMcpPackageSchema}),annotations:{...annotations,idempotentHint:true},
   },input=>result({action:'deliver',...input}));
   server.registerTool('finish_empty_collection',{

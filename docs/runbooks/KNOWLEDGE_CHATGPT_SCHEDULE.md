@@ -60,3 +60,7 @@ ChatGPT側の接続許可が予定実行を止める場合、または利用モ�
 2026-11-07のPCでは、同意保存後に `nbf`（有効開始時刻）の検証で401となった。Windows Time停止と約1.58秒の標準時からの遅れを実測。本人が管理者PowerShellで `Start-Service -Name W32Time` と `w32tm /resync` を実行し、再同期成功。標準時との差は約1〜2msまで解消し、保存済み許可から再開してtoken発行200・5ツール表示を確認した。認証検証を緩める／新しいプラグインを作り直す回避は行わない。正式環境でもNTPの正常性を公開前の確認に含める。最新の完了・未確認は実測記録を参照。
 
 原因確認のための追加JWT再検証は接続確認後に除去した。通常ログはendpoint・成否・安全な分類だけで、JWT／code／state／Cookie／本文は残さない。Windows Timeは実行中・起動種別Manualを確認したが、OSの起動設定は変更していない。
+
+## 配送のテーマ版指定
+
+テーマ付き計画では、add-evidenceを含む各item.themesに、claimで受け取ったsnapshot.themeのid／revisionを一つ指定する。MISSION_THEME_CHANGEDはこの指定の不足・不一致を示す。最新のテーマへ勝手に付け替えず、同じsnapshotから指定を修正して同じrunへ再送する。修正可能な入力不備を資料探索の失敗としてすぐfail_collectionへ流さない。既にfailで待機へ移した場合は、既存の次回試行時刻まで待ち、DBの待ち時刻を手書きして短縮しない。

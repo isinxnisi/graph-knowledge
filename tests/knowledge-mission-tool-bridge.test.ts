@@ -33,3 +33,16 @@ it('does not return raw client errors or credentials, and allows a later retry',
  expect(await bridge.call(input)).toEqual({ok:false,code:'MISSION_LEASE_CHANGED'});
  expect((await bridge.call(input)).ok).toBe(true);
 });
+
+it('lets a delivery repair its claimed theme pin without changing runs or revealing client details',async()=>{
+ const execute=vi.fn().mockRejectedValueOnce(Error('MISSION_THEME_CHANGED')).mockResolvedValueOnce({receiptId:'receipt'});
+ const bridge=createMissionToolBridge('/private/client.json',execute),runId=randomUUID();
+ const item={key:'proof',operation:'add-evidence'},original={items:[item]};
+ const error=await bridge.call({action:'deliver',runId,package:original});
+ expect(error).toMatchObject({ok:false,code:'MISSION_THEME_CHANGED',canRepair:true});
+ expect(JSON.stringify(error)).not.toMatch(/private|client.json|bearer/);
+ expect(original).toEqual({items:[item]});
+ const repaired={items:[{...item,themes:[{id:'claimed-theme',revision:4}]}]};
+ expect(await bridge.call({action:'deliver',runId,package:repaired})).toEqual({ok:true,result:{receiptId:'receipt'}});
+ expect(execute).toHaveBeenLastCalledWith(['/private/client.json','deliver'],{expectedRunId:runId,payload:repaired});
+});
