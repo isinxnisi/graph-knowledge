@@ -9,6 +9,7 @@ COPY tsconfig.json next.config.ts proxy.ts ./
 COPY app ./app
 COPY components ./components
 COPY lib ./lib
+COPY db/member ./db/member
 COPY migrations/knowledge-foundation ./migrations/knowledge-foundation
 COPY vocabulary ./vocabulary
 COPY neo4j ./neo4j
@@ -18,12 +19,11 @@ COPY data/ai-lab/initial.json ./data/ai-lab/initial.json
 COPY docs/research/phase-13-relation-model/v2/ledger.json ./docs/research/phase-13-relation-model/v2/ledger.json
 COPY scripts/public-kg.ts scripts/production-readiness.mjs scripts/generate-contribution-roles.ts scripts/build-publication-probe.mjs scripts/publication-compatibility.ts ./scripts/
 ENV GRAPH_DATASET=public-kg GRAPH_DEPLOYMENT=production
-RUN npm run roles:check && node scripts/build-publication-probe.mjs && npm run build
+RUN npm run roles:check && node scripts/build-publication-probe.mjs && NODE_OPTIONS=--max-old-space-size=3072 npm run build -- --webpack
 
 # 運用CLIだけはtsxと受入資料を必要とする。Webへは含めない。
 FROM builder AS ops
 COPY fixtures/demo.json ./fixtures/demo.json
-COPY db/member ./db/member
 COPY scripts/member-migrate.ts scripts/member-ops.ts scripts/community-safety.ts scripts/community-recovery.ts scripts/ai-identity-ops.ts scripts/official-profile-ops.ts ./scripts/
 ENV NODE_ENV=production
 USER node
@@ -57,6 +57,7 @@ WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000
 COPY --from=builder --chown=node:node /app/.next-public/standalone ./
 COPY --from=builder --chown=node:node /app/.next-public/static ./.next-public/static
+COPY --from=builder --chown=node:node /app/db/member ./db/member
 COPY --from=builder --chown=node:node /app/migrations/knowledge-foundation ./migrations/knowledge-foundation
 COPY --from=builder --chown=node:node /app/.local/publication-probe/publication-probe.cjs ./publication-probe.cjs
 COPY --from=builder --chown=node:node /app/app/fonts/BIZUDPMincho-OG.woff ./app/fonts/BIZUDPMincho-OG.woff
