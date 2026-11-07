@@ -37,7 +37,7 @@ export const fetchMissionClientMetadataResource:ClientMetadataResourceFetch=asyn
   const value=webRequest.headers.get(name);if(value!==null)headers[name]=value;
  }
  return new Promise((resolve,reject)=>{
-  const req=request(url,{agent:false,headers,method:webRequest.method,servername:url.hostname,signal,family:4,autoSelectFamily:false,
+  const req=request(url,{agent:false,headers,method:webRequest.method,servername:url.hostname,signal,family:4,
    lookup:(_host,options,callback)=>{
     if(options.all)callback(null,[pinned]);else callback(null,pinned.address,pinned.family);
    },

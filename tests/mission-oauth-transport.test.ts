@@ -24,7 +24,7 @@ it('pins the validated DNS address and preserves TLS identity without forwarding
  expect(mocks.resolve4).toHaveBeenCalledOnce();expect(mocks.resolve6).not.toHaveBeenCalled();
  expect(mocks.configure).toHaveBeenCalledWith({timeout:1000,tries:2});
  const options=mocks.request.mock.calls[0][1];expect(options.servername).toBe('chatgpt.com');
- expect(options.family).toBe(4);expect(options.autoSelectFamily).toBe(false);
+ expect(options.family).toBe(4);
  expect(options.headers).toEqual({host:'chatgpt.com',accept:'application/json','if-none-match':'etag'});
  const callback=vi.fn();options.lookup('chatgpt.com',{all:true},callback);
  expect(callback).toHaveBeenCalledWith(null,[{address:'104.18.32.7',family:4}]);
