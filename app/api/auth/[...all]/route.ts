@@ -3,7 +3,7 @@ import { z } from "zod";
 import { memberRuntime } from "../../../../lib/server/member/runtime";
 import {missionMcpEnabled} from '../../../../lib/server/member/mission-oauth';
 import {isSiteOperator} from '../../../../lib/server/member/site-operations';
-import {diagnoseMissionClientAssertion,missionOAuthRequestSummary,missionOAuthResponseSummary} from '../../../../lib/server/member/mission-oauth-diagnostics';
+import {missionOAuthRequestSummary,missionOAuthResponseSummary} from '../../../../lib/server/member/mission-oauth-diagnostics';
 import { assertMemberOrigin, MemberError, memberHandle, memberInput, memberJson } from "../../../../lib/server/member/http";
 
 export const runtime = "nodejs";
@@ -51,14 +51,11 @@ async function handle(request: Request) {
       }
       authRequest = new Request(request.url, { method: "POST", headers: request.headers, body: JSON.stringify({ ...input, errorCallbackURL: errorURL.href }) });
     }
-    const assertionRequest=trace&&path==='/oauth2/token'?authRequest.clone():null;
     const response = await auth.handler(authRequest);
     if(trace){
       const data=await response.clone().json().catch(()=>null);
       const summary=missionOAuthResponseSummary(response.status,data);
       console.info('Collection OAuth response',{endpoint:path,...summary});
-      if(assertionRequest&&summary.hint==='client_signature')console.info('Collection OAuth assertion',await diagnoseMissionClientAssertion(assertionRequest,(await auth.$context).baseURL));
-      else if(assertionRequest?.body)await assertionRequest.body.cancel();
     }
     if (response.status >= 500) return memberJson({ error: { code: "MEMBER_UNAVAILABLE" } }, 503);
     response.headers.set("Cache-Control", "private, no-store");

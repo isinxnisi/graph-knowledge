@@ -1,10 +1,10 @@
 # ChatGPT予定実行のAPI直送
 
-2026-11-07。**API直送が合意済みの既定。Issue経由の選択待ちではない。** 収集用Codex予定はPAUSED。認証付きMCPを3200／HTTPS βへ配置。本人の接続承認・ChatGPT側の初回実行を残す。接続と予定実行を確認するまでR3b是正完了とはしない。
+2026-11-07。**API直送が合意済みの既定。Issue経由の選択待ちではない。** 収集用Codex予定はPAUSED。認証付きMCPを3200／HTTPS βへ配置。2026-11-08に本人の接続承認とChatGPTの5ツール表示を確認。初回の配送・同一会話での予定設定を残す。接続と予定実行を確認するまでR3b是正完了とはしない。
 
 ## 接続する処理
 
-ChatGPTが公開資料を探索し、収集専用MCPから既存の範囲付きmission APIへ配送する。接続プログラムはモデルを呼ばない。GitHub Issue、Codex cron、Codex枠を使う別方式へ無断で置換しない。同じ既存ChatGPT会話で継続する予定を使い、毎runの新規チャットを作らない。
+ChatGPTが公開資料を探索し、収集専用MCPから既存の範囲付きmission APIへ配送する。接続プログラムはモデルを呼ばない。GitHub Issue、Codex cron、Codex枠を使う別方式へ無断で置換しない。一つのChatGPT会話で継続する予定を使い、毎runの新規チャットを作らない。
 
 β endpoint：`https://graph-beta.isinxnisi.com/api/knowledge-collection/mcp`。Streamable HTTP、OAuth 2.1＋S256 PKCE、ChatGPT CIMDの公開clientを使う。既存Googleログインで運営者本人が接続し、`missions:collect`と更新用`offline_access`だけを許可する。OIDCの会員情報scope・一般管理操作・任意shellは公開しない。access tokenは10分、回転refreshは30日。停止・対象範囲・利用上限は既存mission側でも照合する。
 
@@ -26,8 +26,8 @@ Plunode側は固定client設定・private checkpointを使い、実行tokenを�
 
 1. 作成済みの[Plunode資料収集 API（β）](https://chatgpt.com/plugins/plugin_asdk_app_6aef2b97439081919c3828f9080c4c6f)で、アプリ行の「アプリの接続を続行する」から再開する。再作成は不要。設定は上記endpoint、OAuth・CIMD、既定scope `missions:collect`、基本scope `offline_access`、OIDC無効。秘密値は入力しない。
 2. 開いたPlunodeで運営Googleアカウントへログインし、表示された収集専用の権限を承認する。
-3. 既存のChatGPT会話でこのプラグインを選び、下の依頼をまず一度実行する。receiptまたは対象なしの結果を確認する。
-4. 同じ会話の継続としてChatGPT側の予定を設定する。独立予定による毎回の新規チャット生成、Codex／Work等への実行元変更がないことを確認する。時刻・対象モデル・接続の許可設定は実画面に表示された内容を記録する。
+3. 収集専用のChatGPT会話を一つ決め、このプラグインを選び、下の依頼をまず一度実行する。receiptまたは対象なしの結果を確認する。
+4. 同じ会話の継続としてChatGPT側の予定を設定する。既存のAI教育用会話・予定を流用しない。独立予定による毎回の新規チャット生成、Codex／Work等への実行元変更がないことを確認する。時刻・対象モデル・接続の許可設定は実画面に表示された内容を記録する。
 
 依頼文：
 
@@ -55,6 +55,8 @@ ChatGPT側の接続許可が予定実行を止める場合、または利用モ�
 
 [Plunode資料収集（β）](https://chatgpt.com/plugins/plugins_6aef23f8b3b4819195ded0ecbd4fcb37)をPRIVATEで作成し、MCP設定とskillが含まれることを確認。ただしWebの配布画面は「デスクトップアプリで開く」と表示された。これをWeb接続完了とは扱わず、上記のカスタムMCPで接続する。配布のreleaseは`pluginrel_6aef23fa51f48191896c70d158a5ea6f`。
 
-## 接続許可済みだがトークン発行で止まるとき
+## 時刻ずれでトークン発行が止まるとき（解消済み）
 
-2026-11-07のPCでは、同意保存後に `nbf`（有効開始時刻）の検証で401となった。Windows Time停止と約1.58秒の標準時からの遅れを実測。本人に管理者PowerShellで `Start-Service -Name W32Time` と `w32tm /resync` を依頼中。同期後にWSLの時刻も照合して、保存済み許可から再接続する。認証検証を緩める／新しいプラグインを作り直す回避は行わない。正式環境でもNTPの正常性を公開前の確認に含める。最新の完了・未確認は実測記録を参照。
+2026-11-07のPCでは、同意保存後に `nbf`（有効開始時刻）の検証で401となった。Windows Time停止と約1.58秒の標準時からの遅れを実測。本人が管理者PowerShellで `Start-Service -Name W32Time` と `w32tm /resync` を実行し、再同期成功。標準時との差は約1〜2msまで解消し、保存済み許可から再開してtoken発行200・5ツール表示を確認した。認証検証を緩める／新しいプラグインを作り直す回避は行わない。正式環境でもNTPの正常性を公開前の確認に含める。最新の完了・未確認は実測記録を参照。
+
+原因確認のための追加JWT再検証は接続確認後に除去した。通常ログはendpoint・成否・安全な分類だけで、JWT／code／state／Cookie／本文は残さない。Windows Timeは実行中・起動種別Manualを確認したが、OSの起動設定は変更していない。

@@ -2,9 +2,9 @@
 
 ## 現在地
 
-R3b実行元の是正中・R4a完了｜R4はbまで｜全体はR6まで。
+R3b是正：API接続完了、初回実行・予定設定が残り｜R4はa完了・bまで｜全体はR6まで。
 
-API直送は既定として進める。Codex収集予定はPAUSED。実装・17件・lint・型検査と、member backup→別DB復元→035移行・旧行／checksum／再実行を確認。fixture OAuthで認可コード・署名付き同意・audience／scope・refresh・失効を確認した。実Google／実ChatGPT予定実行は未確認で、完了扱いにしない。
+API直送は既定として進める。Codex収集予定はPAUSED。実装・17件・lint・型検査と、member backup→別DB復元→035移行・旧行／checksum／再実行を確認。fixture OAuthで認可コード・署名付き同意・audience／scope・refresh・失効を確認した。2026-11-08に実Googleの収集接続承認・ChatGPTでの5ツール表示を確認。初回配送・同一会話での予定実行は未確認で、R3b全体の完了扱いにしない。
 
 ## 設計
 
@@ -33,7 +33,7 @@ app source `e7f3acccb3236fae8799a7b15cee3943e493588a`、build `bkKmHOZGJGlK4D6HL
 
 ## 残り
 
-実Googleによる収集専用接続の承認、ChatGPT側での初回の実配送、既存の同じ会話に継続する予定の作成・実行・利用枠の確認を残す。API実装、fixture認証、metadataの自動検出だけでR3b完了とはしない。通常Graph・会員の実画面の追加確認も接続後に行う。
+ChatGPT側での初回の実配送、一つの同じ会話に継続する予定の作成・実行・利用枠の確認を残す。実Googleの接続承認・5ツール表示は完了。API実装、fixture認証、metadataの自動検出だけでR3b完了とはしない。通常Graph・会員の実画面の追加確認も接続後に行う。
 
 アプリソースは日本語commitで作業branchへ通常push済み、検証済みSHAをmainへfast-forwardし、3200／HTTPS βへ配置した。最後の文書commitも同じbranch／mainへ通常pushして終了する。holdは本人接続待ちの区切りで解放し、接続後は再取得する。本人の権限付与はPlugin Creatorの `SKILL.md` 指示先 `references/server-access.md` の “Let the user complete credentials, MFA, and OAuth consent there.” に従って本人操作とする。
 
@@ -79,3 +79,11 @@ w32tm /resync
 診断追加はformatter／credential非表示3件、JWT claim分類1件、既存transport7件を確認。app source `e7f3acccb3236fae8799a7b15cee3943e493588a`／build `bkKmHOZGJGlK4D6HLN1PX` の型検査込みbuild成功、main／3200／HTTPS βへ配置。DB変更なし、private設定16件は不変、VPS／3276は未更新。既存107検証は以前の基準として活用し、全件の再AI評価は行わない。
 
 ビルド前の空き容量監視で一度停止。rootの `fstrim -v /` でWSLの未使用5.7GiBをtrimした。Windowsの空きは約7.47GiBで、既存cacheの小差分buildを7GiB以上から開始し、6GiB未満で停止する監視と3GiBのNode heap上限を維持した。サービス停止・ファイル削除・volume削除は行っていない。
+
+## 2026-11-08 時刻同期後の実接続成功
+
+本人の再同期コマンドが正常終了。W32TimeはRunning・起動種別Manual。Microsoft標準時への差は-0.0011／-0.0022秒となった。WSLのRTC書換えは行わず、署名・nbf・期限の検証も緩めていない。
+
+保存済みの本人同意から接続を再開し、実token要求の200を確認。CIMD clientの同意1・refresh3・client assertion3を安全な件数だけで照合した。access tokenはJWTのためDBのaccess-token行0を未発行と解釈しない。ChatGPT Webのアプリ詳細にclaim_collection／observe_collection_sources／deliver_collection／finish_empty_collection／fail_collectionの5操作が表示され、接続を続行するアイコンは消えた。これを接続成功とし、まだ研究・配送の実行成功とは扱わない。
+
+原因確認用の追加assertion再検証を削除し、機密値なしのrequest／response分類ログを保持する。既存の「Plunode GitHub接続試験」はAI教育で使用中と確認したため収集先に転用しない。Codex収集予定はPAUSEDを維持。収集専用の一つのChatGPT会話・実行元と利用枠の確認、初回配送・予定実行を残す。
