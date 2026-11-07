@@ -1,0 +1,63 @@
+{
+  "date": "2026-11-08",
+  "source": "037ee63e8722f32260a87b9b4fdec8d0cd6a6b23",
+  "build": "QqlZmk4g9xc1ZmjOk7vXl",
+  "branch": "codex/issue75-theme-foundation",
+  "deployment": {
+    "main": true,
+    "localhost3200": true,
+    "httpsBeta": true,
+    "vpsChanged": false,
+    "preview3276Changed": false,
+    "privateProfilesPreserved": 16,
+    "workersRestarted": 5,
+    "migrationAdded": false,
+    "memberMigrationsUnchanged": "000-035"
+  },
+  "tests": {
+    "passedAcrossTargetedRuns": 104,
+    "existingConditionalSkipped": 17,
+    "finalUpdateAndLayoutRunPassed": 11,
+    "lint": "passed",
+    "typescriptBuild": "passed",
+    "isolatedPostgresTestsPassed": 2
+  },
+  "buildMetrics": {
+    "seconds": 91.7,
+    "nodeHeapMiB": 3072,
+    "minimumWindowsCFreeBytes": 6160719872
+  },
+  "http": {
+    "localhost": {
+      "status": 200,
+      "bytes": 86965
+    },
+    "httpsBeta": {
+      "status": 200,
+      "bytes": 87332
+    }
+  },
+  "browser": {
+    "realGoogle": true,
+    "desktopWidth": 1920,
+    "mobileViewport": [
+      390,
+      844
+    ],
+    "mobileDocumentWidth": 380,
+    "viewportReset": true,
+    "capsuleId": "54059647-872e-4b4a-a2e3-0c7369a6c72f",
+    "savedRevision": 2,
+    "themeOriginalRevision": 5,
+    "translationRevision": 1,
+    "translationId": "translation:984b743591a6642b9c622c011e5636e2724c35552f31c02f",
+    "fixedGraphHeightPx": 480.234375,
+    "splitFrameHeightPx": 524.234375,
+    "realIphoneVerified": false
+  },
+  "remaining": [
+    "R5 integration acceptance and migration preparation",
+    "R6 Linux security readiness, production migration and deployment"
+  ],
+  "push": "see final Git commit and remote result"
+}

@@ -1,3 +1,9 @@
+# 2026-11-08 現在地：R4完了、次はR5
+
+2026-11-08 R4b完了・R4完了：時刻・原資料の時期表記・周期／定性・複数時期・特定時期への子軸入力、旧KGを含む翻訳入口、Theme原文／訳文のCapsule固定保存と明示比較を接続。app `037ee63e`／build `QqlZmk4g9xc1ZmjOk7vXl`、main／3200／HTTPS βへ反映。対象104件・型検査込みbuild・実Googleの保存／訳文公開／取込／再訪とPC／390pxを確認。追加migrationなし、16のprivate設定を保持。R5の統合受入と正式反映R6は残る。 [最新の検証・再開](../verification/KNOWLEDGE_USAGE_R4B_20261108.md)／[時間入力と固定保存](KNOWLEDGE_TIME_INPUT_R4B.md)。
+
+次回はR5。R4の代表テストを無条件に繰り返さず、二つの実テーマ＋Themeなし、三入力経路、一般会員、異言語訂正、共有・コメント・コミュニティ固定、旧保存、新旧publisherの切替／復旧を横断する。通常の管理者承認や全件AI完了待ちは追加しない。R5は概ね1〜2回、正式反映R6は別に1〜2回という推定。R3の専用ChatGPT会話・API直送・毎時20分の予定と、PAUSEDのCodex予定は維持。以下は過去の区切り。
+
 2026-11-08 R3b是正完了：専用の同じChatGPT会話からAPI直送し、最終existing（既存知識の再利用）まで確認。試験計画を停止し、通常予定を毎時20分・Asia/Tokyoで有効化、次回2:20。app 622d3f01／build r4belbBgIV9Xa7l4mw25uをmain／3200／HTTPS βで継続。Codex収集予定はPAUSED、正式VPSは未変更。 [実測・未確認・再開](../verification/KNOWLEDGE_CHATGPT_SCHEDULED_20261108.md)。以下は各時点の履歴。
 
 2026-11-07 API直送β配置済み：app `e7f3accc`／build `bkKmHOZGJGlK4D6HLN1PX`、035・既存保全・HTTP確認済み。ChatGPT WebのCIMD自動検出まで確認。本人接続と初回／予定実行は未確認、R3b是正完了にしない。[実測](../verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)。
