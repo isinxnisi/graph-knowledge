@@ -103,8 +103,8 @@ export default function DiscoveryListPanel({ criteria, cursors, onChange, onPage
           {!displayed.items.length && !commonCount && !commonPending && <div className={styles.empty}><p>{text.empty}</p><button onClick={clear}>{text.clear}</button></div>}
           <EntitySearchResults items={displayed.items} locale={locale} onChoose={entity => onChoose(entity, criteria.predicates, criteria.contributionRole ? [criteria.contributionRole] : undefined)}/>
         </div> : <div className={styles.skeleton} aria-hidden="true"/>}
-      </div>
       <KnowledgeEntitySearchResults q={criteria.q} kind={criteria.kind} criteria={criteria} allowEmpty paused={!!problem} recordView={recordView} excludeIds={recordView?recordData?.claims.map(r=>r.id):displayed?.items.map(e=>e.id)} onMatches={onCommonMatches} onChoose={onChooseKnowledge} onChooseRecord={onChooseRecord}/>
+      </div>
       <nav className={styles.pagination} aria-label={en ? "Result pages" : "結果のページ"}>
         <button disabled={blocked || cursors.length === 1} onClick={() => onPage(v => v.slice(0, -1))}>{text.previous}</button>
         <span>{criteria.predicates?.length ? text.carry : text.hint}</span>
