@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import React from "react";
-import {act,cleanup,render,screen} from "@testing-library/react";
+import {act,cleanup,fireEvent,render,screen} from "@testing-library/react";
 import {afterEach,beforeEach,expect,it,vi} from "vitest";
 import KnowledgeReading,{useKnowledgeReading} from "../components/KnowledgeReading";
 const mocks=vi.hoisted(()=>({workspace:{} as Record<string,unknown>,close:vi.fn()}));
@@ -8,7 +8,7 @@ vi.mock("next/navigation",()=>({useSearchParams:()=>new URLSearchParams(location
 vi.mock("../lib/client/use-knowledge-workspace",()=>({useKnowledgeWorkspace:()=>mocks.workspace,readKnowledge:vi.fn()}));
 vi.mock("../components/GraphCanvas",()=>({default:()=> <div>保持中の図</div>}));
 const theme={theme:{id:"theme",revision:1,content:{title:"テーマ",recordPins:[],description:""}},records:[],snapshot:{entities:[],records:[]}};
-function Reader(){const r=useKnowledgeReading()!;return <><span>既存Explorer</span><div>{r.center}</div></>;}
+function Reader(){const r=useKnowledgeReading()!;return <><span>既存Explorer</span><button onClick={()=>r.openRecord("record-1")}>記録を開く</button><div>{r.center}</div></>;}
 async function flush(){await act(async()=>{for(let n=0;n<10;n++)await Promise.resolve();});}
 beforeEach(()=>{mocks.close.mockClear();history.replaceState({},"","/?ktheme=theme");mocks.workspace={normal:{records:[],entities:[],epoch:0,selection:null},activeTheme:theme,retainedTheme:theme,themeSelection:null,themeView:"graph",busy:false,restoring:false,error:"",message:"",status:null,closeTheme:mocks.close};});
 afterEach(()=>cleanup());
@@ -32,4 +32,19 @@ it("解説だけのThemeに空のGraph領域を追加しない",async()=>{
 it("公開記録の直リンクを既存Explorerのホーム移動と混同しない",async()=>{
  history.replaceState({},"","/?krecord=record-1");mocks.workspace={...mocks.workspace,activeTheme:null,retainedTheme:null};
  render(<KnowledgeReading><Reader/></KnowledgeReading>);expect(screen.getByRole("region",{name:"通常の関係探索"})).toBeTruthy();await flush();expect(mocks.close).not.toHaveBeenCalled();expect(screen.getByRole("region",{name:"通常の関係探索"})).toBeTruthy();
+});
+
+it("通常Graphからの記録取得中は旧URLを理由に取消さず、成功後に直リンクへ切り替える",async()=>{
+ history.replaceState({},"","/");
+ let resolve!:(value:boolean)=>void;
+ const selectRecord=vi.fn(()=>new Promise<boolean>(done=>{resolve=done;}));
+ mocks.workspace={...mocks.workspace,activeTheme:null,retainedTheme:null,selectRecord};
+ render(<KnowledgeReading><Reader/></KnowledgeReading>);await flush();
+ fireEvent.click(screen.getByRole("button",{name:"記録を開く"}));await flush();
+ expect(selectRecord).toHaveBeenCalledWith("record-1",{latest:true});
+ expect(mocks.close).toHaveBeenCalledTimes(1);
+ await act(async()=>{resolve(true);await Promise.resolve();});await flush();
+ expect(new URL(location.href).searchParams.get("krecord")).toBe("record-1");
+ expect(screen.getByRole("region",{name:"通常の関係探索"})).toBeTruthy();
+ expect(mocks.close).toHaveBeenCalledTimes(1);
 });
