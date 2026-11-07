@@ -1,5 +1,6 @@
 "use client";
 import Icon from "./Icon";
+import LegacyEntityTranslations from "./LegacyEntityTranslations";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerLabels, explorerMessage } from "../lib/i18n/explorer";
 
@@ -38,6 +39,7 @@ export default function EntityDetails({ entity, expansion, onExpand, onClose, on
     <p>{entity.description ?? ui.descriptionMissing}</p>
     {!detail && !error && <p role="status">{ui.entityLoading}</p>}
     {detail && <p>{ui.aliases}：{detail.aliases.length ? detail.aliases.join("、") : ui.unregistered}</p>}
+    {dataset==="public-kg"&&<LegacyEntityTranslations key={entity.id} id={entity.id}/>}
     {detail?.event && <><dl className={styles.claimFacts}><dt>{eventParticipationLabels(locale).eventPeriod}</dt><dd>{formatPeriod(detail.event.period, locale)}</dd></dl><p className={styles.muted}>{eventParticipationLabels(locale).periodHelp}</p></>}
     {error && <div role="alert" className={styles.error}><p>{explorerMessage(error, locale)}</p><button onClick={() => { setError(null); setDetail(null); setAttempt((value) => value + 1); }}>{ui.entityRetry}</button></div>}
     {dataset && <p><ReadingLink reference={{ kind: "entity", dataset, id: entity.id }} /></p>}

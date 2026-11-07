@@ -1,17 +1,21 @@
+import {pruneCapsuleTimeline} from "../domain/capsule-timeline";
 import { capsuleDocumentSchema, type CapsuleDocument, type CapsuleRelation } from "../domain/capsule-document";
 import type { KnowledgeRecordVersion } from "../domain/knowledge-foundation";
 import { sameUpdateValue, type CapsuleUpdateResponse } from "../domain/capsule-updates";
+import type {KnowledgeTranslationVersion} from "../domain/knowledge-translation";
 
-export type UpdateChange = { kind:"record"|"entity"|"source"|"mapping"|"theme"; id:string; title:string; before:unknown; after:unknown; beforeRevision?:number; afterRevision?:number };
+export type UpdateChange = { kind:"record"|"entity"|"source"|"mapping"|"theme"|"translation"; id:string; title:string; before:unknown; after:unknown; beforeRevision?:number; afterRevision?:number };
+export const translationSlot=(v:KnowledgeTranslationVersion)=>JSON.stringify([v.target.kind,v.target.id,v.target.field,v.target.evidenceId??null,v.target.aliasIndex??null,v.language]);
 export type CapsuleUpdatePlan = { document:CapsuleDocument; changes:UpdateChange[]; preserved:number; excluded:number; retained:string[] };
 const pinKey=(v:{id:string;revision:number})=>JSON.stringify([v.id,v.revision]);
 const authoredRelation=(doc:CapsuleDocument,r:CapsuleRelation,base:KnowledgeRecordVersion)=>r.label!==base.content.relation||r.note!==base.content.assertion||r.times!==undefined||doc.evidence.some(e=>e.targetKey===r.key);
 
 /** A three-way import into a draft. It never saves, publishes or mutates the observed edition. */
-export function planCapsuleKnowledgeUpdate(document:CapsuleDocument,response:CapsuleUpdateResponse,includeTheme=false):CapsuleUpdatePlan {
+export function planCapsuleKnowledgeUpdate(document:CapsuleDocument,response:CapsuleUpdateResponse,includeTheme=false,translationIds:readonly string[]=[]):CapsuleUpdatePlan {
  if(!document.knowledge||response.unavailable.length)throw Error("取得元を確認できないため取り込めません");
  if(includeTheme&&(!response.theme||response.theme.id!==document.knowledge.theme?.id))throw Error("テーマが一致しません");
  const doc=structuredClone(document),attachment=doc.knowledge!,old=attachment.snapshot,candidate=structuredClone(response.snapshot);
+ if(!includeTheme&&old.theme)candidate.theme=structuredClone(old.theme);
  const changes:UpdateChange[]=[],retained:string[]=[];let preserved=0;
  const groups=["records","entities","sources","mappings"] as const;
  for(const group of groups){
@@ -28,7 +32,7 @@ export function planCapsuleKnowledgeUpdate(document:CapsuleDocument,response:Cap
    changes.push({kind,id,title:String(title??id),before:a.length?a.map(r=>r.content):null,after:b.length?b.map(r=>r.content):null,beforeRevision:a[0]?.revision,afterRevision:b[0]?.revision});
   }
  }
- if(includeTheme&&response.theme&&attachment.theme?.revision!==response.theme.revision)changes.unshift({kind:"theme",id:response.theme.id,title:response.theme.content.title,before:attachment.theme?.revision,after:response.theme.revision,beforeRevision:attachment.theme?.revision,afterRevision:response.theme.revision});
+ if(includeTheme&&response.theme){candidate.theme=structuredClone(response.theme);if(attachment.theme?.revision!==response.theme.revision)changes.unshift({kind:"theme",id:response.theme.id,title:response.theme.content.title,before:old.theme?.content??attachment.theme?.revision,after:response.theme.content,beforeRevision:attachment.theme?.revision,afterRevision:response.theme.revision});}
  const oldRecords=new Map(old.records.map(r=>[r.id,r])),newRecords=new Map(candidate.records.map(r=>[r.id,r]));
  const excluded=new Set(attachment.excludedRecordIds??[]);
  for(const r of old.records)if(r.content.kind==="relation"&&!doc.relations.some(e=>e.origin.kind==="knowledge"&&e.origin.id===r.id))excluded.add(r.id);
@@ -80,13 +84,18 @@ export function planCapsuleKnowledgeUpdate(document:CapsuleDocument,response:Cap
   timeline.placements=timeline.placements.filter(p=>candidate.records.some(r=>r.id===p.recordId&&r.content.times.some(t=>t.id===p.timeId&&timeline.axes.some(a=>a.id===p.axisId&&a.kind===t.time.kind))));
   timeline.insets=timeline.insets.filter(p=>candidate.records.some(r=>r.id===p.parentRecordId)&&timeline.axes.some(a=>a.id===p.axisId));
  }
- candidate.translations=(old.translations??[]).filter(t=>(t.target.kind==='record'?candidate.records:t.target.kind==='entity'?candidate.entities:t.target.kind==='source'?candidate.sources:[]).some(v=>v.id===t.target.id&&v.revision===t.target.revision));
+ const hasOriginal=(t:KnowledgeTranslationVersion)=>(t.target.kind==='record'?candidate.records:t.target.kind==='entity'?candidate.entities:t.target.kind==='source'?candidate.sources:candidate.theme?[candidate.theme]:[]).some(v=>v.id===t.target.id&&v.revision===t.target.revision);
+ const previous=old.translations??[],offered=candidate.translations??[];
+ for(const a of previous){const b=offered.find(v=>translationSlot(v)===translationSlot(a)&&hasOriginal(v));if(b?.id===a.id&&b.revision===a.revision)continue;if(!b&&hasOriginal(a)&&!response.translationsChecked)continue;changes.push({kind:"translation",id:b?.id??a.id,title:`${a.language} · ${a.target.field}`,before:a.text,after:b?.text??null,beforeRevision:a.revision,afterRevision:b?.revision});}
+ candidate.translations=previous.filter(t=>hasOriginal(t)&&(!response.translationsChecked||offered.some(v=>translationSlot(v)===translationSlot(t)))&&!offered.some(v=>translationSlot(v)===translationSlot(t)&&translationIds.includes(v.id))).concat(offered.filter(t=>hasOriginal(t)&&translationIds.includes(t.id)));
+ candidate.translations=[...new Map(candidate.translations.map(t=>[t.id,t])).values()];
  attachment.snapshot={...candidate,initialView:old.initialView,...(timeline?{timeline}:{})};
  attachment.capturedAt=new Date().toISOString();
  attachment.excludedRecordIds=[...excluded];
  if(includeTheme&&response.theme){attachment.theme={id:response.theme.id,revision:response.theme.revision};attachment.themeRecordIds=response.snapshot.records.map(r=>r.id);}
+ if(attachment.timeline)attachment.timeline=pruneCapsuleTimeline(doc,attachment.timeline);
  return {document:capsuleDocumentSchema.parse(doc),changes,preserved,excluded:excluded.size,retained};
 }
 
 /** Do not compare generation IDs: an unrelated publication must not invalidate this preview. */
-export function sameCapsuleUpdate(a:CapsuleUpdateResponse,b:CapsuleUpdateResponse){return sameUpdateValue({snapshot:a.snapshot,theme:a.theme,unavailable:a.unavailable},{snapshot:b.snapshot,theme:b.theme,unavailable:b.unavailable});}
+export function sameCapsuleUpdate(a:CapsuleUpdateResponse,b:CapsuleUpdateResponse){return sameUpdateValue({snapshot:a.snapshot,theme:a.theme,unavailable:a.unavailable,translationsChecked:a.translationsChecked},{snapshot:b.snapshot,theme:b.theme,unavailable:b.unavailable,translationsChecked:b.translationsChecked});}

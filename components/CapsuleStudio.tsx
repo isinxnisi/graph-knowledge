@@ -24,6 +24,7 @@ import KnowledgeSplit from "./KnowledgeSplit";
 import CapsuleKnowledgeTimeline from "./CapsuleKnowledgeTimeline";
 import CapsuleKnowledgeUpdates from "./CapsuleKnowledgeUpdates";
 import { planCapsuleKnowledgeUpdate } from "../lib/client/capsule-knowledge-updates";
+import KnowledgeTimelineFields from "./KnowledgeTimelineFields";
 import KnowledgeRecordDetail from "./KnowledgeRecordDetail";
 import { capsuleKnowledgeProjection, capsuleRelationTimes, capsuleRelationRecordId, withCapsuleTimeline } from "../lib/client/capsule-knowledge";
 import { themeTimeLabel } from "../lib/domain/theme-time";
@@ -74,6 +75,7 @@ export default function CapsuleStudio({ submissionHref, externalFocus, onFocusKe
   const [busy, setBusy] = useState(false), [saving, setSaving] = useState(false), [error, setError] = useState<string | null>(null), [message, setMessage] = useState<string | null>(null);
   const [leave, setLeave] = useState<"close" | "discard" | string | null>(null), [shareOpen, setShareOpen] = useState(false);
   const shareDialog = useRef<HTMLDialogElement>(null);
+  const [timelineSettingsOpen,setTimelineSettingsOpen]=useState(false);
   const [inspector, setInspector] = useState(false), [contentsOpen, setContentsOpen] = useState(false);
   const [menu, setMenu] = useState<GraphContextMenuRequest | null>(null);
   const [titleDraft, setTitleDraft] = useState<string | null>(null);
@@ -472,7 +474,7 @@ export default function CapsuleStudio({ submissionHref, externalFocus, onFocusKe
       </div></div>
       <div className={css.actions}>
         {(contentDocument.knowledge||editing)&&<button disabled={busy} className={css.iconButton} aria-label={knowledgeMode==="graph"?t("年表を表示","Show timeline"):t("関係図だけを表示","Show relation diagram only")} title={knowledgeMode==="graph"?t("年表を表示","Show timeline"):t("関係図だけを表示","Show relation diagram only")} aria-pressed={knowledgeMode!=="graph"} onClick={()=>{if(!contentDocument.knowledge){changeDocument(withCapsuleTimeline(contentDocument));setKnowledgeView("split");}else chooseKnowledgeView(knowledgeMode==="graph"?"split":"graph");}}><Icon name="event"/></button>}
-        {byline&&<span className={css.byline}>{byline}</span>}{readOnly&&onEditRequest&&<button onClick={()=>onEditRequest(current())}><Icon name="edit"/>{t("編集","Edit")}</button>}
+        {editing&&knowledgeSnapshot&&<button disabled={busy} className={css.iconButton} aria-label={t("年表の軸を編集","Edit timeline axes")} title={t("年表の軸を編集","Edit timeline axes")} onClick={()=>setTimelineSettingsOpen(true)}><Icon name="settings"/></button>}{byline&&<span className={css.byline}>{byline}</span>}{readOnly&&onEditRequest&&<button onClick={()=>onEditRequest(current())}><Icon name="edit"/>{t("編集","Edit")}</button>}
         {editing ? <><button disabled={busy} className={css.quietButton} onClick={() => editingChanged || !saved ? setLeave("discard") : discard()}>{t("破棄", "Discard")}</button><button data-variant="primary" disabled={busy || !onSave || capacity?.documents === false} onClick={() => void save()}><Icon name="check"/>{t("保存", "Save")}</button></> : <>{sharing && <button aria-label={t("共有", "Share")} title={t("共有", "Share")} onClick={() => setShareOpen(true)}><Icon name="share"/><span className={css.optionalLabel}>{t("共有", "Share")}</span></button>}{!readOnly && onSave && <button data-variant="primary" onClick={begin}><Icon name="edit"/>{t("編集", "Edit")}</button>}</>}
         {onClose && <button className={css.iconButton} disabled={busy} aria-label={t("Capsuleを閉じる", "Close Capsule")} onClick={requestClose}><Icon name="close"/></button>}
       </div>
@@ -526,9 +528,9 @@ export default function CapsuleStudio({ submissionHref, externalFocus, onFocusKe
       </aside>}
     </div>
     <footer className={css.footer} inert={saving}><span>{destination}{saved && ` · ${t("保存版", "Revision")} ${saved.revision}`}</span><span>{contentDocument.nodes.length} Entity · {contentDocument.relations.length} {t("関係", "relations")}</span><span className={css.footerSpace}/>{!readOnly && !!contentDocument.knowledge?.snapshot.records.length && <button className={css.quietButton} disabled={busy || !!editor} title={t("取得元の更新", "Source updates")} aria-label={t("取得元の更新", "Source updates")} onClick={()=>setUpdatesOpen(true)}><Icon name="refresh"/><span className={css.optionalLabel}>{t("取得元の更新", "Source updates")}</span></button>}{editing ? <button className={css.quietButton} onClick={() => openEditor("capsule")}><Icon name="settings"/>{t("説明", "Description")}</button> : <button className={css.quietButton} title={t("閲覧中の移動は一時的です。編集は今の配置から始まります。", "Viewing moves are temporary. Editing starts from this view.")} onClick={() => { if (saved) { setHistory(capsuleHistory(saved)); setGeneration(v => v + 1); } }}><Icon name="history"/>{t("保存位置", "Saved view")}</button>}<span className={submissionHref?css.submission:css.future}>{submissionHref?<button className={css.quietButton} disabled={busy||!selected.length||!!editor} title={t("選択した対象・関係を投稿草稿へ引き継ぐ・別タブ。未保存の編集も提案として引き継ぎます。", "Create a submission draft from the selection in a new tab, including unsaved proposals.")} onClick={()=>void submitSelection()}><Icon name="edit"/>{t("選択範囲を投稿", "Submit selection")}<Icon name="external"/></button>:t("知識申請：準備中", "Knowledge submission: coming later")}</span></footer>
-    {updatesOpen && <CapsuleKnowledgeUpdates document={contentDocument} onClose={()=>setUpdatesOpen(false)} onApply={(response,includeTheme)=>{
+    {timelineSettingsOpen&&knowledgeSnapshot&&<CapsuleModal title={t("年表の構成","Timeline layout")} onClose={()=>setTimelineSettingsOpen(false)}><header className={css.dialogHeading}><h3>{t("年表の構成","Timeline layout")}</h3><button aria-label={t("閉じる","Close")} onClick={()=>setTimelineSettingsOpen(false)}><Icon name="close"/></button></header><KnowledgeTimelineFields expanded records={knowledgeSnapshot.records} value={knowledgeSnapshot.timeline} locale={locale} onSave={timeline=>{const next={...current().document!,knowledge:{...current().document!.knowledge!,timeline}};const ok=commit(withDocument(current(),next));if(ok){setTimelineSettingsOpen(false);setMessage(t("年表の構成を草稿へ適用しました。","Timeline layout applied to the draft."));}return ok;}}/><p className={css.status}>{t("Capsuleの表示だけを編集します。保存・共有への反映は別操作です。","Changes this Capsule’s layout. Saving and sharing remain separate.")}</p></CapsuleModal>}{updatesOpen && <CapsuleKnowledgeUpdates document={contentDocument} onClose={()=>setUpdatesOpen(false)} onApply={(response,includeTheme,translationIds)=>{
       try{
-        const starting=current(),plan=planCapsuleKnowledgeUpdate(starting.document!,response,includeTheme),next=withDocument(starting,plan.document);
+        const starting=current(),plan=planCapsuleKnowledgeUpdate(starting.document!,response,includeTheme,translationIds),next=withDocument(starting,plan.document);
         const parsed=capsuleSchema.parse(next);if(new TextEncoder().encode(JSON.stringify(parsed)).byteLength>2_000_000)return false;
         if(!editing)begin();
         if(!commit(parsed))return false;

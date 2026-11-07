@@ -1,34 +1,21 @@
 import { calendarMeaning, type CalendarTime } from "./theme-time";
 import type { TimelineTimedRow } from "./timeline-display";
+import { calendarBounds, calendarValue } from "./calendar-value";
 
-export type CalendarUnit = "year" | "month" | "day";
+export type CalendarUnit = "year" | "month" | "day" | "hour";
 export type CalendarResolution = "auto" | CalendarUnit;
 
-const precision = { year: 4, month: 7, day: 10 };
+const precision = { year: 4, month: 7, day: 10, hour: 13 };
 const bucket = (date: number, unit: CalendarUnit) =>
   unit === "year"
     ? Math.floor(date / 10000) * 10000 + 101
     : unit === "month"
       ? Math.floor(date / 100) * 100 + 1
-      : date;
+      : unit === "day" ? Math.floor(date) : Math.floor(date) + Math.floor((date%1)*24+0.00001)/24;
 
 /** Display coordinates only. Partial dates remain unchanged in the source. */
 export function calendarLayoutBounds(value: string): [number, number] {
-  const [year, month, day] = value.split("-").map(Number);
-  const firstMonth = month ?? 1,
-    lastMonth = month ?? 12;
-  const days =
-    lastMonth === 2
-      ? year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)
-        ? 29
-        : 28
-      : [4, 6, 9, 11].includes(lastMonth)
-        ? 30
-        : 31;
-  return [
-    year * 10000 + firstMonth * 100 + (day ?? 1),
-    year * 10000 + lastMonth * 100 + (day ?? days),
-  ];
+  return calendarBounds(value);
 }
 
 export function calendarGraph<R extends TimelineTimedRow>(
@@ -47,7 +34,7 @@ export function calendarGraph<R extends TimelineTimedRow>(
   const finest = Math.max(4, ...values.map((v) => v.length));
   const unit: CalendarUnit =
     resolution === "auto"
-      ? finest >= 10
+      ? finest >= 13 ? "hour" : finest >= 10
         ? "day"
         : finest >= 7
           ? "month"
@@ -68,7 +55,7 @@ export function calendarGraph<R extends TimelineTimedRow>(
         labels.set(bound, [
           ...new Set([
             ...(labels.get(bound) ?? []),
-            value.slice(0, precision[unit]),
+            calendarValue(value)?.zone ? value : value.slice(0, precision[unit]),
           ]),
         ]);
       }

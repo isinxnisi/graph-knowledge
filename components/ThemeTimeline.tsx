@@ -113,11 +113,7 @@ function timeText(record: TimelineDisplayRecord) {
 
 function orderedRecords<R extends TimelineDisplayRecord>(group: Group<R>) {
   if (group.kind === "calendar") {
-    return [...group.records].sort((a, b) =>
-      (a.time?.kind === "calendar" ? a.time.from : "").localeCompare(
-        b.time?.kind === "calendar" ? b.time.from : "",
-      ),
-    );
+    return [...group.records].sort((a,b)=>calendarLayoutBounds(a.time?.kind==="calendar"?a.time.from:"")[0]-calendarLayoutBounds(b.time?.kind==="calendar"?b.time.from:"")[0]);
   }
   if (group.kind === "qualitative" && group.order?.length) {
     const rank = (r: TimelineDisplayRecord) =>
@@ -564,11 +560,11 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
   }
 
   const hasCalendar = records.some((r) => r.time?.kind === "calendar");
-  const settingsSummary = [hasCalendar && resolution !== "auto" ? ({ year: "年", month: "月", day: "日" } as const)[resolution] : "", activeTrace ? name(activeTrace) : ""].filter(Boolean).join(" · ");
+  const settingsSummary = [hasCalendar && resolution !== "auto" ? ({ year: "年", month: "月", day: "日",hour:"時間" } as const)[resolution] : "", activeTrace ? name(activeTrace) : ""].filter(Boolean).join(" · ");
   const readingControls = <>
     {hasCalendar && <label className={css.resolutionSelect}>表示
       <select aria-label="暦の表示単位" value={resolution} onChange={(e) => setResolution(e.target.value as CalendarResolution)}>
-        <option value="auto">自動</option><option value="year">年</option><option value="month">月</option><option value="day">日</option>
+        <option value="auto">自動</option><option value="year">年</option><option value="month">月</option><option value="day">日</option><option value="hour">時間</option>
       </select>
     </label>}
     {subjects.length > 1 && <label className={css.traceSelect}>たどる対象

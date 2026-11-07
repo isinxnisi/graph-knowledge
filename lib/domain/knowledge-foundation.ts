@@ -52,7 +52,7 @@ export const knowledgeTimelineSchema = z.strictObject({
   version: z.literal(1),
   axes: z.array(z.strictObject({ id: knowledgeIdSchema, kind: z.enum(["calendar", "cycle", "qualitative"]), label: text.max(200), order: z.array(text.max(200)).max(400).optional(), originLabel: z.string().max(1000).optional() })).max(32),
   placements: z.array(z.strictObject({ recordId: knowledgeIdSchema, timeId: knowledgeIdSchema, axisId: knowledgeIdSchema })).max(400),
-  insets: z.array(z.strictObject({ parentRecordId: knowledgeIdSchema, axisId: knowledgeIdSchema, label: text.max(200) })).max(32).default([]),
+  insets: z.array(z.strictObject({ parentRecordId: knowledgeIdSchema, parentTimeId:knowledgeIdSchema.optional(), axisId: knowledgeIdSchema, label: text.max(200) })).max(32).default([]),
 });
 export const knowledgeThemeContentSchema = z.strictObject({
   title: text.max(200), description: z.string().max(8000).default(""),
@@ -78,7 +78,7 @@ export type KnowledgeContentByKind = { entity: KnowledgeEntityContent; source: K
 export type KnowledgeStatus = { kind: KnowledgeKind; id: string; revision: number; visibility: "private" | "public" | "hidden"; confirmation: "unreviewed" | "checked" | "disputed" };
 export type KnowledgeActor = { kind: "operator" | "collector" | "collection" | "import" | "submission" | "user" | "reader" | "organizer"; id: string };
 export type KnowledgeList = { entities: KnowledgeEntityVersion[]; sources: KnowledgeSourceVersion[]; records: KnowledgeRecordVersion[]; themes: KnowledgeThemeVersion[]; statuses: KnowledgeStatus[] };
-export type KnowledgeSnapshot = { translations?:import("./knowledge-translation").KnowledgeTranslationVersion[]; schemaVersion: 1; entities: KnowledgeEntityVersion[]; sources: KnowledgeSourceVersion[]; records: KnowledgeRecordVersion[]; mappings: KnowledgeMappingVersion[]; timeline?: KnowledgeTimeline; initialView: "graph" | "timeline" | "split" };
+export type KnowledgeSnapshot = { theme?:KnowledgeThemeVersion; translations?:import("./knowledge-translation").KnowledgeTranslationVersion[]; schemaVersion: 1; entities: KnowledgeEntityVersion[]; sources: KnowledgeSourceVersion[]; records: KnowledgeRecordVersion[]; mappings: KnowledgeMappingVersion[]; timeline?: KnowledgeTimeline; initialView: "graph" | "timeline" | "split" };
 export type KnowledgeThemeResolved = { theme: KnowledgeThemeVersion; snapshot: KnowledgeSnapshot };
 export type KnowledgeChange = { kind: KnowledgeKind; id: string; beforeRevision: number | null; afterRevision: number | null; before: unknown; after: unknown; requiresRecordCorrection?: boolean };
 export type KnowledgeThemeDiff = { themeId: string; revision: number; refreshToken: string; changes: KnowledgeChange[]; unavailable: { kind: KnowledgeKind; id: string }[] };
@@ -120,6 +120,7 @@ export function knowledgeTimelineIssues(records: KnowledgeRecordVersion[], timel
   const issues: string[] = [];
   const byRecord = new Map(records.map(r => [r.id, r]));
   const seen = new Set<string>();
+  for(const inset of timeline.insets)if(inset.parentTimeId&&!byRecord.get(inset.parentRecordId)?.content.times.some(t=>t.id===inset.parentTimeId))issues.push("子軸を接続する親の時間注釈がありません");
   for (const p of timeline.placements) {
     if (!byRecord.get(p.recordId)?.content.times.some(t => t.id === p.timeId))
       issues.push("時間注釈の参照がありません");

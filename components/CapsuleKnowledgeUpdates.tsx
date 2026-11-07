@@ -9,13 +9,14 @@ import { useUiLocale } from "../lib/client/ui-locale";
 import css from "./CapsuleStudio.module.css";
 import styles from "./CapsuleKnowledgeUpdates.module.css";
 
-export default function CapsuleKnowledgeUpdates({document,onClose,onApply}:{document:CapsuleDocument;onClose:()=>void;onApply:(response:CapsuleUpdateResponse,includeTheme:boolean)=>boolean}){
+export default function CapsuleKnowledgeUpdates({document,onClose,onApply}:{document:CapsuleDocument;onClose:()=>void;onApply:(response:CapsuleUpdateResponse,includeTheme:boolean,translationIds:readonly string[])=>boolean}){
  const {locale}=useUiLocale(),en=locale==="en",t=(ja:string,en:string)=>locale==="en"?en:ja;
  const [includeTheme,setIncludeTheme]=useState(false),[attempt,setAttempt]=useState(0),[response,setResponse]=useState<CapsuleUpdateResponse|null>(null),[busy,setBusy]=useState(true),[error,setError]=useState<string|null>(null),[message,setMessage]=useState<string|null>(null);
+ const [translationIds,setTranslationIds]=useState<string[]>([]);
  const active=useRef<AbortController|null>(null);
  async function read(signal:AbortSignal){
   const k=document.knowledge!;
-  const result=await fetch("/api/knowledge/capsule-updates",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({recordIds:k.snapshot.records.map(r=>r.id),entityIds:k.snapshot.entities.map(e=>e.id),theme:k.theme,includeTheme}),signal:AbortSignal.any([signal,AbortSignal.timeout(30_000)]),cache:"no-store"});
+  const result=await fetch("/api/knowledge/capsule-updates",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({recordIds:k.snapshot.records.map(r=>r.id),entityIds:k.snapshot.entities.map(e=>e.id),theme:k.theme,includeTheme,translations:(k.snapshot.translations??[]).map(v=>({target:v.target,language:v.language}))}),signal:AbortSignal.any([signal,AbortSignal.timeout(30_000)]),cache:"no-store"});
   if(!result.ok)throw Error(result.status===404?t("現在は取得元を閲覧できません。保存内容は変更していません。","The source is unavailable. Your saved content is unchanged."):t("更新を取得できませんでした。保存内容は変更していません。","Could not load updates. Your saved content is unchanged."));
   return capsuleUpdateResponseSchema.parse(await result.json());
  }
@@ -26,15 +27,15 @@ export default function CapsuleKnowledgeUpdates({document,onClose,onApply}:{docu
   // The modal owns one fixed draft; changing the comparison mode starts a new read.
   // eslint-disable-next-line react-hooks/exhaustive-deps
  },[includeTheme,attempt]);
- const plan=useMemo(()=>{if(!response||response.unavailable.length)return null;try{return planCapsuleKnowledgeUpdate(document,response,includeTheme);}catch{return null;}},[document,response,includeTheme]);
+ const plan=useMemo(()=>{if(!response||response.unavailable.length)return null;try{return planCapsuleKnowledgeUpdate(document,response,includeTheme,translationIds);}catch{return null;}},[document,response,includeTheme,translationIds]);
  const names=useMemo(()=>({before:Object.fromEntries([...document.knowledge!.snapshot.entities.map(e=>[e.id,e.content.name]),...document.knowledge!.snapshot.sources.map(s=>[s.id,s.content.title])]),after:Object.fromEntries([...(response?.snapshot.entities??[]).map(e=>[e.id,e.content.name]),...(response?.snapshot.sources??[]).map(s=>[s.id,s.content.title])])}),[document,response]);
- const reload=()=>{setBusy(true);setError(null);setMessage(null);setResponse(null);setAttempt(v=>v+1);};
+ const reload=()=>{setTranslationIds([]);setBusy(true);setError(null);setMessage(null);setResponse(null);setAttempt(v=>v+1);};
  async function apply(){
   if(!response||!plan)return;const controller=new AbortController();active.current=controller;setBusy(true);setError(null);setMessage(null);
   try{
    const checked=await read(controller.signal);if(controller.signal.aborted)return;
    if(!sameCapsuleUpdate(response,checked)){setResponse(checked);setMessage(t("比較中に取得元が更新されました。内容をもう一度確認してください。","The source changed during comparison. Review the new changes."));return;}
-   if(!onApply(checked,includeTheme))setError(t("上限または形式を確認してください。草稿は残っています。","Check the limits or format. Your draft is retained."));
+   if(!onApply(checked,includeTheme,translationIds))setError(t("上限または形式を確認してください。草稿は残っています。","Check the limits or format. Your draft is retained."));
   }catch(cause){if(!controller.signal.aborted)setError(cause instanceof Error?cause.message:t("取り込めませんでした","Could not import"));}
   finally{if(!controller.signal.aborted)setBusy(false);}
  }
@@ -48,13 +49,13 @@ export default function CapsuleKnowledgeUpdates({document,onClose,onApply}:{docu
    {error&&<p role="alert">{error}</p>}{message&&<p role="status">{message}</p>}
    {response?.unavailable.length? <p role="alert">{t("現在は閲覧できない取得元があります。保存内容を保つため、今回は取り込めません。","Some sources are unavailable. Import is blocked to preserve your content.")}</p>:null}
    {response&&!plan&&!response.unavailable.length&&<p role="alert">{t("この更新は現在のCapsuleへ取り込めません。保存内容は変更していません。","This update cannot be imported into this Capsule. Your saved content is unchanged.")}</p>}
-   {plan&&<>{!plan.changes.length?<p role="status">{t("取得元に変更はありません。","The source is unchanged.")}</p>:<><p className={styles.summary}>{t(`${plan.changes.length}件の変更`,`${plan.changes.length} changes`)}</p><ul className={styles.list}>{plan.changes.map(c=><li key={c.kind+":"+c.id}><details><summary><span className={styles.kind}>{({record:t("記録","Record"),entity:t("対象","Object"),source:t("資料","Source"),mapping:t("意味対応","Meaning"),theme:t("テーマ","Theme")})[c.kind]}</span><strong>{c.title}</strong><span className={styles.edition}>{c.beforeRevision??"−"} → {c.afterRevision??"−"}</span></summary><div className={styles.columns}><div><h4>{t("取得済み","Captured")}</h4><UpdateValue value={changedValues(c.before,c.after)[0]} en={en} names={names.before}/></div><div><h4>{t("取得元の現在版","Current source")}</h4><UpdateValue value={changedValues(c.before,c.after)[1]} en={en} names={names.after}/></div></div></details></li>)}</ul></>}
+   {plan&&<>{!plan.changes.length?<p role="status">{t("取得元に変更はありません。","The source is unchanged.")}</p>:<><p className={styles.summary}>{t(`${plan.changes.length}件の変更`,`${plan.changes.length} changes`)}</p><ul className={styles.list}>{plan.changes.map(c=><li key={c.kind+":"+c.id}>{c.kind==="translation"&&c.after!==null&&<label className={styles.translationChoice}><input type="checkbox" checked={translationIds.includes(c.id)} onChange={e=>setTranslationIds(ids=>e.target.checked?[...ids,c.id]:ids.filter(id=>id!==c.id))}/>{t("この訳文の更新を取り込む","Import this translation update")}</label>}<details><summary><span className={styles.kind}>{({record:t("記録","Record"),entity:t("対象","Object"),source:t("資料","Source"),mapping:t("意味対応","Meaning"),theme:t("テーマ","Theme"),translation:t("訳文","Translation")})[c.kind]}</span><strong>{c.title}</strong><span className={styles.edition}>{c.beforeRevision??"−"} → {c.afterRevision??"−"}</span></summary><div className={styles.columns}><div><h4>{t("取得済み","Captured")}</h4><UpdateValue value={changedValues(c.before,c.after)[0]} en={en} names={names.before}/></div><div><h4>{t("取得元の現在版","Current source")}</h4><UpdateValue value={changedValues(c.before,c.after)[1]} en={en} names={names.after}/></div></div></details></li>)}</ul></>}
     {!!plan.preserved&&<p className={styles.hint}>{t(`独自に編集した${plan.preserved}項目を保持します。`,`${plan.preserved} authored fields will be preserved.`)}</p>}
     {!!plan.retained.length&&<p>{t(`作者の編集がある${plan.retained.length}件の関係は、テーマから外れていてもこのCapsuleに残します。`,`${plan.retained.length} authored relations will remain in this Capsule after removal from the theme.`)}</p>}
     {!!plan.excluded&&<p className={styles.hint}>{t(`Capsuleで外した${plan.excluded}件の関係は追加し直しません。`,`${plan.excluded} excluded relations will stay excluded.`)}</p>}
    </>}
   </div>
-  <footer className={styles.footer}><p className={styles.hint}>{t("独自の編集と配置を保ち、草稿へ取り込みます。保存・共有への反映は別操作です。","Import into the draft, keeping authored edits and layout. Saving and publishing remain separate.")}</p><div className={css.actions}><button disabled={busy} onClick={reload}><Icon name="refresh"/>{t("再確認","Check again")}</button><button disabled={busy||!plan?.changes.length} data-variant="primary" onClick={()=>void apply()}>{t("草稿に取り込む","Import into draft")}</button></div></footer>
+  <footer className={styles.footer}><p className={styles.hint}>{t("独自の編集と配置を保ち、草稿へ取り込みます。訳文は選んだ更新だけを取り込みます。対応する原文が変わる訳文は外します。保存・共有への反映は別操作です。","Import into the draft, keeping authored edits and layout. Saving and publishing remain separate.")}</p><div className={css.actions}><button disabled={busy} onClick={reload}><Icon name="refresh"/>{t("再確認","Check again")}</button><button disabled={busy||!plan?.changes.some(c=>c.kind!=="translation"||c.after===null||translationIds.includes(c.id))} data-variant="primary" onClick={()=>void apply()}>{t("草稿に取り込む","Import into draft")}</button></div></footer>
  </CapsuleModal>;
 }
 /** Show changes, rather than repeating the whole record around a small correction. */

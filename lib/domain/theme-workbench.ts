@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { CapsuleDocument } from "./capsule-document";
 import { themeTimelineIssues } from "./theme-timeline";
 import { themeTimeLabel } from "./theme-time";
+import { calendarBounds, calendarValue } from "./calendar-value";
 
 const id = z
   .string()
@@ -23,42 +24,10 @@ export const themeEvidenceSchema = z.strictObject({
   excerpt: z.string().trim().min(1).max(4000),
   retrievedAt: z.iso.datetime(),
 });
-function monthDays(year: number, month: number) {
-  return month === 2
-    ? year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)
-      ? 29
-      : 28
-    : [4, 6, 9, 11].includes(month)
-      ? 30
-      : 31;
-}
-// Bounds are used only to reject impossible orderings. They never replace the
-// original partial date or imply that a year/month has a known day.
-function calendarBounds(value: string): [number, number] {
-  const [year, month, day] = value.split("-").map(Number);
-  const firstMonth = month ?? 1,
-    lastMonth = month ?? 12;
-  return [
-    year * 10000 + firstMonth * 100 + (day ?? 1),
-    year * 10000 + lastMonth * 100 + (day ?? monthDays(year, lastMonth)),
-  ];
-}
 function definitelyAfter(left: string, right: string) {
   return calendarBounds(left)[0] > calendarBounds(right)[1];
 }
-const calendarDate = z
-  .string()
-  .regex(/^\d{4}(-\d{2})?(-\d{2})?$/)
-  .refine((value) => {
-    const [y, m, d] = value.split("-").map(Number);
-    if (!y) return false;
-    if (m !== undefined && (m < 1 || m > 12)) return false;
-    if (d !== undefined) {
-      const days = monthDays(y, m);
-      if (d < 1 || d > days) return false;
-    }
-    return true;
-  }, "実在する年月日を入力してください");
+const calendarDate = z.string().max(32).refine(value=>!!calendarValue(value), "年月日、または日時を入力してください（例：2021-12-25T12:20Z）。時区は省略できます");
 export const themeTimeSchema = z
   .discriminatedUnion("kind", [
     z.strictObject({
@@ -69,6 +38,7 @@ export const themeTimeSchema = z
       startLatest: calendarDate.optional(),
       endEarliest: calendarDate.optional(),
       label: z.string().max(300).default(""),
+      expression: z.string().max(300).optional(),
     }),
     z.strictObject({
       kind: z.literal("cycle"),
@@ -93,6 +63,8 @@ export const themeTimeSchema = z
     if (t.kind === "calendar") {
       const issue = (path: string, message: string) =>
         c.addIssue({ code: "custom", path: [path], message });
+      const values=[t.from,t.to,t.startLatest,t.endEarliest].filter((v):v is string=>!!v);
+      if(new Set(values.map(v=>calendarValue(v)?.basis)).size>1)issue("to","同じ時期の境界では時区の指定を揃えてください。未指定の時区は補いません");
       if (t.to && definitelyAfter(t.from, t.to))
         issue("to", "時期の範囲の後端を前端以降にしてください");
       if (t.meaning === "point" && t.to)

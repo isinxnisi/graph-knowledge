@@ -42,5 +42,5 @@ export function themeTimeLabel(time: ThemeTime | null): string {
   } else {
     text = `${range(time.from, time.to)} · ${time.axis} · ${time.coordinateMeaning}`;
   }
-  return text + (time.label ? ` · ${time.label}` : "");
+  return text + (time.kind==="calendar"&&time.expression?` · 原表記：${time.expression}`:"") + (time.label ? ` · ${time.label}` : "");
 }

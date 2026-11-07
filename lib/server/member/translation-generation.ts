@@ -1,3 +1,5 @@
+import {z} from "zod";
+import {prepareLegacyEntityTranslation} from "../knowledge-legacy-translation";
 import {knowledgePublishingEnabled} from "../knowledge-deployment";
 import {knowledgeCapability} from "../knowledge-deployment";
 import type {Pool} from 'pg';
@@ -11,6 +13,7 @@ export function createMemberTranslationGeneration(pool:Pool,origin:string,owner:
  let queue:ReturnType<typeof createTranslationGeneration>|undefined;
  const service=()=>queue??=createTranslationGeneration(pool,new PgPool({connectionString:knowledgeReadConfiguration().databaseUrl,max:2,options:'-c default_transaction_read_only=on'}));
  return {
+  async prepareLegacy(request:Request){assertMemberOrigin(request,origin);if(!request.headers.has('x-member-user'))throw new MemberError(400,'INVALID_ARGUMENT');const user=await owner(request);if(!knowledgeCapability("translation",origin)||!reviewEnabledFor(user.id)||!knowledgePublishingEnabled())throw new MemberError(404,'NOT_FOUND');const input=await memberInput(request,z.strictObject({kind:z.enum(["entity","record"]),id:z.uuidv4(),requestId:z.uuidv4()}),2000);return memberJson(await prepareLegacyEntityTranslation(input));},
   queue:service,
   async command(request:Request){assertMemberOrigin(request,origin);if(!request.headers.has('x-member-user'))throw new MemberError(400,'INVALID_ARGUMENT');const user=await owner(request);if(!knowledgeCapability("translation",origin)||!reviewEnabledFor(user.id)||!knowledgePublishingEnabled())throw new MemberError(404,'NOT_FOUND');
    const v=await memberInput(request,translationGenerationInputSchema);

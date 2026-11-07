@@ -3,6 +3,7 @@ import type {
   ThemeTime,
   ThemeTimelineConfig,
 } from "./theme-workbench";
+import { calendarValue } from "./calendar-value";
 
 export type ThemeTimelineGroup<R extends TimedRecord = ThemeRecord> = {
   id: string;
@@ -25,7 +26,7 @@ function fallbackGroup(
   if (!time)
     return { id: "fallback:none", kind: "none", label: "時期を定めない情報" };
   if (time.kind === "calendar")
-    return { id: "fallback:calendar", kind: "calendar", label: "年月日・期間" };
+    return calendarValue(time.from)?.zone ? {id:"fallback:calendar:offset",kind:"calendar",label:"日時・期間（時区指定あり）",originLabel:"指定した時差で時刻を照合します。日時の原表記は各行に保持します。"} : { id: "fallback:calendar", kind: "calendar", label: "年月日・期間",originLabel:"時区未指定の日時に時差は補いません。" };
   if (time.kind === "cycle")
     return {
       id:
@@ -64,6 +65,7 @@ export function themeTimelineIssues(
   const placementMap = new Map<string, string>();
   const cycleDefinitions = new Map<string, string>();
   const qualitativeDefinitions = new Map<string, string>();
+  const calendarDefinitions = new Map<string, string>();
   config.placements.forEach((placement, i) => {
     if (placementMap.has(placement.recordId))
       add(
@@ -89,6 +91,11 @@ export function themeTimelineIssues(
       if (old && old !== signature)
         add(["placements", i], "同じ周期軸では周期長と単位を揃えてください");
       cycleDefinitions.set(axis.id, signature);
+    }
+    if(time.kind === "calendar") {
+      const basis=calendarValue(time.from)?.basis??"civil",old=calendarDefinitions.get(axis.id);
+      if(old&&old!==basis)add(["placements",i],"時区指定の日時と時区未指定の年月日は別の軸へ置いてください");
+      calendarDefinitions.set(axis.id,basis);
     }
     if (time.kind === "qualitative") {
       const old = qualitativeDefinitions.get(axis.id);

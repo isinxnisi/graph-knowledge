@@ -211,9 +211,9 @@ export function resolvePublicKnowledgeTheme(client: PoolClient, id: string, revi
   return resolve(client, id, revision, true);
 }
 
-export function createKnowledgeFoundationService(pool: Pool) {
+export function createKnowledgeFoundationService(pool: Pool,options:{prepareSchema?:()=>Promise<unknown>}={}) {
   let initialized: Promise<unknown> | undefined;
-  const ready = () => initialized ??= ensureKnowledgeFoundationSchema(pool).catch(e => { initialized = undefined; throw e; });
+  const ready = () => initialized ??= (options.prepareSchema?options.prepareSchema():ensureKnowledgeFoundationSchema(pool)).catch(e => { initialized = undefined; throw e; });
   async function read<T>(fn: (c: PoolClient) => Promise<T>): Promise<T> {
     await ready(); const c = await pool.connect();
     try { await c.query("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY"); const result = await fn(c); await c.query("COMMIT"); return result; }

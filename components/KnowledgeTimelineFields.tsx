@@ -1,0 +1,30 @@
+"use client";
+import { useState } from "react";
+import { knowledgeTimelineIssues, knowledgeTimelineSchema, type KnowledgeRecordVersion, type KnowledgeTimeline } from "../lib/domain/knowledge-foundation";
+import { themeTimeLabel } from "../lib/domain/theme-time";
+import Icon from "./Icon";
+import css from "./KnowledgeTimelineFields.module.css";
+const empty=():KnowledgeTimeline=>({version:1,axes:[],placements:[],insets:[]});
+/** Explicit layout references, separate from factual times and Capsule source baselines. */
+export default function KnowledgeTimelineFields({records,value,onSave,locale="ja",expanded=false}:{records:KnowledgeRecordVersion[];value?:KnowledgeTimeline;onSave:(value:KnowledgeTimeline)=>boolean|Promise<boolean>;locale?:string;expanded?:boolean}){
+ const [draft,setDraft]=useState(()=>structuredClone(value??empty())),[error,setError]=useState(""),[busy,setBusy]=useState(false),[message,setMessage]=useState("");
+ const t=(ja:string,en:string)=>locale==="en"?en:ja;
+ const times=records.flatMap(r=>r.content.times.map(time=>({record:r,time})));
+ const patch=(id:string,changes:Partial<KnowledgeTimeline["axes"][number]>)=>setDraft(d=>({...d,axes:d.axes.map(a=>a.id===id?{...a,...changes}:a)}));
+ async function save(){setError("");setMessage("");const parsed=knowledgeTimelineSchema.safeParse({...draft,axes:draft.axes.map(a=>({...a,...(a.order?{order:a.order.map(v=>v.trim()).filter(Boolean)}:{})}))});if(!parsed.success){setError(t("軸の名前・順序を確認してください。","Check axis names and order."));return;}const issues=knowledgeTimelineIssues(records,parsed.data);if(issues.length){setError(issues[0]);return;}setBusy(true);try{if(await onSave(parsed.data))setMessage(t("年表の構成を適用しました。","Timeline layout applied."));else setError(t("適用できませんでした。入力は残っています。","Could not apply; your input is retained."));}catch{setError(t("適用できませんでした。入力は残っています。","Could not apply; your input is retained."));}finally{setBusy(false);}}
+ return <details className={css.editor} open={expanded||undefined}><summary><Icon name="event"/>{t("年表の軸・子軸を設定","Timeline axes and child axes")}</summary><div className={css.body}>
+  <p>{t("同じ軸に置く時期と、子軸の接続先を選びます。期間の重なりから所属は作りません。","Choose which times share an axis and where child axes connect. Overlap never creates membership.")}</p>
+  {draft.axes.map(axis=><section className={css.axis} key={axis.id} aria-label={t("年表の軸","Timeline axis")}>
+   <div className={css.heading}><label>{t("軸の名前","Axis name")}<input value={axis.label} maxLength={200} onChange={e=>patch(axis.id,{label:e.target.value})}/></label><button type="button" aria-label={t("この軸を外す","Remove this axis")} onClick={()=>setDraft(d=>({...d,axes:d.axes.filter(a=>a.id!==axis.id),placements:d.placements.filter(p=>p.axisId!==axis.id),insets:d.insets.filter(i=>i.axisId!==axis.id)}))}><Icon name="trash"/></button></div>
+   <label>{t("種類","Kind")}<select value={axis.kind} onChange={e=>{const kind=e.target.value as typeof axis.kind;patch(axis.id,{kind,order:undefined});setDraft(d=>({...d,placements:d.placements.filter(p=>p.axisId!==axis.id)}));}}><option value="calendar">{t("年月日・時刻","Calendar / clock")}</option><option value="cycle">{t("周期","Cycle")}</option><option value="qualitative">{t("順序・段階","Qualitative stages")}</option></select></label>
+   {axis.kind==="qualitative"&&<label>{t("段階の順序（一行に一つ・任意）","Stage order (one per line, optional)")}<textarea rows={3} value={axis.order?.join("\n")??""} onChange={e=>patch(axis.id,{order:e.target.value?e.target.value.split("\n"):undefined})}/></label>}
+   <label>{t("子軸の接続先","Child axis anchor")}<select value={JSON.stringify(draft.insets.find(i=>i.axisId===axis.id)?[draft.insets.find(i=>i.axisId===axis.id)!.parentRecordId,draft.insets.find(i=>i.axisId===axis.id)!.parentTimeId??null]:null)} onChange={e=>{const ref=JSON.parse(e.target.value) as [string,string|null]|null;setDraft(d=>({...d,insets:[...d.insets.filter(i=>i.axisId!==axis.id),...(ref?[{axisId:axis.id,parentRecordId:ref[0],...(ref[1]?{parentTimeId:ref[1]}:{}),label:axis.label}]:[])]}));}}>
+    <option value="null">{t("独立した軸","Independent axis")}</option>
+    {records.flatMap(r=>r.content.times.length?r.content.times.map(time=><option key={JSON.stringify([r.id,time.id])} value={JSON.stringify([r.id,time.id])}>{r.content.assertion.slice(0,60)} · {themeTimeLabel(time.time)}</option>):[<option key={r.id} value={JSON.stringify([r.id,null])}>{r.content.assertion.slice(0,80)} · {t("時期なし","Undated")}</option>])}
+   </select></label>
+  </section>)}
+  <button type="button" disabled={draft.axes.length>=32} onClick={()=>setDraft(d=>({...d,axes:[...d.axes,{id:crypto.randomUUID(),kind:"calendar",label:""}]}))}><Icon name="plus"/>{t("軸を追加","Add axis")}</button>
+  {!!times.length&&<details><summary>{t(`時期の配置 · ${times.length}件`,`Place times · ${times.length}`)}</summary><div className={css.placements}>{times.map(({record,time})=><label key={JSON.stringify([record.id,time.id])}><span>{record.content.assertion.slice(0,80)}<small>{themeTimeLabel(time.time)}</small></span><select aria-label={t(`${record.content.assertion}の時期の軸`,`Axis for ${record.content.assertion}`)} value={draft.placements.find(p=>p.recordId===record.id&&p.timeId===time.id)?.axisId??""} onChange={e=>setDraft(d=>({...d,placements:[...d.placements.filter(p=>p.recordId!==record.id||p.timeId!==time.id),...(e.target.value?[{recordId:record.id,timeId:time.id,axisId:e.target.value}]:[])]}))}><option value="">{t("自動（種類・定義ごと）","Automatic (by kind and definition)")}</option>{draft.axes.filter(a=>a.kind===time.time.kind).map(a=><option key={a.id} value={a.id}>{a.label||t("名前未入力","Unnamed axis")}</option>)}</select></label>)}</div></details>}
+  {error&&<p role="alert">{error}</p>}{message&&<p role="status">{message}</p>}<div className={css.actions}><button type="button" disabled={busy} onClick={()=>void save()}><Icon name="check"/>{t("構成を適用","Apply layout")}</button><button type="button" disabled={busy} onClick={()=>{setDraft(structuredClone(value??empty()));setError("");setMessage("");}}>{t("変更を戻す","Reset changes")}</button></div>
+ </div></details>;
+}

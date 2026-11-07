@@ -32,8 +32,8 @@ export default function ThemeTimeFields({ time }: { time: ThemeTime | null }) {
         name={name}
         value={value}
         onChange={(e) => change(e.target.value)}
-        placeholder="1903 / 1903-12 / 1903-12-01"
-        pattern="[0-9]{4}(-[0-9]{2})?(-[0-9]{2})?"
+        placeholder="1903 / 1903-12 / 1903-12-01T12:20Z"
+        maxLength={32}
         autoComplete="off"
       />
     </label>

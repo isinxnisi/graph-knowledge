@@ -16,7 +16,7 @@ import { timelineRecordId, type TimelineDisplayRecord } from "../lib/domain/time
 import css from "./CalendarTimelineGraph.module.css";
 
 const colors = ["#397a85", "#aa713c", "#6878a2", "#8b668f", "#6d844f"];
-const unitNames = { year: "年", month: "月", day: "日" };
+const unitNames = { year: "年", month: "月", day: "日",hour:"時間" };
 
 export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
   records,

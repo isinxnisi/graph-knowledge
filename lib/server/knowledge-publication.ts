@@ -211,6 +211,7 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
     validateCapsuleKnowledge:(raw:unknown)=>read(async c=>{
       const k=capsuleKnowledgeSchema.parse(raw),pins=capsuleKnowledgeReferences(k),rows=await capsuleReferenceRows(c,[pins],true);
       if(pins.some(p=>!rows.has(pinKey(p.kind,p.id,p.revision))))return false;
+      if(k.snapshot.theme){const v=k.snapshot.theme,row=rows.get(pinKey("theme",v.id,v.revision));if(!row||knowledgeDigest({content:v.content,createdAt:v.createdAt,reason:v.reason})!==knowledgeDigest({content:row.content,createdAt:iso(row.created_at),reason:row.reason}))return false;}
       for(const v of k.snapshot.translations??[]){const saved=rows.get(pinKey('translation',v.id,v.revision));if(!saved||knowledgeDigest(saved.content)!==knowledgeDigest(v))return false;}
       return ([['records','record'],['entities','entity'],['sources','source'],['mappings','mapping']] as const).every(([group,kind])=>k.snapshot[group].every(version=>{
         const row=rows.get(pinKey(kind,version.id,version.revision))!;
@@ -219,12 +220,19 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
     }),
     capsuleUpdates:(raw:unknown)=>read(async c=>{
       const q=capsuleUpdateQuerySchema.parse(raw);
+      async function translated(snapshot:import("../domain/knowledge-foundation").KnowledgeSnapshot){
+        const translations=[];
+        for(const request of q.translations){const rows=request.target.kind==="record"?snapshot.records:request.target.kind==="entity"?snapshot.entities:request.target.kind==="source"?snapshot.sources:snapshot.theme?[snapshot.theme]:[];const original=rows.find(v=>v.id===request.target.id);if(!original)continue;
+          try{const v=await readKnowledgeTranslation(c,{...request.target,revision:original.revision},request.language);if(v.translation)translations.push(v.translation);}catch(e){if(!(e instanceof KnowledgeError)||e.status>=500)throw e;}
+        }
+        return {...snapshot,translations};
+      }
       if(q.includeTheme&&q.theme){
         let resolved;
         try{resolved=await resolvePublicKnowledgeTheme(c,q.theme.id);}
         catch(error){if(error instanceof KnowledgeError&&(error.status===403||error.status===404))throw new KnowledgeError("このテーマは閲覧できません",404,"NOT_FOUND");throw error;}
         const control=(await c.query("SELECT active_generation FROM knowledge75.publication_control WHERE singleton")).rows[0];
-        return {generation:control?.active_generation??null,...resolved,unavailable:[]} satisfies CapsuleUpdateResponse;
+        return {generation:control?.active_generation??null,translationsChecked:!!q.translations.length,...resolved,snapshot:await translated({...resolved.snapshot,theme:resolved.theme}),unavailable:[]} satisfies CapsuleUpdateResponse;
       }
       const actual=await generation(c);
       const records=await allowedRows(c,actual.id,[...new Set(q.recordIds)]);
@@ -238,7 +246,8 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
         const row=(await c.query("SELECT * FROM knowledge75.revisions WHERE kind='mapping' AND id=$1 AND revision=$2",[record.record.id,record.semantics.mappingRevision])).rows[0];
         if(row)mappings.push({...rowVersion(row),content:knowledgeMappingContentSchema.parse(row.content)});
       }
-      return {generation:actual.id,snapshot:{schemaVersion:1,initialView:'graph',records:records.map(r=>r.record),entities,sources,mappings},unavailable} satisfies CapsuleUpdateResponse;
+      const theme=q.theme?(await resolvePublicKnowledgeTheme(c,q.theme.id,q.theme.revision)).theme:undefined;
+      return {generation:actual.id,translationsChecked:!!q.translations.length,snapshot:await translated({schemaVersion:1,initialView:'graph',records:records.map(r=>r.record),entities,sources,mappings,...(theme?{theme}:{})}),unavailable} satisfies CapsuleUpdateResponse;
     }),
     themes:(raw:unknown={})=>read(async c=>{
       const q=knowledgeThemeListQuerySchema.parse(raw);

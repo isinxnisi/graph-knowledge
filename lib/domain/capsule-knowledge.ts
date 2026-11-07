@@ -1,9 +1,10 @@
 import {knowledgeTranslationVersionSchema,knowledgeOriginalText} from "./knowledge-translation";
 import { z } from "zod";
-import { knowledgeEntityContentSchema, knowledgeSourceContentSchema, knowledgeRecordContentSchema, knowledgeMappingContentSchema, knowledgeTimelineSchema, knowledgePinSchema, knowledgeTimelineIssues } from "./knowledge-foundation";
+import { knowledgeEntityContentSchema, knowledgeSourceContentSchema, knowledgeRecordContentSchema, knowledgeMappingContentSchema, knowledgeThemeContentSchema, knowledgeTimelineSchema, knowledgePinSchema, knowledgeTimelineIssues } from "./knowledge-foundation";
 const version = <T extends z.ZodType>(content: T) => z.strictObject({ ...knowledgePinSchema.shape, content, createdAt: z.iso.datetime(), reason: z.string().max(4000) });
 export const capsuleKnowledgeSnapshotSchema = z.strictObject({
   schemaVersion: z.literal(1),
+  theme:version(knowledgeThemeContentSchema).optional(),
   entities: z.array(version(knowledgeEntityContentSchema)).max(400),
   sources: z.array(version(knowledgeSourceContentSchema)).max(800),
   records: z.array(version(knowledgeRecordContentSchema)).max(400),
@@ -21,7 +22,7 @@ export const capsuleKnowledgeSnapshotSchema = z.strictObject({
   }
   const translations=s.translations??[];
   if(new Set(translations.map(t=>t.id)).size!==translations.length)issue('Duplicate translation identity');
-  for(const t of translations){const rows=t.target.kind==='record'?s.records:t.target.kind==='entity'?s.entities:t.target.kind==='source'?s.sources:[];
+  for(const t of translations){const rows=t.target.kind==='record'?s.records:t.target.kind==='entity'?s.entities:t.target.kind==='source'?s.sources:s.theme?[s.theme]:[];
    const original=rows.find(v=>v.id===t.target.id&&v.revision===t.target.revision);
    try{if(!original||knowledgeOriginalText(t.target,original.content).text!==t.originalText)issue('Translation original is not in this snapshot');}catch{issue('Invalid translation original');}
   }
@@ -30,8 +31,9 @@ export const capsuleKnowledgeSnapshotSchema = z.strictObject({
 export const capsuleKnowledgeSchema=z.strictObject({
   schemaVersion:z.literal(1), capturedAt:z.iso.datetime(), theme:knowledgePinSchema.optional(),
   snapshot:capsuleKnowledgeSnapshotSchema,
+  timeline:knowledgeTimelineSchema.optional(),
   themeRecordIds:z.array(knowledgePinSchema.shape.id).max(400).optional(),
   excludedRecordIds:z.array(knowledgePinSchema.shape.id).max(400).optional(),
   initialView:z.enum(["graph","timeline","split"]),
-});
+}).superRefine((k,c)=>{if(k.snapshot.theme&&(!k.theme||k.theme.id!==k.snapshot.theme.id||k.theme.revision!==k.snapshot.theme.revision))c.addIssue({code:"custom",message:"Theme baseline and reference differ"});});
 export type CapsuleKnowledge=z.infer<typeof capsuleKnowledgeSchema>;

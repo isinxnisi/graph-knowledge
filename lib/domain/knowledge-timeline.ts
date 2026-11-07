@@ -42,7 +42,7 @@ export function knowledgeTimelineLayout(records: KnowledgeRecordVersion[], timel
         }
       }
     }
-    const candidates = rows.filter(r => r.recordId === inset.parentRecordId);
+    const candidates = rows.filter(r => r.recordId === inset.parentRecordId&&(!inset.parentTimeId||r.timeId===inset.parentTimeId));
     const outside = candidates.filter(r => !descendants.has(axisByRow.get(r.id) ?? ""));
     const parent = outside.find(r => !nestedAxes.has(axisByRow.get(r.id) ?? "")) ?? outside[0] ?? candidates[0];
     return { ...inset, axisId: axisId(inset.axisId), parentRecordId: parent?.id ?? `missing:${inset.parentRecordId}` };

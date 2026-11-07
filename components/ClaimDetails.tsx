@@ -1,4 +1,5 @@
 "use client";
+import LegacyRecordTranslations from "./LegacyRecordTranslations";
 import ExternalSourceLink from "./ExternalSourceLink";
 import { useFilmTrialClaim } from "../lib/client/film-trial";
 import { trackPublicEvent } from "../lib/client/public-events";
@@ -117,6 +118,7 @@ export function ClaimCard({ claim, nodes, title, dataset, referenceDataset = dat
     {claim.predicate === "PARTICIPATED_IN" && !eventParticipation && <p className={styles.muted}>{text.noEventRole}</p>}
     </div></details>
     {dataset && <div className={styles.recordPermalink}><ReadingLink reference={{ kind: "claim", dataset, id: claim.id }}><Icon name="link" />{text.recordLink}</ReadingLink><span>{text.recordLinkHelp}</span></div>}
+    {dataset==="public-kg"&&<LegacyRecordTranslations id={claim.id}/>}
   </article>;
 }
 

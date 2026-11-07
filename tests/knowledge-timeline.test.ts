@@ -13,6 +13,13 @@ export function snapshot(records: KnowledgeRecordVersion[]): KnowledgeSnapshot {
 }
 const date = (id: string, from: string) => ({ id, time: { kind: "calendar" as const, meaning: "point" as const, from, label: id } });
 
+it("anchors a child axis to the explicitly selected parent time and rejects missing references",()=>{
+ const records=[record("parent",{times:[date("first","1991"),date("second","1992")]}),record("child",{times:[date("event","1992-03")]})];
+ const layout:KnowledgeTimeline={version:1,axes:[{id:"main",kind:"calendar",label:"親"},{id:"child",kind:"calendar",label:"子"}],placements:[{recordId:"parent",timeId:"first",axisId:"main"},{recordId:"parent",timeId:"second",axisId:"main"},{recordId:"child",timeId:"event",axisId:"child"}],insets:[{parentRecordId:"parent",parentTimeId:"second",axisId:"child",label:"詳細"}]};
+ expect(knowledgeTimelineIssues(records,layout)).toEqual([]);expect(knowledgeTimelineLayout(records,layout)!.insets[0].parentRecordId).toContain(encodeURIComponent('second'));
+ layout.insets[0].parentTimeId="missing";expect(knowledgeTimelineIssues(records,layout)).toContain("子軸を接続する親の時間注釈がありません");
+});
+
 describe("common fixed snapshot timeline", () => {
   it("projects multiple time annotations without duplicating the Record or losing exact citations", () => {
     const r = record("record:with.dots", { kind: "relation", subjectId: "a", objectId: "b", relation: "装画と挿絵", polarity: "denied", scope: "初版のみ", times: [date("a:b", "1991"), date("a", "1991-06-20")] });

@@ -1,4 +1,5 @@
 import { retainedTextLanguages } from "../domain/knowledge-language";
+import {calendarValue} from "../domain/calendar-value";
 import { relationPresentation } from "./relation-presentation";
 import { relationLabel } from "./format";
 import type { GraphView } from "./graph-view";
@@ -10,6 +11,7 @@ import { capsuleDocumentSchema, type CapsuleDocument, type CapsuleRelation } fro
 /** Capture exactly the already-read edition. The editor never fetches a newer source implicitly. */
 export function captureKnowledgeCapsule(input: {snapshot:KnowledgeSnapshot;theme?:KnowledgeThemeResolved["theme"];title:string;graphView?:GraphView|null;view?:"graph"|"timeline"|"split"}):LocalCapsule {
  const snapshot=structuredClone(input.snapshot),capturedAt=new Date().toISOString();
+ if(input.theme)snapshot.theme=structuredClone(input.theme);
  const used=new Set(snapshot.records.filter(r=>r.content.kind==="relation").flatMap(r=>[r.content.subjectId,r.content.objectId]));
  const keys=new Map(snapshot.entities.map(e=>[e.id,crypto.randomUUID()]));
  const nodes=snapshot.entities.filter(e=>used.has(e.id)).map(e=>({key:keys.get(e.id)!,title:e.content.name,description:e.content.description,badge:e.content.kind,shape:e.content.kind==="人物"||e.content.kind==="person"?"circle" as const:undefined,origin:{kind:"knowledge" as const,id:e.id,revision:e.revision}}));
@@ -35,11 +37,12 @@ export function capsuleKnowledgeProjection(document:CapsuleDocument):KnowledgeSn
  for(const n of document.nodes.filter(n=>n.origin.kind!=="knowledge"))result.entities.push({id:entityId(n.key),revision:1,createdAt:document.knowledge!.capturedAt,reason:"Capsule内の独自編集",content:{name:n.title,description:n.description,kind:n.badge||"対象",aliases:[],language:"und"}});
  for(const relation of document.relations.filter(r=>r.origin.kind!=="knowledge")){const label=relation.label||(relation.origin.kind==="kg"?relationPresentation([relation.origin.snapshot],"ja").graphQualification||relationLabel(relation.origin.snapshot,"ja"):"関係する");result.records.push({id:capsuleRelationRecordId(relation),revision:1,createdAt:document.knowledge!.capturedAt,reason:"Capsule内の独自編集",content:{kind:"relation",subjectId:entityId(relation.source),objectId:entityId(relation.target),assertion:relation.note||label,relation:label,polarity:relation.origin.kind==="local"?relation.origin.polarity??"affirmed":relation.origin.kind==="kg"?relation.origin.snapshot.polarity:"affirmed",scope:"",times:relation.times??[],evidence:[]}});}
  const records=new Map(result.records.map(r=>[r.id,r]));
- const timeline=result.timeline??{version:1 as const,axes:[],placements:[],insets:[]};
- timeline.placements=timeline.placements.filter(p=>records.get(p.recordId)?.content.times.some(t=>t.id===p.timeId&&timeline.axes.some(a=>a.id===p.axisId&&a.kind===t.time.kind)));
+ const timeline=structuredClone(document.knowledge?.timeline??result.timeline??{version:1 as const,axes:[],placements:[],insets:[]});
+ timeline.placements=timeline.placements.filter(p=>records.get(p.recordId)?.content.times.some(t=>{if(t.id!==p.timeId||!timeline.axes.some(a=>a.id===p.axisId&&a.kind===t.time.kind))return false;const original=base.records.find(r=>r.id===p.recordId)?.content.times.find(v=>v.id===p.timeId)?.time;return !!document.knowledge?.timeline||t.time.kind!=="calendar"||original?.kind!=="calendar"||calendarValue(t.time.from)?.basis===calendarValue(original.from)?.basis;}));
  timeline.insets=timeline.insets.filter(p=>records.has(p.parentRecordId));
- const missing=result.records.flatMap(r=>r.content.times.filter(t=>t.time.kind==="calendar"&&!timeline.placements.some(p=>p.recordId===r.id&&p.timeId===t.id)).map(t=>({recordId:r.id,timeId:t.id})));
- if(missing.length){let axis=timeline.axes.find(a=>a.kind==="calendar");if(!axis){axis={id:"capsule-calendar",kind:"calendar",label:"年月日・期間"};timeline.axes.push(axis);}timeline.placements.push(...missing.map(p=>({...p,axisId:axis.id})));}
+ // Unplaced annotations use the renderer's definition-aware fallback groups;
+ // do not combine offset clocks with unknown-zone civil dates implicitly.
+ for(const basis of ["civil","offset"]){const missing=result.records.flatMap(r=>r.content.times.filter(t=>t.time.kind==="calendar"&&calendarValue(t.time.from)?.basis===basis&&!timeline.placements.some(p=>p.recordId===r.id&&p.timeId===t.id)).map(t=>({recordId:r.id,timeId:t.id})));if(missing.length){const id="capsule-calendar-"+basis;let axis=timeline.axes.find(a=>a.id===id);if(!axis){axis={id,kind:"calendar",label:basis==="offset"?"日時（時区指定あり）":"年月日・期間"};timeline.axes.push(axis);}timeline.placements.push(...missing.map(p=>({...p,axisId:axis.id})));}}
  result.timeline=timeline;
 
  return result;

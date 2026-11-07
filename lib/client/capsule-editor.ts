@@ -1,3 +1,4 @@
+import {pruneCapsuleTimeline} from "../domain/capsule-timeline";
 import { claimSummarySchema, entitySummarySchema, type ClaimDetail, type ClaimSummary, type EntityDetail, type EntitySummary, type NeighborsResponse } from "../domain/api";
 import { capsuleDocumentSchema, capsuleReferences, type CapsuleDocument, type CapsuleNode, type CapsuleRelation } from "../domain/capsule-document";
 import { type DatasetMode } from "../domain/dataset";
@@ -51,6 +52,7 @@ export function materializeLegacy(capsule: LocalCapsule, resolved: ResolvedCapsu
 }
 
 export function withDocument(capsule: LocalCapsule, document: CapsuleDocument): LocalCapsule {
+  if(document.knowledge?.timeline)document={...document,knowledge:{...document.knowledge,timeline:pruneCapsuleTimeline(document,document.knowledge.timeline)}};
   return { ...capsule, document, ...capsuleReferences(document) };
 }
 export function withCapsuleView(capsule: LocalCapsule, view: GraphView | null): LocalCapsule {

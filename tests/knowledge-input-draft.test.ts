@@ -4,6 +4,7 @@ import { knowledgeRecordContentSchema } from "../lib/domain/knowledge-foundation
 import { declaredTextLanguage } from "../lib/domain/knowledge-language";
 
 const ja = declaredTextLanguage("ja"), en = declaredTextLanguage("en");
+it("preserves incomplete clock/cycle fields as a resumable draft, not as a submitted valid record",()=>{const input=draft();input.times=[{id:"clock",time:{kind:"calendar",from:"2021-12-25T",label:"",expression:"午後頃"}}];const restored=knowledgeInputDraftSchema.parse(JSON.parse(JSON.stringify(input)));expect(restored.times).toEqual(input.times);const command=knowledgeInputCommand(restored) as {content:unknown};expect(knowledgeRecordContentSchema.safeParse(command.content).success).toBe(false);});
 function draft() {
   return correctionKnowledgeInputDraft({ id: "record", revision: 3, createdAt: "2026-11-05", reason: "原文", content: knowledgeRecordContentSchema.parse({
     kind: "relation", subjectId: "a", objectId: "b", assertion: "AはBを描いた。", relation: "描いた", scope: "初版", textLanguages: { assertion: ja, relation: ja, scope: ja },
