@@ -52,3 +52,11 @@ Zod／Undiciのpatch後の107件・型検査込みproduction buildが成功。�
 DNS修正app `3d5d3291cf5da26aca8c9ca04d495c57044ab88c`／build `nXBDYXdtSB0JWDLmZGg_1`をmain／3200／HTTPS βへ再配置。11件・対象lint・型検査込みproduction build、2環境の12応答が成功。CIMD実文書を解決する認証開始要求も302で `/collection-connect` へ進み、5秒timeoutを解消した。DB migrationなし、private設定16件のhash不変。作成済みのWebプラグインの「アプリの接続を続行する」を本人へ再引継ぎ。実Googleの同意・実ChatGPT配送・予定実行の成功はまだ未確認。画面画像の取得も今回は成功した。
 
 Chromeの既存βタブを新buildで再読込し、既存Googleログイン、運営メニュー、Webbテーマ構成版4・時期なし3件・年表7件と根拠表示を確認。長時間開かれていた旧タブの接続アラートは再取得だけでは残ったが、再読込後は消えた。この既存セッション確認を、新しいOAuth権限の同意成功とは扱わない。
+
+## 再接続で判明したIPv6経路の追加修正
+
+本人の再接続で `Failed to fetch metadata document (network error or redirect blocked)` が発生。βの実ログは `connect ENETUNREACH` と公開IPv6宛の接続失敗を示した。前回のtransportはIPv4 DNSが応答しなければIPv6へ切り替えており、このPCでIPv6経路が利用できない点を扱えていなかった。先の単発疎通だけで本人接続の成功とは扱わない。
+
+この認証接続だけIPv4のA応答へ固定し、DNSは1秒・最大2試行、接続先IPの検証・pinning・TLSのhostname検証・5秒の全体期限を維持する。A応答が得られなければIPv6へ逃がさず失敗を返す。socketの二度目のerrorも処理し、エラー段階とcodeだけをserverログへ残す。Cookie・認可code・token・要求URLはログへ含めない。
+
+別プロセスで2回、実metadata／JWKSの両方が200となり、順に314／177ms、237／158ms。transport7件＋MCP境界5件が成功。PC全体のIPv6／DNS設定は変更しない。β再配置後の認証開始・本人接続は別に確認する。DB変更なし。

@@ -4,8 +4,14 @@ import {Resolver} from 'node:dns/promises';
 import {request} from 'node:https';
 import {Readable} from 'node:stream';
 
-/** Resolve through DNS directly: this host's NSS lookup adds about five seconds.
- * Validate every returned address, then pin one for TLS without a second lookup.
+function reportMetadataFailure(stage:'dns'|'https',error:unknown){
+ const code=error&&typeof error==='object'&&'code'in error?error.code:undefined;
+ console.warn('Collection OAuth metadata request failed',{stage,code:typeof code==='string'&&/^[A-Z0-9_]{1,48}$/.test(code)?code:'UNKNOWN'});
+}
+
+/** Resolve IPv4 through DNS directly: this host's NSS lookup adds about five
+ * seconds and its IPv6 route is unavailable. Retry DNS within the five-second
+ * CIMD deadline, validate every answer, then pin one for TLS without a relookup.
  * Both the metadata document and its JWKS stay on the sole trusted client host. */
 export const fetchMissionClientMetadataResource:ClientMetadataResourceFetch=async(input,init)=>{
  const webRequest=new Request(input,init),url=new URL(webRequest.url);
@@ -13,14 +19,16 @@ export const fetchMissionClientMetadataResource:ClientMetadataResourceFetch=asyn
   throw new TypeError('Untrusted collection client metadata URL');
  if(!['GET','HEAD'].includes(webRequest.method))throw new TypeError('Metadata requires GET or HEAD');
  const signal=webRequest.signal;signal.throwIfAborted();
- const resolver=new Resolver({timeout:1500,tries:1});
+ const resolver=new Resolver({timeout:1000,tries:2});
  const cancel=()=>resolver.cancel();signal.addEventListener('abort',cancel,{once:true});
  let addresses:{address:string;family:number}[];
  try{
-  const [v4,v6]=await Promise.allSettled([resolver.resolve4(url.hostname),resolver.resolve6(url.hostname)]);
+  const v4=await resolver.resolve4(url.hostname);
   signal.throwIfAborted();
-  addresses=[...(v4.status==='fulfilled'?v4.value.map(address=>({address,family:4})):[]),
-   ...(v6.status==='fulfilled'?v6.value.map(address=>({address,family:6})):[])];
+  addresses=v4.map(address=>({address,family:4}));
+ }catch(error){
+  if(!signal.aborted)reportMetadataFailure('dns',error);
+  throw error;
  }finally{signal.removeEventListener('abort',cancel);}
  if(!addresses.length||addresses.some(a=>!isPublicRoutableHost(a.address)))
   throw new TypeError('Metadata requires public-routable DNS answers');
@@ -29,7 +37,7 @@ export const fetchMissionClientMetadataResource:ClientMetadataResourceFetch=asyn
   const value=webRequest.headers.get(name);if(value!==null)headers[name]=value;
  }
  return new Promise((resolve,reject)=>{
-  const req=request(url,{agent:false,headers,method:webRequest.method,servername:url.hostname,signal,
+  const req=request(url,{agent:false,headers,method:webRequest.method,servername:url.hostname,signal,family:4,autoSelectFamily:false,
    lookup:(_host,options,callback)=>{
     if(options.all)callback(null,[pinned]);else callback(null,pinned.address,pinned.family);
    },
@@ -43,6 +51,7 @@ export const fetchMissionClientMetadataResource:ClientMetadataResourceFetch=asyn
    const body=webRequest.method==='HEAD'||[204,205,304].includes(status)?null:Readable.toWeb(response) as unknown as ReadableStream<Uint8Array>;
    resolve(new Response(body,{status,headers:responseHeaders,statusText:response.statusMessage}));
   });
-  req.once('error',reject);req.end();
+  // Keep handling a late socket/abort error after the first rejection as well.
+  req.on('error',error=>{reportMetadataFailure('https',error);reject(error);});req.end();
  });
 };
