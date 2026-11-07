@@ -25,12 +25,13 @@ const lease={runId:z.uuidv4(),generation:z.number().int().positive(),token:z.str
 export const missionWorkerSchema=z.discriminatedUnion('action',[
  z.strictObject({action:z.literal('claim'),requestId:z.uuidv4()}),
  z.strictObject({action:z.literal('resume'),requestId:z.uuidv4(),...lease}),
+ z.strictObject({action:z.literal('observe'),requestId:z.uuidv4(),...lease,urls:z.array(z.url().max(2000)).min(1).max(5)}),
  z.strictObject({action:z.literal('deliver'),requestId:z.uuidv4(),...lease,package:z.json()}),
  z.strictObject({action:z.literal('empty'),requestId:z.uuidv4(),...lease,summary:z.string().trim().min(1).max(1000)}),
  z.strictObject({action:z.literal('fail'),requestId:z.uuidv4(),...lease,retryable:z.boolean(),reason:z.enum(['network','source-unavailable','search-unavailable','limit','invalid-package'])}),
 ]);
 export type MissionWorkerCommand=z.infer<typeof missionWorkerSchema>;
-export const missionRunViewSchema=z.object({id:z.uuidv4(),state:z.string(),reason:z.string(),createdAt:z.string(),receiptId:z.uuidv4().nullable(),receiptState:z.string().nullable(),results:z.array(z.object({state:z.string(),url:z.string().nullable(),reason:z.string()})).default([])});
+export const missionRunViewSchema=z.object({id:z.uuidv4(),state:z.string(),reason:z.string(),createdAt:z.string(),receiptId:z.uuidv4().nullable(),receiptState:z.string().nullable(),results:z.array(z.object({state:z.string(),url:z.string().nullable(),reason:z.string()})).default([]),sources:z.array(z.object({url:z.string(),state:z.string(),bodySha256:z.string(),textSha256:z.string()})).default([])});
 export const missionPageSchema=z.object({
  items:z.array(z.object({id:z.uuidv4(),revision:z.number(),state:z.enum(['active','paused']),content:missionPlanSchema,nextDue:z.string(),runs:z.array(missionRunViewSchema)})),
  themes:z.array(z.object({id:z.string(),label:z.string()})),entities:z.array(z.object({id:z.string(),label:z.string()})),

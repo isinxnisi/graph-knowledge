@@ -1,5 +1,6 @@
 import {knowledgeCapability} from "./knowledge-deployment";
 import {missionImportPrincipal} from './knowledge-mission-principal';
+import {webImportPrincipal} from './knowledge-web-import';
 import {lstat,readFile} from 'node:fs/promises';
 import path from 'node:path';
 import {Pool,type PoolClient} from 'pg';
@@ -9,7 +10,7 @@ import {createKnowledgeImports} from './knowledge-import';
 import {createKnowledgeImportHttp} from './knowledge-import-http';
 import {memberConfig} from './member/config';
 import {knowledgeReadConfiguration} from './knowledge-read-runtime';
-export async function resolveImportPrincipal(pool:Pool,id:string,client?:PoolClient){return id.startsWith('mission:')?missionImportPrincipal(pool,id,client):(await loadImportConfiguration()).principals.find(p=>p.id===id)??null;}
+export async function resolveImportPrincipal(pool:Pool,id:string,client?:PoolClient){return id.startsWith('mission:')?missionImportPrincipal(pool,id,client):id.startsWith('web:')?webImportPrincipal(pool,id,client):(await loadImportConfiguration()).principals.find(p=>p.id===id)??null;}
 export async function loadImportConfiguration():Promise<ImportConfiguration>{
  const file=process.env.KNOWLEDGE_IMPORT_CONFIG;
  if(process.env.KNOWLEDGE_IMPORT_ENABLED!=='1'||!knowledgeCapability('import')||!file||!path.isAbsolute(file))throw new KnowledgeError('受付がありません',404,'NOT_FOUND');

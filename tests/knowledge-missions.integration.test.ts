@@ -8,9 +8,18 @@ import {createKnowledgeMissions} from '../lib/server/knowledge-missions';
 import {missionImportPrincipal} from '../lib/server/knowledge-mission-principal';
 import {missionWorkerSchema,type MissionPlan} from '../lib/domain/knowledge-mission';
 import {reviewConfigSchema} from '../lib/server/knowledge-review-queue';
+import {createReviewQueue} from '../lib/server/knowledge-review-queue';
+import {matchSourceExcerpt} from '../lib/server/knowledge-source-verification';
+import {sourceTextChange} from '../lib/server/knowledge-mission-sources';
+import {createWebKnowledgeImports,webImportPrincipal} from '../lib/server/knowledge-web-import';
+import {ensureKnowledgePublicationSchema} from '../lib/server/knowledge-publication';
+import {migrateKnowledgeTranslations} from '../lib/server/knowledge-translation-migrate';
+import {migrateKnowledgeIdentities} from '../lib/server/knowledge-identity-migrate';
+import {gunzipSync} from 'node:zlib';
 
 const pool=new Pool({connectionString:process.env.MEMBER_DATABASE_URL,max:5}),knowledge=new Pool({connectionString:process.env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL,max:4});
 let core:ReturnType<typeof createKnowledgeMissions>,inbox:ReturnType<typeof createKnowledgeImports>,lostAck=false;
+let sourceBody='A is an organization.';const operator=randomUUID();
 const plan:MissionPlan={title:'装置を調べる',question:'Aと新しい装置の関係を資料から調べる',themeId:null,entityIds:['a'],sourceHosts:['example.org'],intervalHours:24,maxSources:2,maxItems:3};
 type Lease={runId:string;missionId:string;planRevision:number;generation:number;token:string;snapshot:unknown;packageIdentity:{namespace:string;packageId:string;revision:number}};
 const act=(action:unknown)=>core.act('fixture-operator',action);
@@ -26,8 +35,9 @@ beforeAll(async()=>{
 beforeEach(async()=>{
  await pool.query('TRUNCATE knowledge_missions.plans,knowledge_missions.commands,knowledge_missions.workers CASCADE');await pool.query('TRUNCATE knowledge_import.packages CASCADE');await knowledge.query('DROP SCHEMA IF EXISTS knowledge75 CASCADE');
  const foundation=createKnowledgeFoundationService(knowledge);await foundation.execute({kind:'operator',id:'fixture'},{action:'create-bundle',requestId:randomUUID(),entities:[{id:'a',content:{name:'A',kind:'organization'}}],sources:[{id:'base',content:{title:'Baseline',url:'https://example.org/baseline'}}],records:[{id:'baseline',content:{kind:'note',subjectId:'a',assertion:'A is an organization.',evidence:[{id:'base',source:{id:'base',revision:1},locator:'Name',excerpt:'A is an organization.'}]}}],reason:'Isolated mission fixture'});
- inbox=createKnowledgeImports(pool,knowledge,(id,client)=>missionImportPrincipal(pool,id,client));lostAck=false;
- core=createKnowledgeMissions(pool,knowledge,()=>({...inbox,intake:async(...args:Parameters<typeof inbox.intake>)=>{const result=await inbox.intake(...args);if(lostAck){lostAck=false;throw Error('fixture ACK lost after durable intake');}return result;}}));
+ await migrateKnowledgeTranslations(knowledge);await migrateKnowledgeIdentities(knowledge);await ensureKnowledgePublicationSchema(knowledge);
+ inbox=createKnowledgeImports(pool,knowledge,(id,client)=>id.startsWith('web:')?webImportPrincipal(pool,id,client):missionImportPrincipal(pool,id,client),{verify:async(url,excerpt)=>matchSourceExcerpt({url,type:'text/plain',body:Buffer.from(excerpt)},excerpt)});lostAck=false;sourceBody='A is an organization.';
+ core=createKnowledgeMissions(pool,knowledge,()=>({...inbox,intake:async(...args:Parameters<typeof inbox.intake>)=>{const result=await inbox.intake(...args);if(lostAck){lostAck=false;throw Error('fixture ACK lost after durable intake');}return result;}}),{fetchDocument:async url=>({url,type:'text/plain',body:Buffer.from(sourceBody)})});
 },30000);
 afterAll(async()=>{delete process.env.KNOWLEDGE_MISSIONS_ENABLED;await pool.end();await knowledge.end();});
 
@@ -36,6 +46,66 @@ it('saves idempotently, claims once, and keeps published context pins',async()=>
  const claimId=randomUUID(),lease=(await claim(claimId))!;expect(await claim(claimId)).toEqual(lease);expect(await claim()).toBeNull();
  expect(lease).toMatchObject({missionId:a.id,planRevision:1,snapshot:{entities:[{id:'a',revision:1}]}});
  const listing=await core.list();expect(listing.items[0]).toMatchObject({id:a.id,state:'active'});expect(listing.entities.some(v=>v.id==='a')).toBe(true);
+});
+
+it('keeps original editions, distinguishes text from markup, and fences observation scope',async()=>{
+ const p=await create(),first=(await claim())!;
+ const observe=(l:Lease,urls=['https://example.org/baseline'])=>core.worker('fixture-delivery',{action:'observe',requestId:randomUUID(),runId:l.runId,generation:l.generation,token:l.token,urls});
+ const initial=await observe(first) as {result:{observations:{state:string}[]}};expect(initial.result.observations[0].state).toBe('first');
+ await expect(observe(first,['https://elsewhere.org/page'])).rejects.toMatchObject({code:'MISSION_SOURCE_SCOPE'});
+ await core.worker('fixture-delivery',{action:'empty',requestId:randomUUID(),runId:first.runId,generation:first.generation,token:first.token,summary:'No new facts.'});
+ await pool.query("UPDATE knowledge_missions.runs SET created_at=created_at-interval '25 hours' WHERE plan_id=$1",[p.id]);await pool.query('UPDATE knowledge_missions.plans SET next_due=clock_timestamp() WHERE id=$1',[p.id]);
+ const next=(await claim())!;sourceBody='A is now an institute.';
+ const changed=await observe(next) as {result:{observations:{state:string;change:{before:string;after:string}}[]}};
+ expect(changed.result.observations[0]).toMatchObject({state:'text-changed',change:{before:'A is an organization.',after:'A is now an institute.'}});
+ const saved=(await pool.query('SELECT body_gzip FROM knowledge_missions.source_checks WHERE run_id=$1',[first.runId])).rows[0];expect(gunzipSync(saved.body_gzip).toString()).toBe('A is an organization.');
+ expect((await createKnowledgeFoundationService(knowledge).get({kind:'operator',id:'fixture'},'record','baseline')).revision).toBe(1);
+ expect(sourceTextChange('same prefix old suffix','same prefix new suffix').before).toContain('old');
+ const html=createKnowledgeMissions(pool,knowledge,()=>inbox,{fetchDocument:async url=>({url,type:'text/html',body:Buffer.from('<html><body><p>A is now an institute.</p></body></html>')})});
+ await core.worker('fixture-delivery',{action:'empty',requestId:randomUUID(),runId:next.runId,generation:next.generation,token:next.token,summary:'Same supported meaning.'});
+ await pool.query("UPDATE knowledge_missions.runs SET created_at=created_at-interval '25 hours' WHERE plan_id=$1",[p.id]);await pool.query('UPDATE knowledge_missions.plans SET next_due=clock_timestamp() WHERE id=$1',[p.id]);const third=(await claim())!;
+ const markup=await html.worker('fixture-delivery',{action:'observe',requestId:randomUUID(),runId:third.runId,generation:third.generation,token:third.token,urls:['https://example.org/baseline']}) as {result:{observations:{state:string}[]}};expect(markup.result.observations[0].state).toBe('markup-only');
+});
+
+it('accepts an explicit pinned correction only after observing its source and preserves old language text',async()=>{
+ await create();const l=(await claim())!;
+ const pkg={...payload(l),entities:[],sources:[{id:'s',content:{title:'Revised source',url:'https://example.org/baseline',textLanguages:{title:{tag:'en',basis:'declared'}}}}],items:[{key:'correct-baseline',operation:'correct-record',correction:{id:'baseline',revision:1},about:{kind:'record',id:'baseline',revision:1},reason:'資料の更新に合わせ、研究所の設立年を訂正する。',record:{kind:'note',subjectId:'a',assertion:'Aは2001年設立の研究所です。',textLanguages:{assertion:{tag:'ja',basis:'declared'}},evidence:[{id:'proof',source:{id:'s',revision:1},locator:'Introduction',excerpt:'A is a research institute founded in 2001.',textLanguages:{locator:{tag:'en',basis:'declared'},excerpt:{tag:'en',basis:'declared'}}}]}}]};
+ await expect(deliver(l,pkg)).rejects.toMatchObject({code:'MISSION_SOURCE_OBSERVATION_REQUIRED'});
+ await expect(deliver(l,{...pkg,items:[{...pkg.items[0],correction:{id:'elsewhere',revision:1}}]})).rejects.toMatchObject({code:'MISSION_CORRECTION_SCOPE'});
+ sourceBody='A is a research institute founded in 2001.';await core.worker('fixture-delivery',{action:'observe',requestId:randomUUID(),runId:l.runId,generation:l.generation,token:l.token,urls:['https://example.org/baseline']});const accepted=await deliver(l,pkg) as {receiptId:string};
+ const principal=(await missionImportPrincipal(pool,'mission:'+l.runId))!;expect(principal.targets.records).toBe('*');
+ const cfg=reviewConfigSchema.parse({projectId:'mission-correction-fixture',billingTier:'free',verifiedAt:new Date().toISOString(),model:'gemini-3.1-flash-lite',rpm:10,tokensPerMinute:30000,requestsPerDay:400,requestsPerMonth:12000,inputTokensPerDay:250000,outputTokensPerDay:160000,inputTokensPerMonth:7500000,outputTokensPerMonth:4800000,apiKeyFile:'/unused',allowedUsers:[randomUUID()]});
+ await createReviewQueue(pool).heartbeat(cfg);
+ await inbox.processNext(cfg,async()=>({state:'received',status:200,raw:{responseId:'fixture-correction',modelVersion:cfg.model,usageMetadata:{promptTokenCount:100,candidatesTokenCount:20,thoughtsTokenCount:0,totalTokenCount:120},candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify({suitability:'legitimate',support:'supported',reason:'Fixture original source supports the text.'})}]}}]}}));
+ const correctionResult=(await inbox.receipt(principal,accepted.receiptId)).items[0];expect(correctionResult.state,JSON.stringify(correctionResult)).toBe('applied');
+ const f=createKnowledgeFoundationService(knowledge),old=await f.get({kind:'operator',id:'fixture'},'record','baseline',1),current=await f.get({kind:'operator',id:'fixture'},'record','baseline');
+ expect(old.content.assertion).toBe('A is an organization.');expect(current.revision).toBe(2);expect(current.content.textLanguages?.assertion?.tag).toBe('ja');expect(current.content.evidence[0].textLanguages?.excerpt?.tag).toBe('en');
+});
+
+it('collects a theme-only background without inventing a graph entity',async()=>{
+ const f=createKnowledgeFoundationService(knowledge);await f.execute({kind:'operator',id:'fixture'},{action:'create-bundle',requestId:randomUUID(),records:[{id:'reading-context',content:{kind:'note',assertion:'A theme has a reading context.',evidence:[{id:'e',source:{id:'base',revision:1},locator:'Intro',excerpt:'A theme has a reading context.'}]}}],reason:'Fixture editorial theme context'});
+ await f.execute({kind:'operator',id:'fixture'},{action:'create-theme',requestId:randomUUID(),id:'reading',title:'A reading theme',recordPins:[{id:'reading-context',revision:1}],initialView:'timeline'});
+ await create({...plan,themeId:'reading',entityIds:[]});const l=(await claim())!;
+ expect(l.snapshot).toMatchObject({entities:[],records:[{id:'reading-context',revision:1}]});
+ const pkg={format:'plunode-knowledge-package',schemaVersion:1,...l.packageIdentity,sources:payload(l).sources,items:[{key:'context',operation:'add-information',about:{kind:'theme',id:'reading',revision:1},themes:[{id:'reading',revision:1}],record:{kind:'note',aboutTheme:'reading',assertion:'A theme has a reading context.',evidence:[{id:'e',source:{id:'s',revision:1},locator:'Intro',excerpt:'A theme has a reading context.'}]}}]};
+ expect((await deliver(l,pkg) as {receipt:{items:{state:string}[]}}).receipt.items[0].state).toBe('queued');
+});
+
+it('adapts a Web paste without a bearer, preserves the raw package, and keeps namespaces and rights separate',async()=>{
+ await pool.query('TRUNCATE knowledge_missions.web_importers CASCADE');process.env.SITE_OPERATOR_USER_IDS=operator;process.env.SITE_OPERATIONS_ENABLED='1';
+ await pool.query('INSERT INTO "user"(id,name,email,"emailVerified",active,locale) VALUES($1,$2,$3,true,true,$4) ON CONFLICT(id) DO UPDATE SET active=true',[operator,'Fixture operator',operator+'@example.org','ja']);
+ const web=createWebKnowledgeImports(pool,()=>inbox),raw={...payload({packageIdentity:{namespace:'mission.a',packageId:'web-test',revision:1}} as Lease)},requestId=randomUUID();
+ const accepted=await web.deliver(operator,requestId,raw);expect(accepted.receipt.items[0].state).toBe('queued');expect((await web.deliver(operator,requestId,raw)).receipt.receiptId).toBe(accepted.receipt.receiptId);
+ const row=(await pool.query('SELECT * FROM knowledge_missions.web_deliveries WHERE request_id=$1',[requestId])).rows[0];expect(row.original_payload).toEqual(raw);expect(row.payload.namespace).toMatch(/^web\./);expect(row.payload.namespace).not.toBe(raw.namespace);
+ expect((await web.list(operator)).items).toHaveLength(1);expect((await web.list(randomUUID())).items).toHaveLength(0);
+ let lost=true;const recovering=createWebKnowledgeImports(pool,()=>({...inbox,intake:async(...args:Parameters<typeof inbox.intake>)=>{const v=await inbox.intake(...args);if(lost){lost=false;throw Error('fixture Web ACK lost');}return v;}}));
+ const recoveryId=randomUUID();await expect(recovering.deliver(operator,recoveryId,{...raw,packageId:'web-recovery'})).rejects.toThrow('Web ACK lost');
+ expect((await pool.query('SELECT count(*)::int n FROM knowledge_import.packages')).rows[0].n).toBe(2);await pool.query('UPDATE knowledge_missions.web_deliveries SET next_attempt=clock_timestamp() WHERE request_id=$1',[recoveryId]);expect(await recovering.recoverOne()).toBe(true);
+ expect((await pool.query('SELECT count(*)::int n FROM knowledge_import.packages')).rows[0].n).toBe(2);expect((await web.list(operator)).items.find(v=>v.requestId===recoveryId)?.receipt?.receiptId).toBeTruthy();
+ await expect(web.deliver(operator,requestId,{...raw,revision:2})).rejects.toMatchObject({code:'REQUEST_CHANGED'});
+ const principalId='web:'+row.importer_id;expect(await webImportPrincipal(pool,principalId)).not.toBeNull();await pool.query('UPDATE "user" SET active=false WHERE id=$1',[operator]);expect(await webImportPrincipal(pool,principalId)).toBeNull();
+ await expect(web.deliver(operator,randomUUID(),{...raw,packageId:'another'})).rejects.toMatchObject({code:'OPERATOR_REQUIRED'});
+ delete process.env.SITE_OPERATOR_USER_IDS;
 });
 it('delivers through the common importer and recovers an ACK loss without a second receipt',async()=>{
  await create();const lease=(await claim())!;lostAck=true;await expect(deliver(lease)).rejects.toThrow('ACK lost');

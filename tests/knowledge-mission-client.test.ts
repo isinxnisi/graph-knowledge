@@ -27,3 +27,9 @@ it('recovers a prepared delivery after an unknown response without requesting ne
  await expect(runMissionClient([config,'deliver',file])).rejects.toThrow('response lost');const saved=JSON.parse(await readFile(path.join(dir,'checkpoints/mission-current.json'),'utf8'));expect(saved.pending.action).toBe('deliver');
  fetcher.mockResolvedValueOnce(Response.json({receiptId:randomUUID(),replayed:true}));const recovered=await runMissionClient([config,'claim']);expect(recovered.recoveredDelivery).toBe(true);expect(JSON.parse(fetcher.mock.calls.at(-1)![1].body)).toEqual(saved.pending);expect(JSON.parse(await readFile(path.join(dir,'checkpoints/mission-current.json'),'utf8')).pending).toBeUndefined();
 });
+it('recovers an observation without dropping the live delivery lease',async()=>{
+ await runMissionClient([config,'claim']);const file=path.join(dir,'urls.json');await writeFile(file,JSON.stringify(['https://example.org/source']),{mode:0o600});
+ fetcher.mockRejectedValueOnce(Error('observation response lost'));await expect(runMissionClient([config,'observe',file])).rejects.toThrow('response lost');
+ fetcher.mockResolvedValueOnce(Response.json({result:{observations:[{state:'first'}]}}));const recovered=await runMissionClient([config,'claim']);expect(recovered.recoveredObservation).toBe(true);
+ const saved=JSON.parse(await readFile(path.join(dir,'checkpoints/mission-current.json'),'utf8'));expect(saved.lease.runId).toBe(lease.runId);expect(saved.pending).toBeUndefined();
+});

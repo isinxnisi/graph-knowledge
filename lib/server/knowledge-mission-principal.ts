@@ -12,11 +12,15 @@ export async function missionImportPrincipal(pool:Pool,id:string,client?:PoolCli
  // Stop/edit takes the plan first, so it cannot race the final knowledge commit.
  const planRow=(await db.query('SELECT * FROM knowledge_missions.plans WHERE id=$1'+(client?' FOR SHARE':''),[seed.plan_id])).rows[0];
  const run=(await db.query('SELECT * FROM knowledge_missions.runs WHERE id=$1',[id.slice(8)])).rows[0];
- const row=planRow&&run?{...planRow,id:run.id,plan_id:run.plan_id,plan_revision:run.plan_revision,run_state:run.state}:null;
+ const row=planRow&&run?{...planRow,id:run.id,plan_id:run.plan_id,plan_revision:run.plan_revision,run_state:run.state,snapshot:run.snapshot,payload:run.payload}:null;
  if(!row||row.state!=='active'||row.revision!==row.plan_revision||!['delivering','delivered'].includes(row.run_state))return null;
  const plan=missionPlanSchema.parse(row.content);
+ // Corrections stay pinned to the immutable server-validated run payload.
+ // Generic record scopes also cover semantic duplicate reuse outside the Theme;
+ // restricting those to Theme pins would incorrectly reject already-known facts.
+ for(const item of row.payload?.items??[])if(item.operation==='correct-record'&&!(row.snapshot?.records??[]).some((v:{id:string;revision:number})=>v.id===item.correction?.id&&v.revision===item.correction?.revision))return null;
  return {id,namespace:'mission.'+row.plan_id,tokenSha256:'0'.repeat(64),expiresAt:'2100-01-01T00:00:00Z',disabled:false,
-  operations:['create-entity','create-relation','add-information','add-evidence'],
+  operations:['create-entity','create-relation','add-information','add-evidence','correct-record'],
   targets:{entities:'*',records:'*',sources:'*',themes:plan.themeId?[plan.themeId]:[]},allowNewEntities:true,
   packagesPerDay:1,itemsPerDay:plan.maxItems,pendingItems:plan.maxItems};
 }

@@ -20,9 +20,10 @@ export function sourceURL(raw:string){
   throw new SourceCheckError("原資料には認証不要の公開HTTPS URLを指定してください。");
  url.hash="";return url;
 }
-export async function publicSourceDocument(raw:string):Promise<SourceDocument>{
+export async function publicSourceDocument(raw:string,options:{allowedHosts?:string[]}={}):Promise<SourceDocument>{
  let url=sourceURL(raw);const deadline=Date.now()+20000;
  for(let redirect=0;redirect<=3;redirect++){
+  if(options.allowedHosts&&!options.allowedHosts.includes(url.hostname))throw new SourceCheckError("計画で指定したサイト以外への転送は取得しません。");
   const host=url.hostname.replace(/^\[|\]$/g,"");
   const addresses=await Promise.race([lookup(host,{all:true,verbatim:true,family:isIP(host)||4}).catch(()=>lookup(host,{all:true,verbatim:true,family:6})),new Promise<never>((_,reject)=>{const timer=setTimeout(()=>reject(new SourceCheckError("資料の接続先を確認できません。再試行します。",true)),5000);timer.unref();})]);
   if(!addresses.length||addresses.some(a=>!publicSourceAddress(a.address)))throw new SourceCheckError("内部ネットワークの資料は取得できません。公開資料を指定してください。");

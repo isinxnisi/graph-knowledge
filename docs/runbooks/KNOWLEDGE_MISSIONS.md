@@ -12,7 +12,7 @@ R3a。計画と配送APIをβへ接続済みであり、予定実行の実接続
 
 ## 配置
 
-既存会員DBのbackupを別DBへ復元してから、追加 `033-knowledge-missions.sql` を `scripts/member-migrate.ts --knowledge-missions --confirm-origin HTTPS_ORIGIN` で明示適用する。前提migration・origin確認などは同scriptの現行手順を使う。起動・HTTP要求でmigrationを適用しない。既存のchecksumを書き換えない。
+既存会員DBのbackupを別DBへ復元してから、追加033／034（資料取得版・Web配送）を `scripts/member-migrate.ts --knowledge-missions --confirm-origin HTTPS_ORIGIN` で明示適用する。前提migration・origin確認などは同scriptの現行手順を使う。起動・HTTP要求でmigrationを適用しない。既存のchecksumを書き換えない。
 
 配置profileに `missions` capability、既存import／review設定、`KNOWLEDGE_MISSIONS_ENABLED=1` が必要。本人所有0600のprivate server設定を `KNOWLEDGE_MISSIONS_CONFIG` へ指定する。形は `{"workerId":"mission-delivery","tokenSha256":"64桁のSHA256"}`。配送用tokenは暗号学的な32byte乱数とし、原文は別の本人所有0600ファイルへ置く。既存のGoogle認証・import資格・AI設定を置換しない。現在のβlauncherは `~/.local/state/plunode-previews/beta-missions.json` を同条件で読み込む。
 
@@ -26,6 +26,7 @@ Node24、既存の `tsx` を使用する。client設定は本人所有0600で、
 
 ~~~sh
 node --import tsx scripts/knowledge-mission-client.ts /PRIVATE/mission-client.json claim
+node --import tsx scripts/knowledge-mission-client.ts /PRIVATE/mission-client.json observe /PRIVATE/urls.json
 node --import tsx scripts/knowledge-mission-client.ts /PRIVATE/mission-client.json deliver /PRIVATE/package.json
 node --import tsx scripts/knowledge-mission-client.ts /PRIVATE/mission-client.json empty /PRIVATE/summary.txt
 node --import tsx scripts/knowledge-mission-client.ts /PRIVATE/mission-client.json fail source-unavailable
@@ -36,6 +37,12 @@ node --import tsx scripts/knowledge-mission-client.ts /PRIVATE/mission-client.js
 payloadは送信前にprivate checkpointへ保存する。応答喪失時は `claim` で同じ配送を回収し、別の検索・推論やpackageの作り直しをしない。期限・計画版・lease世代が変わった409は旧配送を止め、次の実行へ進む。`empty` は新情報なし、`fail` は取得不能などで、受付・公開成功を装わない。資料取得やAI確認は共通の安全な取得器、予算・retry、重複照合、受理・公開を使う。
 
 配送受付と知識の反映は別の状態として運営画面に表示する。停止は未反映分にも作用し、再開しても停止前の未反映分を復活させない。既存原本・履歴は削除しない。不具合時は新しいDBを読めるWebを保ち、missions capabilityを無効化して修復する。古いdumpで稼働DBを上書きしない。
+
+## 任意のWeb入力と回復
+
+運営の同じ「資料の収集」で「パッケージから登録」を開き、取込JSONを貼付する。内容確認後の受付でprivateな原入力・namespace変換・receiptを保持する。任意の入口であり、定期収集に毎回の人手承認を加えない。元namespaceを資格として使わず、自分専用の内部namespaceへ変換する。一般会員の投稿は従来の知識投稿を使う。
+
+受付後に通信やプロセスが途切れた場合は、同じ内容の再送か、通常のreview Workerによる未配送分の回復で同じreceiptへ進む。履歴は自分の直近10件。未反映の取消は公開済み原本を消さない。設定・所有者の資格を失った配送は自動的に停止する。private DBの取得原文や元packageを公開資材へコピーしない。
 
 ## 2026-11-07 βの現在地
 

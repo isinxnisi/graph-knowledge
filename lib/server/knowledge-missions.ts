@@ -4,12 +4,14 @@ import path from 'node:path';
 import type {Pool,PoolClient,QueryResultRow} from 'pg';
 import {missionPlanSchema,missionOperatorSchema,type MissionPlan,type MissionWorkerCommand} from '../domain/knowledge-mission';
 import {knowledgeImportPackageSchema,type ImportPrincipal} from '../domain/knowledge-import';
-import type {KnowledgeEntityVersion,KnowledgeThemeVersion} from '../domain/knowledge-foundation';
+import type {KnowledgeEntityVersion,KnowledgeThemeVersion,KnowledgeRecordVersion} from '../domain/knowledge-foundation';
 import {createKnowledgeFoundationService,KnowledgeError,knowledgeDigest} from './knowledge-foundation';
 import {missionImportPrincipal} from './knowledge-mission-principal';
 import {importResources,normalizeImportItem} from './knowledge-import-plan';
 import {sourceURL} from './knowledge-source-verification';
 import type {createKnowledgeImports} from './knowledge-import';
+import {createMissionSourceChecks} from './knowledge-mission-sources';
+import {canonicalSourceUrl} from '../domain/knowledge-source-identity';
 
 const reader={kind:'reader' as const,id:'mission-context'};
 const stamp=(v:unknown)=>v instanceof Date?v.toISOString():String(v);
@@ -17,10 +19,11 @@ const hash=(v:string)=>createHash('sha256').update(v).digest('hex');
 // A resumed/edited plan keeps the rolling quota of its previous revisions.
 // The Nth newest run releases a slot; cancelled/empty runs still consumed work.
 const quotaDueSQL="COALESCE((SELECT r.created_at+interval '24 hours' FROM knowledge_missions.runs r WHERE r.plan_id=p.id ORDER BY r.created_at DESC,r.id DESC OFFSET (ceil(24.0/(p.content->>'intervalHours')::integer)::integer-1) LIMIT 1),'-infinity'::timestamptz)";
-export type MissionSnapshot={plan:MissionPlan;theme:KnowledgeThemeVersion|null;entities:KnowledgeEntityVersion[];records:{id:string;revision:number}[]};
+export type MissionSnapshot={plan:MissionPlan;theme:KnowledgeThemeVersion|null;entities:KnowledgeEntityVersion[];records:{id:string;revision:number}[];recordDetails?:KnowledgeRecordVersion[];sources?:{id:string;revision:number;url:string;title:string}[]};
 export async function ensureMissionSchema(pool:Pool){
- const name='033-knowledge-missions.sql',digest=hash(await readFile(path.join(process.cwd(),'db/member',name),'utf8'));
- if((await pool.query('SELECT checksum FROM member_migration WHERE name=$1',[name])).rows[0]?.checksum!==digest)throw new KnowledgeError('定期収集の追加migrationが必要です。',503,'MIGRATION_REQUIRED');
+ for(const name of ['033-knowledge-missions.sql','034-knowledge-mission-updates.sql']){
+ const digest=hash(await readFile(path.join(process.cwd(),'db/member',name),'utf8'));
+ if((await pool.query('SELECT checksum FROM member_migration WHERE name=$1',[name])).rows[0]?.checksum!==digest)throw new KnowledgeError('定期収集の追加migrationが必要です。',503,'MIGRATION_REQUIRED');}
 }
 
 export async function validateMissionPackage(raw:unknown,snapshot:MissionSnapshot,runId:string,planId:string,source:(id:string,revision:number)=>Promise<{content:{url?:string|null}}>){
@@ -37,11 +40,12 @@ export async function validateMissionPackage(raw:unknown,snapshot:MissionSnapsho
  // entity, note or event cannot be smuggled in as part of a themed package.
  for(let n=0;n<=items.length;n++)for(const i of items){const c=i.record;if(c.kind==='relation'&&c.subjectId&&c.objectId&&(reached.has(c.subjectId)||reached.has(c.objectId))){reached.add(c.subjectId);reached.add(c.objectId);}}
  for(const [n,i] of items.entries()){
-  if(!['create-entity','create-relation','add-information','add-evidence'].includes(i.operation??''))throw new KnowledgeError('この収集計画では追加・根拠追加として送ってください。',403,'MISSION_OPERATION_SCOPE');
+  if(!['create-entity','create-relation','add-information','add-evidence','correct-record'].includes(i.operation??''))throw new KnowledgeError('この収集計画では追加・根拠追加・記録の明示訂正として送ってください。',403,'MISSION_OPERATION_SCOPE');
+  if(i.operation==='correct-record'&&(!i.correction||!snapshot.records.some(v=>v.id===i.correction!.id&&v.revision===i.correction!.revision)))throw new KnowledgeError('実行時に渡した記録版を訂正対象に指定してください。',403,'MISSION_CORRECTION_SCOPE');
   const c=i.record,about=i.about;
   if(about?.kind==='entity'&&!snapshot.entities.some(v=>v.id===about.id&&v.revision===about.revision)||about?.kind==='theme'&&(!snapshot.theme||about.id!==snapshot.theme.id||about.revision!==snapshot.theme.revision)||c.aboutTheme&&c.aboutTheme!==snapshot.theme?.id)throw new KnowledgeError('情報を結び付ける対象が計画の範囲外です。',403,'MISSION_TARGET_SCOPE');
   const recordRef=about?.kind==='record'?about:c.aboutRecord;
-  const recordBound=recordRef&&snapshot.records.some(v=>v.id===recordRef.id&&v.revision===recordRef.revision);
+  const recordBound=recordRef&&snapshot.records.some(v=>v.id===recordRef.id&&v.revision===recordRef.revision)||i.operation==='correct-record'&&!!i.correction;
   const themeBound=!!snapshot.theme&&(about?.kind==='theme'&&about.id===snapshot.theme.id&&about.revision===snapshot.theme.revision||c.aboutTheme===snapshot.theme.id);
   if(recordRef&&!recordBound||!recordBound&&!themeBound&&(!c.subjectId||!reached.has(c.subjectId))||c.objectId&&!reached.has(c.objectId))throw new KnowledgeError('計画の対象につながる情報を送ってください。',403,'MISSION_TARGET_SCOPE');
   if(snapshot.theme){if(i.themes?.length!==1||i.themes[0].id!==snapshot.theme.id||i.themes[0].revision!==snapshot.theme.revision)throw new KnowledgeError('実行時に渡したテーマ版を指定してください。',409,'MISSION_THEME_CHANGED');}
@@ -53,7 +57,8 @@ export async function validateMissionPackage(raw:unknown,snapshot:MissionSnapsho
  return pkg;
 }
 
-export function createKnowledgeMissions(pool:Pool,knowledge:Pool,imports:()=>ReturnType<typeof createKnowledgeImports>){
+export function createKnowledgeMissions(pool:Pool,knowledge:Pool,imports:()=>ReturnType<typeof createKnowledgeImports>,options:Parameters<typeof createMissionSourceChecks>[1]={}){
+ const sourceChecks=createMissionSourceChecks(pool,options);
  const foundation=createKnowledgeFoundationService(knowledge);let ready:Promise<void>|undefined;
  const ensure=()=>ready??=ensureMissionSchema(pool).catch(e=>{ready=undefined;throw e;});
  async function tx<T>(f:(c:PoolClient)=>Promise<T>){await ensure();const c=await pool.connect();try{await c.query('BEGIN');const v=await f(c);await c.query('COMMIT');return v;}catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}}
@@ -66,10 +71,14 @@ export function createKnowledgeMissions(pool:Pool,knowledge:Pool,imports:()=>Ret
  async function snapshot(plan:MissionPlan):Promise<MissionSnapshot>{
   const theme=plan.themeId?await foundation.get(reader,'theme',plan.themeId):null;
   const ids=new Set(plan.entityIds),records:{id:string;revision:number}[]=[];if(theme){const resolved=await foundation.resolveTheme(reader,theme.id,theme.revision);if(!plan.entityIds.length)for(const e of resolved.snapshot.entities)ids.add(e.id);for(const v of resolved.snapshot.records)records.push({id:v.id,revision:v.revision});}
-  if(!ids.size)throw new KnowledgeError('核となる対象のあるテーマか、対象を選んでください。',400,'MISSION_ANCHOR_REQUIRED');
+  if(!theme)for(const row of (await knowledge.query("SELECT o.id,o.current_revision revision FROM knowledge75.objects o JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=o.current_revision WHERE o.kind='record' AND o.visibility='public' AND (r.content->>'subjectId'=ANY($1) OR r.content->>'objectId'=ANY($1)) ORDER BY o.id LIMIT 200",[[...ids]])).rows){try{await foundation.get(reader,'record',row.id,row.revision);records.push(row);}catch{/* No inaccessible context. */}}
+  if(!ids.size&&!theme)throw new KnowledgeError('テーマか、核となる対象を選んでください。',400,'MISSION_ANCHOR_REQUIRED');
   const entities=[];for(const id of ids)entities.push(await foundation.get(reader,'entity',id));
   if(entities.length>60)throw new KnowledgeError('テーマの対象が多いため、核となる対象で範囲を絞ってください。',400,'MISSION_ANCHOR_LIMIT');
-  return {plan,theme,entities,records};
+  const recordDetails=[];for(const pin of records)recordDetails.push(await foundation.get(reader,'record',pin.id,pin.revision));
+  const sources=new Map<string,{id:string;revision:number;url:string;title:string}>();
+  for(const record of recordDetails)for(const e of record.content.evidence){const s=await foundation.get(reader,'source',e.source.id,e.source.revision);if(s.content.url&&plan.sourceHosts.includes(new URL(s.content.url).hostname))sources.set(s.id+':'+s.revision,{id:s.id,revision:s.revision,url:s.content.url,title:s.content.title});}
+  return {plan,theme,entities,records,recordDetails,sources:[...sources.values()]};
  }
  async function choices(kind:'entity'|'theme',query:string){
   const q=query.normalize('NFKC').slice(0,200),result=[];
@@ -82,12 +91,12 @@ export function createKnowledgeMissions(pool:Pool,knowledge:Pool,imports:()=>Ret
   for(const p of rows){const runs=[];for(const r of (await pool.query('SELECT * FROM knowledge_missions.runs WHERE plan_id=$1 ORDER BY created_at DESC,id LIMIT 3',[p.id])).rows){
    let receiptState:string|null=null;const results:{state:string;url:string|null;reason:string}[]=[];
    if(r.receipt_id){const principal=runPrincipal(r,p);try{const receipt=await imports().receipt(principal,r.receipt_id);receiptState=receipt.state;for(const i of receipt.items)results.push({state:i.state,url:i.result?.currentUrl??null,reason:i.reason});}catch{receiptState='unavailable';}}
-   runs.push({id:r.id,state:r.state,reason:r.reason,createdAt:stamp(r.created_at),receiptId:r.receipt_id,receiptState,results});
+   runs.push({id:r.id,state:r.state,reason:r.reason,createdAt:stamp(r.created_at),receiptId:r.receipt_id,receiptState,results,sources:await sourceChecks.summary(r.id)});
   }items.push({id:p.id,revision:p.revision,state:p.state,content:p.content,nextDue:stamp(p.eligible_at),runs});}
   const seen=(await pool.query('SELECT max(last_seen) at FROM knowledge_missions.workers')).rows[0]?.at;
   return {items,themes:await choices('theme',''),entities:await choices('entity',query),workerConnected:!!seen&&Date.now()-new Date(seen).getTime()<7200000,workerLastSeen:seen?stamp(seen):null};
  }
- function runPrincipal(run:QueryResultRow,plan:QueryResultRow):ImportPrincipal{const content=missionPlanSchema.parse(plan.content);return {id:'mission:'+run.id,namespace:'mission.'+plan.id,tokenSha256:'0'.repeat(64),expiresAt:'2100-01-01T00:00:00Z',disabled:false,operations:['create-entity','create-relation','add-information','add-evidence'],targets:{entities:'*',records:'*',sources:'*',themes:content.themeId?[content.themeId]:[]},allowNewEntities:true,packagesPerDay:1,itemsPerDay:content.maxItems,pendingItems:content.maxItems};}
+ function runPrincipal(run:QueryResultRow,plan:QueryResultRow):ImportPrincipal{const content=missionPlanSchema.parse(plan.content);return {id:'mission:'+run.id,namespace:'mission.'+plan.id,tokenSha256:'0'.repeat(64),expiresAt:'2100-01-01T00:00:00Z',disabled:false,operations:['create-entity','create-relation','add-information','add-evidence','correct-record'],targets:{entities:'*',records:'*',sources:'*',themes:content.themeId?[content.themeId]:[]},allowNewEntities:true,packagesPerDay:1,itemsPerDay:content.maxItems,pendingItems:content.maxItems};}
  async function act(actor:string,raw:unknown,beforeWrite?:(c:PoolClient)=>Promise<void>){
   const input=missionOperatorSchema.parse(raw);
   return tx(async c=>{await beforeWrite?.(c);return once(c,'operator:'+actor,input.requestId,input,async()=>{
@@ -121,6 +130,11 @@ export function createKnowledgeMissions(pool:Pool,knowledge:Pool,imports:()=>Ret
  async function deliver(worker:string,input:Extract<MissionWorkerCommand,{action:'deliver'}>){
   const saved=await tx(async c=>{const {p,r}=await lockRun(c,worker,input,true);const pkg=await validateMissionPackage(input.package,r.snapshot,r.id,p.id,(id,revision)=>foundation.get(reader,'source',id,revision)),digest=knowledgeDigest(input.package);
    if(r.payload_hash&&r.payload_hash!==digest)throw new KnowledgeError('保存した配送内容が変わっています。同じ内容を再送してください。',409,'MISSION_DELIVERY_CHANGED');
+   for(const raw of pkg.items){const i=normalizeImportItem(pkg,raw).items[0];if(i.operation!=='correct-record')continue;
+    for(const e of i.record.evidence){const src=importResources(pkg).sources.values.get(e.source.id)?.value?.content??(await foundation.get(reader,'source',e.source.id,e.source.revision)).content;
+     if(!src.url||!(await c.query('SELECT 1 FROM knowledge_missions.source_checks WHERE run_id=$1 AND(document_url=$2 OR final_url=$2)',[r.id,canonicalSourceUrl(src.url)])).rowCount)throw new KnowledgeError('訂正に使う資料を、この実行でobserveしてから送ってください。',409,'MISSION_SOURCE_OBSERVATION_REQUIRED');
+    }
+   }
    if(!r.payload)await c.query("UPDATE knowledge_missions.runs SET payload=$2,payload_hash=$3,state='delivering',updated_at=clock_timestamp() WHERE id=$1",[r.id,input.package,digest]);return {p,r,pkg};});
   const principal=await missionImportPrincipal(pool,'mission:'+saved.r.id);if(!principal)throw new KnowledgeError('収集計画が停止・変更されています。',409,'MISSION_LEASE_CHANGED');
   const accepted=await imports().intake(principal,input.package);
@@ -130,6 +144,12 @@ export function createKnowledgeMissions(pool:Pool,knowledge:Pool,imports:()=>Ret
  async function worker(id:string,input:MissionWorkerCommand){
   await ensure();await pool.query('INSERT INTO knowledge_missions.workers(id) VALUES($1) ON CONFLICT(id) DO UPDATE SET last_seen=clock_timestamp()',[id]);
   if(input.action==='claim')return claim(id,input);if(input.action==='deliver')return deliver(id,input);
+  if(input.action==='observe'){
+   const seed=await tx(async c=>{const {p,r}=await lockRun(c,id,input);const prior=(await c.query('SELECT payload_hash,result FROM knowledge_missions.commands WHERE principal=$1 AND request_id=$2',['worker:'+id,input.requestId])).rows[0];if(prior&&prior.payload_hash!==knowledgeDigest(input))throw new KnowledgeError('同じ操作の内容が変わっています。',409,'REQUEST_CHANGED');return {p,r,prior};});
+   if(seed.prior)return {result:seed.prior.result,replayed:true};
+   const docs=await sourceChecks.acquire(missionPlanSchema.parse(seed.p.content),input.urls);
+   return tx(async c=>{const {p,r}=await lockRun(c,id,input);return once(c,'worker:'+id,input.requestId,input,async()=>({observations:await sourceChecks.retain(c,r,missionPlanSchema.parse(p.content),docs)}));});
+  }
   if(input.action==='resume')return tx(async c=>{const {p,r}=await lockRun(c,id,input);return {lease:leaseDto(r,p,input.token)};});
   return tx(async c=>once(c,'worker:'+id,input.requestId,input,async()=>{const {p,r}=await lockRun(c,id,input);
    const retry=input.action==='fail'&&input.retryable&&r.attempts<6,state=input.action==='empty'?'empty':retry?'waiting':'failed',reason=input.action==='empty'?input.summary:({network:'通信が不安定です。', 'source-unavailable':'資料を取得できません。','search-unavailable':'資料探索への接続を待っています。',limit:'実行側の利用上限を待っています。','invalid-package':'配送内容を確認できません。'}[input.reason]);
