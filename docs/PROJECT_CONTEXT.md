@@ -1,3 +1,5 @@
+2026-11-07 API直送の是正：API直送は合意済みの既定。既存Googleログインを使う収集専用MCP・型付き配送・run束縛・再送回復を実装し、17境界テストと別DB復元でOAuth／移行を確認。β配置・本人の接続承認とChatGPTの初回実行を進める。Codex収集予定はPAUSEDのまま。R3b是正完了は未確認。[手順](runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)／[実測](verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)。
+
 2026-11-07訂正：資料収集は合意したChatGPT予定実行とは異なるCodex Sol highのcronへ接続されていた。対象予定をPAUSEDへ変更し設定で確認。API配送・自動公開の実証は保持するが、ChatGPT側の予定実行接続（R3b）は未完了として是正する。毎runの新規チャット生成とCodex利用への無断置換を標準にしない。[訂正・現状](design/KNOWLEDGE_MISSION_EXECUTION_CORRECTION_20261107.md)。
 
 2026-11-07 R4a完了：新旧の通常検索・条件付きページング、同一対象の近傍／経路、対象→Themeの焦点と探索復帰、Record直リンクを接続。app `3d40f9ea`／build `SzWVz9U5EEJUwjunCF1OH` をmain／3200／HTTPS βへ反映。63件・型検査込みbuild・実GoogleのPC／390px確認成功、追加migrationなし。R4bの時間入力・多言語・Capsule、R5、R6は残る。[検証・制約・再開](verification/KNOWLEDGE_USAGE_R4A_20261107.md)。以下は各時点の履歴。

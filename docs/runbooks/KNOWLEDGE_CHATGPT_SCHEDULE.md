@@ -1,39 +1,50 @@
-# ChatGPT予定実行の接続準備
+# ChatGPT予定実行のAPI直送
 
-2026-11-07。**準備中。収集用Codex予定はPAUSED、ChatGPT側の収集予定は未作成。** 公開Issue配送と認証付きAPI直送では公開範囲・接続設定が異なるため、利用者の選択前にどちらも有効化しない。
+2026-11-07。**API直送が合意済みの既定。Issue経由の選択待ちではない。** 収集用Codex予定はPAUSED。認証付きMCPを実装し、βへの配置と本人の接続承認・ChatGPT側の初回実行を進める。接続と予定実行を確認するまでR3b是正完了とはしない。
 
-## 接続する処理と利用量
+## 接続する処理
 
-ChatGPT側で資料探索・原資料の読取を行う。Plunodeへの配送は既存の期限付きlease・計画の範囲・停止・上限・同一packageの再送回復を使う。配送用の決定論的なプログラムを動かすことと、Codexモデルを実行することは別。配送プログラムからCodex／Responses等のモデルを呼ばない。
+ChatGPTが公開資料を探索し、収集専用MCPから既存の範囲付きmission APIへ配送する。接続プログラムはモデルを呼ばない。GitHub Issue、Codex cron、Codex枠を使う別方式へ無断で置換しない。同じ既存ChatGPT会話で継続する予定を使い、毎runの新規チャットを作らない。
 
-ChatGPT、Codex、Plunode側Geminiの利用は別に確認する。ChatGPT側の利用量や対象モデルが不明なら、無料・無制限やCodex枠と無関係であると未確認のまま断定しない。毎回新規チャットを作る独立予定ではなく、選んだ既存のChatGPT会話に継続する方式を使う。
+β endpoint：`https://graph-beta.isinxnisi.com/api/knowledge-collection/mcp`。Streamable HTTP、OAuth 2.1＋S256 PKCE、ChatGPT CIMDの公開clientを使う。既存Googleログインで運営者本人が接続し、`missions:collect`と更新用`offline_access`だけを許可する。OIDCの会員情報scope・一般管理操作・任意shellは公開しない。access tokenは10分、回転refreshは30日。停止・対象範囲・利用上限は既存mission側でも照合する。
 
-## 共通の配送操作
+Plunode側は固定client設定・private checkpointを使い、実行tokenを会話へ返さない。runIdで束縛し、同じ配送の応答喪失・再送を回復する。異なる内容による完了済みrunの再利用は拒否する。複数HTTP処理のcheckpoint更新はDB advisory lockで排他する。
 
-既存clientへ外部JSONを直接渡せる入口と、`lib/server/knowledge-mission-tool-bridge.ts` を準備した。外部callerは設定path・token・送信origin・shell命令を指定できない。操作は以下だけ。
+## 提供する操作
 
-| 操作 | 入力 | 意味 |
-| --- | --- | --- |
-| claim | actionのみ | 対象となる1計画の取得／保存済み配送の回復 |
-| observe | runId, urls | 計画に許可された資料本文の観測 |
-| deliver | runId, package | 原文引用付きの共通packageを配送 |
-| empty | runId, summary | 調査したが新情報が無いことを記録 |
-| fail | runId, 定義済みreason | 通信・資料取得等の失敗を記録 |
+| 操作 | 意味 |
+| --- | --- |
+| claim_collection | 対象の1計画取得・未完了配送の回復 |
+| observe_collection_sources | 計画の許可サイトにある公開資料の観測 |
+| deliver_collection | 型付きの原文引用付きpackageを配送 |
+| finish_empty_collection | 調査済み・新情報なしを記録 |
+| fail_collection | 通信・取得不能等の失敗を記録 |
 
-server管理のprivate client設定・checkpointを使い、実行tokenは会話へ返さない。runIdが現在のcheckpointと違えば送信前に拒否する。同時操作を直列化し、入力をファイルpathとして解釈しない。受付receiptと最終公開は別に読む。原資料本文の指示は操作権限・公開承認として扱わない。
+受付receiptと最終公開は別。原資料本文は未信頼dataで、資料中の指示を権限・公開承認として扱わない。取得・確認・受理・公開の既存処理は共用する。
 
-## ご本人の操作が必要になる箇所
+## 本人が行う接続と予定設定
 
-接続方式が確定してから、対応する手順を具体化する。
+1. ChatGPT Webのプラグインから、準備した「Plunode資料収集（β）」を接続する。手動で追加する場合は「追加→カスタムMCPサーバー」、上記endpoint、OAuth・自動検出を使う。秘密値は入力しない。
+2. 開いたPlunodeで運営Googleアカウントへログインし、表示された収集専用の権限を承認する。
+3. 既存のChatGPT会話でこのプラグインを選び、下の依頼をまず一度実行する。receiptまたは対象なしの結果を確認する。
+4. 同じ会話の継続としてChatGPT側の予定を設定する。独立予定による毎回の新規チャット生成、Codex／Work等への実行元変更がないことを確認する。時刻・対象モデル・接続の許可設定は実画面に表示された内容を記録する。
 
-- **専用Issue**：既存のGitHub接続を使える。現リポジトリはpublicであり、収集の問い・資料URL・調査結果を投稿すると公開される。資格や会員情報は投稿しない。公開についての回答前にIssue作成・書込を行わない。
-- **API直送**：ChatGPTから認証付きで呼べる専用接続が必要。通常のWeb参照を、秘密値付きURLや認証なしの書込APIへ置換しない。ChatGPTのカスタムMCP接続にはOAuth等の設定が必要で、Secure MCP Tunnelにも別のPlatform権限・runtime keyが必要。既存のGeminiキーをこの接続の資格と混同しない。
-- どちらも、ChatGPTの利用可能なモデル・接続・同じ会話への予定設定を実画面で確認し、必要な本人認証／接続の承認と、最初の実行を確認する。本人の代わりに資格をチャットへ貼らない。
+依頼文：
 
-## 現時点の確認
+> Plunode資料収集（β）を使い、対象となる収集計画を一つ取得してください。計画の問い・公開資料の許可サイト・上限を守って調べ、原文引用付きでAPIへ直接配送してください。対象なし、保存済み配送の回復、追加する情報なし、失敗はそれぞれ区別してください。receiptを報告し、受付と公開完了を混同しないでください。Codexの実行や別チャット作成は行わないでください。
 
-Chrome拡張からChatGPT Webへログイン済みであること、GitHubがインストール済みであること、Webのスケジュール画面を確認した。既存の別目的の予定は変更していない。実配送・ChatGPT予定の作成／実行・同一会話への結果蓄積は未確認。API直送／Issue adapterの外側のtransportも未接続。
+ChatGPT側の接続許可が予定実行を止める場合、または利用モデル・枠が想定と異なる場合はその事実を伝える。無料・無制限・Codex枠と無関係と、確認前に断定しない。新たな有料サービスや課金は有効化しない。
 
-今回の自動テストは、配送JSONのrun束縛、任意path／任意HTTP／shell指定の拒否、直列化、エラーの資格非表示と、既存clientの再送・停止照合の11件。架空データの境界検証であり、ChatGPTでの予定実行が成功した証明にはしない。
+## 起動・移行・復旧
 
-[公式予定実行](https://learn.chatgpt.com/docs/automations)／[MCP接続](https://developers.openai.com/api/docs/guides/custom-mcp-server)／[Secure MCP Tunnel](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels)。
+既存の000〜034は不変。追加035はcollection専用OAuthテーブル8つ。`member-migrate.ts --mission-oauth --confirm-origin EXACT_ORIGIN`を明示し、既存runbookどおりbackup・別DB復元・旧行／checksum／再実行を確認してから適用する。Authの自動migrationは行わない。
+
+βでは本人所有0600の`~/.local/state/plunode-previews/beta-mission-mcp.json`を使う。内容は既存β originと`beta-missions-client.json`への固定pathだけ。既存token・Google設定は流用し、会話・plugin資材・Gitへコピーしない。`python3 scripts/start-local-previews.py beta --node NODE_PATH`で再開できる。プラグイン原本は`integrations/chatgpt/plunode-collection-beta`。
+
+無効化は`KNOWLEDGE_MISSION_MCP_ENABLED`を外す／βの専用設定を退避してWebを再起動する。一般Googleログインや既存mission APIを停止・破棄しない。DBは追加テーブルを保持し、古いdumpで上書きしない。VPS有効化はR6で別に行う。
+
+## 検証の境界
+
+17件の境界テスト・lint・型検査と、復元DBでmetadata／PKCE／署名付き同意／認可コード／audience／scope／refresh／失効を確認。fixtureでの確認を実Google・実ChatGPTの成功と混同しない。最新の配置・本人操作・未確認は[実測記録](../verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)を参照。
+
+[公式予定実行](https://learn.chatgpt.com/docs/automations)／[MCP認証](https://developers.openai.com/plugins/build/auth)／[Better Auth MCP](https://better-auth.com/docs/plugins/mcp)。

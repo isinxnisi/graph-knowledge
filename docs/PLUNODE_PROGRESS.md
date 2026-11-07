@@ -1,8 +1,10 @@
+2026-11-07 API直送の是正：API直送は合意済みの既定。既存Googleログインを使う収集専用MCP・型付き配送・run束縛・再送回復を実装し、17境界テストと別DB復元でOAuth／移行を確認。β配置・本人の接続承認とChatGPTの初回実行を進める。Codex収集予定はPAUSEDのまま。R3b是正完了は未確認。[手順](runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)／[実測](verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)。
+
 # Plunode 本運用への進行表
 
 **進捗報告：収集予定停止・R3bの実行元是正待ち、R4a完了｜R4はbまで｜全体はR6まで。** 現工程の完了状態・残り・全体の位置が短く伝わることを毎回優先し、現在地を先、予定終点（分母）を後ろに置く。記号や区切り数を固定する指定ではない。枝番追加・順序変更時も現在地と分母を更新し、「次」だけや細部だけで進捗を表さない。2026-11-06ユーザー補足。以下の説明や履歴を、この短い現在地の代わりにしない。
 
-2026-11-07接続準備：ChatGPT Webログイン・GitHubインストール・スケジュール画面を確認。配送JSONの限定操作とrun束縛を実装し、clientと合わせ11件成功。**外側の配送経路とChatGPT予定は未接続**。公開Issueでは収集の問い・結果が公開されるため、Issue／認証付きAPIの選択回答を待つ。Codex収集予定はPAUSEDを継続。[準備済み・本人操作の境界](runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)。
+2026-11-07接続準備：ChatGPT Webログイン・GitHubインストール・スケジュール画面を確認。配送JSONの限定操作とrun束縛を実装し、clientと合わせ11件成功。**外側の配送経路とChatGPT予定は未接続**。API直送が既定であることを再確認済み。Issueの選択回答は待たない。Codex収集予定はPAUSEDを継続。[準備済み・本人操作の境界](runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)。
 
 2026-11-07訂正：資料収集は合意したChatGPT予定実行とは異なるCodex Sol highのcronへ接続されていた。対象予定をPAUSEDへ変更し設定で確認。API配送・自動公開の実証は保持するが、ChatGPT側の予定実行接続（R3b）は未完了として是正する。毎runの新規チャット生成とCodex利用への無断置換を標準にしない。[訂正・現状](design/KNOWLEDGE_MISSION_EXECUTION_CORRECTION_20261107.md)。
 

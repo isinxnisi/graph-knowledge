@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { genericOAuth } from "better-auth/plugins/generic-oauth";
 import { Pool } from "pg";
 import { MemberUnavailable, type MemberConfig } from "./config";
+import {missionMcpEnabled,missionOAuthPlugins} from './mission-oauth';
 
 export function memberPool(config: MemberConfig) {
   const pool = new Pool({ connectionString: config.databaseUrl, max: 5, connectionTimeoutMillis: 3000,
@@ -20,13 +21,14 @@ export function createMemberAuth(config: MemberConfig, pool: Pool) {
   return betterAuth({
     appName: "Plunode", baseURL: config.origin, basePath: "/api/auth",
     secret: config.secret, database: pool, trustedOrigins: [config.origin],
+    disabledPaths: ['/token'],
     logger: { disabled: true }, onAPIError: { errorURL: `${config.origin}/member` },
     socialProviders: provider.kind === "google" ? { google: { clientId: provider.clientId, clientSecret: provider.clientSecret } } : {},
     plugins: provider.kind === "fixture" ? [genericOAuth({ config: [{
       providerId: "fixture", clientId: "graph-member-fixture", discoveryUrl: `${provider.issuer}/.well-known/openid-configuration`,
       requireIdTokenVerification: true, scopes: ["openid", "profile", "email"], pkce: true,
       tokenEndpointAuth: { method: "none" },
-    }] })] : [],
+    }] })] : missionMcpEnabled() ? missionOAuthPlugins(config.origin) : [],
     advanced: { disableOriginCheck: false, disableCSRFCheck: false, database: { generateId: "uuid" }, cookiePrefix: config.cookiePrefix,
       useSecureCookies: config.origin.startsWith("https:"), defaultCookieAttributes: { httpOnly: true, sameSite: "lax" } },
     session: { expiresIn: 60 * 60 * 24 * 7, updateAge: 60 * 60 * 24, cookieCache: { enabled: false } },

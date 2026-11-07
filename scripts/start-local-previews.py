@@ -106,6 +106,16 @@ def beta_knowledge():
             values['KNOWLEDGE_PATROL_ENABLED'] = '1'
         if 'organize' in profile.get('capabilities', []):
             values['KNOWLEDGE_ORGANIZATION_ENABLED'] = '1'
+    mcp = STATE / 'beta-mission-mcp.json'
+    if mcp.exists():
+        info = mcp.lstat()
+        client = STATE / 'beta-missions-client.json'
+        if mcp.is_symlink() or info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) != 0o600 or info.st_size > 4000:
+            raise ValueError('Private ChatGPT collection profile ownership mismatch')
+        profile = json.loads(mcp.read_text())
+        if profile != {'origin': expected['KNOWLEDGE_PUBLIC_ORIGIN'], 'clientFile': str(client)} or not missions.exists() or not client.exists():
+            raise ValueError('ChatGPT collection must use the existing restricted beta mission client')
+        values.update(KNOWLEDGE_MISSION_MCP_ENABLED='1', KNOWLEDGE_MISSION_MCP_CLIENT=str(client))
     return {**values,'THEME_WORKBENCH_ENABLED':'0'}
 
 

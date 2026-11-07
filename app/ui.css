@@ -49,3 +49,7 @@ body dialog button[data-dialog-close] > .ui-icon { width: 18px; height: 18px; ma
    Only pointer-driven destination rings are suppressed; controls keep focus-visible. */
 html:is([data-input-modality="pointer"], [data-input-modality="initial"]) [data-focus-destination]:focus { outline: none; }
 html[data-input-modality="keyboard"] [data-focus-destination]:focus { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+.mission-connect { max-width: 42rem; margin: 5svh auto; padding: 1.5rem; }
+.mission-connect h1 { margin-block: 1.5rem 1rem; }
+.mission-connect li { margin-block: .55rem; }
+.mission-connect-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-block: 1.5rem; }

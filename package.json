@@ -90,7 +90,13 @@
     "roles:check": "tsx scripts/generate-contribution-roles.ts --check"
   },
   "dependencies": {
+    "@better-auth/cimd": "1.7.7",
+    "@better-auth/core": "1.7.7",
+    "@better-auth/mcp": "1.7.7",
+    "@better-auth/oauth-provider": "1.7.7",
+    "@modelcontextprotocol/server": "2.4.0",
     "better-auth": "1.7.7",
+    "better-call": "1.4.0",
     "cytoscape": "3.34.3",
     "fflate": "0.8.2",
     "ipaddr.js": "2.3.0",

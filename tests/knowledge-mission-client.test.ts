@@ -45,3 +45,12 @@ it('sends chat payload as JSON instead of interpreting it as a file path',async(
  const body=JSON.parse(fetcher.mock.calls.at(-1)![1].body);
  expect(body.package).toEqual({publicSource:'https://example.org'});expect(body.token).toBe(lease.token);
 });
+it('recovers a completed chat delivery without sending it twice and rejects changed content',async()=>{
+ await runMissionClient([config,'claim']);const receiptId=randomUUID(),payload={publicSource:'https://example.org'};
+ fetcher.mockResolvedValueOnce(Response.json({receiptId}));
+ expect(await runMissionClient([config,'deliver'],{expectedRunId:lease.runId,payload})).toEqual({receiptId});
+ fetcher.mockClear();
+ expect(await runMissionClient([config,'deliver'],{expectedRunId:lease.runId,payload})).toEqual({receiptId});
+ await expect(runMissionClient([config,'deliver'],{expectedRunId:lease.runId,payload:{changed:true}})).rejects.toThrow('MISSION_ALREADY_FINISHED');
+ expect(fetcher).not.toHaveBeenCalled();
+});
