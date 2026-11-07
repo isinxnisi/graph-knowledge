@@ -17,6 +17,8 @@
 
 ## 2. 正式資材
 
+2026-11-08のregistry監査でNext 16.3.8、fflate 0.8.2、Vite 8.3.2にadvisoryが検出された。Next／eslint-config-next 16.4.5、fflate 0.8.3、Vite 8.3.6へ更新し、runtime dependency監査の検出は0、既存の変更境界81件は成功した。使用中の機能から実際に攻撃可能だったという実証ではない。更新後のbuild・β実操作・正式image検証は別に確認する。[Next advisory](https://github.com/advisories/GHSA-2464-fhr4-w9xw)／[fflate advisory](https://github.com/advisories/GHSA-px8p-9vwx-vf98)。
+
 既存Dockerfileの `web` と、新設 `knowledge-ops` targetを同じ固定SHAから作る。後者はmember migrationと知識migration・3常駐Workerを含む。Webにも実行時に検査する知識migrationを同梱する。秘密値はbuildしない。source SHA・build ID・platform・image config／manifest・archive SHA256を固定する。
 
 `compose.knowledge-production.yaml` は既存構成へのoverlayで、Web／member-opsを更新し、publisher・review・patrolを追加する。KG用opsは更新しない。配置先に生成する `knowledge.env` と `knowledge-runtime/` はprivateとし、コンテナのnode UIDと0600所有条件を満たす。プロファイルはread-only bind。新Workerはnon-root・read-only filesystem・権限追加なしで動かす。
