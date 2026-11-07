@@ -14,7 +14,7 @@ API直送は既定として進める。Codex収集予定はPAUSED。実装・17�
 
 ## 配置と未確認
 
-app source `2ba6cb07cab7c7850a889ccf88c27ea35da2e175`、build `kXG4dnyy1k-jFN93-JOo_`をmain／3200へ反映。HTTPS βでもTOP・OAuth metadata・resource metadata・接続案内200、未認証MCP401＋challengeを確認。初回のresource metadataの誤った転送pathを修正し、追加migrationなしでWebを再配置した。3276・本番VPSは未変更。ChatGPTからの接続承認と、同じ会話に継続する予定の初回実行を残す。実行元・利用量が確認できていない状態を、API配送やfixture結果だけで成功扱いにしない。
+app source `7a9448020d5aaf8855a051e8dcf93fcd2442f26d`、build `kl-9_RPiFbifehMVuZC4v`をmain／3200へ反映。HTTPS βでもTOP・OAuth metadata・resource metadata・接続案内200、未認証MCP401＋challengeを確認。初回のresource metadataの誤った転送pathを修正し、追加migrationなしでWebを再配置した。3276・本番VPSは未変更。ChatGPTからの接続承認と、同じ会話に継続する予定の初回実行を残す。実行元・利用量が確認できていない状態を、API配送やfixture結果だけで成功扱いにしない。
 
 ## 実測
 
@@ -35,4 +35,8 @@ app source `2ba6cb07cab7c7850a889ccf88c27ea35da2e175`、build `kXG4dnyy1k-jFN93-
 
 実Googleによる収集専用接続の承認、ChatGPT側での初回の実配送、既存の同じ会話に継続する予定の作成・実行・利用枠の確認を残す。API実装、fixture認証、metadataの自動検出だけでR3b完了とはしない。通常Graph・会員の実画面の追加確認も接続後に行う。
 
-ソースは日本語commitで作業branchへ通常push済み。mainの通常pushとhold解放は最終確認で記録する。本人の権限付与はPlugin Creatorの `SKILL.md` 指示先 `references/server-access.md` の “Let the user complete credentials, MFA, and OAuth consent there.” に従って本人操作とする。
+アプリソースは日本語commitで作業branchへ通常push済み、検証済みSHAをmainへfast-forwardし、3200／HTTPS βへ配置した。最後の文書commitも同じbranch／mainへ通常pushして終了する。holdは本人接続待ちの区切りで解放し、接続後は再取得する。本人の権限付与はPlugin Creatorの `SKILL.md` 指示先 `references/server-access.md` の “Let the user complete credentials, MFA, and OAuth consent there.” に従って本人操作とする。
+
+## 最終patchの配置
+
+Zod／Undiciのpatch後の107件・型検査込みproduction buildが成功。上記app source／buildをWebだけ再配置し、3200とHTTPS βで計12応答を確認した（通常ページとmetadataは200、未認証MCPは401）。今回のWeb再配置にDB移行はなく、035までの既存適用を維持した。private設定16件のhashを保持。review WorkerのみWebと共に再起動し、他4 Workerは停止していない。本番VPS・3276は未更新。ChatGPTの作成・接続承認画面は本人操作待ちのままで、実Google／実配送／同一会話での予定実行は未確認。
