@@ -1,3 +1,5 @@
+2026-11-07 R3c完了：Chrome専用接続の実GoogleでWeb貼付→NASA原語訂正の自動公開、漫画の異種関係→自動公開・検索、重複再利用・未反映2項目の取消、年表Capsuleの固定版→比較→明示更新・保存・別タブ再訪をPC／390pxで確認。取消を反映済みとする誤表示と、項目の待機／公開反映中の表示を修正。app `adcc5ada`／build `WhSi2CEV7-AmSOpITEVrB`、main／3200／HTTPS βへ配置、追加migrationなし。38取込＋5 UI・lint・型検査込みbuild成功。[実操作・制約・次の入口](verification/KNOWLEDGE_MISSIONS_R3C_20261107.md)。R4の利用接続、R5のβ全体一巡、R6の正式公開は残る。以下は各時点の履歴。
+
 2026-11-07 R3c実装・β反映済み、最終確認は未完了。app 8ebd580e／build T2REsZ0j7OT8ieC_nrXcn、会員034・復元移行・61件＋取込37件を確認。実公開とPC／スマホ・Capsuleまでの通し確認を残す。[今回の記録と再開](verification/KNOWLEDGE_MISSIONS_R3C_20261107.md)。R3はcまで、全体はR6まで。
 
 2026-11-07 R3b完了：アプリの予定実行から公開資料探索→範囲付きAPI配送→既存確認Workerの自動受理・公開を確認。NASA／ESAの2項目をTheme版4へ追加し、旧Theme版2の12件を保持。app `662cd121`／build `-a6v6--efFNwfdsRQGwbz`、main／3200／HTTPS βへ反映。上限待ちの次回時刻と、再開前の停止・期限照合も修正。追加migrationなし、55件と型検査込みbuild成功。 [検証・制約・再開](verification/KNOWLEDGE_MISSIONS_R3B_20261107.md)。R3はc（本文差分・明示訂正・入力拡充・通し確認）が残り、全体はR6まで。以下は各時点の履歴。

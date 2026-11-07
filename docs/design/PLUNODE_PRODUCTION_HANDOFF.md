@@ -1,4 +1,22 @@
-# 2026-11-07 現在地：R3c実装・β反映済み、最終確認を残す
+# 2026-11-07 現在地：R3c完了、次はR4
+
+**R3c完了、次はR4｜R3はcまで｜全体はR6まで。** [最終の実操作・制約・再開](../verification/KNOWLEDGE_MISSIONS_R3C_20261107.md)を優先する。app `adcc5adad872abaf6bb88f95fd2fd48a0372d73b`／build `WhSi2CEV7-AmSOpITEVrB`、main／3200／HTTPS βへ配置。追加migrationなし・会員034まで。通常のWebb日次計画・予定実行・15のprivate設定とGoogle認証を維持し、本番VPS・共有Kev・3276は更新していない。
+
+実GoogleのWeb貼付からNASAの原語指定をRecord版2／Theme版5へ反映し、旧版1／Theme版4を保持。漫画テーマは本人インタビューから石ノ森章太郎への影響関係と人物を追加し、テーマ版2・検索・自動意味整理を確認。テーマ専用コードは追加していない。重複は既存の同じRecordを再利用。未反映2項目のWeb取消は推論中の1回も含めて適用を止め、利用量を保持した。Capsule `β確認｜R3c 年表の固定版と取得元更新` は保存版2、Theme版5／対象Record版2で再訪できる。
+
+Windows汎用操作のURL特定失敗とChrome拡張の経路を区別する。Chrome拡張・native-host診断は正常で、`cua_repl`のChromeブラウザを選ぶと実Googleのβを操作できた。Windows経路を修理したとは報告しない。専用タブで390pxを測定して確認し、viewportをreset済み。最初のタブ取得はtimeoutしたが、ブラウザ一覧の取得後は操作が成立した。再起動や設定変更を毎回ユーザーへ求めない。
+
+## 次はR4：利用接続
+
+旧KG／common／同一対象の関連付け／訳名を通常の検索・Graphへ接続し、対象からThemeへ入る焦点と元探索への復帰を揃える。時刻・周期／定性等のフォーム、複数時間、Theme訳の保存と差分取込、旧KG詳細と各翻訳field、文脈付き翻訳・cache、活動の固定版への導線を閉じる。既存U3/U4の表示・保存契約を使い、直接作図の後続化をフォームの除外へ広げない。最初に[再計画](PLUNODE_IMPLEMENTATION_REPLAN_20261105.md)のR4と現在のソース差分を固定し、工程内の終点を提示する。
+
+R5は二実テーマ＋Themeなし・三入力経路・一般会員・共有／コメント／コミュニティ固定・旧保存と新旧publisherの統合確認、R6は正式公開・本番向け移行・Linux脆弱性対応。R3の代表接続成功をR5完了として使わない。R4/R5で残り2〜4回、R6は別に1〜2回という粗い見込みを保ち、実装差分で変われば現在地と分母を更新する。
+
+再開はmainの既存 `scripts/start-local-previews.py beta --node /home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/issue75/node`。既存private runtimeを使い、新しいtoken・DB resetを要求しない。mainの`memo.txt`と作業worktreeの`.local/`を保護する。今回はDB変更なしのため、034の復元検証やR1/R2の全評価を反復していない。
+
+以下は過去時点の記録。
+
+## R3c初回配置時点の記録
 
 **R3c実装・β反映済み、最終確認は未完了｜R3はcまで｜全体はR6まで。** [R3cの確認済み・残件・再開](../verification/KNOWLEDGE_MISSIONS_R3C_20261107.md)を優先する。app `8ebd580eb90ea6cd6a6fe63d7ce2f84ef2c2a3a1`／build `T2REsZ0j7OT8ieC_nrXcn`、main／3200／HTTPS βへ配置、会員034まで。資料取得版・hash差分・明示訂正・EntityなしThemeの背景・任意Web貼付を接続。61件＋取込37件・lint・型検査込みbuild・別DB復元移行を確認。既存の資格15ファイル、Google設定、通常の日次計画、独立した5 Workerを保全。最終配置ではreview Workerを再起動した。正式VPSは未変更。
 

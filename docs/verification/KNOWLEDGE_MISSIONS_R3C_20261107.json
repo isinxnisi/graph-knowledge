@@ -3,9 +3,9 @@
   "stage": "R3c",
   "stageEnd": "R3c",
   "overallEnd": "R6",
-  "state": "implemented-and-beta-deployed; final-verification-pending",
-  "source": "8ebd580eb90ea6cd6a6fe63d7ce2f84ef2c2a3a1",
-  "build": "T2REsZ0j7OT8ieC_nrXcn",
+  "state": "complete; R4-next; overall-initial-release-incomplete",
+  "source": "adcc5adad872abaf6bb88f95fd2fd48a0372d73b",
+  "build": "WhSi2CEV7-AmSOpITEVrB",
   "initialSource": "0e693b8ff056456f4c8677aa1b972c4012c4f801",
   "initialBuild": "IMrsZZQ7lxTI0D1CtE3LA",
   "environments": {
@@ -19,13 +19,15 @@
     "existingImportTests": 37,
     "targetLint": true,
     "typeCheckedBuild": true,
-    "googleBrowser": false,
-    "desktopMobileVisual": false
+    "googleBrowser": true,
+    "desktopMobileVisual": true,
+    "followupImportTests": 38,
+    "followupUiTests": 5
   },
   "buildMetrics": {
-    "seconds": 44.7,
+    "seconds": 121.5,
     "nodeHeapMiB": 3072,
-    "windowsFreeMinimum": 9290788864
+    "windowsFreeMinimum": 10636652544
   },
   "migration": {
     "success": true,
@@ -147,12 +149,348 @@
     "testItemsCancelled": true,
     "originalDailyPlanUnchanged": true
   },
-  "browserBlock": "Computer Use stopped the turn because it could not safely determine the current Chrome URL; no alternate UI automation was used",
-  "pending": [
+  "recovery": "Existing beta launcher and private client/checkpoint; no new tokens or DB resets required",
+  "remaining": [
+    "R4 usage connections",
+    "R5 integrated beta acceptance",
+    "R6 formal production release"
+  ],
+  "followup": {
+    "live": {
+      "at": "2026-11-07T06:57:34.409Z",
+      "receipts": [
+        {
+          "packageId": "webb-original-language-correction",
+          "receiptId": "82317a05-23bb-4d8c-87f9-7f0d930147d1",
+          "state": "completed",
+          "items": [
+            {
+              "ordinal": 1,
+              "state": "published",
+              "reason": "知識へ反映しました。",
+              "result": {
+                "id": "import:mission.50c8360d-a0e7-4360-9c13-b4d48b9502d0:record:c2b5c92d50af782eb9fb82d3c22121ee",
+                "revision": 2,
+                "disposition": "updated",
+                "available": true,
+                "themes": [
+                  {
+                    "id": "u3:fbaa9ee12f288cfa:theme",
+                    "revision": 5
+                  }
+                ],
+                "currentUrl": "/?krecord=import%3Amission.50c8360d-a0e7-4360-9c13-b4d48b9502d0%3Arecord%3Ac2b5c92d50af782eb9fb82d3c22121ee"
+              },
+              "usage": {
+                "requests": 2,
+                "inputTokens": 1308,
+                "outputTokens": 253,
+                "unknownAttempts": 1,
+                "retainedInputReservation": 6772,
+                "retainedOutputReservation": 2048
+              }
+            }
+          ],
+          "attempts": [
+            {
+              "ordinal": 1,
+              "state": "delivery-unknown",
+              "httpStatus": null,
+              "category": "timeout",
+              "charge": 1
+            },
+            {
+              "ordinal": 1,
+              "state": "received",
+              "httpStatus": 200,
+              "category": null,
+              "charge": 1
+            }
+          ]
+        },
+        {
+          "packageId": "manga-style-influence",
+          "receiptId": "facf25bb-ea19-4d86-8228-bbbf3f0943ea",
+          "state": "completed",
+          "items": [
+            {
+              "ordinal": 1,
+              "state": "published",
+              "reason": "知識へ反映しました。",
+              "result": {
+                "id": "import:web.c15067b1a48ffb9083cf09a94ae248cd03ec938d3bff37e4:record:612c04144dab589b925295ba66558749",
+                "revision": 1,
+                "disposition": "created",
+                "available": true,
+                "themes": [
+                  {
+                    "id": "u3:real-manga:theme",
+                    "revision": 2
+                  }
+                ],
+                "currentUrl": "/?krecord=import%3Aweb.c15067b1a48ffb9083cf09a94ae248cd03ec938d3bff37e4%3Arecord%3A612c04144dab589b925295ba66558749"
+              },
+              "usage": {
+                "requests": 1,
+                "inputTokens": 516,
+                "outputTokens": 174,
+                "unknownAttempts": 0,
+                "retainedInputReservation": 0,
+                "retainedOutputReservation": 0
+              }
+            }
+          ],
+          "attempts": [
+            {
+              "ordinal": 1,
+              "state": "received",
+              "httpStatus": 200,
+              "category": null,
+              "charge": 1
+            }
+          ]
+        },
+        {
+          "packageId": "cancel-duplicate-check",
+          "receiptId": "7583d977-5ef7-4ca6-93ec-296c817cabbd",
+          "state": "completed",
+          "items": [
+            {
+              "ordinal": 1,
+              "state": "existing",
+              "reason": "同じ知識が登録済みです。記録や活動履歴は増やしていません。",
+              "result": {
+                "id": "import:mission.50c8360d-a0e7-4360-9c13-b4d48b9502d0:record:c2b5c92d50af782eb9fb82d3c22121ee",
+                "revision": 2,
+                "disposition": "existing",
+                "available": true,
+                "themes": [
+                  {
+                    "id": "u3:fbaa9ee12f288cfa:theme",
+                    "revision": 5
+                  }
+                ],
+                "currentUrl": "/?krecord=import%3Amission.50c8360d-a0e7-4360-9c13-b4d48b9502d0%3Arecord%3Ac2b5c92d50af782eb9fb82d3c22121ee"
+              },
+              "usage": {
+                "requests": 1,
+                "inputTokens": 1500,
+                "outputTokens": 384,
+                "unknownAttempts": 0,
+                "retainedInputReservation": 0,
+                "retainedOutputReservation": 0
+              }
+            }
+          ],
+          "attempts": [
+            {
+              "ordinal": 1,
+              "state": "received",
+              "httpStatus": 200,
+              "category": null,
+              "charge": 1
+            }
+          ]
+        },
+        {
+          "packageId": "cancel-pending-items",
+          "receiptId": "9c5f4caa-4841-40c0-9916-88af979e369e",
+          "state": "cancelled",
+          "items": [
+            {
+              "ordinal": 1,
+              "state": "cancelled",
+              "reason": "未反映分を取り消しました。",
+              "result": null,
+              "usage": {
+                "requests": 1,
+                "inputTokens": 1500,
+                "outputTokens": 298,
+                "unknownAttempts": 0,
+                "retainedInputReservation": 0,
+                "retainedOutputReservation": 0
+              }
+            },
+            {
+              "ordinal": 2,
+              "state": "cancelled",
+              "reason": "未反映分を取り消しました。",
+              "result": null,
+              "usage": {
+                "requests": 0,
+                "inputTokens": null,
+                "outputTokens": null,
+                "unknownAttempts": 0,
+                "retainedInputReservation": 0,
+                "retainedOutputReservation": 0
+              }
+            }
+          ],
+          "attempts": [
+            {
+              "ordinal": 1,
+              "state": "received",
+              "httpStatus": 200,
+              "category": null,
+              "charge": 1
+            }
+          ]
+        }
+      ],
+      "record": {
+        "id": "import:mission.50c8360d-a0e7-4360-9c13-b4d48b9502d0:record:c2b5c92d50af782eb9fb82d3c22121ee",
+        "currentRevision": 2,
+        "oldRevision": 1,
+        "assertionUnchanged": true,
+        "originalLanguage": {
+          "tag": "ja",
+          "basis": "declared"
+        },
+        "oldOriginalLanguage": null,
+        "quoteLanguage": {
+          "tag": "en",
+          "basis": "declared"
+        }
+      },
+      "theme": {
+        "revision": 5,
+        "records": 14,
+        "oldRevision": 4,
+        "oldRecordPins": [
+          1
+        ]
+      },
+      "manga": {
+        "revision": 2,
+        "records": [
+          {
+            "id": "69ed2335-344f-41a6-a17f-77708faa0398",
+            "revision": 1,
+            "kind": "relation",
+            "assertion": "大友克洋 → 童夢：著者"
+          },
+          {
+            "id": "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1",
+            "revision": 1,
+            "kind": "relation",
+            "assertion": "長崎尚志 → BILLY BAT：ストーリー共同制作"
+          },
+          {
+            "id": "b6ce3407-e3bb-44c9-867b-7b7434861af5",
+            "revision": 1,
+            "kind": "relation",
+            "assertion": "浦沢直樹 → 手塚治虫：影響を受けた"
+          },
+          {
+            "id": "import:web.c15067b1a48ffb9083cf09a94ae248cd03ec938d3bff37e4:record:612c04144dab589b925295ba66558749",
+            "revision": 1,
+            "kind": "relation",
+            "assertion": "浦沢直樹は、絵のタッチについて石ノ森章太郎から影響を受けたと述べている。"
+          }
+        ]
+      },
+      "capsules": [
+        {
+          "id": "cf5ab479-70b8-4324-aff1-3bfd7d2db409",
+          "currentRevision": 2,
+          "recordPins": [
+            2
+          ],
+          "themePins": [
+            5
+          ],
+          "history": []
+        }
+      ]
+    },
+    "build": {
+      "source": "adcc5adad872abaf6bb88f95fd2fd48a0372d73b",
+      "build": "WhSi2CEV7-AmSOpITEVrB",
+      "directory": "/home/isinxnisi/.cache/plunode-builds/submission-repair-f0245dfa",
+      "missionMigrationTraced": true,
+      "buildExit": 0,
+      "windowsFreeMinimum": 10636652544,
+      "removedCaches": [],
+      "seconds": 121.5,
+      "nodeHeapMiB": 3072,
+      "previousBuild": "T2REsZ0j7OT8ieC_nrXcn",
+      "backup": "/home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/r3c/followup/web-before-20261107T065036Z",
+      "migration": "none; existing 034 unchanged",
+      "privateConfigurationPreserved": true,
+      "workersRestarted": [
+        "knowledge-review-worker"
+      ],
+      "productionChanged": false
+    },
+    "http": [
+      {
+        "check": "local-top",
+        "status": 200,
+        "expected": 200,
+        "passed": true
+      },
+      {
+        "check": "beta-top",
+        "status": 200,
+        "expected": 200,
+        "passed": true
+      },
+      {
+        "check": "beta-operations",
+        "status": 200,
+        "expected": 200,
+        "passed": true
+      },
+      {
+        "check": "paste-anonymous",
+        "status": 401,
+        "expected": 401,
+        "passed": true
+      },
+      {
+        "check": "theme-old",
+        "status": 200,
+        "expected": 200,
+        "passed": true,
+        "themeRevision": 4,
+        "records": 14
+      }
+    ],
+    "screenshots": "assets/r3c-20261107",
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "documentWidth": 380,
+      "reset": true
+    },
+    "realIPhone": false,
+    "newShareAndSnsRetest": false
+  },
+  "initialPending": [
     "successful real correction confirmation and publication",
     "second heterogeneous theme through the supplied input route",
     "registration/correction/search/timeline/Capsule fixed snapshot and explicit update through-check",
     "real Google Web paste and desktop/390px UI verification"
   ],
-  "recovery": "Existing beta launcher and private client/checkpoint; no new tokens or DB resets required"
+  "pending": [],
+  "initialBrowserBlock": "Computer Use stopped the turn because it could not safely determine the current Chrome URL; no alternate UI automation was used",
+  "browserRecovery": {
+    "route": "Chrome extension through cua_repl browser inventory and tab selection",
+    "realGoogleBetaUiVerified": true,
+    "windowsGenericRouteRepaired": false,
+    "securitySettingsChanged": false
+  },
+  "initialBuildMetrics": {
+    "seconds": 44.7,
+    "nodeHeapMiB": 3072,
+    "windowsFreeMinimum": 9290788864
+  },
+  "precedingSource": "8ebd580eb90ea6cd6a6fe63d7ce2f84ef2c2a3a1",
+  "precedingBuild": "T2REsZ0j7OT8ieC_nrXcn",
+  "capsuleTestCleanup": {
+    "softTrashedTestCapsule": "β確認・形と矢印",
+    "reason": "account limit reached during authorized Capsule save verification",
+    "recoverable": true,
+    "conversationRetained": true
+  }
 }
