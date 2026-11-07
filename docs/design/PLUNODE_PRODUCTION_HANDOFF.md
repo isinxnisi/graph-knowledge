@@ -1,3 +1,9 @@
+# 2026-11-08 現在地：R6aの資材検証まで、本番監査・公開は未完了
+
+**R6a作業中（資材検証済み・監査待ち）｜R6はbの正式確認まで｜全体はR6まで。** 固定image `12273b17`／正式候補build `4HA4J9PvlJxJdsWuxlIBA`を作成し、空DBの会員36・知識9 migration／再実行・初回投影・standalone HTTPを検証。imageはVPSへ転送しただけで、load・切替していない。3200／HTTPS βはセキュリティ更新 `999df702`／build `GKCLvKsSR-vkRGVFw_sJ5`で実Googleの年表・Capsule作成／破棄を確認済み。[現在の結果・再開](../verification/KNOWLEDGE_PRODUCTION_R6A_20261108.md)／[R6公開runbook](../runbooks/KNOWLEDGE_PRODUCTION_RELEASE_R6.md)。
+
+次に、本人へ渡した読み取り専用監査の `/home/develop/plunode-r6-20261108/audit-result.json`をSSHで取得する。sudo／Docker権限が不足しており、監査結果なしに過去の本番ledger件数を決め打ちしない。Gemini無料APIの年齢・地域とβ／本番の同project予算配分も回答待ち。公開条件を勝手に縮小せず、両環境へ各400回を配らない。R6aの実機移行・LinuxとR6bの切替／Google・PC Worker・同じChatGPT会話からのAPI直送／正式確認が残る。既存の予定、共有Kev、独立データは変更していない。以下は過去時点の履歴。
+
 # 2026-11-08 現在地：R5完了、残りは正式反映R6
 
 **R5a・b完了｜R5はbまで完了｜全体はR6まで。** 2026-11-08 R5：R5a（利用接続）・b（復元／publisher）の統合確認を完了。初版の機能実装＋β統合検証を区切る。app `48ab1d7f`／build `EOtr5ZgylN49Vxbsuv22i`、main／3200／HTTPS βへ反映。原文／訳文／版の表示整理、公開停止した訳文の共有閲覧制限、公開訳のGraph／年表接続、古い固定版からの選び直し、JSONB項目順による根拠追加の受付誤判定を修正。126件・型検査込みbuild、実Googleの共有2→3・旧版コメント・停止、別DB復元とpublisher障害／rebuildを確認。追加migrationなし・16設定保全・本番未変更。 [最新の検証・再開](../verification/KNOWLEDGE_INTEGRATION_R5_20261108.md)。

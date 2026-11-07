@@ -23,6 +23,10 @@
 
 `compose.knowledge-production.yaml` は既存構成へのoverlayで、Web／member-opsを更新し、publisher・review・patrolを追加する。KG用opsは更新しない。配置先に生成する `knowledge.env` と `knowledge-runtime/` はprivateとし、コンテナのnode UIDと0600所有条件を満たす。プロファイルはread-only bind。新Workerはnon-root・read-only filesystem・権限追加なしで動かす。
 
+MCP clientの `checkpointDirectory` はWeb専用bindの `/run/plunode-knowledge-state` とし、ホスト側 `knowledge-state/` はUID1000・0700にする。設定や配送資格のファイルは `knowledge-runtime/` のread-only領域を使う。checkpointも同じ書込停止境界でbackupする。再起動で再送／leaseの文脈を失わせない。全Workerへ旧KGのURI・user・databaseを明示継承し、コンテナ内localhostへ誤接続しない。
+
+候補overlayを検査するときは、既存app.envと新しいknowledge.envの両方をComposeのinterpolationへ渡す。最終切替では、既存の常用起動コマンドが再び旧Webを起動しないよう、固定imageと新サービスを含む正式な `compose.yaml` を保存する方式を実物監査後に確定する。秘密値を展開した `docker compose config` を一般の記録やGitへ出さない。overlayを一度だけ指定して起動したことだけを永続反映と扱わない。
+
 4GB VPSの余地を残すため、新規Neo4jを常駐させず、専用label／世代を既存Neo4jへ投影する。PostgreSQLは会員DBと別DB・別roleに分離し、hostへ新しいDB portを公開しない。実機のconnection上限・メモリ使用量を照合してから配置を確定する。
 
 資料取得Worker／読解Workerは開発PCから専用HTTPS APIへ接続し、DB portを開けない。review・原本受理・publisher・全件巡回はVPS内で動かす。ChatGPT資料収集は既存の同じ専用会話・API直送を維持し、本番用OAuth接続への切替は本人の同意を含めて確認する。新たなCodex予定へ置き換えない。
@@ -43,3 +47,7 @@
 文書・検証記録を日本語commit・通常pushし、3200／HTTPS β／本番のsource・buildを個別に報告する。Autopilot holdを解放する。最新の実施結果を本書へ追記し、準備完了だけを公開完了としない。
 
 Ubuntuの確認元：[Security updates](https://documentation.ubuntu.com/security/security-updates/)（2026-11-08参照）。Geminiの確認元：[Additional Terms](https://ai.google.dev/gemini-api/terms)（同日参照）。
+
+## 2026-11-08 R6aの資材検証まで
+
+正式候補ソース `12273b17`／build `4HA4J9PvlJxJdsWuxlIBA`。Webとknowledge-ops、空DBの全migration／再実行、checksum拒否、初回の空公開、standalone HTTPを確認した。候補imageはVPSへ転送しただけで、load・起動していない。3200／HTTPS βはセキュリティ更新 `999df702`／build `GKCLvKsSR-vkRGVFw_sJ5`。本番監査と一般提供条件／利用量配分は回答待ち。[実測と残り](../verification/KNOWLEDGE_PRODUCTION_R6A_20261108.md)。

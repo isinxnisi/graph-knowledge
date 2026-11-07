@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-11-07T22:15:47.118152+00:00",
+  "stage": "R6a-in-progress",
+  "overallEnd": "R6",
+  "beta": {
+    "source": "999df702e89c13063261964d060c5f37f371c2f8",
+    "build": "GKCLvKsSR-vkRGVFw_sJ5",
+    "googleBrowser": [
+      "theme-read",
+      "capsule-create",
+      "discard-and-return"
+    ]
+  },
+  "candidateImages": {
+    "source": "12273b176ffd788da42c0f41eb4e4b0dcde63254",
+    "created": "2026-11-07T22:02:29Z",
+    "images": {
+      "web": {
+        "tag": "plunode-web:r6-12273b17",
+        "imageId": "sha256:986eb6472e4ca5b3241bb6b0632398f1ac776a2a09be041212ce1379c76f315c",
+        "platform": "linux/amd64",
+        "size": 309655444,
+        "sourceLabel": "12273b176ffd788da42c0f41eb4e4b0dcde63254",
+        "elapsedSeconds": 156.2,
+        "minimumCFree": 17053683712,
+        "build": "4HA4J9PvlJxJdsWuxlIBA",
+        "archiveIdentity": {
+          "configId": "sha256:986eb6472e4ca5b3241bb6b0632398f1ac776a2a09be041212ce1379c76f315c",
+          "manifestId": "sha256:e04a25e8228720c25b84b82e7576cda8f0896671fbab9f662e4baa998861252d",
+          "diffIds": [
+            "sha256:e58989146fcec76699871403b9897b5c014af1ccd85f5a9300a215e7975525d7",
+            "sha256:a52fce3e2e53c15bee62149c2a83480bfc3000e19b253dba304220e3d487582f",
+            "sha256:65d71716d250882cedd073ea8e6ab52eb8ce7372fb9eed886775d91dbf9b0f74",
+            "sha256:bdfbfbb03dafc1b269c0668c632ae06c04bff6bc9ae624c8a9cbb3ecb4ad1d3c",
+            "sha256:b6a146dc1aed9a3193cadd3aa94373029d72d93c212e59a42c5d0194b2157ab5",
+            "sha256:a799672926d27f733f894fc8a4ffd45a54424fb7b3accd02deddce5626d57d88",
+            "sha256:e496e358ebaf22e6e6036ffc8658cca8cf1f6f897fd2a81af10eb0e61ec6eb34",
+            "sha256:f553b80bda3a7641450e3dd811343a8b29a86a02b9c746e9c83e998e2c2977f1",
+            "sha256:39df28d742b4308f0e11b969d2e3ea68f44308e12ec79f182679df0d385ff82f",
+            "sha256:47838d46230a3e72315dd7b0824554ed1b7c51e242f3d603f18287bf29f5a879",
+            "sha256:26e6a9278c4c4450a7e6c6cb34e241793da53a61bb2c75bbfe36102f302641a5",
+            "sha256:126af4f0f4f32d9fe825d58c3ea36d3f437d2d753d66c6efc7b61a156528cd0b",
+            "sha256:ca89db3d6a5d506a5b11ac4d943d44af13a86b76e916fbba44e363fc4fe78dab",
+            "sha256:45af66d26851dfa881a949496e154837fac9347da84b8bac94ff1f3f7d13b560",
+            "sha256:b2483cf8d80b8b53ce7f842a38f6921500e341ff9a2faa3d49280391bf70bc32",
+            "sha256:858787466a4147d4a77460961a46017ef05ee6e853617911742fbec1e98a98f3",
+            "sha256:e3419eb8aa03350657a6807d9b6d63ae2f636c855281a420d458ef94d0a1dafb",
+            "sha256:58a522f22778ce9085d5a0a84093c819d20c6b411cb6c2738b606c989771c1aa"
+          ]
+        }
+      },
+      "knowledge-ops": {
+        "tag": "plunode-knowledge-ops:r6-12273b17",
+        "imageId": "sha256:65a26eb72991857a680a65b6533c823fc34f9f21bec3b6907990ec2b075c733b",
+        "platform": "linux/amd64",
+        "size": 1563746178,
+        "sourceLabel": "12273b176ffd788da42c0f41eb4e4b0dcde63254",
+        "elapsedSeconds": 21.1,
+        "minimumCFree": 17020317696,
+        "archiveIdentity": {
+          "configId": "sha256:65a26eb72991857a680a65b6533c823fc34f9f21bec3b6907990ec2b075c733b",
+          "manifestId": "sha256:64d1aa221699d1960ed02dc92aac9fe662c483f6cbbfca96357e24c27ca5d913",
+          "diffIds": [
+            "sha256:e58989146fcec76699871403b9897b5c014af1ccd85f5a9300a215e7975525d7",
+            "sha256:a52fce3e2e53c15bee62149c2a83480bfc3000e19b253dba304220e3d487582f",
+            "sha256:65d71716d250882cedd073ea8e6ab52eb8ce7372fb9eed886775d91dbf9b0f74",
+            "sha256:bdfbfbb03dafc1b269c0668c632ae06c04bff6bc9ae624c8a9cbb3ecb4ad1d3c",
+            "sha256:b6a146dc1aed9a3193cadd3aa94373029d72d93c212e59a42c5d0194b2157ab5",
+            "sha256:a799672926d27f733f894fc8a4ffd45a54424fb7b3accd02deddce5626d57d88",
+            "sha256:4231384ada746d9a98b0cd142b7ab90af4728f879cb37d8b1ff3dad8ffe5af9f",
+            "sha256:09be5acf91e105b16e6951c2f93e9189c46f373d53f1323f624466adf837fde9",
+            "sha256:d0ec7460c6ececc4392f954ad8615d72887a0e086da173637efce5a5525878a9",
+            "sha256:65462a71ff4b4e9218c81ac0a6bfe4b7cccc5692dfc4e981a8f8f59a21f1b28b",
+            "sha256:990aa7ebf4584ecb0ee073371a47d3c8d4810e27f4c1bd53f1547df42354669f",
+            "sha256:a0c1c12bf363bd27367df23e59889e50b182b9adb7ac4036771296c40277591d",
+            "sha256:c230a2e06528864e8b8e3225105117ea1f8b02fee34785cda58c3d462e16ec04",
+            "sha256:5b1e9ab6e9c151bfd9e384a57a1fd6c7cda08247686af5fc1c72dc8f59126c54",
+            "sha256:8b30a5e3d5da85a4df76082cf84195d8ebd247e54748de378f1e43aa4e43d2fc",
+            "sha256:92c01f20b53480070cb9463f4cc1b44a465e8a82a00fd9af5f8da0ac5755092a",
+            "sha256:b6cf49bd7b1d8ddc333ae5694a70da6c056fee737e84f3208777cf1e8cae4b87",
+            "sha256:a7abc7dcb9b889b9a2a2c736e324523848da57f3935a48daa66f624341672ce3",
+            "sha256:24e4bb5da79de48ec2606093a3f5da956525d6bb45cb6afafde8019a9b04a10f",
+            "sha256:90101db52798f278775b403ff23b8477591812f9cc19b45d139a696d3cc762ea",
+            "sha256:a96d0dc79e9b84ff58bbf99d546b7444b9224a00b27b98bc43fa31e8f98a2810",
+            "sha256:cfe2ecc088d78c4c99fb7a9d38f42a34d211c93228310a0160d53ddff7cd286e",
+            "sha256:5b64d157d364871a736b9c521af14e0c5c78c6b2e177afa86b40017691398cdb",
+            "sha256:1a4ce98659328f2d53d7823f7ecb21ee00bfcc79060b187bd4a3644bb2601faf",
+            "sha256:ad9e480003b29acdaa765b8539a60bf489f7c5887ddda99773bc2442caa8e645",
+            "sha256:247f5fb34c4990fdab59f95653ffee99e6c0bb9b6a6fb25b7b21fc77d7df02e4",
+            "sha256:bfe93a6b94a702c865abfc59d23e25e8f2387022ce4b5fb80f6c9c2072fb42f3"
+          ]
+        }
+      }
+    },
+    "archive": {
+      "file": "images.tar.gz",
+      "bytes": 580830980,
+      "sha256": "917e31d92d89778a73f289b9fdfe69afc79fa7a936f0b2ae03e8117e63097266"
+    }
+  },
+  "verification": {
+    "regressionTests": 81,
+    "migrationAndImages": {
+      "source": "12273b176ffd788da42c0f41eb4e4b0dcde63254",
+      "build": "4HA4J9PvlJxJdsWuxlIBA",
+      "checks": {
+        "memberFreshAndRepeat": {
+          "ledgerCount": 36,
+          "unchanged": true
+        },
+        "knowledgeFreshAndRepeat": {
+          "ledgerCount": 9,
+          "unchanged": true,
+          "seedObjects": 0
+        },
+        "wrongOriginDatabaseAndChangedChecksumRejected": true,
+        "workerStatusNoAiSend": true,
+        "firstEmptyPublication": true,
+        "webImageContents": {
+          "member": 37,
+          "knowledge": 9,
+          "secretPaths": [],
+          "featuredThemeIds": []
+        },
+        "standaloneHttp": {
+          "memberStatus": 200,
+          "unauthenticatedSession": 200,
+          "privateCapsules": 401,
+          "emptyThemeHome": 200
+        }
+      }
+    },
+    "compose": {
+      "services": [
+        "graph-member-postgres",
+        "graph-neo4j",
+        "knowledge-ops",
+        "knowledge-patrol",
+        "knowledge-publisher",
+        "knowledge-review",
+        "member-ops",
+        "ops",
+        "web"
+      ],
+      "legacyGraphEndpointInherited": true,
+      "checkpointsWritableOnlyInWeb": true,
+      "configurationReadonly": true
+    },
+    "runtimeAudit": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    }
+  },
+  "production": {
+    "audit": "awaiting-owner-sudo",
+    "imagesTransferredAndSha256Matched": true,
+    "imagesLoaded": false,
+    "migrationsApplied": false,
+    "webUpdated": false,
+    "osUpdated": false
+  },
+  "pendingDecisions": [
+    "AI-public-eligibility",
+    "shared-project-budget-beta-production"
+  ],
+  "additionalAiRequests": 0,
+  "http": {
+    "http://127.0.0.1:3200/api/dataset": {
+      "status": 200,
+      "dataset": "public-kg",
+      "revision": "34befbcd-8f5f-4cd9-a059-242a3f0b5ffb"
+    },
+    "https://graph-beta.isinxnisi.com/api/dataset": {
+      "status": 403,
+      "layer": "Cloudflare",
+      "code": 1010,
+      "client": "Python urllib",
+      "browserVerifiedSeparately": true
+    },
+    "https://plunode.net/api/dataset": {
+      "status": 200,
+      "dataset": "public-kg",
+      "revision": "f5dbf83f-c89e-4e40-95ee-57957016089f"
+    }
+  },
+  "staging": {
+    "candidateSumsSha256": "1e5866e56c22a96a2d532313d86db9c4c83cd7f29afe1da5e1613863c3591ea6",
+    "recoveryPublicSha256": "9f314aece021f8de35c70cd69a1ae2c8060d79db3bf6ed25081b2f29948af0b9",
+    "privateKeyKeptOnPC": true,
+    "productionDatabaseAccessed": false,
+    "candidateActivated": false
+  }
+}

@@ -1,3 +1,5 @@
+2026-11-08 R6a：正式公開の準備中。本番のDB・Web・OSは未更新。依存ライブラリのadvisory対応とDocker同梱漏れを修正し、3200／HTTPS βへapp `999df702`／build `GKCLvKsSR-vkRGVFw_sJ5`を反映。正式候補imageは固定 `12273b17`／build `4HA4J9PvlJxJdsWuxlIBA`で、空DB移行・再実行・初回投影・standalone HTTPを確認。VPSには資材転送のみ。管理者監査とAI一般提供条件／β・本番の利用量配分を待つ。[検証・残件・再開](verification/KNOWLEDGE_PRODUCTION_R6A_20261108.md)。以下は各時点の履歴。
+
 2026-11-08 R5：R5a（利用接続）・b（復元／publisher）の統合確認を完了。初版の機能実装＋β統合検証を区切る。app `48ab1d7f`／build `EOtr5ZgylN49Vxbsuv22i`、main／3200／HTTPS βへ反映。原文／訳文／版の表示整理、公開停止した訳文の共有閲覧制限、公開訳のGraph／年表接続、古い固定版からの選び直し、JSONB項目順による根拠追加の受付誤判定を修正。126件・型検査込みbuild、実Googleの共有2→3・旧版コメント・停止、別DB復元とpublisher障害／rebuildを確認。追加migrationなし・16設定保全・本番未変更。 [R5統合受入・残件・再開](verification/KNOWLEDGE_INTEGRATION_R5_20261108.md)。
 
 2026-11-08 R4b完了・R4完了：時刻・原資料の時期表記・周期／定性・複数時期・特定時期への子軸入力、旧KGを含む翻訳入口、Theme原文／訳文のCapsule固定保存と明示比較を接続。app `037ee63e`／build `QqlZmk4g9xc1ZmjOk7vXl`、main／3200／HTTPS βへ反映。対象104件・型検査込みbuild・実Googleの保存／訳文公開／取込／再訪とPC／390pxを確認。追加migrationなし、16のprivate設定を保持。R5の統合受入と正式反映R6は残る。 [検証・制約・次回](verification/KNOWLEDGE_USAGE_R4B_20261108.md)。以下は各時点の履歴。
