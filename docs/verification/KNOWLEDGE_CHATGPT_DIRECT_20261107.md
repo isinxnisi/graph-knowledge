@@ -14,7 +14,7 @@ API直送は既定として進める。Codex収集予定はPAUSED。実装・17�
 
 ## 配置と未確認
 
-app source `87ad49c3988af72c4453817b5c707b18ae088c58`、build `kQOYaMAfRba265KQjs2xT`をmain／3200へ反映。HTTPS βでもTOP・OAuth metadata・resource metadata・接続案内200、未認証MCP401＋challengeを確認。初回のresource metadataの誤った転送pathを修正し、追加migrationなしでWebを再配置した。3276・本番VPSは未変更。ChatGPTからの接続承認と、同じ会話に継続する予定の初回実行を残す。実行元・利用量が確認できていない状態を、API配送やfixture結果だけで成功扱いにしない。
+app source `e7f3acccb3236fae8799a7b15cee3943e493588a`、build `bkKmHOZGJGlK4D6HLN1PX`をmain／3200へ反映。HTTPS βでもTOP・OAuth metadata・resource metadata・接続案内200、未認証MCP401＋challengeを確認。初回のresource metadataの誤った転送pathを修正し、追加migrationなしでWebを再配置した。3276・本番VPSは未変更。ChatGPTからの接続承認と、同じ会話に継続する予定の初回実行を残す。実行元・利用量が確認できていない状態を、API配送やfixture結果だけで成功扱いにしない。
 
 ## 実測
 
@@ -62,3 +62,20 @@ Chromeの既存βタブを新buildで再読込し、既存Googleログイン、�
 別プロセスで2回、実metadata／JWKSの両方が200となり、順に314／177ms、237／158ms。transport7件＋MCP境界5件が成功。PC全体のIPv6／DNS設定は変更しない。β再配置後の認証開始・本人接続は別に確認する。DB変更なし。
 
 IPv4修正のapp `87ad49c3988af72c4453817b5c707b18ae088c58`／build `kQOYaMAfRba265KQjs2xT`をmain／3200／HTTPS βへ配置。型検査込みbuildと2環境12応答、認証開始302が成功。新しいappでは、実ブラウザからChatGPTの「アプリの接続を続行する」を押し、既存Googleセッションを引き継いでPlunodeの「資料収集の接続を許可」画面まで到達した。そこで本人へ引継ぎ、同意buttonは押していない。実接続の完了・配送・予定実行はまだ未確認。DB変更なし、private設定16件のhash不変、本番VPS／3276は未変更。最初のbuildはNodeのRequestOptions型にない冗長なautoSelectFamily指定で停止したため、その指定を除去し、IPv4 pinningの7件を再確認してから新しいSHAでbuild・配置した。
+
+## 本人許可後のトークン発行・時刻同期待ち
+
+本人が許可し、consentは1件、access／refresh tokenは0件。ChatGPTからのPOST token要求はサーバーへ届いており、Originなし・form形式・Authorization headerなし。応答401 `invalid_client` の署名分類となった。追加の機密値なし診断でissuer／subject／audienceと公開鍵IDの一致を確認し、JOSEが署名検証後の `ERR_JWT_CLAIM_VALIDATION_FAILED`／`nbf` で拒否していると判明。JWT自体・code・state・Cookieを保存／表示していない。許可済みの再開は追加の本人同意なしで再現できた。
+
+HTTP DateはPCより約1秒先。Microsoft標準時への `w32tm /stripchart /computer:time.windows.com /dataonly /samples:3` は+1.5851／+1.5807／+1.5802秒で、WindowsとWSLの時計は同程度。Windows Timeサービスは停止（0x80070426）。Codexの `Start-Service -Name W32Time` はサービス開始権限不足で失敗した。管理者PowerShellで以下を本人へ依頼した。
+
+```powershell
+Start-Service -Name W32Time
+w32tm /resync
+```
+
+同期結果後、Windows／WSL／外部時刻を再確認する。WSLの時計が追従していなければRTCから同期する。署名・nbf・期限検証を無効化／緩和して回避しない。既存の許可で再接続を再開し、トークン発行・MCP toolsの接続・ChatGPTからの配送を確認する。接続確認後は原因確定用の詳細assertion診断を取り除き、機密値なしの成否ログを残す。
+
+診断追加はformatter／credential非表示3件、JWT claim分類1件、既存transport7件を確認。app source `e7f3acccb3236fae8799a7b15cee3943e493588a`／build `bkKmHOZGJGlK4D6HLN1PX` の型検査込みbuild成功、main／3200／HTTPS βへ配置。DB変更なし、private設定16件は不変、VPS／3276は未更新。既存107検証は以前の基準として活用し、全件の再AI評価は行わない。
+
+ビルド前の空き容量監視で一度停止。rootの `fstrim -v /` でWSLの未使用5.7GiBをtrimした。Windowsの空きは約7.47GiBで、既存cacheの小差分buildを7GiB以上から開始し、6GiB未満で停止する監視と3GiBのNode heap上限を維持した。サービス停止・ファイル削除・volume削除は行っていない。

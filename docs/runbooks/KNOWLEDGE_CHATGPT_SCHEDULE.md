@@ -54,3 +54,7 @@ ChatGPT側の接続許可が予定実行を止める場合、または利用モ�
 ## 配布資材とWeb接続の区別
 
 [Plunode資料収集（β）](https://chatgpt.com/plugins/plugins_6aef23f8b3b4819195ded0ecbd4fcb37)をPRIVATEで作成し、MCP設定とskillが含まれることを確認。ただしWebの配布画面は「デスクトップアプリで開く」と表示された。これをWeb接続完了とは扱わず、上記のカスタムMCPで接続する。配布のreleaseは`pluginrel_6aef23fa51f48191896c70d158a5ea6f`。
+
+## 接続許可済みだがトークン発行で止まるとき
+
+2026-11-07のPCでは、同意保存後に `nbf`（有効開始時刻）の検証で401となった。Windows Time停止と約1.58秒の標準時からの遅れを実測。本人に管理者PowerShellで `Start-Service -Name W32Time` と `w32tm /resync` を依頼中。同期後にWSLの時刻も照合して、保存済み許可から再接続する。認証検証を緩める／新しいプラグインを作り直す回避は行わない。正式環境でもNTPの正常性を公開前の確認に含める。最新の完了・未確認は実測記録を参照。

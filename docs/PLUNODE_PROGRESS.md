@@ -1,10 +1,12 @@
-2026-11-07 API直送をβへ反映：app `87ad49c3`／build `kQOYaMAfRba265KQjs2xT`。既存107検証を活用し、今回12境界・型検査込みbuild、035の別DB復元・旧行／checksum／再実行不変、3200／HTTPS βのmetadataと未認証401を確認。ChatGPT WebでもCIMD・scopeの自動検出を確認し、本人の接続許可画面まで進み、同意待ちで保持。**実Googleの接続承認・ChatGPTの初回実行／予定実行は未確認**。R3b是正は未完了、R4a完了・b以降を残す。[手順](runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)／[実測](verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)。
+2026-11-07 接続許可後の切り分け：署名・issuer／subject／audience・公開鍵IDは合うが、JWTのnbfで拒否。PCは標準時より約1.58秒遅れ、Windows Timeが停止。管理者の同期操作待ち。トークンは未発行、ChatGPT配送／予定実行は未確認。[実測と再開](verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)。
+
+2026-11-07 API直送をβへ反映：app `e7f3accc`／build `bkKmHOZGJGlK4D6HLN1PX`。既存107検証を活用し、今回12境界・型検査込みbuild、035の別DB復元・旧行／checksum／再実行不変、3200／HTTPS βのmetadataと未認証401を確認。ChatGPT WebでもCIMD・scopeの自動検出を確認し、本人の許可は保存済み、PC時刻同期待ち。**実Googleの接続承認・ChatGPTの初回実行／予定実行は未確認**。R3b是正は未完了、R4a完了・b以降を残す。[手順](runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)／[実測](verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)。
 
 2026-11-07 API直送の是正：API直送は合意済みの既定。既存Googleログインを使う収集専用MCP・型付き配送・run束縛・再送回復を実装し、17境界テストと別DB復元でOAuth／移行を確認。β配置・本人の接続承認とChatGPTの初回実行を進める。Codex収集予定はPAUSEDのまま。R3b是正完了は未確認。[手順](runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)／[実測](verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)。
 
 # Plunode 本運用への進行表
 
-**進捗報告：R3b是正はAPI・β反映済み、接続と初回実行が残り｜R4はa完了・bまで｜全体はR6まで。** 現工程の完了状態・残り・全体の位置が短く伝わることを毎回優先し、現在地を先、予定終点（分母）を後ろに置く。記号や区切り数を固定する指定ではない。枝番追加・順序変更時も現在地と分母を更新し、「次」だけや細部だけで進捗を表さない。2026-11-06ユーザー補足。以下の説明や履歴を、この短い現在地の代わりにしない。
+**進捗報告：R3b是正は本人許可保存済み、PC時刻同期と初回実行が残り｜R4はa完了・bまで｜全体はR6まで。** 現工程の完了状態・残り・全体の位置が短く伝わることを毎回優先し、現在地を先、予定終点（分母）を後ろに置く。記号や区切り数を固定する指定ではない。枝番追加・順序変更時も現在地と分母を更新し、「次」だけや細部だけで進捗を表さない。2026-11-06ユーザー補足。以下の説明や履歴を、この短い現在地の代わりにしない。
 
 2026-11-07接続準備：ChatGPT Webログイン・GitHubインストール・スケジュール画面を確認。配送JSONの限定操作とrun束縛を実装し、clientと合わせ11件成功。**外側の配送経路とChatGPT予定は未接続**。API直送が既定であることを再確認済み。Issueの選択回答は待たない。Codex収集予定はPAUSEDを継続。[準備済み・本人操作の境界](runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)。
 
