@@ -1,8 +1,8 @@
 # Plunode 開発・運用の統合一覧
 
-観測：**2026-11-07T21:17:06+09:00**（JST）。30分周期・AI呼出し0。確認時点の記録です。90分以上古い場合は現在稼働を保証しません。
+観測：**2026-11-07T22:47:07+09:00**（JST）。30分周期・AI呼出し0。確認時点の記録です。90分以上古い場合は現在稼働を保証しません。
 手動の予定・名前は [WORK_SESSIONS.json](WORK_SESSIONS.json) をこのbranchで編集。自動更新はこのMarkdownだけを変更します。
-<!-- work-status:81b06f7959f3ee6eaaa48d9c4f95b22805fd6f19d1849875ccfe784d520a6f0f day:2026-11-07 -->
+<!-- work-status:5b8b6aa3b99a6e3aefe4c2b1ce36160d3a76378ded1aa8aeb3e4de0c3dc1a187 day:2026-11-07 -->
 
 ## A. 作業セッション
 
@@ -54,7 +54,7 @@
 
 | 環境・用途 | 接続・配置（設定） | 観測結果 | 利用セッション |
 |---|---|---|---|
-| Windows PC<br>ID: windows<br>起動元・Task Scheduler<br>専用通常ユーザーtask | worktree: なし | Windows観測 2026-11-07T21:16:49+09:00 | 統合管理一覧 |
+| Windows PC<br>ID: windows<br>起動元・Task Scheduler<br>専用通常ユーザーtask | worktree: なし | Windows観測 2026-11-07T22:46:50+09:00 | 統合管理一覧 |
 | WSL Ubuntu<br>ID: wsl<br>Python／Git／Worker<br>既存WSL | worktree: 複数（実測表参照） | WSL観測済み（この時点のみ） | データ収集・受入<br>データ公開・配送<br>統合管理一覧 |
 | Docker Desktop／WSL<br>ID: docker<br>既存DB・共有service<br>既存container（停止分は維持） | worktree: Compose設定は既存記録参照 | 対象9稼働／3停止 | — |
 | Cloudflare Tunnel<br>ID: tunnel<br>beta公開経路<br>cloudflared（Windows／共有container） | [URL](https://graph-beta.isinxnisi.com/)<br>worktree: なし | Windows cloudflared 1プロセス／公開経路はbetaのHTTP参照 | — |
@@ -64,7 +64,7 @@
 
 | worktree名 | branch | HEAD | 所在 |
 |---|---|---|---|
-| main | main | 41600f77 | 存在 |
+| main | main | e63982ff | 存在 |
 | graph-ai-lab | codex/ai-lab-foundation | af31afd5 | 存在 |
 | graph-ai-lab-publication | codex/ai-education-startup-recovery | df08a168 | 存在 |
 | graph-exploration-structure-v1 | codex/exploration-structure-v1 | 2680afe2 | 存在 |
@@ -75,7 +75,7 @@
 | graph-issue41-film-collection | codex/issue41-film-collection | 2f1f6d64 | 存在 |
 | graph-issue43-film-beta | codex/issue43-film-beta | 05200a17 | 存在 |
 | graph-issue5-decision-postprocessing | codex/issue5-decision-postprocessing | 705c28a6 | 存在 |
-| graph-issue75-theme-foundation | codex/issue75-theme-foundation | 41600f77 | 存在 |
+| graph-issue75-theme-foundation | codex/issue75-theme-foundation | e63982ff | 存在 |
 | graph-knowledge-film-worker-manifest | codex/film-worker-compat-manifest-20261028 | ccab51a6 | 存在 |
 | graph-knowledge-publication-design-review | codex/knowledge-publication-design-review-20261028 | 8380f312 | 存在 |
 | graph-knowledge-publication-pipeline-bundle2 | codex/publication-pipeline-bundle2-20261028 | 99ae8a3c | 存在 |
@@ -93,19 +93,19 @@
 
 ## C. Worker・自動処理
 
-Windows task観測時刻：2026-11-07T21:16:49+09:00。
+Windows task観測時刻：2026-11-07T22:46:50+09:00。
 
 | 処理／目的 | task観測状態／終了結果 | 周期／次回 | 最終起動（観測時） |
 |---|---|---|---|
 | Afterglow-LoginRecovery / ログオン復帰 | Ready / 0 | Logon / None | 2026-11-07T04:41:02.0000000+09:00 |
 | GraphKnowledge-Autopilot / 自動開発 | Disabled / 0 | PT2H / None | 2026-10-10T10:00:02.0000000+09:00 |
-| Plunode-CollectionWorker / 収集／正式受入（依頼別・同一Worker） | Ready / 1 | PT1M,Logon / 2026-11-07T21:17:30.0000000+09:00 | 2026-11-07T21:16:31.0000000+09:00 |
-| Plunode-Publication-Delivery / 公開候補準備／承認済み配送 | Ready / 1 | Logon,PT5M / 2026-11-07T21:20:22.0000000+09:00 | 2026-11-07T21:15:23.0000000+09:00 |
-| Plunode-WorkStatus / 一覧の観測・差分反映（AIなし） | Running / 267009 | PT30M / 2026-11-07T21:46:46.0000000+09:00 | 2026-11-07T21:16:47.0000000+09:00 |
+| Plunode-CollectionWorker / 収集／正式受入（依頼別・同一Worker） | Ready / 1 | PT1M,Logon / 2026-11-07T22:47:30.0000000+09:00 | 2026-11-07T22:46:31.0000000+09:00 |
+| Plunode-Publication-Delivery / 公開候補準備／承認済み配送 | Ready / 1 | Logon,PT5M / 2026-11-07T22:50:22.0000000+09:00 | 2026-11-07T22:45:23.0000000+09:00 |
+| Plunode-WorkStatus / 一覧の観測・差分反映（AIなし） | Running / 267009 | PT30M / 2026-11-07T23:16:46.0000000+09:00 | 2026-11-07T22:46:47.0000000+09:00 |
 
 task結果267009は実行中を意味し、終了成功ではありません。表の次回時刻を過ぎた場合は新しい観測を待ってください。
 
-CollectionWorker記録：error（health観測 2026-11-07T12:16:39+00:00）。実処理 なし、pause なし。
+CollectionWorker記録：error（health観測 2026-11-07T13:46:38+00:00）。実処理 なし、pause なし。
 許可枠：03:00–07:00 JST / 09:00–12:00 JST / 15:00–18:00 JST、既存10分休憩を維持。
 catalog同期：blocked-review-required（固定runtimeとの差異の確認事項。自動修復しません）。
 公開候補準備の既存health：preparation-stopped（記録時刻 2026-11-07T20:30:30+09:00）。
