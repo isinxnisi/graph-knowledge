@@ -14,7 +14,7 @@ API直送は既定として進める。Codex収集予定はPAUSED。実装・17�
 
 ## 配置と未確認
 
-app source `7a9448020d5aaf8855a051e8dcf93fcd2442f26d`、build `kl-9_RPiFbifehMVuZC4v`をmain／3200へ反映。HTTPS βでもTOP・OAuth metadata・resource metadata・接続案内200、未認証MCP401＋challengeを確認。初回のresource metadataの誤った転送pathを修正し、追加migrationなしでWebを再配置した。3276・本番VPSは未変更。ChatGPTからの接続承認と、同じ会話に継続する予定の初回実行を残す。実行元・利用量が確認できていない状態を、API配送やfixture結果だけで成功扱いにしない。
+app source `3d5d3291cf5da26aca8c9ca04d495c57044ab88c`、build `nXBDYXdtSB0JWDLmZGg_1`をmain／3200へ反映。HTTPS βでもTOP・OAuth metadata・resource metadata・接続案内200、未認証MCP401＋challengeを確認。初回のresource metadataの誤った転送pathを修正し、追加migrationなしでWebを再配置した。3276・本番VPSは未変更。ChatGPTからの接続承認と、同じ会話に継続する予定の初回実行を残す。実行元・利用量が確認できていない状態を、API配送やfixture結果だけで成功扱いにしない。
 
 ## 実測
 
@@ -48,3 +48,5 @@ Zod／Undiciのpatch後の107件・型検査込みproduction buildが成功。�
 収集OAuthのtransportだけでA／AAAAを直接解決し、全応答が公開IPであることを確認して一つへ接続を固定する。TLSのhostname／SNI検証、期限によるDNS取消、転送禁止、URLの信頼先限定を維持する。会話や受信要求のCookie・Authorizationはメタ情報の取得先へ転送しない。PC全体のDNS設定・他Workerの資料取得・共有Kevは変更しない。
 
 修正後の実ChatGPT metadataは200／2,345ms、署名検証用JWKSは200／2,170msで取得できた。新規のtransport6件と既存MCP境界5件、対象lintが成功。本人によるOAuth再接続とChatGPTからの初回実行は、β再配置後に引き続き確認する。DB変更はない。
+
+DNS修正app `3d5d3291cf5da26aca8c9ca04d495c57044ab88c`／build `nXBDYXdtSB0JWDLmZGg_1`をmain／3200／HTTPS βへ再配置。11件・対象lint・型検査込みproduction build、2環境の12応答が成功。CIMD実文書を解決する認証開始要求も302で `/collection-connect` へ進み、5秒timeoutを解消した。DB migrationなし、private設定16件のhash不変。作成済みのWebプラグインの「アプリの接続を続行する」を本人へ再引継ぎ。実Googleの同意・実ChatGPT配送・予定実行の成功はまだ未確認。画面画像の取得も今回は成功した。

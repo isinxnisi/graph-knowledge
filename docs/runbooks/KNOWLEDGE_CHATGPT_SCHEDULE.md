@@ -24,7 +24,7 @@ Plunode側は固定client設定・private checkpointを使い、実行tokenを�
 
 ## 本人が行う接続と予定設定
 
-1. ChatGPT Webの「プラグイン→追加→カスタムMCPサーバー」で「Plunode資料収集 API（β）」を追加する。上記endpoint、OAuth・自動検出を使う。CIMD、既定scope `missions:collect`、基本scope `offline_access`、OIDC無効を確認する。秘密値は入力しない。Chromeではこのフォームを入力済みで本人の作成・接続承認待ちにしている。
+1. 作成済みの[Plunode資料収集 API（β）](https://chatgpt.com/plugins/plugin_asdk_app_6aef2b97439081919c3828f9080c4c6f)で、アプリ行の「アプリの接続を続行する」から再開する。再作成は不要。設定は上記endpoint、OAuth・CIMD、既定scope `missions:collect`、基本scope `offline_access`、OIDC無効。秘密値は入力しない。
 2. 開いたPlunodeで運営Googleアカウントへログインし、表示された収集専用の権限を承認する。
 3. 既存のChatGPT会話でこのプラグインを選び、下の依頼をまず一度実行する。receiptまたは対象なしの結果を確認する。
 4. 同じ会話の継続としてChatGPT側の予定を設定する。独立予定による毎回の新規チャット生成、Codex／Work等への実行元変更がないことを確認する。時刻・対象モデル・接続の許可設定は実画面に表示された内容を記録する。
