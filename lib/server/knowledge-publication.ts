@@ -218,7 +218,7 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
         return knowledgeDigest({content:version.content,createdAt:version.createdAt,reason:version.reason})===knowledgeDigest({content:row.content,createdAt:iso(row.created_at),reason:row.reason});
       }));
     }),
-    capsuleUpdates:(raw:unknown)=>read(async c=>{
+    capsuleUpdates:(raw:unknown):Promise<CapsuleUpdateResponse>=>read(async c=>{
       const q=capsuleUpdateQuerySchema.parse(raw);
       async function translated(snapshot:import("../domain/knowledge-foundation").KnowledgeSnapshot){
         const translations=[];
