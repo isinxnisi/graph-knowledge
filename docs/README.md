@@ -1,3 +1,5 @@
+2026-11-07 R3c実装・β反映済み、最終確認は未完了。app 8ebd580e／build T2REsZ0j7OT8ieC_nrXcn、会員034・復元移行・61件＋取込37件を確認。実公開とPC／スマホ・Capsuleまでの通し確認を残す。[今回の記録と再開](verification/KNOWLEDGE_MISSIONS_R3C_20261107.md)。R3はcまで、全体はR6まで。
+
 2026-11-07 R3b完了：アプリの予定実行から公開資料探索→範囲付きAPI配送→既存確認Workerの自動受理・公開を確認。NASA／ESAの2項目をTheme版4へ追加し、旧Theme版2の12件を保持。app `662cd121`／build `-a6v6--efFNwfdsRQGwbz`、main／3200／HTTPS βへ反映。上限待ちの次回時刻と、再開前の停止・期限照合も修正。追加migrationなし、55件と型検査込みbuild成功。 [検証・制約・再開](verification/KNOWLEDGE_MISSIONS_R3B_20261107.md)。R3はc（本文差分・明示訂正・入力拡充・通し確認）が残り、全体はR6まで。以下は各時点の履歴。
 
 2026-11-07 R3a完了：収集計画・範囲付き配送APIをmain／3200／HTTPS βへ接続。app `a6b2e2ea`／build `zLg4ZAkesFvHBwwc8A6H_`、会員033、既存行・checksum・別DB復元と実Googleの計画操作、PC／390pxを確認。[検証・残件・再開](verification/KNOWLEDGE_MISSIONS_R3A_20261107.md)。R3bの予定実行接続、R3cの差分更新・実資料の通し確認は未完了。R3はcまで、全体はR6まで。

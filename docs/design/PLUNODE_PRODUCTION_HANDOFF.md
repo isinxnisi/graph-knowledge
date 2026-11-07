@@ -1,4 +1,14 @@
-# 2026-11-07 現在地：R3b完了、次はR3c
+# 2026-11-07 現在地：R3c実装・β反映済み、最終確認を残す
+
+**R3c実装・β反映済み、最終確認は未完了｜R3はcまで｜全体はR6まで。** [R3cの確認済み・残件・再開](../verification/KNOWLEDGE_MISSIONS_R3C_20261107.md)を優先する。app `8ebd580eb90ea6cd6a6fe63d7ce2f84ef2c2a3a1`／build `T2REsZ0j7OT8ieC_nrXcn`、main／3200／HTTPS βへ配置、会員034まで。資料取得版・hash差分・明示訂正・EntityなしThemeの背景・任意Web貼付を接続。61件＋取込37件・lint・型検査込みbuild・別DB復元移行を確認。既存の資格15ファイル、Google設定、通常の日次計画、独立した5 Workerを保全。最終配置ではreview Workerを再起動した。正式VPSは未変更。
+
+R3cの実APIはNASA本文の取得と訂正受付まで確認。外部確認がtimeout／503となり、公開成功は未確認。診断scriptの誤った再実行で追加した分を含む確認用2計画は停止し、未反映はcancelled。元の日次計画はactiveのまま。本文／引用の旧unknownを推測で書き換えていない。
+
+Computer UseはWindows上のブラウザURL安全確認で当該ターン停止。Chromeでβを開いた状態で接続を再確認し、実Google・PC／390pxのWeb貼付、外部確認からの公開、異種テーマ、検索・年表・Capsule固定版／明示更新を一巡させる。**ここを残してR3完了やR4着手としない。** 長い接続原因調査、全件AI完了待ち、R1／R2の全再評価は追加しない。停止した旧leaseや確認計画を再利用して回避せず、共通の受付・予算・版契約を使う。
+
+予定実行は既存の `plunode` が現行runbookを読む。更新した探索手順のobserveと各fieldのtextLanguagesを使う。通常の管理者承認を加えていない。再起動は既存launcherを使い、DB・private設定・tokenを作り直さない。mainの `memo.txt` と作業worktreeの `.local/` は保護したまま。
+
+## R3b完了時点の記録
 
 **R3b完了、次はR3c｜R3はcまで｜全体はR6まで。** [今回の検証・実行記録・再開](../verification/KNOWLEDGE_MISSIONS_R3B_20261107.md)を優先する。app `662cd121621f9ec78040a0033a0ce705e528ee06`／build `-a6v6--efFNwfdsRQGwbz`、main／3200／HTTPS βへ反映済み。追加migrationなし・会員033まで。作業branch `codex/issue75-theme-foundation`。mainの `memo.txt` と `.local/`、既存private設定、5 Workerは保全。
 

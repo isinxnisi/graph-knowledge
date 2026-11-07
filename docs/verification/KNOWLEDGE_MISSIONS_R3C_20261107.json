@@ -1,0 +1,158 @@
+{
+  "date": "2026-11-07",
+  "stage": "R3c",
+  "stageEnd": "R3c",
+  "overallEnd": "R6",
+  "state": "implemented-and-beta-deployed; final-verification-pending",
+  "source": "8ebd580eb90ea6cd6a6fe63d7ce2f84ef2c2a3a1",
+  "build": "T2REsZ0j7OT8ieC_nrXcn",
+  "initialSource": "0e693b8ff056456f4c8677aa1b972c4012c4f801",
+  "initialBuild": "IMrsZZQ7lxTI0D1CtE3LA",
+  "environments": {
+    "main": true,
+    "localhost3200": true,
+    "httpsBeta": true,
+    "productionVpsChanged": false
+  },
+  "checks": {
+    "relatedTests": 61,
+    "existingImportTests": 37,
+    "targetLint": true,
+    "typeCheckedBuild": true,
+    "googleBrowser": false,
+    "desktopMobileVisual": false
+  },
+  "buildMetrics": {
+    "seconds": 44.7,
+    "nodeHeapMiB": 3072,
+    "windowsFreeMinimum": 9290788864
+  },
+  "migration": {
+    "success": true,
+    "additionalMigrations": [
+      "034-knowledge-mission-updates.sql"
+    ],
+    "memberTablesBefore": 73,
+    "knowledgeCoreTables": 3,
+    "oldRowsPreserved": true,
+    "knowledgeCoreUnchanged": true,
+    "knowledgeDatabaseNotMigrated": true,
+    "largeMutableCacheFullHashOmitted": true,
+    "existingChecksumsPreserved": true,
+    "repeatedUnchanged": true,
+    "ledgerBefore": 34,
+    "ledgerAfter": 35
+  },
+  "restoreRehearsal": {
+    "success": true,
+    "additionalMigrations": [
+      "034-knowledge-mission-updates.sql"
+    ],
+    "memberTablesBefore": 73,
+    "knowledgeCoreTables": 3,
+    "oldRowsPreserved": true,
+    "knowledgeCoreUnchanged": true,
+    "knowledgeDatabaseNotMigrated": true,
+    "largeMutableCacheFullHashOmitted": true,
+    "existingChecksumsPreserved": true,
+    "repeatedUnchanged": true,
+    "ledgerBefore": 34,
+    "ledgerAfter": 35
+  },
+  "backups": {
+    "member": {
+      "bytes": 6303907,
+      "sha256": "a46b15a0684d23c5898fa210d08205788bb0d329d320e817e4cd508b627e93a1"
+    },
+    "knowledge": {
+      "bytes": 178923021,
+      "sha256": "5b1cf04c1ef6c10d110b91e0ef2b35b34bb93ed5646325eeae51045ef131580a"
+    }
+  },
+  "privateConfigurationsPreserved": true,
+  "http": [
+    {
+      "check": "local-top",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "check": "beta-top",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "check": "beta-operations",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "check": "paste-anonymous",
+      "status": 401,
+      "expected": 401,
+      "passed": true
+    },
+    {
+      "check": "theme-old",
+      "status": 200,
+      "expected": 200,
+      "passed": true,
+      "themeRevision": 4,
+      "records": 14
+    }
+  ],
+  "realApi": {
+    "planCreation": "internal fixture using the configured active operator; not Google browser auth",
+    "delivery": "dedicated scoped HTTPS beta API",
+    "sourceAcquisitionVerified": true,
+    "publicCorrectionVerified": false,
+    "oldRecordAndThemePreserved": true,
+    "themeRevision": 4,
+    "deliveries": [
+      {
+        "planId": "ad06d6db-1a51-4f9c-a9e3-3d6233ee6338",
+        "planState": "paused",
+        "runId": "737c1ef5-0878-4c4f-a509-97439dc32023",
+        "receiptId": "fa4d43a4-336e-425f-aacc-6ff4e2935c7c",
+        "itemState": "cancelled",
+        "reason": "受付または送信資格が停止されています。",
+        "attempt": {
+          "state": "http-error",
+          "httpStatus": 503,
+          "category": "unavailable",
+          "transportCode": null,
+          "charged": 1
+        }
+      },
+      {
+        "planId": "befbe284-4e72-442e-99de-a88ed02cff10",
+        "planState": "paused",
+        "runId": "f85063b3-c28b-45dd-9919-f2e9e455cab0",
+        "receiptId": "34239245-cab9-4506-837d-6bb42ad0e31e",
+        "itemState": "cancelled",
+        "reason": "受付または送信資格が停止されています。",
+        "attempt": {
+          "state": "delivery-unknown",
+          "httpStatus": null,
+          "category": "timeout",
+          "transportCode": "TIMEOUT",
+          "charged": 1
+        }
+      }
+    ],
+    "testPlansPaused": true,
+    "testItemsCancelled": true,
+    "originalDailyPlanUnchanged": true
+  },
+  "browserBlock": "Computer Use stopped the turn because it could not safely determine the current Chrome URL; no alternate UI automation was used",
+  "pending": [
+    "successful real correction confirmation and publication",
+    "second heterogeneous theme through the supplied input route",
+    "registration/correction/search/timeline/Capsule fixed snapshot and explicit update through-check",
+    "real Google Web paste and desktop/390px UI verification"
+  ],
+  "recovery": "Existing beta launcher and private client/checkpoint; no new tokens or DB resets required"
+}
