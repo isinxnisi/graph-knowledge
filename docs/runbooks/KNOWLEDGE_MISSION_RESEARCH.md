@@ -4,7 +4,7 @@
 
 ## 実行環境
 
-PCとデスクトップアプリが起動中のローカル予定実行を使う。Node24＋tsx、配置済みcheckoutの `scripts/knowledge-mission-client.ts`、本人所有0600のclient設定が必要。実行ごとの作業ファイルは本人所有0700の専用ディレクトリに、JSON・要約は0600で保存する。資格ファイルやprivate runtimeの中身を読んで表示しない。tokenはclientが必要な送信先にだけ付ける。
+PCとデスクトップアプリが起動中のローカル予定実行を使う。Node24＋tsx、配置済みcheckoutの `scripts/knowledge-mission-client.ts`、本人所有0600のclient設定が必要。実行ごとの作業ファイルはleaseのrunIdで分けた本人所有0700の専用ディレクトリに、JSON・要約は0600で保存する。前回や別計画のファイルを上書きしない。資格ファイルやprivate runtimeの中身を読んで表示しない。tokenはclientが必要な送信先にだけ付ける。
 
 ## 1回の流れ
 

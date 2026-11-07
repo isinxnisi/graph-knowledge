@@ -1,3 +1,7 @@
+2026-11-07 R3b完了。app `662cd121`／build `-a6v6--efFNwfdsRQGwbz`、main／3200／HTTPS β。予定実行 `plunode`／「Plunodeのテーマ資料を収集」をこのPCで有効化し、探索→配送→2件の自動公開を確認した。[検証と残件](../verification/KNOWLEDGE_MISSIONS_R3B_20261107.md)。R3cの本文差分・明示訂正・入力拡充・通し確認は残る。以下のR3a時点の「未接続」は履歴。
+
+再開は既存のβ launcherとデスクトップアプリの起動、Scheduledのタスク有効状態を確認する。資格・checkpoint・計画を作り直さない。計画は運営画面、全タスクはScheduledから停止できる。[探索・配送手順](KNOWLEDGE_MISSION_RESEARCH.md)を使い、clientは保存済みleaseも探索前にサーバーへ照合する。完了結果はScheduledと運営画面で読み、受付と公開完了を区別する。アプリのタスクは毎時の確認、計画の頻度・回数上限はサーバーが別に守る。新しい管理者承認や課金設定は不要。
+
 # テーマに沿った定期収集の運用
 
 R3a。計画と配送APIをβへ接続済みであり、予定実行の実接続はR3b、本文差分からの明示訂正と通し確認はR3cで行う。[設計](../design/KNOWLEDGE_MISSIONS_R3.md)。手動clientの成功を定期実行完了と扱わない。

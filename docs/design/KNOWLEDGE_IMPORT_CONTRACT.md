@@ -1,3 +1,5 @@
+2026-11-07追記：定期探索からのAPI直送は[R3bの予定実行](../verification/KNOWLEDGE_MISSIONS_R3B_20261107.md)で接続・自動公開まで確認済み。Web貼付と本文差分からの明示訂正はR3cへ残す。Issue等は直送が成立しない場合の代替配送という契約を維持する。以下のR1d時点の未実装記述は当時の記録。
+
 # 外部パッケージの共通取込契約
 
 2026-11-05。R1dで専用BearerのHTTP受付・永続package／項目receipt・共通原資料確認／意味重複照合／受理・直接配送clientを実装。配置・実接続は[検証記録](../verification/KNOWLEDGE_IMPORT_R1D_20261105.md)、設定と送信は[runbook](../runbooks/KNOWLEDGE_IMPORT.md)を参照。**定期ChatGPT配送・Issue adapter・Web貼付は未実装**で、R1／R3の残件として維持する。将来構想だけを理由に実装範囲を増減せず、[再計画](PLUNODE_IMPLEMENTATION_REPLAN_20261105.md)の必須範囲を維持する。

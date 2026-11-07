@@ -1,0 +1,68 @@
+{
+  "source": "662cd121621f9ec78040a0033a0ce705e528ee06",
+  "build": "-a6v6--efFNwfdsRQGwbz",
+  "migration": "none; existing 033 unchanged",
+  "privateConfigurationPreserved": true,
+  "workerRestartRequired": false,
+  "scheduledTask": {
+    "id": "plunode",
+    "name": "Plunodeのテーマ資料を収集",
+    "model": "gpt-6.1-sol",
+    "reasoningEffort": "high",
+    "cadence": "hourly",
+    "status": "ACTIVE",
+    "threadId": "01a1b440-13b2-7d00-bc01-01b9e53d668f",
+    "startedAt": "2026-11-07T04:24:23Z",
+    "completedAt": "2026-11-07T04:27:50Z",
+    "durationMs": 206694
+  },
+  "receipt": "1691680b-f2ee-48b6-b9b0-afc0db797fe5",
+  "run": "548d6304-b86c-4dda-9f6a-3349def70333",
+  "itemsPublished": 2,
+  "memberMigrationLedger": {
+    "entries": 34,
+    "checksum": "875ec063ba9dfe5b51a2df7d29ba49d1"
+  },
+  "publicReads": {
+    "http://localhost:3200": {
+      "oldThemeRevision": 2,
+      "newThemeRevision": 4,
+      "oldRecords": 12,
+      "newRecords": 14,
+      "oldRecordVersionsUnchanged": true,
+      "added": [
+        {
+          "id": "import:mission.50c8360d-a0e7-4360-9c13-b4d48b9502d0:record:c2b5c92d50af782eb9fb82d3c22121ee",
+          "revision": 1,
+          "assertion": "Webbの後部モメンタムフラップは、保持装置を解放した後、ばねの力で最終位置へ展開された。"
+        },
+        {
+          "id": "import:mission.50c8360d-a0e7-4360-9c13-b4d48b9502d0:record:a4e62ad4498643d8f129449d2dd82574",
+          "revision": 1,
+          "assertion": "Webbの伸展タワーは、望遠鏡と観測装置を遮熱膜および宇宙機本体から離し、遮熱膜が完全に展開するための空間を確保した。"
+        }
+      ]
+    },
+    "https://graph-beta.isinxnisi.com": {
+      "oldThemeRevision": 2,
+      "newThemeRevision": 4,
+      "oldRecords": 12,
+      "newRecords": 14,
+      "oldRecordVersionsUnchanged": true,
+      "added": [
+        {
+          "id": "import:mission.50c8360d-a0e7-4360-9c13-b4d48b9502d0:record:c2b5c92d50af782eb9fb82d3c22121ee",
+          "revision": 1,
+          "assertion": "Webbの後部モメンタムフラップは、保持装置を解放した後、ばねの力で最終位置へ展開された。"
+        },
+        {
+          "id": "import:mission.50c8360d-a0e7-4360-9c13-b4d48b9502d0:record:a4e62ad4498643d8f129449d2dd82574",
+          "revision": 1,
+          "assertion": "Webbの伸展タワーは、望遠鏡と観測装置を遮熱膜および宇宙機本体から離し、遮熱膜が完全に展開するための空間を確保した。"
+        }
+      ]
+    }
+  },
+  "tests": 55,
+  "productionUpdated": false
+}

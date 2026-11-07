@@ -1,3 +1,17 @@
+# 2026-11-07 現在地：R3b完了、次はR3c
+
+**R3b完了、次はR3c｜R3はcまで｜全体はR6まで。** [今回の検証・実行記録・再開](../verification/KNOWLEDGE_MISSIONS_R3B_20261107.md)を優先する。app `662cd121621f9ec78040a0033a0ce705e528ee06`／build `-a6v6--efFNwfdsRQGwbz`、main／3200／HTTPS βへ反映済み。追加migrationなし・会員033まで。作業branch `codex/issue75-theme-foundation`。mainの `memo.txt` と `.local/`、既存private設定、5 Workerは保全。
+
+予定実行 `plunode`／「Plunodeのテーマ資料を収集」はこのPCのローカルprojectで有効。GPT-6.1 Sol・high、毎時に取得可能な計画を確認する。private clientは `~/.local/state/plunode-previews/beta-missions-client.json`。PCとアプリの稼働が必要で、通常完了通知は抑え、アプリ実行の失敗時を通知する。今回の計画は日次で、毎時の全呼出が資料探索・AI確認を行うわけではない。
+
+実行 `01a1b440-13b2-7d00-bc01-01b9e53d668f` が13:24〜13:27 JSTに旧12件を照合し、NASA／ESAを探索・読取、2項目をreceipt `1691680b-f2ee-48b6-b9b0-afc0db797fe5` へ配送した。既存Workerで両方published、Theme版4／14件を確認。旧12記録版は完全一致。通常のチャット一覧は予定実行履歴を列挙しないため、それだけで未起動と判断しない。アプリのScheduledか既知IDへのwait_threadsを使う。
+
+次はR3c：保存済み原資料の本文hash差分と明示訂正、入力拡充（Entityを含まないTheme背景とWeb貼付）、実資料で登録→訂正→検索／年表／Capsuleの通し確認を行う。Issue adapterはAPI直送が不成立の場合の代替で、今回API直送は実証済み。意味重複・原語・保存断面を守り、本文更新だけで新しい同義事実を量産しない。初回の資料はlanguage=enだが本文／引用fieldのtextLanguagesは未指定で保持された。現行探索手順・予定promptで明示入力を追加したため、R3cで実配送と入力検査も確認する。既存版を推測で埋めない。
+
+55件・型検査込みbuild・実Googleの運営結果を確認済み。DB変更のない今回に033の復元移行やR1／R2の全評価をやり直さない。C実空きは約9GBで、Node heap制限と実空き監視を使う。検証ではnoteのkrecord直リンクに遅延警告、再取得後にGraph 0対象となる表示も観測した。本文・原資料・公開APIは読め、Theme版4への追加は成立。通常探索の再取得状態はR4の接続確認へ引き継ぎ、原因を断定しない。
+
+以下は過去の現在地。
+
 # 2026-11-07 現在地：R3a完了、次はR3b
 
 **R3a完了、次はR3b｜R3はcまで｜全体はR6まで。** [今回の検証と再開](../verification/KNOWLEDGE_MISSIONS_R3A_20261107.md)を最優先する。app `a6b2e2eaf37a9d09876c7bde76e813ac24fb8aa7`／build `zLg4ZAkesFvHBwwc8A6H_`をmain／3200／HTTPS βへ配置済み。会員033まで、知識DBの追加なし。既存認証・12 private設定を維持し、missions capabilityと配送専用資格を追加した。新たな予定実行はまだ作っていない。

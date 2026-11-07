@@ -1,3 +1,5 @@
+2026-11-07 R3b完了：アプリの予定実行から公開資料探索→範囲付きAPI配送→既存確認Workerの自動受理・公開を確認。NASA／ESAの2項目をTheme版4へ追加し、旧Theme版2の12件を保持。app `662cd121`／build `-a6v6--efFNwfdsRQGwbz`、main／3200／HTTPS βへ反映。上限待ちの次回時刻と、再開前の停止・期限照合も修正。追加migrationなし、55件と型検査込みbuild成功。 [検証・制約・再開](verification/KNOWLEDGE_MISSIONS_R3B_20261107.md)。R3はc（本文差分・明示訂正・入力拡充・通し確認）が残り、全体はR6まで。以下は各時点の履歴。
+
 2026-11-06 R2完了：通常Workerの自動適用・公開・分類指定API検索に加え、Chrome専用接続で実Googleセッションの運営集計と通常GraphをPC／390pxで確認。R2a・bを完了し、次はR3。全件AI完了を意味せず、R3〜R5の機能接続・β統合とR6の正式公開は残る。app `7dd6e0dc`／build `fbcBuqYLDLopQ63ecPKsr`は変更なし。[実画面と接続障害の経緯](verification/KNOWLEDGE_ORGANIZATION_R2B_20261106.md#追補chrome接続の再取得と実画面確認を完了)。以下は各時点の履歴。
 
 2026-11-06 R2b追補：β通常Workerの自動適用→既存publisherのready世代→localhost:3200／HTTPS βの公開APIと分類検索を確認。元Record本文は保持。ブラウザ再起動後もWindows側のURL安全判定で操作が停止したため、**PC／スマホの実画面確認だけ残る**。app／buildは `7dd6e0dc`／`fbcBuqYLDLopQ63ecPKsr`を継続。[通常公開の記録](verification/KNOWLEDGE_ORGANIZATION_R2B_20261106.md#追補通常workerの自動適用公開検索を確認)。

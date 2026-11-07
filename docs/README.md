@@ -1,3 +1,5 @@
+2026-11-07 R3b完了：アプリの予定実行から公開資料探索→範囲付きAPI配送→既存確認Workerの自動受理・公開を確認。NASA／ESAの2項目をTheme版4へ追加し、旧Theme版2の12件を保持。app `662cd121`／build `-a6v6--efFNwfdsRQGwbz`、main／3200／HTTPS βへ反映。上限待ちの次回時刻と、再開前の停止・期限照合も修正。追加migrationなし、55件と型検査込みbuild成功。 [検証・制約・再開](verification/KNOWLEDGE_MISSIONS_R3B_20261107.md)。R3はc（本文差分・明示訂正・入力拡充・通し確認）が残り、全体はR6まで。以下は各時点の履歴。
+
 2026-11-07 R3a完了：収集計画・範囲付き配送APIをmain／3200／HTTPS βへ接続。app `a6b2e2ea`／build `zLg4ZAkesFvHBwwc8A6H_`、会員033、既存行・checksum・別DB復元と実Googleの計画操作、PC／390pxを確認。[検証・残件・再開](verification/KNOWLEDGE_MISSIONS_R3A_20261107.md)。R3bの予定実行接続、R3cの差分更新・実資料の通し確認は未完了。R3はcまで、全体はR6まで。
 
 2026-11-06 R3a：テーマに沿う収集計画と期限付き配送APIを実装・検証中。[現行設計](design/KNOWLEDGE_MISSIONS_R3.md)／[運用と配送client](runbooks/KNOWLEDGE_MISSIONS.md)。R3はa（計画・配送）／b（予定実行の実接続）／c（差分更新・通し確認）、全体はR6まで。予定実行の接続やR3全体完了とは混同しない。
