@@ -32,8 +32,9 @@ export function createWebKnowledgeImports(pool:Pool,imports:()=>ReturnType<typeo
  async function deliver(actor:string,requestId:string,raw:unknown,beforeWrite?:(c:PoolClient)=>Promise<void>){
   await ensureMissionSchema(pool);
   const pkg=knowledgeImportPackageSchema.parse(raw),digest=knowledgeDigest(raw);
-  // Enforce normalized, comprehensible input before accepting a browser paste.
-  const normalized=pkg.items.map(v=>normalizeImportItem(pkg,v));
+  // Collect permissions from valid items; the common importer keeps independent
+  // errors for malformed items instead of losing an otherwise useful package.
+  const normalized=pkg.items.flatMap(v=>{try{return [normalizeImportItem(pkg,v)];}catch{return [];}});
   const themes=[...new Set(normalized.flatMap(v=>v.items.flatMap(i=>i.themes?.map(t=>t.id)??[])))];
   const c=await pool.connect();let saved;
   try{await c.query('BEGIN');await beforeWrite?.(c);

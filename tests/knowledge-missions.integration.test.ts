@@ -102,6 +102,7 @@ it('adapts a Web paste without a bearer, preserves the raw package, and keeps na
  const recoveryId=randomUUID();await expect(recovering.deliver(operator,recoveryId,{...raw,packageId:'web-recovery'})).rejects.toThrow('Web ACK lost');
  expect((await pool.query('SELECT count(*)::int n FROM knowledge_import.packages')).rows[0].n).toBe(2);await pool.query('UPDATE knowledge_missions.web_deliveries SET next_attempt=clock_timestamp() WHERE request_id=$1',[recoveryId]);expect(await recovering.recoverOne()).toBe(true);
  expect((await pool.query('SELECT count(*)::int n FROM knowledge_import.packages')).rows[0].n).toBe(2);expect((await web.list(operator)).items.find(v=>v.requestId===recoveryId)?.receipt?.receiptId).toBeTruthy();
+ const partial=await web.deliver(operator,randomUUID(),{...raw,packageId:'web-partial',items:[raw.items[0],{...raw.items[0],key:'invalid',record:{...raw.items[0].record,kind:'invalid-kind'}}]});expect(partial.receipt.items.map(v=>v.state)).toEqual(['queued','needs-changes']);
  await expect(web.deliver(operator,requestId,{...raw,revision:2})).rejects.toMatchObject({code:'REQUEST_CHANGED'});
  const principalId='web:'+row.importer_id;expect(await webImportPrincipal(pool,principalId)).not.toBeNull();await pool.query('UPDATE "user" SET active=false WHERE id=$1',[operator]);expect(await webImportPrincipal(pool,principalId)).toBeNull();
  await expect(web.deliver(operator,randomUUID(),{...raw,packageId:'another'})).rejects.toMatchObject({code:'OPERATOR_REQUIRED'});
