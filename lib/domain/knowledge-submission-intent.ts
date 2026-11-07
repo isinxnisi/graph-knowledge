@@ -3,6 +3,15 @@ import {translationTargetKey} from "./knowledge-translation";
 import {translationTextLimit} from "./knowledge-translation";
 import {knowledgeEntityContentSchema,knowledgeSourceContentSchema,knowledgeRecordContentSchema,type KnowledgePin} from "./knowledge-foundation";
 import type {KnowledgeSubmissionContent,KnowledgeSubmissionContext} from "./knowledge-submission";
+// JSONB does not preserve object-key order. Compare content, while retaining
+// array order and every value, for immutable facts and their existing evidence.
+function sameJson(a:unknown,b:unknown):boolean{
+ if(a===b)return true;
+ if(Array.isArray(a)||Array.isArray(b))return Array.isArray(a)&&Array.isArray(b)&&a.length===b.length&&a.every((v,i)=>sameJson(v,b[i]));
+ if(!a||!b||typeof a!=="object"||typeof b!=="object")return false;
+ const left=a as Record<string,unknown>,right=b as Record<string,unknown>,keys=Object.keys(left);
+ return keys.length===Object.keys(right).length&&keys.every(k=>Object.hasOwn(right,k)&&sameJson(left[k],right[k]));
+}
 export function submissionIntentIssues(content:KnowledgeSubmissionContent,context?:KnowledgeSubmissionContext,origin:'member'|'service'='member'):string[]{
  const issues:string[]=[];
  if(content.schemaVersion!==2)issues.push("投稿先と操作を確認してください。現在の入力欄から申請内容を選び直せます。");
@@ -50,7 +59,7 @@ export function submissionIntentIssues(content:KnowledgeSubmissionContent,contex
     if(!knowledgeEntityContentSchema.safeParse(v.content).success)fail('名前・別名・説明の内容を確認してください。');
     if(v.content.kind!==old.content.kind)fail('分類・対象の付替えは、この訂正には含められません。');
     if(!v.reason.trim())fail('訂正する理由を入力してください。');
-    if(JSON.stringify(v.content)===JSON.stringify(old.content))fail('名前・別名・説明・原文の言語の変更がありません。');
+    if(sameJson(v.content,old.content))fail('名前・別名・説明・原文の言語の変更がありません。');
     if(r.kind!=='note'||r.subjectId!==v.target.id||r.objectId||r.aboutRecord||r.aboutTheme||r.assertion!==entityCorrectionSummary(old.content,v.content))fail('訂正する対象と内容を確認してください。');
    }
   }else{
@@ -59,8 +68,8 @@ export function submissionIntentIssues(content:KnowledgeSubmissionContent,contex
    if(!old)fail("元の記録をサーバーから読み直してください。");
    else if(op==='add-evidence'){
     const fields=['kind','subjectId','objectId','assertion','relation','polarity','scope','times','aboutRecord','aboutTheme'] as const;
-    if(fields.some(k=>JSON.stringify(r[k]??null)!==JSON.stringify(old.content[k]??null)))fail("根拠の追加では元の事実や意味を変更できません。情報の訂正を選んでください。");
-    if(old.content.evidence.some(e=>!r.evidence.some(v=>v.id===e.id&&JSON.stringify(v)===JSON.stringify(e))))fail("元の根拠を残したまま、新しい根拠を追加してください。");
+    if(fields.some(k=>!sameJson(r[k]??null,old.content[k]??null)))fail("根拠の追加では元の事実や意味を変更できません。情報の訂正を選んでください。");
+    if(old.content.evidence.some(e=>!r.evidence.some(v=>v.id===e.id&&sameJson(v,e))))fail("元の根拠を残したまま、新しい根拠を追加してください。");
     if(!r.evidence.some(e=>!old.content.evidence.some(v=>v.id===e.id)))fail("新しい根拠を追加してください。");
    }
   }
