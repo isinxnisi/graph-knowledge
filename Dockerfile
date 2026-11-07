@@ -16,8 +16,11 @@ COPY neo4j ./neo4j
 COPY datasets ./datasets
 COPY data/advertising ./data/advertising
 COPY data/ai-lab/initial.json ./data/ai-lab/initial.json
+# Formal discovery starts without beta/test theme pins. The public recent list
+# still comes from the formal knowledge catalogue.
+COPY data/theme-discovery.production.json ./data/theme-discovery.json
 COPY docs/research/phase-13-relation-model/v2/ledger.json ./docs/research/phase-13-relation-model/v2/ledger.json
-COPY scripts/public-kg.ts scripts/production-readiness.mjs scripts/generate-contribution-roles.ts scripts/build-publication-probe.mjs scripts/publication-compatibility.ts ./scripts/
+COPY scripts/public-kg.ts scripts/production-readiness.mjs scripts/generate-contribution-roles.ts scripts/build-publication-probe.mjs scripts/publication-compatibility.ts scripts/knowledge-mission-client.ts ./scripts/
 ENV GRAPH_DATASET=public-kg GRAPH_DEPLOYMENT=production
 RUN npm run roles:check && node scripts/build-publication-probe.mjs && NODE_OPTIONS=--max-old-space-size=3072 npm run build -- --webpack
 
