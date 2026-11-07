@@ -14,7 +14,7 @@ API直送は既定として進める。Codex収集予定はPAUSED。実装・17�
 
 ## 配置と未確認
 
-app source `e7f3acccb3236fae8799a7b15cee3943e493588a`、build `bkKmHOZGJGlK4D6HLN1PX`をmain／3200へ反映。HTTPS βでもTOP・OAuth metadata・resource metadata・接続案内200、未認証MCP401＋challengeを確認。初回のresource metadataの誤った転送pathを修正し、追加migrationなしでWebを再配置した。3276・本番VPSは未変更。ChatGPTからの接続承認と、同じ会話に継続する予定の初回実行を残す。実行元・利用量が確認できていない状態を、API配送やfixture結果だけで成功扱いにしない。
+app source `12c90a745bdef866f21d7d39a884e97c46c8b739`、build `PUEG4r4rcm6iz8en64hZV`をmain／3200へ反映。HTTPS βでもTOP・OAuth metadata・resource metadata・接続案内200、未認証MCP401＋challengeを確認。初回のresource metadataの誤った転送pathを修正し、追加migrationなしでWebを再配置した。3276・本番VPSは未変更。ChatGPTからの接続承認と、同じ会話に継続する予定の初回実行を残す。実行元・利用量が確認できていない状態を、API配送やfixture結果だけで成功扱いにしない。
 
 ## 実測
 
@@ -87,3 +87,15 @@ w32tm /resync
 保存済みの本人同意から接続を再開し、実token要求の200を確認。CIMD clientの同意1・refresh3・client assertion3を安全な件数だけで照合した。access tokenはJWTのためDBのaccess-token行0を未発行と解釈しない。ChatGPT Webのアプリ詳細にclaim_collection／observe_collection_sources／deliver_collection／finish_empty_collection／fail_collectionの5操作が表示され、接続を続行するアイコンは消えた。これを接続成功とし、まだ研究・配送の実行成功とは扱わない。
 
 原因確認用の追加assertion再検証を削除し、機密値なしのrequest／response分類ログを保持する。既存の「Plunode GitHub接続試験」はAI教育で使用中と確認したため収集先に転用しない。Codex収集予定はPAUSEDを維持。収集専用の一つのChatGPT会話・実行元と利用枠の確認、初回配送・予定実行を残す。
+
+## 通常運用版への仕上げ・残る本人回答
+
+追加assertion診断を除いた13テストと対象lintが成功。型検査込みproduction buildは145.6秒で終了し、監視中のWindows空き容量の最小は7,637,745,664 bytes。既存build cacheを利用し、再AI評価や追加のDB移行は行っていない。
+
+app `12c90a745bdef866f21d7d39a884e97c46c8b739`／build `PUEG4r4rcm6iz8en64hZV`をmain・3200・HTTPS βへWebだけ反映。両originの12応答を確認（通常ページ・metadataは200、未認証MCPは401）。private設定16件のhashを保持。review WorkerだけWebとともに再起動、他4 Workerを維持。実GoogleセッションでWebb構成版4の時期なし情報・年表・並列関係図を再訪できた。本番VPS／3276は未更新。
+
+ChatGPTのChatモード、GPT-6・思考量極高の入力画面を確認。Workへ切り替えていない。公式文書は現時点でChatのモデル利用とWork／Codexの利用枠を区別しているが、予定実行自体が無料・無制限であるとはしない。実際の予定でのモデル・利用区分は設定後の表示で確認する。
+
+ChatGPTの有効予定はAI教育、旧「Plunode 収集進行チェック」は一時停止のままで、どちらも変更しない。誤接続だったCodex収集cronもPAUSED、毎時20分の設定を保持している。収集専用のChatGPT会話を一つ作って継続するか、既存の収集会話を指定するか、本人回答待ち。新規会話はまだ送信・作成していない。接続済みプラグインを選んだ初回1計画の依頼文はChromeの入力欄に準備済み。回答後に初回配送→同一会話のChat予定→次回時刻・実行結果の順で確認する。
+
+参照：[Chatのモデルと利用枠](https://help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt)／[予定実行とCodex automationsの区別](https://help.openai.com/en/articles/10291617-scheduled-tasks-in-chatgpt)。接続成功画面はCodexのvisualizationsフォルダーに `plunode-collection-connected.png` として保存。

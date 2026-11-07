@@ -1,6 +1,6 @@
 2026-11-08 API接続完了：本人のWindows時刻同期後、ChatGPTのtoken発行200と収集5ツールを実画面で確認。JWTのnbf・署名・期限検証は維持し、原因確認用の追加assertion診断を除去。初回の実配送・同一会話での予定設定と実行は残る。Codex収集予定はPAUSEDのまま。[実測と再開](verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)。
 
-2026-11-07 API直送をβへ反映：app `e7f3accc`／build `bkKmHOZGJGlK4D6HLN1PX`。既存107検証を活用し、今回12境界・型検査込みbuild、035の別DB復元・旧行／checksum／再実行不変、3200／HTTPS βのmetadataと未認証401を確認。ChatGPT WebでもCIMD・scopeの自動検出を確認し、本人の許可・接続は完了。**ChatGPTの初回配送／同一会話での予定実行は未確認**。R3b是正は未完了、R4a完了・b以降を残す。[手順](runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)／[実測](verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)。
+2026-11-07 API直送をβへ反映：app `12c90a74`／build `PUEG4r4rcm6iz8en64hZV`。既存107検証を活用し、今回12境界・型検査込みbuild、035の別DB復元・旧行／checksum／再実行不変、3200／HTTPS βのmetadataと未認証401を確認。ChatGPT WebでもCIMD・scopeの自動検出を確認し、本人の許可・接続は完了。**ChatGPTの初回配送／同一会話での予定実行は未確認**。R3b是正は未完了、R4a完了・b以降を残す。[手順](runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)／[実測](verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)。
 
 2026-11-07 API直送の是正：API直送は合意済みの既定。既存Googleログインを使う収集専用MCP・型付き配送・run束縛・再送回復を実装し、17境界テストと別DB復元でOAuth／移行を確認。β配置・本人の接続承認とChatGPTの初回実行を進める。Codex収集予定はPAUSEDのまま。R3b是正完了は未確認。[手順](runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)／[実測](verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)。
 
