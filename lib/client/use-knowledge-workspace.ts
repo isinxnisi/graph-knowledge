@@ -141,7 +141,7 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false }: { ini
         normalRestoration: saved.normalView ? { generation: normal.epoch, view: saved.normalView } : null,
         themeRestoration: themeView ? { generation: themeView.revision, view: themeView.view } : null,
         themeView: wanted?.view ?? theme?.theme.content.initialView ?? "graph",
-        themeSelection: theme ? validSelection(saved.themeSelection, theme.records, theme.snapshot.entities) : null }));
+        themeSelection: theme ? validSelection(wanted?.focusEntityId?{kind:'entity',id:wanted.focusEntityId}:saved.themeSelection, theme.records, theme.snapshot.entities) : null }));
     } catch (e) { if (live(token)) { ready.current = true; setError(messageOf(e)); } }
     finally { if (live(token)) { setRestoring(false); setBusy(false); } }
   }
@@ -279,14 +279,15 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false }: { ini
         const records=mergeRecords(fresh?[]:s.normal.records,[result.record]);
         return {...s,activeTheme:null,...(fresh?{normalView:undefined,normalRestoration:null,neighborPages:{}}:{}),normal:{...s.normal,...(fresh?{rootId:null,epoch:s.normal.epoch+1}:{}),generation:result.generation,records,entities:mergeEntities(fresh?[]:s.normal.entities,recordEntities(records)),selection:{kind:"record",id}}};
       }, options.latest||current.current.activeTheme ? "push" : "replace");
-    } catch (e) { if (live(token)) setError(messageOf(e)); } finally { finish(token); }
+      return true;
+    } catch (e) { if (live(token)) setError(messageOf(e)); return false; } finally { finish(token); }
   }
-  async function openTheme(ref: { id: string; revision?: number }) {
+  async function openTheme(ref: { id: string; revision?: number; focusEntityId?: string }) {
     const token = begin();
     try {
       const theme = await readKnowledge<KnowledgeThemeRead>("theme", { themeId: ref.id, revision: ref.revision });
       if (!live(token)) return;
-      update(s => { const same = s.retainedTheme?.theme.id === theme.theme.id && s.retainedTheme.theme.revision === theme.theme.revision; return { ...s, activeTheme: theme, retainedTheme: theme, themeView: same ? s.themeView : theme.theme.content.initialView, themeSelection: same ? s.themeSelection : null, ...(same ? {} : { themeCanvasView: undefined, themeRestoration: null }) }; }, "push");
+      update(s => { const same = s.retainedTheme?.theme.id === theme.theme.id && s.retainedTheme.theme.revision === theme.theme.revision; return { ...s, activeTheme: theme, retainedTheme: theme, themeView: same ? s.themeView : theme.theme.content.initialView, themeSelection: ref.focusEntityId?validSelection({kind:'entity',id:ref.focusEntityId},theme.records,theme.snapshot.entities):same ? s.themeSelection : null, ...(same ? {} : { themeCanvasView: undefined, themeRestoration: null }) }; }, "push");
     } catch (e) {
       if (live(token)) { setError(messageOf(e)); if (unavailable(e)) update(s => s.retainedTheme?.theme.id === ref.id ? { ...s, activeTheme: null, retainedTheme: null, themeSelection: null, themeCanvasView: undefined, themeRestoration: null } : s); }
     } finally { finish(token); }

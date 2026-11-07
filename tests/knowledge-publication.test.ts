@@ -6,6 +6,7 @@ import neo4j from "neo4j-driver";
 import { createKnowledgeFoundationService } from "../lib/server/knowledge-foundation";
 import { createKnowledgePublicationService, ensureKnowledgePublicationSchema } from "../lib/server/knowledge-publication";
 import {createKnowledgeIdentity} from '../lib/server/knowledge-identity';
+import {migrateKnowledgeTranslations} from '../lib/server/knowledge-translation-migrate';
 import { adaptLegacyKnowledge } from "../lib/domain/knowledge-legacy";
 import type { KnowledgeActor } from "../lib/domain/knowledge-foundation";
 
@@ -18,7 +19,7 @@ const command=(action:string,rest:Record<string,unknown>)=>({requestId:randomUUI
 
 describe.skipIf(!url||!password)("publication PostgreSQL indexes and real Neo4j generations",()=>{
   const pool=new Pool({connectionString:url,max:5});
-  const driver=neo4j.driver("bolt://127.0.0.1:7698",neo4j.auth.basic("neo4j",password??"not-used"),{maxConnectionPoolSize:2});
+  const driver=neo4j.driver(process.env.KNOWLEDGE_TEST_NEO4J_URL??"bolt://127.0.0.1:7698",neo4j.auth.basic("neo4j",password??"not-used"),{maxConnectionPoolSize:2});
   const foundation=createKnowledgeFoundationService(pool);
   const publication=createKnowledgePublicationService(pool,driver);
   const run=(action:string,body:Record<string,unknown>)=>foundation.execute(operator,command(action,body));
@@ -29,8 +30,41 @@ describe.skipIf(!url||!password)("publication PostgreSQL indexes and real Neo4j 
   };
   const hide=(kind:string,id:string,expectedStatusRevision=1)=>run("set-visibility",{kind,id,expectedStatusRevision,visibility:"hidden"});
   const publish=async()=>{const result=await publication.publishPending();expect(result.active).not.toBeNull();return result.active!.id;};
-  beforeAll(async()=>{expect((await pool.query("SELECT current_database() AS n")).rows[0].n).toMatch(/^plunode_knowledge75_test_/);await driver.verifyConnectivity();await ensureKnowledgePublicationSchema(pool);},30000);
+  beforeAll(async()=>{expect((await pool.query("SELECT current_database() AS n")).rows[0].n).toMatch(/^plunode_knowledge75_test_/);await driver.verifyConnectivity();await ensureKnowledgePublicationSchema(pool);await migrateKnowledgeTranslations(pool);},30000);
   afterAll(async()=>{await pool.end();await driver.close();});
+  it('applies category filters before pagination and reads translated names without replacing the original name',async()=>{
+    await run('create-bundle',{entities:Array.from({length:24},(_,i)=>({id:'usage-kind-'+String(i).padStart(2,'0'),content:{name:'登録順の候補 '+i,kind:i<21?'組織':'人物',aliases:[]}})),sources:[{id:'usage-kind-source',content:source}],records:Array.from({length:24},(_,i)=>({id:'usage-kind-fact-'+i,content:{kind:'note',subjectId:'usage-kind-'+String(i).padStart(2,'0'),assertion:'資料に候補'+i+'の記載がある',evidence:[{id:'e',source:{id:'usage-kind-source',revision:1},locator:'索引'}]}})),visibility:'public'});
+    const g=await publish();
+    const page=await publication.entities({generation:g,q:'登録順の候補',kind:'person',limit:2});
+    expect(page.entities.map(e=>e.id)).toEqual(['usage-kind-21','usage-kind-22']);expect(page.hasMore).toBe(true);
+    expect((await publication.entities({generation:g,q:'登録順の候補',kind:'person',limit:2,cursor:page.nextCursor!})).entities.map(e=>e.id)).toEqual(['usage-kind-23']);
+    const target={kind:'entity',id:'usage-kind-23',revision:1,field:'name'};
+    const original=await publication.textOriginal(target as Parameters<typeof publication.textOriginal>[0]);
+    await run('accept-translation',{target,language:'en',text:'Unusual translated candidate',originalHash:original.hash,expectedRevision:0});
+    const translated=await publication.entities({generation:g,q:'Unusual translated candidate'});
+    expect(translated.entities.map(e=>e.id)).toEqual(['usage-kind-23']);expect(translated.entities[0].content.name).toBe('登録順の候補 23');
+    await hide('entity','usage-kind-23');expect((await publication.entities({generation:g,q:'Unusual translated candidate'})).entities).toEqual([]);
+  });
+  it('uses current version-bound identity decisions for neighborhoods, intermediate path steps and Theme focus, and revokes old cursors',async()=>{
+    await seed('usage-left-');await seed('usage-right-');const g=await publish();
+    const themeId='usage-related-theme';
+    await run('create-theme',{id:themeId,title:'同じ対象を含むテーマ',recordPins:[{id:'usage-right-r0',revision:1}],initialView:'graph'});
+    const identities=createKnowledgeIdentity(pool),cmd={requestId:randomUUID(),left:{id:'usage-left-b',revision:1},right:{id:'usage-right-a',revision:1},expectedRevision:0,state:'same',reason:'同一対象の近傍と経路の隔離検証',reference:'https://example.com/proof',locator:'本人の識別'};
+    await identities.act(operator.id,cmd);
+    const page=await publication.neighbors({generation:g,entityId:'usage-left-b',limit:1});expect(page.hasMore).toBe(true);
+    const all=await publication.neighbors({generation:g,entityId:'usage-left-b',limit:50});expect(all.records.map(r=>r.record.id)).toContain('usage-right-r0');
+    expect((await publication.entities({generation:g,scopeIds:['usage-right-b'],kind:'person'})).entities.map(e=>e.id)).toEqual(['usage-right-b']);
+    expect((await publication.search({generation:g,aroundId:'usage-left-b',entityKind:'person'})).records.map(r=>r.record.id)).toContain('usage-right-r0');
+    expect((await publication.search({generation:g,scopeIds:['usage-right-b'],predicates:['CONTRIBUTED_TO']})).records).toEqual([]);
+    expect(all.records.find(r=>r.record.id==='usage-right-r0')?.record.content.subjectId).toBe('usage-right-a');
+    const paths=await publication.paths({generation:g,fromEntityId:'usage-left-a',toEntityId:'usage-right-c',maxDepth:2});
+    expect(paths.paths.some(p=>p.identitySteps?.some(step=>step.from==='usage-left-b'&&step.to==='usage-right-a'))).toBe(true);
+    const themes=await publication.themes({entityId:'usage-left-b'});expect(themes.themes.map(t=>t.id)).toContain(themeId);expect(themes.focusIds).toContain('usage-right-a');
+    await identities.act(operator.id,{...cmd,requestId:randomUUID(),expectedRevision:1,state:'withdrawn'});
+    await expect(publication.neighbors({generation:g,entityId:'usage-left-b',limit:1,cursor:page.nextCursor!})).rejects.toMatchObject({code:'CURSOR_MISMATCH'});
+    expect((await publication.paths({generation:g,fromEntityId:'usage-left-a',toEntityId:'usage-right-c',maxDepth:2})).paths).toEqual([]);
+    expect((await publication.themes({entityId:'usage-left-b'})).themes.map(t=>t.id)).not.toContain(themeId);
+  });
   it('searches reviewed identity names while retaining endpoints, and invalidates a changed identity cursor',async()=>{
     await seed('identity-public-');const generation=await publish(),identities=createKnowledgeIdentity(pool);
     const cmd={requestId:randomUUID(),left:{id:'identity-public-a',revision:1},right:{id:'identity-public-b',revision:1},expectedRevision:0,state:'same',reason:'隔離データの同一性検証',reference:'https://example.com/proof',locator:'本文'};

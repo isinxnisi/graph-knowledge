@@ -5,18 +5,19 @@ export const activeIdentityEdges=`SELECT r.left_id,r.right_id FROM knowledge75.e
 
 /** Resolve only current, public, version-bound identity decisions. Seed IDs are
  * retained even when they are new/unlinked. Never rewrite original records. */
-export async function resolveIdentityGroups(c:PoolClient,ids:string[]){
+export async function resolveIdentityGroups(c:PoolClient,ids:string[],generation?:string){
  await assertIdentitySchema(c);
  const seeds=[...new Set(ids)].sort();
  if(!seeds.length)return new Map<string,string[]>();
  await c.query('SET LOCAL jit=off');
- const rows=(await c.query(`WITH RECURSIVE edges AS MATERIALIZED (${activeIdentityEdges}),
+ const projected=generation?` AND EXISTS(SELECT 1 FROM knowledge75.publication_entities x WHERE x.generation=$2 AND x.id=r.left_id AND x.revision=r.left_revision) AND EXISTS(SELECT 1 FROM knowledge75.publication_entities x WHERE x.generation=$2 AND x.id=r.right_id AND x.revision=r.right_revision)`:'';
+ const rows=(await c.query(`WITH RECURSIVE edges AS MATERIALIZED (${activeIdentityEdges}${projected}),
  members(seed,id) AS (SELECT id,id FROM unnest($1::text[]) id UNION
  SELECT m.seed,CASE WHEN e.left_id=m.id THEN e.right_id ELSE e.left_id END
  FROM members m JOIN edges e ON e.left_id=m.id OR e.right_id=m.id)
- SELECT seed,array_agg(id ORDER BY id) AS ids FROM members GROUP BY seed ORDER BY seed`,[seeds])).rows;
+ SELECT seed,array_agg(id ORDER BY id) AS ids FROM members GROUP BY seed ORDER BY seed`,[seeds,...(generation?[generation]:[])])).rows;
  return new Map(rows.map(r=>[r.seed as string,r.ids as string[]]));
 }
-export async function identityGroup(c:PoolClient,ids:string[]){
- return [...new Set([...(await resolveIdentityGroups(c,ids)).values()].flat())].sort();
+export async function identityGroup(c:PoolClient,ids:string[],generation?:string){
+ return [...new Set([...(await resolveIdentityGroups(c,ids,generation)).values()].flat())].sort();
 }

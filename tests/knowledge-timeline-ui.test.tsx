@@ -13,6 +13,12 @@ const s: KnowledgeSnapshot = {
   sources: [{ id: "source", ...stamp, revision: 2, content: { title: "資料の第2版", bibliography: "資料集 第2版", url: null, language: "ja" } }],
   records: [{ id: "shared-record", ...stamp, content: knowledgeRecordContentSchema.parse({ kind: "relation", assertion: "装画と挿絵を手掛けた", subjectId: "a", objectId: "b", relation: "装画と挿絵", times: [{ id: "created", time: { kind: "calendar", from: "1991", label: "制作" } }, { id: "printed", time: { kind: "calendar", from: "1992", label: "刊行" } }], evidence: [{ id: "e", source: { id: "source", revision: 2 }, locator: "図版一覧", excerpt: "", stance: "support" }] }) }],
 };
+it('marks the selected subject in both time rows without filtering away other subjects or expanding the records',()=>{
+ const {container}=render(<KnowledgeTimeline snapshot={s} focusedRecordId={null} focusedEntityId="a" onFocusRecord={vi.fn()}/>);
+ expect([...container.querySelectorAll('[data-subject-focus]')].map(e=>e.getAttribute('data-entity-id'))).toEqual(['a','a']);
+ expect(container.querySelectorAll('[data-entity-id="b"]')).toHaveLength(2);
+ expect(screen.getAllByRole('button',{name:/^装画と挿絵を手掛けた/}).every(button=>button.getAttribute('aria-expanded')==='false')).toBe(true);
+});
 it("selects the same factual Record from either time, and exposes fixed citation context without fake links", () => {
   const onFocus = vi.fn(), onShow = vi.fn(), fetch = vi.fn(); vi.stubGlobal("fetch", fetch);
   function Host() {

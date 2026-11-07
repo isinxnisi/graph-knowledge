@@ -2,6 +2,7 @@ import {expect,it,vi} from 'vitest';
 import type {Pool} from 'pg';
 import type {Driver} from 'neo4j-driver';
 import {createKnowledgePublicationService} from '../lib/server/knowledge-publication';
+vi.mock('../lib/server/knowledge-identity-resolution',()=>({identityGroup:async(_c:unknown,ids:string[])=>ids}));
 const generation='k75-'+ 'a'.repeat(32);
 const center={id:'subject-with-a-fact',revision:1,content:{name:'新しく登録した場所',kind:'place',description:'',aliases:[],language:'ja'},createdAt:'2026-11-04T00:00:00Z',reason:'公開'};
 function setup(hasRelation:boolean){

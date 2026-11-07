@@ -23,6 +23,7 @@ import { focusDestination } from "../lib/client/focus-destination";
 import { useDialogDismiss } from "../lib/client/use-dialog-dismiss";
 import { useDialogBackdrop } from "../lib/client/use-dialog-backdrop";
 import DiscoveryListPanel from "./DiscoveryListPanel";
+import {useKnowledgeReading} from "./KnowledgeReading";
 import {ThemeSearchPanel, initialThemeCriteria, type ThemeCriteria, type OpenTheme} from "./ThemeDiscovery";
 import styles from "./DiscoveryExplorer.module.css";
 import DiscoveryConnections from "./DiscoveryConnections";
@@ -58,6 +59,7 @@ export default function DiscoveryExplorer({ lab = false, presetBrowser = false, 
   lab?: boolean; presetBrowser?: boolean; initial?: DiscoveryCriteria; onClose?: (source?: string | null) => void; onChoose?: (entity: EntitySummary, predicates?: PredicateFilter, roles?: import("../lib/domain/exploration").ContributionRoleFilter) => void;
 }) {
   const { locale, setLocale } = useUiLocale(), en = locale === "en";
+  const knowledge=useKnowledgeReading();
   const t = (ja: string, english: string) => en ? english : ja;
   const themesEnabled=Boolean(onChooseTheme);
   const entries: Entry[]=lab?["connections","worlds"]:["connections","worlds","list",...(themesEnabled?["themes" as const]:[])];
@@ -273,7 +275,7 @@ export default function DiscoveryExplorer({ lab = false, presetBrowser = false, 
         {entry === "themes" && onChooseTheme ? <ThemeSearchPanel criteria={themeCriteria} onChange={setThemeCriteria} onOpen={ref=>{flush();selected.current=true;window.addEventListener("popstate",()=>{onChooseTheme(ref);requestAnimationFrame(()=>focusDestination(document.getElementById("explorer-graph")));},{once:true});window.history.back();}} /> : preview ? ready&&<DiscoveryConnections value={connectionFlow} onChange={setConnectionFlow} body={body} onCheckpoint={checkpointConnection} onGraph={snapshot=>{
           selected.current=true;
           checkpoint(snapshot,true);
-        }}/>:entry === "list" ? <DiscoveryListPanel criteria={listCriteria} cursors={listCursors} onChange={value => { setListCriteria(value); setListCursors([null]); }} onPage={setListCursors} onChoose={chooseListResult}/> : browsingPresets ? <DiscoveryPresetBrowser filters={catalog.filters} onChange={filters=>setCatalog(old=>({...old,filters}))} onSelect={selectCatalog} onNames={showCatalogNames} busy={catalogBusy} error={catalogError}/> : <>
+        }}/>:entry === "list" ? <DiscoveryListPanel criteria={listCriteria} cursors={listCursors} onChange={value => { setListCriteria(value); setListCursors([null]); }} onPage={setListCursors} onChoose={chooseListResult} onChooseKnowledge={entity=>{flush();selected.current=true;window.addEventListener('popstate',()=>{knowledge?.openEntity(entity);requestAnimationFrame(()=>focusDestination(document.getElementById('explorer-graph')));},{once:true});window.history.back();}} onChooseRecord={id=>{flush();selected.current=true;window.addEventListener('popstate',()=>{knowledge?.openRecord(id);requestAnimationFrame(()=>focusDestination(document.getElementById('explorer-detail')));},{once:true});window.history.back();}}/> : browsingPresets ? <DiscoveryPresetBrowser filters={catalog.filters} onChange={filters=>setCatalog(old=>({...old,filters}))} onSelect={selectCatalog} onNames={showCatalogNames} busy={catalogBusy} error={catalogError}/> : <>
         {!(preview && catalog.mode === "names" && !context.anchor) && <section className={styles.selectionSummary} data-empty={!hasConditions || undefined} aria-label={t("選択要約", "Selection summary")}>
           <div className={styles.summaryChips}>
             <span className={styles.subjectChip}><button id="prototype-subject" onClick={startNames} title={context.anchor?.name}><span className={styles.subjectLabel}>{t("対象：", "Subject: ")}</span>{context.anchor?.name ?? t("名前から指定", "choose by name")}<Icon name="search"/></button>{context.anchor && <button aria-label={t("対象だけ外す", "Remove only subject")} onClick={() => change({ ...context, anchor: null }, ["対象の解除", "Subject removal"])}>×</button>}</span>

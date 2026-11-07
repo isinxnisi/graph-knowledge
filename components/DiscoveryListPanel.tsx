@@ -12,6 +12,8 @@ import { discoverySearchLabels } from "../lib/i18n/discovery-search";
 import { searchLabels } from "../lib/i18n/entity-search";
 import { explorerMessage } from "../lib/i18n/explorer";
 import EntitySearchResults from "./EntitySearchResults";
+import KnowledgeEntitySearchResults from "./KnowledgeEntitySearchResults";
+import type {KnowledgeEntityVersion} from "../lib/domain/knowledge-foundation";
 import { CONTRIBUTION_ROLE_IDS } from "../lib/domain/contribution";
 import { contributionLabels } from "../lib/i18n/contribution";
 import { recordSearchProblem, recordPresets, type RecordSearchCriteria } from "../lib/domain/discovery-records";
@@ -22,10 +24,12 @@ import Icon from "./Icon";
 import styles from "./DiscoveryExplorer.module.css";
 
 // Entity-list conditions remain separate from the subject's relation exploration.
-export default function DiscoveryListPanel({ criteria, cursors, onChange, onPage, onChoose }: {
+export default function DiscoveryListPanel({ criteria, cursors, onChange, onPage, onChoose, onChooseKnowledge, onChooseRecord }: {
   criteria: DiscoveryCriteria; cursors: (string | null)[];
   onChange: (criteria: DiscoveryCriteria) => void; onPage: Dispatch<SetStateAction<(string | null)[]>>;
   onChoose: (entity: EntitySummary, predicates?: PredicateFilter, roles?: import("../lib/domain/exploration").ContributionRoleFilter) => void;
+  onChooseKnowledge?: (entity:KnowledgeEntityVersion)=>void;
+  onChooseRecord?: (id:string)=>void;
 }) {
   const { locale } = useUiLocale(), en = locale === "en", text = discoverySearchLabels(locale), search = searchLabels(locale);
   const [composing, setComposing] = useState(false);
@@ -96,6 +100,7 @@ export default function DiscoveryListPanel({ criteria, cursors, onChange, onPage
           <EntitySearchResults items={displayed.items} locale={locale} onChoose={entity => onChoose(entity, criteria.predicates, criteria.contributionRole ? [criteria.contributionRole] : undefined)}/>
         </div> : <div className={styles.skeleton} aria-hidden="true"/>}
       </div>
+      <KnowledgeEntitySearchResults q={criteria.q} kind={criteria.kind} criteria={criteria} allowEmpty paused={!!problem} recordView={recordView} excludeIds={recordView?recordData?.claims.map(r=>r.id):displayed?.items.map(e=>e.id)} onChoose={onChooseKnowledge} onChooseRecord={onChooseRecord}/>
       <nav className={styles.pagination} aria-label={en ? "Result pages" : "結果のページ"}>
         <button disabled={blocked || cursors.length === 1} onClick={() => onPage(v => v.slice(0, -1))}>{text.previous}</button>
         <span>{criteria.predicates?.length ? text.carry : text.hint}</span>

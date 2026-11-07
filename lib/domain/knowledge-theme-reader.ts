@@ -1,8 +1,10 @@
 import { z } from "zod";
 import { knowledgeIdSchema, knowledgeRevisionSchema, type KnowledgeThemeVersion, type KnowledgeSnapshot, type KnowledgeEntityVersion } from "./knowledge-foundation";
 import type { KnowledgePublishedRecord } from "./knowledge-publication";
+import { PREDICATE_KEYS } from "./predicates";
+import { roleIdSchema } from "./contribution";
 
-export type KnowledgeThemePage = { themes: {
+export type KnowledgeThemePage = { focusIds?: string[]; themes: {
   id: string; revision: number; title: string; description: string;
   initialView: "graph" | "timeline" | "split"; hasTimeline: boolean; hasRelations?: boolean; publishedAt?: string; entityIds: string[];
 }[] };
@@ -20,6 +22,9 @@ export const knowledgeEntityQuerySchema = z.strictObject({
   generation: z.string().regex(/^k75-[a-f0-9]{32}$/).optional(),
   entityId: knowledgeIdSchema.optional(), q: queryText.default(""), kind: z.string().trim().min(1).max(80).optional(),
   entityIds: z.array(knowledgeIdSchema).max(200).transform(ids => [...new Set(ids)].sort()).optional(),
+  predicates: z.array(z.enum(PREDICATE_KEYS)).min(1).max(PREDICATE_KEYS.length).transform(ids => [...new Set(ids)].sort()).optional(),
+  roleId: roleIdSchema.optional(), aroundId: knowledgeIdSchema.optional(),
+  scopeIds: z.array(knowledgeIdSchema).max(20000).transform(ids => [...new Set(ids)].sort()).optional(),
   limit: z.number().int().min(1).max(50).default(20),
   cursor: z.string().min(1).max(2048).regex(/^[A-Za-z0-9_-]+$/).optional(),
 });

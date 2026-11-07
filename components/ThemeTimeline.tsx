@@ -22,6 +22,7 @@ type Props<R extends TimelineDisplayRecord> = {
   entities: TimelineDisplayEntity[];
   timeline?: ThemeTimelineConfig;
   focusedRecordId: string | null;
+  focusedEntityId?: string;
   onFocusRecord: (id: string | null) => void;
   selectedRecordIds: string[];
   onToggleSelected?: (id: string) => void;
@@ -49,14 +50,16 @@ const meaningLabels = {
 function RecordContext({
   record,
   entities,
+  focusedEntityId,
 }: {
   record: TimelineDisplayRecord;
   entities: TimelineDisplayEntity[];
+  focusedEntityId?: string;
 }) {
   const entity = (id: string) => {
     const value = entities.find((e) => e.id === id);
     return (
-      <span className={css.entityTag} data-entity-id={id}>
+      <span className={css.entityTag} data-entity-id={id} data-subject-focus={focusedEntityId===id||undefined} title={focusedEntityId===id?'探索から選択している対象':undefined}>
         <i
           className={css.entityShape}
           data-shape={value?.kind === "人物" ? "circle" : "round-rectangle"}
@@ -238,6 +241,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
   entities,
   timeline,
   focusedRecordId,
+  focusedEntityId,
   onFocusRecord,
   selectedRecordIds,
   onToggleSelected,
@@ -381,7 +385,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
               >
                 <span className={css.rowText}>
                   <span className={css.assertion}>{record.assertion}</span>
-                  <RecordContext record={record} entities={entities} />
+                  <RecordContext record={record} entities={entities} focusedEntityId={focusedEntityId}/>
                   {(nested.length > 0 ||
                     (group.kind !== "calendar" && t?.label)) && (
                     <span className={css.meta}>

@@ -59,6 +59,27 @@ async function setup() { const api = server(), hook = renderHook(() => useKnowle
 beforeEach(() => { vi.useFakeTimers(); sessionStorage.clear(); window.history.replaceState({}, "", "/"); });
 afterEach(() => { cleanup(); vi.useRealTimers(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 
+it('対象からThemeを開くと固定snapshotの対象を選び、閉じても元探索と位置を保持する',async()=>{
+ const {result}=await setup();await act(()=>result.current.startFrom(a));
+ act(()=>result.current.selectEntity('b'));
+ await act(()=>result.current.openTheme({id:'theme',revision:3,focusEntityId:'b'}));
+ expect(result.current.themeSelection).toEqual({kind:'entity',id:'b'});
+ expect(new URL(location.href).searchParams.get('kfocus')).toBe('b');
+ expect(result.current.normal.rootId).toBe('a');expect(result.current.normal.selection).toEqual({kind:'entity',id:'b'});
+ act(()=>result.current.closeTheme());expect(result.current.normal.rootId).toBe('a');expect(result.current.normal.records[0].record.revision).toBe(2);
+ await act(()=>result.current.openTheme({id:'theme',revision:3,focusEntityId:'c'}));expect(result.current.themeSelection).toBeNull();
+ expect(result.current.activeTheme?.records[0].record.revision).toBe(1);
+});
+it('Theme直リンクの対象焦点は再読込時も復元し、Record直リンクは古い探索の起点で上書きしない',async()=>{
+ const api=server();history.replaceState({},'','/?ktheme=theme&krev=3&kfocus=b');
+ const hook=renderHook(()=>useKnowledgeWorkspace({embedded:true}));await flush();
+ expect(hook.result.current.themeSelection).toEqual({kind:'entity',id:'b'});hook.unmount();
+ history.replaceState({},'','/?krecord=r2');
+ const secondHook=renderHook(()=>useKnowledgeWorkspace({embedded:true}));await flush();
+ expect(secondHook.result.current.normal.selection).toEqual({kind:'record',id:'r2'});expect(secondHook.result.current.normal.records.map(r=>r.record.id)).toEqual(['r2']);
+ expect(api.requests.some(p=>p.get('mode')==='graph'&&p.get('recordIds')==='r2')).toBe(true);
+});
+
 it("Themeの固定版・選択と通常探索を分け、閉じても両方の読書状態を保つ", async () => {
   const { result } = await setup();
   await act(() => result.current.startFrom(a));

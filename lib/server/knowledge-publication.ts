@@ -1,6 +1,9 @@
 import {readKnowledgeRecordVersion} from './knowledge-record-version';
 import {readKnowledgeTextOriginal,readKnowledgeTranslation,readKnowledgeTranslationById} from "./knowledge-foundation";
 import {identitySearchIds} from './knowledge-identity';
+import {identityGroup} from './knowledge-identity-resolution';
+import {readIdentityPaths} from './knowledge-identity-paths';
+import {knowledgeSearchKinds} from '../domain/knowledge-search-kind';
 import {migrateKnowledgeIdentities} from './knowledge-identity-migrate';
 import type {KnowledgeTextTarget} from "../domain/knowledge-translation";
 import { createHash, randomUUID } from "node:crypto";
@@ -193,6 +196,12 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
   async function allowedRows(c:PoolClient,generationId:string,ids:string[]){if(!ids.length)return [];return (await c.query(`SELECT body FROM knowledge75.publication_records r WHERE generation=$1 AND id=ANY($2::text[]) AND ${readableSql()} ORDER BY id`,[generationId,ids])).rows.map(r=>r.body as KnowledgePublishedRecord);}
   async function deniedIds(c:PoolClient,generationId:string){return (await c.query(`SELECT id FROM knowledge75.publication_records r WHERE generation=$1 AND NOT (${readableSql()})`,[generationId])).rows.map(r=>r.id as string);}
   async function entity(c:PoolClient,generationId:string,id:string){const r=(await c.query("SELECT e.body FROM knowledge75.publication_entities e JOIN knowledge75.objects o ON o.kind='entity' AND o.id=e.id AND o.visibility='public' JOIN knowledge75.published_revisions p ON p.kind='entity' AND p.id=e.id AND p.revision=e.revision WHERE e.generation=$1 AND e.id=$2",[generationId,id])).rows[0];if(!r)throw new KnowledgeError("この対象は閲覧できません",404,"NOT_FOUND");return r.body as KnowledgeEntityVersion;}
+  async function searchEntityIds(c:PoolClient,q:string,generationId:string){
+    if(!q.trim())return [];
+    const pattern='%'+normalize(q).replace(/[\\%_]/g,'\\$&')+'%';
+    const translated=(await c.query(`SELECT DISTINCT e.id FROM knowledge75.publication_entities e JOIN knowledge75.objects o ON o.kind='entity' AND o.id=e.id AND o.visibility='public' JOIN knowledge75.published_revisions p ON p.kind='entity' AND p.id=e.id AND p.revision=e.revision JOIN knowledge75.text_translation_heads h ON h.target->>'kind'='entity' AND h.target->>'id'=e.id AND h.target->>'revision'=e.revision::text AND h.target->>'field' IN ('name','aliases') AND h.visibility='public' JOIN knowledge75.text_translation_revisions t ON t.id=h.id AND t.revision=h.current_revision WHERE e.generation=$1 AND lower(normalize(t.text,NFKC)) LIKE $2 ESCAPE E'\\\\' ORDER BY e.id`,[generationId,pattern])).rows.map(r=>r.id as string);
+    return [...new Set([...await identitySearchIds(c,q,generationId),...await identityGroup(c,translated,generationId)])].sort();
+  }
   return {
     publishPending,status:()=>read(statusIn),
     capsulesReadable:(raw:unknown)=>read(async c=>{
@@ -234,7 +243,8 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
     themes:(raw:unknown={})=>read(async c=>{
       const q=knowledgeThemeListQuerySchema.parse(raw);
       const values:unknown[]=[];const conditions=["o.kind='theme'","o.visibility='public'","p.id IS NOT NULL"];
-      if(q.entityId){values.push(q.entityId);conditions.push(`EXISTS (SELECT 1 FROM jsonb_array_elements(r.content->'entityPins') pin WHERE pin->>'id'=$${values.length})`);}
+      const focusIds=q.entityId?await identityGroup(c,[q.entityId]):[];
+      if(q.entityId){values.push(focusIds);conditions.push(`EXISTS (SELECT 1 FROM jsonb_array_elements(r.content->'entityPins') pin WHERE pin->>'id'=ANY($${values.length}::text[]))`);}
       if(q.q){values.push("%"+normalize(q.q).replace(/[\\%_]/g,"\\$&")+"%");conditions.push(`lower(normalize(concat_ws(' ',r.content->>'title',r.content->>'description'),NFKC)) LIKE $${values.length} ESCAPE E'\\\\'`);}
       const candidates=(await c.query(`SELECT r.id,r.revision,(SELECT min(first.created_at) FROM knowledge75.revisions first WHERE first.kind='theme' AND first.id=r.id) AS first_created_at FROM knowledge75.objects o JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=o.current_revision LEFT JOIN knowledge75.published_revisions p ON p.kind=r.kind AND p.id=r.id AND p.revision=r.revision WHERE ${conditions.join(" AND ")} ORDER BY r.id`,values)).rows;
       const result:KnowledgeThemePage={themes:[]};
@@ -244,7 +254,7 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
       }
       result.themes=result.themes.filter(t=>q.kind==='all'||(t.hasTimeline?'timeline':t.hasRelations?'graph':'context')===q.kind);
       result.themes.sort((a,b)=>q.order==='name'?a.title.localeCompare(b.title,'ja')||a.id.localeCompare(b.id):(b.publishedAt??'').localeCompare(a.publishedAt??'')||a.id.localeCompare(b.id));
-      return result;
+      return {...result,...(q.entityId?{focusIds}:{})};
     }),
     theme:(raw:unknown)=>read(async c=>{
       const q=knowledgeThemeReadQuerySchema.parse(raw);
@@ -262,13 +272,21 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
     }),
     entities:(raw:unknown={})=>read(async c=>{
       const q=knowledgeEntityQuerySchema.parse(raw);const cursor=decodeCursor(q.cursor);const actual=await generation(c,q.generation??cursor?.generation);
-      const identities=await identitySearchIds(c,q.q,actual.id);
-      const filter=knowledgeDigest({kind:"entities",q:normalize(q.q),identities,entityKind:q.kind??null,entityId:q.entityId??null,entityIds:q.entityIds??null,limit:q.limit});
+      const identities=await searchEntityIds(c,q.q,actual.id),aroundIds=q.aroundId?await identityGroup(c,[q.aroundId],actual.id):null;
+      const filter=knowledgeDigest({kind:"entities",...q,cursor:undefined,generation:undefined,q:normalize(q.q),identities,aroundIds});
       if(cursor&&(cursor.generation!==actual.id||cursor.filter!==filter))throw new KnowledgeError("対象の検索条件と続きの取得条件が一致しません",400,"CURSOR_MISMATCH");
       const values:unknown[]=[actual.id,cursor?.after??""];const conditions=["e.generation=$1","e.id>$2","o.visibility='public'","p.id IS NOT NULL"];
       if(q.entityId){values.push(q.entityId);conditions.push(`e.id=$${values.length}`);}
       if(q.entityIds){values.push(q.entityIds);conditions.push(`e.id=ANY($${values.length}::text[])`);}
-      if(q.kind){values.push(q.kind);conditions.push(`e.body#>>'{content,kind}'=$${values.length}`);}
+      if(q.kind){values.push(knowledgeSearchKinds(q.kind));conditions.push(`e.body#>>'{content,kind}'=ANY($${values.length}::text[])`);}
+      if(q.scopeIds){values.push(q.scopeIds);conditions.push(`e.id=ANY($${values.length}::text[])`);}
+      if(q.predicates||q.roleId||aroundIds){
+        const relation=[`r.generation=e.generation`,`(r.subject_id=e.id OR r.object_id=e.id)`,readableSql()];
+        if(q.predicates){values.push(q.predicates);relation.push(`r.predicate=ANY($${values.length}::text[])`);}
+        if(q.roleId){values.push(q.roleId);relation.push(`r.predicate='CONTRIBUTED_TO' AND r.role_id=$${values.length}`);}
+        if(aroundIds){values.push(aroundIds);relation.push(`(r.subject_id=ANY($${values.length}::text[]) OR r.object_id=ANY($${values.length}::text[]))`);}
+        conditions.push(`EXISTS(SELECT 1 FROM knowledge75.publication_records r WHERE ${relation.join(' AND ')})`);
+      }
       if(q.q){values.push("%"+normalize(q.q).replace(/[\\%_]/g,"\\$&")+"%");const textIndex=values.length;values.push(identities);conditions.push(`(lower(normalize(concat_ws(' ',e.body#>>'{content,name}',(e.body#>'{content,aliases}')::text),NFKC)) LIKE $${textIndex} ESCAPE E'\\\\' OR e.id=ANY($${values.length}::text[]))`);}
       values.push(q.limit+1);
       const rows=(await c.query(`SELECT e.id,e.body FROM knowledge75.publication_entities e LEFT JOIN knowledge75.objects o ON o.kind='entity' AND o.id=e.id LEFT JOIN knowledge75.published_revisions p ON p.kind='entity' AND p.id=e.id AND p.revision=e.revision WHERE ${conditions.join(" AND ")} ORDER BY e.id LIMIT $${values.length}`,values)).rows;
@@ -277,14 +295,17 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
     }),
     search:(raw:unknown)=>read(async c=>{
       const q=knowledgePublicationQuerySchema.parse(raw);const cursor=decodeCursor(q.cursor);const actual=await generation(c,q.generation??cursor?.generation);
-      const identities=await identitySearchIds(c,q.q,actual.id);
+      const identities=await searchEntityIds(c,q.q,actual.id),entityIds=q.entityId?await identityGroup(c,[q.entityId],actual.id):null,aroundIds=q.aroundId?await identityGroup(c,[q.aroundId],actual.id):null;
       const {cursor:_cursor,generation:_generation,...filters}=q;void _cursor;void _generation;
-      const filter=knowledgeDigest({kind:"search",...filters,q:normalize(q.q??""),identities});
+      const filter=knowledgeDigest({kind:"search",...filters,q:normalize(q.q??""),identities,entityIds,aroundIds});
       if(cursor&&(cursor.generation!==actual.id||cursor.filter!==filter))throw new KnowledgeError("検索条件と続きの取得条件が一致しません",400,"CURSOR_MISMATCH");
       const values:unknown[]=[actual.id,cursor?.after??""];const where=["r.generation=$1","r.id>$2",readableSql()];
       const equal=(column:string,v:unknown)=>{if(v!==undefined&&v!==""){values.push(v);where.push(`r.${column}=$${values.length}`);}};
       if(q.q){values.push("%"+normalize(q.q).replace(/[\\%_]/g,"\\$&")+"%");const textIndex=values.length;values.push(identities);where.push(`(r.search_text LIKE $${textIndex} ESCAPE E'\\\\' OR r.subject_id=ANY($${values.length}::text[]) OR r.object_id=ANY($${values.length}::text[]))`);}
-      if(q.entityId){values.push(q.entityId);where.push(`(r.subject_id=$${values.length} OR r.object_id=$${values.length})`);}
+      if(entityIds){values.push(entityIds);where.push(`(r.subject_id=ANY($${values.length}::text[]) OR r.object_id=ANY($${values.length}::text[]))`);}
+      for(const ids of [aroundIds,q.scopeIds])if(ids){values.push(ids);where.push(`(r.subject_id=ANY($${values.length}::text[]) OR r.object_id=ANY($${values.length}::text[]))`);}
+      if(q.entityKind){values.push(knowledgeSearchKinds(q.entityKind));where.push(`EXISTS(SELECT 1 FROM knowledge75.publication_entities e WHERE e.generation=r.generation AND e.id IN(r.subject_id,r.object_id) AND e.body#>>'{content,kind}'=ANY($${values.length}::text[]))`);}
+      if(q.predicates){values.push(q.predicates);where.push(`r.predicate=ANY($${values.length}::text[])`);}
       for(const [column,v] of [["relation_label",q.relationLabel],["polarity",q.polarity],["concept_id",q.conceptId],["predicate",q.predicate],["role_id",q.roleId],["isbn13",q.isbn13],["organization_position_id",q.organizationPositionId],["event_role_id",q.eventRoleId],["event_id",q.eventId]] as const)equal(column,v);
       if(q.eventDay){values.push(q.eventDay);where.push(`r.event_from <= $${values.length}::date AND r.event_to >= $${values.length}::date`);}
       values.push(q.limit+1);const rows=(await c.query(`SELECT r.id,r.body FROM knowledge75.publication_records r WHERE ${where.join(" AND ")} ORDER BY r.id LIMIT $${values.length}`,values)).rows;
@@ -298,25 +319,36 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
     textTranslation:(target:KnowledgeTextTarget,language:string,revision?:number)=>read(c=>readKnowledgeTranslation(c,target,language,revision)),
     detail:(raw:{generation?:string;recordId:string})=>read(async c=>{const q=z.strictObject({generation:generationSchema.optional(),recordId:z.string().min(1).max(120)}).parse(raw);const actual=await generation(c,q.generation);const records=await allowedRows(c,actual.id,[q.recordId]);if(!records[0])throw new KnowledgeError("この記録は閲覧できません",404,"NOT_FOUND");return {generation:actual.id,record:records[0]};}),
     graph:(raw:{generation?:string;recordIds:string[]})=>read(async c=>{const q=z.strictObject({generation:generationSchema.optional(),recordIds:z.array(z.string().min(1).max(120)).max(200)}).parse(raw);const actual=await generation(c,q.generation);const records=await allowedRows(c,actual.id,[...new Set(q.recordIds)]);const sources=[...new Map(records.flatMap(r=>r.sources.map(s=>[pinKey("source",s.id,s.revision),s] as const))).values()];return {generation:actual.id,records,entities:distinctEntities(records),sources};}),
+    entityScope:(raw:{generation?:string;ids:string[]})=>read(async c=>{
+      const q=z.strictObject({generation:generationSchema.optional(),ids:z.array(z.string().min(1).max(120)).max(20000)}).parse(raw),actual=await generation(c,q.generation);
+      const ids=await identityGroup(c,q.ids,actual.id);
+      const rows=(await c.query(`SELECT DISTINCT id FROM knowledge75.publication_records r CROSS JOIN LATERAL unnest(ARRAY[r.subject_id,r.object_id]) id WHERE r.generation=$1 AND (r.subject_id=ANY($2::text[]) OR r.object_id=ANY($2::text[])) AND id IS NOT NULL AND ${readableSql()} ORDER BY id LIMIT 20001`,[actual.id,ids])).rows.map(r=>r.id as string);
+      const result=[...new Set([...ids,...rows])].sort();if(result.length>20000)throw new KnowledgeError('検索範囲が大きすぎます。名前で絞ってください',400,'SCOPE_TOO_LARGE');
+      return {generation:actual.id,ids:result};
+    }),
     neighbors:(raw:{generation?:string;entityId:string;direction?:"both"|"out"|"in";limit?:number;cursor?:string})=>read(async c=>{
       const q=z.strictObject({generation:generationSchema.optional(),entityId:z.string().min(1).max(120),direction:z.enum(["both","out","in"]).default("both"),limit:z.number().int().min(1).max(50).default(20),cursor:z.string().max(2048).optional()}).parse(raw);
       const cursor=decodeCursor(q.cursor);const actual=await generation(c,q.generation??cursor?.generation);const center=await entity(c,actual.id,q.entityId);
-      const filter=knowledgeDigest({kind:"neighbors",entityId:q.entityId,direction:q.direction,limit:q.limit});if(cursor&&(cursor.generation!==actual.id||cursor.filter!==filter))throw new KnowledgeError("近傍条件と続きの取得条件が一致しません",400,"CURSOR_MISMATCH");
+      const identityIds=await identityGroup(c,[q.entityId],actual.id);
+      const filter=knowledgeDigest({kind:"neighbors",entityId:q.entityId,identityIds,direction:q.direction,limit:q.limit});if(cursor&&(cursor.generation!==actual.id||cursor.filter!==filter))throw new KnowledgeError("近傍条件と続きの取得条件が一致しません",400,"CURSOR_MISMATCH");
       // A zero degree is authoritative in the immutable public Record index.
       // Note-only subjects must not wait for a graph connection that cannot add
       // any result. Positive relation reads still verify their Neo4j generation.
-      const endpoint=q.direction==='out'?'r.subject_id=$2':q.direction==='in'?'r.object_id=$2':'(r.subject_id=$2 OR r.object_id=$2)';
-      const hasIndexedRelation=Boolean((await c.query(`SELECT 1 FROM knowledge75.publication_records r WHERE r.generation=$1 AND ${endpoint} AND r.id>$3 AND r.body#>>'{record,content,kind}'='relation' AND ${readableSql()} LIMIT 1`,[actual.id,q.entityId,cursor?.after??''])).rowCount);
+      const endpoint=q.direction==='out'?'r.subject_id=ANY($2::text[])':q.direction==='in'?'r.object_id=ANY($2::text[])':'(r.subject_id=ANY($2::text[]) OR r.object_id=ANY($2::text[]))';
+      const hasIndexedRelation=Boolean((await c.query(`SELECT 1 FROM knowledge75.publication_records r WHERE r.generation=$1 AND ${endpoint} AND r.id>$3 AND r.body#>>'{record,content,kind}'='relation' AND ${readableSql()} LIMIT 1`,[actual.id,identityIds,cursor?.after??''])).rowCount);
       if(!hasIndexedRelation)return {generation:actual.id,records:[],entities:[],center,hasMore:false,nextCursor:null};
       const denied=await deniedIds(c,actual.id);
-      const ids=await graphRead(actual,async tx=>{const arrow=q.direction==="out"?"-[r:K75U2_REL]->":q.direction==="in"?"<-[r:K75U2_REL]-":"-[r:K75U2_REL]-";return (await tx.run(`MATCH (a:K75U2Entity {generation:$generation,id:$id})${arrow}(b:K75U2Entity {generation:$generation}) WHERE r.generation=$generation AND r.recordId>$after AND NOT r.recordId IN $denied RETURN DISTINCT r.recordId AS id ORDER BY id LIMIT $limit`,{generation:actual.id,id:q.entityId,after:cursor?.after??"",denied,limit:neo4j.int(q.limit+1)})).records.map(r=>String(r.get("id")));});
+      const ids=await graphRead(actual,async tx=>{const arrow=q.direction==="out"?"-[r:K75U2_REL]->":q.direction==="in"?"<-[r:K75U2_REL]-":"-[r:K75U2_REL]-";return (await tx.run(`MATCH (a:K75U2Entity {generation:$generation})${arrow}(b:K75U2Entity {generation:$generation}) WHERE a.id IN $ids AND r.generation=$generation AND r.recordId>$after AND NOT r.recordId IN $denied RETURN DISTINCT r.recordId AS id ORDER BY id LIMIT $limit`,{generation:actual.id,ids:identityIds,after:cursor?.after??"",denied,limit:neo4j.int(q.limit+1)})).records.map(r=>String(r.get("id")));});
       const hasMore=ids.length>q.limit;const selected=ids.slice(0,q.limit);const records=await allowedRows(c,actual.id,selected);
       return {generation:actual.id,records,entities:distinctEntities(records),center,hasMore,nextCursor:hasMore?encodeCursor({v:1,generation:actual.id,filter,after:selected.at(-1)!}):null};
     }),
     paths:(raw:{generation?:string;fromEntityId:string;toEntityId:string;maxDepth?:number;limit?:number})=>read(async c=>{
-      const q=z.strictObject({generation:generationSchema.optional(),fromEntityId:z.string().min(1).max(120),toEntityId:z.string().min(1).max(120),maxDepth:z.number().int().min(1).max(4).default(3),limit:z.number().int().min(1).max(25).default(10)}).parse(raw);const actual=await generation(c,q.generation);await entity(c,actual.id,q.fromEntityId);await entity(c,actual.id,q.toEntityId);const denied=await deniedIds(c,actual.id);
-      const candidates=await graphRead(actual,async tx=>(await tx.run(`MATCH p=(a:K75U2Entity {generation:$generation,id:$from})-[:K75U2_REL*1..${q.maxDepth}]-(b:K75U2Entity {generation:$generation,id:$to}) WHERE all(r IN relationships(p) WHERE r.generation=$generation AND NOT r.recordId IN $denied) AND all(n IN nodes(p) WHERE n.generation=$generation) AND all(n IN nodes(p) WHERE single(m IN nodes(p) WHERE m=n)) RETURN [r IN relationships(p)|r.recordId] AS recordIds,[n IN nodes(p)|n.id] AS entityIds ORDER BY length(p),recordIds,entityIds LIMIT $limit`,{generation:actual.id,from:q.fromEntityId,to:q.toEntityId,denied,limit:neo4j.int(q.limit+1)})).records.map(r=>({recordIds:r.get("recordIds") as string[],entityIds:r.get("entityIds") as string[]})));
-      const hasMore=candidates.length>q.limit;const selected=candidates.slice(0,q.limit);const records=await allowedRows(c,actual.id,[...new Set(selected.flatMap(p=>p.recordIds))]);const allowed=new Set(records.map(r=>r.record.id));return {generation:actual.id,paths:selected.filter(p=>p.recordIds.every(id=>allowed.has(id))),records,entities:distinctEntities(records),hasMore,maxDepth:q.maxDepth};
+      const q=z.strictObject({generation:generationSchema.optional(),fromEntityId:z.string().min(1).max(120),toEntityId:z.string().min(1).max(120),maxDepth:z.number().int().min(1).max(4).default(3),limit:z.number().int().min(1).max(25).default(10)}).parse(raw);const actual=await generation(c,q.generation);const endpoints=await Promise.all([entity(c,actual.id,q.fromEntityId),entity(c,actual.id,q.toEntityId)]);
+      // Validate the graph generation, then traverse its authoritative public Record
+      // index with current identity transitions. Original endpoints stay unchanged.
+      await graphRead(actual,async()=>undefined);
+      const candidates=await readIdentityPaths(c,{generation:actual.id,from:q.fromEntityId,to:q.toEntityId,maxDepth:q.maxDepth,limit:q.limit,readableSql:readableSql()});
+      const hasMore=candidates.length>q.limit;const selected=candidates.slice(0,q.limit);const records=await allowedRows(c,actual.id,[...new Set(selected.flatMap(p=>p.recordIds))]);const allowed=new Set(records.map(r=>r.record.id));return {generation:actual.id,paths:selected.filter(p=>p.recordIds.every(id=>allowed.has(id))),records,entities:[...new Map([...distinctEntities(records),...endpoints].map(e=>[e.id,e])).values()],hasMore,maxDepth:q.maxDepth};
     }),
   };
 }

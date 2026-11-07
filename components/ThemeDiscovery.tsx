@@ -11,18 +11,19 @@ import results from "./DiscoverySearch.module.css";
 
 export type ThemeCriteria = { q: string; kind: "all" | "timeline" | "graph" | "context"; order: "newest" | "name" };
 export const initialThemeCriteria: ThemeCriteria = { q: "", kind: "all", order: "newest" };
-export type OpenTheme = (ref: { id: string; revision?: number }) => void;
-export function ThemeLink({ theme, onOpen, appearance = "row", showDescription = false }: {
+export type OpenTheme = (ref: { id: string; revision?: number; focusEntityId?: string }) => void;
+export function ThemeLink({ theme, onOpen, appearance = "row", showDescription = false, focusEntityId }: {
   theme: KnowledgeThemeSummary; onOpen: OpenTheme;
   appearance?: "row" | "featured" | "recent"; showDescription?: boolean;
+  focusEntityId?: string;
 }) {
   const { locale } = useUiLocale(), en = locale === "en";
   const type = knowledgeThemeTypeLabel(theme, en);
   const icon = theme.hasTimeline ? "event" : theme.hasRelations === false ? "book" : "graph";
-  const href = `${en ? "/en" : "/"}?${new URLSearchParams({ ktheme: theme.id, krev: String(theme.revision), kview: theme.initialView })}`;
+  const href = `${en ? "/en" : "/"}?${new URLSearchParams({ ktheme: theme.id, krev: String(theme.revision), kview: theme.initialView,...(focusEntityId?{kfocus:focusEntityId}:{}) })}`;
   function choose(event: MouseEvent<HTMLAnchorElement>) {
     if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    event.preventDefault(); onOpen({ id: theme.id, revision: theme.revision });
+    event.preventDefault(); onOpen({ id: theme.id, revision: theme.revision,...(focusEntityId?{focusEntityId}:{}) });
   }
   if (appearance === "recent") return <a className={css.recentLink} href={href} onClick={choose}>
     <Icon name={icon}/>{theme.title}<span>{type}</span>

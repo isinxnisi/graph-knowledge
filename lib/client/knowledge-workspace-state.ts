@@ -33,21 +33,23 @@ export function parseKnowledgeReference(value: unknown): KnowledgeWorkspaceRefer
   const result = knowledgeWorkspaceReferenceSchema.safeParse(value);
   return result.success ? result.data : null;
 }
-export function knowledgeThemeLocation(url: URL): { id: string; revision?: number; view?: KnowledgeView } | null {
+export function knowledgeThemeLocation(url: URL): { id: string; revision?: number; view?: KnowledgeView; focusEntityId?: string } | null {
   const id = knowledgeIdSchema.safeParse(url.searchParams.get("ktheme"));
   if (!id.success) return null;
   const rawRevision = url.searchParams.get("krev"), revision = rawRevision === null ? undefined : Number(rawRevision);
   if (revision !== undefined && (!Number.isSafeInteger(revision) || revision < 1)) return null;
   const view = url.searchParams.get("kview");
-  return { id: id.data, ...(revision === undefined ? {} : { revision }), ...(["graph", "timeline", "split"].includes(view ?? "") ? { view: view as KnowledgeView } : {}) };
+  const focus=knowledgeIdSchema.safeParse(url.searchParams.get('kfocus'));
+  return { id: id.data, ...(focus.success?{focusEntityId:focus.data}:{}), ...(revision === undefined ? {} : { revision }), ...(["graph", "timeline", "split"].includes(view ?? "") ? { view: view as KnowledgeView } : {}) };
 }
 export function knowledgeWorkspaceHref(url: URL, value: KnowledgeWorkspaceReference): string {
   const next = new URL(url);
-  for (const key of ["ktheme", "krev", "kview"]) next.searchParams.delete(key);
+  for (const key of ["ktheme", "krev", "kview", "kfocus"]) next.searchParams.delete(key);
   if (value.theme) {
     next.searchParams.set("ktheme", value.theme.id);
     next.searchParams.set("krev", String(value.theme.revision));
     next.searchParams.set("kview", value.themeView);
+    if(value.themeSelection?.kind==='entity')next.searchParams.set('kfocus',value.themeSelection.id);
   }
   return next.pathname + next.search + next.hash;
 }
