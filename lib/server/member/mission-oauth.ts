@@ -1,7 +1,7 @@
 import {jwt} from 'better-auth/plugins';
 import {mcp} from '@better-auth/mcp';
 import {cimd} from '@better-auth/cimd';
-import {fetchClientMetadataResource} from '@better-auth/cimd/node';
+import {fetchMissionClientMetadataResource} from './mission-oauth-transport';
 
 export const MISSION_SCOPE='missions:collect';
 export const MISSION_MCP_PATH='/api/knowledge-collection/mcp';
@@ -28,7 +28,7 @@ export function missionOAuthPlugins(origin:string){
     oauthClientAssertion:{modelName:'mission_oauth_client_assertion'},
    },
   }),
-  cimd({fetchClientMetadataResource,metadataProfile:'mcp-2026-07-28',isMetadataDocumentUrlAllowed:chatGptClientUrl,
+  cimd({fetchClientMetadataResource:fetchMissionClientMetadataResource,metadataProfile:'mcp-2026-07-28',isMetadataDocumentUrlAllowed:chatGptClientUrl,
    metadataFetchPolicy:{maximumFetchesPerMinute:12,maximumFetchesPerOriginPerMinute:12},maxCacheEntries:4}),
  ];
 }

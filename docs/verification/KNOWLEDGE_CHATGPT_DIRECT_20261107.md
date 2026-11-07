@@ -40,3 +40,11 @@ app source `7a9448020d5aaf8855a051e8dcf93fcd2442f26d`、build `kl-9_RPiFbifehMVu
 ## 最終patchの配置
 
 Zod／Undiciのpatch後の107件・型検査込みproduction buildが成功。上記app source／buildをWebだけ再配置し、3200とHTTPS βで計12応答を確認した（通常ページとmetadataは200、未認証MCPは401）。今回のWeb再配置にDB移行はなく、035までの既存適用を維持した。private設定16件のhashを保持。review WorkerのみWebと共に再起動し、他4 Workerは停止していない。本番VPS・3276は未更新。ChatGPTの作成・接続承認画面は本人操作待ちのままで、実Google／実配送／同一会話での予定実行は未確認。
+
+## 接続時の5秒timeout修正
+
+本人の接続で `invalid_client: Metadata document fetch timed out after 5000ms` が発生。このPCのNode `dns.lookup` は5,075ms、同じホストの `dns.resolve4` は35ms、従来のCIMD transportのHTTP全体は5,398msだった。公式CIMD libraryの5秒固定期限に、OSの名前解決待ちだけで達していた。単なるパスワードエラーやGemini利用量の問題ではない。
+
+収集OAuthのtransportだけでA／AAAAを直接解決し、全応答が公開IPであることを確認して一つへ接続を固定する。TLSのhostname／SNI検証、期限によるDNS取消、転送禁止、URLの信頼先限定を維持する。会話や受信要求のCookie・Authorizationはメタ情報の取得先へ転送しない。PC全体のDNS設定・他Workerの資料取得・共有Kevは変更しない。
+
+修正後の実ChatGPT metadataは200／2,345ms、署名検証用JWKSは200／2,170msで取得できた。新規のtransport6件と既存MCP境界5件、対象lintが成功。本人によるOAuth再接続とChatGPTからの初回実行は、β再配置後に引き続き確認する。DB変更はない。

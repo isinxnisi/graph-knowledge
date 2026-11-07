@@ -45,6 +45,8 @@ ChatGPT側の接続許可が予定実行を止める場合、または利用モ�
 
 ## 検証の境界
 
+接続時にCIMDの5秒timeoutとなる場合は、まずPlunode側のmetadata／JWKS取得を確認する。2026-11-07のPCではOSの`dns.lookup`に約5秒の待ちがあり、収集OAuthだけ直接DNS解決＋公開IPへの接続固定に修正した。PC全体のDNS変更、認証なしへの切替、client URLの無制限許可で回避しない。
+
 17件の境界＋会員の既存確認を合わせた107テスト・lint・型検査込みbuildと、復元DBでmetadata／PKCE／署名付き同意／認可コード／audience／scope／refresh／失効を確認。fixtureでの確認を実Google・実ChatGPTの成功と混同しない。最新の配置・本人操作・未確認は[実測記録](../verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)を参照。
 
 [公式予定実行](https://learn.chatgpt.com/docs/automations)／[MCP認証](https://developers.openai.com/plugins/build/auth)／[Better Auth MCP](https://better-auth.com/docs/plugins/mcp)。
