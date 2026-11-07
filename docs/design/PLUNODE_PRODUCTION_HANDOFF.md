@@ -1,3 +1,5 @@
+2026-11-08 R3b是正：専用の同じChatGPT会話に予定を作成し実配送を確認。正常な根拠追加の再送はChatGPT側の送信許可待ち。app `622d3f01`／build `r4belbBgIV9Xa7l4mw25u`、main／3200／HTTPS βへ配置、25テスト・型検査込みbuild成功。R4a完了・b以降は残る。[現在地・再開](../verification/KNOWLEDGE_CHATGPT_SCHEDULED_20261108.md)。以下の日付付き記録は各時点の履歴。 ChatGPTの定期起動も送信許可待ちのため一時停止中。
+
 2026-11-07 API直送β配置済み：app `e7f3accc`／build `bkKmHOZGJGlK4D6HLN1PX`、035・既存保全・HTTP確認済み。ChatGPT WebのCIMD自動検出まで確認。本人接続と初回／予定実行は未確認、R3b是正完了にしない。[実測](../verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)。
 
 2026-11-07 R3b是正：API直送を既定として収集専用OAuth／MCPを実装。17件と別DB復元の認証・移行を確認。β配置・本人接続・ChatGPT予定の初回実行は最新の[実測記録](../verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)と[接続手順](../runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)を参照。Codex予定はPAUSED、R4a完了・R4b以降は残る。
