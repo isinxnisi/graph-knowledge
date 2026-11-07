@@ -17,6 +17,7 @@ import KnowledgeRelatedInformation from "./KnowledgeRelatedInformation";
 import KnowledgeContributors from "./KnowledgeContributors";
 import {useKnowledgeSubmissionsEnabled} from "./KnowledgeSubmissionAvailability";
 import {createSelectionSubmission,knowledgeSubmissionSelection,submissionHandoffError} from "../lib/client/knowledge-submission-handoff";
+import {MemberClientError} from "../lib/client/member-api";
 import GraphCanvas, {type GraphCanvasHandle} from "./GraphCanvas";
 import KnowledgeTimeline from "./KnowledgeTimeline";
 import KnowledgeSplit from "./KnowledgeSplit";
@@ -41,6 +42,7 @@ export const useKnowledgeReading=()=>useContext(ReadingContext);
 export default function KnowledgeReading({children,operatorEnabled=true}:{children:ReactNode;operatorEnabled?:boolean}) {
  const submissionsEnabled=useKnowledgeSubmissionsEnabled();
  const [submissionBusy,setSubmissionBusy]=useState(false),[submissionError,setSubmissionError]=useState("");
+ const [submissionRefreshTarget,setSubmissionRefreshTarget]=useState<{kind:"record"|"entity";id:string}|null>(null);
  const [canvasKeys,setCanvasKeys]=useState<string[]>([]);
  const [keptTranslations,setKeptTranslations]=useState<KnowledgeTranslationVersion[]>([]);
  const keepTranslation=(v:KnowledgeTranslationVersion)=>setKeptTranslations(rows=>[...rows.filter(r=>r.id!==v.id),v]);
@@ -98,18 +100,18 @@ export default function KnowledgeReading({children,operatorEnabled=true}:{childr
    const opened=await w.startFrom(entity);if(!opened)return;const url=new URL(location.href);url.searchParams.delete("krecord");url.searchParams.set("kentity",entity.id);history.replaceState(history.state,"",url);setCommonVisible(true);setPane("graph");
  }
  async function submitSelection(){
-   setSubmissionBusy(true);setSubmissionError("");
+   setSubmissionBusy(true);setSubmissionError("");setSubmissionRefreshTarget(null);
    try{const canvas=active?themeCanvas.current:normalCanvas.current,fromCanvas=canvas?.selectedKeys?.()??canvasKeys,fallback=canvasSelection(selection),keys=fromCanvas.length&&(!fallback||fromCanvas.includes(fallback.id))?fromCanvas:fallback?[fallback.id]:[];
      const context=knowledgeSubmissionSelection(entities,records.map(r=>r.record),keys,active?{id:active.theme.id,revision:active.theme.revision}:undefined);
      checkpoint();const href=await createSelectionSubmission({context});location.assign(href);
-   }catch(error){setSubmissionError(submissionHandoffError(error,en));}finally{setSubmissionBusy(false);}
+   }catch(error){setSubmissionError(submissionHandoffError(error,en));if(error instanceof MemberClientError&&error.status===409)setSubmissionRefreshTarget(selectedRecord?{kind:"record",id:selectedRecord.record.id}:selectedEntity?{kind:"entity",id:selectedEntity.id}:null);}finally{setSubmissionBusy(false);}
  }
  const submissionButton=submissionsEnabled&&<button className={css.themeInfo} aria-label={en?"Submit selection":"選択範囲を投稿"} title={en?"Submit selected knowledge":"選択範囲を投稿"} disabled={busy||submissionBusy||(!selection&&!canvasKeys.length)} onClick={()=>void submitSelection()}><Icon name="edit"/></button>;
  function graphFromTimeline(id:string){w.setThemeSelection({kind:"record",id});w.setThemeView("split");requestAnimationFrame(()=>{themeCanvas.current?.ensureVisible?.("record:"+id);if(matchMedia("(max-width:1100px)").matches)themeGraphPane.current?.scrollIntoView({block:"start"});});}
  const themeButton=(t:ThemeSummary)=><button key={t.id} className={css.result} disabled={busy} onClick={()=>openTheme({...t,focusEntityId:entityId&&t.entityIds.includes(entityId)?entityId:t.entityIds.find(id=>relatedPage?.focusIds?.includes(id))})}><strong>{t.title}</strong><small>{knowledgeThemeTypeLabel(t,en)}</small></button>;
  const value:KnowledgeReadingContract={active:Boolean(active)||commonVisible||(busy&&requested),restoring:w.restoring,openTheme,openRecord,openEntity,leave,checkpoint,attachHost,error:w.error,message:w.message,busy,
  center:<div className={css.workspace}>
-  {submissionError&&<p role="alert" className={base.error}>{submissionError}</p>}
+  {submissionError&&<p role="alert" className={base.error}>{submissionError}{submissionRefreshTarget&&<button onClick={()=>{const target=submissionRefreshTarget;setSubmissionError("");setSubmissionRefreshTarget(null);if(target.kind==="record")openRecord(target.id);else{const entity=entities.find(e=>e.id===target.id);if(entity)openEntity(entity);}}}><Icon name="refresh"/>{en?"Open current content and reselect":"最新版を開いて選び直す"}</button>}</p>}
   {submissionBusy&&<p role="status">{en?"Creating a private draft…":"非公開の投稿草稿を作成しています…"}</p>}
  {w.error&&<p role="alert" className={base.error}>{w.error}<button onClick={()=>void w.refreshLatest()}>再取得</button></p>}
  {busy&&(active||commonVisible||requested)&&<p role="status" className={css.notice}>読み込んでいます…</p>}

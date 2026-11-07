@@ -3,10 +3,16 @@ import React from "react";
 import {act,cleanup,fireEvent,render,screen} from "@testing-library/react";
 import {afterEach,beforeEach,expect,it,vi} from "vitest";
 import KnowledgeReading,{useKnowledgeReading} from "../components/KnowledgeReading";
-const mocks=vi.hoisted(()=>({workspace:{} as Record<string,unknown>,close:vi.fn()}));
+import {MemberClientError} from "../lib/client/member-api";
+import {knowledgeRecordContentSchema,knowledgeSourceContentSchema} from "../lib/domain/knowledge-foundation";
+import {buildKnowledgePublishedRecord} from "../lib/domain/knowledge-publication";
+const mocks=vi.hoisted(()=>({workspace:{} as Record<string,unknown>,close:vi.fn(),capture:vi.fn()}));
 vi.mock("next/navigation",()=>({useSearchParams:()=>new URLSearchParams(location.search)}));
 vi.mock("../lib/client/use-knowledge-workspace",()=>({useKnowledgeWorkspace:()=>mocks.workspace,readKnowledge:vi.fn()}));
 vi.mock("../components/GraphCanvas",()=>({default:()=> <div>保持中の図</div>}));
+vi.mock("../components/KnowledgeSubmissionAvailability",()=>({useKnowledgeSubmissionsEnabled:()=>true}));
+vi.mock("../lib/client/use-knowledge-display-translations",()=>({useKnowledgeDisplayTranslations:()=>[]}));
+vi.mock("../lib/client/knowledge-submission-handoff",async()=>({...await vi.importActual("../lib/client/knowledge-submission-handoff"),createSelectionSubmission:mocks.capture}));
 const theme={theme:{id:"theme",revision:1,content:{title:"テーマ",recordPins:[],description:""}},records:[],snapshot:{entities:[],records:[]}};
 function Reader(){const r=useKnowledgeReading()!;return <><span>既存Explorer</span><button onClick={()=>r.openRecord("record-1")}>記録を開く</button><div>{r.center}</div></>;}
 async function flush(){await act(async()=>{for(let n=0;n<10;n++)await Promise.resolve();});}
@@ -47,4 +53,18 @@ it("通常Graphからの記録取得中は旧URLを理由に取消さず、成�
  expect(new URL(location.href).searchParams.get("krecord")).toBe("record-1");
  expect(screen.getByRole("region",{name:"通常の関係探索"})).toBeTruthy();
  expect(mocks.close).toHaveBeenCalledTimes(1);
+});
+
+it("固定版の選択投稿が競合しても勝手に替えず、明示操作で現在版を開き直せる",async()=>{
+ const record={id:"record-1",revision:1,createdAt:"2026-11-08T00:00:00Z",reason:"",content:knowledgeRecordContentSchema.parse({kind:"note",assertion:"固定した内容",aboutTheme:"theme",evidence:[{id:"e",source:{id:"source",revision:1},locator:"本文"}]})};
+ const snapshot={schemaVersion:1 as const,initialView:"graph" as const,records:[record],entities:[],sources:[{id:"source",revision:1,createdAt:record.createdAt,reason:"",content:knowledgeSourceContentSchema.parse({title:"公開資料",bibliography:"固定版"})}],mappings:[]};
+ const fixed={...theme,snapshot,records:[buildKnowledgePublishedRecord(record,snapshot)]},selectRecord=vi.fn(async()=>false);
+ mocks.workspace={...mocks.workspace,activeTheme:fixed,retainedTheme:fixed,themeSelection:{kind:"record",id:record.id},selectRecord,captureThemeView:vi.fn()};
+ mocks.capture.mockRejectedValueOnce(new MemberClientError(409,"REFERENCE_CONFLICT"));
+ render(<KnowledgeReading><Reader/></KnowledgeReading>);await flush();
+ fireEvent.click(screen.getByRole("button",{name:"選択範囲を投稿"}));await flush();
+ expect(mocks.capture).toHaveBeenCalledWith({context:expect.objectContaining({recordPins:[{id:record.id,revision:1}],themePin:{id:"theme",revision:1}})});
+ expect(selectRecord).not.toHaveBeenCalled();expect(fixed.snapshot.records[0].revision).toBe(1);
+ fireEvent.click(screen.getByRole("button",{name:"最新版を開いて選び直す"}));await flush();
+ expect(selectRecord).toHaveBeenCalledWith(record.id,{latest:true});expect(fixed.snapshot.records[0].revision).toBe(1);
 });
