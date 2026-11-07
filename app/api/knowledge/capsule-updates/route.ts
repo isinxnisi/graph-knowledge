@@ -10,7 +10,7 @@ export async function POST(request:Request){
   knowledgeReadGuard(request);
   const reader=request.body?.getReader();if(!reader)return NextResponse.json({error:'入力がありません'},{status:400,headers});
   const chunks:Uint8Array[]=[];let length=0;
-  while(true){const chunk=await reader.read();if(chunk.done)break;length+=chunk.value.byteLength;if(length>128_000){await reader.cancel();return NextResponse.json({error:'参照が多すぎます'},{status:413,headers});}chunks.push(chunk.value);}
+  while(true){const chunk=await reader.read();if(chunk.done)break;length+=chunk.value.byteLength;if(length>512_000){await reader.cancel();return NextResponse.json({error:'参照が多すぎます'},{status:413,headers});}chunks.push(chunk.value);}
   const bytes=new Uint8Array(length);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.byteLength;}
   const input=JSON.parse(new TextDecoder().decode(bytes));const service=await knowledgePublicationPreview();
   return NextResponse.json(await service.capsuleUpdates(input),{headers});

@@ -12,6 +12,7 @@ export const knowledgeTextTargetSchema=z.strictObject({
 });
 export type KnowledgeTextTarget=z.infer<typeof knowledgeTextTargetSchema>;
 export const translationLanguageSchema=knowledgeLanguageTagSchema.refine(v=>!["und","mul","zxx"].includes(v),"訳文の言語を選んでください");
+export const knowledgeDisplayTranslationsQuerySchema=z.strictObject({targets:z.array(knowledgeTextTargetSchema).max(100),language:translationLanguageSchema});
 export const translationProposalSchema=z.strictObject({target:knowledgeTextTargetSchema,language:translationLanguageSchema,text:z.string().trim().max(4000),expectedRevision:z.number().int().nonnegative().default(0)});
 export const knowledgeTranslationVersionSchema=z.strictObject({id:knowledgeIdSchema,revision:knowledgeRevisionSchema,target:knowledgeTextTargetSchema,language:translationLanguageSchema,text:z.string().min(1).max(4000),originalText:z.string().min(1).max(4000),originalHash:z.string().regex(/^[a-f0-9]{64}$/),createdAt:z.string(),reason:z.string()});
 export type KnowledgeTranslationVersion=z.infer<typeof knowledgeTranslationVersionSchema>;

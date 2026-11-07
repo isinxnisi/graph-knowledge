@@ -8,7 +8,7 @@ export const capsuleKnowledgeSnapshotSchema = z.strictObject({
   entities: z.array(version(knowledgeEntityContentSchema)).max(400),
   sources: z.array(version(knowledgeSourceContentSchema)).max(800),
   records: z.array(version(knowledgeRecordContentSchema)).max(400),
-  translations:z.array(knowledgeTranslationVersionSchema).max(100).optional(),
+  translations:z.array(knowledgeTranslationVersionSchema).max(1200).optional(),
   mappings: z.array(version(knowledgeMappingContentSchema)).max(400),
   timeline: knowledgeTimelineSchema.optional(), initialView: z.enum(["graph", "timeline", "split"]),
 }).superRefine((s,ctx) => {

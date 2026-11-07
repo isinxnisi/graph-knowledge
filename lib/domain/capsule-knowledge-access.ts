@@ -4,7 +4,7 @@ import type { CapsuleKnowledge } from "./capsule-knowledge";
 
 export const knowledgeReferenceSchema = z.strictObject({ ...knowledgePinSchema.shape, kind:z.enum(["record","entity","source","mapping","theme","translation"]) });
 export type KnowledgeReference = z.infer<typeof knowledgeReferenceSchema>;
-export const knowledgeReferenceGroupsSchema = z.array(z.array(knowledgeReferenceSchema).max(2101)).max(400);
+export const knowledgeReferenceGroupsSchema = z.array(z.array(knowledgeReferenceSchema).max(3201)).max(400);
 export function capsuleKnowledgeReferences(knowledge:CapsuleKnowledge):KnowledgeReference[] {
   return [
     ...(knowledge.snapshot.translations??[]).map(v=>({kind:"translation" as const,id:v.id,revision:v.revision})),

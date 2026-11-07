@@ -3,6 +3,8 @@
 import { useMemo, type ReactNode } from "react";
 import type { KnowledgeSnapshot } from "../lib/domain/knowledge-foundation";
 import { knowledgeTimelineProjection } from "../lib/domain/knowledge-timeline";
+import {knowledgeDisplaySnapshot} from "../lib/domain/knowledge-display";
+import {useUiLocale} from "../lib/client/ui-locale";
 import { timelineRecordId } from "../lib/domain/timeline-display";
 import ThemeTimeline from "./ThemeTimeline";
 
@@ -17,7 +19,8 @@ export default function KnowledgeTimeline({ snapshot, focusedRecordId, focusedEn
   headerAction?: ReactNode;
   emptyMessage?: string;
 }) {
-  const projection = useMemo(() => knowledgeTimelineProjection(snapshot, { untimedInContext }), [snapshot, untimedInContext]);
+  const {locale}=useUiLocale();
+  const projection = useMemo(() => knowledgeTimelineProjection(knowledgeDisplaySnapshot(snapshot,locale), { untimedInContext }), [snapshot, locale,untimedInContext]);
   return <ThemeTimeline
     {...projection}
     emptyMessage={emptyMessage}

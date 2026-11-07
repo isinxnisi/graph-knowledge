@@ -1,5 +1,7 @@
 import {readKnowledgeRecordVersion} from './knowledge-record-version';
 import {readKnowledgeTextOriginal,readKnowledgeTranslation,readKnowledgeTranslationById} from "./knowledge-foundation";
+import {translationId} from "./knowledge-translation-storage";
+import {knowledgeDisplayTranslationsQuerySchema,type KnowledgeTranslationVersion} from "../domain/knowledge-translation";
 import {identitySearchIds} from './knowledge-identity';
 import {identityGroup} from './knowledge-identity-resolution';
 import {readIdentityPaths} from './knowledge-identity-paths';
@@ -326,6 +328,15 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
     recordVersion:(id:string,revision:number)=>read(c=>readKnowledgeRecordVersion(c,{id,revision})),
     textOriginal:(target:KnowledgeTextTarget)=>read(c=>readKnowledgeTextOriginal(c,target,true)),
     textTranslation:(target:KnowledgeTextTarget,language:string,revision?:number)=>read(c=>readKnowledgeTranslation(c,target,language,revision)),
+    displayTranslations:(raw:unknown)=>read(async c=>{
+      const q=knowledgeDisplayTranslationsQuerySchema.parse(raw);
+      const ids=[...new Set(q.targets.map(target=>translationId(target,q.language)))];
+      if(!ids.length)return {translations:[] as KnowledgeTranslationVersion[]};
+      const heads=(await c.query("SELECT id FROM knowledge75.text_translation_heads WHERE id=ANY($1::text[]) AND visibility='public'",[ids])).rows;
+      const translations:KnowledgeTranslationVersion[]=[];
+      for(const head of heads){try{translations.push(await readKnowledgeTranslationById(c,head.id));}catch(e){if(!(e instanceof KnowledgeError)||e.status>=500)throw e;}}
+      return {translations};
+    }),
     detail:(raw:{generation?:string;recordId:string})=>read(async c=>{const q=z.strictObject({generation:generationSchema.optional(),recordId:z.string().min(1).max(120)}).parse(raw);const actual=await generation(c,q.generation);const records=await allowedRows(c,actual.id,[q.recordId]);if(!records[0])throw new KnowledgeError("この記録は閲覧できません",404,"NOT_FOUND");return {generation:actual.id,record:records[0]};}),
     graph:(raw:{generation?:string;recordIds:string[]})=>read(async c=>{const q=z.strictObject({generation:generationSchema.optional(),recordIds:z.array(z.string().min(1).max(120)).max(200)}).parse(raw);const actual=await generation(c,q.generation);const records=await allowedRows(c,actual.id,[...new Set(q.recordIds)]);const sources=[...new Map(records.flatMap(r=>r.sources.map(s=>[pinKey("source",s.id,s.revision),s] as const))).values()];return {generation:actual.id,records,entities:distinctEntities(records),sources};}),
     entityScope:(raw:{generation?:string;ids:string[]})=>read(async c=>{
