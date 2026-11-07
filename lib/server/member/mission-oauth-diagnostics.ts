@@ -19,3 +19,30 @@ export function missionOAuthRequestSummary(path:string,request:Request,origin:st
   form:request.headers.get('content-type')?.includes('application/x-www-form-urlencoded')??false,
   hasAuthorization:request.headers.has('authorization')};
 }
+import {createLocalJWKSet,decodeJwt,decodeProtectedHeader,jwtVerify} from 'jose';
+import {fetchMissionClientMetadataResource} from './mission-oauth-transport';
+
+
+/** Inspect only a rejected assertion in memory. Never persist or emit the JWT. */
+export async function diagnoseMissionClientAssertion(request:Request,issuer:string){
+ try{
+  const form=await request.formData(),assertion=form.get('client_assertion');
+  if(typeof assertion!=='string')return {assertion:'absent'};
+  const header=decodeProtectedHeader(assertion),claims=decodeJwt(assertion);
+  const clientId='https://chatgpt.com/oauth/client.json',audiences=Array.isArray(claims.aud)?claims.aud:[claims.aud];
+  const details:Record<string,string|boolean>={assertion:'present',issuerMatches:claims.iss===clientId,subjectMatches:claims.sub===clientId,
+   audienceMatches:audiences.includes(issuer)||audiences.includes(issuer+'/oauth2/token')};
+  const response=await fetchMissionClientMetadataResource('https://chatgpt.com/oauth/jwks.json',{signal:AbortSignal.timeout(3000),headers:{Accept:'application/json'}});
+  if(response.status!==200)return {...details,keys:'unavailable'};
+  const jwks=await response.json();details.keyIdMatches=Array.isArray(jwks.keys)&&jwks.keys.some((key:{kid?:string})=>key.kid===header.kid);
+  try{
+   await jwtVerify(assertion,createLocalJWKSet(jwks),{issuer:clientId,subject:clientId,audience:[issuer,issuer+'/oauth2/token']});
+   details.verification='valid';
+  }catch(error){
+   const e=error as {code?:unknown;claim?:unknown};
+   details.verification=typeof e.code==='string'&&/^[A-Z0-9_]{1,64}$/.test(e.code)?e.code:'failed';
+   if(typeof e.claim==='string'&&['iss','sub','aud','exp','nbf','iat'].includes(e.claim))details.claim=e.claim;
+  }
+  return details;
+ }catch{return {assertion:'diagnostic-unavailable'};}
+}
