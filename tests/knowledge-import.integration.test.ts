@@ -106,8 +106,16 @@ describe('authenticated immutable external knowledge packages',()=>{
  });
  it('honors revocation before final acceptance without confusing the sender with a member',async()=>{
   const id=await send();await core.processNext(cfg,async l=>{p.disabled=true;return response(l.wire);});expect((await status(id)).items[0].state).toBe('cancelled');p.disabled=false;
+  expect((await status(id)).state).toBe('cancelled');
   await pool.query("UPDATE knowledge_import.items SET lease_until=clock_timestamp()-interval '1 second'");
   await core.processNext(cfg,dispatch);expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.operations WHERE actor_kind='import'")).rows[0].n).toBe(0);
+ });
+ it('does not report a partially revoked package as fully reflected',async()=>{
+  const value=payload();value.items.push({...item('two'),record:{...item('two').record,relation:'別の機器を提供した',assertion:'AはBへ別の機器を提供した。'}});
+  const id=await send(value);await core.processNext(cfg,dispatch);
+  await age();await core.processNext(cfg,async l=>{p.disabled=true;return response(l.wire);});p.disabled=false;
+  const pending=await status(id);expect(pending.items.map(i=>i.state)).toEqual(['applied','cancelled']);expect(pending.state).toBe('processing');
+  await pool.query("UPDATE knowledge_import.items SET state='published' WHERE package_id=$1 AND state='applied'",[id]);expect((await status(id)).state).toBe('completed-with-issues');
  });
  it('does not accept a response from another model and preserves failed-attempt quota',async()=>{
   const id=await send();await core.processNext(cfg,async l=>{const r=response(l.wire);r.raw.modelVersion='gemini-3.5-flash-lite';return r;});

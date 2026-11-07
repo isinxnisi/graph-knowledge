@@ -84,8 +84,8 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
     result:result?{id:result.id,revision:result.revision,disposition:result.disposition,available:visible,themes,currentUrl:visible&&i.decision?.plan?.command?.action!=='accept-translation'?'/?krecord='+encodeURIComponent(result.id):null}:null,
     usage:{requests:u.requests??0,inputTokens:u.input===null?null:Number(u.input),outputTokens:u.output===null?null:Number(u.output),unknownAttempts:u.unknown,retainedInputReservation:Number(u.reserved_input??0),retainedOutputReservation:Number(u.reserved_output??0)}});
   }
-  const done=items.every(i=>terminal.includes(i.state)),fail=items.some(i=>['needs-changes','declined'].includes(i.state));
-  return {receiptId:pkg.id,namespace:pkg.namespace,packageId:pkg.package_id,revision:pkg.revision,digest:pkg.digest,createdAt:pkg.created_at,cancellation:pkg.cancelled_at?{at:pkg.cancelled_at,reason:pkg.cancel_reason}:null,state:pkg.cancelled_at?'cancelled':done?fail?'completed-with-issues':'completed':'processing',resourceIssues:pkg.resource_issues,items,externalUsage:{basis:'sender-declared',value:pkg.payload.externalUsage??null}};
+  const done=items.every(i=>terminal.includes(i.state)),cancelled=items.length>0&&items.every(i=>i.state==='cancelled'),fail=items.some(i=>['needs-changes','declined','cancelled'].includes(i.state));
+  return {receiptId:pkg.id,namespace:pkg.namespace,packageId:pkg.package_id,revision:pkg.revision,digest:pkg.digest,createdAt:pkg.created_at,cancellation:pkg.cancelled_at?{at:pkg.cancelled_at,reason:pkg.cancel_reason}:null,state:pkg.cancelled_at||cancelled?'cancelled':done?fail?'completed-with-issues':'completed':'processing',resourceIssues:pkg.resource_issues,items,externalUsage:{basis:'sender-declared',value:pkg.payload.externalUsage??null}};
  }
  async function cancel(p:ImportPrincipal,id:string,reason?:string){return tx(async c=>{
   const pkg=(await c.query('SELECT * FROM knowledge_import.packages WHERE id=$1 AND principal_id=$2 AND namespace=$3 FOR UPDATE',[id,p.id,p.namespace])).rows[0];if(!pkg)throw new KnowledgeError('受付がありません',404,'NOT_FOUND');

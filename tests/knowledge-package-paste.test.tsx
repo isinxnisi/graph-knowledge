@@ -7,6 +7,11 @@ import {KnowledgePackagePaste} from '../components/KnowledgePackagePaste';
 const fetcher=vi.fn(),pkg={format:'plunode-knowledge-package',schemaVersion:1,namespace:'chat',packageId:'fixture',revision:1,items:[{operation:'add-information',record:{assertion:'資料から確認した事実。'}}]};
 beforeEach(()=>{fetcher.mockReset();vi.stubGlobal('fetch',fetcher);fetcher.mockImplementation(async()=>Response.json({items:[]}));});
 afterEach(()=>{cleanup();vi.unstubAllGlobals();});
+it('shows each pending item status even before a reason is available',async()=>{
+ fetcher.mockImplementation(async()=>Response.json({items:[{requestId:'request',namespace:'chat',packageId:'waiting-package',revision:1,createdAt:'2026-11-07T06:00:00Z',receipt:{receiptId:'receipt',state:'processing',items:[{ordinal:1,state:'queued',reason:'',result:null}]}}]}));
+ render(<KnowledgePackagePaste userId="owner" onDirty={()=>{}}/>);const details=screen.getByText('パッケージから登録').closest('details')!;details.open=true;fireEvent(details,new Event('toggle'));
+ expect(await screen.findByText('確認待ち')).toBeTruthy();expect(screen.queryByText('反映済み')).toBeNull();
+});
 it('keeps paste optional, previews the package, and retains the same request after an ambiguous response',async()=>{
  render(<KnowledgePackagePaste userId="owner" onDirty={()=>{}}/>);
  const details=screen.getByText('パッケージから登録').closest('details')!;expect(details.open).toBe(false);details.open=true;fireEvent(details,new Event('toggle'));

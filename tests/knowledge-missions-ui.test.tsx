@@ -8,6 +8,10 @@ import {KnowledgeMissions} from '../components/KnowledgeMissions';
 const page={items:[],themes:[{id:'theme',label:'Webbの年表'}],entities:[{id:'webb',label:'Webb'}],workerConnected:false,workerLastSeen:null},fetcher=vi.fn();
 beforeEach(()=>{fetcher.mockReset();vi.stubGlobal('fetch',fetcher);fetcher.mockImplementation(async()=>Response.json(page));});
 afterEach(()=>{cleanup();vi.unstubAllGlobals();});
+it('distinguishes a cancelled delivery from publication in the plan history',async()=>{
+ fetcher.mockImplementation(async()=>Response.json({...page,items:[{id:'11111111-1111-4111-8111-111111111111',revision:1,state:'paused',content:{title:'停止した確認計画',question:'公開資料の内容を確認する',themeId:'theme',entityIds:[],sourceHosts:['science.nasa.gov'],intervalHours:24,maxSources:1,maxItems:1},nextDue:'2026-11-08T00:00:00Z',runs:[{id:'22222222-2222-4222-8222-222222222222',state:'delivered',reason:'',createdAt:'2026-11-07T00:00:00Z',receiptId:'33333333-3333-4333-8333-333333333333',receiptState:'cancelled',results:[{state:'cancelled',url:null,reason:'受付または送信資格が停止されています。'}]}]}]}));
+ render(<KnowledgeMissions userId="owner" authorized onDirty={()=>{}}/>);expect(await screen.findByText(/未反映分を取消済み/)).toBeTruthy();expect(screen.getByText('取消済み')).toBeTruthy();expect(screen.queryByText('反映済み')).toBeNull();
+});
 async function fill(){fireEvent.click(screen.getByRole('button',{name:'計画を追加'}));fireEvent.change(screen.getByRole('textbox',{name:'計画の名前'}),{target:{value:'Webbの装置'}});fireEvent.change(screen.getByRole('combobox',{name:'追加先のテーマ'}),{target:{value:'theme'}});fireEvent.change(screen.getByRole('textbox',{name:'何を調べますか'}),{target:{value:'Webbの観測装置について資料を調べる'}});fireEvent.change(screen.getByRole('textbox',{name:/資料のサイト/}),{target:{value:'www.esa.int'}});}
 it('keeps settings closed initially and distinguishes a saved plan from a connected schedule',async()=>{
  render(<KnowledgeMissions userId="owner" authorized onDirty={()=>{}}/>);await screen.findByText(/定期実行は未接続/);expect(screen.queryByRole('textbox')).toBeNull();await fill();expect(screen.getByRole('button',{name:'この計画で収集'})).toBeTruthy();
