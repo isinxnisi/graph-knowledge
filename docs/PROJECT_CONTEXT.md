@@ -1,3 +1,5 @@
+2026-11-07 API直送をβへ反映：app `2ba6cb07`／build `kXG4dnyy1k-jFN93-JOo_`。107テスト・型検査込みbuild、035の別DB復元・旧行／checksum／再実行不変、3200／HTTPS βのmetadataと未認証401を確認。ChatGPT WebでもCIMD・scopeの自動検出を確認し、接続フォームを本人承認待ちで保持。**実Googleの接続承認・ChatGPTの初回実行／予定実行は未確認**。R3b是正は未完了、R4a完了・b以降を残す。[手順](runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)／[実測](verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)。
+
 2026-11-07 API直送の是正：API直送は合意済みの既定。既存Googleログインを使う収集専用MCP・型付き配送・run束縛・再送回復を実装し、17境界テストと別DB復元でOAuth／移行を確認。β配置・本人の接続承認とChatGPTの初回実行を進める。Codex収集予定はPAUSEDのまま。R3b是正完了は未確認。[手順](runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)／[実測](verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)。
 
 2026-11-07訂正：資料収集は合意したChatGPT予定実行とは異なるCodex Sol highのcronへ接続されていた。対象予定をPAUSEDへ変更し設定で確認。API配送・自動公開の実証は保持するが、ChatGPT側の予定実行接続（R3b）は未完了として是正する。毎runの新規チャット生成とCodex利用への無断置換を標準にしない。[訂正・現状](design/KNOWLEDGE_MISSION_EXECUTION_CORRECTION_20261107.md)。

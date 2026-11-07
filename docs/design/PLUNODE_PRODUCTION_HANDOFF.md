@@ -1,3 +1,5 @@
+2026-11-07 API直送β配置済み：app `2ba6cb07`／build `kXG4dnyy1k-jFN93-JOo_`、035・既存保全・HTTP確認済み。ChatGPT WebのCIMD自動検出まで確認。本人接続と初回／予定実行は未確認、R3b是正完了にしない。[実測](../verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)。
+
 2026-11-07 R3b是正：API直送を既定として収集専用OAuth／MCPを実装。17件と別DB復元の認証・移行を確認。β配置・本人接続・ChatGPT予定の初回実行は最新の[実測記録](../verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)と[接続手順](../runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)を参照。Codex予定はPAUSED、R4a完了・R4b以降は残る。
 
 2026-11-07接続準備：ChatGPT Webログイン・GitHubインストール・スケジュール画面を確認。配送JSONの限定操作とrun束縛を実装し、clientと合わせ11件成功。**外側の配送経路とChatGPT予定は未接続**。公開Issueでは収集の問い・結果が公開されるため、Issue／認証付きAPIの選択回答を待つ。Codex収集予定はPAUSEDを継続。[準備済み・本人操作の境界](../runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)。

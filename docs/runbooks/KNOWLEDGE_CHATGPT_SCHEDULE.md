@@ -1,6 +1,6 @@
 # ChatGPT予定実行のAPI直送
 
-2026-11-07。**API直送が合意済みの既定。Issue経由の選択待ちではない。** 収集用Codex予定はPAUSED。認証付きMCPを実装し、βへの配置と本人の接続承認・ChatGPT側の初回実行を進める。接続と予定実行を確認するまでR3b是正完了とはしない。
+2026-11-07。**API直送が合意済みの既定。Issue経由の選択待ちではない。** 収集用Codex予定はPAUSED。認証付きMCPを3200／HTTPS βへ配置。本人の接続承認・ChatGPT側の初回実行を残す。接続と予定実行を確認するまでR3b是正完了とはしない。
 
 ## 接続する処理
 
@@ -24,14 +24,14 @@ Plunode側は固定client設定・private checkpointを使い、実行tokenを�
 
 ## 本人が行う接続と予定設定
 
-1. ChatGPT Webのプラグインから、準備した「Plunode資料収集（β）」を接続する。手動で追加する場合は「追加→カスタムMCPサーバー」、上記endpoint、OAuth・自動検出を使う。秘密値は入力しない。
+1. ChatGPT Webの「プラグイン→追加→カスタムMCPサーバー」で「Plunode資料収集 API（β）」を追加する。上記endpoint、OAuth・自動検出を使う。CIMD、既定scope `missions:collect`、基本scope `offline_access`、OIDC無効を確認する。秘密値は入力しない。Chromeではこのフォームを入力済みで本人の作成・接続承認待ちにしている。
 2. 開いたPlunodeで運営Googleアカウントへログインし、表示された収集専用の権限を承認する。
 3. 既存のChatGPT会話でこのプラグインを選び、下の依頼をまず一度実行する。receiptまたは対象なしの結果を確認する。
 4. 同じ会話の継続としてChatGPT側の予定を設定する。独立予定による毎回の新規チャット生成、Codex／Work等への実行元変更がないことを確認する。時刻・対象モデル・接続の許可設定は実画面に表示された内容を記録する。
 
 依頼文：
 
-> Plunode資料収集（β）を使い、対象となる収集計画を一つ取得してください。計画の問い・公開資料の許可サイト・上限を守って調べ、原文引用付きでAPIへ直接配送してください。対象なし、保存済み配送の回復、追加する情報なし、失敗はそれぞれ区別してください。receiptを報告し、受付と公開完了を混同しないでください。Codexの実行や別チャット作成は行わないでください。
+> Plunode資料収集 API（β）を使い、対象となる収集計画を一つ取得してください。計画の問い・公開資料の許可サイト・上限を守って調べ、原文引用付きでAPIへ直接配送してください。対象なし、保存済み配送の回復、追加する情報なし、失敗はそれぞれ区別してください。receiptを報告し、受付と公開完了を混同しないでください。Codexの実行や別チャット作成は行わないでください。
 
 ChatGPT側の接続許可が予定実行を止める場合、または利用モデル・枠が想定と異なる場合はその事実を伝える。無料・無制限・Codex枠と無関係と、確認前に断定しない。新たな有料サービスや課金は有効化しない。
 
@@ -45,6 +45,10 @@ ChatGPT側の接続許可が予定実行を止める場合、または利用モ�
 
 ## 検証の境界
 
-17件の境界テスト・lint・型検査と、復元DBでmetadata／PKCE／署名付き同意／認可コード／audience／scope／refresh／失効を確認。fixtureでの確認を実Google・実ChatGPTの成功と混同しない。最新の配置・本人操作・未確認は[実測記録](../verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)を参照。
+17件の境界＋会員の既存確認を合わせた107テスト・lint・型検査込みbuildと、復元DBでmetadata／PKCE／署名付き同意／認可コード／audience／scope／refresh／失効を確認。fixtureでの確認を実Google・実ChatGPTの成功と混同しない。最新の配置・本人操作・未確認は[実測記録](../verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)を参照。
 
 [公式予定実行](https://learn.chatgpt.com/docs/automations)／[MCP認証](https://developers.openai.com/plugins/build/auth)／[Better Auth MCP](https://better-auth.com/docs/plugins/mcp)。
+
+## 配布資材とWeb接続の区別
+
+[Plunode資料収集（β）](https://chatgpt.com/plugins/plugins_6aef23f8b3b4819195ded0ecbd4fcb37)をPRIVATEで作成し、MCP設定とskillが含まれることを確認。ただしWebの配布画面は「デスクトップアプリで開く」と表示された。これをWeb接続完了とは扱わず、上記のカスタムMCPで接続する。配布のreleaseは`pluginrel_6aef23fa51f48191896c70d158a5ea6f`。
