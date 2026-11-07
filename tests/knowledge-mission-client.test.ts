@@ -54,3 +54,24 @@ it('recovers a completed chat delivery without sending it twice and rejects chan
  await expect(runMissionClient([config,'deliver'],{expectedRunId:lease.runId,payload:{changed:true}})).rejects.toThrow('MISSION_ALREADY_FINISHED');
  expect(fetcher).not.toHaveBeenCalled();
 });
+
+it.each([false,true])('resumes a failed run under a newer verified generation (legacy checkpoint: %s)',async legacy=>{
+ await runMissionClient([config,'claim']);
+ fetcher.mockResolvedValueOnce(Response.json({runId:lease.runId,state:'waiting'}));
+ await runMissionClient([config,'fail'],{expectedRunId:lease.runId,payload:'invalid-package'});
+ const checkpoint=path.join(dir,'checkpoints/mission-current.json');
+ if(legacy){const saved=JSON.parse(await readFile(checkpoint,'utf8'));delete saved.completed.generation;await writeFile(checkpoint,JSON.stringify(saved),{mode:0o600});}
+ const nextLease={...lease,generation:2,token:randomBytes(32).toString('hex')};
+ fetcher.mockResolvedValueOnce(Response.json({result:{lease:nextLease}}));
+ await runMissionClient([config,'claim']);
+ fetcher.mockResolvedValueOnce(Response.json({result:{observations:[]}}));
+ await runMissionClient([config,'observe'],{expectedRunId:lease.runId,payload:['https://example.org/source']});
+ expect(JSON.parse(fetcher.mock.calls.at(-1)![1].body)).toMatchObject({action:'observe',generation:2,token:nextLease.token});
+ const receiptId=randomUUID(),payload={publicSource:'https://example.org/source'};
+ fetcher.mockResolvedValueOnce(Response.json({receiptId}));
+ expect(await runMissionClient([config,'deliver'],{expectedRunId:lease.runId,payload})).toEqual({receiptId});
+ const calls=fetcher.mock.calls.length;
+ expect(await runMissionClient([config,'deliver'],{expectedRunId:lease.runId,payload})).toEqual({receiptId});
+ await expect(runMissionClient([config,'deliver'],{expectedRunId:lease.runId,payload:{changed:true}})).rejects.toThrow('MISSION_ALREADY_FINISHED');
+ expect(fetcher).toHaveBeenCalledTimes(calls);
+});

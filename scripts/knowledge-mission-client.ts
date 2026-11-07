@@ -8,11 +8,11 @@ import {missionWorkerSchema} from '../lib/domain/knowledge-mission';
 
 const configSchema=z.strictObject({origin:z.url(),tokenFile:z.string(),checkpointDirectory:z.string()});
 type Lease={runId:string;generation:number;token:string;expiresAt:string;[key:string]:unknown};
-type Checkpoint={lease?:Lease;pending?:z.infer<typeof missionWorkerSchema>;result?:unknown;completed?:{runId:string;action:string;digest:string;result:unknown}};
+type Checkpoint={lease?:Lease;pending?:z.infer<typeof missionWorkerSchema>;result?:unknown;completed?:{runId:string;generation?:number;action:string;digest:string;result:unknown}};
 type WorkerCommand=z.infer<typeof missionWorkerSchema>;
 function completedCommand(command:Exclude<WorkerCommand,{action:'claim'}>,result:unknown){
  const payload=command.action==='deliver'?command.package:command.action==='empty'?command.summary:command.action==='fail'?command.reason:command.action==='observe'?command.urls:null;
- return {runId:command.runId,action:command.action,digest:knowledgeDigest({action:command.action,payload}),result};
+ return {runId:command.runId,generation:command.generation,action:command.action,digest:knowledgeDigest({action:command.action,payload}),result};
 }
 async function privateText(file:string,max:number){const s=await lstat(file);if(!path.isAbsolute(file)||!s.isFile()||s.isSymbolicLink()||s.uid!==process.getuid?.()||(s.mode&0o777)!==0o600||s.size>max)throw Error('本人所有・0600のprivateファイルを指定してください。');return readFile(file,'utf8');}
 export type MissionClientInput={expectedRunId:string;payload?:unknown};
@@ -50,7 +50,9 @@ export async function runMissionClient(args:string[],input?:MissionClientInput){
   await save(lease?{lease}:{result});return {...result,result:result.result?{...result.result,lease:lease?publicLease(lease):null}:result.result};
  }
  const inputDigest=input?knowledgeDigest({action,payload:input.payload}):undefined;
- if(input&&cp.completed?.runId===input.expectedRunId){
+ // A server-validated retry lease supersedes an older generation's completion.
+ // Keep legacy markers readable; a live lease is still checked by the server.
+ if(input&&cp.completed?.runId===input.expectedRunId&&!(cp.lease?.runId===input.expectedRunId&&cp.completed.generation!==cp.lease.generation)){
   if(cp.completed.action===action&&cp.completed.digest===inputDigest)return cp.completed.result;
   throw Error('MISSION_ALREADY_FINISHED');
  }
