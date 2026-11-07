@@ -3,6 +3,7 @@ import { z } from "zod";
 import { memberRuntime } from "../../../../lib/server/member/runtime";
 import {missionMcpEnabled} from '../../../../lib/server/member/mission-oauth';
 import {isSiteOperator} from '../../../../lib/server/member/site-operations';
+import {missionOAuthRequestSummary,missionOAuthResponseSummary} from '../../../../lib/server/member/mission-oauth-diagnostics';
 import { assertMemberOrigin, MemberError, memberHandle, memberInput, memberJson } from "../../../../lib/server/member/http";
 
 export const runtime = "nodejs";
@@ -16,6 +17,8 @@ async function handle(request: Request) {
     const allowed = request.method === "GET" ? ["/get-session", "/callback/google", "/callback/fixture", "/error",...(connected?['/jwks','/oauth2/authorize','/.well-known/oauth-authorization-server','/.well-known/oauth-protected-resource']:[])]
       : ["/sign-in/social", "/sign-out", "/revoke-sessions",...(connected?['/oauth2/token','/oauth2/revoke','/oauth2/introspect','/oauth2/consent']:[])];
     if (!allowed.includes(path)) throw new MemberError(404, "NOT_FOUND");
+    const trace=connected&&request.method==='POST'&&['/oauth2/token','/oauth2/consent'].includes(path);
+    if(trace)console.info('Collection OAuth request',missionOAuthRequestSummary(path,request,config.origin));
     if (request.method === "POST") {
       if(['/oauth2/token','/oauth2/revoke','/oauth2/introspect'].includes(path)){
         if(request.headers.has('origin')&&request.headers.get('origin')!==config.origin)throw new MemberError(403,'INVALID_ORIGIN');
@@ -49,6 +52,10 @@ async function handle(request: Request) {
       authRequest = new Request(request.url, { method: "POST", headers: request.headers, body: JSON.stringify({ ...input, errorCallbackURL: errorURL.href }) });
     }
     const response = await auth.handler(authRequest);
+    if(trace){
+      const data=await response.clone().json().catch(()=>null);
+      console.info('Collection OAuth response',{endpoint:path,...missionOAuthResponseSummary(response.status,data)});
+    }
     if (response.status >= 500) return memberJson({ error: { code: "MEMBER_UNAVAILABLE" } }, 503);
     response.headers.set("Cache-Control", "private, no-store");
     response.headers.set("Vary", "Cookie");
