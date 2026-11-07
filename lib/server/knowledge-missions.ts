@@ -130,6 +130,7 @@ export function createKnowledgeMissions(pool:Pool,knowledge:Pool,imports:()=>Ret
  async function worker(id:string,input:MissionWorkerCommand){
   await ensure();await pool.query('INSERT INTO knowledge_missions.workers(id) VALUES($1) ON CONFLICT(id) DO UPDATE SET last_seen=clock_timestamp()',[id]);
   if(input.action==='claim')return claim(id,input);if(input.action==='deliver')return deliver(id,input);
+  if(input.action==='resume')return tx(async c=>{const {p,r}=await lockRun(c,id,input);return {lease:leaseDto(r,p,input.token)};});
   return tx(async c=>once(c,'worker:'+id,input.requestId,input,async()=>{const {p,r}=await lockRun(c,id,input);
    const retry=input.action==='fail'&&input.retryable&&r.attempts<6,state=input.action==='empty'?'empty':retry?'waiting':'failed',reason=input.action==='empty'?input.summary:({network:'通信が不安定です。', 'source-unavailable':'資料を取得できません。','search-unavailable':'資料探索への接続を待っています。',limit:'実行側の利用上限を待っています。','invalid-package':'配送内容を確認できません。'}[input.reason]);
    await c.query("UPDATE knowledge_missions.runs SET state=$2,reason=$3,lease_hash=NULL,lease_until=NULL,next_attempt=clock_timestamp()+interval '15 minutes',updated_at=clock_timestamp() WHERE id=$1",[r.id,state,reason]);

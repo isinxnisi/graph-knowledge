@@ -54,13 +54,17 @@ it('rejects outside sources, disconnected targets, extra authority and invalid o
  await expect(deliver(lease,{...payload(lease),approved:true})).rejects.toBeTruthy();expect((await pool.query('SELECT count(*)::int n FROM knowledge_import.packages')).rows[0].n).toBe(0);
 });
 it('fences expired lease generations and rejects edits made during research',async()=>{
- const p=await create(),old=(await claim())!;await pool.query("UPDATE knowledge_missions.runs SET lease_until=clock_timestamp()-interval '1 second' WHERE id=$1",[old.runId]);
+ const p=await create(),old=(await claim())!;
+ const resume=()=>core.worker('fixture-delivery',{action:'resume',requestId:randomUUID(),runId:old.runId,generation:old.generation,token:old.token});
+ expect((await resume()) as {lease:Lease}).toMatchObject({lease:{runId:old.runId,generation:old.generation}});
+ await pool.query("UPDATE knowledge_missions.runs SET lease_until=clock_timestamp()-interval '1 second' WHERE id=$1",[old.runId]);await expect(resume()).rejects.toMatchObject({code:'MISSION_LEASE_CHANGED'});
  const next=(await claim())!;expect(next.runId).toBe(old.runId);expect(next.generation).toBe(old.generation+1);await expect(deliver(old)).rejects.toMatchObject({code:'MISSION_LEASE_CHANGED'});
  await act({action:'update',requestId:randomUUID(),id:p.id,expectedRevision:1,content:{...plan,question:'Aに関する別の資料を調べてほしい'}});await expect(deliver(next)).rejects.toMatchObject({code:'MISSION_LEASE_CHANGED'});
 });
 it('pauses unreflected work and never revives an old run when resumed',async()=>{
  const p=await create(),lease=(await claim())!;await deliver(lease);expect(await missionImportPrincipal(pool,'mission:'+lease.runId)).not.toBeNull();
  await act({action:'pause',requestId:randomUUID(),id:p.id,expectedRevision:1});expect(await missionImportPrincipal(pool,'mission:'+lease.runId)).toBeNull();expect(await claim()).toBeNull();
+ await expect(core.worker('fixture-delivery',{action:'resume',requestId:randomUUID(),runId:lease.runId,generation:lease.generation,token:lease.token})).rejects.toMatchObject({code:'MISSION_LEASE_CHANGED'});
  await act({action:'resume',requestId:randomUUID(),id:p.id,expectedRevision:2});expect(await missionImportPrincipal(pool,'mission:'+lease.runId)).toBeNull();expect(await claim()).toBeNull();
  const run=(await pool.query('SELECT created_at FROM knowledge_missions.runs WHERE id=$1',[lease.runId])).rows[0];
  expect(Date.parse((await core.list()).items[0].nextDue)).toBeGreaterThanOrEqual(new Date(run.created_at).getTime()+24*3600000);

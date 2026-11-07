@@ -24,6 +24,7 @@ export const missionOperatorSchema=z.discriminatedUnion('action',[
 const lease={runId:z.uuidv4(),generation:z.number().int().positive(),token:z.string().regex(/^[a-f0-9]{64}$/)};
 export const missionWorkerSchema=z.discriminatedUnion('action',[
  z.strictObject({action:z.literal('claim'),requestId:z.uuidv4()}),
+ z.strictObject({action:z.literal('resume'),requestId:z.uuidv4(),...lease}),
  z.strictObject({action:z.literal('deliver'),requestId:z.uuidv4(),...lease,package:z.json()}),
  z.strictObject({action:z.literal('empty'),requestId:z.uuidv4(),...lease,summary:z.string().trim().min(1).max(1000)}),
  z.strictObject({action:z.literal('fail'),requestId:z.uuidv4(),...lease,retryable:z.boolean(),reason:z.enum(['network','source-unavailable','search-unavailable','limit','invalid-package'])}),

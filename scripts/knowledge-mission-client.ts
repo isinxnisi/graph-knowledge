@@ -28,7 +28,12 @@ export async function runMissionClient(args:string[]){
  if(action==='claim'){
   // Recover an already prepared delivery before asking the model to research again.
   if(cp.pending&&cp.pending.action!=='claim'){const result=await send(cp.pending);await save({result});return {recoveredDelivery:true,...result};}
-  if(cp.lease&&Date.parse(cp.lease.expiresAt)>Date.now())return {lease:publicLease(cp.lease),resumed:true};
+  if(cp.lease&&Date.parse(cp.lease.expiresAt)>Date.now()){
+   const value=await send({action:'resume',requestId:randomUUID(),runId:cp.lease.runId,generation:cp.lease.generation,token:cp.lease.token});
+   const lease=value.lease as Lease|undefined;
+   if(!lease||lease.runId!==cp.lease.runId||lease.generation!==cp.lease.generation||lease.token!==cp.lease.token||!Number.isFinite(Date.parse(lease.expiresAt)))throw Error('実行の確認応答が不完全です。次回に同じ実行を確認します。');
+   await save({lease});return {lease:publicLease(lease),resumed:true};
+  }
   const command=cp.pending?.action==='claim'?cp.pending:{action:'claim' as const,requestId:randomUUID()};await save({pending:command});const result=await send(command),lease=result.result?.lease as Lease|null;
   if(lease&&Date.parse(lease.expiresAt)<=Date.now()){await save({});return {lease:null,reason:'前の依頼の期限が切れました。次回の実行で取り直します。'};}
   await save(lease?{lease}:{result});return {...result,result:result.result?{...result.result,lease:lease?publicLease(lease):null}:result.result};
