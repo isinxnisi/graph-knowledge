@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { EntitySummary } from "../lib/domain/api";
 import { SEARCH_KINDS } from "../lib/domain/search";
@@ -12,7 +12,7 @@ import { discoverySearchLabels } from "../lib/i18n/discovery-search";
 import { searchLabels } from "../lib/i18n/entity-search";
 import { explorerMessage } from "../lib/i18n/explorer";
 import EntitySearchResults from "./EntitySearchResults";
-import KnowledgeEntitySearchResults from "./KnowledgeEntitySearchResults";
+import KnowledgeEntitySearchResults,{type KnowledgeEntitySearchMatches} from "./KnowledgeEntitySearchResults";
 import type {KnowledgeEntityVersion} from "../lib/domain/knowledge-foundation";
 import { CONTRIBUTION_ROLE_IDS } from "../lib/domain/contribution";
 import { contributionLabels } from "../lib/i18n/contribution";
@@ -34,6 +34,10 @@ export default function DiscoveryListPanel({ criteria, cursors, onChange, onPage
   const { locale } = useUiLocale(), en = locale === "en", text = discoverySearchLabels(locale), search = searchLabels(locale);
   const [composing, setComposing] = useState(false);
   const recordView = !!criteria.recordView;
+  const commonKey=JSON.stringify(criteria),[commonMatches,setCommonMatches]=useState<(KnowledgeEntitySearchMatches&{key:string})|null>(null);
+  const onCommonMatches=useCallback((value:KnowledgeEntitySearchMatches)=>setCommonMatches({...value,key:commonKey}),[commonKey]);
+  const commonCount=commonMatches?.key===commonKey?commonMatches.ids.length:0;
+  const commonPending=commonMatches?.key!==commonKey||commonMatches.pending;
   const recordCriteria: RecordSearchCriteria = { q: criteria.q, kind: criteria.kind, predicates: criteria.predicates ?? null, contributionRole: criteria.contributionRole ?? null, ...(criteria.theme ? { theme: criteria.theme } : {}), ...(criteria.around ? { around: criteria.around } : {}) };
   const problem = recordSearchProblem(recordCriteria);
   const query = useDiscoverySearch(recordView ? { q: "", kind: null, theme: criteria.theme, around: criteria.around } : criteria, recordView ? null : cursors.at(-1)!, composing && !recordView || !!problem);
@@ -82,31 +86,31 @@ export default function DiscoveryListPanel({ criteria, cursors, onChange, onPage
     </aside>
     <section className={styles.matches} aria-label={recordView ? en ? "Relation records" : "関係の記録" : en ? "Entity list" : "対象の一覧"} aria-busy={loading}>
       <form className={styles.keyword} data-testid="discovery-keyword" onSubmit={event => { event.preventDefault(); if (recordView) records.retry(); else query.retry(); }}>
-        <div className={styles.keywordLabel}><label htmlFor="discovery-name">{en ? "Name or alias · optional" : "名前・別名（空欄でも検索）"}</label></div>
+        <div className={styles.keywordLabel}><label htmlFor="discovery-name">{recordView?en?"Name, alias or knowledge text":"名前・別名・知識の内容":en ? "Name or alias · optional" : "名前・別名（空欄でも検索）"}</label></div>
         <div className={styles.inputRow}><Icon name="search"/><input id="discovery-name" aria-label={search.name} value={criteria.q} placeholder={text.placeholder} autoComplete="off" maxLength={100} onChange={event => onChange({ ...criteria, q: event.target.value })} onCompositionStart={() => setComposing(true)} onCompositionEnd={() => setComposing(false)}/>
           {criteria.q && <button type="button" aria-label={text.remove(search.name)} onClick={() => onChange({ ...criteria, q: "" })}><Icon name="close"/></button>}
           <button type="submit" className={styles.searchSubmit}>{search.submit}<Icon name="arrow"/></button>
         </div>
       </form>
-      <div className={styles.resultHeading}><div><h3>{recordView ? en ? "Relation records" : "関係の記録" : en ? "Entities" : "対象の一覧"}</h3><span role="status">{problem ? "" : loading ? text.updating : recordView ? records.result ? (en ? records.result.claims.length + " on this page" : "このページ " + records.result.claims.length + "件") : "" : query.result ? text.resultCount(query.result.items.length, query.result.total ?? query.result.items.length) : ""}</span></div><small>{text.page(cursors.length)}</small></div>
+      <div className={styles.resultHeading}><div><h3>{recordView ? en ? "Relation records" : "関係の記録" : en ? "Entities" : "対象の一覧"}</h3><span role="status">{problem ? "" : loading || commonPending ? text.updating : (recordView ? records.result : query.result) ? (en ? "Shown: " : "表示 ") + (((recordView ? records.result?.claims.length : query.result?.items.length) ?? 0) + commonCount) + (en ? "" : "件") : ""}</span></div><small>{text.page(cursors.length)}</small></div>
       {error && !problem && <div role="alert" className={styles.unavailable}><p>{recordView ? records.conflict ? (en ? "The public KG changed. Refresh from the first page." : "公開KGの版が変わりました。先頭から再取得してください。") : (en ? "Could not load records. Please retry." : "記録を取得できませんでした。再試行してください。") : explorerMessage(error!, locale)}</p><button onClick={() => { onPage([null]); if (recordView) records.retry(); else query.retry(); }}>{text.retry}</button></div>}
       <div className={styles.resultStage} data-updating={blocked || undefined} data-testid="discovery-results">
         {problem ? <p className={styles.note}>{en ? "Search paused; every criterion is retained." : "検索を実行していません。選択条件はすべて保持しています。"}</p> : recordView ? <div inert={blocked} aria-hidden={blocked || undefined}>
           {recordData && <div className={styles.recordList}>{recordData.claims.map(claim => <DiscoveryClaimRow key={recordData.revision + ":" + claim.id} claim={claim} nodes={recordData.nodes} revision={recordData.revision} graphHref={graphHref}/>)}</div>}
-          {records.result && !records.result.claims.length && <div className={styles.empty}><p>{en ? "No published Claim matches all these criteria. This is not a statement about coverage of the whole world." : "すべての条件に一致する公開Claimはありません。世界全体の収録状況を意味しません。"}</p><button onClick={clear}>{text.clear}</button></div>}
+          {records.result && !records.result.claims.length && !commonCount && !commonPending && <div className={styles.empty}><p>{en ? "No published record matches these criteria. This is not a statement about coverage of the whole world." : "条件に一致する公開記録はありません。世界全体の収録状況を意味しません。"}</p><button onClick={clear}>{text.clear}</button></div>}
           {loading && !recordData && <div className={styles.skeleton} aria-hidden="true"/>}
         </div> : displayed ? <div inert={blocked} aria-hidden={blocked || undefined}>
-          {!displayed.items.length && <div className={styles.empty}><p>{text.empty}</p><button onClick={clear}>{text.clear}</button></div>}
+          {!displayed.items.length && !commonCount && !commonPending && <div className={styles.empty}><p>{text.empty}</p><button onClick={clear}>{text.clear}</button></div>}
           <EntitySearchResults items={displayed.items} locale={locale} onChoose={entity => onChoose(entity, criteria.predicates, criteria.contributionRole ? [criteria.contributionRole] : undefined)}/>
         </div> : <div className={styles.skeleton} aria-hidden="true"/>}
       </div>
-      <KnowledgeEntitySearchResults q={criteria.q} kind={criteria.kind} criteria={criteria} allowEmpty paused={!!problem} recordView={recordView} excludeIds={recordView?recordData?.claims.map(r=>r.id):displayed?.items.map(e=>e.id)} onChoose={onChooseKnowledge} onChooseRecord={onChooseRecord}/>
+      <KnowledgeEntitySearchResults q={criteria.q} kind={criteria.kind} criteria={criteria} allowEmpty paused={!!problem} recordView={recordView} excludeIds={recordView?recordData?.claims.map(r=>r.id):displayed?.items.map(e=>e.id)} onMatches={onCommonMatches} onChoose={onChooseKnowledge} onChooseRecord={onChooseRecord}/>
       <nav className={styles.pagination} aria-label={en ? "Result pages" : "結果のページ"}>
         <button disabled={blocked || cursors.length === 1} onClick={() => onPage(v => v.slice(0, -1))}>{text.previous}</button>
         <span>{criteria.predicates?.length ? text.carry : text.hint}</span>
         <button disabled={blocked || !(recordView ? records.result?.nextCursor : query.result?.nextCursor)} onClick={() => { onPage(v => [...v, (recordView ? records.result!.nextCursor : query.result!.nextCursor)]); document.getElementById("discovery-name")?.closest("form")?.scrollIntoView({ block: "start" }); }}>{text.next}</button>
       </nav>
-      {(recordView || criteria.contributionRole) && <p className={styles.scopeNote}>{en ? "Names and kind match the same endpoint of each Claim, across all pages. Graph carries relation and role only; name, kind and scope remain search criteria. Graph expands both directions." : "名前と種別は同じClaimの同じ端点で照合し、全ページに適用します。Graphへ渡すのは関係と制作役割です。名前・種別・範囲は検索に保持し、Graphは両方向へ展開します。"}</p>}
+      {(recordView || criteria.contributionRole) && <p className={styles.scopeNote}>{en ? "For the existing relation list, name and kind match the same endpoint across all pages. Names, kind and scope stay in search; open a subject to explore its connections." : "既存の関係一覧では、名前と種別を同じ関係の同じ対象で照合します。名前・種別・範囲は検索に保持し、対象を開いて周囲の関係を広げられます。"}</p>}
       {((recordView && records.result) || (!recordView && criteria.contributionRole && query.result?.revision)) && <small className={styles.revision}>PUBLIC KG · {recordView ? records.result!.revision : query.result!.revision}</small>}
       <p className={styles.scopeNote}>{en ? "These filters search the list. Your connection and world selections are kept in their entrances." : "この条件は一覧の検索に使います。接点・知識世界で選んだ条件は、それぞれの入口に保持しています。"}</p>
     </section>

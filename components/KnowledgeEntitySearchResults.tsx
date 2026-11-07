@@ -11,7 +11,7 @@ import {knowledgeKindLabel} from "../lib/client/knowledge-kind-label";
 import Icon from "./Icon";
 import css from "./KnowledgeRelatedInformation.module.css";
 import rows from "./DiscoverySearch.module.css";
-export type KnowledgeEntitySearchMatches={q:string;kind:string|null;ids:string[]};
+export type KnowledgeEntitySearchMatches={q:string;kind:string|null;ids:string[];pending?:boolean};
 
 export default function KnowledgeEntitySearchResults({q,kind,excludeIds=[],onMatches,criteria,allowEmpty=false,onChoose,recordView=false,onChooseRecord,paused=false}:{
  q:string;kind:string|null;excludeIds?:string[];onMatches?:(value:KnowledgeEntitySearchMatches)=>void;
@@ -53,8 +53,9 @@ export default function KnowledgeEntitySearchResults({q,kind,excludeIds=[],onMat
  },[enabled,key,parameters,retry]);
  const current=enabled&&result?.key===key?result.items.filter(e=>!excludeIds.includes(e.id)):[];
  const recordRows=enabled&&records?.key===key?records.items.filter(r=>!excludeIds.includes(r.record.id)):[];
- const visibleIds=JSON.stringify(current.map(e=>e.id));
- useEffect(()=>{onMatches?.({q,kind,ids:JSON.parse(visibleIds) as string[]});},[q,kind,visibleIds,onMatches]);
+ const visibleIds=JSON.stringify(recordView?recordRows.map(r=>r.record.id):current.map(e=>e.id));
+ const pending=enabled&&(busy||result?.key!==key)&&failure?.key!==key;
+ useEffect(()=>{onMatches?.({q,kind,ids:JSON.parse(visibleIds) as string[],pending});},[q,kind,visibleIds,pending,onMatches]);
  if(!enabled)return null;
  const failed=failure?.key===key;
  return <section className={css.section} aria-label={recordView?en?'Additional knowledge':'新しく加わった知識':en?'Additional subjects':'新しく加わった対象'} aria-busy={busy}>

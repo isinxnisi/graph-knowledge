@@ -44,8 +44,8 @@ export default function KnowledgeReading({children,operatorEnabled=true}:{childr
  const withTranslations=(snapshot:import("../lib/domain/knowledge-foundation").KnowledgeSnapshot)=>({...snapshot,translations:keptTranslations.filter(t=>(t.target.kind==="record"?snapshot.records:t.target.kind==="source"?snapshot.sources:t.target.kind==="entity"?snapshot.entities:[]).some(v=>v.id===t.target.id&&v.revision===t.target.revision))});
  const [createdCapsule,setCreatedCapsule]=useState<LocalCapsule|null>(null);
  const w=useKnowledgeWorkspace({embedded:true}); const locationParams=useSearchParams(); const {locale}=useUiLocale(),en=locale==="en";
- const [commonVisible,setCommonVisible]=useState(false);
- const [requested,setRequested]=useState(false);
+ const [commonVisible,setCommonVisible]=useState(()=>locationParams.has('kentity')||locationParams.has('krecord'));
+ const [requested,setRequested]=useState(()=>locationParams.has('ktheme')||locationParams.has('kentity')||locationParams.has('krecord'));
  const host=useRef<Host|null>(null);
  const attachHost=useCallback((value:Host)=>{host.current=value;return()=>{if(host.current===value)host.current=null;};},[]);
  const normalCanvas=useRef<GraphCanvasHandle>(null),themeCanvas=useRef<GraphCanvasHandle>(null),themeGraphPane=useRef<HTMLDivElement>(null);

@@ -53,6 +53,7 @@ describe.skipIf(!url||!password)("publication PostgreSQL indexes and real Neo4j 
     await identities.act(operator.id,cmd);
     const page=await publication.neighbors({generation:g,entityId:'usage-left-b',limit:1});expect(page.hasMore).toBe(true);
     const all=await publication.neighbors({generation:g,entityId:'usage-left-b',limit:50});expect(all.records.map(r=>r.record.id)).toContain('usage-right-r0');
+    expect((await publication.entityScope({generation:g,ids:['usage-left-b']})).ids).toEqual(expect.arrayContaining(['usage-left-a','usage-right-a','usage-right-b']));
     expect((await publication.entities({generation:g,scopeIds:['usage-right-b'],kind:'person'})).entities.map(e=>e.id)).toEqual(['usage-right-b']);
     expect((await publication.search({generation:g,aroundId:'usage-left-b',entityKind:'person'})).records.map(r=>r.record.id)).toContain('usage-right-r0');
     expect((await publication.search({generation:g,scopeIds:['usage-right-b'],predicates:['CONTRIBUTED_TO']})).records).toEqual([]);

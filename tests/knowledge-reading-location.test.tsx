@@ -31,5 +31,5 @@ it("解説だけのThemeに空のGraph領域を追加しない",async()=>{
 
 it("公開記録の直リンクを既存Explorerのホーム移動と混同しない",async()=>{
  history.replaceState({},"","/?krecord=record-1");mocks.workspace={...mocks.workspace,activeTheme:null,retainedTheme:null};
- render(<KnowledgeReading><Reader/></KnowledgeReading>);await flush();expect(mocks.close).not.toHaveBeenCalled();expect(screen.getByRole("region",{name:"通常の関係探索"})).toBeTruthy();
+ render(<KnowledgeReading><Reader/></KnowledgeReading>);expect(screen.getByRole("region",{name:"通常の関係探索"})).toBeTruthy();await flush();expect(mocks.close).not.toHaveBeenCalled();expect(screen.getByRole("region",{name:"通常の関係探索"})).toBeTruthy();
 });

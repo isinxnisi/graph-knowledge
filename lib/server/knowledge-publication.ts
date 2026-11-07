@@ -322,7 +322,7 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
     entityScope:(raw:{generation?:string;ids:string[]})=>read(async c=>{
       const q=z.strictObject({generation:generationSchema.optional(),ids:z.array(z.string().min(1).max(120)).max(20000)}).parse(raw),actual=await generation(c,q.generation);
       const ids=await identityGroup(c,q.ids,actual.id);
-      const rows=(await c.query(`SELECT DISTINCT id FROM knowledge75.publication_records r CROSS JOIN LATERAL unnest(ARRAY[r.subject_id,r.object_id]) id WHERE r.generation=$1 AND (r.subject_id=ANY($2::text[]) OR r.object_id=ANY($2::text[])) AND id IS NOT NULL AND ${readableSql()} ORDER BY id LIMIT 20001`,[actual.id,ids])).rows.map(r=>r.id as string);
+      const rows=(await c.query(`SELECT DISTINCT endpoint.id FROM knowledge75.publication_records r CROSS JOIN LATERAL unnest(ARRAY[r.subject_id,r.object_id]) endpoint(id) WHERE r.generation=$1 AND (r.subject_id=ANY($2::text[]) OR r.object_id=ANY($2::text[])) AND endpoint.id IS NOT NULL AND ${readableSql()} ORDER BY endpoint.id LIMIT 20001`,[actual.id,ids])).rows.map(r=>r.id as string);
       const result=[...new Set([...ids,...rows])].sort();if(result.length>20000)throw new KnowledgeError('検索範囲が大きすぎます。名前で絞ってください',400,'SCOPE_TOO_LARGE');
       return {generation:actual.id,ids:result};
     }),
