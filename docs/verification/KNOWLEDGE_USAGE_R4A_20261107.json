@@ -1,0 +1,119 @@
+{
+  "date": "2026-11-07",
+  "phase": "R4a complete; R4b remains; total R6",
+  "source": "3d40f9ea20f7b9f47798906f4bfd46e36fe481a6",
+  "build": "SzWVz9U5EEJUwjunCF1OH",
+  "environments": {
+    "main": "same source; documentation head may advance",
+    "localhost3200": "deployed",
+    "httpsBeta": "deployed and browser verified",
+    "productionVps": "unchanged",
+    "isolated3276": "unchanged"
+  },
+  "migration": "none; member 034 and existing knowledge migrations unchanged",
+  "automatedTests": {
+    "publicationPostgresNeo4j": 19,
+    "emptyNeighbors": 2,
+    "workspace": 21,
+    "commonSearch": 4,
+    "readingLocation": 5,
+    "publicActivity": 3,
+    "timeline": 5,
+    "readService": 2,
+    "runtime": 2,
+    "uniqueTotal": 63
+  },
+  "checks": {
+    "eslint": "passed scoped files",
+    "typecheck": "passed in final production build",
+    "http": [
+      {
+        "check": "local",
+        "status": 200
+      },
+      {
+        "check": "beta",
+        "status": 200
+      },
+      {
+        "check": "name-category",
+        "count": 1
+      },
+      {
+        "check": "cross-store-scope-manga",
+        "count": 1
+      },
+      {
+        "check": "cross-store-scope-science",
+        "count": 0
+      },
+      {
+        "check": "same-record-predicate",
+        "count": 0
+      },
+      {
+        "check": "ordinary-knowledge-search",
+        "count": 1
+      },
+      {
+        "check": "fixed-generation-next-page",
+        "generation": "k75-469aa8f03a22f014fceadb529af2a03b"
+      },
+      {
+        "check": "old-theme-unchanged",
+        "revision": 4,
+        "records": 14
+      }
+    ]
+  },
+  "browser": {
+    "engine": "Chrome extension; existing real Google session",
+    "desktopWidth": "existing viewport",
+    "mobileViewport": {
+      "width": 390,
+      "height": 844,
+      "documentWidth": 380
+    },
+    "viewportReset": true,
+    "verified": [
+      "new Entity partial-name search and ordinary graph",
+      "new Record search from browse list, count=1, detail and original source",
+      "Record deep-link reload: two subjects, one relation, 115%",
+      "common Entity -> Theme selected focus -> return, 115% retained",
+      "legacy Naoki Urasawa -> Theme focus UUID -> return, 83% retained",
+      "390px search and opening Record details"
+    ],
+    "fixturesNotRealData": [
+      "multi-page search beyond 20",
+      "translated name with exact target revision and stopped translation",
+      "identity transitions in mid-path and unlink cursor invalidation",
+      "focused timeline subject labels without row filtering"
+    ],
+    "proof": [
+      "assets/knowledge-r4a-20261107/search-desktop.jpg",
+      "assets/knowledge-r4a-20261107/search-mobile.jpg",
+      "assets/knowledge-r4a-20261107/record-mobile.jpg"
+    ]
+  },
+  "preservation": {
+    "privateSettings": 15,
+    "privateSettingsPreserved": true,
+    "originalRecordEndpointsUnchanged": true,
+    "publicRowsWrittenByR4Verification": false,
+    "aiCallsForR4": 0,
+    "sharedKevChanged": false
+  },
+  "releaseBackup": "/home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/r4a/navigation/web-before-20261107T115336Z",
+  "remaining": [
+    "R4b temporal input and display/save connection",
+    "R4b multilingual fields, Theme translation snapshot and update comparison",
+    "R5 integrated beta acceptance",
+    "R6 production migration, Linux vulnerabilities and formal URL acceptance"
+  ],
+  "limits": [
+    "old KG and common results use independently paginated sections; shown count is loaded rows, not a globally sorted total",
+    "collection scope is published two-hop scope with a 20000-subject ceiling and explicit failure, not silent truncation",
+    "identity path transitions are explicit API metadata, not invented factual relation records",
+    "actual iPhone/WebKit and full integrated workflows remain R5"
+  ]
+}

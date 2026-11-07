@@ -1,3 +1,13 @@
+# 2026-11-07 現在地：R4a完了、次はR4b
+
+**R4a完了、次はR4b｜R4はbまで｜全体はR6まで。** [最新の実装・実操作・制約](../verification/KNOWLEDGE_USAGE_R4A_20261107.md)／[R4設計](KNOWLEDGE_USAGE_R4.md)を優先する。app `3d40f9ea20f7b9f47798906f4bfd46e36fe481a6`／build `SzWVz9U5EEJUwjunCF1OH`、main／3200／HTTPS β。追加migrationなし。15のprivate設定・認証・5 Workerを維持、本番VPS／共有Kev／3276は未更新。
+
+次回はR4bの時間入力・翻訳field・Theme訳のCapsule保存／比較と文脈cache。R4aで全件条件検索、近傍／経路の現在版同一性、Themeの実ID焦点、普通の探索への復帰、Record直リンクまで確認済み。既存検索とcommonは独立ページング。検索失敗時の表示保持・旧保存版・原Record端点を維持する。新しい管理者承認や全件AI完了待ちを追加しない。R4b＋R5は概ね2〜3回、R6は別に1〜2回の見込み。
+
+再開コマンドと保存済み環境は検証記録を参照。mainの `memo.txt` とworktreeの `.local/` を保護。AGENTSのreview／hold／tokenを確認し、変更境界の検証→日本語commit→通常push→main／3200／β確認まで行う。
+
+以下はR3c終了時の履歴で、現在の未完了範囲は上記を優先する。
+
 # 2026-11-07 現在地：R3c完了、次はR4
 
 **R3c完了、次はR4｜R3はcまで｜全体はR6まで。** [最終の実操作・制約・再開](../verification/KNOWLEDGE_MISSIONS_R3C_20261107.md)を優先する。app `adcc5adad872abaf6bb88f95fd2fd48a0372d73b`／build `WhSi2CEV7-AmSOpITEVrB`、main／3200／HTTPS βへ配置。追加migrationなし・会員034まで。通常のWebb日次計画・予定実行・15のprivate設定とGoogle認証を維持し、本番VPS・共有Kev・3276は更新していない。
