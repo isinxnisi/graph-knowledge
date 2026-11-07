@@ -50,3 +50,5 @@ Zod／Undiciのpatch後の107件・型検査込みproduction buildが成功。�
 修正後の実ChatGPT metadataは200／2,345ms、署名検証用JWKSは200／2,170msで取得できた。新規のtransport6件と既存MCP境界5件、対象lintが成功。本人によるOAuth再接続とChatGPTからの初回実行は、β再配置後に引き続き確認する。DB変更はない。
 
 DNS修正app `3d5d3291cf5da26aca8c9ca04d495c57044ab88c`／build `nXBDYXdtSB0JWDLmZGg_1`をmain／3200／HTTPS βへ再配置。11件・対象lint・型検査込みproduction build、2環境の12応答が成功。CIMD実文書を解決する認証開始要求も302で `/collection-connect` へ進み、5秒timeoutを解消した。DB migrationなし、private設定16件のhash不変。作成済みのWebプラグインの「アプリの接続を続行する」を本人へ再引継ぎ。実Googleの同意・実ChatGPT配送・予定実行の成功はまだ未確認。画面画像の取得も今回は成功した。
+
+Chromeの既存βタブを新buildで再読込し、既存Googleログイン、運営メニュー、Webbテーマ構成版4・時期なし3件・年表7件と根拠表示を確認。長時間開かれていた旧タブの接続アラートは再取得だけでは残ったが、再読込後は消えた。この既存セッション確認を、新しいOAuth権限の同意成功とは扱わない。
