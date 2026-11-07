@@ -64,3 +64,5 @@ ChatGPT側の接続許可が予定実行を止める場合、または利用モ�
 ## 配送のテーマ版指定
 
 テーマ付き計画では、add-evidenceを含む各item.themesに、claimで受け取ったsnapshot.themeのid／revisionを一つ指定する。MISSION_THEME_CHANGEDはこの指定の不足・不一致を示す。最新のテーマへ勝手に付け替えず、同じsnapshotから指定を修正して同じrunへ再送する。修正可能な入力不備を資料探索の失敗としてすぐfail_collectionへ流さない。既にfailで待機へ移した場合は、既存の次回試行時刻まで待ち、DBの待ち時刻を手書きして短縮しない。
+
+add-evidenceとcorrect-recordでは、追加・訂正先の固定Recordのid／revisionをcorrectionとabout(kind=record)の両方に同じ値で指定する。correct-recordはreasonも必要。MCPは不足・不一致を耐久受付前に返すので、同じrun内で修正する。これらの条件は取得済みRecordを指すものであり、新しい情報のaboutとの使い分けを保つ。

@@ -115,3 +115,11 @@ ChatGPT側に「Plunodeのテーマ資料を収集」を作成し、予定一覧
 同じ会話に予定の結果が追加され、β側にも0:51:09のclaimを確認した。この回はnext_attemptの0:51:41より前で正常・対象なし。予定一覧は次回1:53を表示。0:55に予定メニューの「今すぐ実行」を使うと、同じrunの新しいgeneration=2を取得したが、observeでクライアントがMISSION_ALREADY_FINISHEDを返した。サーバーのrunはleasedであり、サーバーが終了したのではなかった。
 
 原因はprivate checkpointのcompletedがrunIdだけを見て、generation=1のfail完了記録をgeneration=2にも適用したこと。完了記録にgenerationを保存し、サーバー確認済みの新しいleaseがある場合は古い世代の完了記録で遮らないよう修正した。旧checkpointも読み取れる。完了済みの同じ配送の再送回復・内容変更拒否は保持する。旧形式／新形式のfail→再claim→observe→deliverを2ケース追加し、既存を含む18テストとlintが成功した。既存の新しいleaseから再開でき、DBや待ち時刻の書換えは行わない。
+
+## API受付成功と、既存対象指定の入力検査
+
+修正後の予定の「今すぐ実行」から同じrunを再開し、1:03に原文を再取得、1:04に直接配送receipt `e93461ca-e6fb-47ac-95c2-abc1d403a6b4` を受け取った。テーマは取得snapshotの版5を指定できた。サーバーrunはdeliveredで、ChatGPTも受付と公開を区別した。
+
+公開前の項目準備ではneeds-changesとなった。immutable payloadを対象欄だけ確認すると、add-evidenceのabout(record)はあるがcorrectionが未指定だった。共通受理は両方に同じ固定Record pinを必要とする。MCPにこの条件の説明と受付前検査を追加し、add-evidence／correct-recordはabout(kind=record)とcorrectionを一致させ、correct-recordには理由も必須とした。自動的に対象や版を書き換えず、欠落・不一致はMCPの入力エラーとして返し、同じrunで修正できる。資料本文や資格は検査結果へ出さない。
+
+最初のreceiptは変更せず保持し、公開成功とは扱わない。確認用の同じ計画を通常UIで再設定し、別のrunで有効な入力を再確認する。対象指定の不足・不一致・訂正理由不足の3ケースと、修正後にbridgeへ渡ることを確認する回帰テストを追加した。

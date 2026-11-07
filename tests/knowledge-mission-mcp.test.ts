@@ -28,3 +28,16 @@ it('allows only the verified ChatGPT client identity document, not arbitrary met
  const params=new URLSearchParams('client_id=trusted&ba_param=client_id&sig=signed&page=injected');
  expect(signedMissionOAuthQuery(params)).toBe('client_id=trusted&ba_param=client_id&sig=signed');
 });
+
+it.each(['missing','mismatched','missing-reason'])('requires existing-target metadata before durable intake (%s)',async mode=>{
+ const call=vi.fn().mockResolvedValue({ok:true,result:{receiptId:'receipt'}}),handler=createMissionMcpHandler(call),runId=randomUUID();
+ const record={kind:'note',assertion:'An existing fact.',evidence:[{id:'proof',source:{id:'s',revision:1},locator:'Description',excerpt:'An existing fact.'}]};
+ const about={kind:'record',id:'target',revision:2};
+ const item={key:'proof',operation:mode==='missing-reason'?'correct-record':'add-evidence',about,record,...(mode!=='missing'?{correction:{id:'target',revision:mode==='mismatched'?1:2}}:{})};
+ const pkg={format:'plunode-knowledge-package',schemaVersion:1,namespace:'mission.fixture',packageId:'run.fixture',revision:1,sources:[{id:'s',content:{title:'Source',url:'https://science.nasa.gov/source'}}],items:[item]};
+ const invalid=await handler.fetch(rpc('tools/call',{name:'deliver_collection',arguments:{runId,package:pkg}}));
+ const rejected=await invalid.json();expect(rejected.result?.isError||rejected.error).toBeTruthy();expect(call).not.toHaveBeenCalled();
+ const repaired={...pkg,items:[{...item,correction:{id:'target',revision:2},...(mode==='missing-reason'?{reason:'The source corrects this fixed version.'}:{})}]};
+ const accepted=await handler.fetch(rpc('tools/call',{name:'deliver_collection',arguments:{runId,package:repaired}}));
+ expect(accepted.status,await accepted.clone().text()).toBe(200);expect(call).toHaveBeenCalledWith(expect.objectContaining({action:'deliver',runId,package:expect.objectContaining({items:[expect.objectContaining({about,correction:{id:'target',revision:2}})]})}));
+});
