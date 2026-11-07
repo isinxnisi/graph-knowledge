@@ -14,10 +14,10 @@ async function handle(request: Request) {
     const path = new URL(request.url).pathname.replace(/^\/api\/auth/, "");
     const connected=missionMcpEnabled();
     const allowed = request.method === "GET" ? ["/get-session", "/callback/google", "/callback/fixture", "/error",...(connected?['/jwks','/oauth2/authorize','/.well-known/oauth-authorization-server','/.well-known/oauth-protected-resource']:[])]
-      : ["/sign-in/social", "/sign-out", "/revoke-sessions",...(connected?['/oauth2/token','/oauth2/revoke','/oauth2/consent']:[])];
+      : ["/sign-in/social", "/sign-out", "/revoke-sessions",...(connected?['/oauth2/token','/oauth2/revoke','/oauth2/introspect','/oauth2/consent']:[])];
     if (!allowed.includes(path)) throw new MemberError(404, "NOT_FOUND");
     if (request.method === "POST") {
-      if(['/oauth2/token','/oauth2/revoke'].includes(path)){
+      if(['/oauth2/token','/oauth2/revoke','/oauth2/introspect'].includes(path)){
         if(request.headers.has('origin')&&request.headers.get('origin')!==config.origin)throw new MemberError(403,'INVALID_ORIGIN');
       }else assertMemberOrigin(request, config.origin);
     }

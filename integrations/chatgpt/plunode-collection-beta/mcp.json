@@ -2,6 +2,12 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
   "mcpServers": {"plunode-collection": {
     "type": "streamable-http",
-    "url": "https://graph-beta.isinxnisi.com/api/knowledge-collection/mcp"
+    "url": "https://graph-beta.isinxnisi.com/api/knowledge-collection/mcp",
+    "extensions": {"com.openai": {"auth": {
+      "type": "oauth", "client": {"mode": "cimd"},
+      "baseScopes": ["missions:collect"],
+      "defaultScopes": ["missions:collect", "offline_access"],
+      "oidcEnabled": false
+    }}}
   }}
 }
