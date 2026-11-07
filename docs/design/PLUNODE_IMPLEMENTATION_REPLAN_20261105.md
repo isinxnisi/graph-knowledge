@@ -1,3 +1,5 @@
+2026-11-08 R5：R5a（利用接続）・b（復元／publisher）の統合確認を完了。初版の機能実装＋β統合検証を区切る。app `48ab1d7f`／build `EOtr5ZgylN49Vxbsuv22i`、main／3200／HTTPS βへ反映。原文／訳文／版の表示整理、公開停止した訳文の共有閲覧制限、公開訳のGraph／年表接続、古い固定版からの選び直し、JSONB項目順による根拠追加の受付誤判定を修正。126件・型検査込みbuild、実Googleの共有2→3・旧版コメント・停止、別DB復元とpublisher障害／rebuildを確認。追加migrationなし・16設定保全・本番未変更。 [現在の統合受入・再開](../verification/KNOWLEDGE_INTEGRATION_R5_20261108.md)。R5a・bを完了し、次は正式反映R6。以下の差分表と未確認は各監査時点の記録であり、現在地は進行表と最新検証を優先する。
+
 2026-11-07訂正：資料収集は合意したChatGPT予定実行とは異なるCodex Sol highのcronへ接続されていた。対象予定をPAUSEDへ変更し設定で確認。API配送・自動公開の実証は保持するが、ChatGPT側の予定実行接続（R3b）は未完了として是正する。毎runの新規チャット生成とCodex利用への無断置換を標準にしない。[訂正・現状](KNOWLEDGE_MISSION_EXECUTION_CORRECTION_20261107.md)。
 
 2026-11-08追補：R4a/bの検索・翻訳入口・時間フォーム・Theme原文／訳文のCapsule固定保存と明示比較までβへ接続済み。[現行契約](KNOWLEDGE_TIME_INPUT_R4B.md)／[実操作と残るR5・R6](../verification/KNOWLEDGE_USAGE_R4B_20261108.md)を優先する。以下の「後続」「未接続」は各時点の記録であり、初版範囲を削る根拠にしない。全量自動翻訳と年表の直接作図は開始していない。

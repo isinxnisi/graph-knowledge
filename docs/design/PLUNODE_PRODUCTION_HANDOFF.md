@@ -1,3 +1,9 @@
+# 2026-11-08 現在地：R5完了、残りは正式反映R6
+
+**R5a・b完了｜R5はbまで完了｜全体はR6まで。** 2026-11-08 R5：R5a（利用接続）・b（復元／publisher）の統合確認を完了。初版の機能実装＋β統合検証を区切る。app `48ab1d7f`／build `EOtr5ZgylN49Vxbsuv22i`、main／3200／HTTPS βへ反映。原文／訳文／版の表示整理、公開停止した訳文の共有閲覧制限、公開訳のGraph／年表接続、古い固定版からの選び直し、JSONB項目順による根拠追加の受付誤判定を修正。126件・型検査込みbuild、実Googleの共有2→3・旧版コメント・停止、別DB復元とpublisher障害／rebuildを確認。追加migrationなし・16設定保全・本番未変更。 [最新の検証・再開](../verification/KNOWLEDGE_INTEGRATION_R5_20261108.md)。
+
+同じ選択投稿2版は通常Workerの自動再試行2回目で「登録済み」となり、元のRecord版2へ案内された。記録・保存版・活動履歴は増えていない。R5は完了。R6では正式監査・Linux脆弱性・本番の現行データからの移行・Google／PC Worker／API直送・同時点backup・正式URLを確認する。β dumpを本番へコピーせず、通常の手動承認・全件AI完了待ち・新しいCodex予定は追加しない。以下は過去の区切り。
+
 # 2026-11-08 現在地：R4完了、次はR5
 
 2026-11-08 R4b完了・R4完了：時刻・原資料の時期表記・周期／定性・複数時期・特定時期への子軸入力、旧KGを含む翻訳入口、Theme原文／訳文のCapsule固定保存と明示比較を接続。app `037ee63e`／build `QqlZmk4g9xc1ZmjOk7vXl`、main／3200／HTTPS βへ反映。対象104件・型検査込みbuild・実Googleの保存／訳文公開／取込／再訪とPC／390pxを確認。追加migrationなし、16のprivate設定を保持。R5の統合受入と正式反映R6は残る。 [最新の検証・再開](../verification/KNOWLEDGE_USAGE_R4B_20261108.md)／[時間入力と固定保存](KNOWLEDGE_TIME_INPUT_R4B.md)。

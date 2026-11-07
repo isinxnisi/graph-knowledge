@@ -1,0 +1,145 @@
+{
+  "date": "2026-11-08",
+  "status": "R5a（利用接続）・b（復元／publisher）の統合確認を完了。初版の機能実装＋β統合検証を区切る",
+  "application": {
+    "source": "48ab1d7f8237d9404f23515c53593f3de38ffcf1",
+    "build": "EOtr5ZgylN49Vxbsuv22i",
+    "buildExit": 0,
+    "seconds": 189.8,
+    "migration": "none; existing 000-035 unchanged",
+    "privateConfigurationPreserved": true,
+    "workersRestarted": [
+      "knowledge-patrol-worker",
+      "knowledge-collection-reader",
+      "knowledge-collection-worker",
+      "knowledge-review-worker",
+      "knowledge-beta-worker"
+    ],
+    "productionChanged": false
+  },
+  "tests": {
+    "passed": 126,
+    "excludedMemberTests": 62
+  },
+  "restore": {
+    "restored": [
+      {
+        "kind": "member",
+        "tables": 84,
+        "ownersPreserved": true,
+        "tableFingerprintsPreserved": true,
+        "migrationRepeatedUnchanged": true
+      },
+      {
+        "kind": "knowledge",
+        "tables": 29,
+        "ownersPreserved": true,
+        "tableFingerprintsPreserved": true,
+        "migrationRepeatedUnchanged": false,
+        "comparison": "26 canonical-table fingerprints; 3 derived-table counts"
+      }
+    ],
+    "publisher": {
+      "emptyGraphRejected": true,
+      "failedActivationPreservedPointer": true,
+      "explicitRebuildSucceeded": true,
+      "legacyLabelPreserved": true,
+      "canonicalTablesUnchanged": 23,
+      "active": "k75-73a1d00609bcb1876eaf6984338a0455"
+    }
+  },
+  "ogp": {
+    "current": {
+      "url": "https://graph-beta.isinxnisi.com/shared/HwxxoHtkiP7TVR6bphNAsOlegTn6GTBwKtcl03I0fSY",
+      "htmlStatus": 200,
+      "meta": {
+        "robots": "noindex, nofollow, noarchive",
+        "og:title": "β確認｜R5 漫画をつくる人々",
+        "og:description": "『童夢』『BILLY BAT』の制作と、浦沢直樹・手塚治虫の影響関係を、既存資料の記録から読む。",
+        "og:url": "https://graph-beta.isinxnisi.com/shared/HwxxoHtkiP7TVR6bphNAsOlegTn6GTBwKtcl03I0fSY",
+        "og:site_name": "Plunode",
+        "og:image": "https://graph-beta.isinxnisi.com/shared/HwxxoHtkiP7TVR6bphNAsOlegTn6GTBwKtcl03I0fSY/image/3",
+        "og:image:width": "1200",
+        "og:image:height": "630",
+        "og:image:alt": "β確認｜R5 漫画をつくる人々の関係図",
+        "og:type": "website",
+        "twitter:card": "summary_large_image",
+        "twitter:title": "β確認｜R5 漫画をつくる人々",
+        "twitter:description": "『童夢』『BILLY BAT』の制作と、浦沢直樹・手塚治虫の影響関係を、既存資料の記録から読む。",
+        "twitter:image": "https://graph-beta.isinxnisi.com/shared/HwxxoHtkiP7TVR6bphNAsOlegTn6GTBwKtcl03I0fSY/image/3"
+      },
+      "image": {
+        "status": 200,
+        "type": "image/png",
+        "bytes": 80641,
+        "dimensions": [
+          1200,
+          630
+        ],
+        "sha256": "d90fcbbeb9cf12c0e6690e6aafece3df71910005445d1488e1112744121df39a"
+      }
+    },
+    "previous": {
+      "url": "https://graph-beta.isinxnisi.com/shared/HwxxoHtkiP7TVR6bphNAsOlegTn6GTBwKtcl03I0fSY?revision=2",
+      "htmlStatus": 200,
+      "meta": {
+        "robots": "noindex, nofollow, noarchive",
+        "og:title": "漫画をつくる人々",
+        "og:description": "『童夢』『BILLY BAT』の制作と、浦沢直樹・手塚治虫の影響関係を、既存資料の記録から読む。",
+        "og:url": "https://graph-beta.isinxnisi.com/shared/HwxxoHtkiP7TVR6bphNAsOlegTn6GTBwKtcl03I0fSY?revision=2",
+        "og:site_name": "Plunode",
+        "og:image": "https://graph-beta.isinxnisi.com/shared/HwxxoHtkiP7TVR6bphNAsOlegTn6GTBwKtcl03I0fSY/image/2",
+        "og:image:width": "1200",
+        "og:image:height": "630",
+        "og:image:alt": "漫画をつくる人々の関係図",
+        "og:type": "website",
+        "twitter:card": "summary_large_image",
+        "twitter:title": "漫画をつくる人々",
+        "twitter:description": "『童夢』『BILLY BAT』の制作と、浦沢直樹・手塚治虫の影響関係を、既存資料の記録から読む。",
+        "twitter:image": "https://graph-beta.isinxnisi.com/shared/HwxxoHtkiP7TVR6bphNAsOlegTn6GTBwKtcl03I0fSY/image/2"
+      },
+      "image": {
+        "status": 200,
+        "type": "image/png",
+        "bytes": 75331,
+        "dimensions": [
+          1200,
+          630
+        ],
+        "sha256": "27b213be7091e6c4b76e3736188e853724ca65bddd50e88d2827d325cdf16d09"
+      }
+    },
+    "actualSNSPreview": "not tested in R5"
+  },
+  "stop": [
+    {
+      "path": "/api/shared/capsule",
+      "status": 404
+    },
+    {
+      "path": "/api/shared/capsule?revision=2",
+      "status": 404
+    },
+    {
+      "path": "/shared/HwxxoHtkiP7TVR6bphNAsOlegTn6GTBwKtcl03I0fSY/image/2",
+      "status": 404
+    },
+    {
+      "path": "/shared/HwxxoHtkiP7TVR6bphNAsOlegTn6GTBwKtcl03I0fSY/image/3",
+      "status": 404
+    }
+  ],
+  "selectionSubmission": {
+    "id": "6d80c372-1860-434d-878f-e52fe97e9f48",
+    "revision": 2,
+    "state": "queued",
+    "reviewState": "published",
+    "attempts": 2,
+    "finalResultConfirmed": true,
+    "outcome": "existing",
+    "recordId": "submission:9ac202ad-e212-42f8-ae3a-dbd1b2b4ce1e:record:ca7666b1909e7cef",
+    "recordRevision": 2,
+    "extraRecords": 0,
+    "extraActivities": 0
+  }
+}
