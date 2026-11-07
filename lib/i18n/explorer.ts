@@ -6,7 +6,7 @@ import { dataReleaseLabels } from "./data-release";
 import { searchLabels } from "./entity-search";
 // 探索画面のUIだけ。Entity名・原資料・locator・noteには適用しない。
 const ja = {
-  language: "表示言語", languageHelp: "このブラウザに保存します。名前・説明・資料原文は登録表記のまま表示します。", languageFailed: "表示言語を保存できません。この画面には反映しています。",
+  language: "表示言語", languageHelp: "このブラウザに保存します。図には対応する公開訳を使い、訳がない箇所と資料の引用は原文を表示します。", languageFailed: "表示言語を保存できません。この画面には反映しています。",
   detail: "詳細", unselected: "未選択", selected: "選択中", graphLoading: (n: number) => `Graphを取得中…（${n}件）`, expanded: "近傍は展開済みです。", closed: "展開は閉じています。クリックで取得済みの枝を復元します。", expandHelp: "クリックで一段階展開します。", grouped: "線ごとに同じ関係の主張をまとめて表示しています。",
   graphAria: "人物・作品・組織・出来事の関係グラフ。操作できるテキスト一覧は下にあります。", shapes: "丸：人物 ／ 四角：作品 ／ 六角形：組織 ／ ひし形：出来事", edges: "矢印：方向 ／ 破線：否定", nodeStates: "二重枠：展開済 ／ 淡い外枠：新規表示",
   kinds: { person: "人物", work: "作品", organization: "組織", event: "出来事" }, unknown: "不明", periodUnknown: "期間不明", fromUnknown: "開始不明", toUnknown: "終了不明", affirmed: "肯定", denied: "否定", descriptionMissing: "説明は未登録です。", noDescription: "説明なし", aliases: "別名", unregistered: "未登録",
@@ -17,7 +17,7 @@ const ja = {
 };
 const en: typeof ja = {
   language: "Language",
-  languageHelp: "Saved in this browser. Names, descriptions and source text keep their registered wording.",
+  languageHelp: "Saved in this browser. Diagrams use matching published translations. Untranslated fields and source quotations keep their original wording.",
   languageFailed: "Could not save language. It is applied to this page.",
   detail: "Details",
   unselected: "None",
