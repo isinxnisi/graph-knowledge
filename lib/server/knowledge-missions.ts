@@ -12,6 +12,7 @@ import {sourceURL} from './knowledge-source-verification';
 import type {createKnowledgeImports} from './knowledge-import';
 import {createMissionSourceChecks} from './knowledge-mission-sources';
 import {canonicalSourceUrl} from '../domain/knowledge-source-identity';
+import {submissionIntentIssues} from '../domain/knowledge-submission-intent';
 
 const reader={kind:'reader' as const,id:'mission-context'};
 const stamp=(v:unknown)=>v instanceof Date?v.toISOString():String(v);
@@ -42,6 +43,12 @@ export async function validateMissionPackage(raw:unknown,snapshot:MissionSnapsho
  for(const [n,i] of items.entries()){
   if(!['create-entity','create-relation','add-information','add-evidence','correct-record'].includes(i.operation??''))throw new KnowledgeError('この収集計画では追加・根拠追加・記録の明示訂正として送ってください。',403,'MISSION_OPERATION_SCOPE');
   if(i.operation==='correct-record'&&(!i.correction||!snapshot.records.some(v=>v.id===i.correction!.id&&v.revision===i.correction!.revision)))throw new KnowledgeError('実行時に渡した記録版を訂正対象に指定してください。',403,'MISSION_CORRECTION_SCOPE');
+  if(i.operation==='add-evidence'){
+   // Reject repairable baseline edits before saving the immutable package.
+   // Use the same intent rules as common intake, against the claimed version.
+   const issues=submissionIntentIssues(normalized[n],{entities:snapshot.entities,sources:[],records:snapshot.recordDetails??[]},'service');
+   if(issues.length)throw new KnowledgeError(issues.join(' '),400,'MISSION_EVIDENCE_BASELINE');
+  }
   const c=i.record,about=i.about;
   if(about?.kind==='entity'&&!snapshot.entities.some(v=>v.id===about.id&&v.revision===about.revision)||about?.kind==='theme'&&(!snapshot.theme||about.id!==snapshot.theme.id||about.revision!==snapshot.theme.revision)||c.aboutTheme&&c.aboutTheme!==snapshot.theme?.id)throw new KnowledgeError('情報を結び付ける対象が計画の範囲外です。',403,'MISSION_TARGET_SCOPE');
   const recordRef=about?.kind==='record'?about:c.aboutRecord;

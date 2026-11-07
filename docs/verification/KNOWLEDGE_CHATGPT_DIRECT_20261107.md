@@ -123,3 +123,9 @@ ChatGPT側に「Plunodeのテーマ資料を収集」を作成し、予定一覧
 公開前の項目準備ではneeds-changesとなった。immutable payloadを対象欄だけ確認すると、add-evidenceのabout(record)はあるがcorrectionが未指定だった。共通受理は両方に同じ固定Record pinを必要とする。MCPにこの条件の説明と受付前検査を追加し、add-evidence／correct-recordはabout(kind=record)とcorrectionを一致させ、correct-recordには理由も必須とした。自動的に対象や版を書き換えず、欠落・不一致はMCPの入力エラーとして返し、同じrunで修正できる。資料本文や資格は検査結果へ出さない。
 
 最初のreceiptは変更せず保持し、公開成功とは扱わない。確認用の同じ計画を通常UIで再設定し、別のrunで有効な入力を再確認する。対象指定の不足・不一致・訂正理由不足の3ケースと、修正後にbridgeへ渡ることを確認する回帰テストを追加した。
+
+## 根拠だけを追加する入力の再確認
+
+予定の再実行でreceipt 50675f34-b368-4f65-b748-2fc70b771d34を受領したが、公開準備でneeds-changesとなった。固定snapshotとimmutable payloadの差分は、record.aboutRecordへの余分な自己参照と、既存evidenceの脱落だった。事実文そのものは保持されていた。受付成功を公開成功とは扱わず、このreceiptも書換えない。
+
+共通のsubmissionIntentIssuesをmissionの耐久受付前にも適用し、add-evidenceの元内容・既存根拠の変更をMISSION_EVIDENCE_BASELINEとして返す。同じrunで固定snapshotのcontentを保ち、新しい根拠だけ足すよう案内する。サーバーが入力を勝手に直したり、元の根拠を失う入力を受理したりしない。自己参照・既存根拠脱落の実不具合2ケース、修正後の通過、資格を含まない修正案内と既存client／MCPを合わせ24テスト・対象lint成功。今回もDB移行なし。

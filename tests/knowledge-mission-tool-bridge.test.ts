@@ -46,3 +46,13 @@ it('lets a delivery repair its claimed theme pin without changing runs or reveal
  expect(await bridge.call({action:'deliver',runId,package:repaired})).toEqual({ok:true,result:{receiptId:'receipt'}});
  expect(execute).toHaveBeenLastCalledWith(['/private/client.json','deliver'],{expectedRunId:runId,payload:repaired});
 });
+
+it('returns a bounded repair hint for evidence baseline errors without changing the payload',async()=>{
+ const execute=vi.fn().mockRejectedValueOnce(Error('MISSION_EVIDENCE_BASELINE')).mockResolvedValueOnce({receiptId:'receipt'});
+ const bridge=createMissionToolBridge('/private/client.json',execute),runId=randomUUID(),original={items:[{operation:'add-evidence'}]};
+ const result=await bridge.call({action:'deliver',runId,package:original});
+ expect(result).toMatchObject({ok:false,code:'MISSION_EVIDENCE_BASELINE',canRepair:true});
+ expect(JSON.stringify(result)).not.toMatch(/private|client.json|bearer/);
+ expect(original).toEqual({items:[{operation:'add-evidence'}]});
+ expect(await bridge.call({action:'deliver',runId,package:{items:['repaired']}})).toEqual({ok:true,result:{receiptId:'receipt'}});
+});

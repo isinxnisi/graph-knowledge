@@ -31,6 +31,7 @@ export function createMissionToolBridge(clientFile:string,execute:typeof runMiss
     }catch(error){
      const code=error instanceof Error&&/^[A-Z][A-Z0-9_]{1,80}$/.test(error.message)?error.message:'DELIVERY_UNAVAILABLE';
      if(command.action==='deliver'&&code==='MISSION_THEME_CHANGED')return {ok:false,code,canRepair:true,hint:'Every item.themes must contain exactly the claimed snapshot.theme id and revision, including add-evidence. Repair that pin and retry deliver_collection in this same run; do not switch to the current theme or record this as a research failure.'};
+     if(command.action==='deliver'&&code==='MISSION_EVIDENCE_BASELINE')return {ok:false,code,canRepair:true,hint:'For add-evidence, copy the target snapshot.recordDetails entry content unchanged, including all existing evidence and any aboutRecord/aboutTheme. Append new evidence with a new id. Put the target pin in item.about (kind record) and item.correction, not a new record.aboutRecord self-reference. Keep existing source pins and retry in this same run; do not replace the original fact or evidence.'};
      return {ok:false,code};
     }
    });
