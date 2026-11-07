@@ -1,0 +1,55 @@
+# Overlay for the inspected, already-running production Compose file.
+# knowledge.env and knowledge-runtime are generated privately on the target.
+x-knowledge-worker: &knowledge-worker
+  image: "${KNOWLEDGE_OPS_IMAGE:?Set the verified knowledge operator image}"
+  profiles: [knowledge]
+  restart: unless-stopped
+  init: true
+  user: "1000:1000"
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  env_file: [./app.env, ./knowledge.env]
+  environment:
+    GRAPH_DATASET: public-kg
+    GRAPH_DEPLOYMENT: production
+    NODE_OPTIONS: --max-old-space-size=192
+  volumes:
+    - ./knowledge-runtime:/run/plunode-knowledge:ro
+  tmpfs: ["/tmp:rw,nosuid,nodev,size=67108864,mode=1777"]
+  networks:
+    default: {gw_priority: 0}
+    web-egress: {gw_priority: 1}
+  logging:
+    driver: json-file
+    options: {max-size: 10m, max-file: "3"}
+
+services:
+  web:
+    image: "${KNOWLEDGE_WEB_IMAGE:?Set the verified Web image}"
+    env_file: [./knowledge.env]
+    volumes:
+      - ./knowledge-runtime:/run/plunode-knowledge:ro
+  member-ops:
+    image: "${KNOWLEDGE_OPS_IMAGE:?Set the verified knowledge operator image}"
+  knowledge-ops:
+    <<: *knowledge-worker
+    restart: "no"
+    command: [scripts/knowledge-migrate.ts]
+    mem_limit: 320m
+  knowledge-publisher:
+    <<: *knowledge-worker
+    command: [scripts/knowledge-publication-worker.ts]
+    mem_limit: 256m
+    environment:
+      GRAPH_DATASET: public-kg
+      GRAPH_DEPLOYMENT: production
+      NODE_OPTIONS: --max-old-space-size=128
+  knowledge-review:
+    <<: *knowledge-worker
+    command: [scripts/knowledge-review-worker.ts]
+    mem_limit: 320m
+  knowledge-patrol:
+    <<: *knowledge-worker
+    command: [scripts/knowledge-patrol-worker.ts, run]
+    mem_limit: 320m

@@ -9,6 +9,7 @@ COPY tsconfig.json next.config.ts proxy.ts ./
 COPY app ./app
 COPY components ./components
 COPY lib ./lib
+COPY migrations/knowledge-foundation ./migrations/knowledge-foundation
 COPY vocabulary ./vocabulary
 COPY neo4j ./neo4j
 COPY datasets ./datasets
@@ -29,6 +30,18 @@ USER node
 ENTRYPOINT ["node", "--import", "tsx", "scripts/public-kg.ts"]
 CMD ["validate"]
 
+# Common knowledge maintenance and bounded resident workers. No private profile,
+# API key or beta state is built into this image; Compose supplies read-only files.
+FROM ops AS knowledge-ops
+USER root
+COPY scripts/knowledge-migrate.ts scripts/knowledge-review-worker.ts scripts/knowledge-publication-worker.ts scripts/knowledge-patrol-worker.ts scripts/knowledge-collection-worker.ts scripts/knowledge-collection-reader.ts ./scripts/
+# Local launchers load this file. Production values arrive only through runtime
+# environment variables, so the compatibility file is deliberately empty.
+RUN install -m 0444 /dev/null /app/.env.public
+USER node
+ENTRYPOINT ["node", "--import", "tsx"]
+CMD ["scripts/knowledge-migrate.ts"]
+
 # One-shot public-artifact validator/publisher. No KG/member env or model runtime.
 FROM dependencies AS lab-artifact-ops
 COPY lib/domain ./lib/domain
@@ -44,6 +57,7 @@ WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000
 COPY --from=builder --chown=node:node /app/.next-public/standalone ./
 COPY --from=builder --chown=node:node /app/.next-public/static ./.next-public/static
+COPY --from=builder --chown=node:node /app/migrations/knowledge-foundation ./migrations/knowledge-foundation
 COPY --from=builder --chown=node:node /app/.local/publication-probe/publication-probe.cjs ./publication-probe.cjs
 COPY --from=builder --chown=node:node /app/app/fonts/BIZUDPMincho-OG.woff ./app/fonts/BIZUDPMincho-OG.woff
 COPY --from=builder --chown=node:node /app/app/fonts/OFL.txt ./font-licenses/BIZUDPMincho-OFL.txt

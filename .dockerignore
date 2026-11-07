@@ -66,3 +66,14 @@ db/*
 !vocabulary/**
 
 !scripts/official-profile-ops.ts
+
+!migrations/
+migrations/*
+!migrations/knowledge-foundation/
+!migrations/knowledge-foundation/**
+!scripts/knowledge-migrate.ts
+!scripts/knowledge-review-worker.ts
+!scripts/knowledge-publication-worker.ts
+!scripts/knowledge-patrol-worker.ts
+!scripts/knowledge-collection-worker.ts
+!scripts/knowledge-collection-reader.ts
