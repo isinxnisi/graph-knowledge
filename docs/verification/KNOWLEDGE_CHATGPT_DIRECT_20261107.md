@@ -14,7 +14,7 @@ API直送は既定として進める。Codex収集予定はPAUSED。実装・17�
 
 ## 配置と未確認
 
-app source `3d5d3291cf5da26aca8c9ca04d495c57044ab88c`、build `nXBDYXdtSB0JWDLmZGg_1`をmain／3200へ反映。HTTPS βでもTOP・OAuth metadata・resource metadata・接続案内200、未認証MCP401＋challengeを確認。初回のresource metadataの誤った転送pathを修正し、追加migrationなしでWebを再配置した。3276・本番VPSは未変更。ChatGPTからの接続承認と、同じ会話に継続する予定の初回実行を残す。実行元・利用量が確認できていない状態を、API配送やfixture結果だけで成功扱いにしない。
+app source `87ad49c3988af72c4453817b5c707b18ae088c58`、build `kQOYaMAfRba265KQjs2xT`をmain／3200へ反映。HTTPS βでもTOP・OAuth metadata・resource metadata・接続案内200、未認証MCP401＋challengeを確認。初回のresource metadataの誤った転送pathを修正し、追加migrationなしでWebを再配置した。3276・本番VPSは未変更。ChatGPTからの接続承認と、同じ会話に継続する予定の初回実行を残す。実行元・利用量が確認できていない状態を、API配送やfixture結果だけで成功扱いにしない。
 
 ## 実測
 
@@ -60,3 +60,5 @@ Chromeの既存βタブを新buildで再読込し、既存Googleログイン、�
 この認証接続だけIPv4のA応答へ固定し、DNSは1秒・最大2試行、接続先IPの検証・pinning・TLSのhostname検証・5秒の全体期限を維持する。A応答が得られなければIPv6へ逃がさず失敗を返す。socketの二度目のerrorも処理し、エラー段階とcodeだけをserverログへ残す。Cookie・認可code・token・要求URLはログへ含めない。
 
 別プロセスで2回、実metadata／JWKSの両方が200となり、順に314／177ms、237／158ms。transport7件＋MCP境界5件が成功。PC全体のIPv6／DNS設定は変更しない。β再配置後の認証開始・本人接続は別に確認する。DB変更なし。
+
+IPv4修正のapp `87ad49c3988af72c4453817b5c707b18ae088c58`／build `kQOYaMAfRba265KQjs2xT`をmain／3200／HTTPS βへ配置。型検査込みbuildと2環境12応答、認証開始302が成功。新しいappでは、実ブラウザからChatGPTの「アプリの接続を続行する」を押し、既存Googleセッションを引き継いでPlunodeの「資料収集の接続を許可」画面まで到達した。そこで本人へ引継ぎ、同意buttonは押していない。実接続の完了・配送・予定実行はまだ未確認。DB変更なし、private設定16件のhash不変、本番VPS／3276は未変更。最初のbuildはNodeのRequestOptions型にない冗長なautoSelectFamily指定で停止したため、その指定を除去し、IPv4 pinningの7件を再確認してから新しいSHAでbuild・配置した。
