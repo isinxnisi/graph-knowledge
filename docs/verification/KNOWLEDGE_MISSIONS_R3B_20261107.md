@@ -1,5 +1,7 @@
 # R3b 定期探索から配送への実接続
 
+**2026-11-07訂正：収集用のCodex予定実行はPAUSED。合意したChatGPT側の予定実行との接続は未完了。以下のCodex実行記録／起動手順を標準運用として再開しない。** API配送・自動公開の実証とは区別する。[実物・停止・是正方針](../design/KNOWLEDGE_MISSION_EXECUTION_CORRECTION_20261107.md)。
+
 2026-11-07。確認先は [HTTPS βの資料収集](https://graph-beta.isinxnisi.com/operations#collection)。運営ログインで「テーマに沿って定期収集」の計画と直近結果を確認する。
 
 ## 配置・保持

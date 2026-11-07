@@ -1,3 +1,5 @@
+2026-11-07訂正：資料収集は合意したChatGPT予定実行とは異なるCodex Sol highのcronへ接続されていた。対象予定をPAUSEDへ変更し設定で確認。API配送・自動公開の実証は保持するが、ChatGPT側の予定実行接続（R3b）は未完了として是正する。毎runの新規チャット生成とCodex利用への無断置換を標準にしない。[訂正・現状](design/KNOWLEDGE_MISSION_EXECUTION_CORRECTION_20261107.md)。
+
 2026-11-07 R4a完了：新旧の通常検索・条件付きページング、同一対象の近傍／経路、対象→Themeの焦点と探索復帰、Record直リンクを接続。app `3d40f9ea`／build `SzWVz9U5EEJUwjunCF1OH` をmain／3200／HTTPS βへ反映。63件・型検査込みbuild・実GoogleのPC／390px確認成功、追加migrationなし。R4bの時間入力・多言語・Capsule、R5、R6は残る。[検証・制約・再開](verification/KNOWLEDGE_USAGE_R4A_20261107.md)。以下は各時点の履歴。
 
 2026-11-07 R3c完了：Chrome専用接続の実GoogleでWeb貼付→NASA原語訂正の自動公開、漫画の異種関係→自動公開・検索、重複再利用・未反映2項目の取消、年表Capsuleの固定版→比較→明示更新・保存・別タブ再訪をPC／390pxで確認。取消を反映済みとする誤表示と、項目の待機／公開反映中の表示を修正。app `adcc5ada`／build `WhSi2CEV7-AmSOpITEVrB`、main／3200／HTTPS βへ配置、追加migrationなし。38取込＋5 UI・lint・型検査込みbuild成功。[実操作・制約・次の入口](verification/KNOWLEDGE_MISSIONS_R3C_20261107.md)。R4の利用接続、R5のβ全体一巡、R6の正式公開は残る。以下は各時点の履歴。

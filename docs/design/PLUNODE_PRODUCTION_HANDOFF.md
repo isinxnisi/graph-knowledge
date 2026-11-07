@@ -1,3 +1,5 @@
+2026-11-07訂正：資料収集は合意したChatGPT予定実行とは異なるCodex Sol highのcronへ接続されていた。対象予定をPAUSEDへ変更し設定で確認。API配送・自動公開の実証は保持するが、ChatGPT側の予定実行接続（R3b）は未完了として是正する。毎runの新規チャット生成とCodex利用への無断置換を標準にしない。[訂正・現状](KNOWLEDGE_MISSION_EXECUTION_CORRECTION_20261107.md)。
+
 # 2026-11-07 現在地：R4a完了、次はR4b
 
 **R4a完了、次はR4b｜R4はbまで｜全体はR6まで。** [最新の実装・実操作・制約](../verification/KNOWLEDGE_USAGE_R4A_20261107.md)／[R4設計](KNOWLEDGE_USAGE_R4.md)を優先する。app `3d40f9ea20f7b9f47798906f4bfd46e36fe481a6`／build `SzWVz9U5EEJUwjunCF1OH`、main／3200／HTTPS β。追加migrationなし。15のprivate設定・認証・5 Workerを維持、本番VPS／共有Kev／3276は未更新。
