@@ -4,7 +4,7 @@ import path from 'node:path';
 import type {Pool,PoolClient,QueryResultRow} from 'pg';
 import {missionPlanSchema,missionOperatorSchema,type MissionPlan,type MissionWorkerCommand} from '../domain/knowledge-mission';
 import {knowledgeImportPackageSchema,type ImportPrincipal} from '../domain/knowledge-import';
-import type {KnowledgeEntityVersion,KnowledgeThemeVersion,KnowledgeRecordVersion} from '../domain/knowledge-foundation';
+import {knowledgeRecordContentSchema,type KnowledgeEntityVersion,type KnowledgeThemeVersion,type KnowledgeRecordVersion} from '../domain/knowledge-foundation';
 import {createKnowledgeFoundationService,KnowledgeError,knowledgeDigest} from './knowledge-foundation';
 import {missionImportPrincipal} from './knowledge-mission-principal';
 import {importResources,normalizeImportItem} from './knowledge-import-plan';
@@ -46,7 +46,7 @@ export async function validateMissionPackage(raw:unknown,snapshot:MissionSnapsho
   if(i.operation==='add-evidence'){
    // Reject repairable baseline edits before saving the immutable package.
    // Use the same intent rules as common intake, against the claimed version.
-   const issues=submissionIntentIssues(normalized[n],{entities:snapshot.entities,sources:[],records:snapshot.recordDetails??[]},'service');
+   const issues=submissionIntentIssues(normalized[n],{entities:snapshot.entities,sources:[],records:(snapshot.recordDetails??[]).map(v=>({...v,content:knowledgeRecordContentSchema.parse(v.content)}))},'service');
    if(issues.length)throw new KnowledgeError(issues.join(' '),400,'MISSION_EVIDENCE_BASELINE');
   }
   const c=i.record,about=i.about;

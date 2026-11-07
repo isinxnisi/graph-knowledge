@@ -1,4 +1,5 @@
 import {expect,it} from 'vitest';
+import {knowledgeStableJson} from '../lib/server/knowledge-foundation';
 import {validateMissionPackage,type MissionSnapshot} from '../lib/server/knowledge-missions';
 import {knowledgeRecordContentSchema,knowledgeEntityContentSchema} from '../lib/domain/knowledge-foundation';
 const pin={id:'baseline',revision:1},sourcePin={id:'source',revision:1};
@@ -16,4 +17,10 @@ it.each([
  const before=JSON.stringify(repaired);
  await expect(validateMissionPackage(repaired,snapshot,'run','plan',source)).resolves.toMatchObject({items:[{operation:'add-evidence'}]});
  expect(JSON.stringify(repaired)).toBe(before);
+});
+
+it('accepts unchanged evidence after the snapshot has round-tripped through JSONB key ordering',async()=>{
+ const persisted=JSON.parse(knowledgeStableJson(snapshot));
+ const pkg=packageWith({...content,evidence:[...content.evidence,extra]});
+ await expect(validateMissionPackage(pkg,persisted,'run','plan',source)).resolves.toMatchObject({items:[{operation:'add-evidence'}]});
 });
