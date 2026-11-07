@@ -6,7 +6,7 @@ import { MemberError } from "./http";
 /** SQL identifiers come only from server-owned call sites. Never interpolate input. */
 export function knowledgeReferencesSql(snapshot:string) {
   const k=`${snapshot}#>'{content,document,knowledge}'`;
-  const groups=([['records','record'],['entities','entity'],['sources','source'],['mappings','mapping']] as const).map(([group,kind])=>`SELECT jsonb_build_object('kind','${kind}','id',p->'id','revision',p->'revision') AS pin FROM jsonb_array_elements(COALESCE(${k}#>'{snapshot,${group}}','[]'::jsonb)) p`);
+  const groups=([['records','record'],['entities','entity'],['sources','source'],['mappings','mapping'],['translations','translation']] as const).map(([group,kind])=>`SELECT jsonb_build_object('kind','${kind}','id',p->'id','revision',p->'revision') AS pin FROM jsonb_array_elements(COALESCE(${k}#>'{snapshot,${group}}','[]'::jsonb)) p`);
   groups.push(`SELECT (${k}->'theme')||'{"kind":"theme"}'::jsonb AS pin WHERE ${k}->'theme' IS NOT NULL`);
   return `(SELECT COALESCE(jsonb_agg(pin),'[]'::jsonb) FROM (${groups.join(' UNION ALL ')}) knowledge_pins)`;
 }

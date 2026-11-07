@@ -3,6 +3,8 @@ import { randomUUID } from "node:crypto";
 import {Pool} from "pg";
 const knowledgePool=new Pool({connectionString:process.env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL,max:5});
 import {captureKnowledgeCapsule,withCapsuleTimeline} from "../lib/client/capsule-knowledge";
+import {planCapsuleKnowledgeUpdate} from "../lib/client/capsule-knowledge-updates";
+import {migrateKnowledgeTranslations} from "../lib/server/knowledge-translation-migrate";
 import {createKnowledgeFoundationService} from "../lib/server/knowledge-foundation";
 import {createKnowledgePublicationService} from "../lib/server/knowledge-publication";
 import {capsuleShareImage} from "../lib/server/capsule-share-image";
@@ -483,6 +485,41 @@ it('年表Capsuleを同じURLで明示更新し、会話の対象版とコミュ
  const fixed=await(await service().community.readCapsule(request(),listing.id)).json();expect(fixed.capsule.revision).toBe(1);expect(fixed.capsule.content.title).toBe("年表の共有");
  await service().revokeShare(request(a,{expectedShareId:issued.share.id}),cap.id);expect((await shared()).status).toBe(404);
  expect((await call(()=>service().community.readCapsule(request(),listing.id))).status).toBe(200);
+},30000);
+
+it('R5: fixed Theme translations and authored time axes survive sharing, explicit updates and withdrawal',async()=>{
+ const f=await knowledgeFixture();await migrateKnowledgeTranslations(knowledgePool);
+ const target={kind:"theme" as const,id:f.prefix+"t",revision:1,field:"title" as const};
+ const original=await f.publication.textOriginal(target);
+ await f.execute("accept-translation",{target,language:"en",text:"Captured timeline",originalHash:original.hash,expectedRevision:0});
+ const query={recordIds:[f.prefix+"r"],entityIds:[],theme:{id:target.id,revision:1},includeTheme:true,translations:[{target,language:"en"}]};
+ const initial=await f.publication.capsuleUpdates(query);
+ const saved=captureKnowledgeCapsule({snapshot:initial.snapshot,theme:initial.theme,title:"R5の固定断面"});
+ const doc=saved.document!;
+ doc.relations[0].times=[...doc.knowledge!.snapshot.records[0].content.times,
+  {id:"clock",time:{kind:"calendar",meaning:"point",from:"2021-12-25T12:20Z",label:"打上げ"}},
+  {id:"cycle",time:{kind:"cycle",axis:"一日の活動",period:24,unit:"時間",from:22,to:2,wrap:true,label:"夜間"}},
+  {id:"stage",time:{kind:"qualitative",axis:"工程",coordinateMeaning:"進行段階",from:"準備",to:"完了",label:"工程の進行"}}];
+ doc.knowledge!.timeline={version:1,axes:[{id:"clock-axis",kind:"calendar",label:"時刻"},{id:"stage-axis",kind:"qualitative",label:"工程",order:["準備","完了"]}],placements:[{axisId:"clock-axis",recordId:f.prefix+"r",timeId:"clock"},{axisId:"stage-axis",recordId:f.prefix+"r",timeId:"stage"}],insets:[{axisId:"stage-axis",parentRecordId:f.prefix+"r",parentTimeId:"clock",label:"工程"}]};
+ const content={...f.content,title:saved.title,document:doc},cap=await create(content),place=await community(),listing=await publish(place.id,cap);
+ const issueResponse=await call(()=>service().issueShare(request(a,{expectedRevision:1,expectedShareId:null}),cap.id));expect(issueResponse.status).toBe(201);const issued=await issueResponse.json();
+ const shared=()=>call(()=>service().readShared(new Request(origin,{headers:{"x-capsule-token":issued.token}})));
+ const read=await(await shared()).json();expect(read.capsule.content.document.knowledge.snapshot.theme.revision).toBe(1);expect(read.capsule.content.document.relations[0].times).toEqual(doc.relations[0].times);
+ const post=request(b,{requestId:randomUUID(),revision:1,body:"原文と訳文の固定版を読んだコメント"});post.headers.set("x-capsule-token",issued.token);expect((await service().createDiscussionPost(post,cap.id)).status).toBe(201);
+ const translation=initial.snapshot.translations![0];await f.execute("accept-translation",{target,language:"en",text:"Revised timeline",originalHash:original.hash,expectedRevision:1});
+ const latest=await f.publication.capsuleUpdates(query);expect(latest.snapshot.translations![0].revision).toBe(2);
+ expect(planCapsuleKnowledgeUpdate(doc,latest,true).document.knowledge!.snapshot.translations![0].revision).toBe(1);
+ const plan=planCapsuleKnowledgeUpdate(doc,latest,true,[translation.id]);expect(plan.document.relations[0].times).toEqual(doc.relations[0].times);expect(plan.document.knowledge!.timeline).toEqual(doc.knowledge!.timeline);
+ const updated={...content,document:plan.document};expect((await service().update(request(a,{expectedRevision:1,content:updated}),cap.id)).status).toBe(200);
+ expect((await(await shared()).json()).capsule.content.document.knowledge.snapshot.translations[0].revision).toBe(1);
+ expect((await service().publishShare(request(a,{expectedRevision:2,expectedSharedRevision:1,expectedShareId:issued.share.id}),cap.id)).status).toBe(200);
+ expect((await(await service().shareStatus(request(a),cap.id)).json()).token).toBe(issued.token);
+ expect((await(await shared()).json()).capsule.content.document.knowledge.snapshot.translations[0].revision).toBe(2);
+ const pinned=await(await service().community.readCapsule(request(),listing.id)).json();expect(pinned.capsule.content.document.knowledge.snapshot.translations[0].revision).toBe(1);
+ const discussion=request(b,undefined,"/?revision=2");discussion.headers.set("x-capsule-token",issued.token);expect((await(await service().readDiscussion(discussion,cap.id)).json()).posts.map((p:{revision:number})=>p.revision)).toEqual([1]);
+ await f.execute("set-translation-visibility",{id:translation.id,expectedStatusRevision:1,visibility:"hidden"});
+ expect((await shared()).status).toBe(404);expect((await call(()=>service().community.readCapsule(request(),listing.id))).status).toBe(404);
+ expect((await service().read(request(a),cap.id)).status).toBe(200);
 },30000);
 
 it.each(["theme","record","entity","source","mapping"] as const)('%s停止は共有の現行・旧版・会話・固定掲載・掲載先・通報検査へ反映し、本人の保存は残す',async kind=>{
