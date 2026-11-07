@@ -2,6 +2,8 @@
 
 **進捗報告：収集予定停止・R3bの実行元是正待ち、R4a完了｜R4はbまで｜全体はR6まで。** 現工程の完了状態・残り・全体の位置が短く伝わることを毎回優先し、現在地を先、予定終点（分母）を後ろに置く。記号や区切り数を固定する指定ではない。枝番追加・順序変更時も現在地と分母を更新し、「次」だけや細部だけで進捗を表さない。2026-11-06ユーザー補足。以下の説明や履歴を、この短い現在地の代わりにしない。
 
+2026-11-07接続準備：ChatGPT Webログイン・GitHubインストール・スケジュール画面を確認。配送JSONの限定操作とrun束縛を実装し、clientと合わせ11件成功。**外側の配送経路とChatGPT予定は未接続**。公開Issueでは収集の問い・結果が公開されるため、Issue／認証付きAPIの選択回答を待つ。Codex収集予定はPAUSEDを継続。[準備済み・本人操作の境界](runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)。
+
 2026-11-07訂正：資料収集は合意したChatGPT予定実行とは異なるCodex Sol highのcronへ接続されていた。対象予定をPAUSEDへ変更し設定で確認。API配送・自動公開の実証は保持するが、ChatGPT側の予定実行接続（R3b）は未完了として是正する。毎runの新規チャット生成とCodex利用への無断置換を標準にしない。[訂正・現状](design/KNOWLEDGE_MISSION_EXECUTION_CORRECTION_20261107.md)。
 
 2026-11-07 R4a完了：新旧の通常検索・条件付きページング、同一対象の近傍／経路、対象→Themeの焦点と探索復帰、Record直リンクを接続。app `3d40f9ea`／build `SzWVz9U5EEJUwjunCF1OH` をmain／3200／HTTPS βへ反映。63件・型検査込みbuild・実GoogleのPC／390px確認成功、追加migrationなし。R4bの時間入力・多言語・Capsule、R5、R6は残る。[検証・制約・再開](verification/KNOWLEDGE_USAGE_R4A_20261107.md)。以下は各時点の履歴。

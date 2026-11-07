@@ -27,3 +27,7 @@ Codexの `automations/plunode/automation.toml` は `kind=cron`、モデル `gpt-
 ## 今回の変更範囲
 
 予定実行のPAUSED確認と文書訂正のみ。アプリsource／DBは変更せず、buildは行わない。既存3200／HTTPS βのapp `3d40f9ea`／build `SzWVz9U5EEJUwjunCF1OH` を継続し、本番VPSは未更新。過去のR3b完了記録より本訂正を優先する。
+
+## 接続準備の追補
+
+ChatGPT側のログイン・GitHub接続と予定画面を確認した。配送clientに外部JSONとrunIdを直接渡す限定入口を追加し、4つのbridge境界と既存client7件の計11件で確認。shell・任意URL・任意pathを指定できず、資格はserver側だけに保持する。外側のIssue／MCP transportはまだ未接続。公開Issueの可否を先に確認し、回答前の作成・書込み・ChatGPT予定の作成は行っていない。[準備と本人操作](../runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)。Webコード・DB・既存サービスのbuildは変更しない。

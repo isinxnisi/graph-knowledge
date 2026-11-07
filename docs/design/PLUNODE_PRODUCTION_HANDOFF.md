@@ -1,3 +1,5 @@
+2026-11-07接続準備：ChatGPT Webログイン・GitHubインストール・スケジュール画面を確認。配送JSONの限定操作とrun束縛を実装し、clientと合わせ11件成功。**外側の配送経路とChatGPT予定は未接続**。公開Issueでは収集の問い・結果が公開されるため、Issue／認証付きAPIの選択回答を待つ。Codex収集予定はPAUSEDを継続。[準備済み・本人操作の境界](../runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)。
+
 2026-11-07訂正：資料収集は合意したChatGPT予定実行とは異なるCodex Sol highのcronへ接続されていた。対象予定をPAUSEDへ変更し設定で確認。API配送・自動公開の実証は保持するが、ChatGPT側の予定実行接続（R3b）は未完了として是正する。毎runの新規チャット生成とCodex利用への無断置換を標準にしない。[訂正・現状](KNOWLEDGE_MISSION_EXECUTION_CORRECTION_20261107.md)。
 
 # 2026-11-07 現在地：R4a完了、次はR4b

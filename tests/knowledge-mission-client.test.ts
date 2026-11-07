@@ -33,3 +33,15 @@ it('recovers an observation without dropping the live delivery lease',async()=>{
  fetcher.mockResolvedValueOnce(Response.json({result:{observations:[{state:'first'}]}}));const recovered=await runMissionClient([config,'claim']);expect(recovered.recoveredObservation).toBe(true);
  const saved=JSON.parse(await readFile(path.join(dir,'checkpoints/mission-current.json'),'utf8'));expect(saved.lease.runId).toBe(lease.runId);expect(saved.pending).toBeUndefined();
 });
+
+it('refuses structured chat data for a different run before it sends or reads any input path',async()=>{
+ await runMissionClient([config,'claim']);fetcher.mockClear();
+ await expect(runMissionClient([config,'deliver','/etc/passwd'],{expectedRunId:randomUUID(),payload:{}})).rejects.toThrow('MISSION_LEASE_CHANGED');
+ expect(fetcher).not.toHaveBeenCalled();
+});
+it('sends chat payload as JSON instead of interpreting it as a file path',async()=>{
+ await runMissionClient([config,'claim']);fetcher.mockResolvedValueOnce(Response.json({receiptId:randomUUID()}));
+ await runMissionClient([config,'deliver','/etc/passwd'],{expectedRunId:lease.runId,payload:{publicSource:'https://example.org'}});
+ const body=JSON.parse(fetcher.mock.calls.at(-1)![1].body);
+ expect(body.package).toEqual({publicSource:'https://example.org'});expect(body.token).toBe(lease.token);
+});
