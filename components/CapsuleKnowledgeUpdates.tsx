@@ -11,12 +11,17 @@ import styles from "./CapsuleKnowledgeUpdates.module.css";
 
 export default function CapsuleKnowledgeUpdates({document,onClose,onApply}:{document:CapsuleDocument;onClose:()=>void;onApply:(response:CapsuleUpdateResponse,includeTheme:boolean,translationIds:readonly string[])=>boolean}){
  const {locale}=useUiLocale(),en=locale==="en",t=(ja:string,en:string)=>locale==="en"?en:ja;
+ const [translationLanguage,setTranslationLanguage]=useState("");
  const [includeTheme,setIncludeTheme]=useState(false),[attempt,setAttempt]=useState(0),[response,setResponse]=useState<CapsuleUpdateResponse|null>(null),[busy,setBusy]=useState(true),[error,setError]=useState<string|null>(null),[message,setMessage]=useState<string|null>(null);
  const [translationIds,setTranslationIds]=useState<string[]>([]);
  const active=useRef<AbortController|null>(null);
  async function read(signal:AbortSignal){
   const k=document.knowledge!;
-  const result=await fetch("/api/knowledge/capsule-updates",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({recordIds:k.snapshot.records.map(r=>r.id),entityIds:k.snapshot.entities.map(e=>e.id),theme:k.theme,includeTheme,translations:(k.snapshot.translations??[]).map(v=>({target:v.target,language:v.language}))}),signal:AbortSignal.any([signal,AbortSignal.timeout(30_000)]),cache:"no-store"});
+  const kept=(k.snapshot.translations??[]).map(v=>({target:v.target,language:v.language}));
+  const offered=translationLanguage&&k.theme?[{target:{kind:"theme" as const,...k.theme,field:"title" as const},language:translationLanguage},{target:{kind:"theme" as const,...k.theme,field:"description" as const},language:translationLanguage}]:[];
+  const translations=[...new Map([...kept,...offered].map(v=>[JSON.stringify([v.target,v.language]),v])).values()];
+  if(translations.length>100)throw Error(t("訳文の比較は一度に100項目までです。保存した訳文のみの比較へ戻してください。","Compare up to 100 translation fields at once. Return to captured translations only."));
+  const result=await fetch("/api/knowledge/capsule-updates",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({recordIds:k.snapshot.records.map(r=>r.id),entityIds:k.snapshot.entities.map(e=>e.id),theme:k.theme,includeTheme,translations}),signal:AbortSignal.any([signal,AbortSignal.timeout(30_000)]),cache:"no-store"});
   if(!result.ok)throw Error(result.status===404?t("現在は取得元を閲覧できません。保存内容は変更していません。","The source is unavailable. Your saved content is unchanged."):t("更新を取得できませんでした。保存内容は変更していません。","Could not load updates. Your saved content is unchanged."));
   return capsuleUpdateResponseSchema.parse(await result.json());
  }
@@ -26,7 +31,7 @@ export default function CapsuleKnowledgeUpdates({document,onClose,onApply}:{docu
   return()=>{controller.abort();active.current?.abort();};
   // The modal owns one fixed draft; changing the comparison mode starts a new read.
   // eslint-disable-next-line react-hooks/exhaustive-deps
- },[includeTheme,attempt]);
+ },[includeTheme,attempt,translationLanguage]);
  const plan=useMemo(()=>{if(!response||response.unavailable.length)return null;try{return planCapsuleKnowledgeUpdate(document,response,includeTheme,translationIds);}catch{return null;}},[document,response,includeTheme,translationIds]);
  const names=useMemo(()=>({before:Object.fromEntries([...document.knowledge!.snapshot.entities.map(e=>[e.id,e.content.name]),...document.knowledge!.snapshot.sources.map(s=>[s.id,s.content.title])]),after:Object.fromEntries([...(response?.snapshot.entities??[]).map(e=>[e.id,e.content.name]),...(response?.snapshot.sources??[]).map(s=>[s.id,s.content.title])])}),[document,response]);
  const reload=()=>{setTranslationIds([]);setBusy(true);setError(null);setMessage(null);setResponse(null);setAttempt(v=>v+1);};
@@ -43,6 +48,7 @@ export default function CapsuleKnowledgeUpdates({document,onClose,onApply}:{docu
  return <CapsuleModal wide title={t("取得元の更新","Source updates")} onClose={close} className={styles.modal}>
   <header className={css.dialogHeading}><h3>{t("取得元の更新","Source updates")}</h3><button aria-label={t("比較を閉じる","Close comparison")} onClick={close}><Icon name="close"/></button></header>
   {document.knowledge?.theme&&<div className={styles.modes} role="group" aria-label={t("比較する範囲","Comparison scope")}>{[false,true].map(theme=><button key={String(theme)} aria-pressed={includeTheme===theme} disabled={busy} onClick={()=>{setBusy(true);setResponse(null);setError(null);setMessage(null);setIncludeTheme(theme);}}>{theme?t("テーマの構成","Theme composition"):t("取得済みの原記録","Captured records")}</button>)}</div>}
+  {document.knowledge?.theme&&<label className={styles.translationLanguage}>{t("訳文の比較","Translation comparison")}<select value={translationLanguage} disabled={busy} onChange={e=>{setTranslationLanguage(e.target.value);setTranslationIds([]);setBusy(true);setResponse(null);setError(null);setMessage(null);}}><option value="">{t("保存した訳文のみ","Captured translations only")}</option><option value="ja">{t("テーマの日本語訳も探す","Also find Japanese theme translations")}</option><option value="en">{t("テーマの英語訳も探す","Also find English theme translations")}</option></select></label>}
   <p className={styles.hint}>{includeTheme?t("テーマに含まれる記録の追加・除外と、テーマが選んだ版を比較します。","Compare the theme’s membership and selected editions."):t("取得済みの記録と対象を、現在公開されている版と比較します。","Compare the captured records and objects with their currently published editions.")}</p>
   <div className={styles.results} aria-busy={busy}>
    {busy&&<p role="status">{t("取得元を確認しています…","Checking the source…")}</p>}

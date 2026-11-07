@@ -87,6 +87,7 @@ export function planCapsuleKnowledgeUpdate(document:CapsuleDocument,response:Cap
  const hasOriginal=(t:KnowledgeTranslationVersion)=>(t.target.kind==='record'?candidate.records:t.target.kind==='entity'?candidate.entities:t.target.kind==='source'?candidate.sources:candidate.theme?[candidate.theme]:[]).some(v=>v.id===t.target.id&&v.revision===t.target.revision);
  const previous=old.translations??[],offered=candidate.translations??[];
  for(const a of previous){const b=offered.find(v=>translationSlot(v)===translationSlot(a)&&hasOriginal(v));if(b?.id===a.id&&b.revision===a.revision)continue;if(!b&&hasOriginal(a)&&!response.translationsChecked)continue;changes.push({kind:"translation",id:b?.id??a.id,title:`${a.language} · ${a.target.field}`,before:a.text,after:b?.text??null,beforeRevision:a.revision,afterRevision:b?.revision});}
+ for(const b of offered)if(hasOriginal(b)&&!previous.some(a=>translationSlot(a)===translationSlot(b)))changes.push({kind:"translation",id:b.id,title:`${b.language} · ${b.target.field}`,before:null,after:b.text,afterRevision:b.revision});
  candidate.translations=previous.filter(t=>hasOriginal(t)&&(!response.translationsChecked||offered.some(v=>translationSlot(v)===translationSlot(t)))&&!offered.some(v=>translationSlot(v)===translationSlot(t)&&translationIds.includes(v.id))).concat(offered.filter(t=>hasOriginal(t)&&translationIds.includes(t.id)));
  candidate.translations=[...new Map(candidate.translations.map(t=>[t.id,t])).values()];
  attachment.snapshot={...candidate,initialView:old.initialView,...(timeline?{timeline}:{})};
