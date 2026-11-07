@@ -14,6 +14,9 @@ import type {createKnowledgeImports} from './knowledge-import';
 const reader={kind:'reader' as const,id:'mission-context'};
 const stamp=(v:unknown)=>v instanceof Date?v.toISOString():String(v);
 const hash=(v:string)=>createHash('sha256').update(v).digest('hex');
+// A resumed/edited plan keeps the rolling quota of its previous revisions.
+// The Nth newest run releases a slot; cancelled/empty runs still consumed work.
+const quotaDueSQL="COALESCE((SELECT r.created_at+interval '24 hours' FROM knowledge_missions.runs r WHERE r.plan_id=p.id ORDER BY r.created_at DESC,r.id DESC OFFSET (ceil(24.0/(p.content->>'intervalHours')::integer)::integer-1) LIMIT 1),'-infinity'::timestamptz)";
 export type MissionSnapshot={plan:MissionPlan;theme:KnowledgeThemeVersion|null;entities:KnowledgeEntityVersion[];records:{id:string;revision:number}[]};
 export async function ensureMissionSchema(pool:Pool){
  const name='033-knowledge-missions.sql',digest=hash(await readFile(path.join(process.cwd(),'db/member',name),'utf8'));
@@ -75,12 +78,12 @@ export function createKnowledgeMissions(pool:Pool,knowledge:Pool,imports:()=>Ret
   return result;
  }
  async function list(query=''){
-  await ensure();const rows=(await pool.query('SELECT * FROM knowledge_missions.plans ORDER BY created_at DESC,id LIMIT 30')).rows,items=[];
+  await ensure();const rows=(await pool.query(`SELECT p.*,GREATEST(p.next_due,${quotaDueSQL}) AS eligible_at FROM knowledge_missions.plans p ORDER BY p.created_at DESC,p.id LIMIT 30`)).rows,items=[];
   for(const p of rows){const runs=[];for(const r of (await pool.query('SELECT * FROM knowledge_missions.runs WHERE plan_id=$1 ORDER BY created_at DESC,id LIMIT 3',[p.id])).rows){
    let receiptState:string|null=null;const results:{state:string;url:string|null;reason:string}[]=[];
    if(r.receipt_id){const principal=runPrincipal(r,p);try{const receipt=await imports().receipt(principal,r.receipt_id);receiptState=receipt.state;for(const i of receipt.items)results.push({state:i.state,url:i.result?.currentUrl??null,reason:i.reason});}catch{receiptState='unavailable';}}
    runs.push({id:r.id,state:r.state,reason:r.reason,createdAt:stamp(r.created_at),receiptId:r.receipt_id,receiptState,results});
-  }items.push({id:p.id,revision:p.revision,state:p.state,content:p.content,nextDue:stamp(p.next_due),runs});}
+  }items.push({id:p.id,revision:p.revision,state:p.state,content:p.content,nextDue:stamp(p.eligible_at),runs});}
   const seen=(await pool.query('SELECT max(last_seen) at FROM knowledge_missions.workers')).rows[0]?.at;
   return {items,themes:await choices('theme',''),entities:await choices('entity',query),workerConnected:!!seen&&Date.now()-new Date(seen).getTime()<7200000,workerLastSeen:seen?stamp(seen):null};
  }
@@ -93,7 +96,8 @@ export function createKnowledgeMissions(pool:Pool,knowledge:Pool,imports:()=>Ret
    if(input.action==='create'){if((await c.query('SELECT count(*)::int n FROM knowledge_missions.plans')).rows[0].n>=30)throw new KnowledgeError('収集計画は30件までです。',429,'MISSION_PLAN_LIMIT');const id=randomUUID();await c.query('INSERT INTO knowledge_missions.plans(id,content,created_by) VALUES($1,$2,$3)',[id,input.content,actor]);return {id,revision:1};}
    const p=(await c.query('SELECT * FROM knowledge_missions.plans WHERE id=$1 FOR UPDATE',[input.id])).rows[0];if(!p)throw new KnowledgeError('収集計画がありません。',404,'NOT_FOUND');if(p.revision!==input.expectedRevision)throw new KnowledgeError('別の操作で計画が変わりました。読み直して確認してください。',409,'REVISION_CONFLICT');
    await c.query("UPDATE knowledge_missions.runs SET state='cancelled',reason='計画が変更・停止されました。',lease_hash=NULL,lease_until=NULL,updated_at=clock_timestamp() WHERE plan_id=$1 AND state IN('leased','waiting','delivering')",[p.id]);
-   await c.query("UPDATE knowledge_missions.plans SET revision=revision+1,state=$2,content=$3,next_due=CASE WHEN $2='active' THEN clock_timestamp() ELSE next_due END,updated_at=clock_timestamp() WHERE id=$1",[p.id,input.action==='pause'?'paused':input.action==='resume'?'active':p.state,'content'in input?input.content:p.content]);return {id:p.id,revision:p.revision+1};
+   await c.query("UPDATE knowledge_missions.plans SET revision=revision+1,state=$2,content=$3,next_due=CASE WHEN $2='active' THEN clock_timestamp() ELSE next_due END,updated_at=clock_timestamp() WHERE id=$1",[p.id,input.action==='pause'?'paused':input.action==='resume'?'active':p.state,'content'in input?input.content:p.content]);
+   await c.query(`UPDATE knowledge_missions.plans p SET next_due=GREATEST(p.next_due,${quotaDueSQL}) WHERE p.id=$1`,[p.id]);return {id:p.id,revision:p.revision+1};
   });});
  }
  function leaseDto(r:QueryResultRow,p:QueryResultRow,token:string){return {runId:r.id,missionId:p.id,planRevision:r.plan_revision,generation:r.generation,token,expiresAt:stamp(r.lease_until),snapshot:r.snapshot,packageIdentity:{namespace:'mission.'+p.id,packageId:'run.'+r.id,revision:1},...(r.payload?{pendingPackage:r.payload}:{})};}

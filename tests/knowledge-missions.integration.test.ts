@@ -61,13 +61,25 @@ it('fences expired lease generations and rejects edits made during research',asy
 it('pauses unreflected work and never revives an old run when resumed',async()=>{
  const p=await create(),lease=(await claim())!;await deliver(lease);expect(await missionImportPrincipal(pool,'mission:'+lease.runId)).not.toBeNull();
  await act({action:'pause',requestId:randomUUID(),id:p.id,expectedRevision:1});expect(await missionImportPrincipal(pool,'mission:'+lease.runId)).toBeNull();expect(await claim()).toBeNull();
- await act({action:'resume',requestId:randomUUID(),id:p.id,expectedRevision:2});expect(await missionImportPrincipal(pool,'mission:'+lease.runId)).toBeNull();expect((await claim())?.runId).not.toBe(lease.runId);
+ await act({action:'resume',requestId:randomUUID(),id:p.id,expectedRevision:2});expect(await missionImportPrincipal(pool,'mission:'+lease.runId)).toBeNull();expect(await claim()).toBeNull();
+ const run=(await pool.query('SELECT created_at FROM knowledge_missions.runs WHERE id=$1',[lease.runId])).rows[0];
+ expect(Date.parse((await core.list()).items[0].nextDue)).toBeGreaterThanOrEqual(new Date(run.created_at).getTime()+24*3600000);
+ expect((await pool.query('SELECT next_due FROM knowledge_missions.plans WHERE id=$1',[p.id])).rows[0].next_due.getTime()).toBeGreaterThanOrEqual(new Date(run.created_at).getTime()+24*3600000);
  const cfg=reviewConfigSchema.parse({projectId:'mission-fixture',billingTier:'free',verifiedAt:new Date().toISOString(),model:'gemini-3.1-flash-lite',rpm:10,tokensPerMinute:30000,requestsPerDay:80,requestsPerMonth:2400,inputTokensPerDay:250000,outputTokensPerDay:160000,inputTokensPerMonth:7500000,outputTokensPerMonth:4800000,apiKeyFile:'/unused',allowedUsers:[randomUUID()]});
  const dispatch=vi.fn();expect(await inbox.processNext(cfg,dispatch)).toBe(false);expect(dispatch).not.toHaveBeenCalled();expect((await pool.query('SELECT state FROM knowledge_import.items')).rows[0].state).toBe('cancelled');
 });
 it('records an empty result, applies per-plan daily limits and continues other plans',async()=>{
  const p=await create(),lease=(await claim())!;await core.worker('fixture-delivery',{action:'empty',requestId:randomUUID(),runId:lease.runId,generation:lease.generation,token:lease.token,summary:'No new supported information found.'});
- await pool.query('UPDATE knowledge_missions.plans SET next_due=clock_timestamp() WHERE id=$1',[p.id]);expect(await claim()).toBeNull();const other=await create({...plan,title:'別の計画'});expect((await claim())?.missionId).toBe(other.id);
+ await pool.query('UPDATE knowledge_missions.plans SET next_due=clock_timestamp() WHERE id=$1',[p.id]);expect(await claim()).toBeNull();expect(Date.parse((await core.list()).items[0].nextDue)).toBeGreaterThan(Date.now()+23*3600000);const other=await create({...plan,title:'別の計画'});expect((await claim())?.missionId).toBe(other.id);
+});
+
+it('uses the next released slot when a changed frequency has several runs in its rolling window',async()=>{
+ const p=await create({...plan,intervalHours:6});
+ for(let n=0;n<4;n++){const l=(await claim())!;await core.worker('fixture-delivery',{action:'empty',requestId:randomUUID(),runId:l.runId,generation:l.generation,token:l.token,summary:'No new information.'});await pool.query('UPDATE knowledge_missions.plans SET next_due=clock_timestamp() WHERE id=$1',[p.id]);}
+ await act({action:'update',requestId:randomUUID(),id:p.id,expectedRevision:1,content:{...plan,intervalHours:12}});
+ expect(await claim()).toBeNull();const starts=(await pool.query('SELECT created_at FROM knowledge_missions.runs ORDER BY created_at DESC,id DESC')).rows;
+ expect(Date.parse((await core.list()).items[0].nextDue)).toBe(new Date(starts[1].created_at).getTime()+24*3600000);
+ await pool.query("UPDATE knowledge_missions.runs SET created_at=created_at-interval '25 hours'");await pool.query('UPDATE knowledge_missions.plans SET next_due=clock_timestamp()');expect(await claim()).not.toBeNull();
 });
 
 it('pins the current theme and accepts its timeless background without an isolated graph node',async()=>{
