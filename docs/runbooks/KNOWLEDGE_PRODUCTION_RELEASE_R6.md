@@ -8,7 +8,7 @@
 
 review Workerは既存Webの `COMMUNITY_ENABLED` / `SITE_OPERATIONS_ENABLED` / `SITE_OPERATOR_USER_IDS` を引き継ぐ必要がある。初回に未指定でテーマ受付が取消になったため、`e0371f7f` の専用補修を正式適用済み。補修backupは `/opt/graph-knowledge/backups/theme-worker-flags-20261108T054606Z`、Compose SHA256 `a10c984aee7d65cb7d30e522c12c1b1184b7ead27aaf5a8014207c62c3d7cf3b`。Web／DB／image不変、運営資格・有効会員・capabilityはすべてtrue。旧取消受付をDBで開き直さない。
 
-正式アプリ受入・TCP補修確認済み、Caddy補修は未完了（[Linux実測](../verification/LINUX_SECURITY_R6_20261108.md)／[Caddy固定補修](../verification/CADDY_SECURITY_R6_20261108.md)）。本人の本番送信許可後、同じChatGPT予定→正式API→通常確認・公開で2関係がTheme構成版3へ追加された。既存Capsuleへ比較取込・保存し、同じ共有URLの明示更新も確認した。日常運用の再開は[ChatGPT予定runbook](KNOWLEDGE_CHATGPT_SCHEDULE.md)の同じ会話・予定から行う。初回公開scriptの再実行や新しい同名Themeの作成は不要。
+正式アプリ受入・TCP／Caddy補修と正式復帰確認済み（[Linux実測](../verification/LINUX_SECURITY_R6_20261108.md)／[Caddy固定補修](../verification/CADDY_SECURITY_R6_20261108.md)）。本人の本番送信許可後、同じChatGPT予定→正式API→通常確認・公開で2関係がTheme構成版3へ追加された。既存Capsuleへ比較取込・保存し、同じ共有URLの明示更新も確認した。日常運用の再開は[ChatGPT予定runbook](KNOWLEDGE_CHATGPT_SCHEDULE.md)の同じ会話・予定から行う。初回公開scriptの再実行や新しい同名Themeの作成は不要。
 
 ## 起点と守る境界
 
@@ -109,3 +109,7 @@ PCの本人用入口は `backups/knowledge-theme-20261108/run-release.py`。既�
 切替後は新しい正式MCP接続で `missions:collect themes:compose offline_access` の本人同意を得る。既存のβ接続は維持し、同じ「Plunode資料収集」会話・予定へ正式接続を指定する。ChatGPTの資料付きTheme受付→通常確認／公開→元の受付IDの結果URL→探索・年表・Capsuleを実際に確認してからR6完了を判断する。共通原本の版と既存の保存・共有を勝手に更新しない。
 
 13:11 JSTの最初の補修切替は復元用一時DBで停止し、本番構成・036は変更されていない。手順是正後の入口は `backups/knowledge-theme-20261108-r2/run-release.py`。古い入口を再実行せず、失敗stageを保全した別root stageへ同一アプリ資材と修正版の復元手順をコピーする。移行manifestは適用済み36件＋036だけに限定し、初期化専用SQLを含めない。TCPで初期化完了を待ち、既存ロールを再作成しない。同じ復元関数での実物βbackupの84→85表・37件・旧行／所有者・再実行確認は成功済み。正式の最新backupでの検証と切替、正式接続は本人操作後に確認する。
+
+## Linux補修を閉じた状態（2026-11-08）
+
+稼働kernel149／Caddy公式2.11.9、標準／ESM更新0、正式HTTPS／HTTP2・実API・3 Worker、設定／証明書と暗号化backupのPC照合を確認し、R6の残りを閉じた。通常packageの一括更新や全CVE不存在を意味しない。Caddyの将来保守は登録済み公式stable sourceで候補とreleaseのsecurity変更を確認し、固定対象のsimulate・設定検査・backup・正式確認を繰り返す。初回補修scriptを無条件に再実行せず、その時点のkernel／package／source／設定を再監査する。別件eBay監視unitのfailedは未変更・原因未調査として[最終記録](../verification/CADDY_SECURITY_R6_20261108.md)へ分けた。

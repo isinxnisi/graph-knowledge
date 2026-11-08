@@ -2,7 +2,7 @@
 
 ## 現在地
 
-**正式アプリの切替・代表操作とTCP補修／再起動を確認済み。Caddyのsecurity更新1件を残すためR6全体は未完了。** [Caddy補修の現在地](CADDY_SECURITY_R6_20261108.md)。 [現在の影響と再開手順](LINUX_SECURITY_R6_20261108.md)。 本人の送信許可後、同じChatGPT予定から配送した2関係が通常確認・publisherを通り、Theme構成版3へ追記された。正式の年表／背景／関係図、Capsuleの独自編集保全・比較取込・保存・同じURLへの共有反映まで確認。以下の「待ち」「未確認」は各時点の履歴であり、最終結果は末尾を優先する。全件のAI処理を完遂した保証や、後続構想の年表比較／マージ完成の意味ではない。
+**R6b完了。正式アプリの切替・代表操作と、TCP／Caddy補修・正式復帰・backup照合を確認済み。** [Caddy最終結果と別件unit](CADDY_SECURITY_R6_20261108.md)。 [現在の影響と再開手順](LINUX_SECURITY_R6_20261108.md)。 本人の送信許可後、同じChatGPT予定から配送した2関係が通常確認・publisherを通り、Theme構成版3へ追記された。正式の年表／背景／関係図、Capsuleの独自編集保全・比較取込・保存・同じURLへの共有反映まで確認。以下の「待ち」「未確認」は各時点の履歴であり、最終結果は末尾を優先する。全件のAI処理を完遂した保証や、後続構想の年表比較／マージ完成の意味ではない。
 
 ## 配置済み
 
@@ -178,3 +178,9 @@ OGPはTwitterbot相当HTTPで200、1200×630 PNG、112,843bytes、SHA256 `676b8e
 - 年表同士の比較／マージ、年表の直接作図、全件訳文の先行生成は既に後続へ分けた構想。今回の完成に合わせて新しく範囲を縮小したものではない。
 
 最終証跡：`formal-theme-current.json`、`formal-theme-append-result.json`、`formal-theme-share-before-update.json`、`formal-theme-ogp-v3.json`、`final-health.json` は作業tree `.local/theme-worker-flags-repair/`。画面はPCのvisualizations内 `formal-theme-v3.png`、`formal-share-v3.png`、`formal-schedule-normal.png`。アプリの利用接続はこの時点で確認済み。ただし後刻、LinuxのTCP脆弱性未修正を確認したため、R6の残りはkernel更新・再起動と正式サービス復帰確認へ訂正した。
+
+## Linux補修後の最終受入（20:14以降 JST）
+
+初回の「security候補0だから完了」という誤判定を訂正したうえで、修正kernel149の再起動とCaddy公式2.11.9を実際に適用・起動し、標準／ESM security更新0、正式HTTPS／HTTP2、旧KG検索／Theme3／共有3／OGP不変、3 Workerとbackup復号・既存TLS証明書保持を確認した。アプリsource14542c72／build wFBq24bSaSp0W-_ZOFaXr、Docker／DB／会員／認証設定は保持。3200／HTTPS β／正式のdatasetはいずれも200。
+
+これをもってR1〜R6で合意した本運用初版の残りを閉じる。全件AI処理を既に終えた保証や、年表比較／マージ等の後続構想、VPS全サービスの無障害保証には広げない。別プロジェクトeBay監視unitの20:06失敗は未変更・原因未調査で[記録](CADDY_SECURITY_R6_20261108.md#本件外のfailed-unit)へ分ける。

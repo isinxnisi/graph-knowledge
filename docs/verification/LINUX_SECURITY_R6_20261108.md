@@ -1,6 +1,6 @@
 # R6 Linux TCP脆弱性の見落とし・訂正と補修（2026-11-08）
 
-**TCP補修・再起動確認済み、Caddy補修準備中｜残りはCaddy適用・正式確認｜全体はR6まで。** アプリの正式公開と代表操作の受入は保持するが、Caddyのsecurity更新1件が残るためR6全体は未完了。[Caddyの固定補修計画](CADDY_SECURITY_R6_20261108.md)。以下の未実施記述は適用準備時点の履歴で、実施結果は末尾を優先する。
+**TCP・Caddy補修と正式復帰確認済み｜R6の残作業なし｜全体はR6まで完了。** アプリの正式公開と代表操作の受入に加え、稼働修正版・公式診断の標準／ESM更新0件、設定／証明書とbackup保全を確認。[Caddyの固定補修計画](CADDY_SECURITY_R6_20261108.md)。以下の未実施記述は適用準備時点の履歴で、実施結果は末尾を優先する。
 
 ## 見落としと訂正
 
@@ -41,3 +41,7 @@ localhost:3200／HTTPS β／正式アプリはapp14542c72のまま。今回の�
 - `/api/knowledge/public?mode=status` とTheme構成版3、旧KGのPLUTO検索、公開共有APIが200。共有内容版3とOGP画像を読め、OGPは更新前と同じ112,843bytes・SHA256 `676b8e65cc1466b65c54dcc73f6bd9833a965de09cf96e2c5546b1e7ea90e17d`。新共通知識のNeo4j投影と会員PGの実読取を確認。review／publisher／patrolの各Nodeプロセスも復帰した。新しい実AI処理を検証のためだけに発生させていない。
 - backup `/opt/graph-knowledge/backups/linux-security-20261108T104512Z`。暗号化archive SHA256 `aa1a7a219fd9eed44da44700fb88e55ed9fcad29a0dc14aed6ebe6b7a84fcee6`、wrapped key `8c5d4b468f6ad7d934ffc980757118cb093942be9e33bc1b72a4d4e3b3621b04`。PCへ取得してhash・復号・tar全読取と両dumpのPGDMP形式を確認。会員dump SHA256 `2d635fce21d6e48e317ef100e7c864d48feffdfb8cc5cee7176c97701dc47b11`、知識dump `25ce1978fce1d9ca650b1e2be59f6c245460ab0a775897a75e4c465a2bcab35e`。一時復号データは削除した。今回DB復元を繰り返したわけではなく、既存の復元検証を再利用する。
 - `pro security-status --format json` は標準security更新0、ESM Infra0、ESM Apps1。残りは稼働中のCaddy `2.6.2-6ubuntu0.24.04.3` に対する `2.6.2-6ubuntu0.24.04.3+esm2`。Ubuntu Proは未接続。古いログインbannerの件数を現在の結果に代えない。今回のTCP補修を、残るCaddyや全ソフトウェアの脆弱性不存在の確認と混同しない。
+
+## Caddy補修後の完了判定
+
+20:14のCaddy公式2.11.9への適用と、正式HTTPS／HTTP2・実API／認証境界・3 Worker・backupのPC復号／証明書保持を確認。Ubuntu診断の標準／ESM Apps／ESM Infraはいずれも0件。今回公開工程で残っていたTCP／Caddy補修を完了した。[Caddyの実測・限界・別件unit](CADDY_SECURITY_R6_20261108.md)を参照する。通常の全package更新やOS release-upgradeは行っていない。Caddy以外の第三者packageも含めた全CVE不存在の保証とはしない。
