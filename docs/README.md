@@ -1,4 +1,4 @@
-2026-11-08是正中：ChatGPTからの既存テーマ更新が不足していたため補修。新規登録の成功を、登録・更新の一連の成立まで確認した意味では扱わない。app a2712fc6をmain／3200／HTTPS βへ反映し、会員038と既存データ保全・閲覧を確認。正式資材は照合済み、本番切替・実ChatGPTの直接更新は未確認。[設計](design/KNOWLEDGE_CHATGPT_THEME_REGISTRATION.md)／[実測と残件](verification/KNOWLEDGE_CHATGPT_THEME_UPDATES_20261108.md)。以下は各時点の履歴。
+2026-11-08是正完了：ChatGPTからの既存テーマ直接更新をmain／3200／HTTPS β／正式VPSへ反映。app a2712fc6、正式build jGYRGPYTKRpa4o6BWC8cr、会員39／知識9。同じ既存App・Chatから構成版3→4→5の説明更新・復元を確認し、旧版と原資料URL・構成を保持した。収集計画・運営画面操作は直接更新の前提ではない。[設計](design/KNOWLEDGE_CHATGPT_THEME_REGISTRATION.md)／[実測](verification/KNOWLEDGE_CHATGPT_THEME_UPDATES_20261108.md)。以下は各時点の履歴。
 
 2026-11-08追記：[TOPの紹介テーマを運営から選ぶ](design/FEATURED_THEMES_OPERATIONS.md)。公開テーマの選択・掲載順・明示保存をmain／3200／HTTPS β／正式サイトで確認済み。[実測](verification/FEATURED_THEMES_OPERATIONS_20261108.md)。テーマ作成と新着は既存経路を維持。
 

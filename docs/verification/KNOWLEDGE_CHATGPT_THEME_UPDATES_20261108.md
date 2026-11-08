@@ -2,7 +2,7 @@
 
 ## 対象と現在地
 
-新規テーマ登録だけを確認し、Chatから既存テーマを更新できない不足を残していた。収集計画の作成や運営画面の操作を利用者へ追加する説明は撤回する。今回は直接更新を実装し、既存環境への配置と実接続確認を行う。現在は実装・隔離検証・β配置と処理系の復旧まで。本番切替と実ChatGPTの更新確認は未完了。
+新規テーマ登録だけを確認し、Chatから既存テーマを更新できない不足を残していた。収集計画の作成や運営画面の操作を利用者へ追加する説明は撤回する。今回は直接更新を実装し、既存環境への配置と実接続確認を行う。是正は完了。main／3200／HTTPS β／正式VPSへ反映し、同じChatGPT会話と既存正式Appから既存テーマを直接更新・復元して公開結果まで確認した。以下の「未完了」「未更新」は各時点の履歴で、最終結果は末尾を参照する。
 
 ## 実装
 
@@ -47,3 +47,32 @@ MCP・入力契約・既存収集／認可の19件も成功。新規作成／更
 同じβ設定を利用するreview／reader／patrolだけを正常停止し、旧識別値との条件付き更新で現在の承認済み設定を採用。review_attemptsの全行hashが採用操作の前後で不変であることを確認した。既存の台帳・送信履歴・cooldownを削除／resetしていない。3 callerを同じvalidated launcherから再開し、publisherを含む4プロセスのmain cwd・稼働、設定digest一致、2.35秒前のheartbeatと通常iterationを確認した。旧reader／patrolには既存のretryログがあり、これを全件成功と扱わない。正式環境・共有Kevは変更していない。
 
 非公開記録は `.local/theme-updates-20261108/beta-review-recovery.json`。この補修は既に承認された実行設定の整合回復で、Chatからのテーマ更新に運営者の手作業を追加する仕様ではない。038適用時の旧行保全とは、後続のこの明示補修を区別する。アプリsource／build／imageは変更なし。
+
+## 正式反映・同じChatGPT会話の直接更新を完了（23:16〜23:29 JST）
+
+本人が準備済みrunnerを実行。転送資材・現行構成の再照合後、86→86表、会員ledger38→39へ038だけを追加し、分離した復元DBで旧checksum・全行／所有者の保全と再実行不変を確認した。知識DBの9件は変更なし。Web／3 Workerはapp `a2712fc6674294a79e0d666497e442074db2cc8b`、正式build `jGYRGPYTKRpa4o6BWC8cr` へ切替。
+
+- Web tag `plunode-web:theme-updates-a2712fc6`、manifest ID `sha256:5ff39ebcb1b43f091f3bb4888b768ef07c66492c3aa3038cbfbe7de61fe93d05`。ops tag `plunode-knowledge-ops:theme-updates-a2712fc6`、manifest ID `sha256:a4b820ebd50eb33d4285bb1f7a2dc1bd7f78f6aa9c016f5ed6f1ceecee841671`。
+- 正式backup `/opt/graph-knowledge/backups/theme-updates-release-20261108T141614Z`。Member dump `8b565da1cc5ba7852ee55eb1cad6a14dd650c8e8b0956ece543b1a6e08703110`、Knowledge dump `c4d6df25718a76230e2059db7a7a40bc41f77422d504a8685f8315e226bc2665`。暗号化archive `328f4cf0fccec35729ab4765834d39d8ddcede3a62b668eb602bc2c8ee46dff4`、wrapped key `1e9cd0e780870ee5a336b8a1a8032c208e88a3373968531dd46f346c763e7c0e`。PCでRSA/AES復号し、tarをstream読取して両dumpのSHA256一致を確認。平文archive・設定・鍵の追加保存はしていない。
+- 既存の認証・設定・会員／Capsule・旧KGコンテナ・AI artifactを保持。OS／Caddy／共有Kev、既存予定の変更はなし。
+
+### 実ChatGPTの受入
+
+既存App `plugin_asdk_app_6aeffba90628819181cfb1d6eb54a8d0`、同じ会話 `https://chatgpt.com/c/6aef440d-ceac-83ee-b59b-163349281c60` を継続した。App管理の「ツールを更新」は初回に一般エラーが表示されたが、次の試行後に新操作が利用でき、実際の読取・更新を確認した。初回の原因は特定していない。App作成／OAuth再接続／scope追加、収集計画の新設はしていない。
+
+1. `get_theme_authoring_guide` と `read_theme` で正式Theme `theme:915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1` の構成版3を取得。4 Record／3 Entity／3 Source／3年表配置と、NASAの原資料URLを確認。
+2. `update_theme` で説明末尾へ「関係図と年表を並べて読める。」だけを追加。requestId `8c55fd4a-6e81-4db4-a19d-49fa9c06e2e8`、同じIDの構成版4として `published`。`get_theme_registration` と `read_theme`、正式公開APIで反映を確認した。
+3. 取得した構成版4から同じ更新操作で元の説明全文へ復元。requestId `6d0a48be-7db5-40e2-8e45-39cbdd76c71e`、構成版5として `published`。Chatから再取得し、正式公開APIでも確認した。
+4. 元の構成版3・中間版4が不変で取得でき、最終版5のcontentが元の版3と完全一致することを比較した。snapshot・4 Recordの詳細、3原資料URL・言語・年表構成・既存pinsは3→4→5で不変。公開世代は `pending:false`、`lastFailure:null`。
+
+今回は説明の構成編集なので、新しい知識・原資料やGemini呼出しは発生しない。資料URL付き新規項目、背景の通常確認・競合・取消・再送・掲載解除などは前述の隔離DBテストで確認した範囲であり、今回すべてを実ChatGPT／実AIで再実施した意味ではない。保存済みCapsuleの断面保全は移行時の全行比較と隔離検証で確認し、今回あらためて個人のCapsuleを保存・共有し直してはいない。
+
+### 最終の閲覧・配置状態
+
+- 正式Chromeで構成版3を再読込し、固定版が突然5へ切り替わらないことを確認。最終構成版5で年表／関係図・元の説明・既存Googleセッションを確認した。確認URLは `https://plunode.net/?ktheme=theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1&krev=5&kview=split`。
+- localhost3200は同source、β build `5XPEJUNPcGXW1WRVI4TlF`。dataset／theme-homeは200。HTTPS βも実ChromeでTOP→紹介テーマ→年表／関係図と既存Googleを確認。Python既定UAでのβ再照合はCloudflare 1010・403だったため、ブラウザでの確認と区別し、保護設定を変更していない。
+- 正式dataset／theme-home／固定版APIは200、未認証MCPは401。誤った `/api/knowledge/theme-home` を試した際の404は存在しない検証URLによるもので、実API `/api/knowledge/public?mode=theme-home` へ修正して確認した。
+- 今回の専用tmpfsテストコンテナだけを検証後に削除。実DB・既存volume・旧backup・private設定は保持。
+- 実画面記録：`C:/Users/nishr/.codex/visualizations/2026/10/29/01a18791-0fba-7ac0-9f89-54c48fdffcf6/theme-updates-formal-v5.png`。非公開のactivation・復号照合・版比較は `.local/theme-updates-20261108/` に保持した。
+
+是正全3工程（不足照合／実装／接続確認・反映）を完了。既存テーマへの直接更新に、利用者が運営画面で収集計画を作成する手順はない。Chat側ではテーマURLと変更内容・資料URLを伝えれば、取得した固定版を対象に更新できる。
