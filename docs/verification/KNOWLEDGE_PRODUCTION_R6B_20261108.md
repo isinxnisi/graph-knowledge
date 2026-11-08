@@ -53,3 +53,17 @@ OGPはTwitterbot相当のHTTPで、正式originだけのメタ情報、1200×630
 本番と同じ固定PG image・正式ops image・復元関数を使い、実物βの000〜035 backupを隔離DBへ復元して通常Node migratorで036を適用した。84→85表、ledger37、旧行／所有者・checksum保持、再実行不変に成功。稼働中のβ・正式DBへこの検証の変更は書いていない。正式の最新dumpによる同じ検証と切替は、本人の再実行で行う。
 
 再開用資材は別stage `release-14542c72-r2`。最初の失敗stageとbackupを残し、同じアプリ14542c72・build wFBq24bSaSp0W-_ZOFaXr・image archiveを再利用する。PCの入口は `backups/knowledge-theme-20261108-r2/run-release.py`。新しいschema、Web、本人OAuthの接続とChatGPT登録はまだ本番未確認。
+
+## 補修版の正式反映に成功（13:22 JST）
+
+r2の本人sudo実行で正式反映を完了した。元の失敗は `psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory`。復元先の起動完了をTCPで待つ修正後はロール作成を通過した。
+
+- source `14542c7282ef59a2f07a3627f3fb7583d5f1dcfa`、build `wFBq24bSaSp0W-_ZOFaXr`、Web manifest `sha256:7c675fb5dce9f6d55a4cc885823eef6ab5789c1fd4a4435ee9bd34ea18ae1fcb`。
+- 正式の最新backupを分離DBへ復元し84→85表、会員ledger37。036だけを追加し旧行・所有者・checksumを維持、再実行で変更なし。知識ledger9は不変。Theme flag以外の設定、KG container、AI artifactを維持した。
+- backup `/opt/graph-knowledge/backups/theme-api-release-20261108T042241Z`。
+- Member dump SHA256 `07647af53b2c578fff1a535f13826aa926263f6817dde31b2b466126f2046d03`、Knowledge dump SHA256 `808a7f43a9871cba80c4c9ec8d98d920607c2d62a9a19d03a781488b88e54eab`。
+- 暗号化archive SHA256 `70fa4c2c0ffc42a2f8434a5a47d9a1537710af93e47e2ab77d7a16e63e0a98de`、暗号化された鍵 SHA256 `fbb708e722be92c3218353f5488767fff293b9b96bccbe6f9c4bf7424c2a5b8f`。
+- PCへ取得し、PC限定の秘密鍵で復号、両dump hashを照合した。復号時の一時鍵・平文archiveは削除済み。
+- 正式 `/api/dataset` は200で従来revision `f5dbf83f-c89e-4e40-95ee-57957016089f`。OAuth metadataは `missions:collect` / `themes:compose` / `offline_access`、resourceは正式origin。正式テーマ一覧は200・0件で、手動のDB初期投入を行っていない。
+
+ChatGPTの正式OAuth同意・同じ会話での実Theme登録・探索利用は未確認。Chromeの操作と接続一覧が3回timeoutし、本人へ再起動を依頼した。利用できるPlugin Creatorの操作はarchiveの作成／更新で、既存App所有のMCP URLを変更する操作はないため、β接続を維持した別の正式App接続を準備する方針を継続する。本人のOAuth同意を省略したり、CodexからのDB投入を代替実証にしたりしない。
