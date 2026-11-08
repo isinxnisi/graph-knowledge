@@ -8,7 +8,7 @@
 
 review Workerは既存Webの `COMMUNITY_ENABLED` / `SITE_OPERATIONS_ENABLED` / `SITE_OPERATOR_USER_IDS` を引き継ぐ必要がある。初回に未指定でテーマ受付が取消になったため、`e0371f7f` の専用補修を正式適用済み。補修backupは `/opt/graph-knowledge/backups/theme-worker-flags-20261108T054606Z`、Compose SHA256 `a10c984aee7d65cb7d30e522c12c1b1184b7ead27aaf5a8014207c62c3d7cf3b`。Web／DB／image不変、運営資格・有効会員・capabilityはすべてtrue。旧取消受付をDBで開き直さない。
 
-R6b完了。本人の本番送信許可後、同じChatGPT予定→正式API→通常確認・公開で2関係がTheme構成版3へ追加された。既存Capsuleへ比較取込・保存し、同じ共有URLの明示更新も確認した。日常運用の再開は[ChatGPT予定runbook](KNOWLEDGE_CHATGPT_SCHEDULE.md)の同じ会話・予定から行う。初回公開scriptの再実行や新しい同名Themeの作成は不要。
+正式アプリ受入済み・Linux脆弱性対応は未完了（[訂正と補修手順](../verification/LINUX_SECURITY_R6_20261108.md)）。本人の本番送信許可後、同じChatGPT予定→正式API→通常確認・公開で2関係がTheme構成版3へ追加された。既存Capsuleへ比較取込・保存し、同じ共有URLの明示更新も確認した。日常運用の再開は[ChatGPT予定runbook](KNOWLEDGE_CHATGPT_SCHEDULE.md)の同じ会話・予定から行う。初回公開scriptの再実行や新しい同名Themeの作成は不要。
 
 ## 起点と守る境界
 
@@ -43,7 +43,7 @@ MCP clientの `checkpointDirectory` はWeb専用bindの `/run/plunode-knowledge-
 
 1. 本番の実ledgerから未適用migrationを確定する。既存checksumは変更しない。知識DBは `scripts/knowledge-migrate.ts --confirm-origin https://plunode.net --confirm-database EXACT_DATABASE` で明示適用する。既存関数を再利用し、seedはしない。
 2. 復旧用に旧Compose／env／private runtime／image識別情報を保存する。準備段階ではexported snapshotによりWeb稼働中にMember dumpと同じ断面の表・所有者・行を得る。scripts/prepare-knowledge-production.pyで隔離PGへ復元し、追加移行・再実行を検証する。正式切替時にはWebと書込Workerを同じ区切りで停止し、最新の会員・知識DBとcheckpointのbackupを確保する。失敗時に旧dumpを本番へ上書きしない。
-3. LinuxはUbuntuのsecurity pocketと実際の更新候補を照合する。通常の機能更新や無関係なサービスの更新を一括実行しない。適用内容・再起動要否を記録し、必要な再起動後は既存サービスを復帰する。パッケージの新旧だけで未修正CVEと断定しない。
+3. Linuxは実稼働kernel・導入済みkernel・追従meta-package・保持／保留を記録し、現在の重要CVEに対するUbuntu公式の修正状況と配布packageのchangelogを照合する。-securityだけでなく-updates側の修正・新ABIの依存packageも確認する。候補0件・reboot-required不在・install成功だけでは対応完了としない。固定版のAPT planをsimulateし、対象外更新／削除を拒否して、backup後に必要なpackageを適用する。再起動後のuname・package版・Web／DB／Worker／正式URLの復帰まで確認する。通常の機能更新・release-upgrade・proposed追加・有料ESMの有効化は一括実行しない。
 4. 固定資材・private profileを再照合し、新Webと対象Workerを起動する。新しい保存形式を書いた後に、それを読めない旧Webへ機械的に戻さない。障害時は書込を止め、現行DBを保って修復／対応版へ切り替える。
 
 ## 4. 正式確認と完了

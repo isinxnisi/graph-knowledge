@@ -2,7 +2,7 @@
 
 ## 現在地
 
-**R6b完了・R6完了。R1〜R6の合意した本運用初版を正式公開済み。** 本人の送信許可後、同じChatGPT予定から配送した2関係が通常確認・publisherを通り、Theme構成版3へ追記された。正式の年表／背景／関係図、Capsuleの独自編集保全・比較取込・保存・同じURLへの共有反映まで確認。以下の「待ち」「未確認」は各時点の履歴であり、最終結果は末尾を優先する。全件のAI処理を完遂した保証や、後続構想の年表比較／マージ完成の意味ではない。
+**訂正：正式アプリの切替・代表操作は確認済み。Linux脆弱性対応を確認しないままR6全体を完了扱いしたため、R6は未完了へ戻す。** [現在の影響と再開手順](LINUX_SECURITY_R6_20261108.md)。 本人の送信許可後、同じChatGPT予定から配送した2関係が通常確認・publisherを通り、Theme構成版3へ追記された。正式の年表／背景／関係図、Capsuleの独自編集保全・比較取込・保存・同じURLへの共有反映まで確認。以下の「待ち」「未確認」は各時点の履歴であり、最終結果は末尾を優先する。全件のAI処理を完遂した保証や、後続構想の年表比較／マージ完成の意味ではない。
 
 ## 配置済み
 
@@ -177,4 +177,4 @@ OGPはTwitterbot相当HTTPで200、1200×630 PNG、112,843bytes、SHA256 `676b8e
 - 実Googleと実ChatGPT・実NASA原文で確認した経路と、過去のfixtureによる境界検証を区別する。実iPhoneのキーボード／スクロール、SNS実プレビュー、正式PC読解Workerの別の実資料jobは今回未実施。PCの取得・読解Workerは起動／再開接続済みで、代表の実取得は前節で確認済み。
 - 年表同士の比較／マージ、年表の直接作図、全件訳文の先行生成は既に後続へ分けた構想。今回の完成に合わせて新しく範囲を縮小したものではない。
 
-最終証跡：`formal-theme-current.json`、`formal-theme-append-result.json`、`formal-theme-share-before-update.json`、`formal-theme-ogp-v3.json`、`final-health.json` は作業tree `.local/theme-worker-flags-repair/`。画面はPCのvisualizations内 `formal-theme-v3.png`、`formal-share-v3.png`、`formal-schedule-normal.png`。R6bの残り実装・本人操作なし。以後は通常運用とユーザー評価を受け、別の改善を混ぜず扱う。
+最終証跡：`formal-theme-current.json`、`formal-theme-append-result.json`、`formal-theme-share-before-update.json`、`formal-theme-ogp-v3.json`、`final-health.json` は作業tree `.local/theme-worker-flags-repair/`。画面はPCのvisualizations内 `formal-theme-v3.png`、`formal-share-v3.png`、`formal-schedule-normal.png`。アプリの利用接続はこの時点で確認済み。ただし後刻、LinuxのTCP脆弱性未修正を確認したため、R6の残りはkernel更新・再起動と正式サービス復帰確認へ訂正した。
