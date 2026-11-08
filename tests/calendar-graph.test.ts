@@ -268,8 +268,8 @@ it("keeps year/month events as single anchors alongside day-precise events in ev
 
 it("collapses identical coarse occurrence bounds without reclassifying real durations", () => {
   for (const value of ["1996", "1989-09"]) {
-    const records = (["occurrence-window", "unclassified-range", "duration"] as const).map(meaning =>
-      record(meaning, { kind: "calendar", meaning, from: value, to: value, label: "" }));
+    const records = (["occurrence-window", undefined, "duration"] as const).map(meaning =>
+      record(meaning ?? "legacy", { kind: "calendar", meaning, from: value, to: value, label: "" }));
     const graph = calendarGraph(records, "day");
     expect(graph.ranges.slice(0, 2).every(range => range.start === range.end)).toBe(true);
     expect(graph.ranges[2].end).toBeGreaterThan(graph.ranges[2].start);
