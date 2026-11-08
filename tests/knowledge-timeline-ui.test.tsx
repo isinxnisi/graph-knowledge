@@ -85,3 +85,22 @@ it("opens settings below the heading and retains their values after closing", ()
   expect((screen.getByRole("combobox", { name: "暦の表示単位" }) as HTMLSelectElement).value).toBe("month");
   expect((screen.getByRole("combobox", { name: "たどる対象" }) as HTMLSelectElement).value).toBe("b");
 });
+
+it("does not add phantom range endings for coarse dated events in the normal knowledge timeline", () => {
+  const rows = [
+    { id: "workshop", assertion: "1989年9月の検討会", time: { kind: "calendar", meaning: "point", from: "1989-09", label: "検討会" } },
+    { id: "proposal", assertion: "1996年の提言", time: { kind: "calendar", meaning: "point", from: "1996", label: "提言" } },
+    { id: "day", assertion: "日付のある出来事", time: { kind: "calendar", meaning: "point", from: "2021-12-25", label: "" } },
+    { id: "period", assertion: "実際の期間", time: { kind: "calendar", meaning: "duration", from: "2021-12-28", to: "2022-01-04", label: "展開期間" } },
+  ];
+  const data: KnowledgeSnapshot = { ...s, records: rows.map(row => ({ ...s.records[0], id: row.id, content: knowledgeRecordContentSchema.parse({ ...s.records[0].content, assertion: row.assertion, times: [{ id: "when", time: row.time }] }) })) };
+  const original = JSON.stringify(data);
+  render(<KnowledgeTimeline snapshot={data} focusedRecordId={null} onFocusRecord={vi.fn()} />);
+  for (const name of ["1989年9月の検討会", "1996年の提言", "日付のある出来事"]) {
+    expect(screen.getByRole("button", { name: new RegExp("^時期の線を選ぶ：" + name) }).hasAttribute("data-point")).toBe(true);
+  }
+  expect(screen.queryByText("候補の後端")).toBeNull();
+  expect(screen.getByRole("button", { name: /^時期の線を選ぶ：実際の期間/ }).hasAttribute("data-point")).toBe(false);
+  expect(screen.getByText("終了側").closest("button")).toBeTruthy();
+  expect(JSON.stringify(data)).toBe(original);
+});

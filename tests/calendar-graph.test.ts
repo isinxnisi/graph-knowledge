@@ -115,7 +115,7 @@ it("keeps mixed precision and early leap years without reverse rows or invented 
   const [mixed, coarse, day] = g.ranges;
   expect(mixed.endRow).toBeGreaterThan(mixed.startRow);
   expect(coarse.startRow).toBeLessThan(day.startRow);
-  expect(coarse.endRow).toBeGreaterThan(day.endRow);
+  expect(coarse.endRow).toBe(coarse.startRow);
   expect(g.slices.map((s) => s.label)).not.toContain("1903-01-01");
 });
 
@@ -245,8 +245,34 @@ it("chooses the finest stored precision for automatic display and never guesses 
   });
   expect(calendarGraph([year]).unit).toBe("year");
   expect(calendarGraph([year, month]).unit).toBe("month");
-  expect(calendarGraph([year], "day").slices.map((s) => s.label)).toEqual([
-    "1991",
-    "1991",
-  ]);
+  expect(calendarGraph([year], "day").slices.map((s) => s.label)).toEqual(["1991"]);
+});
+
+it("keeps year/month events as single anchors alongside day-precise events in every display unit", () => {
+  const records = [
+    record("workshop", { kind: "calendar", meaning: "point", from: "1989-09", label: "検討会" }),
+    record("recommendation", { kind: "calendar", meaning: "point", from: "1996", label: "提言" }),
+    record("launch", { kind: "calendar", meaning: "point", from: "2021-12-25", label: "打上げ" }),
+  ];
+  const original = JSON.stringify(records);
+  for (const resolution of ["auto", "year", "month", "day", "hour"] as const) {
+    const graph = calendarGraph(records, resolution);
+    expect(graph.ranges.every(range => range.start === range.end)).toBe(true);
+    expect(graph.rows).toHaveLength(3);
+    expect(graph.rows.every(row => row.record && !row.ending)).toBe(true);
+    expect(graph.ranges.every(range => range.anchorRow === range.endAnchorRow)).toBe(true);
+  }
+  expect(calendarGraph(records).rows.map(row => row.label)).toEqual(["1989-09", "1996", "2021-12-25"]);
+  expect(JSON.stringify(records)).toBe(original);
+});
+
+it("collapses identical coarse occurrence bounds without reclassifying real durations", () => {
+  for (const value of ["1996", "1989-09"]) {
+    const records = (["occurrence-window", "unclassified-range", "duration"] as const).map(meaning =>
+      record(meaning, { kind: "calendar", meaning, from: value, to: value, label: "" }));
+    const graph = calendarGraph(records, "day");
+    expect(graph.ranges.slice(0, 2).every(range => range.start === range.end)).toBe(true);
+    expect(graph.ranges[2].end).toBeGreaterThan(graph.ranges[2].start);
+    expect(graph.ranges.map(range => range.meaning)).toEqual(["occurrence-window", "unclassified-range", "duration"]);
+  }
 });

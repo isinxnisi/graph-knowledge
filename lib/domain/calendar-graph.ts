@@ -6,6 +6,11 @@ export type CalendarUnit = "year" | "month" | "day" | "hour";
 export type CalendarResolution = "auto" | CalendarUnit;
 
 const precision = { year: 4, month: 7, day: 10, hour: 13 };
+// A partial date limits precision; it does not turn a dated event into a period.
+const singleAnchor = (time: CalendarTime) =>
+  calendarMeaning(time) === "point" ||
+  (calendarMeaning(time) !== "duration" && time.to === time.from);
+
 const bucket = (date: number, unit: CalendarUnit) =>
   unit === "year"
     ? Math.floor(date / 10000) * 10000 + 101
@@ -51,7 +56,8 @@ export function calendarGraph<R extends TimelineTimedRow>(
       time.to,
     ]) {
       if (!value) continue;
-      for (const bound of bounds(value)) {
+      const displayedBounds = singleAnchor(time) ? bounds(value).slice(0, 1) : bounds(value);
+      for (const bound of displayedBounds) {
         labels.set(bound, [
           ...new Set([
             ...(labels.get(bound) ?? []),
@@ -64,26 +70,27 @@ export function calendarGraph<R extends TimelineTimedRow>(
   const coordinates = [...labels.keys()].sort((a, b) => a - b);
   const ranges = dated.map((record) => {
     const time = record.time,
-      [start, pointEnd] = bounds(time.from);
-    const end = bounds(time.to ?? time.from)[1];
+      [start] = bounds(time.from),
+      collapsed = singleAnchor(time);
+    const end = collapsed ? start : bounds(time.to ?? time.from)[1];
     // A coarse start cannot be later than the latest possible end and vice versa.
-    const startEnd = Math.min(end, bounds(time.startLatest ?? time.from)[1]);
-    const endStart = Math.max(
+    const startEnd = collapsed ? start : Math.min(end, bounds(time.startLatest ?? time.from)[1]);
+    const endStart = collapsed ? start : Math.max(
       start,
       bounds(time.endEarliest ?? time.to ?? time.from)[0],
     );
     return {
       record,
       start,
-      end: time.to ? end : pointEnd,
+      end,
       startEnd,
       endStart,
       meaning: calendarMeaning(time),
-      uncertainBoundary:
+      uncertainBoundary: !collapsed && (
         calendarLayoutBounds(time.startLatest ?? time.from)[1] >
           calendarLayoutBounds(time.from)[0] ||
         calendarLayoutBounds(time.to ?? time.from)[1] >
-          calendarLayoutBounds(time.endEarliest ?? time.to ?? time.from)[0],
+          calendarLayoutBounds(time.endEarliest ?? time.to ?? time.from)[0]),
       lane: 0,
     };
   });
