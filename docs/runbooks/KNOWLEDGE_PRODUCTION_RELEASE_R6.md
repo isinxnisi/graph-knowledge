@@ -89,3 +89,13 @@ app `027f89bf`／正式build `Sf6Myn-qsOSMt8bnqxpE9`。会員16追加・知識9�
 ### guard配下の端末入力
 
 PC helperは制御端末 /dev/tty を開き直さない。guardは子を別sessionへ分けるため、scripts/production_ssh_terminal.pyで既存の標準入出力を引き継ぎ、SSHは -tt を使う。guardやsudoの認証条件を緩めない。run-release.py --terminal-check はsudoなしの固定文字列probeであり、本番切替とは別。標準入力をpipeから渡す場合も、公開用sudoパスワードをpipe／ファイル／チャットへ保存してはならない。通常の公開実行では本人がterminalへ直接入力する。
+
+## 既存R6へChatGPT新規テーマ受付を追加する（2026-11-08）
+
+027f89bfの正式切替後に欠けていた運営Themeの新規受付を補修する。一般ユーザーのTheme投稿UIや手動DB投入への変更ではない。[接続契約](../design/KNOWLEDGE_CHATGPT_THEME_REGISTRATION.md)と[R6b記録](../verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md)を参照。
+
+固定アプリ14542c72・正式build wFBq24bSaSp0W-_ZOFaXrを使い、専用 `scripts/release-knowledge-theme-production.py` と照合済みmanifestで更新する。旧R6の初回配置scriptは再実行しない。追加Member SQLは036だけ、既存checksumを変更しない。Knowledgeは9のまま。
+
+PCの本人用入口は `backups/knowledge-theme-20261108/run-release.py`。既存SSH／sudoと共通holdを使い、パスワードはterminal内だけへ入力する。既存構成が変われば停止し、最新backupを作成して別DB復元・追加migration・再実行と旧行／所有者保全を確認する。影響範囲はWebと3つの知識Worker、036の受付台帳、Themeの有効化flag。KG用ops、会員・認証・旧KGのデータ、収集PCの資格、AIラボ資材は維持する。
+
+切替後は新しい正式MCP接続で `missions:collect themes:compose offline_access` の本人同意を得る。既存のβ接続は維持し、同じ「Plunode資料収集」会話・予定へ正式接続を指定する。ChatGPTの資料付きTheme受付→通常確認／公開→元の受付IDの結果URL→探索・年表・Capsuleを実際に確認してからR6完了を判断する。共通原本の版と既存の保存・共有を勝手に更新しない。

@@ -31,3 +31,13 @@ OGPはTwitterbot相当のHTTPで、正式originだけのメタ情報、1200×630
 ## 残り
 
 βへの補修版配置と本人認証境界の確認、正式用資材と036の実物backup復元検証・反映、ChatGPTの正式接続と新規テーマの実登録、同じ会話／予定の接続先切替、テーマから探索・年表・Capsuleへの利用確認。本人のsudo入力と新しいOAuth同意は必要になった時点で具体的な手順を用意する。既存ベータの接続・スケジュールと正式接続は混同しない。
+
+## 新規テーマの補修版：β配置・正式更新待ち
+
+- アプリsource `14542c7282ef59a2f07a3627f3fb7583d5f1dcfa`。対象17件・lint・型検査込みのβ／正式webpack buildが成功。
+- 3200／HTTPS β：build `J8c0xCK92ByIAFgkz3nbx`。実物Member backupを別コンテナのDBへ復元し旧行・所有者を照合、036だけを追加した。旧000〜035のchecksum維持、ledger37、通常migratorの再実行で変更なし。会員・Capsule・既存テーマのテストデータを削除していない。
+- 実Googleセッションを保ち、TOP→Webbテーマ→中央の年表／関係図、背景情報・根拠の表示を確認。OAuth metadataは `missions:collect` / `themes:compose` / `offline_access` を広告する。MCPの匿名POSTは3200・HTTPS βで401を確認（外部検査の初回に403応答があり、通常のUser-Agent付き再確認は401。恒常的な接続障害とは判定していない）。実際の新scopeによるTheme登録は、本人の接続同意後に正式側で確認する。
+- 正式候補build `wFBq24bSaSp0W-_ZOFaXr`、Web tag `plunode-web:r6-theme-14542c72`／manifest `sha256:7c675fb5dce9f6d55a4cc885823eef6ab5789c1fd4a4435ee9bd34ea18ae1fcb`、ops tag `plunode-knowledge-ops:r6-theme-14542c72`／manifest `sha256:a8c66ce8285140e1a9784347f9da50abffb4635a005ac48b5f99dd24004dfbf7`。
+- archive SHA256 `1690db650b2fc25f250dd0fa54df8b1e5f067a707ca1eacc7663827dbe549fcf`。archiveのconfig／manifest／全layerと固定sourceのlabelを照合した。βのDB／秘密値／実験artifactを含めない。
+- 既に切替済みのR6へ追加する専用script `scripts/release-knowledge-theme-production.py` を準備。旧構成・image・build・全設定hash・ledgerを照合し、一時停止→最新Member／Knowledge backup→Memberの別DB復元／036／再実行→暗号化backup→036と新imageへ更新する。知識migration9・旧KG・AI artifactは保持する。新scopeを有効化する1設定以外のprivate設定を変えない。
+- 本番ではこの補修版はまだ未適用。本人のsudo入力が必要。初回R6 scriptの再実行や、旧dumpへの巻戻しは行わない。

@@ -1,4 +1,4 @@
-2026-11-08 R6b：app027f89bf／正式build Sf6Myn-qsOSMt8bnqxpE9の切替・会員36／知識9 migration・最終backupを完了し、PCで暗号化backupの復号とhashを照合。実Googleで正式Capsuleの同じURLの明示更新・旧版／新版コメント・共有停止を確認。PC資料取得WorkerもNASA2資料を取得。**ChatGPTから新規テーマを登録するAPIが未接続と判明し補修中**。一般ユーザーのテーマ作成UIや手動DB投入へ置き換えない。R6bの正式受入は未完了。[新規テーマの接続契約](design/KNOWLEDGE_CHATGPT_THEME_REGISTRATION.md)。以下は各時点の履歴。
+2026-11-08 R6b：正式app027f89bfの切替・36／9 migration・最終backupを完了しPCで復号／hashを照合。実Googleの正式Capsuleで共有URL維持・旧版／新版コメント・停止、PC WorkerのNASA2資料取得を確認。**ChatGPT新規テーマ登録の不足を補修し、app14542c72／βbuild J8c0xCK92ByIAFgkz3nbxをmain／3200／HTTPS βへ反映**。会員036の別DB復元・旧行／所有者・checksum・再実行を確認。正式候補build wFBq24bSaSp0W-_ZOFaXrを準備し、sudo反映・本人の正式OAuth接続・ChatGPT実登録を残す。R6bは未完了。[実測と再開](verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md)。以下は各時点の履歴。
 
 2026-11-08 R6b切替前：PC helperがguard配下で/dev/ttyを開けず終了。SSH／sudo／本番変更は未実行。標準入出力継承＋遠隔PTYへ修正し、実SSHの非特権probeで制御端末なし・継承端末・非表示入力を確認。本番資材は027f89bf／Sf6Myn-qsOSMt8bnqxpE9のまま。修正版helperのsudo切替・正式確認待ち。[詳細](verification/KNOWLEDGE_PRODUCTION_R6A_20261108.md#r6b切替前の端末修正)。
 
