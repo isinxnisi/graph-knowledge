@@ -1,4 +1,4 @@
-2026-11-08更新：TCP脆弱性CVE-2026-98432の修正kernel 6.8.0-149-genericでの再起動・正式API／PG／Neo4j／3 Workerの復帰とbackupのPC復号を確認。アプリ受入は保持するが、公式診断でCaddyのESM security更新1件が残るためR6全体は未完了。現在地は「R6：TCP補修済み・Caddy補修準備中｜残りはCaddy適用・正式確認｜全体はR6まで」。[Linux実測](verification/LINUX_SECURITY_R6_20261108.md)／[Caddyの固定補修計画](verification/CADDY_SECURITY_R6_20261108.md)。以下は各時点の履歴。
+2026-11-08最終確認：R6b完了。正式アプリ受入に加え、TCP修正kernel 6.8.0-149-genericとCaddy公式2.11.9の実稼働、正式HTTPS／HTTP2・PG／Neo4j読取・3 Worker、既存TLS証明書／設定とbackup復号を確認。Ubuntu診断の標準・ESM security更新は0件。R1〜R6で合意した本運用初版を公開・確認済みとする。別プロジェクトeBay監視unitの20:06失敗は未変更・別記。[Linux補修実測](verification/LINUX_SECURITY_R6_20261108.md)／[Caddy最終確認](verification/CADDY_SECURITY_R6_20261108.md)。以下は各時点の履歴。
 
 2026-11-08 R6b完了：同じChatGPT会話・予定から正式APIへの継続配送と2関係の通常公開、Theme構成版3、独自編集を保ったCapsule取込・保存・同じURLへの共有反映を確認。R1〜R6で合意した本運用初版の構築・β統合・正式反映を区切る。app14542c72／正式build wFBq24bSaSp0W-_ZOFaXr、会員37／知識9。今回のWeb／DB／image変更なし。[最終実測と制約](verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md#送信許可後の継続配送と正式受入を完了)。以下は各時点の履歴。
 
