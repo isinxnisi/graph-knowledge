@@ -39,11 +39,55 @@ def fingerprints(sql,tables,old_ledger=False):
   parts.append("SELECT '"+key+"' AS key,("+value+") AS value")
  return json.loads(sql("SELECT coalesce(json_object_agg(key,value),'{}'::json) FROM ("+' UNION ALL '.join(parts)+')checks')) if parts else {}
 
+def rehearse_member_backup(sql,backup,tables,before,images,m):
+ # The image entrypoint briefly starts a Unix-socket-only bootstrap server.
+ # Wait for TCP, which is available only after that bootstrap has finished.
+ suffix=secrets.token_hex(5);network='plunode-theme-restore-'+suffix;container=network+'-pg';net=False;created=False
+ try:
+  run(['docker','network','create','--internal',network]);net=True
+  run(['docker','run','-d','--name',container,'--network',network,'--network-alias','graph-member-postgres','--memory','256m','--tmpfs','/var/lib/postgresql/data:rw,size=512m','-e','POSTGRES_HOST_AUTH_METHOD=trust','-e','POSTGRES_USER=restore_admin','-e','POSTGRES_DB=postgres',m['postgresImage']]);created=True
+  for _ in range(50):
+   if subprocess.run(['docker','exec',container,'pg_isready','-h','127.0.0.1','-U','restore_admin','-d','postgres'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode==0:break
+   time.sleep(.2)
+  else:raise RuntimeError('Restore database not ready')
+  def restored(q,db='graph_member'):
+   return run(['docker','exec','-i',container,'psql','-h','127.0.0.1','-X','-qAt','-U','restore_admin','-d',db,'-v','ON_ERROR_STOP=1'],q.encode())
+  roles=json.loads(sql('SELECT json_agg(rolname) FROM pg_roles WHERE rolname !~ \'^pg_\'' ,'postgres'))
+  existing=set(json.loads(restored('SELECT json_agg(rolname) FROM pg_roles','postgres')))
+  for role in roles:
+   if role not in existing:restored('CREATE ROLE '+ident(role)+' NOLOGIN','postgres')
+  restored("ALTER ROLE gk_member LOGIN PASSWORD 'isolated-rehearsal-only'",'postgres');restored('CREATE DATABASE graph_member OWNER gk_member','postgres')
+  with (backup/'member.dump').open('rb') as f:
+   p=subprocess.run(['docker','exec','-i',container,'pg_restore','-h','127.0.0.1','-U','restore_admin','-d','graph_member','--exit-on-error'],stdin=f,stdout=subprocess.PIPE,stderr=subprocess.PIPE);assert p.returncode==0,'Separate restore failed'
+  assert columns(restored)==tables and fingerprints(restored,tables)==before
+  rehearsal=backup/'rehearsal.env';private(rehearsal,'\n'.join(['GRAPH_DEPLOYMENT=production','MEMBER_STORAGE_ENABLED=1','MEMBER_ORIGIN=https://plunode.net','MEMBER_DATABASE_URL=postgresql://gk_member:isolated-rehearsal-only@graph-member-postgres:5432/graph_member','MEMBER_AUTH_SECRET='+secrets.token_hex(32),'MEMBER_COOKIE_PREFIX=gk-member-production','MEMBER_AUTH_PROVIDER=google','MEMBER_GOOGLE_CLIENT_ID=isolated-migration','MEMBER_GOOGLE_CLIENT_SECRET='+secrets.token_hex(24),'NODE_OPTIONS=--max-old-space-size=256'])+'\n')
+  migrate=['docker','run','--rm','--network',network,'--memory','384m','--env-file',str(rehearsal),images['knowledge-ops']['tag'],'scripts/member-migrate.ts','--theme-registration','--confirm-origin','https://plunode.net']
+  run(migrate);assert json.loads(restored('SELECT json_object_agg(name,checksum) FROM member_migration'))==m['memberMigrations'];assert fingerprints(restored,tables,True)==before
+  all_tables=columns(restored);all_rows=fingerprints(restored,all_tables);run(migrate);assert fingerprints(restored,all_tables)==all_rows
+  return {'oldTables':len(tables),'tables':len(all_tables),'ledgerCount':len(m['memberMigrations']),'oldRowsAndOwnersPreserved':True,'repeatedUnchanged':True,'memberDumpSha256':digest(backup/'member.dump')}
+ finally:
+  if created:run(['docker','rm','-f',container])
+  if net:run(['docker','network','rm',network])
+
+def validate_migration_plan(manifest):
+ before=manifest['previous']['memberMigrations'];after=manifest['memberMigrations']
+ additions=set(manifest['additionalMemberMigrations'])
+ assert additions=={'036-theme-registration.sql'},'Only migration 036 is authorized'
+ assert set(after)==set(before)|additions,'Migration manifest contains an unrelated or missing SQL file'
+ assert all(after[name]==checksum for name,checksum in before.items()),'Applied migration checksum changed'
+
 def main():
  assert os.geteuid()==0;os.umask(0o077);stage=pathlib.Path.cwd().resolve()
  assert str(stage).startswith('/root/plunode-theme-release-')
  gate=(ROOT/'.member-activation.lock').open('a');fcntl.flock(gate,fcntl.LOCK_EX|fcntl.LOCK_NB)
- m=json.loads((stage/'manifest.json').read_text());previous=m['previous'];images=m['images']
+ m=json.loads((stage/'manifest.json').read_text());validate_migration_plan(m);previous=m['previous'];images=m['images']
+ # The predecessor log is root-private. Report only its safe PostgreSQL error
+ # line; never include command arguments, environment values or credentials.
+ failure=pathlib.Path('/root/plunode-theme-release-20261108-14542c72/command-failure.json')
+ if failure.is_file():
+  diagnostic=json.loads(failure.read_text());lines=diagnostic.get('stderr','').splitlines()
+  safe=[v.strip() for v in lines if any(t in v for t in ['ERROR:','FATAL:','psql: error:']) and not re.search(r'postgresql://|password=|secret|token',v,re.I)]
+  emit('previous-failure-diagnostic',exit=diagnostic.get('exit',diagnostic.get('returncode')),message=' '.join(safe)[:500] or 'See retained private diagnostics')
  assert m['source'] and set(m['additionalMemberMigrations'])=={'036-theme-registration.sql'}
  for name,value in previous['files'].items():assert digest(ROOT/name)==value,'Live setting changed: '+name
  assert shutil.disk_usage(ROOT).free>4*1024**3
@@ -87,31 +131,8 @@ def main():
    with (backup/name).open('wb') as f:run(['docker','exec',pg,'pg_dump','-U','postgres','-d',db,'-Fc'],output=f)
   assert fingerprints(sql,tables)==before
   private(backup/'member-before.json',json.dumps({'tables':tables,'fingerprints':before,'ledger':old_ledger}))
-  suffix=secrets.token_hex(5);network='plunode-theme-restore-'+suffix;container=network+'-pg';net=False;created=False
-  try:
-   run(['docker','network','create','--internal',network]);net=True
-   run(['docker','run','-d','--name',container,'--network',network,'--network-alias','graph-member-postgres','--memory','256m','--tmpfs','/var/lib/postgresql/data:rw,size=512m','-e','POSTGRES_HOST_AUTH_METHOD=trust','-e','POSTGRES_USER=restore_admin','-e','POSTGRES_DB=postgres',m['postgresImage']]);created=True
-   for _ in range(50):
-    if subprocess.run(['docker','exec',container,'pg_isready','-U','restore_admin'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode==0:break
-    time.sleep(.2)
-   else:raise RuntimeError('Restore database not ready')
-   def restored(q,db='graph_member'):
-    return run(['docker','exec','-i',container,'psql','-X','-qAt','-U','restore_admin','-d',db,'-v','ON_ERROR_STOP=1'],q.encode())
-   roles=json.loads(sql('SELECT json_agg(rolname) FROM pg_roles WHERE rolname !~ \'^pg_\'' ,'postgres'))
-   for role in roles:
-    if role!='restore_admin':restored('CREATE ROLE '+ident(role)+' NOLOGIN','postgres')
-   restored("ALTER ROLE gk_member LOGIN PASSWORD 'isolated-rehearsal-only'",'postgres');restored('CREATE DATABASE graph_member OWNER gk_member','postgres')
-   with (backup/'member.dump').open('rb') as f:
-    p=subprocess.run(['docker','exec','-i',container,'pg_restore','-U','restore_admin','-d','graph_member','--exit-on-error'],stdin=f,stdout=subprocess.PIPE,stderr=subprocess.PIPE);assert p.returncode==0,'Separate restore failed'
-   assert columns(restored)==tables and fingerprints(restored,tables)==before
-   rehearsal=backup/'rehearsal.env';private(rehearsal,'\n'.join(['GRAPH_DEPLOYMENT=production','MEMBER_STORAGE_ENABLED=1','MEMBER_ORIGIN=https://plunode.net','MEMBER_DATABASE_URL=postgresql://gk_member:isolated-rehearsal-only@graph-member-postgres:5432/graph_member','MEMBER_AUTH_SECRET='+secrets.token_hex(32),'MEMBER_COOKIE_PREFIX=gk-member-production','MEMBER_AUTH_PROVIDER=google','MEMBER_GOOGLE_CLIENT_ID=isolated-migration','MEMBER_GOOGLE_CLIENT_SECRET='+secrets.token_hex(24),'NODE_OPTIONS=--max-old-space-size=256'])+'\n')
-   migrate=['docker','run','--rm','--network',network,'--memory','384m','--env-file',str(rehearsal),images['knowledge-ops']['tag'],'scripts/member-migrate.ts','--theme-registration','--confirm-origin','https://plunode.net']
-   run(migrate);assert json.loads(restored('SELECT json_object_agg(name,checksum) FROM member_migration'))==m['memberMigrations'];assert fingerprints(restored,tables,True)==before
-   all_tables=columns(restored);all_rows=fingerprints(restored,all_tables);run(migrate);assert fingerprints(restored,all_tables)==all_rows
-   emit('backup-restore-rehearsal-ok',oldTables=len(tables),tables=len(all_tables),ledgerCount=len(m['memberMigrations']),oldRowsAndOwnersPreserved=True,repeatedUnchanged=True,memberDumpSha256=digest(backup/'member.dump'),knowledgeDumpSha256=digest(backup/'knowledge.dump'))
-  finally:
-   if created:run(['docker','rm','-f',container])
-   if net:run(['docker','network','rm',network])
+  rehearsal=rehearse_member_backup(sql,backup,tables,before,images,m)
+  emit('backup-restore-rehearsal-ok',**rehearsal,knowledgeDumpSha256=digest(backup/'knowledge.dump'))
   payload=backup/'recovery.tar';key=backup/'encryption-key';verified=backup/'verify.tar'
   with tarfile.open(payload,'w') as tar:
    for item in backup.iterdir():

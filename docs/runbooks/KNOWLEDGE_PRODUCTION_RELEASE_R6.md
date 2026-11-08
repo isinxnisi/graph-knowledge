@@ -99,3 +99,5 @@ PC helperは制御端末 /dev/tty を開き直さない。guardは子を別sessi
 PCの本人用入口は `backups/knowledge-theme-20261108/run-release.py`。既存SSH／sudoと共通holdを使い、パスワードはterminal内だけへ入力する。既存構成が変われば停止し、最新backupを作成して別DB復元・追加migration・再実行と旧行／所有者保全を確認する。影響範囲はWebと3つの知識Worker、036の受付台帳、Themeの有効化flag。KG用ops、会員・認証・旧KGのデータ、収集PCの資格、AIラボ資材は維持する。
 
 切替後は新しい正式MCP接続で `missions:collect themes:compose offline_access` の本人同意を得る。既存のβ接続は維持し、同じ「Plunode資料収集」会話・予定へ正式接続を指定する。ChatGPTの資料付きTheme受付→通常確認／公開→元の受付IDの結果URL→探索・年表・Capsuleを実際に確認してからR6完了を判断する。共通原本の版と既存の保存・共有を勝手に更新しない。
+
+13:11 JSTの最初の補修切替は復元用一時DBで停止し、本番構成・036は変更されていない。手順是正後の入口は `backups/knowledge-theme-20261108-r2/run-release.py`。古い入口を再実行せず、失敗stageを保全した別root stageへ同一アプリ資材と修正版の復元手順をコピーする。移行manifestは適用済み36件＋036だけに限定し、初期化専用SQLを含めない。TCPで初期化完了を待ち、既存ロールを再作成しない。同じ復元関数での実物βbackupの84→85表・37件・旧行／所有者・再実行確認は成功済み。正式の最新backupでの検証と切替、正式接続は本人操作後に確認する。

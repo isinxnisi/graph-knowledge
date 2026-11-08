@@ -41,3 +41,15 @@ OGPはTwitterbot相当のHTTPで、正式originだけのメタ情報、1200×630
 - archive SHA256 `1690db650b2fc25f250dd0fa54df8b1e5f067a707ca1eacc7663827dbe549fcf`。archiveのconfig／manifest／全layerと固定sourceのlabelを照合した。βのDB／秘密値／実験artifactを含めない。
 - 既に切替済みのR6へ追加する専用script `scripts/release-knowledge-theme-production.py` を準備。旧構成・image・build・全設定hash・ledgerを照合し、一時停止→最新Member／Knowledge backup→Memberの別DB復元／036／再実行→暗号化backup→036と新imageへ更新する。知識migration9・旧KG・AI artifactは保持する。新scopeを有効化する1設定以外のprivate設定を変えない。
 - 本番ではこの補修版はまだ未適用。本人のsudo入力が必要。初回R6 scriptの再実行や、旧dumpへの巻戻しは行わない。
+
+## 補修版の最初の切替試行と復元手順の是正（13:11 JST）
+
+本人のsudo実行はpreflightとMember／Knowledge backupを終え、一時復元DBのロール作成で停止した。`runtimeChanged=false`、本番migration036未実行、旧dumpの復元なし。既存サービスを再起動し、正式 `/api/dataset` とテーマ一覧APIの200、従来dataset revisionを確認した。現在の正式アプリは027f89bfのままである。
+
+詳細な失敗stderrはroot専用stageへ保全され、非特権SSHからは読めない。起動時のUnix socketだけの準備サーバーをready扱いしないようTCPで待つ処理へ修正し、復元先に既にあるロールを再作成しないようにした。元失敗の具体的なエラー行は再実行の冒頭で、秘密値を含む行を除外して取得する。ローカルの小さい起動probe3回では元失敗を再現しておらず、特定の原因を確定したとは扱わない。
+
+同じ本番復元関数を呼ぶ確認で、manifestに初期化専用 `production-init.sql` が混ざっていた照合ミスも検出・修正した。manifestは適用済み000〜035＋036の37件に限定し、未知SQL・欠落・旧checksum変更は停止前に拒否する。3つの回帰検査に成功した。
+
+本番と同じ固定PG image・正式ops image・復元関数を使い、実物βの000〜035 backupを隔離DBへ復元して通常Node migratorで036を適用した。84→85表、ledger37、旧行／所有者・checksum保持、再実行不変に成功。稼働中のβ・正式DBへこの検証の変更は書いていない。正式の最新dumpによる同じ検証と切替は、本人の再実行で行う。
+
+再開用資材は別stage `release-14542c72-r2`。最初の失敗stageとbackupを残し、同じアプリ14542c72・build wFBq24bSaSp0W-_ZOFaXr・image archiveを再利用する。PCの入口は `backups/knowledge-theme-20261108-r2/run-release.py`。新しいschema、Web、本人OAuthの接続とChatGPT登録はまだ本番未確認。

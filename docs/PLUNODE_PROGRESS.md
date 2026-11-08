@@ -1,4 +1,4 @@
-2026-11-08 R6b：正式app027f89bfの切替・36／9 migration・最終backupを完了しPCで復号／hashを照合。実Googleの正式Capsuleで共有URL維持・旧版／新版コメント・停止、PC WorkerのNASA2資料取得を確認。**ChatGPT新規テーマ登録の不足を補修し、app14542c72／βbuild J8c0xCK92ByIAFgkz3nbxをmain／3200／HTTPS βへ反映**。会員036の別DB復元・旧行／所有者・checksum・再実行を確認。正式候補build wFBq24bSaSp0W-_ZOFaXrを準備し、sudo反映・本人の正式OAuth接続・ChatGPT実登録を残す。R6bは未完了。[実測と再開](verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md)。以下は各時点の履歴。
+2026-11-08 R6b：正式補修版の初回切替は復元用一時DBのロール作成で停止（本番構成・036は未変更）。従来Webの200を確認。復元の起動待ち・既存ロール確認と、移行manifestへ初期化SQLが混ざる照合ミスを修正。同じ復元関数／正式opsで実物βbackupの84→85表・37 migration・旧行／所有者・再実行不変、3回帰検査に成功。別stage r2を照合済みで本人のsudo再開待ち。アプリ14542c72／正式候補buildは据え置き、βはJ8c0xCK92ByIAFgkz3nbxを継続。**R6bの正式反映・ChatGPT実登録は未完了**。[実測と再開](verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md)。以下は各時点の履歴。
 
 2026-11-08 R6b切替前：PC helperがguard配下で/dev/ttyを開けず終了。SSH／sudo／本番変更は未実行。標準入出力継承＋遠隔PTYへ修正し、実SSHの非特権probeで制御端末なし・継承端末・非表示入力を確認。本番資材は027f89bf／Sf6Myn-qsOSMt8bnqxpE9のまま。修正版helperのsudo切替・正式確認待ち。[詳細](verification/KNOWLEDGE_PRODUCTION_R6A_20261108.md#r6b切替前の端末修正)。
 
