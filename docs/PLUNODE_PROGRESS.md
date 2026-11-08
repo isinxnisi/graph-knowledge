@@ -1,4 +1,4 @@
-2026-11-09 ChatGPT訳文API是正：①不足照合完了・②実装／検証中｜残りは②検証と③全環境反映・接続確認｜今回の工程は3まで。既存の同じAppで訳文の読取・投稿／訂正・状態・取消を接続。C空き確保後にWSL／Dockerを復旧し、設定14件・12コンテナ・3200／HTTPS β／共有Kevの保持と復帰を確認。以下は各時点の履歴。
+2026-11-09 ChatGPT訳文API是正：①不足照合・②実装／17件と両build完了、③localhost／HTTPS β反映完了｜残りは③正式切替・同じAppでの登録確認｜今回の工程は3まで。app bc486903、β B4MiXUlaSU-rC5jeP2a1h、正式候補 RWsvoeFimf3i8iA3_oAfH。β会員39／知識8を保持、追加移行なし。本番資材は転送照合済みで未切替。[実測・再開](verification/KNOWLEDGE_CHATGPT_TRANSLATIONS_20261109.md)。以下は各時点の履歴。
 
 2026-11-09年月日の点／範囲是正：①原因照合・②4例と38件検証・③全環境反映と正式実画面確認まで完了｜残作業なし｜今回の工程は3まで。app 9edea51a、正式build N8Bl5w9EhBsWobty5fc7G、β build NryL0r9D2f-0_C79h2o9g。原本を保ち7点・1実期間を確認。[実測と制約](verification/TIMELINE_COARSE_POINTS_20261109.md)。
 

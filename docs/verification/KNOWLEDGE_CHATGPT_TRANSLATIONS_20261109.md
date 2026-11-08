@@ -1,6 +1,6 @@
 # ChatGPTからテーマの訳文を登録・訂正する接続
 
-2026-11-09。実装・隔離検証を実施、配置と実ChatGPT確認は未完了。
+2026-11-09。実装・隔離検証・localhost／HTTPS β反映を実施。本番切替と実ChatGPTでの登録確認は未完了。
 
 ## 不足と対応
 
@@ -27,3 +27,15 @@ Cの空きが約31MBとなりUbuntuの書込が失敗。ユーザーの空き確
 公開決定が記録された直後（通常Workerが表示状態を追いつかせる前）も、公開済みの訳文として返し、取消で削除したと偽らないことを追加検証した。補修後も17件成功。
 
 正式切替はWebだけ。同じDB形式を読める直前Webへの復帰だけを許容し、旧dump復元やWorker／OS更新は行わない。直前Webのsource／image／build、会員39／知識9の全checksum、private環境設定のhashを照合。稼働Composeは切替直前に固定してbackupし、変更はWeb imageだけとrendered configの全体比較で検証する。
+
+## β反映と本番切替準備
+
+アプリsource `bc48690353b23d6fe9b67a8d859c9d3d08a0eea1`。β build `B4MiXUlaSU-rC5jeP2a1h`、正式候補build `RWsvoeFimf3i8iA3_oAfH`。両方のwebpack build・型検査が成功。正式候補tagは `plunode-web:theme-translations-bc486903`、config image `sha256:4b9a22e401293c9a45fedd3212968449097a6be2c9e53cefbb4e6140cfcfa57b`、manifest image `sha256:e537e4c20280b533a905e8a27f79a5fbbce28f3cb074e87b8220e0e7f685de05`。同じ固定sourceから、正式は既存のproduction用テーマ紹介設定で作成した。秘密値・β DB・実験データはimageへ入れない。
+
+β切替では14 private設定のhash・既存Worker PIDを保持。実DBの全migration checksumを照合し、会員39件／知識8件を維持した（βは草稿用003をこのDBへ置いていない。正式の知識9件と混同しない）。新規migration・DB操作なし。localhostとWindows側HTTPS βがHTTP200。実Googleログイン済みChromeでTOP→Webbテーマ構成版5の年表／関係図・作成導線を確認。新しい投稿の送信やGoogleの再ログインはこの画面確認では行っていない。
+
+同じ稼働設定と既存運営者を用いた読取専用のserver probeで、実DB上のWebbテーマ構成版2の原文・訳文版0と、新guideの翻訳schemaをdispatcher経由で確認。transportのOAuthや実Gemini送信の代わりと扱わない。Node単独でserver-only moduleを読む初回は条件不足で停止し、server条件で実行して成功した。ブラウザのDOM接続がfocus処理でtimeoutしたため、同じChromeの標準AX操作へ切り替え、再起動を要求せず画面確認を完了した。
+
+正式候補のstandalone imageを、private設定／DBを接続しない一時コンテナで起動。robots200、MCPのPOST専用ルートがGET405を返すことを確認。最初の試験でGET404を仮定していた期待値は誤りで、アプリ修正は不要。archive全layer・config・manifestとsource labelを検証し、VPSへの転送後にも全checksumを照合。ここまで本番のWeb／DB／Workerは未変更。
+
+実行用コマンド：`wsl -d Ubuntu -- python3 /home/isinxnisi/1.projects/7.graph-knowledge/backups/theme-translations-20261109/run-release.py`。VPSの既存sudo入力が必要。通常の共通holdを解放して引き渡し、command側がguardを取得・解放する。切替後、既存正式Appの新操作の取得、訳文登録と原文／Theme版の保持、正式表示を続けて確認する。
