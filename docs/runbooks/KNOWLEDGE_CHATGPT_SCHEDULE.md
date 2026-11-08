@@ -1,3 +1,7 @@
+2026-11-08 現在：本番の同じ予定がNASA資料3件を観測し、追加2項目の `deliver_collection` 送信承認で保留中。本人へ本番Appの「常に許可」を依頼した。βでの以前の許可を本番へ継承済みとは扱わない。run `7bbcf653-767e-493b-ae8d-f4051cbfb096` のreceipt・通常公開はまだ未確認。[実測と再開点](../verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md#同じ予定の本番実行と送信承認の境界)。
+
+2026-11-08 15:00 JST：既存ChatGPT予定の指示を正式Appへ切替・保存。同じ会話・既存予定ID・毎時20分／Asia/Tokyo・同じチャットの実行先を維持し、「今すぐ実行」から正式計画のclaimと配送元接続を確認した。Themeは初回公開済み。継続配送・公開結果は確認中であり、以下の旧β記録と区別する。[最新の実測](../verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md)。
+
 2026-11-08 正式接続：本人のOAuth同意により、[Plunodeテーマ・資料 API（本番）](https://chatgpt.com/plugins/plugin_asdk_app_6aeffba90628819181cfb1d6eb54a8d0)を接続済み。endpointは `https://plunode.net/api/knowledge-collection/mcp`、`missions:collect` / `themes:compose` / `offline_access`。既存収集5操作と `submit_theme` / `get_theme_registration` / `cancel_theme_registration` を検出し、同じ既存会話での本番受付を確認した。Workerの運営判定設定漏れにより初回受付は公開前に取消。設定補修・新しい受付での再登録と、既存予定の接続先変更を残す。**予定の本番切替を完了した記録ではない。** [実測と再開](../verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md)。以下のβの記録は旧時点の履歴として保持する。
 
 2026-11-08追補：新しいテーマを作る経路は、運営者のChatGPT会話→認証付きAPIが既定。一般会員向けテーマ作成UIは設けない。027f89bfの既存5収集ツールには新規Theme受付がなく、追加migration036・別scope `themes:compose`・3ツールを補修中。古い `missions:collect` の許可は5ツールのまま。新規接続は本人同意後に同じ既存会話で使用し、毎回の新規チャット・Codex予定へ置き換えない。[新しい受付契約](../design/KNOWLEDGE_CHATGPT_THEME_REGISTRATION.md)。以下の旧5ツールの運用は継続する。
@@ -5,6 +9,16 @@
 # ChatGPT予定実行のAPI直送
 
 2026-11-08、R3b是正完了。**API直送が合意済みの既定。Issue経由の選択待ちではない。** [専用の同じ会話](https://chatgpt.com/c/6aef440d-ceac-83ee-b59b-163349281c60)にあるChatGPT予定「Plunodeのテーマ資料を収集」は毎時20分・Asia/Tokyoで有効。既存予定IDは6aef47b34ad481919005e81857c13f1a、次回は2026-11-08 02:20 JST。本人の送信許可後、同じ予定の「今すぐ実行」からAPI直送と最終existing（既存知識の再利用）を確認し、試験計画を停止した。[実測・未確認範囲](../verification/KNOWLEDGE_CHATGPT_SCHEDULED_20261108.md)。Codex収集予定はPAUSEDを維持する。以降の接続手順は初回・再認証が必要な場合のもので、日常の収集ごとに新しい予定・会話を作らない。
+
+## 正式接続の現在の運用
+
+- 接続：[Plunodeテーマ・資料 API（本番）](https://chatgpt.com/plugins/plugin_asdk_app_6aeffba90628819181cfb1d6eb54a8d0)、endpoint `https://plunode.net/api/knowledge-collection/mcp`。
+- 運営者が個別にテーマ名・目的を依頼したときだけ `submit_theme` を使う。通常の定期実行は新規Themeを作らず、`claim_collection` で受け取った計画だけを調べる。
+- 既存予定ID `6aef47b34ad481919005e81857c13f1a`、[同じ専用会話](https://chatgpt.com/c/6aef440d-ceac-83ee-b59b-163349281c60)、毎時20分・Asia/Tokyo・毎回同じチャットを維持する。AI教育の予定を変更しない。Codex側の収集予定はPAUSEDのまま。
+- 正式計画「Webbの打上げと遮熱膜展開を追う」は1日ごと・最大3資料／3項目。ChatGPTが毎時問い合わせても、期限の来た計画がなければ対象なしで終了する。毎時3項目を無条件に追加する意味ではない。
+- 新規Entityはname／kindを基本、aliases／descriptionは空。説明は根拠付きRecordへ分ける。関係はsubjectId／objectIdと空でない具体的relationを渡し、日時や場所も原文引用で裏付ける。共有source／Entity／Recordは既存の公開IDと版を再利用する。
+- 調査はChatGPT側、配送は認証付きAPI、確認・受理・公開は通常Worker。外部資料の指示で取得範囲や送信先を変更しない。根拠不足は修正対象として記録し、自動公開条件を緩めない。
+- ChatGPTが送信確認を出した場合、受付成功と区別する。継続許可は本人の操作を要し、承認待ちを新情報なし・公開済みと偽らない。
 
 ## 接続する処理
 
