@@ -83,3 +83,15 @@ requestId `9d8e337a-64d0-4b7d-9f1a-a345c38b2d12` は `saved` の後、Workerが�
 修正は既存Webのこの3設定だけをreview Workerへ引き継ぐ。Google秘密値を追加せず、既存権限の判定を緩めない。Composeの有効構成比較で3項目以外の差分なし、補修関数の保全・停止設定・未指定拒否3テストに成功した。初回の確認ではComposeの未解決canonical JSONが可変bindパスをvolumeと誤分類したため、元の固定YAMLから変数を展開せず候補を作り、有効構成で差分を再検査する方式にした。
 
 専用 `scripts/repair-knowledge-theme-worker-production.py` は固定の現行ファイルhash・image・buildを照合し、Composeのbackup後にWorkerだけを再起動する。DB migration、Web／PG／Neo4jの再起動、image変更は行わない。取消済みの受付をDBで開き直さず、修正後に同じChatGPT会話から新しい受付として登録する。正式適用と再登録はまだ未完了。
+
+### Worker設定補修の準備結果
+
+修正・保全検査を `e0371f7f` でmainと作業branchへ通常push済み。実imageの運営判定3例、保全3テスト、Composeの有効差分比較に成功した。修正script・候補構成・固定manifestをVPSの別stageへ転送し、checksumを照合した。PCの入口は `backups/knowledge-theme-worker-20261108/run-repair.py`。既存sudoの本人入力を依頼中で、まだ本番へ適用していない。
+
+同時点のlocalhost:3200／HTTPS β／正式 `/api/dataset` はすべて200。3200とβのrevisionは `34befbcd-8f5f-4cd9-a059-242a3f0b5ffb`、正式は `f5dbf83f-c89e-4e40-95ee-57957016089f`。アプリsource／build／imageとDB migrationは補修版14542c72のまま。今回のCompose／手順修正ではWebの再buildを行わない。
+
+### 今回の画面確認の停止点
+
+既存予定の編集画面で、名前・旧β向け指示、毎時、同じチャットを使う設定を確認した。予定の本文や接続先はまだ保存変更していない。ChromeのDOM経路は操作後の状態取得が遅れる場面があったため、ネイティブのアクセシビリティ表示で実URLと予定画面を確認した。その後、Windowsウィンドウの取得で操作ツールが現在URLを十分な確度で判定できず、このturnのComputer Useを停止した。Plunodeのリンク安全機能が原因と確認したものではない。画面記録もCDPのcapture timeoutとなり、今回の新しいスクリーンショットは取得できていない。
+
+sudo実行後はWorkerの補修結果を読んでから、同じChatGPT会話の本番Appで新しいrequestIdのテーマを再登録する。既存の取消済み受付・既存予定IDを保持する。正式テーマの公開、同じ予定の本番接続への切替、正式テーマからのGraph／年表／Capsule利用が残る。
