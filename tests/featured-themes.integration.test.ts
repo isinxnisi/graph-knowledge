@@ -11,7 +11,7 @@ vi.mock("../lib/server/member/runtime", () => ({ memberRuntime: () => ({ pool })
 vi.mock("../lib/server/knowledge-publication-preview", () => ({ knowledgePublicationPreview: vi.fn() }));
 const pool = new Pool({ connectionString: process.env.MEMBER_DATABASE_URL, max: 5 });
 const origin = "http://127.0.0.1:3221", operator = randomUUID(), other = randomUUID(), member = randomUUID();
-const sessions = new Map([operator, other, member].map(id => [id, randomUUID()]));
+const sessions = new Map<string, string>([operator, other, member].map(id => [id, randomUUID()]));
 const service = createSiteOperationsService(pool, origin, async req => {
   const id = req.headers.get("x-member-user");
   if (!id || !sessions.has(id)) throw new MemberError(401, "UNAUTHENTICATED");
@@ -20,7 +20,7 @@ const service = createSiteOperationsService(pool, origin, async req => {
 const themes: KnowledgeThemePage["themes"] = ["one", "two", "three"].map((id, n) => ({ id, revision: n+1, title: id, description: "published", initialView: "graph", hasTimeline: false, hasRelations: true, entityIds: [] }));
 let published = themes;
 const catalog = vi.fn(async () => ({ themes: published }));
-const read = (id = operator) => memberHandle(() => service.featuredThemes(new Request(origin, { headers: { "x-member-user": id } }), catalog));
+const read = (id: string = operator) => memberHandle(() => service.featuredThemes(new Request(origin, { headers: { "x-member-user": id } }), catalog));
 const save = (body: unknown, id = operator, from = origin) => memberHandle(() => service.saveFeaturedThemes(new Request(origin, { method: "POST", headers: { origin: from, "x-member-user": id, "content-type": "application/json" }, body: JSON.stringify(body) }), catalog));
 const input = (themeIds = ["two", "one"], expectedRevision = 0) => ({ requestId: randomUUID(), themeIds, expectedRevision });
 beforeAll(async () => {

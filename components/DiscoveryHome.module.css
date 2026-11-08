@@ -38,15 +38,15 @@
 .home .fields h3, .home .recent h3, .home .search h3 { margin: 0 0 12px; font-family: var(--font-editorial); font-size: 21px; font-weight: 400; }
 .fields, .recent { margin-top: 26px; }
 .fieldGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 8px; }
-.home .fieldGrid a, .home .themeFeature { display: flex; align-items: flex-start; gap: 8px; padding: 10px 8px; text-decoration: none; color: var(--color-text); border-radius: 5px; background: var(--color-canvas); }
+.home .fieldGrid a, .themeFeature { display: flex; align-items: flex-start; gap: 8px; padding: 10px 8px; text-decoration: none; color: var(--color-text); border-radius: 5px; background: var(--color-canvas); }
 .fieldGrid a > :global(.ui-icon), .themeFeature > :global(.ui-icon) { color: var(--color-accent); flex: 0 0 auto; width: 16px; margin-top: 3px; }
 .fieldGrid a > :last-child, .themeFeature > :last-child { margin-left: auto; width: 13px; }
 .fieldGrid a > span, .themeFeature > span { min-width: 0; display: grid; gap: 3px; }
 .fieldGrid small, .themeFeature small { color: var(--color-muted); font-size: 10px; }
 .fieldGrid strong, .themeFeature strong { font-size: 13px; font-weight: 600; }
 .fieldGrid span > span, .themeFeature span > span { font-size: 11px; color: var(--color-muted); line-height: 1.6; }
-.home .fieldGrid a:hover, .home .themeFeature:hover { background: var(--color-hover); }
-.home .fieldGrid a, .home .themeFeature { transition: background-color 160ms ease; }
+.home .fieldGrid a:hover, .themeFeature:hover { background: var(--color-hover); }
+.home .fieldGrid a, .themeFeature { transition: background-color 160ms ease; }
 .home .recent h4 { margin: 14px 0 4px; font-size: 11px; color: var(--color-muted); font-weight: 500; }
 .recent ul { padding: 0; margin: 0; list-style: none; }
 .recent li { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--color-border); font-size: 12px; }
@@ -75,6 +75,6 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .home > [data-discovery-reveal] { animation: none; }
-  .home .featured, .home .fieldGrid a, .home .themeFeature { transition: none; }
+  .home .featured, .home .fieldGrid a, .themeFeature { transition: none; }
 }
 .home .prototypeLink { display: inline-block; padding: 10px 0; margin-top: 2px; font-size: 11px; color: var(--color-accent); text-underline-offset: 4px; }
