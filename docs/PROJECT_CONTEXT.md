@@ -1,3 +1,5 @@
+2026-11-09年表の点／範囲表示の是正完了：main／localhost3200／HTTPS β／正式サイトへ反映。app 9edea51a、正式build N8Bl5w9EhBsWobty5fc7G、β build NryL0r9D2f-0_C79h2o9g。4例の描き分けと同一期間A・Bの共通軸を38件で検証し、正式Theme版6の7点・1実期間と原本／断面不変を実画面・APIで確認。Webのみ、会員39／知識9・Worker／設定を保持。[条件・実測・制約](verification/TIMELINE_COARSE_POINTS_20261109.md)。以下は各時点の履歴。
+
 2026-11-08是正完了：ChatGPTからの既存テーマ直接更新をmain／3200／HTTPS β／正式VPSへ反映。app a2712fc6、正式build jGYRGPYTKRpa4o6BWC8cr、会員39／知識9。同じ既存App・Chatから構成版3→4→5の説明更新・復元を確認し、旧版と原資料URL・構成を保持した。収集計画・運営画面操作は直接更新の前提ではない。[設計](design/KNOWLEDGE_CHATGPT_THEME_REGISTRATION.md)／[実測](verification/KNOWLEDGE_CHATGPT_THEME_UPDATES_20261108.md)。以下は各時点の履歴。
 
 2026-11-08追加改善完了：紹介テーマをサイト運営から選択・並べ替え・明示保存できる。main／3200／HTTPS β／正式URLで確認済み。app `4dd8af25`、正式build `VhZydgGnOKI5nCb9w6khB`、会員38／知識9。既存設定・データを保持。R1〜R6完了後の改善であり、テーマ作成はChatGPT→API、新着は自動を維持。[設計](design/FEATURED_THEMES_OPERATIONS.md)／[正式受入](verification/FEATURED_THEMES_OPERATIONS_20261108.md)。以下は各時点の履歴。

@@ -1,5 +1,7 @@
 # 年・月精度の出来事を点として表示する是正
 
+2026-11-09：修正・localhost／HTTPS β／正式サイト反映と実画面確認を完了。原本・取得断面・実期間を保持。以下に原因、条件の合意、切替前の記録と正式確認を残す。
+
 ## 原因と範囲
 
 2026-11-09指摘の正式Webb Theme構成版6を公開APIから照合。1989-09／1996／2002／2004／2019の記録はいずれも `meaning:point`、`from` だけで、終了を登録していない。誤登録や新しいTheme APIによる変換ではなく、共有描画 `calendarGraph` が粗い年月の可能範囲を日表示へ投影し、時点まで範囲へ広げる欠落だった。
@@ -12,7 +14,7 @@
 
 calendarGraph／通常KnowledgeTimeline／ThemeTimelineの38件と変更対象lintを確認。auto・年・月・日・時間で不要な終端行を作らず、内側に詳しい日付がある場合の候補幅、異なる端の範囲、同一期間A・Bの共通日付軸と別レーンを検証した。原本JSONは不変で、実期間の線と終了側を保つ。最初のUI試行では終了ボタンの空白を仮定したテストが不一致となり、表示テキストとbuttonの存在の検証に修正した。
 
-## 配置
+## 配置（初回準備時点）
 
 アプリ修正は実装済み、配置と実画面確認は未完了。直前はapp a2712fc6、β build 5XPEJUNPcGXW1WRVI4TlF、正式build jGYRGPYTKRpa4o6BWC8cr。会員39／知識9を保持し、Web表示だけの反映を準備する。
 
@@ -39,3 +41,14 @@ calendarGraph／通常KnowledgeTimeline／ThemeTimelineの38件と変更対象li
 本番反映はWeb imageだけを更新する。既存構成hash、会員39／知識9のmigration checksum、Web版、KG・PostgreSQL・3 Workerのcontainer IDと設定を照合し、変更があれば停止する。Web設定のbackupを保持し、失敗時は同じDB形式を読める直前Webへだけ復帰する。DB migration・dump復元・Worker／OS更新は行わない。
 
 Web manifest ID `sha256:40ad911ed47470d42f4ef9a896258913c80db1fb5c00ecf9513fe69605086573`。再開コマンドは `wsl -d Ubuntu -- python3 /home/isinxnisi/1.projects/7.graph-knowledge/backups/timeline-points-20261109/run-release.py`。旧stage 8cd039acは使用せず、9edea51aの別stageへ固定する。VPSの既存sudo本人入力待ち。
+
+
+## 正式反映・受入完了（2026-11-09）
+
+本人のsudo入力によりWebだけを切替。app `9edea51a799aea6f9e8d30ff4438e3c7946c8dbd`、正式build `N8Bl5w9EhBsWobty5fc7G`、image manifest `sha256:40ad911ed47470d42f4ef9a896258913c80db1fb5c00ecf9513fe69605086573`。設定backupは `/opt/graph-knowledge/backups/timeline-points-web-20261108T155427Z`（UTC名、JSTは11月9日00:54）。会員39／知識9と全checksum、既存設定、KG・PG・3 Worker container ID、AI公開artifactの保全を切替scriptで確認。DB移行・旧dump復元・Worker／OS更新なし。
+
+[正式確認URL](https://plunode.net/?ktheme=theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1&krev=6&kview=split)。rootと新build manifestはHTTP200。公開APIの固定Theme版6とsnapshot全体を切替前の取得物と比較し、一致を確認した。
+
+実Googleセッションの正式Chrome画面で、1989-09／1996／2002／2004／2019を含む7時点が点、実期間が1範囲と終了側1個、不要な候補の後端0個を確認。年月点と実期間の線をそれぞれ選択し、対応する記録・根拠の詳細が開く。元の14行／2点／6終端から9行／7点／1実期間終端になり、原本を変更せずに冗長な行を除いた。
+
+localhost／HTTPS βは同じ修正sourceのbuild `NryL0r9D2f-0_C79h2o9g`。前節の38件・型検査・lint・二つのbuildを再利用し、文書だけの完了記録では再buildしない。390px指定が確認ツールへ反映されなかった制約は保持し、今回のスマホ実画面確認完了とは報告しない。実機iPhoneの確認は未実施。A・Bの集約方法は未決で、共通軸・別レーンを保つ今回の範囲から広げない。

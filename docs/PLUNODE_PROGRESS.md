@@ -1,4 +1,4 @@
-2026-11-09年月精度の点表示是正：①原因照合・②4例と38件検証・③localhost／β反映・実画面確認まで完了｜残りは正式Web切替と正式URL確認｜今回の工程は3まで。app 9edea51a、β build NryL0r9D2f-0_C79h2o9g。同じ年月日の点／範囲を周囲の精度に合わせて表示し、原本を保持。[実測と再開](verification/TIMELINE_COARSE_POINTS_20261109.md)。
+2026-11-09年月日の点／範囲是正：①原因照合・②4例と38件検証・③全環境反映と正式実画面確認まで完了｜残作業なし｜今回の工程は3まで。app 9edea51a、正式build N8Bl5w9EhBsWobty5fc7G、β build NryL0r9D2f-0_C79h2o9g。原本を保ち7点・1実期間を確認。[実測と制約](verification/TIMELINE_COARSE_POINTS_20261109.md)。
 
 2026-11-08テーマ更新是正：①不足照合・②実装検証・③接続確認／全環境反映を完了｜残作業なし｜今回の工程は3まで。app a2712fc6、正式build jGYRGPYTKRpa4o6BWC8cr、β build 5XPEJUNPcGXW1WRVI4TlF、会員39／知識9。同じChatから構成版3→4→5の説明更新・復元、旧版・資料URLの保持を確認。収集計画や運営画面操作は不要。[実測と制約](verification/KNOWLEDGE_CHATGPT_THEME_UPDATES_20261108.md)。以下は各時点の履歴。
 
