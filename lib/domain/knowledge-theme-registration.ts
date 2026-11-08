@@ -1,4 +1,5 @@
 import {z} from 'zod';
+import {readThemeTranslationSchema,submitThemeTranslationSchema} from './knowledge-theme-translation';
 import {missionMcpPackageSchema} from './knowledge-mission-mcp';
 import {knowledgeThemeContentSchema,knowledgePinSchema,knowledgeTimelineSchema,knowledgeIdSchema} from './knowledge-foundation';
 
@@ -60,6 +61,10 @@ export type ThemeUpdateInput=z.infer<typeof themeUpdateInputSchema>;
 export const themeAuthoringRequestSchema=z.union([themeRegistrationInputSchema,themeUpdateInputSchema]);
 export type ThemeAuthoringRequest=z.infer<typeof themeAuthoringRequestSchema>;
 export const themeRegistrationCommandSchema=z.discriminatedUnion('action',[
+ readThemeTranslationSchema.extend({action:z.literal('read-translation')}),
+ submitThemeTranslationSchema.safeExtend({action:z.literal('submit-translation')}),
+ z.strictObject({action:z.literal('translation-status'),requestId:z.uuidv4()}),
+ z.strictObject({action:z.literal('cancel-translation'),requestId:z.uuidv4()}),
  themeRegistrationInputSchema.safeExtend({action:z.literal('submit-theme')}),
  themeUpdateInputSchema.safeExtend({action:z.literal('update-theme')}),
  z.strictObject({action:z.literal('theme-status'),requestId:z.uuidv4()}),

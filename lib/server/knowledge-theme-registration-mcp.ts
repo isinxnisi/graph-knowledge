@@ -1,5 +1,6 @@
 import type {McpServer} from '@modelcontextprotocol/server';
 import {z} from 'zod';
+import {readThemeTranslationSchema,submitThemeTranslationSchema} from '../domain/knowledge-theme-translation';
 import {themeRegistrationInputSchema,themeUpdateInputSchema,type ThemeRegistrationCommand} from '../domain/knowledge-theme-registration';
 
 /** Installed only for a verified operator token with the separate compose scope.
@@ -43,4 +44,21 @@ export function registerThemeMcpTools(server:McpServer,call:(command:ThemeRegist
   description:'Cancel an unfinished theme creation/update request and its unapplied package items. Already published common knowledge is retained. A completed creation/update is not undone. The theme and already published common knowledge are not deleted. Only act on an explicit cancellation request.',
   inputSchema:z.strictObject({requestId:z.uuidv4()}),annotations,
  },input=>run({action:'cancel-theme',...input}));
+ server.registerTool('read_theme_translation',{
+  description:'Read the original and an existing translation of an exact public Entity, Record, Source or Theme field contained in a read_theme snapshot. Use before submit_theme_translation. Returns expectedRevision (0 if absent), original language and field length limit. It never requests AI or changes the original. Use revision only to inspect an older translation edition; read the latest before submitting.',
+  inputSchema:readThemeTranslationSchema,annotations:{...annotations,readOnlyHint:true},
+ },input=>run({action:'read-translation',...input}));
+ server.registerTool('submit_theme_translation',{
+  description:'Register or correct ONE translation of an exact public field from read_theme, without replacing original text or advancing the Theme revision. First read_theme_translation; use its expectedRevision explicitly (0 for first translation). Use get_theme_authoring_guide for target fields, languages, privacy and review disclosure. The connected operator submits public text to the existing external review provider/budget; normal semantic-equivalence checks, member attribution and feedback apply. Receipt is not publication. Keep requestId and payload unchanged on retry, including after a lost response. No collection plan or operations-screen action is required. Poll get_theme_translation_submission for publication/conflicts. Saved Capsules/shares keep their pinned translation until explicitly refreshed.',
+  inputSchema:submitThemeTranslationSchema,annotations,
+ },input=>run({action:'submit-translation',...input}));
+ server.registerTool('get_theme_translation_submission',{
+  description:'Read this connected operator’s exact translation submission and its review/publication result, waits, required changes or conflict. This is read-only; a saved unfinished delivery resumes only when submit_theme_translation is retried with identical requestId and payload. Never claim published while saved/processing. It never reads another owner’s submission or private/unavailable Theme contents.',
+  inputSchema:z.strictObject({requestId:z.uuidv4()}),annotations:{...annotations,readOnlyHint:true},
+ },input=>run({action:'translation-status',...input}));
+ server.registerTool('cancel_theme_translation_submission',{
+  description:'Cancel this operator’s pending translation submission only on an explicit cancellation request. Already published knowledge/translation editions remain; a published translation is corrected with a fresh requestId and the current expectedRevision. Does not delete a Theme, its originals or saved Capsules.',
+  inputSchema:z.strictObject({requestId:z.uuidv4()}),annotations,
+ },input=>run({action:'cancel-translation',...input}));
+
 }
