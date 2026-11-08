@@ -1,3 +1,5 @@
+2026-11-09 ChatGPT訳文API：同じ運営接続に読取・登録／訂正・状態・取消を追加。原文とTheme版を保持し、既存の確認・帰属・予算を共用。17件とβ向けbuildを確認、環境反映と実接続は継続中。[契約](design/KNOWLEDGE_CHATGPT_THEME_REGISTRATION.md#chatからの訳文登録訂正2026-11-09)／[検証](verification/KNOWLEDGE_CHATGPT_TRANSLATIONS_20261109.md)。以下は各時点の履歴。
+
 2026-11-09年表の点／範囲表示の是正完了：main／localhost3200／HTTPS β／正式サイトへ反映。app 9edea51a、正式build N8Bl5w9EhBsWobty5fc7G、β build NryL0r9D2f-0_C79h2o9g。4例の描き分けと同一期間A・Bの共通軸を38件で検証し、正式Theme版6の7点・1実期間と原本／断面不変を実画面・APIで確認。Webのみ、会員39／知識9・Worker／設定を保持。[条件・実測・制約](verification/TIMELINE_COARSE_POINTS_20261109.md)。以下は各時点の履歴。
 
 2026-11-08是正完了：ChatGPTからの既存テーマ直接更新をmain／3200／HTTPS β／正式VPSへ反映。app a2712fc6、正式build jGYRGPYTKRpa4o6BWC8cr、会員39／知識9。同じ既存App・Chatから構成版3→4→5の説明更新・復元を確認し、旧版と原資料URL・構成を保持した。収集計画・運営画面操作は直接更新の前提ではない。[設計](design/KNOWLEDGE_CHATGPT_THEME_REGISTRATION.md)／[実測](verification/KNOWLEDGE_CHATGPT_THEME_UPDATES_20261108.md)。以下は各時点の履歴。

@@ -12,7 +12,7 @@
 
 隔離した一時PostgreSQLの会員／知識DBと、MCP schema・権限境界の合計17件が成功。原文／Themeの版と保存したCapsule保持、既存訳文の訂正と旧訳文の読取、同一ID並行再送・文面変更拒否、応答喪失の続行、状態照会が勝手に処理を始めないこと、取消を復活させないこと、後から編集した草稿を古い再送で提出しないこと、別所有者／公開範囲、profile／anonymous帰属を検証した。AI応答はfixtureで、実Gemini／実ChatGPTの確認とは区別する。
 
-変更対象lint成功。型検査ではテスト側のUUID推論・匿名引数・JSONschemaの型注釈を修正し、buildで再確認する。最初の試験で、試験DBを毎回作り直す際のキャッシュ付きfixtureを修正した。また2件目の送信が既存の送信間隔待ちになったため、隔離試験の時刻だけを進めて訂正まで確認した。本体の待ち処理・利用枠は緩めない。
+変更対象lint成功。型検査ではテスト側のUUID推論・匿名引数・JSONschemaの型注釈を修正し、β向けbuildで型検査まで成功した。最初の試験で、試験DBを毎回作り直す際のキャッシュ付きfixtureを修正した。また2件目の送信が既存の送信間隔待ちになったため、隔離試験の時刻だけを進めて訂正まで確認した。本体の待ち処理・利用枠は緩めない。
 
 ## ローカル容量不足からの復帰
 
@@ -22,4 +22,8 @@ Cの空きが約31MBとなりUbuntuの書込が失敗。ユーザーの空き確
 
 ## 配置と残件
 
-直前のapp 9edea51a、localhost／β build NryL0r9D2f-0_C79h2o9g、正式build N8Bl5w9EhBsWobty5fc7Gを起点とする。会員39／知識9を維持し、Webのみを更新する。新APIのβ確認・正式反映・既存ChatGPT接続での確認はこれから行う。
+直前のapp 9edea51a、localhost／β build NryL0r9D2f-0_C79h2o9g、正式build N8Bl5w9EhBsWobty5fc7Gを起点とする。会員39／知識9を維持し、Webのみを更新する。最終アプリはbc486903。β向けbuild B4MiXUlaSU-rC5jeP2a1hが成功。新APIのβ確認・正式反映・既存ChatGPT接続での確認はこれから行う。
+
+公開決定が記録された直後（通常Workerが表示状態を追いつかせる前）も、公開済みの訳文として返し、取消で削除したと偽らないことを追加検証した。補修後も17件成功。
+
+正式切替はWebだけ。同じDB形式を読める直前Webへの復帰だけを許容し、旧dump復元やWorker／OS更新は行わない。直前Webのsource／image／build、会員39／知識9の全checksum、private環境設定のhashを照合。稼働Composeは切替直前に固定してbackupし、変更はWeb imageだけとrendered configの全体比較で検証する。
