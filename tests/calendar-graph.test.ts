@@ -89,7 +89,7 @@ it("does not draw a certain interior when endpoint windows overlap", () => {
 });
 
 it("keeps mixed precision and early leap years without reverse rows or invented date labels", () => {
-  expect(calendarLayoutBounds("0004-02")).toEqual([40201, 40229]);
+  expect(calendarLayoutBounds("0004-02")).toEqual([40201, 40229 + 86399 / 86400]);
   const records = [
     record("mixed", {
       kind: "calendar",
@@ -115,7 +115,7 @@ it("keeps mixed precision and early leap years without reverse rows or invented 
   const [mixed, coarse, day] = g.ranges;
   expect(mixed.endRow).toBeGreaterThan(mixed.startRow);
   expect(coarse.startRow).toBeLessThan(day.startRow);
-  expect(coarse.endRow).toBe(coarse.startRow);
+  expect(coarse.endRow).toBeGreaterThan(day.endRow);
   expect(g.slices.map((s) => s.label)).not.toContain("1903-01-01");
 });
 
@@ -275,4 +275,75 @@ it("collapses identical coarse occurrence bounds without reclassifying real dura
     expect(graph.ranges[2].end).toBeGreaterThan(graph.ranges[2].start);
     expect(graph.ranges.map(range => range.meaning)).toEqual(["occurrence-window", "unclassified-range", "duration"]);
   }
+});
+
+it("retains a coarse event window only when another finer date is inside that same possible period", () => {
+  for (const [coarse, inside, outside] of [
+    ["1989-09", "1989-09-15", "1989-10-01"],
+    ["1996", "1996-04-12", "1997-01-01"],
+  ]) {
+    const event = record("coarse", { kind: "calendar", meaning: "point", from: coarse, label: "" });
+    const fine = (value: string) => record("fine", { kind: "calendar", meaning: "point", from: value, label: "" });
+    const alone = calendarGraph([event], "day").ranges[0];
+    expect(alone.start).toBe(alone.end);
+    const unrelated = calendarGraph([event, fine(outside)]).ranges[0];
+    expect(unrelated.start).toBe(unrelated.end);
+    const contextual = calendarGraph([event, fine(inside)]).ranges[0];
+    expect(contextual.end).toBeGreaterThan(contextual.start);
+    expect(contextual.meaning).toBe("point");
+    expect(calendarGraph([event, fine(inside)], coarse.length === 4 ? "year" : "month").ranges[0].end)
+      .toBe(calendarGraph([event, fine(inside)], coarse.length === 4 ? "year" : "month").ranges[0].start);
+    expect(event.time).toEqual({ kind: "calendar", meaning: "point", from: coarse, label: "" });
+  }
+});
+
+it("keeps explicitly different months or days as ranges even without intervening records", () => {
+  for (const [from, to] of [["1989-09", "1989-10"], ["1989-09-04", "1989-09-20"]]) {
+    const window = record("window", { kind: "calendar", meaning: "occurrence-window", from, to, label: "" });
+    for (const resolution of ["auto", "day"] as const) {
+      const graph = calendarGraph([window], resolution);
+      expect(graph.ranges[0].end).toBeGreaterThan(graph.ranges[0].start);
+      expect(graph.rows.filter(row => row.ending)).toHaveLength(1);
+    }
+  }
+});
+
+it("keeps a single chronological date axis for separate records with identical intervals", () => {
+  const interval = { kind: "calendar" as const, meaning: "occurrence-window" as const, from: "1989-09-04", to: "1989-09-20", label: "" };
+  const graph = calendarGraph([
+    record("a", interval), record("b", { ...interval }),
+    record("inside", { kind: "calendar", from: "1989-09-12", label: "" }),
+  ]);
+  expect(graph.rows.filter(row => row.first).map(row => row.label)).toEqual(["1989-09-04", "1989-09-12", "1989-09-20"]);
+  expect(graph.rows.every((row, i) => i === 0 || row.coordinate >= graph.rows[i-1].coordinate)).toBe(true);
+  expect(graph.ranges[0].lane).not.toBe(graph.ranges[1].lane);
+  for (const range of graph.ranges.slice(0, 2)) {
+    expect(graph.rows[range.anchorRow].record?.id).toBe(range.record.id);
+    expect(graph.rows[range.endAnchorRow].ending?.id).toBe(range.record.id);
+  }
+});
+
+
+it("distinguishes all four same-bound examples without changing their source", () => {
+  const window = (id: string, from: string, to = from) => record(id, { kind: "calendar", meaning: "occurrence-window", from, to, label: "" });
+  const point = (id: string, from: string) => record(id, { kind: "calendar", meaning: "point", from, label: "" });
+  const cases = [
+    { records: [window("month", "1989-09"), window("day", "1989-09-04")], shapes: ["range", "point"] },
+    { records: [window("window", "1989-09-04"), point("point", "1989-09-04")], shapes: ["range", "point"] },
+    { records: [window("day", "1989-09-04"), window("longer", "1989-09-04", "1989-09-05")], shapes: ["point", "range"] },
+    { records: [window("day", "1989-09-04"), window("clock", "1989-09-04T09:00", "1989-09-04T10:00")], shapes: ["range", "range"] },
+  ];
+  for (const { records, shapes } of cases) {
+    const before = JSON.stringify(records), graph = calendarGraph(records);
+    expect(graph.ranges.map(range => range.end > range.start || range.compactRange ? "range" : "point")).toEqual(shapes);
+    expect(graph.rows.every((row, i) => i === 0 || row.coordinate >= graph.rows[i-1].coordinate)).toBe(true);
+    expect(JSON.stringify(records)).toBe(before);
+  }
+  const sameDay = calendarGraph(cases[1].records);
+  expect(sameDay.rows.filter(row => row.first).map(row => row.label)).toEqual(["1989-09-04"]);
+  expect(sameDay.rows.filter(row => row.ending)).toHaveLength(0);
+  const clock = calendarGraph(cases[3].records);
+  expect(clock.ranges[0].start).toBeLessThan(clock.ranges[1].start);
+  expect(clock.ranges[0].end).toBeGreaterThan(clock.ranges[1].end);
+  expect(clock.rows.map(row => row.label)).not.toContain("1989-09-04T00");
 });

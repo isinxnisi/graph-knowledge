@@ -329,3 +329,19 @@
 .surface .graph button.range:hover, .surface .graph button.range:active {
   border: 0 !important; background: transparent !important; box-shadow: none !important; border-radius: 0;
 }
+
+/* Same-bucket occurrence windows stay distinguishable from a separate point.
+   Keep one date row and a short interval mark; do not invent clock labels. */
+.graph .range[data-compact-range] {
+  align-self: start;
+  height: 44px;
+  min-height: 44px;
+  transform: translateY(calc(var(--anchor) - 22px));
+}
+.graph .range[data-compact-range] i {
+  top: 15px;
+  bottom: auto;
+  height: 14px;
+}
+.graph .range[data-compact-range]::before { top: 13px; }
+.graph .range[data-compact-range]::after { bottom: 13px; }

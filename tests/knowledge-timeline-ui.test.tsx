@@ -104,3 +104,36 @@ it("does not add phantom range endings for coarse dated events in the normal kno
   expect(screen.getByText("終了側").closest("button")).toBeTruthy();
   expect(JSON.stringify(data)).toBe(original);
 });
+
+it("shows a coarse month as a window when a day-precise event inside it is also visible", () => {
+  const rows = [
+    { id: "coarse", assertion: "月まで分かる出来事", time: { kind: "calendar", meaning: "point", from: "1989-09", label: "月の候補" } },
+    { id: "fine", assertion: "その月の別の出来事", time: { kind: "calendar", meaning: "point", from: "1989-09-15", label: "" } },
+  ];
+  const data: KnowledgeSnapshot = { ...s, records: rows.map(row => ({ ...s.records[0], id: row.id, content: knowledgeRecordContentSchema.parse({ ...s.records[0].content, assertion: row.assertion, times: [{ id: "when", time: row.time }] }) })) };
+  const view = render(<KnowledgeTimeline snapshot={data} focusedRecordId={null} onFocusRecord={vi.fn()} />);
+  expect(screen.getByRole("button", { name: /^時期の線を選ぶ：月まで分かる出来事/ }).hasAttribute("data-point")).toBe(false);
+  expect(screen.getByText("候補の後端")).toBeTruthy();
+  view.rerender(<KnowledgeTimeline snapshot={{ ...data, records: data.records.slice(0,1) }} focusedRecordId={null} onFocusRecord={vi.fn()} />);
+  expect(screen.getByRole("button", { name: /^時期の線を選ぶ：月まで分かる出来事/ }).hasAttribute("data-point")).toBe(true);
+  expect(screen.queryByText("候補の後端")).toBeNull();
+});
+
+
+it("draws a short same-date window beside a point, and a day window around clock entries", () => {
+  const make = (clock: boolean): KnowledgeSnapshot => ({ ...s, records: [
+    { ...s.records[0], id: "window", content: { ...s.records[0].content, assertion: "同じ日の候補幅", times: [{ id: "window", time: { kind: "calendar", meaning: "occurrence-window", from: "1989-09-04", to: "1989-09-04", label: "" } }] } },
+    { ...s.records[0], id: "other", content: { ...s.records[0].content, assertion: "同日の別の記録", times: [{ id: "other", time: clock
+      ? { kind: "calendar", meaning: "duration", from: "1989-09-04T09:00", to: "1989-09-04T10:00", label: "" }
+      : { kind: "calendar", meaning: "point", from: "1989-09-04", label: "" } }] } },
+  ] });
+  const { rerender } = render(<KnowledgeTimeline snapshot={make(false)} focusedRecordId={null} onFocusRecord={vi.fn()} />);
+  const line = () => screen.getByRole("button", { name: /^時期の線を選ぶ：同じ日の候補幅/ });
+  expect(line().hasAttribute("data-point")).toBe(false);
+  expect(line().hasAttribute("data-compact-range")).toBe(true);
+  expect(screen.getByRole("button", { name: /^時期の線を選ぶ：同日の別の記録/ }).hasAttribute("data-point")).toBe(true);
+  rerender(<KnowledgeTimeline snapshot={make(true)} focusedRecordId={null} onFocusRecord={vi.fn()} />);
+  expect(line().hasAttribute("data-point")).toBe(false);
+  expect(line().hasAttribute("data-compact-range")).toBe(false);
+  expect(screen.getByRole("button", { name: /^時期の線を選ぶ：同日の別の記録/ }).hasAttribute("data-point")).toBe(false);
+});

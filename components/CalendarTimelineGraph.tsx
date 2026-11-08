@@ -196,7 +196,8 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
                   data-range-id={record.id}
                   style={style}
                   data-meaning={meaning}
-                  data-point={point || undefined}
+                  data-point={(point && !range.compactRange) || undefined}
+                  data-compact-range={range.compactRange || undefined}
                   data-uncertain={range.uncertainBoundary || undefined}
                   data-focused={focusedRecordId === timelineRecordId(record) || undefined}
                   title={`${record.assertion} · ${themeTimeLabel(record.time)}`}
