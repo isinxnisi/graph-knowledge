@@ -1,6 +1,6 @@
 # R6 Linux TCP脆弱性の見落とし・訂正と補修（2026-11-08）
 
-**R6のLinux補修中｜残りは固定kernel更新・再起動・正式サービス復帰確認｜全体はR6まで。** アプリの正式公開と代表操作の受入は保持するが、R6全体の完了報告は撤回する。OSのpackage変更・再起動は、現時点では未実施。
+**TCP補修・再起動確認済み、Caddy補修準備中｜残りはCaddy適用・正式確認｜全体はR6まで。** アプリの正式公開と代表操作の受入は保持するが、Caddyのsecurity更新1件が残るためR6全体は未完了。[Caddyの固定補修計画](CADDY_SECURITY_R6_20261108.md)。以下の未実施記述は適用準備時点の履歴で、実施結果は末尾を優先する。
 
 ## 見落としと訂正
 
@@ -34,3 +34,10 @@ APT metadataを再取得し、10packageすべてが固定版149・信頼され�
 10packageの実機simulateと、対象外サービス更新・削除・別版・依存欠落・重複actionを拒否する6境界テストを用いる。実機でpackageをまだ変更していないため、インストール・再起動後の稼働は未確認。現況JSONは作業treeの `.local/linux-security-20261108/` に保持する。
 
 localhost:3200／HTTPS β／正式アプリはapp14542c72のまま。今回の変更はOS補修用手順・判定の訂正で、Web再build・DB migration・テストデータ投入は行わない。標準サポート外のESM2件、全ソフトウェアに未修正CVEがないこと、無関係な機能更新の一括適用はこの限定補修の確認結果と混同しない。Linux対応の最終結果は適用後に追記する。
+
+## 本人実行後の実機確認（19:45〜19:48 JST）
+
+- 固定10packageをすべて `6.8.0-149.149` へ導入。再起動後の `uname -r` は `6.8.0-149-generic`。boot IDは `805499be-d5fe-4fe5-b36a-50df00cc5740` から `11540757-bb62-4ef1-8b90-0397cd5cf6cb` へ変化した。旧147のkernelは保持。dpkg auditは空、reboot-requiredなし、Docker active、failed systemd unitは0。
+- `/api/knowledge/public?mode=status` とTheme構成版3、旧KGのPLUTO検索、公開共有APIが200。共有内容版3とOGP画像を読め、OGPは更新前と同じ112,843bytes・SHA256 `676b8e65cc1466b65c54dcc73f6bd9833a965de09cf96e2c5546b1e7ea90e17d`。新共通知識のNeo4j投影と会員PGの実読取を確認。review／publisher／patrolの各Nodeプロセスも復帰した。新しい実AI処理を検証のためだけに発生させていない。
+- backup `/opt/graph-knowledge/backups/linux-security-20261108T104512Z`。暗号化archive SHA256 `aa1a7a219fd9eed44da44700fb88e55ed9fcad29a0dc14aed6ebe6b7a84fcee6`、wrapped key `8c5d4b468f6ad7d934ffc980757118cb093942be9e33bc1b72a4d4e3b3621b04`。PCへ取得してhash・復号・tar全読取と両dumpのPGDMP形式を確認。会員dump SHA256 `2d635fce21d6e48e317ef100e7c864d48feffdfb8cc5cee7176c97701dc47b11`、知識dump `25ce1978fce1d9ca650b1e2be59f6c245460ab0a775897a75e4c465a2bcab35e`。一時復号データは削除した。今回DB復元を繰り返したわけではなく、既存の復元検証を再利用する。
+- `pro security-status --format json` は標準security更新0、ESM Infra0、ESM Apps1。残りは稼働中のCaddy `2.6.2-6ubuntu0.24.04.3` に対する `2.6.2-6ubuntu0.24.04.3+esm2`。Ubuntu Proは未接続。古いログインbannerの件数を現在の結果に代えない。今回のTCP補修を、残るCaddyや全ソフトウェアの脆弱性不存在の確認と混同しない。

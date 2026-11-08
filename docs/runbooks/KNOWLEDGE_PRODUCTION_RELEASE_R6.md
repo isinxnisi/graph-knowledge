@@ -8,7 +8,7 @@
 
 review Workerは既存Webの `COMMUNITY_ENABLED` / `SITE_OPERATIONS_ENABLED` / `SITE_OPERATOR_USER_IDS` を引き継ぐ必要がある。初回に未指定でテーマ受付が取消になったため、`e0371f7f` の専用補修を正式適用済み。補修backupは `/opt/graph-knowledge/backups/theme-worker-flags-20261108T054606Z`、Compose SHA256 `a10c984aee7d65cb7d30e522c12c1b1184b7ead27aaf5a8014207c62c3d7cf3b`。Web／DB／image不変、運営資格・有効会員・capabilityはすべてtrue。旧取消受付をDBで開き直さない。
 
-正式アプリ受入済み・Linux脆弱性対応は未完了（[訂正と補修手順](../verification/LINUX_SECURITY_R6_20261108.md)）。本人の本番送信許可後、同じChatGPT予定→正式API→通常確認・公開で2関係がTheme構成版3へ追加された。既存Capsuleへ比較取込・保存し、同じ共有URLの明示更新も確認した。日常運用の再開は[ChatGPT予定runbook](KNOWLEDGE_CHATGPT_SCHEDULE.md)の同じ会話・予定から行う。初回公開scriptの再実行や新しい同名Themeの作成は不要。
+正式アプリ受入・TCP補修確認済み、Caddy補修は未完了（[Linux実測](../verification/LINUX_SECURITY_R6_20261108.md)／[Caddy固定補修](../verification/CADDY_SECURITY_R6_20261108.md)）。本人の本番送信許可後、同じChatGPT予定→正式API→通常確認・公開で2関係がTheme構成版3へ追加された。既存Capsuleへ比較取込・保存し、同じ共有URLの明示更新も確認した。日常運用の再開は[ChatGPT予定runbook](KNOWLEDGE_CHATGPT_SCHEDULE.md)の同じ会話・予定から行う。初回公開scriptの再実行や新しい同名Themeの作成は不要。
 
 ## 起点と守る境界
 
