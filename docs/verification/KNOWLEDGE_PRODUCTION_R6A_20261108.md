@@ -1,5 +1,7 @@
 # R6a 正式公開の準備と未実施の境界
 
+**2026-11-08後刻訂正：Linuxのsecurity候補0件は、CVE対応完了を意味しなかった。** 同名の既存packageと-security originだけの集計で、-updatesのkernel更新・新ABI依存package・稼働kernelのCVEを見落とした。[実機照合と是正](LINUX_SECURITY_R6_20261108.md)。
+
 2026-11-08 最終更新：R6aの監査・実物復元／再実行・暗号化backupのPC復号・正式資材の照合まで完了。R6bは既存sudoによる切替待ち。正式候補はapp `027f89bf`／build `Sf6Myn-qsOSMt8bnqxpE9`。本番はまだ旧版。下記の初期準備記録と、末尾の「R6aの最終資材・切替待ち」を区別する。
 
 

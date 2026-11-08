@@ -1,3 +1,5 @@
+2026-11-08訂正：アプリの正式公開・代表操作は確認済みだが、Linux脆弱性対応は未完了。稼働kernel 6.8.0-147-genericに対するCVE-2026-98432の修正適用を確認せず、R6全体を完了扱いした判断を撤回する。現在地は「R6のLinux補修中｜残りは固定kernel更新・再起動・正式サービス復帰確認｜全体はR6まで」。[影響・照合結果・再開手順](verification/LINUX_SECURITY_R6_20261108.md)。以下は各時点の履歴。
+
 2026-11-08 R6b完了：同じChatGPT会話・予定から正式APIへの継続配送と2関係の通常公開、Theme構成版3、独自編集を保ったCapsule取込・保存・同じURLへの共有反映を確認。R1〜R6で合意した本運用初版の構築・β統合・正式反映を区切る。app14542c72／正式build wFBq24bSaSp0W-_ZOFaXr、会員37／知識9。今回のWeb／DB／image変更なし。[最終実測と制約](verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md#送信許可後の継続配送と正式受入を完了)。以下は各時点の履歴。
 
 2026-11-08 R6b：正式app14542c72／build wFBq24bSaSp0W-_ZOFaXr、会員37／知識9へ反映済み。Workerの運営判定3設定を補修し、実ChatGPT→正式API→通常確認でTheme構成版1を公開した。同じChatGPT予定の本番切替・資料観測まで確認。継続配送はChatGPTの送信承認待ち。正式の年表／背景／Capsule保存・編集・破棄・再訪・共有を確認したが、R6b全体は未完了。[現在地と実測](verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md)。以下は各時点の履歴。

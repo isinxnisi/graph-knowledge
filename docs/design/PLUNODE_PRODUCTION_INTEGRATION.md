@@ -1,3 +1,5 @@
+2026-11-08訂正：アプリの正式公開・代表操作は確認済みだが、Linux脆弱性対応は未完了。稼働kernel 6.8.0-147-genericに対するCVE-2026-98432の修正適用を確認せず、R6全体を完了扱いした判断を撤回する。現在地は「R6のLinux補修中｜残りは固定kernel更新・再起動・正式サービス復帰確認｜全体はR6まで」。[影響・照合結果・再開手順](../verification/LINUX_SECURITY_R6_20261108.md)。以下は各時点の履歴。
+
 2026-11-08：R1〜R6で合意した本運用初版の機能構築・β統合・正式公開を完了。同じChatGPT会話／予定→正式API→通常確認→Theme構成版3と、Capsuleの明示取込／共有更新を確認した。[進行表](../PLUNODE_PROGRESS.md)／[正式受入と制約](../verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md#送信許可後の継続配送と正式受入を完了)。全件巡回・自動整理は運用中も続け、全件のAI確認済みを完成条件へ追加しない。以下の未完了記述は各時点の履歴。
 
 2026-11-06 R1j：配置profileと用途別capability、送信・公開・再開時の認可を共通化。βの許可会員・既存資格は維持。外部翻訳取込も公開文脈／wire／attemptの照合へ接続した。208件・型検査込みbuildと実Googleの草稿作成・保存・再訪、PC／390pxを確認。app `db9303fe`／build `2QST9Iieq0L0g-6y3nJDa`、追加migrationなし。**R1の共通契約は完了、次はR2の全データ巡回・自動整理。本運用初版全体は未完了。** [進行表](../PLUNODE_PROGRESS.md)／[今回の区切り](../verification/KNOWLEDGE_DEPLOYMENT_R1J_20261106.md)。以降のU番号の経緯と、現在のR工程を区別する。

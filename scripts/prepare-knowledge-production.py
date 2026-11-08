@@ -39,10 +39,12 @@ def fingerprints(sql,tables,old_ledger=False):
  return out
 
 def security_updates(backup):
+ # This is a limited pocket audit, never a completed CVE/running-kernel assessment.
+ coverage={"assessmentComplete":False,"scope":"newer installed-package versions in Ubuntu -security only; excludes -updates-only fixes and running-kernel CVE verification"}
  p=subprocess.run(['apt-get','-o','Acquire::Retries=2','-o','Acquire::http::Timeout=20','-o','Acquire::https::Timeout=20','update'],capture_output=True,text=True,timeout=240,env={**os.environ,'LC_ALL':'C'})
  private(backup/'apt-update.log',p.stdout+p.stderr)
  fresh=p.returncode==0 and not any(s in p.stdout+p.stderr for s in ['Failed to fetch','Some index files failed'])
- if not fresh:return {'metadataRefreshed':False,'packages':[],'packagesChanged':False}
+ if not fresh:return {**coverage,'metadataRefreshed':False,'packages':[],'packagesChanged':False}
  import apt,apt_pkg
  cache=apt.Cache();updates=[]
  for package in cache:
@@ -57,8 +59,8 @@ def security_updates(backup):
  if updates:
   simulation=subprocess.run(['apt-get','--simulate','--no-install-recommends','--only-upgrade','install',*[x['name']+'='+x['securityVersion']for x in updates]],capture_output=True,text=True,timeout=120,env={**os.environ,'LC_ALL':'C'})
   private(backup/'apt-security-simulation.log',simulation.stdout+simulation.stderr)
-  return {'metadataRefreshed':True,'packages':updates,'simulationSucceeded':simulation.returncode==0,'packagesChanged':False}
- return {'metadataRefreshed':True,'packages':[],'simulationSucceeded':True,'packagesChanged':False}
+  return {**coverage,'metadataRefreshed':True,'packages':updates,'simulationSucceeded':simulation.returncode==0,'packagesChanged':False}
+ return {**coverage,'metadataRefreshed':True,'packages':[],'simulationSucceeded':True,'packagesChanged':False}
 
 def main():
  assert os.geteuid()==0,'Use the existing administrator sudo'
