@@ -12,33 +12,41 @@ import results from "./DiscoverySearch.module.css";
 export type ThemeCriteria = { q: string; kind: "all" | "timeline" | "graph" | "context"; order: "newest" | "name" };
 export const initialThemeCriteria: ThemeCriteria = { q: "", kind: "all", order: "newest" };
 export type OpenTheme = (ref: { id: string; revision?: number; focusEntityId?: string }) => void;
-export function ThemeLink({ theme, onOpen, appearance = "row", showDescription = false, focusEntityId }: {
+export function ThemeLink({ theme, onOpen, appearance = "row", showDescription = false, focusEntityId, openInNewTab = false }: {
   theme: KnowledgeThemeSummary; onOpen: OpenTheme;
   appearance?: "row" | "featured" | "recent"; showDescription?: boolean;
-  focusEntityId?: string;
+  focusEntityId?: string; openInNewTab?: boolean;
 }) {
   const { locale } = useUiLocale(), en = locale === "en";
   const type = knowledgeThemeTypeLabel(theme, en);
   const icon = theme.hasTimeline ? "event" : theme.hasRelations === false ? "book" : "graph";
   const href = `${en ? "/en" : "/"}?${new URLSearchParams({ ktheme: theme.id, krev: String(theme.revision), kview: theme.initialView,...(focusEntityId?{kfocus:focusEntityId}:{}) })}`;
   function choose(event: MouseEvent<HTMLAnchorElement>) {
-    if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (openInNewTab || event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault(); onOpen({ id: theme.id, revision: theme.revision,...(focusEntityId?{focusEntityId}:{}) });
   }
-  if (appearance === "recent") return <a className={css.recentLink} href={href} onClick={choose}>
+  if (appearance === "recent") return <a className={css.recentLink} href={href} target={openInNewTab ? "_blank" : undefined} rel={openInNewTab ? "noopener" : undefined} onClick={choose}>
     <Icon name={icon}/>{theme.title}<span>{type}</span>
   </a>;
-  if (appearance === "featured") return <a className={`${home.themeFeature} ${css.featureLink}`} href={href} onClick={choose}>
+  if (appearance === "featured") return <a className={`${home.themeFeature} ${css.featureLink}`} href={href} target={openInNewTab ? "_blank" : undefined} rel={openInNewTab ? "noopener" : undefined} onClick={choose}>
     <Icon name={icon}/><span><small>{type}</small><strong>{theme.title}</strong>
       {showDescription && theme.description && <span className={css.featureDescription}>{theme.description}</span>}
     </span><Icon name="arrow"/>
   </a>;
-  return <a className={`${results.resultRow} ${css.themeRow}`} href={href} onClick={choose}>
+  return <a className={`${results.resultRow} ${css.themeRow}`} href={href} target={openInNewTab ? "_blank" : undefined} rel={openInNewTab ? "noopener" : undefined} onClick={choose}>
     <Icon name={icon}/><span className={results.identity}>
       <span className={results.name}><strong>{theme.title}</strong><small>{type}</small></span>
       {showDescription && theme.description && <span className={results.description}>{theme.description}</span>}
     </span><Icon name="chevron"/>
   </a>;
+}
+export function FeaturedThemeRail({ themes, onOpen, openInNewTab = false }: {
+  themes: KnowledgeThemeSummary[]; onOpen: OpenTheme; openInNewTab?: boolean;
+}) {
+  const { locale } = useUiLocale();
+  return <div className={`${css.featured} ${css.home}`} role="list" aria-label={locale === "en" ? "Featured themes · scroll horizontally" : "紹介テーマ・横にスクロールできます"}>
+    {themes.map(theme => <div key={theme.id} role="listitem"><ThemeLink theme={theme} onOpen={onOpen} appearance="featured" showDescription openInNewTab={openInNewTab}/></div>)}
+  </div>;
 }
 export function useHomeThemes(initialData?: KnowledgeThemeHome | null, enabled = true) {
   const [data, setData] = useState<KnowledgeThemeHome | null>(initialData ?? null);
@@ -72,7 +80,7 @@ export function HomeThemes({ state, onOpen, onBrowse, part = "both" }: {
   }
   if (!data.total) return null;
   return <div className={css.home}>
-    {part !== "recent" && !!data.featured.length && <section className={home.fields} aria-labelledby="home-theme-featured"><div className={css.heading}><h3 id="home-theme-featured">{en ? "Featured themes" : "紹介テーマ"}</h3><button onClick={onBrowse}>{en ? "Explore themes" : "テーマを探す"}<Icon name="arrow" /></button></div><div className={css.featured} role="list" aria-label={en ? "Featured themes · scroll horizontally" : "紹介テーマ・横にスクロールできます"}>{data.featured.map(theme=><div key={theme.id} role="listitem"><ThemeLink theme={theme} onOpen={onOpen} appearance="featured" showDescription/></div>)}</div></section>}
+    {part !== "recent" && !!data.featured.length && <section className={home.fields} aria-labelledby="home-theme-featured"><div className={css.heading}><h3 id="home-theme-featured">{en ? "Featured themes" : "紹介テーマ"}</h3><button onClick={onBrowse}>{en ? "Explore themes" : "テーマを探す"}<Icon name="arrow" /></button></div><FeaturedThemeRail themes={data.featured} onOpen={onOpen}/></section>}
     {part !== "featured" && <section className={home.recent} aria-labelledby="home-theme-recent"><div className={css.heading}><h3 id="home-theme-recent">{en ? "New themes" : "新着テーマ"}</h3><button onClick={onBrowse}>{en ? "Browse all" : "一覧を見る"}<Icon name="arrow" /></button></div><ul>{data.recent.map(theme=><li key={theme.id}><ThemeLink theme={theme} onOpen={onOpen} appearance="recent"/><time dateTime={theme.publishedAt}>{theme.publishedAt?.slice(0,10)}</time></li>)}</ul><p className={home.note}>{en ? "Theme registration dates, not dates of historical events." : "テーマの登録日です。出来事が起きた日付ではありません。"}</p></section>}
   </div>;
 }

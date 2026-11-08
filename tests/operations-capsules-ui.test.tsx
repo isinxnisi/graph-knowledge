@@ -53,3 +53,11 @@ it('Capsuleコメントの通報ではコミュニティ停止や図の停止を
  expect(screen.getByRole('button',{name:'Hide post'})).toBeDefined();expect(screen.getByRole('button',{name:'Review target'})).toBeDefined();
  expect(screen.queryByRole('button',{name:'Suspend community'})).toBeNull();expect(screen.queryByRole('button',{name:'Block this Capsule version'})).toBeNull();
 });
+
+it('紹介テーマのメニューを運営権限の確認後に開く',async()=>{
+ history.replaceState(null,'','/operations#featured');
+ mock.request.mockImplementation(async(path:string,schema:z.ZodType)=>schema.parse(path.endsWith('/session')?{operator:true}:{revision:0,themeIds:[],updatedAt:null,themes:[]}));
+ render(<OperationsPage dataset="demo"/>);
+ expect(await screen.findByRole('heading',{name:'Featured selection 0'})).toBeTruthy();
+ expect(screen.getByRole('button',{name:'Featured themes'}).getAttribute('aria-current')).toBe('page');
+});

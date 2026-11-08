@@ -7,6 +7,10 @@ import {operateCommunitySafety} from './community-site-safety';
 import {decideCommunityRecovery} from './community-recovery';
 import {communityPage,pageTime} from './community-pagination';
 
+import { readFeaturedThemes, saveFeaturedThemes } from "./featured-themes";
+import { saveFeaturedThemesSchema } from "../../domain/featured-themes";
+import type { KnowledgeThemePage } from "../../domain/knowledge-theme-reader";
+
 const reason=z.string().trim().min(1).max(500),revision=z.number().int().positive();
 export const siteActionSchema=z.discriminatedUnion('kind',[
  z.strictObject({kind:z.literal('report'),requestId:z.uuidv4(),id:z.uuidv4(),action:z.enum(['inspect','block-capsule','hide-post','unhide-post','suspend-community','resume-community','resolve','dismiss']),expectedRevision:revision,expectedReportRevision:revision,reason}),
@@ -27,6 +31,16 @@ export function createSiteOperationsService(pool:Pool,origin:string,owner:(req:R
   return memberTransaction(pool,async c=>{await authorized(c,u);if(!(await c.query("SELECT to_regclass('site_operation_request') AS ready")).rows[0].ready)throw new MemberError(503,'OPERATIONS_UNAVAILABLE');const result=await fn(c,u);await authorized(c,u);return memberJson(result);});
  }
  return {
+  featuredThemes(req:Request,catalog:()=>Promise<KnowledgeThemePage>){return access(req,async c=>({ ...await readFeaturedThemes(c), ...await catalog() }));},
+  saveFeaturedThemes(req:Request,catalog:()=>Promise<KnowledgeThemePage>){
+   assertMemberOrigin(req,origin);
+   if(!req.headers.has('x-member-user'))throw new MemberError(400,'INVALID_ARGUMENT');
+   return access(req,async(c,u)=>{
+    const input=await memberInput(req,saveFeaturedThemesSchema);
+    const page=await catalog();
+    return saveFeaturedThemes(c,u.id,input,new Set(page.themes.map(t=>t.id)));
+   });
+  },
   read(req:Request,section:string){return access(req,async(c,u)=>{
    const q=new URL(req.url).searchParams;
    if(section==='session')return {operator:true,userId:u.id};
