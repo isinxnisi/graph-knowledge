@@ -2,7 +2,7 @@
 
 ## 現在地
 
-R6b切替済み・接続補修中。新規テーマをChatGPTから登録する経路を補修し、正式受入を続ける。R6全体は未完了。
+R6b補修版は切替済み。本番MCPの本人同意と実ChatGPTからの受付に成功したが、Workerへの運営設定の引継ぎ漏れを検出した。設定修正・同じ会話からの再登録と正式受入を続ける。R6全体は未完了。
 
 ## 配置済み
 
@@ -71,3 +71,15 @@ ChatGPTの正式OAuth同意・同じ会話での実Theme登録・探索利用は
 ### Chrome復旧後の正式接続準備
 
 本人のChrome再起動後、同じChrome接続から操作を再開できた。ChatGPTのカスタムMCPフォームへ「Plunodeテーマ・資料 API（本番）」を入力し、正式endpoint、CIMD、正式の認可／token URL、resourceを実画面で検出した。デフォルトscopeは `missions:collect` と `themes:compose`、継続接続の基本scopeは `offline_access`。本人の作成・OAuth同意を依頼した。β接続は変更していない。新しい接続のツール利用・実Theme登録・予定の本番切替はまだ未確認。
+
+## 本番MCP接続と実登録で検出したWorker設定漏れ
+
+本人の作成・OAuth同意後、本番App `plugin_asdk_app_6aeffba90628819181cfb1d6eb54a8d0` で新規テーマ3操作と既存収集5操作を確認した。同じ専用会話 `6aef440d-ceac-83ee-b59b-163349281c60` から本番Appを明示し、NASAの打上げ記事と遮熱膜の展開記事をChatGPTが読み、4項目・3年表配置・split表示のテーマを送信した。一般利用者のテーマ作成UIやCLIのDB投入ではない。
+
+requestId `9d8e337a-64d0-4b7d-9f1a-a345c38b2d12` は `saved` の後、Workerが「運営権限が停止されたため」と `cancelled` にした。receiptと公開Themeはなく、公開成功とは扱わない。接続済みMCPの同じIDの読取でも確認した。
+
+正式の暗号化backupから構成だけを照合すると、Webには有効化フラグ2つと運営者IDがある一方、最小化したWorkerの環境には `COMMUNITY_ENABLED` / `SITE_OPERATIONS_ENABLED` / `SITE_OPERATOR_USER_IDS` がないことが判明した。既存Webの本人権限は正常。補修前の実imageはこの設定で運営判定false、同じWeb設定を与えるとtrue、停止設定ではfalseとなる3例を、ネットワークなしで確認した。
+
+修正は既存Webのこの3設定だけをreview Workerへ引き継ぐ。Google秘密値を追加せず、既存権限の判定を緩めない。Composeの有効構成比較で3項目以外の差分なし、補修関数の保全・停止設定・未指定拒否3テストに成功した。初回の確認ではComposeの未解決canonical JSONが可変bindパスをvolumeと誤分類したため、元の固定YAMLから変数を展開せず候補を作り、有効構成で差分を再検査する方式にした。
+
+専用 `scripts/repair-knowledge-theme-worker-production.py` は固定の現行ファイルhash・image・buildを照合し、Composeのbackup後にWorkerだけを再起動する。DB migration、Web／PG／Neo4jの再起動、image変更は行わない。取消済みの受付をDBで開き直さず、修正後に同じChatGPT会話から新しい受付として登録する。正式適用と再登録はまだ未完了。

@@ -54,6 +54,12 @@ services:
     <<: *knowledge-worker
     command: [scripts/knowledge-review-worker.ts]
     mem_limit: 320m
+    environment:
+      <<: *knowledge-environment
+      # Web imports and theme recovery recheck the same existing operator.
+      COMMUNITY_ENABLED: "${COMMUNITY_ENABLED:-0}"
+      SITE_OPERATIONS_ENABLED: "${SITE_OPERATIONS_ENABLED:-0}"
+      SITE_OPERATOR_USER_IDS: "${SITE_OPERATOR_USER_IDS:-}"
   knowledge-patrol:
     <<: *knowledge-worker
     command: [scripts/knowledge-patrol-worker.ts, run]
