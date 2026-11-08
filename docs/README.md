@@ -1,3 +1,5 @@
+2026-11-09 テーマ表示是正：①不足確認・②実装／34件と両build・③localhost／HTTPS β反映と390px／PC確認まで完了｜残りは③正式切替・正式表示確認｜今回の工程は3まで。app bbd9503c、β TsVq7vQb6n5X9cGPCLM3o、正式候補 S36Jte03E0skpM32EgDrk。TOP／一覧／詳細の公開訳文接続とスマホの見出し幅を修正。DB・Worker変更なし。[検証・再開](verification/THEME_LOCALE_MOBILE_20261109.md)。以下は各時点の履歴。
+
 2026-11-09 ChatGPT訳文API：main／localhost3200／HTTPS β／正式サイトへ反映・確認済み。既存Appと同じChatからWebb構成版6のタイトル英訳を公開し、正式表示と原文／Theme版・固定断面の保持を確認した。17件・両build成功、DB移行／Worker更新なし。[契約](design/KNOWLEDGE_CHATGPT_THEME_REGISTRATION.md#chatからの訳文登録訂正2026-11-09)／[検証・制約](verification/KNOWLEDGE_CHATGPT_TRANSLATIONS_20261109.md)。以下は各時点の履歴。
 
 2026-11-09年表の点／範囲表示の是正完了：main／localhost3200／HTTPS β／正式サイトへ反映。app 9edea51a、正式build N8Bl5w9EhBsWobty5fc7G、β build NryL0r9D2f-0_C79h2o9g。4例の描き分けと同一期間A・Bの共通軸を38件で検証し、正式Theme版6の7点・1実期間と原本／断面不変を実画面・APIで確認。Webのみ、会員39／知識9・Worker／設定を保持。[条件・実測・制約](verification/TIMELINE_COARSE_POINTS_20261109.md)。以下は各時点の履歴。
