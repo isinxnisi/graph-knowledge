@@ -2,7 +2,7 @@
 
 ## 現在地
 
-R6b補修版とWorker設定を正式適用済み。同じ実ChatGPT会話からTheme構成版1を公開し、同じ既存予定を本番へ切り替えた。正式Themeから年表／背景／Capsuleの保存・関係図編集の年表反映・破棄・再訪・共有も確認。継続収集はNASA原文3資料の観測後、ChatGPT側の送信承認で保留中。配送・通常公開とThemeの追記結果が残り、R6全体は未完了。
+**R6b完了・R6完了。R1〜R6の合意した本運用初版を正式公開済み。** 本人の送信許可後、同じChatGPT予定から配送した2関係が通常確認・publisherを通り、Theme構成版3へ追記された。正式の年表／背景／関係図、Capsuleの独自編集保全・比較取込・保存・同じURLへの共有反映まで確認。以下の「待ち」「未確認」は各時点の履歴であり、最終結果は末尾を優先する。全件のAI処理を完遂した保証や、後続構想の年表比較／マージ完成の意味ではない。
 
 ## 配置済み
 
@@ -141,3 +141,40 @@ backupは `/opt/graph-knowledge/backups/theme-worker-flags-20261108T054606Z`、�
 - Twitterbot相当HTTPは200、OGP／Twitterのtitleは `公開確認｜Webbの工程と背景`、画像altは年表、画像は1200×630 PNG（91,731bytes、SHA256 `5f4786d7788e01c2363727f5c3c7e81be545a4da52fcaccd87080b3a53046514`）。OGP／代表URL／画像URLはすべて正式origin。SNS実プレビューは未確認、告知投稿なし。
 
 PC証跡は `C:/Users/nishr/.codex/visualizations/2026/11/08/plunode-r6/` の `formal-collection-plan.png` / `formal-delivery-approval.png` / `formal-theme-capsule-pc.png` / `formal-theme-capsule-mobile.png`。安全なHTTP結果は作業treeの `.local/theme-worker-flags-repair/formal-theme-ogp.json`。秘密値や会員DBを検証資材へ含めない。
+
+## 送信許可後の継続配送と正式受入を完了
+
+### 実ChatGPTからの配送・自動公開
+
+本人の送信許可後、同じ会話・既存予定から `deliver_collection` が成功した。run `7bbcf653-767e-493b-ae8d-f4051cbfb096`、receipt `bcb87c64-56ae-4b7a-a519-684b0b5b15d1`。15:17 JSTのChatGPT報告はprocessing／2項目queuedであり、それ自体を公開完了の根拠にはしない。
+
+通常の原資料照合・Gemini・原本受理・publisherにより、以下の2Recordが内容版1で公開された。正式運営画面は同じ計画を「反映済み」と表示し、公開APIはTheme構成版3の4Record・3Entity・3年表配置を返す。
+
+- 打上げ `import:mission.1ff1495d-eda2-4fd2-80c5-52d839805e79:record:4a1d48d413e6ae768e0ffbcb9074e939`。NASA打上げ記事の原文に加え、NASA Launchページにある日付・場所・時刻の明記を根拠にした。
+- 展開完了 `import:mission.1ff1495d-eda2-4fd2-80c5-52d839805e79:record:e2890b1c1b98f8649aa4dbd5dd1baa29`。1月4日の遮熱膜展開完了を、NASA原文と具体的な関係名で登録した。全望遠鏡の展開完了や連続稼働と混同しない。
+
+[正式Theme構成版3](https://plunode.net/?ktheme=theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1&krev=3)。旧構成版1は2Recordのまま読み戻せ、元の2Record pinが構成版3にも保持されている。テーマ専用コードやDBの手書き投入、公開条件の緩和は使わなかった。
+
+16:21・17:21 JSTの予定実行は対象なしで正常終了。18:34には終了済みrunへの再操作が `MISSION_ALREADY_FINISHED` で拒否された記録があり、これを新しい配送成功とは扱わない。許可のタイミング等の直接原因は未特定。18:37に同じ既存予定の「今すぐ実行」から再確認し、claim1回→ok true／lease null／replayed false→対象なしで正常終了、追加承認なしを実画面で確認した。公開済み2件を再配送していない。
+
+既存予定は毎時20分・Asia/Tokyo・同じ会話を継続。正式計画は1日ごと、次回2026-11-09 14:59:47 JST、最大3資料／3項目。通常分の収集ごとに管理者の対象選択・承認を要求しない。初回OAuth同意・送信の継続許可と、例外時の任意運営操作は別。Codex収集予定はPAUSED、AI教育予定は不変。
+
+### 正式Theme更新からCapsule・同一共有URLへの接続
+
+正式Theme構成版3を通常Graph領域で開き、12月25日の点、12月28日〜1月4日の期間、1月4日の完了点、時期を置かない背景1件と対応する関係図を確認した。
+
+既存 `公開確認｜Webbの工程と背景` は保存版2・2関係のままで、元Themeの更新だけでは差し替わらない。「取得元の更新」→「テーマの構成」で1→3、追加Record2・Entity1・Source2を含む6差分と「独自に編集した1項目を保持」を確認。草稿に取り込む→保存し、独自ラベル「遮熱膜をひらいた」と既存根拠・背景を保って保存版3・3Entity／4関係となった。
+
+保存後も共有は保存版2・OGP image/2のまま。共有画面の「保存した変更を共有へ反映」で、[同じURL](https://plunode.net/shared/e7DmydnrC0xOg77CwLnvb7pqTDg-AQDEqP6eFbJFgjo)を保存版3へ更新した。既に開いた共有タブは保存版2を保持し、リンク再確認の更新案内→「更新された図を読む」で明示的に保存版3へ進めた。
+
+OGPはTwitterbot相当HTTPで200、1200×630 PNG、112,843bytes、SHA256 `676b8e65cc1466b65c54dcc73f6bd9833a965de09cf96e2c5546b1e7ea90e17d`。代表・画像URLは正式originのまま、image/2→image/3でhashも変わった。SNS上のカード再取得・実表示はこの受入では未確認、告知投稿なし。
+
+### 配置・保全・制約
+
+- 3200／HTTPS βはapp14542c72・build `J8c0xCK92ByIAFgkz3nbx`、正式は同app・build `wFBq24bSaSp0W-_ZOFaXr`。最終 `/api/dataset` は3環境すべて200で旧dataset revisionを保持。新共通知識は専用API／投影で提供され、旧KGの件数／revisionを書き換えない。
+- 今回は実操作と記録だけでWeb再build・image変更・追加migration・DB resetはない。既存の移行／別DB復元／再実行とbackup復号照合は前節の結果を再利用した。
+- 全件巡回・自動整理は初版の通常機能として常駐し順次処理する。全対象が一度AI確認・整理を終えたかを待つ全量テストへは広げない。構造・排他・再開・停止・代表の実AI／実公開の既存検証を用いる。
+- 実Googleと実ChatGPT・実NASA原文で確認した経路と、過去のfixtureによる境界検証を区別する。実iPhoneのキーボード／スクロール、SNS実プレビュー、正式PC読解Workerの別の実資料jobは今回未実施。PCの取得・読解Workerは起動／再開接続済みで、代表の実取得は前節で確認済み。
+- 年表同士の比較／マージ、年表の直接作図、全件訳文の先行生成は既に後続へ分けた構想。今回の完成に合わせて新しく範囲を縮小したものではない。
+
+最終証跡：`formal-theme-current.json`、`formal-theme-append-result.json`、`formal-theme-share-before-update.json`、`formal-theme-ogp-v3.json`、`final-health.json` は作業tree `.local/theme-worker-flags-repair/`。画面はPCのvisualizations内 `formal-theme-v3.png`、`formal-share-v3.png`、`formal-schedule-normal.png`。R6bの残り実装・本人操作なし。以後は通常運用とユーザー評価を受け、別の改善を混ぜず扱う。

@@ -1,3 +1,5 @@
+2026-11-08 R6b完了：同じChatGPT会話・予定から正式APIへの継続配送と2関係の通常公開、Theme構成版3、独自編集を保ったCapsule取込・保存・同じURLへの共有反映を確認。R1〜R6で合意した本運用初版の構築・β統合・正式反映を区切る。app14542c72／正式build wFBq24bSaSp0W-_ZOFaXr、会員37／知識9。今回のWeb／DB／image変更なし。[最終実測と制約](verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md#送信許可後の継続配送と正式受入を完了)。以下は各時点の履歴。
+
 2026-11-08 R6b：正式app027f89bfの切替と移行・backup照合を完了。正式Capsuleの共有更新・コメント文脈・停止とPC資料取得を確認。ChatGPTからの新規テーマ登録APIの不足を補修中で、R6の正式受入は未完了。[現在地と残り](verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md)。以下は各時点の履歴。
 
 2026-11-08 本人回答後：本番300回・β100回の配分を確定し、月次・token・送信速度も同じ共通枠へ収まる候補設定をschema検査済み。正式起動前にβから切替し、既存台帳を保持する。監査の初回実行はSSH認証前に切断したため、接続再利用の監査helperを準備・無権限check済み。本番監査結果・Linux／実機移行・正式切替はまだ未完了。[更新と再開](verification/KNOWLEDGE_PRODUCTION_R6A_20261108.md#本人回答後利用量確定と監査の再試行)。
