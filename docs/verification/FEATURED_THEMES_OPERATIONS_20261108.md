@@ -37,3 +37,14 @@ backup：開発PCの作業worktree `.local/featured-themes-20261108/beta-backup-
 `release-featured-themes-production.py` は、現在のapp `14542c72`／build `wFBq24bSaSp0W-_ZOFaXr` とWorker設定補修後のComposeを照合する。対象は追加037だけ。Webと3 Workerを短く停止し、現行DBのbackup・別DB復元／移行／再実行、暗号化照合後にWeb／opsを切り替える。設定と原本は保持する。OS／Caddyの変更、βデータの移送、seed、古いdumpの上書きや旧形式Webへの機械的な復旧はしない。
 
 本番のsudoパスワードはCodex側から入力できないため、準備・転送・照合後に本人のterminal実行を依頼する。実際の配置結果と正式URLでの確認は追記する。
+
+## 正式候補の識別（未配置）
+
+- source：`4dd8af2594d124a5984b97925dd9eff454aca32c`
+- build：`VhZydgGnOKI5nCb9w6khB`
+- Web image manifest：`sha256:d4c6b4f509abd377e8c50acf800692b679d2799c3e0aae96be0099aef38d5c3d`
+- ops image manifest：`sha256:e7f800300e7d03de55f870607335011031b12aec6f450d588e358d11accfc6e9`
+- 既存37→38 migration、追加037のみ。archiveの全blobとconfig／manifest／layer対応、source label・linux/amd64・Web buildを照合済み。
+- `sudo -n true` はパスワード要求で実行不可。本人のterminal入力を必要とする。[公開・再開手順](../runbooks/FEATURED_THEMES_RELEASE.md)。本番適用の成功とは区別する。
+
+補修後のlocalhost公開 `theme-home` は200で、元の3件・元の順。管理APIは未認証401を確認した。
