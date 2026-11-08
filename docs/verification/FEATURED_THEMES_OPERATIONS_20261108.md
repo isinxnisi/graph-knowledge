@@ -2,7 +2,7 @@
 
 ## 現在地
 
-紹介テーマの選択・掲載順・プレビュー・明示保存を実装し、main／localhost:3200／HTTPS βの実操作を確認した。本番向け資材は転送・照合済みで、既存sudoの本人入力待ち。**正式VPSにはまだ未反映**。R1〜R6の完了状態を変更するものではなく、その後の追加改善。
+紹介テーマの選択・掲載順・プレビュー・明示保存を実装し、main／localhost:3200／HTTPS β／正式VPSへの反映と実操作を完了した。正式サイトの掲載保存→TOP反映、0件で非掲載→再読み込み保持、backup復号を確認済み。R1〜R6の完了状態を変更するものではなく、その後の追加改善。
 
 - アプリsource：`4dd8af2594d124a5984b97925dd9eff454aca32c`
 - localhost／β build：`T0in9w8OdeSYUhnlpc_gK`
@@ -32,23 +32,51 @@
 
 backup：開発PCの作業worktree `.local/featured-themes-20261108/beta-backup-20261108T210704`。dump SHA-256 `6f5dae3ca6bdb0277c2dea9cd04a653ed855c9a2daf1d2c837a10a0e60ae04e4`。private領域で管理しGitへ含めない。βの選択はテスト後、元と同じ3件・元の順に保存して戻した。
 
-## 本番への引継ぎ
+## 切替前の引継ぎ（実施済み）
 
 `release-featured-themes-production.py` は、現在のapp `14542c72`／build `wFBq24bSaSp0W-_ZOFaXr` とWorker設定補修後のComposeを照合する。対象は追加037だけ。Webと3 Workerを短く停止し、現行DBのbackup・別DB復元／移行／再実行、暗号化照合後にWeb／opsを切り替える。設定と原本は保持する。OS／Caddyの変更、βデータの移送、seed、古いdumpの上書きや旧形式Webへの機械的な復旧はしない。
 
-本番のsudoパスワードはCodex側から入力できないため、準備・転送・照合後に本人のterminal実行を依頼する。実際の配置結果と正式URLでの確認は追記する。
+本番のsudoパスワードはCodex側から入力できないため、準備・転送・照合後に本人のterminal実行で適用した。配置結果と正式URLでの確認は下記。
 
-## 正式候補の識別（未配置）
+## 配置済み正式資材の識別
 
 - source：`4dd8af2594d124a5984b97925dd9eff454aca32c`
 - build：`VhZydgGnOKI5nCb9w6khB`
 - Web image manifest：`sha256:d4c6b4f509abd377e8c50acf800692b679d2799c3e0aae96be0099aef38d5c3d`
 - ops image manifest：`sha256:e7f800300e7d03de55f870607335011031b12aec6f450d588e358d11accfc6e9`
 - 既存37→38 migration、追加037のみ。archiveの全blobとconfig／manifest／layer対応、source label・linux/amd64・Web buildを照合済み。
-- `sudo -n true` はパスワード要求で実行不可。本人のterminal入力を必要とする。[公開・再開手順](../runbooks/FEATURED_THEMES_RELEASE.md)。本番適用の成功とは区別する。
+- 既存sudoの本人入力で切替成功。[公開・再開手順](../runbooks/FEATURED_THEMES_RELEASE.md)。
 
 補修後のlocalhost公開 `theme-home` は200で、元の3件・元の順。管理APIは未認証401を確認した。
 
-正式stage `/home/develop/plunode-featured-20261108/release-4dd8af25` の全6資材のchecksum照合を完了。実装・記録はmainと `codex/featured-themes-operations` へ通常push済み。本人入力後は正式URLでの掲載保存とTOPを確認し、配置結果を追記する。
+正式stage `/home/develop/plunode-featured-20261108/release-4dd8af25` の全6資材のchecksum照合を完了。実装・記録はmainと `codex/featured-themes-operations` へ通常push済み。本人入力による切替後、下記の正式受入を完了した。
 
 今回生成したコンパイルcache約1.8GBを整理し、旧runtime buildはmainの無視対象 `backups/featured-themes-20261108/previous-builds` へ保管した。DB dump・private設定・モデル・稼働volumeは削除していない。Cドライブの実空きは1.8GBで、WSLの空きblock trimだけでは物理容量は増えなかった。既存サービスを止める追加compactは今回行っていない。
+
+## 正式反映・受入完了
+
+2026-11-08 12:32 UTCの実行でapp `4dd8af25`／build `VhZydgGnOKI5nCb9w6khB` を配置。追加037、会員38件／知識9件。旧行・所有者・設定を保持し、KG containerとAI artifactは不変。新Web／ops imageを使い、3 Workerのnode processもSSHから確認した。OS／Caddy変更、βデータの移送、seedはない。
+
+- backup：`/opt/graph-knowledge/backups/featured-themes-release-20261108T123201Z`
+- 別DB復元：85→86表、37→38 migration。旧行・所有者保全、再実行不変。
+- member dump SHA-256：`2873af21d5287064cb3e861938877a77243e8af05160cf81e478032daa684707`
+- knowledge dump SHA-256：`ea094e4c780bb1027a7655fca443f3e5a98089547af3f8c357e491c7ec272c70`
+- 暗号化backup SHA-256：`34f9809d0033843cd82ebbaa68cf083cf90c94597bf2a2b7b40b6593785a080b`
+- wrapped key SHA-256：`f7089d43c0236ab7c9930f6c4fa2bf8fe96930c48a9dbf1911f50a7780120e9b`
+
+暗号化資材を開発PCのprivate領域へ回収し、保持していた秘密鍵で復号、両dumpのhash一致を確認。検証用の復号鍵と一時tarは削除した。未検証の暗号化ファイルの保管だけを復元確認と扱っていない。
+
+### 正式画面と公開API
+
+[正式の紹介テーマ管理](https://plunode.net/operations#featured)を既存の実Googleセッションで操作した。
+
+1. 公開済みの「Webbが宇宙でひらくまで」を追加し、同じカードのプレビューを確認。
+2. 「掲載を保存」の成功表示後、[正式TOP](https://plunode.net/)の紹介欄と正式Theme版3へのリンクを確認。
+3. 掲載を外して0件で保存し、TOPの紹介欄が隠れること、新着テーマは残ることを確認。
+4. 管理画面を再読み込みし、0件の保存済み設定が保持されることを確認。確認前と同じ非掲載状態へ戻し、利用者の掲載選択を先取りしない。
+
+正式 `/api/dataset` は200、既存KG revision `f5dbf83f-c89e-4e40-95ee-57957016089f` を保持。公開 `theme-home` は200・紹介0／新着1、未認証の管理APIは401。localhostは200・元の紹介3件を保持。正式とβの選択・DBを分離している。
+
+PC幅の正式実操作、390px幅のβ実操作を確認。iPhone実機の確認や、今回変更しない全機能の再検証は追加していない。既存18件の対象テスト・型検査込みbuildを活用し、変更のないコードへ理由のない再実行はしない。
+
+公開runnerのguard解放後、共通ロックが空きであることを確認してから、正式受入・記録用に再取得した。記録は日本語commitと通常pushでmain／作業branchへ反映し、終了時にholdを解放する。

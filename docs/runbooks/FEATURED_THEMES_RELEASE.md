@@ -6,7 +6,7 @@
 
 - app source `4dd8af2594d124a5984b97925dd9eff454aca32c`
 - 3200／HTTPS β build `T0in9w8OdeSYUhnlpc_gK`（反映・実操作確認済み）
-- 正式候補 build `VhZydgGnOKI5nCb9w6khB`（配置前）
+- 正式build `VhZydgGnOKI5nCb9w6khB`（反映・実操作確認済み）
 - 追加migration `037-featured-themes.sql` のみ。既存000〜036のchecksumを変更しない。
 
 ## 準備と適用
@@ -17,7 +17,7 @@
 4. 設定・dumpの復旧資材を暗号化し、Web／ops imageだけを切り替える。3 Workerは同じ新ops imageで再開する。Google認証・会員・Capsule・KG・AI設定・Caddy／OSは保持する。βデータを移さない。
 5. 正式HTTPSの `/operations#featured` で掲載を保存し、TOPで確認する。未認証API401、元の新着順、既存テーマへの入口も確認する。必要に応じて掲載を元に戻す。
 
-既存VPSは `sudo -n` 不可のため、準備済みのPC側runnerから本人がterminalへパスワードを入力する。パスワードをチャットに送らない。今回のrunner：
+既存VPSは `sudo -n` 不可のため、準備済みのPC側runnerから本人がterminalへパスワードを入力する。パスワードをチャットに送らない。今回のrunner（適用済み。再配置時は現行構成を起点に新しいstageを用意し、この一回用資材をそのまま再実行しない）：
 
 ```powershell
 wsl -d Ubuntu -- python3 /home/isinxnisi/1.projects/7.graph-knowledge/backups/featured-themes-20261108/run-release.py
