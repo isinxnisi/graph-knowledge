@@ -1,3 +1,5 @@
+2026-11-08 正式接続：本人のOAuth同意により、[Plunodeテーマ・資料 API（本番）](https://chatgpt.com/plugins/plugin_asdk_app_6aeffba90628819181cfb1d6eb54a8d0)を接続済み。endpointは `https://plunode.net/api/knowledge-collection/mcp`、`missions:collect` / `themes:compose` / `offline_access`。既存収集5操作と `submit_theme` / `get_theme_registration` / `cancel_theme_registration` を検出し、同じ既存会話での本番受付を確認した。Workerの運営判定設定漏れにより初回受付は公開前に取消。設定補修・新しい受付での再登録と、既存予定の接続先変更を残す。**予定の本番切替を完了した記録ではない。** [実測と再開](../verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md)。以下のβの記録は旧時点の履歴として保持する。
+
 2026-11-08追補：新しいテーマを作る経路は、運営者のChatGPT会話→認証付きAPIが既定。一般会員向けテーマ作成UIは設けない。027f89bfの既存5収集ツールには新規Theme受付がなく、追加migration036・別scope `themes:compose`・3ツールを補修中。古い `missions:collect` の許可は5ツールのまま。新規接続は本人同意後に同じ既存会話で使用し、毎回の新規チャット・Codex予定へ置き換えない。[新しい受付契約](../design/KNOWLEDGE_CHATGPT_THEME_REGISTRATION.md)。以下の旧5ツールの運用は継続する。
 
 # ChatGPT予定実行のAPI直送
