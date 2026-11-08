@@ -1,8 +1,10 @@
 # 2026-11-08 現在地：R6aの資材検証まで、本番監査・公開は未完了
 
+本人回答で共通予算は本番300回・β100回に確定。privateの切替候補をschema検査済みで、稼働中の400回設定と台帳はまだ維持している。初回監査はSSH認証前切断。PC側 backups/knowledge-production-20261108/run-audit.py は既存接続を再利用し、--check成功済み。本人の引数なし実行・sudo入力から監査を再開する。年齢・地域は方針了承と実装要否の質問を受けており、専用認証基盤を追加せず、利用条件／既存同意の最小案を整理する。[追補](../verification/KNOWLEDGE_PRODUCTION_R6A_20261108.md#本人回答後利用量確定と監査の再試行)。
+
 **R6a作業中（資材検証済み・監査待ち）｜R6はbの正式確認まで｜全体はR6まで。** 固定image `12273b17`／正式候補build `4HA4J9PvlJxJdsWuxlIBA`を作成し、空DBの会員36・知識9 migration／再実行・初回投影・standalone HTTPを検証。imageはVPSへ転送しただけで、load・切替していない。3200／HTTPS βはセキュリティ更新 `999df702`／build `GKCLvKsSR-vkRGVFw_sJ5`で実Googleの年表・Capsule作成／破棄を確認済み。[現在の結果・再開](../verification/KNOWLEDGE_PRODUCTION_R6A_20261108.md)／[R6公開runbook](../runbooks/KNOWLEDGE_PRODUCTION_RELEASE_R6.md)。
 
-次に、本人へ渡した読み取り専用監査の `/home/develop/plunode-r6-20261108/audit-result.json`をSSHで取得する。sudo／Docker権限が不足しており、監査結果なしに過去の本番ledger件数を決め打ちしない。Gemini無料APIの年齢・地域とβ／本番の同project予算配分も回答待ち。公開条件を勝手に縮小せず、両環境へ各400回を配らない。R6aの実機移行・LinuxとR6bの切替／Google・PC Worker・同じChatGPT会話からのAPI直送／正式確認が残る。既存の予定、共有Kev、独立データは変更していない。以下は過去時点の履歴。
+次に、本人へ渡した読み取り専用監査の `/home/develop/plunode-r6-20261108/audit-result.json`をSSHで取得する。sudo／Docker権限が不足しており、監査結果なしに過去の本番ledger件数を決め打ちしない。Gemini無料APIの利用条件の反映範囲は整理中。同project予算は本番300回・β100回で確定し、切替候補を検査済み。公開条件を勝手に縮小せず、両環境へ各400回を配らない。R6aの実機移行・LinuxとR6bの切替／Google・PC Worker・同じChatGPT会話からのAPI直送／正式確認が残る。既存の予定、共有Kev、独立データは変更していない。以下は過去時点の履歴。
 
 # 2026-11-08 現在地：R5完了、残りは正式反映R6
 

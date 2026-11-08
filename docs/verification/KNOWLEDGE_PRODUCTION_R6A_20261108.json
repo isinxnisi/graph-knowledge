@@ -157,7 +157,7 @@
     }
   },
   "production": {
-    "audit": "awaiting-owner-sudo",
+    "audit": "owner-retry-after-preauthentication-connection-reset",
     "imagesTransferredAndSha256Matched": true,
     "imagesLoaded": false,
     "migrationsApplied": false,
@@ -165,8 +165,7 @@
     "osUpdated": false
   },
   "pendingDecisions": [
-    "AI-public-eligibility",
-    "shared-project-budget-beta-production"
+    "AI-public-eligibility-implementation-scope"
   ],
   "additionalAiRequests": 0,
   "http": {
@@ -194,5 +193,59 @@
     "privateKeyKeptOnPC": true,
     "productionDatabaseAccessed": false,
     "candidateActivated": false
+  },
+  "updatedAt": "2026-11-08T01:42:54.016747+00:00",
+  "budgetSplit": {
+    "agreed": true,
+    "activated": false,
+    "sourceBetaConfigSha256": "7636c56cd548f0a56c3ef5b6330b3b453805b1b8773653542449727963d903bb",
+    "limits": {
+      "requestsPerDay": {
+        "production": 300,
+        "beta": 100
+      },
+      "requestsPerMonth": {
+        "production": 9300,
+        "beta": 3100
+      },
+      "rpm": {
+        "production": 9,
+        "beta": 3
+      },
+      "tokensPerMinute": {
+        "production": 150000,
+        "beta": 50000
+      },
+      "inputTokensPerDay": {
+        "production": 1500000,
+        "beta": 500000
+      },
+      "outputTokensPerDay": {
+        "production": 1500000,
+        "beta": 500000
+      },
+      "inputTokensPerMonth": {
+        "production": 46500000,
+        "beta": 15500000
+      },
+      "outputTokensPerMonth": {
+        "production": 46500000,
+        "beta": 15500000
+      }
+    },
+    "betaUsageAtPreparation": {
+      "day": "2026-11-07",
+      "month": "2026-11",
+      "dayRequests": 5,
+      "monthRequests": 412
+    },
+    "apply": "Before production AI workers start; keep ledgers and provider cooldown; recalculate transition usage while beta workers are stopped",
+    "schemaValid": true
+  },
+  "ssh": {
+    "intermittentPreauthenticationReset": true,
+    "causeConfirmed": false,
+    "reusedExistingConnectionVerified": true,
+    "auditHelperVerifiedWithoutSudo": true
   }
 }

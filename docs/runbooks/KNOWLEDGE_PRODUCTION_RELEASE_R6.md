@@ -50,4 +50,12 @@ Ubuntuの確認元：[Security updates](https://documentation.ubuntu.com/securit
 
 ## 2026-11-08 R6aの資材検証まで
 
-正式候補ソース `12273b17`／build `4HA4J9PvlJxJdsWuxlIBA`。Webとknowledge-ops、空DBの全migration／再実行、checksum拒否、初回の空公開、standalone HTTPを確認した。候補imageはVPSへ転送しただけで、load・起動していない。3200／HTTPS βはセキュリティ更新 `999df702`／build `GKCLvKsSR-vkRGVFw_sJ5`。本番監査と一般提供条件／利用量配分は回答待ち。[実測と残り](../verification/KNOWLEDGE_PRODUCTION_R6A_20261108.md)。
+正式候補ソース `12273b17`／build `4HA4J9PvlJxJdsWuxlIBA`。Webとknowledge-ops、空DBの全migration／再実行、checksum拒否、初回の空公開、standalone HTTPを確認した。候補imageはVPSへ転送しただけで、load・起動していない。3200／HTTPS βはセキュリティ更新 `999df702`／build `GKCLvKsSR-vkRGVFw_sJ5`。本番監査と一般提供条件の整理は未完了。利用量配分は下記の本人回答で確定した。[実測と残り](../verification/KNOWLEDGE_PRODUCTION_R6A_20261108.md)。
+
+### 本人回答後の更新
+
+利用量は本番300回・β100回で確定。月次・token・速度も同じ共通上限を3対1に分けたprivate候補を準備し、稼働中設定と台帳はまだ変更していない。[配分と切替条件](../design/KNOWLEDGE_AI_BUDGET.md#2026-11-08-本番βの配分を確定)。本番のAI起動前にβの設定と全利用processを揃え、切替前消費・未確定送信も確認する。
+
+本人の最初の監査実行はSSH認証前のconnection resetで停止し、sudoも監査scriptも実行されていない。こちらでも断続的な切断と接続成功を確認。既存SSH接続を再利用するPC側の `backups/knowledge-production-20261108/run-audit.py` を準備し、`--check`で接続と転送済みscriptのSHA256を確認した。引数なしの本人実行だけが既存sudoを呼ぶ。パスワードをファイルやチャットへ保存しない。監査結果の受領は別に確認する。
+
+年齢・地域の方針は了承されたが、「バックエンドでの利用にも特別な実装が必要か」という確認がある。公式条件は組込先のAPI Clientにも言及するため、内部利用なら対象外と決めつけない。一方で専用の身分証確認・生年月日収集を必須とする記載は確認しておらず、そのような基盤は追加しない。利用条件の明記と既存送信同意へ反映する最小案を基本に整理する。AI機能だけの制限でサービス全体の条件を満たすと公式に確認できた意味にはせず、公開Graph全体の年齢制限へ勝手に広げない。現時点でそのUI／同意更新を実装済みとは扱わない。

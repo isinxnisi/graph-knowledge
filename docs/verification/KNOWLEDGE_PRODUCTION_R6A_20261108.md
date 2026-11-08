@@ -56,12 +56,23 @@ backup持出し用の新しい復旧用鍵も準備し、公開鍵だけをstagi
 
 ## 残り・再開
 
-R6aの残り：本番の実物監査、Linux security pocketの確認と適用計画、本番Member DBに対する未適用migrationの確定・backup／別DB復元、正式用private profile／一般提供条件／共有AI予算の確定、切替runnerの実機条件との照合。
+R6aの残り：本番の実物監査、Linux security pocketの確認と適用計画、本番Member DBに対する未適用migrationの確定・backup／別DB復元、正式用private profile／一般提供条件の整理と確定済み共有AI予算の切替、切替runnerの実機条件との照合。
 
 SSHは接続できるが、既存sudoはパスワード必須で、developからDockerを操作する権限もない。読み取り専用 `audit.py`を転送し、SHA256 `a67f893209700f1bfdd21002c50904b48a1bede548c791980d82063ad59c96fe` を確認して本人へ実行を依頼した。結果の `/home/develop/plunode-r6-20261108/audit-result.json` を取得し、秘密値を出さずに確認して再開する。転送済みの監査scriptを途中で差し替えない。
 
-加えて、Gemini無料APIの一般提供条件（18歳以上・提供地域）と、同一projectを使うβ／本番の予算配分を質問中。回答前に利用者の範囲を勝手に縮小したり、βと本番へ各400回を設定したりしない。[公式条件](https://ai.google.dev/gemini-api/terms)。課金・別キーでの迂回・管理者による通常の承認作業は追加しない。
+Gemini無料APIの一般提供条件（18歳以上・提供地域）は方針了承と実装要否の質問を受け、最小の反映範囲を整理中。同一projectの予算は本番300回・β100回で確定した。利用者の範囲を勝手に縮小したり、βと本番へ各400回を設定したりしない。[公式条件](https://ai.google.dev/gemini-api/terms)。課金・別キーでの迂回・管理者による通常の承認作業は追加しない。
 
 R6bは本番切替、正式originでのGoogle・PC Worker・既存の同じChatGPT会話へのAPI接続、代表操作、OGP・正式URL、必要なLinux更新後の復帰確認。本人のOAuth同意が必要な操作は、その時点で具体的に示す。まだ実施していない。
 
 3200／HTTPS βの再開はmainで `python3 scripts/start-local-previews.py beta --node /home/isinxnisi/1.projects/.worktrees/graph-issue75-theme-foundation/.local/issue75/node`。既存台帳・private設定から再開し、DB resetや資格の作り直しをしない。3276、共有Kev、AI教育、ChatGPT／Codexの予定は今回変更していない。
+
+
+## 本人回答後：利用量確定と監査の再試行
+
+本番300回／日・β100回／日を確定。月次9,300／3,100、RPM9／3、入力TPM150,000／50,000、日次入力・出力それぞれ1,500,000／500,000、月次それぞれ46,500,000／15,500,000のprivate候補を準備した。同じproject・既存modelを維持し、現行schemaと合計を検査済み。適用は正式AI起動前にβから行う。準備時のβ台帳はprovider日付2026-11-07で5回、月次412回。切替直前に消費・予約を再確認し、超過分を無視した二重割当をしない。[現行契約](../design/KNOWLEDGE_AI_BUDGET.md)。
+
+本人の最初の監査コマンドは kex_exchange_identification: read: Connection reset by peer で認証前に停止。こちらでも接続成功と同じ切断を確認したが、原因は特定していない。確立した既存SSH接続を再利用するhelper backups/knowledge-production-20261108/run-audit.pyを開発PCへ用意し、--checkで接続と転送済みauditのSHA256を確認した。引数なしの実行は同じ読み取り監査だけを既存sudoで実行し、PWはterminalから入力する。監査結果は受領後に別途検査する。
+
+年齢・地域の方針は了承されたが、内部でのAI利用にも特別な実装が必要かという質問を受けた。公式条件は組込先のAPI Clientにも条件を課しており、単にサーバーから呼ぶことで対象外とは言えない。一方で、身分証確認や生年月日収集の専用基盤を必須とする記載は確認できない。利用条件と既存送信同意への最小の反映を基本とし、AI機能だけの制限でサービス全体への条件を満たすと断言した先の提案は訂正する。全Graph閲覧を18歳以上へ変更したり、未実装のgateを実装済みとしたりしない。[公式条件](https://ai.google.dev/gemini-api/terms)。
+
+今回の追加AI送信・DB migration・アプリbuild・サービス切替はない。β／3200は前段のbuildを維持し、正式サイトは旧版のまま。通常pushとhold解放は実行結果を完了報告に記載する。
