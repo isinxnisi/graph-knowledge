@@ -2,7 +2,7 @@
 
 ## 現在地
 
-R6b補修版は切替済み。本番MCPの本人同意と実ChatGPTからの受付に成功したが、Workerへの運営設定の引継ぎ漏れを検出した。設定修正・同じ会話からの再登録と正式受入を続ける。R6全体は未完了。
+R6b補修版とWorker設定を正式適用済み。同じ実ChatGPT会話からTheme構成版1を公開し、同じ既存予定を本番へ切り替えた。正式Themeから年表／背景／Capsuleの保存・関係図編集の年表反映・破棄・再訪・共有も確認。継続収集はNASA原文3資料の観測後、ChatGPT側の送信承認で保留中。配送・通常公開とThemeの追記結果が残り、R6全体は未完了。
 
 ## 配置済み
 
@@ -95,3 +95,49 @@ requestId `9d8e337a-64d0-4b7d-9f1a-a345c38b2d12` は `saved` の後、Workerが�
 既存予定の編集画面で、名前・旧β向け指示、毎時、同じチャットを使う設定を確認した。予定の本文や接続先はまだ保存変更していない。ChromeのDOM経路は操作後の状態取得が遅れる場面があったため、ネイティブのアクセシビリティ表示で実URLと予定画面を確認した。その後、Windowsウィンドウの取得で操作ツールが現在URLを十分な確度で判定できず、このturnのComputer Useを停止した。Plunodeのリンク安全機能が原因と確認したものではない。画面記録もCDPのcapture timeoutとなり、今回の新しいスクリーンショットは取得できていない。
 
 sudo実行後はWorkerの補修結果を読んでから、同じChatGPT会話の本番Appで新しいrequestIdのテーマを再登録する。既存の取消済み受付・既存予定IDを保持する。正式テーマの公開、同じ予定の本番接続への切替、正式テーマからのGraph／年表／Capsule利用が残る。
+
+## Workerの運営判定設定を正式適用（14:46 JST）
+
+本人のsudo実行で既存Webの運営判定3設定をreview Workerへ引き継いだ。実機probeは `operator=true` / `active=true` / `capabilities=true`。Web／DBの再起動・DB変更・image変更はなく、旧取消済み受付も開き直していない。
+
+backupは `/opt/graph-knowledge/backups/theme-worker-flags-20261108T054606Z`、配置Compose SHA256は `a10c984aee7d65cb7d30e522c12c1b1184b7ead27aaf5a8014207c62c3d7cf3b`。転送stageのactivation logをPCへ取得して本人の実行結果と照合した。正式アプリsource14542c72／build wFBq24bSaSp0W-_ZOFaXrを維持する。
+
+同じChatGPT会話で、新しいrequestIdによる本番再登録を依頼した。登録・公開・既存予定の本番切替・テーマの正式利用は継続確認中。
+
+### 修正後の実受付：Entityの説明を分離
+
+同じChatGPT会話から本番へ `bda93c74-4b31-4df4-8e64-f4821e0bd294` を送信し、receipt `307f8f28-4cc3-4558-b05b-9c8d8363836c` を取得。権限停止は解消した。4項目はすべて、新規Entityに説明・別名を含めた入力が共通の機械検査で要修正となった（各requests=0）。受付は `needs-changes`、公開Record0、Theme未発行。
+
+新しい対象はname／kindを基本とし、aliasesを空・descriptionを空にして、事実・時期・根拠はRecordへ残すようChatGPTへ依頼した。新しいrequestIdで再送し、旧受付の原本・結果は保持する。原資料や公開条件の検査を迂回していない。
+
+## 正式テーマの初回公開と既存予定の本番切替（15:00 JST）
+
+新しいrequestId `e7341f2a-8c36-4d95-8be2-0935a743b68e`、receipt `ee6e89a4-2af1-4738-804b-af55a3e323d5` は通常の根拠確認・Gemini・publisherを通り、`published-with-issues` に到達した。テーマ「Webbが宇宙でひらくまで」は `theme:915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1` 構成版1として公開。期間と、時期を置かない背景の2件を受理した。打上げは日時／場所を裏付ける引用の不足、展開完了は具体的な関係名の不足で要修正。受理できない項目を公開したり、検査を弱めたりしていない。
+
+[正式テーマ構成版1](https://plunode.net/?ktheme=theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1&krev=1)。実Googleで中央の年表・関係図、期間の開始／終了、時期を置かない背景と原文の根拠を開いた。旧Themeを作り直すのではなく、このThemeに収集を継続する。
+
+正式運営画面で「Webbの打上げと遮熱膜展開を追う」を保存した。1日ごと、1回最大3資料／3項目、NASA・ESAの3ホスト、追加先をこのThemeに固定。未受理の打上げ・展開完了を優先し、既存期間／背景を重複登録せず、訂正や削除はしない計画とした。
+
+既存のChatGPT予定 `6aef47b34ad481919005e81857c13f1a` の指示だけを正式Appへ変更・保存した。同じ会話 `6aef440d-ceac-83ee-b59b-163349281c60`、毎時20分、Asia/Tokyo、同じチャットを使う設定を維持。新規Theme作成は個別の運営依頼に限り、通常予定はclaimした既存計画だけを処理する。新しい予定・会話、Codex予定への置換、AI教育予定の変更はない。
+
+「今すぐ実行」から同じ予定を開始し、正式運営画面は配送元の最終接続15:00:02と「資料を探索中」を表示した。正式のclaimまで接続できたことを確認。配送receipt・通常公開・Theme更新とCapsule利用は続けて確認する。
+
+## 同じ予定の本番実行と送信承認の境界
+
+15:00の実行は本番計画 `Webbの打上げと遮熱膜展開を追う` revision1をclaimし、NASA一次資料3件を `observe_collection_sources` で確認した。runId `7bbcf653-767e-493b-ae8d-f4051cbfb096`。期間・背景を再作成せず、打上げと遮熱膜展開完了の2関係を同じTheme版1へ追加するpackageを作成した。
+
+`deliver_collection` 直前でChatGPT側の送信承認が出た。表示された理由は、ツール説明が入力の修正・再試行や受付と公開の区別を規定しているという「不審な指示」判定。NASA本文に攻撃指示があったことを確認したものではない。画面の配送詳細は公開NASAのURL・引用・関係・公開IDで、秘密値・会員情報は含まない。本番の継続許可はβ接続とは別であり、今後の定期実行にも作用するため、本人へ「常に許可」の操作を依頼した。許可の検査を無効化したり、Codexから代わりに配送したりしていない。
+
+この時点のreceiptは未発行、継続2項目の公開は未確認。既存予定の保存・claim・原文観測と、配送・公開完了を区別する。本人操作後は同じrunの受付結果と正式Themeの構成版を調べる。新しい予定や新しい同名Themeを作らない。
+
+## 正式ThemeからCapsuleの利用（実Google・PC／390px）
+
+- 正式Theme構成版1を開き、期間の開始2021-12-28／終了2022-01-04、途中停止を含む説明、時期を置かない5層遮熱膜の背景、NASA原文・資料版1を確認。
+- Themeから `公開確認｜Webbの工程と背景` をアカウントへ保存（2Entity・2関係）。既存PLUTO由来のテストではなく、今回の共通知識DBから生成したCapsuleである。
+- 内容一覧→関係の編集で表示名を「遮熱膜を展開した」から「遮熱膜をひらいた」へ変更。年表の関係表記も変わり、時期・原文・背景は保ったまま保存版2へ保存した。元Themeは元の表記・構成版1を保持。
+- 仮の未保存タイトルを適用→破棄確認→変更を破棄し、保存済みタイトルへ復帰。My Capsulesから同じ保存版2へ再訪できた。
+- PCと390×844幅で表示・年表／関係図の切替を確認。viewport overrideは元へ戻した。実iPhoneのSafari／Chromeのスクロールやキーボードは今回未検証。
+- 保存版2の限定共有を作成し、[正式共有URL](https://plunode.net/shared/e7DmydnrC0xOg77CwLnvb7pqTDg-AQDEqP6eFbJFgjo)で期間・背景・独自ラベルを確認。この確認用共有は有効なまま残す。
+- Twitterbot相当HTTPは200、OGP／Twitterのtitleは `公開確認｜Webbの工程と背景`、画像altは年表、画像は1200×630 PNG（91,731bytes、SHA256 `5f4786d7788e01c2363727f5c3c7e81be545a4da52fcaccd87080b3a53046514`）。OGP／代表URL／画像URLはすべて正式origin。SNS実プレビューは未確認、告知投稿なし。
+
+PC証跡は `C:/Users/nishr/.codex/visualizations/2026/11/08/plunode-r6/` の `formal-collection-plan.png` / `formal-delivery-approval.png` / `formal-theme-capsule-pc.png` / `formal-theme-capsule-mobile.png`。安全なHTTP結果は作業treeの `.local/theme-worker-flags-repair/formal-theme-ogp.json`。秘密値や会員DBを検証資材へ含めない。

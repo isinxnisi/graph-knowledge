@@ -2,6 +2,14 @@
 
 2026-11-08。R5の確認済みアプリ `48ab1d7f`、記録 `374125f1` を起点にする。今回の「進めてください」をR6の公開実行指示として受け、過去のβ限定の作業区切りを新しい公開を止める理由にしない。R6aは実物監査・資材／移行準備、R6bは切替・正式URLの確認。現時点で公開済みという意味ではない。
 
+## 現在の配置と再開点（2026-11-08）
+
+正式はapp `14542c7282ef59a2f07a3627f3fb7583d5f1dcfa`／build `wFBq24bSaSp0W-_ZOFaXr`、会員37／知識9。3200／HTTPS βは同app／build `J8c0xCK92ByIAFgkz3nbx`。後続の文書・Compose補修commitはWeb再buildを必要としない。最新の実物復元／暗号化backup hashは[正式切替の検証記録](../verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md)を参照する。
+
+review Workerは既存Webの `COMMUNITY_ENABLED` / `SITE_OPERATIONS_ENABLED` / `SITE_OPERATOR_USER_IDS` を引き継ぐ必要がある。初回に未指定でテーマ受付が取消になったため、`e0371f7f` の専用補修を正式適用済み。補修backupは `/opt/graph-knowledge/backups/theme-worker-flags-20261108T054606Z`、Compose SHA256 `a10c984aee7d65cb7d30e522c12c1b1184b7ead27aaf5a8014207c62c3d7cf3b`。Web／DB／image不変、運営資格・有効会員・capabilityはすべてtrue。旧取消受付をDBで開き直さない。
+
+ChatGPTの正式接続・初回Theme公開と既存予定の本番切替まで実測済み。継続収集の送信承認待ちがあり、R6b全体の完了とは扱わない。再開は[ChatGPT予定runbook](KNOWLEDGE_CHATGPT_SCHEDULE.md)と同じ会話・runから行う。初回公開scriptの再実行や新しい同名Themeの作成は不要。
+
 ## 起点と守る境界
 
 - SSH先・host鍵検証・develop＋既存sudoはそのまま。現在の `/opt/graph-knowledge/compose.yaml` と `app.env` を実物で読み、古い一回用公開runnerを再実行しない。

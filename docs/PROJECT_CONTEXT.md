@@ -1,3 +1,5 @@
+2026-11-08 R6b：正式app14542c72／build wFBq24bSaSp0W-_ZOFaXr、会員37／知識9へ反映済み。Workerの運営判定3設定を補修し、実ChatGPT→正式API→通常確認でTheme構成版1を公開した。同じChatGPT予定の本番切替・資料観測まで確認。継続配送はChatGPTの送信承認待ち。正式の年表／背景／Capsule保存・編集・破棄・再訪・共有を確認したが、R6b全体は未完了。[現在地と実測](verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md)。以下は各時点の履歴。
+
 2026-11-08 R6b：正式app027f89bfの切替と移行・backup照合を完了。正式Capsuleの共有更新・コメント文脈・停止とPC資料取得を確認。ChatGPTからの新規テーマ登録APIの不足を補修中で、R6の正式受入は未完了。[現在地と残り](verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md)。以下は各時点の履歴。
 
 2026-11-08 R4b完了・R4完了：時刻・原資料の時期表記・周期／定性・複数時期・特定時期への子軸入力、旧KGを含む翻訳入口、Theme原文／訳文のCapsule固定保存と明示比較を接続。app `037ee63e`／build `QqlZmk4g9xc1ZmjOk7vXl`、main／3200／HTTPS βへ反映。対象104件・型検査込みbuild・実Googleの保存／訳文公開／取込／再訪とPC／390pxを確認。追加migrationなし、16のprivate設定を保持。R5の統合受入と正式反映R6は残る。 [検証・制約・次回](verification/KNOWLEDGE_USAGE_R4B_20261108.md)。以下は各時点の履歴。

@@ -1,3 +1,5 @@
+2026-11-08 R6b：正式app14542c72／build wFBq24bSaSp0W-_ZOFaXr、会員37／知識9へ反映済み。Workerの運営判定3設定を補修し、実ChatGPT→正式API→通常確認でTheme構成版1を公開した。同じChatGPT予定の本番切替・資料観測まで確認。継続配送はChatGPTの送信承認待ち。正式の年表／背景／Capsule保存・編集・破棄・再訪・共有を確認したが、R6b全体は未完了。[現在地と実測](verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md)。以下は各時点の履歴。
+
 2026-11-07 API直送をβへ反映：app `e7f3accc`／build `bkKmHOZGJGlK4D6HLN1PX`。既存107検証を活用し、今回12境界・型検査込みbuild、035の別DB復元・旧行／checksum／再実行不変、3200／HTTPS βのmetadataと未認証401を確認。ChatGPT WebでもCIMD・scopeの自動検出を確認し、本人の許可は保存済み、PC時刻同期待ち。**実Googleの接続承認・ChatGPTの初回実行／予定実行は未確認**。R3b是正は未完了、R4a完了・b以降を残す。[手順](runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)／[実測](verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)。
 
 2026-11-07 API直送の是正：API直送は合意済みの既定。既存Googleログインを使う収集専用MCP・型付き配送・run束縛・再送回復を実装し、17境界テストと別DB復元でOAuth／移行を確認。β配置・本人の接続承認とChatGPTの初回実行を進める。Codex収集予定はPAUSEDのまま。R3b是正完了は未確認。[手順](runbooks/KNOWLEDGE_CHATGPT_SCHEDULE.md)／[実測](verification/KNOWLEDGE_CHATGPT_DIRECT_20261107.md)。
