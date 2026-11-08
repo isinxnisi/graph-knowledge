@@ -6,7 +6,7 @@ import {migrateMemberDatabase} from '../lib/server/member/migrate';
 import {createKnowledgeFoundationService,KnowledgeError,knowledgeDigest} from '../lib/server/knowledge-foundation';
 import {migrateKnowledgeTranslations} from '../lib/server/knowledge-translation-migrate';
 import {migrateKnowledgeIdentities} from '../lib/server/knowledge-identity-migrate';
-import {ensureKnowledgePublicationSchema} from '../lib/server/knowledge-publication';
+import {createKnowledgePublicationService,ensureKnowledgePublicationSchema} from '../lib/server/knowledge-publication';
 import {createThemeTranslationAuthoring,themeTranslationOperationId} from '../lib/server/knowledge-theme-translation';
 import {createKnowledgeSubmissionService} from '../lib/server/knowledge-submissions';
 import {createReviewQueue,reviewConfigSchema} from '../lib/server/knowledge-review-queue';
@@ -82,4 +82,12 @@ it('never submits a later member edit when retrying an interrupted capture',asyn
  const store=createKnowledgeSubmissionService(pool,{memberStore:true,dataset:'public-kg'}),draft=await store.get(owner,themeTranslationOperationId(owner,v.requestId,'submission'));
  await store.execute(owner,{action:'save',id:draft.id,expectedVersion:draft.version,requestId:randomUUID(),content:{...draft.content,title:'Later user edit'}});
  await expect(service().submit(owner,v)).rejects.toMatchObject({code:'VERSION_CONFLICT'});expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.review_jobs')).rows[0].n).toBe(0);
+});
+
+it('serves only public fixed-version translations in the same theme catalogue without replacing originals',async()=>{
+ const s=service(),v=input();await publish(s,v);
+ const catalogue=createKnowledgePublicationService(knowledge,{} as never);
+ const page=await catalogue.themes();expect(page.themes[0]).toMatchObject({title:'Aの歴史',revision:1,translations:[{text:'A history',language:'en',target}]});
+ await knowledge.query("UPDATE knowledge75.text_translation_heads SET visibility='hidden'");
+ expect((await catalogue.themes()).themes[0].translations).toBeUndefined();
 });

@@ -1,11 +1,12 @@
 import { z } from "zod";
+import type {KnowledgeTranslationVersion} from "./knowledge-translation";
 import { knowledgeIdSchema, knowledgeRevisionSchema, type KnowledgeThemeVersion, type KnowledgeSnapshot, type KnowledgeEntityVersion } from "./knowledge-foundation";
 import type { KnowledgePublishedRecord } from "./knowledge-publication";
 import { PREDICATE_KEYS } from "./predicates";
 import { roleIdSchema } from "./contribution";
 
 export type KnowledgeThemePage = { focusIds?: string[]; themes: {
-  id: string; revision: number; title: string; description: string;
+  id: string; revision: number; title: string; description: string; translations?: KnowledgeTranslationVersion[];
   initialView: "graph" | "timeline" | "split"; hasTimeline: boolean; hasRelations?: boolean; publishedAt?: string; entityIds: string[];
 }[] };
 /** A Theme fixes its own versions. It is not re-resolved against an active generation. */

@@ -4,6 +4,7 @@ import { readKnowledge } from "../lib/client/use-knowledge-workspace";
 import { knowledgeThemeTypeLabel, type KnowledgeThemeSummary, type KnowledgeThemePage, type KnowledgeThemeHome } from "../lib/domain/knowledge-theme-reader";
 import { useUiLocale } from "../lib/client/ui-locale";
 import Icon from "./Icon";
+import {knowledgeDisplayText} from "../lib/domain/knowledge-display";
 import layout from "./DiscoveryExplorer.module.css";
 import css from "./ThemeDiscovery.module.css";
 import home from "./DiscoveryHome.module.css";
@@ -19,6 +20,8 @@ export function ThemeLink({ theme, onOpen, appearance = "row", showDescription =
 }) {
   const { locale } = useUiLocale(), en = locale === "en";
   const type = knowledgeThemeTypeLabel(theme, en);
+  const title=knowledgeDisplayText(theme.translations,{kind:"theme",id:theme.id,revision:theme.revision,field:"title"},locale,theme.title);
+  const description=knowledgeDisplayText(theme.translations,{kind:"theme",id:theme.id,revision:theme.revision,field:"description"},locale,theme.description);
   const icon = theme.hasTimeline ? "event" : theme.hasRelations === false ? "book" : "graph";
   const href = `${en ? "/en" : "/"}?${new URLSearchParams({ ktheme: theme.id, krev: String(theme.revision), kview: theme.initialView,...(focusEntityId?{kfocus:focusEntityId}:{}) })}`;
   function choose(event: MouseEvent<HTMLAnchorElement>) {
@@ -26,17 +29,17 @@ export function ThemeLink({ theme, onOpen, appearance = "row", showDescription =
     event.preventDefault(); onOpen({ id: theme.id, revision: theme.revision,...(focusEntityId?{focusEntityId}:{}) });
   }
   if (appearance === "recent") return <a className={css.recentLink} href={href} target={openInNewTab ? "_blank" : undefined} rel={openInNewTab ? "noopener" : undefined} onClick={choose}>
-    <Icon name={icon}/>{theme.title}<span>{type}</span>
+    <Icon name={icon}/>{title}<span>{type}</span>
   </a>;
   if (appearance === "featured") return <a className={`${home.themeFeature} ${css.featureLink}`} href={href} target={openInNewTab ? "_blank" : undefined} rel={openInNewTab ? "noopener" : undefined} onClick={choose}>
-    <Icon name={icon}/><span><small>{type}</small><strong>{theme.title}</strong>
-      {showDescription && theme.description && <span className={css.featureDescription}>{theme.description}</span>}
+    <Icon name={icon}/><span><small>{type}</small><strong>{title}</strong>
+      {showDescription && theme.description && <span className={css.featureDescription}>{description}</span>}
     </span><Icon name="arrow"/>
   </a>;
   return <a className={`${results.resultRow} ${css.themeRow}`} href={href} target={openInNewTab ? "_blank" : undefined} rel={openInNewTab ? "noopener" : undefined} onClick={choose}>
     <Icon name={icon}/><span className={results.identity}>
-      <span className={results.name}><strong>{theme.title}</strong><small>{type}</small></span>
-      {showDescription && theme.description && <span className={results.description}>{theme.description}</span>}
+      <span className={results.name}><strong>{title}</strong><small>{type}</small></span>
+      {showDescription && theme.description && <span className={results.description}>{description}</span>}
     </span><Icon name="chevron"/>
   </a>;
 }

@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import {UiLocaleProvider} from "../lib/client/ui-locale";
 import React,{useState} from "react";
 import {act,cleanup,fireEvent,render,screen} from "@testing-library/react";
 import {afterEach,beforeEach,expect,it,vi} from "vitest";
@@ -60,4 +61,15 @@ it("TOPの共有リクエスト失敗は見出し付きで一度だけ案内し�
  function Home(){const state=useHomeThemes(null);return <><HomeThemes part="featured" state={state} onOpen={vi.fn()} onBrowse={vi.fn()}/><HomeThemes part="recent" state={state} onOpen={vi.fn()} onBrowse={vi.fn()}/></>;}
  render(<Home/>);await act(async()=>{});expect(screen.getByRole('heading',{name:'紹介テーマ'})).toBeTruthy();expect(screen.getAllByText('テーマを読み込めませんでした。')).toHaveLength(1);expect(screen.getAllByRole('button',{name:'再試行'})).toHaveLength(1);
  recover=true;fireEvent.click(screen.getByRole('button',{name:'再試行'}));await act(async()=>{});expect(screen.getByRole('heading',{name:'新着テーマ'})).toBeTruthy();expect(screen.getByText(graph.title)).toBeTruthy();expect(screen.queryByText('テーマを読み込めませんでした。')).toBeNull();
+});
+
+it("紹介・新着・検索は同じ初期応答の公開訳を使い、原文とURLの版を保持する",()=>{
+ const translations=[{id:'translation:'+ 'a'.repeat(48),revision:1,target:{kind:'theme' as const,id:timeline.id,revision:timeline.revision,field:'title' as const},language:'en',text:'Webb’s journey',originalText:timeline.title,originalHash:'a'.repeat(64),reason:'test',createdAt:'2026-11-09T00:00:00Z'}];
+ const theme={...timeline,translations};
+ const {rerender}=render(<UiLocaleProvider initialLocale="en"><ThemeLink theme={theme} onOpen={vi.fn()} appearance="featured"/></UiLocaleProvider>);
+ expect(screen.getByText('Webb’s journey')).toBeTruthy();expect(screen.getByRole('link').getAttribute('href')).toContain('krev=2');expect(theme.title).toBe(timeline.title);
+ rerender(<UiLocaleProvider initialLocale="ja"><ThemeLink theme={theme} onOpen={vi.fn()} appearance="recent"/></UiLocaleProvider>);
+ // Remount the provider when simulating a route language change.
+ cleanup();render(<UiLocaleProvider initialLocale="ja"><ThemeLink theme={theme} onOpen={vi.fn()}/></UiLocaleProvider>);expect(screen.getByText(timeline.title)).toBeTruthy();
+ cleanup();render(<UiLocaleProvider initialLocale="en"><ThemeLink theme={{...theme,revision:3}} onOpen={vi.fn()}/></UiLocaleProvider>);expect(screen.getByText(timeline.title)).toBeTruthy();expect(screen.queryByText('Webb’s journey')).toBeNull();
 });

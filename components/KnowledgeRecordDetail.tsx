@@ -1,5 +1,7 @@
 "use client";
 import ExternalSourceLink from "./ExternalSourceLink";
+import {useKnowledgeDisplayTranslations} from "../lib/client/use-knowledge-display-translations";
+import {knowledgeDisplayText} from "../lib/domain/knowledge-display";
 import KnowledgeTranslationPanel, {type TranslationField} from "./KnowledgeTranslationPanel";
 import type {KnowledgeTranslationVersion} from "../lib/domain/knowledge-translation";
 import { themeTimeLabel } from "../lib/domain/theme-time";
@@ -11,18 +13,21 @@ import css from "./KnowledgeExplorer.module.css";
 
 export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme,onTranslation }: {onTranslation?:(v:KnowledgeTranslationVersion)=>void;onRecord?:(id:string)=>void;onTheme?:(id:string)=>void; dto: KnowledgePublishedRecord; onEntity: (id: string) => void }) {
   const { locale } = useUiLocale(), en = locale === "en";
+  const translations=useKnowledgeDisplayTranslations(dto.entities,[dto.record],undefined,locale);
+  const text=(field:"assertion"|"relation"|"scope",original:string)=>knowledgeDisplayText(translations,{kind:"record",id:dto.record.id,revision:dto.record.revision,field},locale,original);
+  const entityName=(e:KnowledgePublishedRecord["entities"][number])=>knowledgeDisplayText(translations,{kind:"entity",id:e.id,revision:e.revision,field:"name"},locale,e.content.name);
   const r = dto.record.content, typed = dto.legacyTyped;
-  const name = (id: string | null) => dto.entities.find((e) => e.id === id)?.content.name ?? (en ? "No subject" : "対象なし");
+  const name = (id: string | null) => {const e=dto.entities.find(e=>e.id===id);return e?entityName(e):(en ? "No subject" : "対象なし");};
   return <article>
     <KnowledgeContributors id={dto.record.id} revision={dto.record.revision}/>
     <h2>{r.kind === "relation" ? `${name(r.subjectId)} → ${name(r.objectId)}` : en ? "Event / context" : "出来事・説明"}</h2>
     {r.aboutRecord&&<p className={css.meta}>{en?"About this knowledge: ":"この知識・関係について："}{onRecord?<button onClick={()=>onRecord(r.aboutRecord!.id)}>{en?"Read the original":"元の知識を読む"}</button>:<a href={"/?krecord="+encodeURIComponent(r.aboutRecord.id)}>{en?"Read the original":"元の知識を読む"}</a>} · {en?"Revision":"内容版"} {r.aboutRecord.revision}</p>}
     {r.aboutTheme&&<p className={css.meta}>{en?"About this theme: ":"このテーマについて："}{onTheme?<button onClick={()=>onTheme(r.aboutTheme!)}>{en?"Open theme":"テーマを読む"}</button>:<a href={"/?ktheme="+encodeURIComponent(r.aboutTheme)}>{en?"Open theme":"テーマを読む"}</a>}</p>}
-    {dto.entities.length > 0 && <div className={css.actions} aria-label={en ? "Follow a subject" : "図の対象から辿る"}>{dto.entities.map((e) => <button key={e.id} onClick={() => onEntity(e.id)}>{e.content.name}</button>)}</div>}
+    {dto.entities.length > 0 && <div className={css.actions} aria-label={en ? "Follow a subject" : "図の対象から辿る"}>{dto.entities.map((e) => <button key={e.id} onClick={() => onEntity(e.id)}>{entityName(e)}</button>)}</div>}
     <div className={css.meta}>{en ? "Content revision" : "内容版"} {dto.record.revision} · {r.polarity === "affirmed" ? en ? "Affirmed" : "肯定" : r.polarity === "denied" ? en ? "Denied" : "否定" : en ? "Uncertain" : "不確実"}</div>
-    {r.relation && <p lang={r.textLanguages?.relation?.tag}><strong>{r.relation}</strong></p>}<p lang={r.textLanguages?.assertion?.tag}>{r.assertion}</p>{r.textLanguages?.assertion&&<small className={css.meta}>{en?"Original language":"原文の言語"} · {r.textLanguages.assertion.tag}</small>}
+    {r.relation && <p lang={text("relation",r.relation)!==r.relation?locale:r.textLanguages?.relation?.tag}><strong>{text("relation",r.relation)}</strong></p>}<p lang={text("assertion",r.assertion)!==r.assertion?locale:r.textLanguages?.assertion?.tag}>{text("assertion",r.assertion)}</p>{r.textLanguages?.assertion&&<small className={css.meta}>{en?"Original language":"原文の言語"} · {r.textLanguages.assertion.tag}</small>}
     <KnowledgeTranslationPanel onRetain={onTranslation} fields={knowledgeRecordTranslationFields(dto,en)}/>
-    {r.scope && <p>{en ? "Scope" : "範囲"}：{r.scope}</p>}
+    {r.scope && <p>{en ? "Scope" : "範囲"}：{text("scope",r.scope)}</p>}
     {r.times.map((t) => <p key={t.id}>{themeTimeLabel(t.time)}</p>)}
     {typed?.event && <p>{en ? "Event occurrence" : "開催期間"}：{typed.event.metadata.period.from?.value ?? "?"} 〜 {typed.event.metadata.period.to?.value ?? "?"}<br /><span className={css.meta}>{en ? "Separate from a person's participation period." : "人物の参加期間とは別の情報です。"}</span></p>}
     {dto.semantics.status === "current" && dto.semantics.concept && <p className={css.meta}>{en ? "Meaning" : "意味対応"}：{dto.semantics.concept.label}</p>}

@@ -29,6 +29,17 @@ const pinKey = (kind: string, id: string, revision: number) => JSON.stringify([k
 const normalize = (v: string) => v.normalize("NFKC").toLocaleLowerCase();
 const schemaVersion = "002-publication.sql";
 
+
+/** The same public/version/original checks serve catalogue HTML and graph overlays. */
+async function publicDisplayTranslations(c:PoolClient,targets:KnowledgeTextTarget[],language:string){
+      const ids=[...new Set(targets.map(target=>translationId(target,language)))];
+      if(!ids.length)return [] as KnowledgeTranslationVersion[];
+      const heads=(await c.query("SELECT id FROM knowledge75.text_translation_heads WHERE id=ANY($1::text[]) AND visibility='public'",[ids])).rows;
+      const translations:KnowledgeTranslationVersion[]=[];
+      for(const head of heads){try{translations.push(await readKnowledgeTranslationById(c,head.id));}catch(e){if(!(e instanceof KnowledgeError)||e.status>=500)throw e;}}
+      return translations;
+}
+
 export async function ensureKnowledgePublicationSchema(pool: Pool) {
   await ensureKnowledgeFoundationSchema(pool);
   await migrateKnowledgeIdentities(pool);
@@ -263,6 +274,11 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
         try{const resolved=await resolvePublicKnowledgeTheme(c,candidate.id,Number(candidate.revision));const {theme,snapshot}=resolved;result.themes.push({id:theme.id,revision:theme.revision,title:theme.content.title,description:theme.content.description,initialView:theme.content.initialView,hasTimeline:snapshot.records.some(r=>r.content.times.length>0),hasRelations:snapshot.records.some(r=>r.content.kind==='relation'),publishedAt:new Date(candidate.first_created_at).toISOString(),entityIds:snapshot.entities.map(e=>e.id)});}
         catch(error){if(error instanceof KnowledgeError && (error.status===403||error.status===404))continue;throw error;}
       }
+      // Include optional display text in the same catalogue response, including SSR.
+      // Original title/description and pins remain unchanged for authoring consumers.
+      const targets:KnowledgeTextTarget[]=result.themes.flatMap(t=>[{kind:'theme',id:t.id,revision:t.revision,field:'title'},{kind:'theme',id:t.id,revision:t.revision,field:'description'}]);
+      const translations=(await Promise.all(['ja','en'].map(language=>publicDisplayTranslations(c,targets,language)))).flat();
+      for(const theme of result.themes){const rows=translations.filter(t=>t.target.id===theme.id&&t.target.revision===theme.revision);if(rows.length)theme.translations=rows;}
       result.themes=result.themes.filter(t=>q.kind==='all'||(t.hasTimeline?'timeline':t.hasRelations?'graph':'context')===q.kind);
       result.themes.sort((a,b)=>q.order==='name'?a.title.localeCompare(b.title,'ja')||a.id.localeCompare(b.id):(b.publishedAt??'').localeCompare(a.publishedAt??'')||a.id.localeCompare(b.id));
       return {...result,...(q.entityId?{focusIds}:{})};
@@ -330,12 +346,7 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
     textTranslation:(target:KnowledgeTextTarget,language:string,revision?:number)=>read(c=>readKnowledgeTranslation(c,target,language,revision)),
     displayTranslations:(raw:unknown)=>read(async c=>{
       const q=knowledgeDisplayTranslationsQuerySchema.parse(raw);
-      const ids=[...new Set(q.targets.map(target=>translationId(target,q.language)))];
-      if(!ids.length)return {translations:[] as KnowledgeTranslationVersion[]};
-      const heads=(await c.query("SELECT id FROM knowledge75.text_translation_heads WHERE id=ANY($1::text[]) AND visibility='public'",[ids])).rows;
-      const translations:KnowledgeTranslationVersion[]=[];
-      for(const head of heads){try{translations.push(await readKnowledgeTranslationById(c,head.id));}catch(e){if(!(e instanceof KnowledgeError)||e.status>=500)throw e;}}
-      return {translations};
+      return {translations:await publicDisplayTranslations(c,q.targets,q.language)};
     }),
     detail:(raw:{generation?:string;recordId:string})=>read(async c=>{const q=z.strictObject({generation:generationSchema.optional(),recordId:z.string().min(1).max(120)}).parse(raw);const actual=await generation(c,q.generation);const records=await allowedRows(c,actual.id,[q.recordId]);if(!records[0])throw new KnowledgeError("この記録は閲覧できません",404,"NOT_FOUND");return {generation:actual.id,record:records[0]};}),
     graph:(raw:{generation?:string;recordIds:string[]})=>read(async c=>{const q=z.strictObject({generation:generationSchema.optional(),recordIds:z.array(z.string().min(1).max(120)).max(200)}).parse(raw);const actual=await generation(c,q.generation);const records=await allowedRows(c,actual.id,[...new Set(q.recordIds)]);const sources=[...new Map(records.flatMap(r=>r.sources.map(s=>[pinKey("source",s.id,s.revision),s] as const))).values()];return {generation:actual.id,records,entities:distinctEntities(records),sources};}),

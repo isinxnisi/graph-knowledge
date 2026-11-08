@@ -6,8 +6,8 @@ import {knowledgeTranslationVersionSchema,translationTargetKey,type KnowledgeTex
 const empty:readonly KnowledgeTranslationVersion[]=Object.freeze([]);
 export function useKnowledgeDisplayTranslations(entities:KnowledgeEntityVersion[],records:KnowledgeRecordVersion[],theme:KnowledgeThemeVersion|undefined,language:string):readonly KnowledgeTranslationVersion[]{
  const targets:KnowledgeTextTarget[]=[
-  ...entities.map(e=>({kind:"entity" as const,id:e.id,revision:e.revision,field:"name" as const})),
-  ...records.flatMap(r=>[{kind:"record" as const,id:r.id,revision:r.revision,field:"assertion" as const},...(r.content.relation?[{kind:"record" as const,id:r.id,revision:r.revision,field:"relation" as const}]:[])]),
+  ...entities.flatMap(e=>[{kind:"entity" as const,id:e.id,revision:e.revision,field:"name" as const},...(e.content.description?[{kind:"entity" as const,id:e.id,revision:e.revision,field:"description" as const}]:[])]),
+  ...records.flatMap(r=>[{kind:"record" as const,id:r.id,revision:r.revision,field:"assertion" as const},...(r.content.relation?[{kind:"record" as const,id:r.id,revision:r.revision,field:"relation" as const}]:[]),...(r.content.scope?[{kind:"record" as const,id:r.id,revision:r.revision,field:"scope" as const}]:[])]),
   ...(theme?[{kind:"theme" as const,id:theme.id,revision:theme.revision,field:"title" as const},...(theme.content.description?[{kind:"theme" as const,id:theme.id,revision:theme.revision,field:"description" as const}]:[])]:[]),
  ];
  const key=JSON.stringify({language,targets:[...new Map(targets.map(t=>[translationTargetKey(t),t])).values()].sort((a,b)=>translationTargetKey(a).localeCompare(translationTargetKey(b)))});

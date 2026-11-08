@@ -46,7 +46,9 @@
 @media (max-width: 800px) {
  .viewTabs { padding: 4px 0 9px; }
  .viewTabs button { flex: 1; min-height: 40px; padding: 6px; }
- .workspace .themeHeader { gap: 5px; }
+ .workspace .themeHeader { gap: 2px 5px; flex-wrap: wrap; }
+ .workspace .themeHeader .return { margin-right: auto; min-height: 36px; }
+ .workspace .themeHeader h2 { order: 4; flex: 1 0 100%; white-space: normal; overflow-wrap: anywhere; line-height: 1.4; padding: 1px 0 8px; }
  .themeHeader h2 { font-size: 17px; }
  .themeHeader > span { display: none; }
  .canvasFrame:not(.themeCanvas) > div:first-child { height: min(58dvh,560px); min-height: 330px; }
