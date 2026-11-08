@@ -59,7 +59,7 @@ it('resumes a lost acknowledgement without silently queueing a read, and refuses
 });
 async function publish(s:ReturnType<typeof service>,v:SubmitThemeTranslation){
  await s.submit(owner,v);await pool.query("UPDATE member_knowledge.review_attempts SET started_at=clock_timestamp()-interval '2 minutes'");const dispatch=vi.fn(async()=>response());expect(await runKnowledgeReviewOnce(queue,cfg,dispatch)).toBe(true);expect(dispatch).toHaveBeenCalledTimes(1);
- const engine=createKnowledgeAcceptance(pool,knowledge,{});expect(await engine.run(cfg)).toBe(true);await engine.run(cfg);return s.status(owner,v.requestId);
+ const engine=createKnowledgeAcceptance(pool,knowledge,{});expect(await engine.run(cfg)).toBe(true);expect(await s.cancel(owner,v.requestId)).toMatchObject({state:'published'});await engine.run(cfg);return s.status(owner,v.requestId);
 }
 it('publishes and corrects a translation through normal review, preserving original/theme/Capsule editions and named attribution',async()=>{
  const s=service(),v=input(),resolved=await foundation.resolveTheme({kind:'reader',id:'fixture'},'theme'),cap=captureKnowledgeCapsule({title:'Saved',snapshot:resolved.snapshot}),saved=knowledgeDigest(cap);

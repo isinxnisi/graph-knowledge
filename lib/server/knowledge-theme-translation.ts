@@ -50,7 +50,7 @@ export function createThemeTranslationAuthoring(pool:Pool,knowledge:Pool,origin:
   const item=value.content.items[0],theme=item.about;
   if(item.operation!=='translate-text'||theme?.kind!=='theme')throw new KnowledgeError('訳文の受付がありません。',404,'NOT_FOUND');
   await reader.read(theme.id,theme.revision);
-  const states=value.review?.items.map(v=>v.state)??[];
+  const states=value.review?.items.map(v=>v.publication?.state==='published'?'published':v.state)??[];
   const state=value.state==='cancelled'?'cancelled':states.length&&states.every(s=>s==='published')?'published':states.some(s=>['needs-changes','declined'].includes(s))?'needs-changes':states.length?'processing':'saved';
   return {requestId,submissionId:value.id,state,theme:{id:theme.id,revision:theme.revision},target:item.translation!.target,language:item.translation!.language,review:value.review??null,
    reason:state==='saved'?'送信は未完了です。同じrequestIdと内容でsubmit_theme_translationを再送すると続きから処理します。':state==='published'?'訳文を公開しました。原文・テーマの内容版と保存済みCapsuleは保持しています。':'確認結果と待ち理由はreview.itemsで確認できます。'};
@@ -79,7 +79,7 @@ export function createThemeTranslationAuthoring(pool:Pool,knowledge:Pool,origin:
  }
  async function cancel(owner:string,requestId:string){
   await allowed(owner);await response(owner,requestId);const id=themeTranslationOperationId(owner,requestId,'submission'),current=await store.get(owner,id);
-  if(current.review?.items.length&&current.review.items.every(i=>i.state==='published'))return {...await response(owner,requestId),reason:'既に公開済みの訳文を取り消し・削除していません。訂正は最新の訳文版を確認して別のrequestIdで送れます。'};
+  if(current.review?.items.some(i=>i.publication))return {...await response(owner,requestId),reason:'受理済みの訳文の公開決定は取り消していません。既に公開した版も保持します。訂正は最新の訳文版を確認して別のrequestIdで送れます。'};
   if(current.state!=='cancelled')await store.execute(owner,{action:'cancel',requestId:themeTranslationOperationId(owner,requestId,'cancel'),id,expectedVersion:current.version});
   return response(owner,requestId);
  }
