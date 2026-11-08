@@ -75,3 +75,12 @@ app `027f89bf`／正式build `Sf6Myn-qsOSMt8bnqxpE9`。会員16追加・知識9�
 常用compose.yaml自体へ固定image・新3 Workerを反映し、将来の通常起動でも旧Webへ戻らないようにする。PGは既存volumeを保ってmax_connectionsを60へ変更。既存Neo4j／KG ops・Google／会員／コミュニティ設定とAI artifactを維持する。正本は別DB plunode_knowledge75_production。betaを100回／日へ切替済みで、正式の300回／日と合計400回／日、台帳は保持した。
 
 切替は`scripts/release-knowledge-production.py`をchecksum固定のroot-private stageから実行する。実行用helperはPCの`backups/knowledge-production-20261108/run-release.py`。Web停止前に再照合し、最新backup→16／9 migration→空の初回投影→Web／3 Workerへ進む。新形式適用後は旧DB上書きや旧Webへの自動downgradeをしない。結果を受領してから正式URLのGoogle／代表操作、PCの2 Worker、同一ChatGPT会話の正式OAuthを確認する。
+
+
+### PCの取得・読解Workerの再開
+
+`scripts/start-knowledge-production-workers.py --node NODE24_PATH`は、本人所有0700の`~/.local/state/plunode-previews/production/`から正式用の2つのprivate clientを読み、PCの独立PID・log・checkpointで再開する。正式origin以外を拒否し、β／Member DB／Neo4jの環境変数を継承しない。PCへVPSのDB資格は渡さない。`--check`はローカル検査だけでAPI／AIへ送らない。
+
+正式profileを設置した後は、既存の`start-local-previews.py beta`／`all`でPC・WSLを復帰すると、この2 Workerも再開する。未設定なら既存のβ起動に影響しない。正式Workerの起動失敗でβの起動を止めない。定期収集の調査は同じChatGPT会話・API直送を維持し、PC Workerは資料の安全な取得・配送と、VPSの予約済み読解だけを担う。
+
+現在はprivate資材の準備と`--check`・β origin拒否まで確認済みで、正式用profileの設置と実接続は本番切替後に行う。新しいCodex予定は作らない。

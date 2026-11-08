@@ -288,5 +288,11 @@ if __name__ == '__main__':
     # Serialize this launcher's starts. Lock FD is closed by exec; no service lock persists.
     with open(STATE / 'start.lock', 'w') as gate:
         fcntl.flock(gate, fcntl.LOCK_EX)
+        # A configured formal capture/reader pair also resumes after PC/WSL
+        # startup. Its failure must not prevent the independent beta preview.
+        if options.service in ('beta', 'all') and (STATE / 'production/deployment.json').exists():
+            result = subprocess.run(['python3', str(ROOT / 'scripts/start-knowledge-production-workers.py'), '--node', node])
+            if result.returncode:
+                print('Formal PC workers need attention; continuing the beta startup.')
         for service in SERVICES if options.service == 'all' else [options.service]:
             start(service, node)

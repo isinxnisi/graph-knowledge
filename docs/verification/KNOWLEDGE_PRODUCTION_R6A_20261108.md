@@ -1,10 +1,13 @@
 # R6a 正式公開の準備と未実施の境界
 
+2026-11-08 最終更新：R6aの監査・実物復元／再実行・暗号化backupのPC復号・正式資材の照合まで完了。R6bは既存sudoによる切替待ち。正式候補はapp `027f89bf`／build `Sf6Myn-qsOSMt8bnqxpE9`。本番はまだ旧版。下記の初期準備記録と、末尾の「R6aの最終資材・切替待ち」を区別する。
+
+
 2026-11-08。**R6a作業中｜R6はbの正式確認まで｜全体はR6まで。** R5完了後の継続指示を受け、正式公開の準備へ進んだ。本番のDB・Web・OSはまだ更新していない。資材の検証やVPSへの転送を公開完了と扱わない。
 
 ## 確認先と現在の実行物
 
-- [localhost:3200](http://localhost:3200/)／[HTTPS β](https://graph-beta.isinxnisi.com/)：セキュリティ更新を配置済み。実行ソース `999df702e89c13063261964d060c5f37f371c2f8`、build `GKCLvKsSR-vkRGVFw_sJ5`。本人ログインはHTTPS βを使う。
+- [localhost:3200](http://localhost:3200/)／[HTTPS β](https://graph-beta.isinxnisi.com/)：セキュリティ更新を配置済み。実行ソース `027f89bfc8c2e4605ffce1ca789f814081f18b1b`、build `RTmRnpoWCYnN5rgv2CLlz`。本人ログインはHTTPS βを使う。
 - [Webbの年表・関係図](https://graph-beta.isinxnisi.com/?ktheme=u3%3Afbaa9ee12f288cfa%3Atheme&krev=5&kview=split)：Googleログイン済みのChromeで表示、Capsule作成画面、未保存の作成を破棄して探索へ戻る操作を確認。新しい保存や共有は作っていない。
 - [正式サイト](https://plunode.net/)：従来版のまま。実物監査で旧Web source 3a533256／build gICsYdcWaoj_SCu-Pm6jh、会員migration000〜019の20件を確認。正式切替は未実施。
 
@@ -130,3 +133,5 @@ APT metadataの更新は成功。noble-securityの4componentの配布元も確�
 `scripts/release-knowledge-production.py`は、固定資材と監査時の稼働構成を再照合し、最新backup後に追加16／9 migration・初回の空投影・Web／3 Worker切替を行う。旧34表の行・構造・所有者、本線Entity数とAI artifact／認証設定の保持を照合する。archiveの許可ファイル・経路逸脱拒否、Compose／profile schema、正式origin、SQL checksumを確認した。新形式を書いた後の旧Webへの自動downgrade・旧dumpの上書き復元は行わない。
 
 **本番の正式切替は未実施。** R6bでは既存sudo入力後、正式Google・実テーマ作成・投稿／訂正・Capsule／同URL共有・OGP・PC Worker・同じChatGPT会話の正式API接続を確認する。管理者の毎回承認や全件AI完了を条件に追加しない。
+
+PC Worker再開用launcherも追加した。既存β起動時の復帰へ接続し、正式profile未設置時は既存動作を維持。実際のprivate候補でローカル検査とβ endpoint拒否を確認し、API／AI送信0・process起動0。正式profileの設置と実接続はR6bで切替後に行う。
