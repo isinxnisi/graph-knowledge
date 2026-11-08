@@ -1,3 +1,4 @@
+import {createThemeRegistrations} from '../lib/server/knowledge-theme-registration';
 import {assertKnowledgeWorker,reviewMemberScope} from "../lib/server/knowledge-deployment";
 import {createKnowledgeImports} from '../lib/server/knowledge-import';
 import {resolveImportPrincipal} from '../lib/server/knowledge-import-runtime';
@@ -37,6 +38,7 @@ async function main(){
  const translations=knowledge?createTranslationGeneration(pool,knowledge):null;
  const imports=knowledge&&process.env.KNOWLEDGE_IMPORT_ENABLED==='1'?createKnowledgeImports(pool,knowledge,(id,client)=>resolveImportPrincipal(pool,id,client)):null;
  const webImports=imports&&process.env.KNOWLEDGE_MISSIONS_ENABLED==='1'?createWebKnowledgeImports(pool,()=>imports):null;
+ const themes=webImports&&imports&&knowledge&&process.env.KNOWLEDGE_THEME_REGISTRATION_ENABLED==='1'?createThemeRegistrations(pool,knowledge,webImports,imports):null;
  let stopping=false;process.once('SIGTERM',()=>{stopping=true;});process.once('SIGINT',()=>{stopping=true;});
  try{
   if(process.argv.includes("--status")){console.log(JSON.stringify(await queue.usage(config)));return;}
@@ -48,8 +50,8 @@ async function main(){
   try{while(!stopping){assertKnowledgeWorker("review-worker",auth.origin);const worked=await runKnowledgeReviewOnce(queue,config,lease=>callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire) as ReturnType<typeof geminiReviewRequest>}),acceptance?lease=>acceptance.validateReview(lease.jobId):undefined);const moderated=knowledge?await runKnowledgeModeration(pool,knowledge):false;const accepted=acceptance?await acceptance.run(config):false;
    let generated=false;
    if(translations&&!worked){try{await translations.recover();const lease=await translations.claim(config);if(lease){generated=true;await translations.finish(lease,await translations.canSend(lease)?await callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire)}):{state:'not-sent'});}}catch{console.error('Translation processing temporarily unavailable; retained jobs will resume.');}}
-   let imported=false;if(imports){try{await webImports?.recoverOne();imported=await imports.processNext(config,lease=>stopping?Promise.resolve({state:'not-sent' as const}):callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire)}));}catch{console.error('Import processing temporarily unavailable; retained packages will resume.');}}
-   if(worked||accepted||moderated||generated||imported)console.log(JSON.stringify({event:'knowledge-review-iteration',completed:true}));else await new Promise(resolve=>setTimeout(resolve,2500));if(process.argv.includes('--once'))break;}}
+   let imported=false,themed=false;if(imports){try{themed=await themes?.recoverOne()??false;await webImports?.recoverOne();imported=await imports.processNext(config,lease=>stopping?Promise.resolve({state:'not-sent' as const}):callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire)}));}catch{console.error('Import processing temporarily unavailable; retained packages will resume.');}}
+   if(worked||accepted||moderated||generated||imported||themed)console.log(JSON.stringify({event:'knowledge-review-iteration',completed:true}));else await new Promise(resolve=>setTimeout(resolve,2500));if(process.argv.includes('--once'))break;}}
   finally{clearInterval(heartbeat);}
  }finally{await knowledge?.end();await pool.end();}
 }

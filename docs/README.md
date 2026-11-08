@@ -1,3 +1,5 @@
+2026-11-08 R6b：正式app027f89bfの切替と移行・backup照合を完了。正式Capsuleの共有更新・コメント文脈・停止とPC資料取得を確認。ChatGPTからの新規テーマ登録APIの不足を補修中で、R6の正式受入は未完了。[現在地と残り](verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md)。以下は各時点の履歴。
+
 2026-11-08 本人回答後：本番300回・β100回の配分を確定し、月次・token・送信速度も同じ共通枠へ収まる候補設定をschema検査済み。正式起動前にβから切替し、既存台帳を保持する。監査の初回実行はSSH認証前に切断したため、接続再利用の監査helperを準備・無権限check済み。本番監査結果・Linux／実機移行・正式切替はまだ未完了。[更新と再開](verification/KNOWLEDGE_PRODUCTION_R6A_20261108.md#本人回答後利用量確定と監査の再試行)。
 
 2026-11-08 R6a：正式公開の準備中。本番のDB・Web・OSは未更新。依存ライブラリのadvisory対応とDocker同梱漏れを修正し、3200／HTTPS βへapp `999df702`／build `GKCLvKsSR-vkRGVFw_sJ5`を反映。正式候補imageは固定 `12273b17`／build `4HA4J9PvlJxJdsWuxlIBA`で、空DB移行・再実行・初回投影・standalone HTTPを確認。VPSには資材転送のみ。管理者監査とAI一般提供条件／β・本番の利用量配分を待つ。[検証・残件・再開](verification/KNOWLEDGE_PRODUCTION_R6A_20261108.md)。以下は各時点の履歴。

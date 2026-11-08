@@ -4,6 +4,9 @@ import {cimd} from '@better-auth/cimd';
 import {fetchMissionClientMetadataResource} from './mission-oauth-transport';
 
 export const MISSION_SCOPE='missions:collect';
+export const THEME_COMPOSE_SCOPE='themes:compose';
+export function themeComposeScopeEnabled(){return process.env.KNOWLEDGE_THEME_REGISTRATION_ENABLED==='1';}
+export function grantedThemeComposeScope(scope:unknown){return themeComposeScopeEnabled()&&typeof scope==='string'&&scope.split(/\s+/).includes(THEME_COMPOSE_SCOPE);}
 export const MISSION_MCP_PATH='/api/knowledge-collection/mcp';
 export function missionMcpEnabled(){return process.env.KNOWLEDGE_MISSION_MCP_ENABLED==='1';}
 export function chatGptClientUrl(value:string){
@@ -17,7 +20,7 @@ export function missionOAuthPlugins(origin:string){
   jwt({disableSettingJwtHeader:true,schema:{jwks:{modelName:'mission_oauth_jwks'}}}),
   mcp({
    resource:origin+MISSION_MCP_PATH,loginPage:'/collection-connect',consentPage:'/collection-connect',
-   scopes:[MISSION_SCOPE,'offline_access'],grantTypes:['authorization_code','refresh_token'],
+   scopes:[MISSION_SCOPE,...(themeComposeScopeEnabled()?[THEME_COMPOSE_SCOPE]:[]),'offline_access'],grantTypes:['authorization_code','refresh_token'],
    accessTokenExpiresIn:600,refreshTokenExpiresIn:60*60*24*30,
    allowDynamicClientRegistration:false,allowUnauthenticatedClientRegistration:false,
    clientPrivileges:()=>false,resourcePrivileges:()=>false,

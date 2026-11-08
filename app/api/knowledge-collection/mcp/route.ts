@@ -3,10 +3,11 @@ import {z} from 'zod';
 import {memberRuntime} from '../../../../lib/server/member/runtime';
 import {missionHandle} from '../../../../lib/server/member/knowledge-missions';
 import {MemberError,memberInput} from '../../../../lib/server/member/http';
-import {missionMcpEnabled,MISSION_SCOPE,MISSION_MCP_PATH} from '../../../../lib/server/member/mission-oauth';
+import {missionMcpEnabled,MISSION_SCOPE,MISSION_MCP_PATH,grantedThemeComposeScope} from '../../../../lib/server/member/mission-oauth';
 import {assertMissionMcpUser} from '../../../../lib/server/member/mission-mcp-access';
 import {knowledgeCapability} from '../../../../lib/server/knowledge-deployment';
 import {createMissionMcpHandler,missionMcpBridge} from '../../../../lib/server/knowledge-mission-mcp';
+import {dispatchThemeRegistration} from '../../../../lib/server/member/knowledge-theme-registration';
 
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
@@ -26,7 +27,7 @@ export async function POST(request:Request){return missionHandle(async()=>{
     // destination, bearer credential or shell invocation reaches the bridge.
     return await missionMcpBridge().call(command);
    }finally{if(held)await client.query('SELECT pg_advisory_unlock(71900261,75)');client.release();}
-  });
+  },grantedThemeComposeScope(claims.scope)?{call:command=>dispatchThemeRegistration(z.uuidv4().parse(claims.sub),command)}:undefined);
   const response=await handler.fetch(new Request(req.url,{method:'POST',headers:req.headers,body:JSON.stringify(body)}));
   response.headers.set('Cache-Control','private, no-store');return response;
  },{resource:config.origin+MISSION_MCP_PATH,requiredScopes:[MISSION_SCOPE]})(request);

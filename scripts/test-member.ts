@@ -3,7 +3,8 @@ import { randomBytes, randomUUID } from "node:crypto";
 
 // Disposable dedicated PostgreSQL. Never targets a configured product DB, and
 // cleanup only removes the uniquely named container created by this invocation.
-const missionTests=process.argv.includes('--missions');
+const themeRegistrationTests=process.argv.includes('--theme-registration');
+const missionTests=themeRegistrationTests||process.argv.includes('--missions');
 const importTests=missionTests||process.argv.includes('--imports');
 const readingTests=process.argv.includes("--collection-reading");
 const collectionTests=readingTests||process.argv.includes("--collection");
@@ -12,7 +13,7 @@ const feedbackTests=process.argv.includes("--feedback");
 const submissionTests=importTests||process.argv.includes("--submissions")||feedbackTests||appealTests||collectionTests;
 const capsuleTests=process.argv.includes("--capsules")||submissionTests;
 const accountTests=process.argv.includes("--accounts");
-const operationsTests=process.argv.includes("--operations")||accountTests||appealTests||collectionTests;
+const operationsTests=themeRegistrationTests||process.argv.includes("--operations")||accountTests||appealTests||collectionTests;
 const communityTests = process.argv.includes("--community")||operationsTests||capsuleTests;
 const safetyTests=process.argv.includes("--safety");
 const browserTests = process.argv.includes("--e2e");
@@ -54,7 +55,7 @@ try {
 
   child = spawn(process.execPath, browserTests
     ? ["--import", "tsx", "scripts/test-member-browser.ts", ...process.argv.slice(2).filter(arg => arg !== "--capsules" && arg !== "--e2e" && arg !== "--community" && arg !== "--safety" && arg !== "--operations" && arg !== "--accounts")]
-    : ["node_modules/vitest/vitest.mjs", "run", ...(submissionTests ? (importTests?(missionTests?["tests/knowledge-missions.integration.test.ts","tests/knowledge-missions.test.ts","tests/knowledge-missions-ui.test.tsx","tests/knowledge-package-paste.test.tsx","tests/knowledge-mission-client.test.ts","tests/knowledge-collection-ui.test.tsx","tests/knowledge-deployment.test.ts"]:["tests/knowledge-import.integration.test.ts"]):readingTests?["tests/knowledge-collection-reading.integration.test.ts"]:collectionTests?["tests/knowledge-collection.integration.test.ts"]:appealTests?["tests/knowledge-appeals.integration.test.ts"]:feedbackTests?["tests/knowledge-submission-feedback.integration.test.ts"]:["tests/knowledge-submission-member.integration.test.ts","tests/knowledge-submission-references.integration.test.ts"]) : capsuleTests ? ["tests/capsule-document.integration.test.ts"] : communityTests ? [accountTests ? "tests/public-profiles.integration.test.ts" : operationsTests ? "tests/site-operations.integration.test.ts" : safetyTests ? "tests/community-safety.integration.test.ts" : "tests/community.integration.test.ts"] : ["tests/member.integration.test.ts", "tests/member-cold.integration.test.ts"]), "--maxWorkers=1", "--no-file-parallelism", "--exclude", "backups/**", "--exclude", ".local/**"], { env, stdio: "inherit" });
+    : ["node_modules/vitest/vitest.mjs", "run", ...(submissionTests ? (importTests?(missionTests?themeRegistrationTests?["tests/knowledge-theme-registration.integration.test.ts","tests/knowledge-theme-registration.test.ts","tests/knowledge-mission-mcp.test.ts","tests/knowledge-mission-mcp-access.test.ts"]:["tests/knowledge-missions.integration.test.ts","tests/knowledge-missions.test.ts","tests/knowledge-missions-ui.test.tsx","tests/knowledge-package-paste.test.tsx","tests/knowledge-mission-client.test.ts","tests/knowledge-collection-ui.test.tsx","tests/knowledge-deployment.test.ts"]:["tests/knowledge-import.integration.test.ts"]):readingTests?["tests/knowledge-collection-reading.integration.test.ts"]:collectionTests?["tests/knowledge-collection.integration.test.ts"]:appealTests?["tests/knowledge-appeals.integration.test.ts"]:feedbackTests?["tests/knowledge-submission-feedback.integration.test.ts"]:["tests/knowledge-submission-member.integration.test.ts","tests/knowledge-submission-references.integration.test.ts"]) : capsuleTests ? ["tests/capsule-document.integration.test.ts"] : communityTests ? [accountTests ? "tests/public-profiles.integration.test.ts" : operationsTests ? "tests/site-operations.integration.test.ts" : safetyTests ? "tests/community-safety.integration.test.ts" : "tests/community.integration.test.ts"] : ["tests/member.integration.test.ts", "tests/member-cold.integration.test.ts"]), "--maxWorkers=1", "--no-file-parallelism", "--exclude", "backups/**", "--exclude", ".local/**"], { env, stdio: "inherit" });
   const timer = setTimeout(() => child?.kill("SIGTERM"), browserTests ? 960_000 : 180_000);
   const code = await new Promise<number>((resolve, reject) => { child!.once("error", reject); child!.once("exit", code => resolve(code ?? 1)); });
   clearTimeout(timer);

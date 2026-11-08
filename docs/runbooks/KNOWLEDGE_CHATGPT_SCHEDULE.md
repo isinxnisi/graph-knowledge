@@ -1,3 +1,5 @@
+2026-11-08追補：新しいテーマを作る経路は、運営者のChatGPT会話→認証付きAPIが既定。一般会員向けテーマ作成UIは設けない。027f89bfの既存5収集ツールには新規Theme受付がなく、追加migration036・別scope `themes:compose`・3ツールを補修中。古い `missions:collect` の許可は5ツールのまま。新規接続は本人同意後に同じ既存会話で使用し、毎回の新規チャット・Codex予定へ置き換えない。[新しい受付契約](../design/KNOWLEDGE_CHATGPT_THEME_REGISTRATION.md)。以下の旧5ツールの運用は継続する。
+
 # ChatGPT予定実行のAPI直送
 
 2026-11-08、R3b是正完了。**API直送が合意済みの既定。Issue経由の選択待ちではない。** [専用の同じ会話](https://chatgpt.com/c/6aef440d-ceac-83ee-b59b-163349281c60)にあるChatGPT予定「Plunodeのテーマ資料を収集」は毎時20分・Asia/Tokyoで有効。既存予定IDは6aef47b34ad481919005e81857c13f1a、次回は2026-11-08 02:20 JST。本人の送信許可後、同じ予定の「今すぐ実行」からAPI直送と最終existing（既存知識の再利用）を確認し、試験計画を停止した。[実測・未確認範囲](../verification/KNOWLEDGE_CHATGPT_SCHEDULED_20261108.md)。Codex収集予定はPAUSEDを維持する。以降の接続手順は初回・再認証が必要な場合のもので、日常の収集ごとに新しい予定・会話を作らない。

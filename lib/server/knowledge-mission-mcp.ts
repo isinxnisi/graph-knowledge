@@ -1,27 +1,13 @@
 import {createMcpHandler,McpServer} from '@modelcontextprotocol/server';
 import {z} from 'zod';
 import {createMissionToolBridge,type MissionToolCommand} from './knowledge-mission-tool-bridge';
-import {knowledgeImportPackageSchema} from '../domain/knowledge-import';
-import {knowledgeSubmissionContentSchema} from '../domain/knowledge-submission';
-import {knowledgeEntityContentSchema,knowledgeSourceContentSchema,knowledgeIdSchema,knowledgePinSchema} from '../domain/knowledge-foundation';
+import {missionMcpPackageSchema} from '../domain/knowledge-mission-mcp';
+export {missionMcpPackageSchema} from '../domain/knowledge-mission-mcp';
+import {registerThemeMcpTools} from './knowledge-theme-registration-mcp';
+import type {ThemeRegistrationCommand} from '../domain/knowledge-theme-registration';
 
-const missionMcpItemSchema=knowledgeSubmissionContentSchema.shape.items.element.extend({
- operation:z.enum(['create-entity','create-relation','add-information','add-evidence','correct-record']),
- correction:knowledgePinSchema.optional().describe('Required for add-evidence and correct-record: the existing Record id and revision from the claimed snapshot. Also set about to kind record with this exact same id and revision.'),
- reason:z.string().trim().max(4000).optional(),
-}).superRefine((item,context)=>{
- if(['add-evidence','correct-record'].includes(item.operation)&&(!item.correction||item.about?.kind!=='record'||item.about.id!==item.correction.id||item.about.revision!==item.correction.revision))context.addIssue({code:'custom',path:['correction'],message:'For add-evidence and correct-record, set correction and about (kind: record) to the same existing Record id and revision from the claimed snapshot.'});
- if(item.operation==='correct-record'&&!item.reason?.trim())context.addIssue({code:'custom',path:['reason'],message:'State why this fixed Record version needs correcting.'});
-});
 
-export const missionMcpPackageSchema=knowledgeImportPackageSchema.omit({legacy:true}).extend({
- entities:z.array(z.strictObject({id:knowledgeIdSchema,content:knowledgeEntityContentSchema})).max(40).default([]),
- sources:z.array(z.strictObject({id:knowledgeIdSchema,content:knowledgeSourceContentSchema})).max(5).default([]),
- entityPins:z.array(knowledgePinSchema).max(40).default([]),sourcePins:z.array(knowledgePinSchema).max(80).default([]),
- items:z.array(missionMcpItemSchema).min(1).max(10),
-});
-
-export function createMissionMcpHandler(call:(value:MissionToolCommand)=>Promise<unknown>){
+export function createMissionMcpHandler(call:(value:MissionToolCommand)=>Promise<unknown>,authoring?:{call:(value:ThemeRegistrationCommand)=>Promise<unknown>}){
  return createMcpHandler(()=>{
   const server=new McpServer({name:'plunode-collection',version:'1.0.0'});
   const annotations={readOnlyHint:false,destructiveHint:false,openWorldHint:false};
@@ -46,6 +32,7 @@ export function createMissionMcpHandler(call:(value:MissionToolCommand)=>Promise
    description:'Record why this plan could not be completed. Never replace a real failure with an empty successful result. The existing server manages retries.',
    inputSchema:z.strictObject({runId:z.uuidv4(),reason:z.enum(['network','source-unavailable','search-unavailable','limit','invalid-package'])}),annotations:{...annotations,idempotentHint:true},
   },input=>result({action:'fail',...input}));
+  if(authoring)registerThemeMcpTools(server,authoring.call);
   return server;
  },{maxRequestBodySize:2100000});
 }

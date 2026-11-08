@@ -36,7 +36,7 @@ def beta_knowledge():
     values = json.loads(private.read_text())
     from urllib.parse import urlsplit
     expected = {'KNOWLEDGE_RUNTIME':'beta','KNOWLEDGE_PUBLICATION_ENABLED':'1','KNOWLEDGE_WORKSPACE_ENABLED':'1','KNOWLEDGE_PUBLIC_ORIGIN':'https://graph-beta.isinxnisi.com','KNOWLEDGE_NEO4J_URL':'bolt://127.0.0.1:7699'}
-    optional = set(values) & {'KNOWLEDGE_SUBMISSIONS_ENABLED','KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED'}
+    optional = set(values) & {'KNOWLEDGE_SUBMISSIONS_ENABLED','KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED','KNOWLEDGE_THEME_REGISTRATION_ENABLED'}
     if set(values) != set(expected) | {'KNOWLEDGE_DATABASE_URL','KNOWLEDGE_NEO4J_PASSWORD'} | optional or any(values.get(k) != v for k,v in expected.items()) or any(values.get(k,'0') not in ('0','1') for k in optional):
         raise ValueError('Unexpected knowledge beta configuration')
     url = urlsplit(values['KNOWLEDGE_DATABASE_URL'])
@@ -116,6 +116,8 @@ def beta_knowledge():
         if profile != {'origin': expected['KNOWLEDGE_PUBLIC_ORIGIN'], 'clientFile': str(client)} or not missions.exists() or not client.exists():
             raise ValueError('ChatGPT collection must use the existing restricted beta mission client')
         values.update(KNOWLEDGE_MISSION_MCP_ENABLED='1', KNOWLEDGE_MISSION_MCP_CLIENT=str(client))
+    if values.get('KNOWLEDGE_THEME_REGISTRATION_ENABLED') == '1' and not mcp.exists():
+        raise ValueError('Theme registration requires the existing ChatGPT connection profile')
     return {**values,'THEME_WORKBENCH_ENABLED':'0'}
 
 
