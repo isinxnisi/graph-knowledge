@@ -25,3 +25,17 @@ MCP・入力契約・既存収集／認可の19件も成功。新規作成／更
 ## 配置・実接続
 
 未完了。3200／HTTPS βは従来app4dd8af25／buildT0in9w8OdeSYUhnlpc_gK。本番も従来app4dd8af25／buildVhZydgGnOKI5nCb9w6khB。現在の公開サービスを、この実装済みソースの反映済みと扱わない。
+
+
+## β配置と正式資材の照合（22:52 JST以降）
+
+アプリsource `a2712fc6674294a79e0d666497e442074db2cc8b`。変更コードd74f3c37、接続同意文言a2712fc6、公開手順be29be1c。β／正式webpack buildとも型検査込みで成功。
+
+- 3200／HTTPS β build `5XPEJUNPcGXW1WRVI4TlF` へ反映。実物Member backupを分離DBへ復元し、86→86表・ledger38→39、038だけを追加。旧checksum・全行・所有者の保持、再実行不変を確認。private runtime16設定のファイルhashを保持した。
+- backup `.local/theme-updates-20261108/beta-backup-20261108T225210`、Member dump SHA256 `cdef8b9184e8de627d712fbacc0aa3a2b71de1611f52e3102768a4d0388c6e65`。
+- localhost／HTTPS βでdataset200・テーマhome200（既存3テーマ）・MCP未認証401。実Googleセッションの既存年表／関係図・行の展開・NASA資料URLと右詳細の対応を確認。これは既存閲覧の回帰確認であり、βの既存collection-only Appから新しいcompose操作を実行した記録ではない。
+- 正式build `jGYRGPYTKRpa4o6BWC8cr`。Web／ops source labelと038を照合し、image archiveをVPSへ直接転送した。開発PCのCドライブ空き不足を避けるため、約581MBのarchiveをPCへ重複保存していない。VPS側でarchiveのconfig／manifest／全layerを固定SHAへ照合。archive SHA256は非公開manifestに保存し、RELEASE-SHA256SUMSで全資材を照合済み。
+- 正式の直前構成は、検証済みの前回暗号化backupからcomposeを再構成し、配置済み4dd8af25のimage tag・build・設定hash・会員38／知識9に固定。新scriptは実機の設定・image・ledgerが相違すれば停止前に中止する。
+- 本番は未更新。`sudo -n true` はパスワード要求で失敗。本人用入口は `backups/theme-updates-20261108/run-release.py`。既存の端末継承helper・共通guardを使う。公開後の実ChatGPTからのテーマ取得・直接更新は未確認で、是正全体を完了扱いにしていない。
+
+追加の確認観点：現在の接続には `themes:compose` があるためAppは維持する。ツール一覧の更新を確認し、scope追加や別App作成へ無断で変更しない。実ChatGPTの確認では、既存テーマの対象版を読み、同じIDへの小さな説明更新と復元、旧版・資料URLの保持を確認する。別更新との競合時には上書きせず停止する。
