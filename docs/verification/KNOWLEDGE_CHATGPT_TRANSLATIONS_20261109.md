@@ -1,6 +1,6 @@
 # ChatGPTからテーマの訳文を登録・訂正する接続
 
-2026-11-09。実装・隔離検証・localhost／HTTPS β反映を実施。本番切替と実ChatGPTでの登録確認は未完了。
+2026-11-09。実装・隔離検証・localhost／HTTPS β／正式サイトへの反映と、同じ実ChatGPT Appからの訳文登録・公開・正式表示まで完了。以下の準備段階の記載は各時点の履歴。
 
 ## 不足と対応
 
@@ -39,3 +39,24 @@ Cの空きが約31MBとなりUbuntuの書込が失敗。ユーザーの空き確
 正式候補のstandalone imageを、private設定／DBを接続しない一時コンテナで起動。robots200、MCPのPOST専用ルートがGET405を返すことを確認。最初の試験でGET404を仮定していた期待値は誤りで、アプリ修正は不要。archive全layer・config・manifestとsource labelを検証し、VPSへの転送後にも全checksumを照合。ここまで本番のWeb／DB／Workerは未変更。
 
 実行用コマンド：`wsl -d Ubuntu -- python3 /home/isinxnisi/1.projects/7.graph-knowledge/backups/theme-translations-20261109/run-release.py`。VPSの既存sudo入力が必要。通常の共通holdを解放して引き渡し、command側がguardを取得・解放する。切替後、既存正式Appの新操作の取得、訳文登録と原文／Theme版の保持、正式表示を続けて確認する。
+
+## 正式切替と同じChatGPT Appでの公開確認（完了）
+
+本人のsudo実行で、正式Webをアプリ `bc48690353b23d6fe9b67a8d859c9d3d08a0eea1`／build `RWsvoeFimf3i8iA3_oAfH`／manifest image `sha256:e537e4c20280b533a905e8a27f79a5fbbce28f3cb074e87b8220e0e7f685de05` へ切替。backupは `/opt/graph-knowledge/backups/theme-translations-web-20261108T172832Z`。会員39／知識9のmigration checksum、Worker・既存設定・KG・AI artifactは不変。DB migration／dump復元／OS更新は行っていない。切替後のactivated記録を読み戻し、正式rootと当該build manifestのHTTP200を確認した。
+
+既存「Plunodeテーマ・資料 API（本番）」の「ツールを更新」を実行し、同じApp・既存接続・同じ「テーマ作成の進め方」会話を継続。Appの再作成、新規OAuth権限、収集計画や運営画面の操作は不要だった。認証済み `get_theme_authoring_guide` で翻訳操作のschemaを取得した。
+
+実ChatGPTから `read_theme_translation` → `submit_theme_translation` → `get_theme_translation_submission` と読戻しを行い、Webbテーマ `theme:915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1` 構成版6のtitle・enを公開した。受付 `f70c44bb-6268-4c73-a90a-f9d25fe2d75d`、最終状態 `published`。訳文IDは `translation:612f65d2e3875343cbd3c68c811e4a8a99bf1b1b024b7163`、訳文版1、本文は `Webb's Journey to Unfolding in Space`。公開時刻は2026-11-08 17:35:15 UTC（11月9日02:35 JST）。実受付は通常の確認・公開経路を通しており、17件のfixture AI試験とは区別する。今回、同じ英訳を試験のために再登録したり、公開済みの訳文を取り消したりはしていない。
+
+独立に正式公開APIを読んで上記訳文・原文 `Webbが宇宙でひらくまで`・原文hash・対象構成版6を照合。登録前後の認証済み `read_theme` のThemeオブジェクトとsnapshotを全体比較し、日本語原文・Theme構成版・12記録／4対象／7資料・年表配置が一致した。実Chromeでも正式 `/en` の中央見出しが英訳になり、構成版6と右の日本語原文が保たれていることを確認した。利用者が続けて依頼した他項目の英訳は、この1件の確認結果には含めない。
+
+確認先：
+
+- [英語表示のWebbテーマ](https://plunode.net/en?ktheme=theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1&krev=6&kview=split)
+- [訳文版1と対応する原文](https://plunode.net/translations?id=translation%3A612f65d2e3875343cbd3c68c811e4a8a99bf1b1b024b7163&revision=1)
+
+既存Chatで「このテーマのタイトルや説明を英訳して登録して」と依頼できる。原文や構成の変更は `update_theme`、訳文は読取後のexpectedRevisionを指定して別操作で登録する。訂正は最新訳文を読んで別requestIdへ進み、旧訳文版は保持する。1操作は1項目・1言語で、既存の会員連投制限（20件／時）・同時草稿上限・共通AI予算を継承する。テーマ丸ごとの一括投稿専用APIや、この確認で全項目を訳し切る処理は追加していない。
+
+本番で実測したのはタイトル1件の新規訳文の公開・読戻し・表示。訳文訂正／取消／匿名／再送障害の代表境界は隔離試験で確認し、本番へ不要な再登録を繰り返していない。スマホの新しい配置変更はなく、今回の正式実画面確認はPC幅。保存済みCapsule／共有断面の保持は既存契約と17件の試験によるもので、今回この本番テーマから別のCapsuleを作って再検証してはいない。
+
+正式切替後の記録だけの追記では再build・再配置しない。localhost3200／HTTPS βはアプリbc486903・build B4MiXUlaSU-rC5jeP2a1h、正式は同アプリ・build RWsvoeFimf3i8iA3_oAfHで、いずれも反映済み。
