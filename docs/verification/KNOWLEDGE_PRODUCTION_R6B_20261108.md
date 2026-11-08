@@ -67,3 +67,7 @@ r2の本人sudo実行で正式反映を完了した。元の失敗は `psql: err
 - 正式 `/api/dataset` は200で従来revision `f5dbf83f-c89e-4e40-95ee-57957016089f`。OAuth metadataは `missions:collect` / `themes:compose` / `offline_access`、resourceは正式origin。正式テーマ一覧は200・0件で、手動のDB初期投入を行っていない。
 
 ChatGPTの正式OAuth同意・同じ会話での実Theme登録・探索利用は未確認。Chromeの操作と接続一覧が3回timeoutし、本人へ再起動を依頼した。利用できるPlugin Creatorの操作はarchiveの作成／更新で、既存App所有のMCP URLを変更する操作はないため、β接続を維持した別の正式App接続を準備する方針を継続する。本人のOAuth同意を省略したり、CodexからのDB投入を代替実証にしたりしない。
+
+### Chrome復旧後の正式接続準備
+
+本人のChrome再起動後、同じChrome接続から操作を再開できた。ChatGPTのカスタムMCPフォームへ「Plunodeテーマ・資料 API（本番）」を入力し、正式endpoint、CIMD、正式の認可／token URL、resourceを実画面で検出した。デフォルトscopeは `missions:collect` と `themes:compose`、継続接続の基本scopeは `offline_access`。本人の作成・OAuth同意を依頼した。β接続は変更していない。新しい接続のツール利用・実Theme登録・予定の本番切替はまだ未確認。

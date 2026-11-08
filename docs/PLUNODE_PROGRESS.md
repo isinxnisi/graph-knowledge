@@ -1,4 +1,4 @@
-2026-11-08 R6b：補修版app14542c72／正式build wFBq24bSaSp0W-_ZOFaXrを正式VPSへ反映。最新backupの別DB復元84→85表・会員37／知識9・旧行／所有者・再実行不変に成功し、暗号化backupをPCで復号／dump hash照合した。正式URLのmetadataでテーマ作成scopeを確認。βは同app・build J8c0xCK92ByIAFgkz3nbx。**残りはChatGPTの本番接続同意・同じ会話からの実登録と正式探索確認**。Chrome操作がtimeoutし本人の再起動を待つ。R6b全体は未完了。[実測と再開](verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md)。以下は各時点の履歴。
+2026-11-08 R6b：補修版app14542c72／正式build wFBq24bSaSp0W-_ZOFaXrを正式VPSへ反映。最新backupの別DB復元84→85表・会員37／知識9・旧行／所有者・再実行不変に成功し、暗号化backupをPCで復号／dump hash照合した。正式URLのmetadataでテーマ作成scopeを確認。βは同app・build J8c0xCK92ByIAFgkz3nbx。**残りはChatGPTの本番接続同意・同じ会話からの実登録と正式探索確認**。Chrome再起動後に操作が復旧し、正式MCPフォームのCIMD・2権限・継続接続scopeを確認。本人の作成／OAuth同意待ち。R6b全体は未完了。[実測と再開](verification/KNOWLEDGE_PRODUCTION_R6B_20261108.md)。以下は各時点の履歴。
 
 2026-11-08 R6b切替前：PC helperがguard配下で/dev/ttyを開けず終了。SSH／sudo／本番変更は未実行。標準入出力継承＋遠隔PTYへ修正し、実SSHの非特権probeで制御端末なし・継承端末・非表示入力を確認。本番資材は027f89bf／Sf6Myn-qsOSMt8bnqxpE9のまま。修正版helperのsudo切替・正式確認待ち。[詳細](verification/KNOWLEDGE_PRODUCTION_R6A_20261108.md#r6b切替前の端末修正)。
 
