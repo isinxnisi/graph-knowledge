@@ -34,7 +34,7 @@ MCP clientの `checkpointDirectory` はWeb専用bindの `/run/plunode-knowledge-
 ## 3. DB・OSと切替
 
 1. 本番の実ledgerから未適用migrationを確定する。既存checksumは変更しない。知識DBは `scripts/knowledge-migrate.ts --confirm-origin https://plunode.net --confirm-database EXACT_DATABASE` で明示適用する。既存関数を再利用し、seedはしない。
-2. 復旧用に旧Compose／env／private runtime／image識別情報を保存する。Webと書込Workerを同じ区切りで停止し、会員・知識DBの整合したbackupを確保する。別名DBへ復元し、旧行と所有者／ledgerを照合して移行・再実行を検証する。失敗時に旧dumpを本番へ上書きしない。
+2. 復旧用に旧Compose／env／private runtime／image識別情報を保存する。準備段階ではexported snapshotによりWeb稼働中にMember dumpと同じ断面の表・所有者・行を得る。scripts/prepare-knowledge-production.pyで隔離PGへ復元し、追加移行・再実行を検証する。正式切替時にはWebと書込Workerを同じ区切りで停止し、最新の会員・知識DBとcheckpointのbackupを確保する。失敗時に旧dumpを本番へ上書きしない。
 3. LinuxはUbuntuのsecurity pocketと実際の更新候補を照合する。通常の機能更新や無関係なサービスの更新を一括実行しない。適用内容・再起動要否を記録し、必要な再起動後は既存サービスを復帰する。パッケージの新旧だけで未修正CVEと断定しない。
 4. 固定資材・private profileを再照合し、新Webと対象Workerを起動する。新しい保存形式を書いた後に、それを読めない旧Webへ機械的に戻さない。障害時は書込を止め、現行DBを保って修復／対応版へ切り替える。
 
@@ -59,3 +59,19 @@ Ubuntuの確認元：[Security updates](https://documentation.ubuntu.com/securit
 本人の最初の監査実行はSSH認証前のconnection resetで停止し、sudoも監査scriptも実行されていない。こちらでも断続的な切断と接続成功を確認。既存SSH接続を再利用するPC側の `backups/knowledge-production-20261108/run-audit.py` を準備し、`--check`で接続と転送済みscriptのSHA256を確認した。引数なしの本人実行だけが既存sudoを呼ぶ。パスワードをファイルやチャットへ保存しない。監査結果の受領は別に確認する。
 
 年齢・地域の方針は了承されたが、「バックエンドでの利用にも特別な実装が必要か」という確認がある。公式条件は組込先のAPI Clientにも言及するため、内部利用なら対象外と決めつけない。一方で専用の身分証確認・生年月日収集を必須とする記載は確認しておらず、そのような基盤は追加しない。利用条件の明記と既存送信同意へ反映する最小案を基本に整理する。AI機能だけの制限でサービス全体の条件を満たすと公式に確認できた意味にはせず、公開Graph全体の年齢制限へ勝手に広げない。現時点でそのUI／同意更新を実装済みとは扱わない。
+
+
+### 実物監査の受領後
+
+会員ledgerは000〜019の20件・checksum一致、追加は020〜035の16件。知識001〜009の9件は新DBへ適用する。旧会員34表とGoogle／コミュニティ設定を保護する。APTの旧キャッシュだけでsecurity更新不要とせず、準備helperのmetadata更新・simulate結果を確認して適用内容を固定する。
+
+準備helperは別のroot-private stageを使い、既存の失敗資材や稼働構成を消さない。実物backup／復元・再実行と暗号化の確認は、本番migration／正式切替と区別する。PCで暗号化backupを復号してdump hashを照合後、最終資材・設定・復旧を揃えて切替helperを提示する。
+
+
+### 最終切替候補（準備完了、まだ未実行）
+
+app `027f89bf`／正式build `Sf6Myn-qsOSMt8bnqxpE9`。会員16追加・知識9新規を確定し、実物Member dumpの分離復元と再実行、暗号化backupのPC復号を完了した。noble-security metadataの更新と配布元を確認し、追加候補は0件。
+
+常用compose.yaml自体へ固定image・新3 Workerを反映し、将来の通常起動でも旧Webへ戻らないようにする。PGは既存volumeを保ってmax_connectionsを60へ変更。既存Neo4j／KG ops・Google／会員／コミュニティ設定とAI artifactを維持する。正本は別DB plunode_knowledge75_production。betaを100回／日へ切替済みで、正式の300回／日と合計400回／日、台帳は保持した。
+
+切替は`scripts/release-knowledge-production.py`をchecksum固定のroot-private stageから実行する。実行用helperはPCの`backups/knowledge-production-20261108/run-release.py`。Web停止前に再照合し、最新backup→16／9 migration→空の初回投影→Web／3 Workerへ進む。新形式適用後は旧DB上書きや旧Webへの自動downgradeをしない。結果を受領してから正式URLのGoogle／代表操作、PCの2 Worker、同一ChatGPT会話の正式OAuthを確認する。

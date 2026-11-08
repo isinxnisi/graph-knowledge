@@ -1,16 +1,19 @@
 {
   "schemaVersion": 1,
   "at": "2026-11-07T22:15:47.118152+00:00",
-  "stage": "R6a-in-progress",
+  "stage": "R6a-prepared-R6b-activation-pending",
   "overallEnd": "R6",
   "beta": {
-    "source": "999df702e89c13063261964d060c5f37f371c2f8",
-    "build": "GKCLvKsSR-vkRGVFw_sJ5",
+    "source": "027f89bfc8c2e4605ffce1ca789f814081f18b1b",
+    "build": "RTmRnpoWCYnN5rgv2CLlz",
+    "requestsPerDay": 100,
     "googleBrowser": [
-      "theme-read",
-      "capsule-create",
-      "discard-and-return"
-    ]
+      "existing-session-retained",
+      "existing-draft-read",
+      "updated-notice",
+      "390px-no-horizontal-overflow"
+    ],
+    "bundler": "webpack"
   },
   "candidateImages": {
     "source": "12273b176ffd788da42c0f41eb4e4b0dcde63254",
@@ -157,16 +160,11 @@
     }
   },
   "production": {
-    "audit": "owner-retry-after-preauthentication-connection-reset",
-    "imagesTransferredAndSha256Matched": true,
-    "imagesLoaded": false,
-    "migrationsApplied": false,
-    "webUpdated": false,
-    "osUpdated": false
+    "activated": false,
+    "existingSiteRetained": true,
+    "formalBrowserAcceptance": false
   },
-  "pendingDecisions": [
-    "AI-public-eligibility-implementation-scope"
-  ],
+  "pendingDecisions": [],
   "additionalAiRequests": 0,
   "http": {
     "http://127.0.0.1:3200/api/dataset": {
@@ -194,7 +192,7 @@
     "productionDatabaseAccessed": false,
     "candidateActivated": false
   },
-  "updatedAt": "2026-11-08T01:42:54.016747+00:00",
+  "updatedAt": "2026-11-08T02:33:56.104774+00:00",
   "budgetSplit": {
     "agreed": true,
     "activated": false,
@@ -247,5 +245,71 @@
     "causeConfirmed": false,
     "reusedExistingConnectionVerified": true,
     "auditHelperVerifiedWithoutSudo": true
-  }
+  },
+  "auditedProduction": {
+    "source": "3a533256598e63a7f2d1d433902b20ca5e584a3d",
+    "build": "gICsYdcWaoj_SCu-Pm6jh",
+    "memberTables": 34,
+    "memberMigrations": 20,
+    "additionalMemberMigrations": 16,
+    "newKnowledgeMigrations": 9
+  },
+  "preparation": {
+    "at": "2026-11-08T02:13:38.534793+00:00",
+    "backup": "/opt/graph-knowledge/backups/knowledge-r6-preparation-20261108T021314Z",
+    "restore": {
+      "oldTables": 34,
+      "migratedTables": 84,
+      "memberMigrations": 36,
+      "oldRowsAndOwnersPreserved": true,
+      "repeatedUnchanged": true,
+      "dumpSha256": "2250240533a952ca56cf8dba5596fdc6d493e9fc7ad9be535791c3d846ec7b3d"
+    },
+    "security": {
+      "metadataRefreshed": true,
+      "packages": [],
+      "simulationSucceeded": true,
+      "packagesChanged": false
+    },
+    "liveDbMigrated": false,
+    "webStopped": false,
+    "osPackagesChanged": false,
+    "activated": false,
+    "encryptedBackupSha256": "e828399b028c2536c0dc0c33d120827f30039fda2e297255380d3f700b8398c0",
+    "wrappedKeySha256": "ab85c07e901a7445d25c7c7c5d7be8b8e2b7399770be92b31d74247310b2acd4"
+  },
+  "pcRecovery": {
+    "decrypted": true,
+    "dumpHashMatched": true,
+    "configurationMatched": true
+  },
+  "finalCandidate": {
+    "source": "027f89bfc8c2e4605ffce1ca789f814081f18b1b",
+    "images": {
+      "web": {
+        "tag": "plunode-web:r6-027f89bf",
+        "configId": "sha256:b6f0ab7b43cb8e79851579b1dff1e713b1122a9303beea4cf16fff4a88fe693a",
+        "manifestId": "sha256:d70a6aa1ecf562d30b83bb3017927c77246b1a5c644a12fb83751d1eead5b42c",
+        "build": "Sf6Myn-qsOSMt8bnqxpE9"
+      },
+      "knowledge-ops": {
+        "tag": "plunode-knowledge-ops:r6-027f89bf",
+        "configId": "sha256:d44e9262c436ccb4b910a88a7e170c071df95d81618fe290db62b0ac6d3e0fe6",
+        "manifestId": "sha256:f0af81bac0f894c945b4575369d5c9dbfc4c7521e546803b63790405364d1d99",
+        "build": null
+      }
+    },
+    "archive": {
+      "file": "images-r6-027f89bf.tar.gz",
+      "sha256": "ef06f7c855852e4d51f35613c1485c5b43dd2758917e1d8bef63763a8629f175",
+      "bytes": 583710196
+    },
+    "migrationChecksumsMatchRehearsal": true
+  },
+  "pendingWork": [
+    "sudo-activation",
+    "formal-google-and-user-flows",
+    "pc-worker-formal-endpoints",
+    "same-chatgpt-conversation-formal-oauth-and-delivery"
+  ]
 }

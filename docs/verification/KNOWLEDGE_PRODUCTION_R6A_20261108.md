@@ -6,7 +6,7 @@
 
 - [localhost:3200](http://localhost:3200/)／[HTTPS β](https://graph-beta.isinxnisi.com/)：セキュリティ更新を配置済み。実行ソース `999df702e89c13063261964d060c5f37f371c2f8`、build `GKCLvKsSR-vkRGVFw_sJ5`。本人ログインはHTTPS βを使う。
 - [Webbの年表・関係図](https://graph-beta.isinxnisi.com/?ktheme=u3%3Afbaa9ee12f288cfa%3Atheme&krev=5&kview=split)：Googleログイン済みのChromeで表示、Capsule作成画面、未保存の作成を破棄して探索へ戻る操作を確認。新しい保存や共有は作っていない。
-- [正式サイト](https://plunode.net/)：従来版のまま。今回の本番内のimage／build／ledgerは管理者監査の結果待ちであり、過去の記録だけから確定しない。
+- [正式サイト](https://plunode.net/)：従来版のまま。実物監査で旧Web source 3a533256／build gICsYdcWaoj_SCu-Pm6jh、会員migration000〜019の20件を確認。正式切替は未実施。
 
 R5の原文・訳文・版の表示整理、共有更新・コメント・公開停止、移行・復旧の実績は[前段の検証](KNOWLEDGE_INTEGRATION_R5_20261108.md)を活用した。これらの全操作を今回もう一度実施した意味にはしない。今回のブラウザ確認はPC幅で、R5の390px検証は再利用した。iPhone／WebKit実機ではない。
 
@@ -76,3 +76,57 @@ R6bは本番切替、正式originでのGoogle・PC Worker・既存の同じChatG
 年齢・地域の方針は了承されたが、内部でのAI利用にも特別な実装が必要かという質問を受けた。公式条件は組込先のAPI Clientにも条件を課しており、単にサーバーから呼ぶことで対象外とは言えない。一方で、身分証確認や生年月日収集の専用基盤を必須とする記載は確認できない。利用条件と既存送信同意への最小の反映を基本とし、AI機能だけの制限でサービス全体への条件を満たすと断言した先の提案は訂正する。全Graph閲覧を18歳以上へ変更したり、未実装のgateを実装済みとしたりしない。[公式条件](https://ai.google.dev/gemini-api/terms)。
 
 今回の追加AI送信・DB migration・アプリbuild・サービス切替はない。β／3200は前段のbuildを維持し、正式サイトは旧版のまま。通常pushとhold解放は実行結果を完了報告に記載する。
+
+
+## 本番監査の受領と実物復元の準備
+
+2026-11-08 10:47 JSTの読み取り監査を受領。接続再利用helperで本人がsudoを実行した。監査によるDB・Web・OS変更はない。
+
+- 正式Webはsource `3a533256`／build `gICsYdcWaoj_SCu-Pm6jh`。会員DBはgraph_member、知識DBはまだない。
+- 会員34表、適用済み000〜019の20件は現在のSQL checksumと一致。追加020〜035の16件、新しい知識DBには001〜009の9件を適用する。seedしない。
+- Google認証・会員・コミュニティ・運営設定を実物で確認。AIラボartifactは候補imageと同じhash。旧KGのpublic-kg revisionは保持する。
+- Ubuntu 24.04、kernel 6.8.0-147-generic、RAM約4GB、空きdisk約135GiB。PG上限30接続は、新Worker同居に合わせて調整を検討する。DB別role・専用世代label・追加Neo4jなしの構成を維持する。
+- APTのキャッシュ一覧だけではsecurity pocketを判定できない。metadataの再取得とsimulate結果から適用リストを固定する。
+
+`scripts/prepare-knowledge-production.py`を追加（commit `4a89755d`）。現在のCompose／env／build／ledgerを照合し、Member DBのexported snapshotを保持して、同じsnapshotで表構造・所有者・行fingerprintとcustom dumpを得る。隔離network／一時PGへ復元し、16件の追加migrationと再実行、旧行／所有者の保全を確認する。Web停止・本番DB移行・OSパッケージ更新・公開切替は行わない。
+
+PCの独立PGで、snapshot後の同時更新・追加をdumpへ混入させず、同じsnapshotのfingerprint／所有者と復元先が一致することを確認した。本番での成功とは区別する。準備helper `backups/knowledge-production-20261108/run-preparation.py`は転送・SHA256照合済みで、本人がsudo実行済み。実物の34表→84表／36 migrationと再実行不変・旧行／所有者保持を確認した。
+
+復旧資材はVPSのroot専用backupへ保存し、PCへの取得分はAES暗号化＋RSA-OAEPで包んだ鍵とする。秘密鍵はPCだけに保持し、VPS／Gitへ送らない。PCで復号・dump hash照合が済む前に復旧確認済みとしない。
+
+### 一般提供の案内
+
+既存の送信確認とprivacy説明へ18歳以上・提供地域の条件を短く追記した（app `027f89bf`）。現在の送信先名は詳細説明へ保持する。訳文生成は公開原文＋文脈から私有草稿を作り、生成だけでは自動公開しないことも明記した。
+
+身分証・生年月日収集や新しい同意DB／workflowは追加しない。これは案内更新であり、厳密な年齢／所在地検証を実装した意味ではない。API Client全体への条件をAI機能だけの制限で満たすと公式に確認した意味にもせず、公開Graph全体を勝手に年齢制限へ変更しない。[公式条件](https://ai.google.dev/gemini-api/terms)／[提供地域](https://ai.google.dev/gemini-api/docs/available-regions)。
+
+案内3画面はeslint error 0（既存Hook warning 1）、TypeScript検査成功。追加migrationはなく、beta／正式buildは完了し、betaは下記の再配置後に確認した。旧候補12273b17でのSQL／復元検証は、最終資材でもSQL checksum一致を照合して活用する。
+
+
+## R6aの最終資材・切替待ち
+
+本人実行の準備結果を受領。本番Member DBの34表を分離PGへ復元し、84表・会員36 migrationへ移行した。旧行・所有者を保持し、再実行でも変化なし。dump SHA256は`2250240533a952ca56cf8dba5596fdc6d493e9fc7ad9be535791c3d846ec7b3d`。VPS backupは`/opt/graph-knowledge/backups/knowledge-r6-preparation-20261108T021314Z`。PCでRSA-OAEP鍵とAES暗号化backupを復号し、dump／旧Compose／envのhash一致まで確認した。
+
+APT metadataの更新は成功。noble-securityの4componentの配布元も確認し、追加security版があるインストール済みpackageは0件。OSパッケージの更新は実施していない。これは全ソフトウェアの脆弱性不存在の保証ではない。
+
+| 資材 | 最終候補 |
+| --- | --- |
+| アプリsource | `027f89bfc8c2e4605ffce1ca789f814081f18b1b` |
+| 正式build | `Sf6Myn-qsOSMt8bnqxpE9` |
+| Web tag | `plunode-web:r6-027f89bf` |
+| Web config ID | `sha256:b6f0ab7b43cb8e79851579b1dff1e713b1122a9303beea4cf16fff4a88fe693a` |
+| Web manifest ID | `sha256:d70a6aa1ecf562d30b83bb3017927c77246b1a5c644a12fb83751d1eead5b42c` |
+| knowledge-ops tag | `plunode-knowledge-ops:r6-027f89bf` |
+| knowledge-ops manifest ID | `sha256:f0af81bac0f894c945b4575369d5c9dbfc4c7521e546803b63790405364d1d99` |
+| image archive SHA256 | `ef06f7c855852e4d51f35613c1485c5b43dd2758917e1d8bef63763a8629f175` |
+| 3200／HTTPS β build | `RTmRnpoWCYnN5rgv2CLlz`（同じapp source） |
+
+最終image内の会員36／知識9 SQLは、実物復元検証をした12273b17と全checksum一致。全layer／config／manifest／sourceラベルを照合した。正式用runtimeは別DB・別role・正式originと新規配送資格を使い、βのDBや会員や試験themeを持ち込まない。Google認証等の旧Web設定、本線KGのops／Neo4j定義とvolume／networkは一致した。PGは30→60接続へ調整し、新常駐はpublisher／review／patrolの3つ。資料取得／読解の2 WorkerはPCから正式HTTPS APIへ接続する。
+
+βを100回／日へ切り替え、使用済み5回／日・412回／月とprovider待機状態は不変。他15 private設定を保全した。正式は300回／日とし、月次・token・速度も合意配分。既存台帳を0へ戻していない。
+
+最初のβ buildをTurbopack既定で作ったため、配置先移動後にpgの外部module名を解決できず認証APIが失敗した。担当の配置不備として記録する。動作済みbuildへ戻し、従来と同じwebpackで作り直して再配置した。最終APIはmember/status 200、auth/get-session 200、私有Capsuleは未認証401、theme-home 200。実ChromeのGoogleセッション継続・既存草稿の表示と案内文をPC／390pxで確認し、390pxのpage幅380pxで横あふれなし。追加の投稿・AI送信は行っていない。
+
+`scripts/release-knowledge-production.py`は、固定資材と監査時の稼働構成を再照合し、最新backup後に追加16／9 migration・初回の空投影・Web／3 Worker切替を行う。旧34表の行・構造・所有者、本線Entity数とAI artifact／認証設定の保持を照合する。archiveの許可ファイル・経路逸脱拒否、Compose／profile schema、正式origin、SQL checksumを確認した。新形式を書いた後の旧Webへの自動downgrade・旧dumpの上書き復元は行わない。
+
+**本番の正式切替は未実施。** R6bでは既存sudo入力後、正式Google・実テーマ作成・投稿／訂正・Capsule／同URL共有・OGP・PC Worker・同じChatGPT会話の正式API接続を確認する。管理者の毎回承認や全件AI完了を条件に追加しない。
