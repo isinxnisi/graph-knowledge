@@ -132,6 +132,18 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
  async function prepare(l:NonNullable<Awaited<ReturnType<typeof lease>>>):Promise<Prepared>{
   const pkg=knowledgeImportPackageSchema.parse(l.pkg.payload),content=knowledgeSubmissionContentSchema.parse(l.item.normalized),context=await resolveImportContext(knowledge,content);assertImportScope(l.p,content,context);
   const value=prepareImportPlan(pkg,content,context,l.pkg.id,l.item.id),item=content.items[0],proofs:SourceProof[]=[];
+   if(value.plan.command.action==='accept-record'&&value.plan.command.themes?.length){
+    const registry=(await pool.query("SELECT to_regclass('knowledge_missions.theme_registrations') AS name")).rows[0]?.name;
+    if(registry){
+     const deferred=(await pool.query(`SELECT r.input->'target' AS target FROM knowledge_missions.theme_registrations r JOIN knowledge_missions.web_deliveries d ON d.request_id=r.request_id JOIN knowledge_missions.web_importers w ON w.id=d.importer_id WHERE r.receipt_id=$1 AND r.state IN('saved','processing') AND r.input ? 'target' AND 'web:'||w.id::text=$2 AND w.owner_id=r.owner_id`,[l.pkg.id,l.p.id])).rows[0]?.target;
+     if(deferred){
+      if(value.plan.command.themes.some(p=>p.id!==deferred.id||p.revision!==deferred.revision))throw new KnowledgeError('テーマ更新の取得版を確認してください。',409,'REVISION_CONFLICT');
+      // Verified theme context stays pinned; final editorial composition applies
+      // membership, rather than publishing a partly updated theme in advance.
+      value.plan.command={...value.plan.command,themes:[],...(value.plan.command.record.content.aboutTheme===deferred.id?{deferredTheme:{id:deferred.id,revision:deferred.revision}}:{})};
+     }
+    }
+   }
   if(item.operation!=='translate-text'){const started=Date.now();for(const e of submissionReviewEvidence(item,context)){
    if(Date.now()-started>45000)throw new SourceCheckError('原資料の取得に時間がかかっています。自動で再試行します。',true);
    const source=content.sources.find(s=>s.id===e.source.id&&e.source.revision===1)??context.sources.find(s=>s.id===e.source.id&&s.revision===e.source.revision);

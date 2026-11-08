@@ -376,7 +376,12 @@ export function createKnowledgeFoundationService(pool: Pool,options:{prepareSche
           unchanged=knowledgeDigest(duplicateMeaning(old.content))===knowledgeDigest(duplicateMeaning(r))&&knowledgeDigest(old.content.evidence)===knowledgeDigest(r.evidence)&&knowledgeDigest(old.content.textLanguages??null)===knowledgeDigest(r.textLanguages??null);
           revision=unchanged?h.current_revision:h.current_revision+1;
         }
-        if(r.aboutTheme&&!retainsThemeContext&&!cmd.themes?.some(t=>t.id===r.aboutTheme))throw new KnowledgeError("テーマへの追加と情報の公開を同時に行ってください");
+        if(cmd.deferredTheme){
+          if(actor.kind!=='import'||!internal||r.aboutTheme!==cmd.deferredTheme.id)throw new KnowledgeError('テーマ構成を保留する内部受付が必要です',403,'FORBIDDEN');
+          const theme=await head(c,'theme',cmd.deferredTheme.id,'FOR SHARE');expected(theme.current_revision,cmd.deferredTheme.revision);
+          await assertRevisionPublic(c,'theme',cmd.deferredTheme.id,cmd.deferredTheme.revision);
+        }
+        if(r.aboutTheme&&!retainsThemeContext&&!cmd.themes?.some(t=>t.id===r.aboutTheme)&&cmd.deferredTheme?.id!==r.aboutTheme)throw new KnowledgeError("テーマへの追加と情報の公開を同時に行ってください");
         await validateRecord(c,{...cmd.record,revision,createdAt:"",reason:cmd.reason},entityPins,true);
         result=unchanged?await version(c,'record',cmd.record.id,revision):await put("record",cmd.record.id,r,revision,cmd.reason);
         for(const p of [...(cmd.themes??[])].sort((a,b)=>a.id.localeCompare(b.id))){
@@ -422,6 +427,22 @@ export function createKnowledgeFoundationService(pool: Pool,options:{prepareSche
       } else if (cmd.action === "create-theme") {
         const snapshot = await capture(c, cmd.recordPins, { entityPins: cmd.entityPins, sourcePins: cmd.sourcePins, timeline: cmd.timeline, initialView: cmd.initialView, publicOnly: true });
         result = await put("theme", cmd.id, { title: cmd.title, description: cmd.description, ...(cmd.textLanguages ? { textLanguages: cmd.textLanguages } : {}), ...snapshotPins(snapshot), ...(cmd.timeline ? { timeline: cmd.timeline } : {}), initialView: cmd.initialView }, 1, cmd.reason);
+      } else if (cmd.action === "edit-theme") {
+        const h = await head(c, "theme", cmd.id, "FOR UPDATE"); expected(h.current_revision, cmd.expectedRevision);
+        if(h.visibility!=="public")throw new KnowledgeError("公開中のテーマを選び直してください",409,"REFERENCE_NOT_PUBLIC");
+        const old = await version(c,"theme",cmd.id);
+        const observed = await capture(c,cmd.recordPins,{timeline:cmd.timeline,initialView:cmd.initialView,publicOnly:true});
+        // Retain observed names/mappings of retained records. An unrelated
+        // source/entity correction must not be silently imported by an edit.
+        const entityPins=observed.entities.map(e=>old.content.entityPins.find(p=>p.id===e.id)??pin(e));
+        const mappingPins=observed.records.flatMap(r=>{
+          const retained=old.content.recordPins.some(p=>p.id===r.id&&p.revision===r.revision);
+          const p=retained?old.content.mappingPins.find(p=>p.id===r.id):observed.mappings.find(p=>p.id===r.id);
+          return p?[{id:p.id,revision:p.revision}]:[];
+        });
+        const snapshot=await capture(c,cmd.recordPins,{entityPins,mappingPins,timeline:cmd.timeline,initialView:cmd.initialView,publicOnly:true});
+        const content={title:cmd.title,description:cmd.description,...(cmd.textLanguages?{textLanguages:cmd.textLanguages}:{}),...snapshotPins(snapshot),...(cmd.timeline?{timeline:cmd.timeline}:{}),initialView:cmd.initialView};
+        result=knowledgeDigest(content)===knowledgeDigest(old.content)?old:await put("theme",cmd.id,content,cmd.expectedRevision+1,cmd.reason);
       } else if (cmd.action === "refresh-theme") {
         const h = await head(c, "theme", cmd.id, "FOR UPDATE"); expected(h.current_revision, cmd.expectedRevision);
         const old = await version(c, "theme", cmd.id);

@@ -1,3 +1,5 @@
+2026-11-08追加是正：ChatGPTからのテーマ更新。現状照合完了・実装中｜残りは実装検証と接続確認・反映｜今回の工程は3（不足照合／実装／接続確認・反映）。新規作成だけで更新を含めて完了とした不足を是正。収集計画や運営画面操作を直接更新の前提にしない。[更新契約](design/KNOWLEDGE_CHATGPT_THEME_REGISTRATION.md)。以下は各時点の履歴。
+
 2026-11-08追加改善：**紹介テーマの運営管理をlocalhost／HTTPS β／正式サイトで確認・完了｜残作業なし｜今回はこの機能まで**。[設計](design/FEATURED_THEMES_OPERATIONS.md)／[検証と反映状態](verification/FEATURED_THEMES_OPERATIONS_20261108.md)。R1〜R6の完了を取り消すものではない。
 
 2026-11-08最終確認：R6b完了。正式アプリ受入に加え、TCP修正kernel 6.8.0-149-genericとCaddy公式2.11.9の実稼働、正式HTTPS／HTTP2・PG／Neo4j読取・3 Worker、既存TLS証明書／設定とbackup復号を確認。Ubuntu診断の標準・ESM security更新は0件。R1〜R6で合意した本運用初版を公開・確認済みとする。別プロジェクトeBay監視unitの20:06失敗は未変更・別記。[Linux補修実測](verification/LINUX_SECURITY_R6_20261108.md)／[Caddy最終確認](verification/CADDY_SECURITY_R6_20261108.md)。以下は各時点の履歴。

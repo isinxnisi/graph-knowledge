@@ -5,6 +5,8 @@ import {migrateMemberDatabase} from '../lib/server/member/migrate';
 import {createKnowledgeFoundationService} from '../lib/server/knowledge-foundation';
 import {createKnowledgeImports} from '../lib/server/knowledge-import';
 import {createWebKnowledgeImports,webImportPrincipal} from '../lib/server/knowledge-web-import';
+import {createThemeAuthoringReader} from '../lib/server/knowledge-theme-authoring-reader';
+import {themeAuthoringGuide} from '../lib/server/knowledge-theme-authoring-guide';
 import {createThemeRegistrations} from '../lib/server/knowledge-theme-registration';
 import {ensureKnowledgePublicationSchema} from '../lib/server/knowledge-publication';
 import {migrateKnowledgeTranslations} from '../lib/server/knowledge-translation-migrate';
@@ -17,9 +19,10 @@ const owner=randomUUID(),other=randomUUID();
 let service:ReturnType<typeof createThemeRegistrations>,inbox:ReturnType<typeof createKnowledgeImports>,web:ReturnType<typeof createWebKnowledgeImports>;
 const input=()=>({requestId:randomUUID(),title:'Aをたどる',description:'資料からたどるテーマ',initialView:'timeline',recordPins:[{id:'baseline',revision:1}]});
 const foundation=()=>createKnowledgeFoundationService(knowledge);
-const cfg=reviewConfigSchema.parse({projectId:'theme-registration-fixture',billingTier:'free',verifiedAt:new Date().toISOString(),model:'gemini-3.1-flash-lite',rpm:10,tokensPerMinute:30000,requestsPerDay:80,requestsPerMonth:2400,inputTokensPerDay:250000,outputTokensPerDay:160000,inputTokensPerMonth:7500000,outputTokensPerMonth:4800000,apiKeyFile:'/unused',allowedUsers:[owner]});
+const cfg=reviewConfigSchema.parse({projectId:'theme-registration-fixture',billingTier:'free',verifiedAt:new Date().toISOString(),model:'gemini-3.1-flash-lite',rpm:15,tokensPerMinute:500000,requestsPerDay:80,requestsPerMonth:2400,inputTokensPerDay:250000,outputTokensPerDay:160000,inputTokensPerMonth:7500000,outputTokensPerMonth:4800000,apiKeyFile:'/unused',allowedUsers:[owner]});
 async function wake(){await pool.query("UPDATE knowledge_missions.theme_registrations SET next_attempt=clock_timestamp() WHERE state IN('saved','processing')");}
 beforeAll(async()=>{
+ vi.stubEnv('COMMUNITY_ENABLED','1');vi.stubEnv('SITE_OPERATIONS_ENABLED','1');
  expect(process.env.MEMBER_TEST_CONTAINER).toMatch(/^gk-member-test-/);
  expect((await pool.query('SELECT current_database() name')).rows[0].name).toBe('graph_member_test');
  expect((await knowledge.query('SELECT current_database() name')).rows[0].name).toBe('plunode_knowledge75_test_capsule_share');
@@ -28,6 +31,10 @@ beforeAll(async()=>{
  await migrateMemberDatabase(pool,...Array(27).fill(true));await migrateMemberDatabase(pool,...Array(27).fill(true));
  expect((await pool.query('SELECT name,checksum FROM member_migration WHERE name<>$1 ORDER BY name',['036-theme-registration.sql'])).rows).toEqual(before);
  expect((await pool.query('SELECT count(*)::int n FROM member_migration')).rows[0].n).toBe(37);
+ const baseline=(await pool.query('SELECT name,checksum FROM member_migration ORDER BY name')).rows;
+ await migrateMemberDatabase(pool,...Array(29).fill(true));await migrateMemberDatabase(pool,...Array(29).fill(true));
+ expect((await pool.query("SELECT name,checksum FROM member_migration WHERE name NOT IN('037-featured-themes.sql','038-theme-updates.sql') ORDER BY name")).rows).toEqual(baseline);
+ expect((await pool.query('SELECT count(*)::int n FROM member_migration')).rows[0].n).toBe(39);
  process.env.KNOWLEDGE_MISSIONS_ENABLED='1';process.env.SITE_OPERATOR_USER_IDS=owner+','+other;
 },30000);
 beforeEach(async()=>{
@@ -86,4 +93,54 @@ it('retains an invalid timeline request for correction instead of silently dropp
  const v={...input(),timeline:{version:1,axes:[{id:'calendar',kind:'calendar',label:'Events'}],placements:[{recordId:'item:typo',timeId:'event',axisId:'calendar'}],insets:[]}};
  await service.submit(owner,v);await service.recoverOne();expect(await service.status(owner,v.requestId)).toMatchObject({state:'needs-changes',theme:null});
  expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.objects WHERE kind='theme'")).rows[0].n).toBe(0);
+});
+
+async function theme(){const v=input();await service.submit(owner,v);await service.recoverOne();return (await service.status(owner,v.requestId)).theme!;}
+const edit=(t:{id:string;revision:number},changes:Record<string,unknown>={title:'Aをより詳しくたどる'})=>({requestId:randomUUID(),target:{id:t.id,revision:t.revision},changes,reason:'Improve the same theme from ChatGPT'});
+it('updates the same theme, keeps the original snapshot, recovers a replay after the target advanced and reads source URLs',async()=>{
+ const t=await theme(),v=edit(t);await service.submit(owner,v);await service.recoverOne();
+ const result=await service.status(owner,v.requestId);expect(result).toMatchObject({state:'published',operation:'update',theme:{id:t.id,revision:2,title:v.changes.title}});
+ expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id,1)).content.title).toBe('Aをたどる');
+ expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id,2)).content.recordPins).toEqual([{id:'baseline',revision:1}]);
+ expect(await service.submit(owner,v)).toMatchObject({replayed:true});
+ const reader=createThemeAuthoringReader(knowledge,'https://plunode.net');
+ expect((await reader.read('https://plunode.net/?ktheme='+encodeURIComponent(t.id))).snapshot.sources[0].content.url).toBe('https://example.org/base');
+ expect((await reader.find('theme','より詳しく',0)).items.map(i=>i.id)).toEqual([t.id]);
+ const guide=JSON.stringify(themeAuthoringGuide());expect(guide).toContain('package.sources[].content.url');expect(guide).toContain('https://science.nasa.gov/mission/webb/launch/');
+});
+it('appends existing records, reorders and removes only membership, retaining common data and prior theme versions',async()=>{
+ const t=await theme();
+ await foundation().execute({kind:'operator',id:'fixture'},{action:'create-bundle',requestId:randomUUID(),entityPins:[{id:'a',revision:1}],sources:[{id:'extra-source',content:{title:'Second source',url:'https://example.org/extra'}}],records:[{id:'extra',content:{kind:'note',subjectId:'a',assertion:'A works internationally.',evidence:[{id:'proof',source:{id:'extra-source',revision:1},locator:'Work',excerpt:'A works internationally.'}]}}],reason:'Second published fact'});
+ const v={...edit(t,{}),recordPins:[{id:'extra',revision:1}],recordOrder:['extra','baseline']};await service.submit(owner,v);await service.recoverOne();
+ expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id)).content.recordPins.map(p=>p.id)).toEqual(['extra','baseline']);
+ const remove={...edit({...t,revision:2},{}),removeRecordIds:['baseline']};await service.submit(owner,remove);await service.recoverOne();
+ expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id)).content.recordPins).toEqual([{id:'extra',revision:1}]);
+ expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id,1)).content.recordPins).toEqual([{id:'baseline',revision:1}]);
+ expect((await foundation().get({kind:'reader',id:'fixture'},'record','baseline')).revision).toBe(1);
+});
+it('reports concurrent edits and revocation instead of overwriting the current theme',async()=>{
+ const t=await theme(),a=edit(t),b=edit(t,{description:'Concurrent intent'});await service.submit(owner,a);await service.submit(owner,b);
+ await service.recoverOne();await service.recoverOne();expect(await service.status(owner,b.requestId)).toMatchObject({state:'needs-changes',theme:null});
+ expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id)).revision).toBe(2);
+ await expect(service.submit(owner,edit(t))).rejects.toMatchObject({code:'REVISION_CONFLICT'});
+ const v=edit({...t,revision:2});await service.submit(owner,v);await service.cancel(owner,v.requestId);expect(await service.status(owner,v.requestId)).toMatchObject({state:'cancelled'});
+ expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id)).revision).toBe(2);
+});
+it('recovers a committed edit after a lost acknowledgement without a second revision',async()=>{
+ const t=await theme(),v=edit(t);await service.submit(owner,v);
+ service=createThemeRegistrations(pool,knowledge,web,inbox,{afterThemeCommit:async()=>{throw Error('ACK lost');}});await service.recoverOne();
+ expect(await service.status(owner,v.requestId)).toMatchObject({state:'published',theme:{id:t.id,revision:2}});
+ expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.revisions WHERE kind='theme' AND id=$1",[t.id])).rows[0].n).toBe(2);
+});
+it('accepts a new source URL and theme-only background without partially changing the theme during review',async()=>{
+ const t=await theme();await createReviewQueue(pool).heartbeat(cfg);
+ const pkg={format:'plunode-knowledge-package',schemaVersion:1,namespace:'theme.direct',packageId:'background',revision:1,sources:[{id:'source',content:{title:'Independent public source',url:'https://example.org/theme-background',language:'en'}}],items:[{key:'background',operation:'add-information',about:{kind:'theme',id:t.id,revision:1},themes:[{id:t.id,revision:1}],record:{kind:'note',aboutTheme:t.id,assertion:'This theme places A in its wider context.',evidence:[{id:'proof',source:{id:'source',revision:1},locator:'Context paragraph',excerpt:'A has a wider context.'}]}}]};
+ const v={...edit(t,{}),package:pkg};await service.submit(owner,v);await service.recoverOne();
+ const dispatch=vi.fn(async()=>({state:'received' as const,status:200,raw:{responseId:'fixture',modelVersion:cfg.model,usageMetadata:{promptTokenCount:100,candidatesTokenCount:20,thoughtsTokenCount:0,totalTokenCount:120},candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify({suitability:'legitimate',support:'supported',reason:'The cited source supports this background.'})}]}}]}}));
+ await inbox.processNext(cfg,dispatch);expect(dispatch).toHaveBeenCalledTimes(1);
+ expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id)).revision).toBe(1);
+ await pool.query("UPDATE knowledge_import.items SET state='published' WHERE state='applied'");await wake();await service.recoverOne();
+ const result=await service.status(owner,v.requestId);expect(result,JSON.stringify(result)).toMatchObject({state:'published',theme:{id:t.id,revision:2}});
+ const snapshot=await foundation().resolveTheme({kind:'reader',id:'fixture'},t.id);expect(snapshot.snapshot.records).toHaveLength(2);
+ expect(snapshot.snapshot.sources.map(s=>s.content.url)).toContain('https://example.org/theme-background');
 });

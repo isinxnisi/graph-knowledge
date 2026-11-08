@@ -1,6 +1,6 @@
 import {afterEach,expect,it,vi} from 'vitest';
 import {randomUUID} from 'node:crypto';
-import {themeRegistrationInputSchema} from '../lib/domain/knowledge-theme-registration';
+import {themeRegistrationInputSchema,themeUpdateInputSchema} from '../lib/domain/knowledge-theme-registration';
 import {grantedThemeComposeScope} from '../lib/server/member/mission-oauth';
 import {createMissionMcpHandler} from '../lib/server/knowledge-mission-mcp';
 import {PROTOCOL_VERSION_META_KEY,CLIENT_INFO_META_KEY,CLIENT_CAPABILITIES_META_KEY} from '@modelcontextprotocol/server';
@@ -25,7 +25,26 @@ it('adds typed creation/status/cancellation only to the explicitly authorized ha
  const old=createMissionMcpHandler(collect),handler=createMissionMcpHandler(collect,{call:compose});
  const absent=await(await old.fetch(rpc('tools/call',{name:'submit_theme',arguments:request()}))).json();expect(absent.error||absent.result?.isError).toBeTruthy();expect(compose).not.toHaveBeenCalled();
  const tools=(await(await handler.fetch(rpc('tools/list',{}))).json()).result.tools;
- expect(tools).toHaveLength(8);expect(tools.find((v:{name:string})=>v.name==='submit_theme').inputSchema.properties.package).toBeDefined();
+ expect(tools).toHaveLength(14);expect(tools.find((v:{name:string})=>v.name==='submit_theme').inputSchema.properties.package).toBeDefined();
  const input=request();await handler.fetch(rpc('tools/call',{name:'submit_theme',arguments:input}));expect(compose).toHaveBeenCalledWith(expect.objectContaining({action:'submit-theme',requestId:input.requestId,title:input.title}));expect(collect).not.toHaveBeenCalled();
  compose.mockClear();await handler.fetch(rpc('tools/call',{name:'submit_theme',arguments:{...input,credential:'secret',origin:'https://other.example'}}));expect(compose).not.toHaveBeenCalled();
+});
+
+it('describes source URL registration and directly exposes update/read/guide without a collection lease',async()=>{
+ const compose=vi.fn().mockResolvedValue({ok:true}),handler=createMissionMcpHandler(vi.fn(),{call:compose});
+ const tools=(await(await handler.fetch(rpc('tools/list',{}))).json()).result.tools;
+ for(const name of ['get_theme_authoring_guide','read_theme','search_themes','update_theme','read_theme_knowledge'])expect(tools.some((t:{name:string})=>t.name===name)).toBe(true);
+ expect(tools.find((t:{name:string})=>t.name==='submit_theme').description).toContain('package.sources[].content.url');
+ await handler.fetch(rpc('tools/call',{name:'get_theme_authoring_guide',arguments:{}}));expect(compose).toHaveBeenLastCalledWith({action:'theme-guide'});
+ const update={requestId:randomUUID(),target:{id:'theme',revision:1},changes:{title:'Updated'},reason:'Improve the title'};
+ await handler.fetch(rpc('tools/call',{name:'update_theme',arguments:update}));expect(compose).toHaveBeenLastCalledWith(expect.objectContaining({action:'update-theme',target:update.target,changes:update.changes}));
+ compose.mockResolvedValueOnce({ok:false,code:'REVISION_CONFLICT',message:'Read the current theme'});
+ expect((await(await handler.fetch(rpc('tools/call',{name:'update_theme',arguments:update}))).json()).result.isError).toBe(true);
+});
+it('requires an explicit target/reason and preserves omitted update fields instead of replacing the theme',()=>{
+ const update={requestId:randomUUID(),target:{id:'theme',revision:3},changes:{description:''},reason:'Clear the introduction'};
+ expect(themeUpdateInputSchema.parse(update)).toMatchObject({changes:{description:''},recordPins:[],removeRecordIds:[],package:null});
+ expect(()=>themeUpdateInputSchema.parse({...update,target:undefined})).toThrow();
+ expect(()=>themeUpdateInputSchema.parse({...update,changes:{}})).toThrow();
+ expect(()=>themeUpdateInputSchema.parse({...update,recordPins:[{id:'a',revision:1}],removeRecordIds:['a']})).toThrow();
 });
