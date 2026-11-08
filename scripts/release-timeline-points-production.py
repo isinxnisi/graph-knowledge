@@ -2,7 +2,7 @@
 """Web-only timeline projection repair. No DB migration or Worker/OS update."""
 import copy,datetime,fcntl,importlib.util,json,os,pathlib,pwd,shutil,time
 ROOT=pathlib.Path('/opt/graph-knowledge')
-SOURCE='8cd039acfa628bb746d66dcfa2306b27d53eca25'
+SOURCE='9edea51a799aea6f9e8d30ff4438e3c7946c8dbd'
 def main():
  assert os.geteuid()==0;os.umask(0o077);stage=pathlib.Path.cwd().resolve()
  assert str(stage).startswith('/root/plunode-timeline-points-20261109-')

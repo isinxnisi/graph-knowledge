@@ -26,3 +26,16 @@ calendarGraph／通常KnowledgeTimeline／ThemeTimelineの38件と変更対象li
 
 
 追加の4例（同一月と同一日／同一日幅と点／同一日幅と翌日までの幅／同一日幅と09〜10時）をモデルと実UIで検証。2例目の短い範囲記号は本人確認済み。日内の時刻との関係を保つため描画上の上端を日の末まで確保し、未知の時刻は表示・保存しない。型検査・変更対象lintも成功。期間同士の集約方式は未決のまま維持する。
+
+
+## 最終資材と実画面確認（切替前）
+
+- アプリsource `9edea51a799aea6f9e8d30ff4438e3c7946c8dbd`。localhost3200／HTTPS βはbuild `NryL0r9D2f-0_C79h2o9g`へ反映済み。14個のprivate設定と既存Worker PIDを照合し、変更なし。会員・知識DBへの操作なし。
+- βの既存Webbテーマ構成版5で、通常年表の6点＋1範囲、点選択と関係図、実Googleセッションを確認。正式テーマ構成版6のデータをβへ取り込んではいない。
+- 同じ実装のThemeTimelineを用いるローカルの一時画面で、4例と同一期間A・Bを表示。2例目の14pxの範囲記号（44pxの操作領域）、4例目の日内の時刻範囲、共通軸04→12→20を実Chromeで確認。一時画面はfixtureだけを渡し、DB・共有データを変更せず終了した。
+- browser viewport指定は390pxを返さず実測1920pxだったため、今回390pxの実画面確認済みとはしない。既存レスポンシブ構成を変更せず、短い範囲の描画と操作領域を確認した。
+- 正式向けWeb build `N8Bl5w9EhBsWobty5fc7G`、tag `plunode-web:timeline-points-9edea51a`、config image `sha256:40daf43670650e97b11d7b54e1d8318b9a9544fc05142b54c2be5889efd3e7f4`。転送後のarchive全layer／config／manifestとchecksumを照合済み。本番切替・正式画面確認は未完了。
+
+本番反映はWeb imageだけを更新する。既存構成hash、会員39／知識9のmigration checksum、Web版、KG・PostgreSQL・3 Workerのcontainer IDと設定を照合し、変更があれば停止する。Web設定のbackupを保持し、失敗時は同じDB形式を読める直前Webへだけ復帰する。DB migration・dump復元・Worker／OS更新は行わない。
+
+Web manifest ID `sha256:40ad911ed47470d42f4ef9a896258913c80db1fb5c00ecf9513fe69605086573`。再開コマンドは `wsl -d Ubuntu -- python3 /home/isinxnisi/1.projects/7.graph-knowledge/backups/timeline-points-20261109/run-release.py`。旧stage 8cd039acは使用せず、9edea51aの別stageへ固定する。VPSの既存sudo本人入力待ち。
