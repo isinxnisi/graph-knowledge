@@ -18,4 +18,17 @@ Chromeの実viewportを390×844へ設定し、対象ヘッダのタイトル幅�
 
 正式候補image tag `plunode-web:theme-locale-bbd9503c`、config `sha256:b802fb24d23de021d2408e77dc630f09c45ad89c54c03551899f01642a0e8e5b`、manifest `sha256:e64c68c7617631f7f9d9cd0a38841fb3dfca4df296f27408a893f1eee5a2ce45`。standaloneのrobots HTTP200・正式build ID・既存AIラボartifact hashを照合。archive全layer・config・manifestを検証し、VPSへ転送後の全checksum一致も確認した。直前app bc486903／正式build RWsvoeFimf3i8iA3_oAfHを前提に、既存のWeb-only切替契約を使う。DB移行／Worker／OSの更新は不要。
 
-本番はまだ未切替。VPSのsudo入力後、正式TOPの英訳・スマホ見出しを確認して完了する。実行用は `/home/isinxnisi/1.projects/7.graph-knowledge/backups/theme-locale-mobile-20261109/run-release.py`。同じコマンドが共通guardを取得・解放し、Web設定のbackupと直前の互換Webへの復帰手順を保持する。
+切替前はVPSのsudo入力を待ち、正式TOPの英訳・スマホ見出しの確認を残していた。実行用は `/home/isinxnisi/1.projects/7.graph-knowledge/backups/theme-locale-mobile-20261109/run-release.py`。同じコマンドが共通guardを取得・解放し、Web設定のbackupと直前の互換Webへの復帰手順を保持する。
+
+
+## 正式反映と実画面確認（完了）
+
+2026-11-09、本人のsudo実行により、同じ固定アプリ `bbd9503cdf7adb237bf3a1117605379573d8f439`／正式build `S36Jte03E0skpM32EgDrk`／manifest image `sha256:e64c68c7617631f7f9d9cd0a38841fb3dfca4df296f27408a893f1eee5a2ce45` へWebだけを切替。backupは `/opt/graph-knowledge/backups/theme-locale-web-20261108T232210Z`（11月9日08:22 JST）。activated記録をSSHで読み戻し、会員39／知識9の全migration不変、Worker・既存設定・KG・AIラボartifactの保持とDB復元なしを確認した。
+
+正式 `/en` のHTTP200と初期HTML内の英訳タイトル、当該build manifestのHTTP200を確認。実ChromeでTOPの紹介テーマのタイトル・説明が公開英訳となり、同じカードからテーマ構成版6へ進めた。390×844の実viewportで英題 `Webb's Journey to Unfolding in Space` を表示し、タイトル幅354px・white-space normal・ページ横はみ出しなしを確認。年表でも公開済みの1989年／1996年の本文などは英語になった。未登録の年表見出し・時期ラベルなどは原文のまま。追加のAI送信・訳文登録はしていない。
+
+viewportを1920pxの通常幅へ戻し、従来の横並びと見出し幅約874px・横はみ出しなしを確認。右の詳細も同じ英訳タイトル・説明と構成版6を表示した。Chromeでスマホ相当幅を確認した結果であり、iPhone実機のChromeを遠隔操作した検証とは区別する。
+
+確認先は [正式英語TOP](https://plunode.net/en) → 紹介テーマ、または [Webb構成版6](https://plunode.net/en?ktheme=theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1&krev=6&kview=split)。日本語表示では日本語原文を使い、公開済み英訳がある項目のみ英語表示へ切り替える。
+
+localhost3200／HTTPS β／正式VPSはいずれも同じアプリsourceまで反映済み。β buildは `TsVq7vQb6n5X9cGPCLM3o`、正式buildは `S36Jte03E0skpM32EgDrk`。正式反映後は記録のみの追記で、不要な再build・再配置をしない。今回の3工程は完了。
