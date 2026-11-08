@@ -348,5 +348,18 @@
     "apiRequests": 0,
     "processesStarted": 0,
     "formalInstallationPending": true
+  },
+  "terminalFix": {
+    "localControllingTtyAbsent": true,
+    "inheritedStdinWasPipe": true,
+    "remotePtyConfirmed": true,
+    "fixedProbeRead": true,
+    "sudoInvoked": false,
+    "productionChanged": false,
+    "detachedPtyStdinConfirmed": true,
+    "remoteGetpassInputConfirmed": true,
+    "inputEchoSuppressed": true,
+    "reason": "Autopilot guard separates the session; no local controlling tty",
+    "implementation": "Inherited stdio with forced remote PTY; no auth or lock changes"
   }
 }

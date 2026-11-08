@@ -135,3 +135,12 @@ APT metadataの更新は成功。noble-securityの4componentの配布元も確�
 **本番の正式切替は未実施。** R6bでは既存sudo入力後、正式Google・実テーマ作成・投稿／訂正・Capsule／同URL共有・OGP・PC Worker・同じChatGPT会話の正式API接続を確認する。管理者の毎回承認や全件AI完了を条件に追加しない。
 
 PC Worker再開用launcherも追加した。既存β起動時の復帰へ接続し、正式profile未設置時は既存動作を維持。実際のprivate候補でローカル検査とβ endpoint拒否を確認し、API／AI送信0・process起動0。正式profileの設置と実接続はR6bで切替後に行う。
+
+
+## R6b切替前の端末修正
+
+本人の最初の切替実行は、PC helperが /dev/tty を開く時点でENXIOとなり終了した。SSH／sudo／VPSの切替scriptは未実行。正式dataset APIは200、新しい知識theme-home APIは404で従来版を継続している。
+
+原因はAutopilot guardのstart_new_session=Trueにより、子に制御端末がないこと。共有ロックの分離・権限・host鍵検証は変更せず、scripts/production_ssh_terminal.pyで標準入出力を継承し、ssh -ttで遠隔PTYを確保する。privateなrun-release.py／run-preparation.pyから同じ実装を呼ぶ。本番image・build・SQL・runtime archiveとSHA256 anchorは変更していない。
+
+実SSHの非特権probeで、制御端末なし＋pipe入力と、制御端末なし＋継承PTY入力を確認。後者では非機密の固定文字列をgetpassへ渡し、入力が画面へechoされず成功した。sudoやDB／Web操作は行っていない。公開本体の再buildは不要。R6bは修正版helperのsudo実行と正式確認が引き続き残る。

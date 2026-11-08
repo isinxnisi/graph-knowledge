@@ -1,3 +1,5 @@
+2026-11-08 R6b切替前：PC helperがguard配下で/dev/ttyを開けず終了。SSH／sudo／本番変更は未実行。標準入出力継承＋遠隔PTYへ修正し、実SSHの非特権probeで制御端末なし・継承端末・非表示入力を確認。本番資材は027f89bf／Sf6Myn-qsOSMt8bnqxpE9のまま。修正版helperのsudo切替・正式確認待ち。[詳細](verification/KNOWLEDGE_PRODUCTION_R6A_20261108.md#r6b切替前の端末修正)。
+
 2026-11-08 R6a：実物backupの分離復元（34→84表、会員36件）・再実行・PCでの復号／hash照合まで成功。Linuxのsecurity追加候補0を確認。正式資材app027f89bf／build Sf6Myn-qsOSMt8bnqxpE9と設定・切替scriptを準備。3200／HTTPS βは同source・webpack build RTmRnpoWCYnN5rgv2CLlz、実Google・PC／390px確認済み。β100回／日へ切替し台帳維持。本番は旧版、R6bのsudo切替・正式確認待ち。[実測・残り](verification/KNOWLEDGE_PRODUCTION_R6A_20261108.md#r6aの最終資材切替待ち)。以下は各時点の履歴。
 
 2026-11-08 本番監査受領：旧Web 3a533256、会員000〜019のchecksum一致を確認し、追加020〜035の16件と知識001〜009を確定。snapshot backup・分離復元／再実行の準備資材を転送・照合済み、本人のsudo実行待ち。一般提供の案内をapp 027f89bfへ追加し、beta／正式buildを準備中。本番DB／Web／OSは未更新。[実測・残件](verification/KNOWLEDGE_PRODUCTION_R6A_20261108.md#本番監査の受領と実物復元の準備)。以下は各時点の履歴。

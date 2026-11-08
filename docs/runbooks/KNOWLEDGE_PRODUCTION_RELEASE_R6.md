@@ -84,3 +84,8 @@ app `027f89bf`／正式build `Sf6Myn-qsOSMt8bnqxpE9`。会員16追加・知識9�
 正式profileを設置した後は、既存の`start-local-previews.py beta`／`all`でPC・WSLを復帰すると、この2 Workerも再開する。未設定なら既存のβ起動に影響しない。正式Workerの起動失敗でβの起動を止めない。定期収集の調査は同じChatGPT会話・API直送を維持し、PC Workerは資料の安全な取得・配送と、VPSの予約済み読解だけを担う。
 
 現在はprivate資材の準備と`--check`・β origin拒否まで確認済みで、正式用profileの設置と実接続は本番切替後に行う。新しいCodex予定は作らない。
+
+
+### guard配下の端末入力
+
+PC helperは制御端末 /dev/tty を開き直さない。guardは子を別sessionへ分けるため、scripts/production_ssh_terminal.pyで既存の標準入出力を引き継ぎ、SSHは -tt を使う。guardやsudoの認証条件を緩めない。run-release.py --terminal-check はsudoなしの固定文字列probeであり、本番切替とは別。標準入力をpipeから渡す場合も、公開用sudoパスワードをpipe／ファイル／チャットへ保存してはならない。通常の公開実行では本人がterminalへ直接入力する。
