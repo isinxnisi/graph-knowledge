@@ -2,7 +2,7 @@
 
 ## 現在地
 
-紹介テーマの選択・掲載順・プレビュー・明示保存を実装し、main／localhost:3200／HTTPS βの実操作を確認した。本番向け資材を準備中で、**正式VPSにはまだ未反映**。R1〜R6の完了状態を変更するものではなく、その後の追加改善。
+紹介テーマの選択・掲載順・プレビュー・明示保存を実装し、main／localhost:3200／HTTPS βの実操作を確認した。本番向け資材は転送・照合済みで、既存sudoの本人入力待ち。**正式VPSにはまだ未反映**。R1〜R6の完了状態を変更するものではなく、その後の追加改善。
 
 - アプリsource：`4dd8af2594d124a5984b97925dd9eff454aca32c`
 - localhost／β build：`T0in9w8OdeSYUhnlpc_gK`
@@ -48,3 +48,7 @@ backup：開発PCの作業worktree `.local/featured-themes-20261108/beta-backup-
 - `sudo -n true` はパスワード要求で実行不可。本人のterminal入力を必要とする。[公開・再開手順](../runbooks/FEATURED_THEMES_RELEASE.md)。本番適用の成功とは区別する。
 
 補修後のlocalhost公開 `theme-home` は200で、元の3件・元の順。管理APIは未認証401を確認した。
+
+正式stage `/home/develop/plunode-featured-20261108/release-4dd8af25` の全6資材のchecksum照合を完了。実装・記録はmainと `codex/featured-themes-operations` へ通常push済み。本人入力後は正式URLでの掲載保存とTOPを確認し、配置結果を追記する。
+
+今回生成したコンパイルcache約1.8GBを整理し、旧runtime buildはmainの無視対象 `backups/featured-themes-20261108/previous-builds` へ保管した。DB dump・private設定・モデル・稼働volumeは削除していない。Cドライブの実空きは1.8GBで、WSLの空きblock trimだけでは物理容量は増えなかった。既存サービスを止める追加compactは今回行っていない。
