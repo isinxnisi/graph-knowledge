@@ -94,3 +94,26 @@ HTTPS βは既存Googleログイン状態で次を実操作した。
 WSLの標準urllibによるHTTPS βの追加取得は403だった。Chrome上のβ閲覧は成功しており、この403をアプリ表示失敗や本番のクロール結果へ読み替えない。SEOのヘッダー・HTML・画像・サイトマップは、同じβ向けbuildのローカルHTTPと正式Hostの隔離契約テストで確認した。正式VPSは未配置のため、正式originの実HTTP・外部SNSカード・Search Console／Google検索登録は未確認。
 
 画面記録：`C:/Users/nishr/.codex/tmp/theme-reading-beta-desktop.png`、`C:/Users/nishr/.codex/tmp/theme-reading-beta-mobile-en.png`。一時3280は今回の比較用で、日常確認先は3200／HTTPS β。残る外部依存はCreators APIの実資格・認証設定、OneLinkの国別連携、実商品画像での確認。未決レイアウト2組は比較試作のまま保持し、本番公開と採用判断を今回の完了へ混ぜない。
+
+## 追調整：情報密度と全体のまとまり（2026-11-10）
+
+利用者から「年表の情報密度が下がり過ぎ」「全体のデザインが整っていない」と指摘。見出し・短文・対応する関係・種別・同じ日付・出典ボタンが縦に積まれた前回の構成を見直した。主文は年表用短文を優先して1つにし、種別はその文と同じ流れへ、関係対応は補助行へ、出典は枠なしの短い入口へまとめた。左軸の日付は重複させず、期間の意味と両端を残す。期間名の繰返しだけを削り、詳細・時期の線のアクセシブルな名前には全ラベルを保持する。
+
+1920×855の同じ幅で先頭4記録の実DOM高さを比較：
+
+| 記録 | 変更前 | 変更後 |
+|---|---:|---:|
+| 打上げ | 196.8px | 88.1px |
+| 遮熱膜の展開工程 | 231.4px | 130.2px |
+| ミッドブーム | 214.4px | 88.1px |
+| 三層の張力調整 | 196.8px | 88.1px |
+
+主文はPC13px・スマホ14pxを使用し、文字を一律に縮小して詰めない。導入は画像・余白を調整し156→130px。詳細の見出しは23pxの同じ書体・階層にそろえ、未選択時も説明が先、構成版・翻訳は補助情報の開閉内に置いた。点・期間の幾何、画面の選択と戻り、元のデータ、SEO契約は変更しない。
+
+関連4ファイル37テスト成功、変更TSXとテストのlint成功、型検査込みbuild成功。初回の単体テスト起動はNode標準runnerを指定したためCSS importで停止し、リポジトリ既定のVitestで実行し直した。初期詳細を自動で概要へ置換する案は既存の選択契約を変えるため採用せず、順序と見せ方の調整に留めた。
+
+アプリ `0e9776da57bf80db3f4e1cd7bf503d99680fcbeb`／build `t5JBnVwJ-LNI-dyBki84N` をmainと作業ブランチへpush後、3200／HTTPS βへ反映。3200のHTTP 200とbuildを確認。既存22設定のhashと5 Workerの同じPIDを保全し、Webだけ再起動した。DB・KG・収集予定・本番VPSは変更なし。旧buildはmain `.local/theme-density-beta-20261110/previous` に保持。
+
+HTTPS βの実Google状態で日本語PCの同じ行高・指定出典の展開を確認。英語390pxでGraph→Details→同じGraphへ復帰し、期間表記と主文を確認。320pxは同じ最終buildのローカルでdocument310px／viewport320px、390pxはβで380px／390px。実iPhoneは未確認。写真・枠・余白・選択表示を実画面で比較した。日時なし情報・地域未対応時のA/Bを確定した意味ではない。
+
+画面記録：`C:/Users/nishr/.codex/tmp/theme-reading-density-beta-desktop.png`／`C:/Users/nishr/.codex/tmp/theme-reading-density-beta-mobile-en.png`。ブラウザの一時的なviewportは解除し、確認用3280は停止、日常確認先3200とHTTPS βを稼働したまま残す。

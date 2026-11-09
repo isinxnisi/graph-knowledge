@@ -1,4 +1,4 @@
-2026-11-10 テーマ閲覧の追調整：①密度の原因確認・②主文と補助行の再整理を完了、③最終build／狭幅確認中｜残りは③3200／HTTPS β反映と記録｜今回は③まで、本番未変更。
+2026-11-10 テーマ閲覧の追調整：①原因確認・②密度と階層の調整・③検証／3200／HTTPS β反映まで完了｜今回の修正に残作業なし｜今回は③まで、本番未変更。app 0e9776da／β t5JBnVwJ-LNI-dyBki84N。先頭4件197〜231→88〜130px、37テスト・lint・型検査込みbuild、PC／390px日英の出典往復と320pxを確認。[実測](verification/THEME_READING_REFRESH_BETA_20261110.md)。
 
 2026-11-10 テーマ閲覧UI・SEO：①仕様照合・②実装と実内容・③検証／3200／HTTPS β反映まで完了｜今回の残りは採用判断と別途承認後の本番公開｜今回は③まで。app aa0d6009、β build w9CfEe6fPaVJhsJ0L6Whn。日英・390／320／1024px、出典／概要の往復、実画像OGと初回HTML・公開境界を確認。商品API資格・OneLink実接続は未確認、配置A/Bは比較試作。本番未変更。[設計](design/THEME_READING_REFRESH_20261110.md)／[検証・制約](verification/THEME_READING_REFRESH_BETA_20261110.md)。
 
