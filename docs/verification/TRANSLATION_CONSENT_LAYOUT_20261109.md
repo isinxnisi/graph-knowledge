@@ -1,6 +1,6 @@
 # 翻訳欄のチェックボックスとスマホ表示
 
-2026-11-09。①原因確認・②局所修正／画面確認・③localhost／HTTPS β／正式反映の3工程。①・②を完了。③はlocalhost／HTTPS βへ反映し、本番資材の転送・照合まで完了。本番切替・正式画面確認を残す。
+2026-11-09。①原因確認・②局所修正／画面確認・③localhost／HTTPS β／正式反映の3工程。①・②・③を完了。localhost／HTTPS β／正式Webへ反映し、正式の390px／PC表示とチェック操作を確認した。
 
 ## 原因と変更範囲
 
@@ -21,3 +21,12 @@ Graph探索の親 `Explorer.module.css` の `.explorer input { width:100% }` が
 - mainへ通常反映し、3200／HTTPS βで上記を確認。14 private設定・会員39／知識8 migration checksum・既存Worker PIDを保持。Webだけを再起動。画面記録：`C:/Users/nishr/.codex/tmp/translation-consent-beta-390-20261109.png`。
 - 正式候補 image `plunode-web:translation-consent-9d39f7d2`、manifest `sha256:c34b30b2108df60a711c44ca9ad1956f63390e0230f0d759dc09e36223b12519`。archiveのconfig／layer／source照合、VPS転送hash・runner --checkに成功。切替helperは既存のWeb-only手順を引き継ぎ、a9f2deaa／build XLE-FT07_ebW1CI2ERHw7、private設定、会員39／知識9 checksumと稼働サービスを再照合してWebだけを更新する。DB／Worker／KG／OSは更新しない。
 - 本番はまだa9f2deaaの旧表示。既存sudoは本人入力が必要なため、PowerShellで `wsl -d Ubuntu -- python3 /home/isinxnisi/1.projects/7.graph-knowledge/backups/translation-consent-20261109/run-release.py`。実行後の正式確認と完了記録を残す。
+
+
+## 正式反映・画面確認を完了
+
+- 本人のsudo実行後、正式app `9d39f7d2`／build `f-Ryn5yWRD-CNjoPfInPS`とHTTP200を確認。Web manifestは上記と一致し、Webだけ更新。会員39／知識9のmigration、Worker・設定・KG・AI artifactは不変。DB復元は行っていない。
+- 設定backup：`/opt/graph-knowledge/backups/translation-consent-web-20261109T094700Z`。activated.jsonとHTTP／画面計測をPCのignored `backups/translation-consent-20261109/`へ保存した。
+- 実Googleログインの正式Theme構成版6を390pxで開き、年表見出しの翻訳欄を確認。checkbox幅16px／文章幅278.03px／label高さ40.78pxで、修正前の幅301.22px／高さ570.94pxの崩れは解消。横へのはみ出しなし。チェックで生成ボタン有効、解除で無効になる。PC幅1920pxでも幅16px／高さ40.78pxを確認し、viewport指定を解除した。
+- 正式画面記録：`C:/Users/nishr/.codex/tmp/translation-consent-formal-390-20261109.png`。実機iPhoneの確認は行っていない。
+- 同じ欄では、修正前から「翻訳依頼を確認できません。」のstatus取得エラーが表示されることも確認した。今回変更したCSS／markupによるエラーとは区別して記録する。原因調査・実AI要求は今回行わず、下書き生成の成功を確認したとは報告しない。チェック操作と表示崩れの修正は完了。

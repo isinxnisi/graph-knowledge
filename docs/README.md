@@ -1,3 +1,5 @@
+2026-11-09 翻訳欄のスマホ表示是正：①原因確認・②修正／β確認・③正式反映と画面確認まで完了｜今回の表示修正は残作業なし｜工程は③まで。app9d39f7d2、β kmG5WncQ4B_AyPgirQCqe、正式 f-Ryn5yWRD-CNjoPfInPS。正式390pxでcheckbox16px／文章高さ41px、PCとチェック操作を確認。DB／Worker更新なし。既存の依頼状況取得エラーは別記。[完了結果・制約](verification/TRANSLATION_CONSENT_LAYOUT_20261109.md)。
+
 2026-11-09 翻訳欄のスマホ表示是正：幅100%がcheckboxへ継承された崩れを局所修正。3200／HTTPS βで390px・320px・PC、日本語／英語とチェック操作を確認。本番資材は転送・照合済み、sudo切替と正式確認を残す。[検証・再開](verification/TRANSLATION_CONSENT_LAYOUT_20261109.md)。
 
 2026-11-09 運営APIのシステム投入是正：①確認・②実装／β・③正式補修／受入まで完了｜残作業なし｜今回の工程は③まで。app a9f2deaa、β ayda-KKHQdO56T_QdP8ju、正式 XLE-FT07_ebW1CI2ERHw7。43受付の誤帰属を補修し42公開creditを除去。原本・訳文・私有owner・最新Theme版8／旧版6を保持。正式画面、16公開訳文、同一受付再送とbackup復号を確認。[完了結果](verification/OPERATOR_API_SYSTEM_INTAKE_20261109.md)。以下は各時点の履歴。
