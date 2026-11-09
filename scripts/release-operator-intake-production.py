@@ -6,6 +6,29 @@ ROOT=pathlib.Path('/opt/graph-knowledge')
 def module(name,file):
  spec=importlib.util.spec_from_file_location(name,file);value=importlib.util.module_from_spec(spec);spec.loader.exec_module(value);return value
 
+def fingerprints(sql,tables):
+ # Hash each row before aggregation, so captured documents never inflate the
+ # aggregate buffer. Separate statements avoid database-wide UNION/JIT plans.
+ # Send them through one psql session to avoid one docker exec per table.
+ def ident(v):return '"'+v.replace('"','""')+'"'
+ queries=[]
+ for t in tables:
+  source='SELECT '+','.join(map(ident,t['columns']))+' FROM '+ident(t['schema'])+'.'+ident(t['name'])
+  queries.append("WITH hashes AS MATERIALIZED (SELECT encode(sha256(convert_to(row_to_json(x)::text,'UTF8')),'hex') AS h FROM ("+source+") x) SELECT count(*)||':'||encode(sha256(convert_to(coalesce(string_agg(h,'' ORDER BY h),''),'UTF8')),'hex') FROM hashes")
+ if not queries:return {}
+ rows=sql('SET jit=off; SET max_parallel_workers_per_gather=0; '+';'.join(queries)).splitlines()
+ assert len(rows)==len(tables) and all(len(v.split(':'))==2 and len(v.split(':')[1])==64 for v in rows),'Invalid table fingerprint results'
+ return {t['schema']+'.'+t['name']:value for t,value in zip(tables,rows)}
+
+def knowledge_fingerprints(sql,tables):
+ # Check every table's tuple identity/version without expanding repeated large
+ # projection bodies. Any row write changes this signature. Hash authoritative
+ # originals and translations by content as well; the read model is derived.
+ originals={'objects','revisions','text_translation_heads','text_translation_revisions','source_acquisitions','source_acquisition_links'}
+ assert originals<=set(t['name'] for t in tables if t['schema']=='knowledge75')
+ versions=[{**t,'columns':['ctid','xmin']} for t in tables]
+ return {'rowVersions':fingerprints(sql,versions),'originals':fingerprints(sql,[t for t in tables if t['schema']=='knowledge75' and t['name'] in originals])}
+
 def repair_command(run,image,network,environment,apply=False):
  output=run(['docker','run','--rm','--network',network,'--memory','384m','--env-file',str(environment),image,'scripts/repair-operator-intake-privacy.ts','--apply' if apply else '--plan'])
  return json.loads(output)
@@ -28,12 +51,12 @@ def rehearsal(h,f,sql,backup,tables,before,image,postgres,flags):
   with (backup/'member.dump').open('rb') as stream:
    result=subprocess.run(['docker','exec','-i',name+'-pg','pg_restore','-h','127.0.0.1','-U','restore_admin','-d','graph_member','--exit-on-error'],stdin=stream,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
   assert result.returncode==0,'Separate database restore failed'
-  assert f.columns(restored)==tables and f.fingerprints(restored,tables)==before,'Restored member data differs'
+  assert f.columns(restored)==tables and fingerprints(restored,tables)==before,'Restored member data differs'
   env=backup/'rehearsal.env';h.private(env,'\n'.join([*(k+'='+v for k,v in flags.items()),'MEMBER_DATABASE_URL=postgresql://gk_member@graph-member-postgres:5432/graph_member','NODE_OPTIONS=--max-old-space-size=256'])+'\n')
   plan=repair_command(run,image,name,env);applied=repair_command(run,image,name,env,True);again=repair_command(run,image,name,env,True)
   assert plan['submissionIds']==applied['submissionIds']==again['submissionIds'] and plan['originalDigest']==applied['originalDigest']==again['originalDigest']
   assert again['personalCredits']==again['publicationCredits']==0
-  after=f.fingerprints(restored,tables)
+  after=fingerprints(restored,tables)
   assert all(after[k]==v for k,v in before.items() if k not in ['member_knowledge.submission_revisions','member_knowledge.publication_contributors']),'Unrelated restored rows changed'
   assert f.columns(restored)==tables
   return plan
@@ -43,7 +66,14 @@ def rehearsal(h,f,sql,backup,tables,before,image,postgres,flags):
 
 def main():
  assert os.geteuid()==0;os.umask(0o077);stage=pathlib.Path.cwd().resolve();assert str(stage).startswith('/root/plunode-operator-intake-20261109-')
- h=module('image_checks',stage/'production_image_verification.py');f=module('fingerprints',stage/'release-featured-themes-production.py');run=h.run
+ h=module('image_checks',stage/'production_image_verification.py');f=module('fingerprints',stage/'release-featured-themes-production.py')
+ def run(args,data=None,output=None):
+  p=subprocess.run(args,input=data,stdout=output or subprocess.PIPE,stderr=subprocess.PIPE)
+  if p.returncode:
+   h.private(stage/'command-failure.json',json.dumps({'program':args[0],'exit':p.returncode,'stderr':p.stderr.decode(errors='replace')}))
+   raise RuntimeError('Protected command failed; see private command-failure.json: '+args[0])
+  return p.stdout.decode().strip() if p.stdout is not None else ''
+ h.run=run
  lock=(ROOT/'.member-activation.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
  m=json.loads((stage/'manifest.json').read_text());prev=m['previous'];assert prev['source']=='a5b82aae26e9d9f200b8e6b311a4a949bc81d973' and m['additionalMigrations']==[]
  for name,sha in prev['files'].items():assert h.digest(ROOT/name)==sha,'Private runtime setting changed'
@@ -73,13 +103,15 @@ def main():
  backup=ROOT/'backups'/('operator-intake-'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ'));backup.mkdir(mode=0o700)
  for name in ['compose.yaml','app.env','knowledge.env']:shutil.copy2(ROOT/name,backup/name);(backup/name).chmod(0o600)
  shutil.copy2(stage/'manifest.json',backup/'manifest.json');stopped=False;repair_started=False
+ h.emit('preflight-ok',source=m['sourceCommit'],build=m['build'],additionalMigrations=[],backup=str(backup))
  try:
   assert h.digest(ROOT/'compose.yaml')==compose_sha
   run(comp+['stop','-t','60','web',*workers]);stopped=True
-  tables=f.columns(sql);before=f.fingerprints(sql,tables);ktables=f.columns(lambda q:sql(q,'plunode_knowledge75_production'));kbefore=f.fingerprints(lambda q:sql(q,'plunode_knowledge75_production'),ktables)
+  tables=f.columns(sql);before=fingerprints(sql,tables);ktables=f.columns(lambda q:sql(q,'plunode_knowledge75_production'));kbefore=knowledge_fingerprints(lambda q:sql(q,'plunode_knowledge75_production'),ktables)
+  h.emit('preservation-baseline-ok',memberTables=len(tables),knowledgeTables=len(ktables),boundedChecks=True)
   for db,name in [('graph_member','member.dump'),('plunode_knowledge75_production','knowledge.dump')]:
    with (backup/name).open('wb') as stream:run(['docker','exec',pg,'pg_dump','-U','postgres','-d',db,'-Fc'],output=stream)
-  assert f.fingerprints(sql,tables)==before
+  assert fingerprints(sql,tables)==before
   plan=rehearsal(h,f,sql,backup,tables,before,m['memberOps']['tag'],cfg['services']['graph-member-postgres']['image'],flags)
   # Every known API request must be classified by the historical capture check.
   owners=flags['SITE_OPERATOR_USER_IDS'].split(',')
@@ -103,8 +135,8 @@ def main():
    for file in [payload,key,verified]:file.unlink(missing_ok=True)
   live_plan=json.loads(run(ccomp+['run','--rm','--no-deps','knowledge-review','scripts/repair-operator-intake-privacy.ts','--plan']));assert live_plan==plan,'Live repair plan differs from restored rehearsal'
   repair_started=True;result=json.loads(run(ccomp+['run','--rm','--no-deps','knowledge-review','scripts/repair-operator-intake-privacy.ts','--apply']));assert result['submissionIds']==plan['submissionIds'] and result['originalDigest']==plan['originalDigest']
-  after=f.fingerprints(sql,tables);assert all(after[k]==v for k,v in before.items() if k not in ['member_knowledge.submission_revisions','member_knowledge.publication_contributors'])
-  assert f.columns(sql)==tables and ledger()==baseline and f.fingerprints(lambda q:sql(q,'plunode_knowledge75_production'),ktables)==kbefore
+  after=fingerprints(sql,tables);assert all(after[k]==v for k,v in before.items() if k not in ['member_knowledge.submission_revisions','member_knowledge.publication_contributors'])
+  assert f.columns(sql)==tables and ledger()==baseline and knowledge_fingerprints(lambda q:sql(q,'plunode_knowledge75_production'),ktables)==kbefore
   h.atomic(ROOT/'compose.yaml',candidate)
   run(comp+['up','-d','--no-deps','--pull','never','--wait','--wait-timeout','180','web',*workers]);run(comp+['exec','-T','web','node','scripts/production-readiness.mjs'])
   assert run(comp+['exec','-T','web','cat','/app/.next-public/BUILD_ID'])==m['build']
@@ -118,6 +150,10 @@ def main():
   if stopped:
    if repair_started:h.atomic(ROOT/'compose.yaml',candidate)
    run(comp+['up','-d','--no-deps','--pull','never','web',*workers])
+  diagnostic=stage/'command-failure.json'
+  if diagnostic.exists():
+   dest=pathlib.Path(m['exportDirectory']+'-failure');dest.mkdir(mode=0o700,parents=True,exist_ok=True);owner=pwd.getpwnam('develop');os.chown(dest,owner.pw_uid,owner.pw_gid)
+   target=dest/'command-failure.json';shutil.copy2(diagnostic,target);target.chmod(0o600);os.chown(target,owner.pw_uid,owner.pw_gid)
   h.emit('repair-required',dataRepairStarted=repair_started,oldDumpRestored=False,automaticOldWebDowngrade=False,backup=str(backup));raise
 
 if __name__=='__main__':main()

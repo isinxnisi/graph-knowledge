@@ -1,3 +1,5 @@
+2026-11-09 運営API是正：③の再開資材まで準備済み。初回は保全確認SQLで停止し正式は従来版へ復帰。確認処理を修正・86＋29表で検証し、同じapp／imageのr2を転送・照合。本番補修は未実行。[検証・再開](verification/OPERATOR_API_SYSTEM_INTAKE_20261109.md)。
+
 2026-11-09 年表の文章の英訳是正：①不足整理・②実装／検証・③全環境反映と9訳文の通常公開・正式PC／390px確認まで完了｜今回の3工程は完了。app a5b82aae、β 1ZiD7iwB_PfTU1c2DCBLR、正式 vdygDVSqogk2drMutfW3U。見出し・時期ラベル・詳細補足を訳文へ接続し、正式Theme版6と原本snapshotを保持。会員39／知識9 migration・設定・KGは不変、切替手順補修6270664b。[完了結果・制約](verification/TIMELINE_TEXT_TRANSLATIONS_20261109.md)。以下は各時点の履歴。
 
 

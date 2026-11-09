@@ -1,3 +1,5 @@
+2026-11-09 運営API是正：③初回切替は保全確認SQLで停止・補修開始前に従来版へ復帰。確認処理を表単位・省メモリへ修正し86＋29表で検証、r2資材を転送照合済み｜残りは③再実行・既存分の是正・正式確認｜全体は③まで。app／imageはa9f2deaaのまま。[失敗・修正・再開](verification/OPERATOR_API_SYSTEM_INTAKE_20261109.md)。
+
 2026-11-09 運営APIのシステム投入是正：①露出確認・②実装／37件とβ確認を完了｜③本番資材転送・照合済み、sudo切替／既存分補修・正式確認が残る｜今回の工程は③まで。app a9f2deaa、β ayda-KKHQdO56T_QdP8ju、正式候補 XLE-FT07_ebW1CI2ERHw7。システム投入を個人の公開帰属・活動・未読から分離し、一般投稿の記名／匿名を保持。本番は旧a5b82aaeで是正前。[検証・再開](verification/OPERATOR_API_SYSTEM_INTAKE_20261109.md)。以下は各時点の履歴。
 
 2026-11-09 年表の文章の英訳是正：①不足整理・②実装／検証・③全環境反映と9訳文の通常公開・正式PC／390px確認まで完了｜今回の3工程は完了。app a5b82aae、β 1ZiD7iwB_PfTU1c2DCBLR、正式 vdygDVSqogk2drMutfW3U。見出し・時期ラベル・詳細補足を訳文へ接続し、正式Theme版6と原本snapshotを保持。会員39／知識9 migration・設定・KGは不変、切替手順補修6270664b。[完了結果・制約](verification/TIMELINE_TEXT_TRANSLATIONS_20261109.md)。以下は各時点の履歴。

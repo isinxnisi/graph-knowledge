@@ -21,9 +21,19 @@
 - βのmember DB 86表をbackupして別の内部networkの一時PGへ復元し、同じ正式ops image／補修CLIでplan→apply→applyを確認。βの旧API固有形式該当は0件で、通常フォームの訳文投稿は保持。初回の稼働中dumpと取得後fingerprintの比較はWorker更新で一致せず、Web／β Worker停止中の一貫したsnapshotで再検証して成功した。正式も停止後にbackup・fingerprintを採る。
 - βは14 private設定と会員39件のmigration checksumを保持。Webとβ Workerを再開。実Googleセッションで年表と個人投稿28件／未読15件の通常表示を確認。HTTPのlocalhost版IDも一致。HTTPS βは実Chromeで確認（Python UAはCloudflare1010で拒否されるため、HTTP確認成功とは扱わない）。
 - 正式Web image `plunode-web:operator-intake-a9f2deaa`、manifest `sha256:0c694e8ec2525266e8f7692d40649bea75034d1075cf32791aa737ef0567e981`。ops `plunode-knowledge-ops:operator-intake-a9f2deaa`、manifest `sha256:7f8b3272dd4c05105af7155b457e677af647ad3cdfb4a9c0a46d7a9798cec00d`。archiveの全layer／configを検証し、VPSへの転送hashとrunner `--check`に成功。
-- 正式切替scriptは現在のa5b82aae／build vdygDVSqogk2drMutfW3U、Web＋ops5alias、private設定hash、会員39／知識9 checksumを固定。最新member／knowledge backup・別DBで限定補修と再実行・既知16API requestの一致・暗号化復号hash確認を通してから、同じ補修を正式へ適用する。更新対象以外の全表fingerprintと知識全表、private owner／本文／取得断面digestを比較する。
+- 正式切替scriptは現在のa5b82aae／build vdygDVSqogk2drMutfW3U、Web＋ops5alias、private設定hash、会員39／知識9 checksumを固定。最新member／knowledge backup・別DBで限定補修と再実行・既知16API requestの一致・暗号化復号hash確認を通してから、同じ補修を正式へ適用する。更新対象以外の会員全表の内容fingerprint、知識全表の行version署名と原本／訳文の内容fingerprint、private owner／本文／取得断面digestを比較する。
 - `scripts/release-operator-intake-production.py`はWebと3 Workerを切替。元の本文や版を削除せず、schema migration、KG／OS、認証／予算設定を変更しない。失敗時は古いdumpでDBを戻さず、補修開始後は互換の新runtimeへ復帰する。
 
 ## 正式反映の再開
 
-開発PCのPowerShellで `wsl -d Ubuntu -- python3 /home/isinxnisi/1.projects/7.graph-knowledge/backups/operator-intake-20261109/run-release.py`。既存sudoはパスワード要求のため本人入力が必要。完了後はactivated記録、暗号化backup、既知訳文の公開creditなし、プロフィール／未読、同じrequestの再送を正式URLで確認する。現時点では正式の修正完了・個人露出解消とは報告しない。
+開発PCのPowerShellで `wsl -d Ubuntu -- python3 /home/isinxnisi/1.projects/7.graph-knowledge/backups/operator-intake-20261109-r2/run-release.py`。既存sudoはパスワード要求のため本人入力が必要。完了後はactivated記録、暗号化backup、既知訳文の公開creditなし、プロフィール／未読、同じrequestの再送を正式URLで確認する。現時点では正式の修正完了・個人露出解消とは報告しない。
+
+
+## 初回正式切替の停止と再開資材（2026-11-09 13:38以降）
+
+- 初回はmember／knowledgeの照合のうち、知識DB全体の一括fingerprint SQLで停止。dataRepairStarted=falseで、本文・公開credit・DB schema・runtime切替は未実行。正式HTTP200と従来build vdygDVSqogk2drMutfW3Uの復帰を確認した。失敗stageとbackup /opt/graph-knowledge/backups/operator-intake-20261109T043807Zを保持。
+- 初回helperが失敗コマンドのstderrを捨てていたため、本番PostgreSQLの元エラーは断定しない。ローカルでは描画投影2.2GB・全巡回inventory約130万行を含む一括集計の高負荷を確認し、自分が起動した確認queryだけを中止。サービス／通常Workerは止めていない。
+- 確認SQLを表ごとの独立statementへ分け、原文を行hashへ変換してから集約する。jit／parallelをこの確認sessionだけで無効化し、docker execはまとめて余計な往復を避ける。知識DBでは巨大な派生投影の本文を展開せず、全表のctid／xmin署名（行追加・更新・削除を検出）と原本／訳文6表の内容hashを照合する。知識DBへの書込処理はない。
+- 修正版で会員86表2.51秒、知識29表27.52秒の照合に成功。1MB text、行順変更で同値、重複行追加で相違、同値UPDATEでもtuple-version署名が変わることを、rollbackする一時表で確認。会員補修・復元検証、所有者／原本の保全契約は維持する。
+- コマンド失敗時のstderrはrootの0600診断へ残し、非公開のdevelop所有directoryへ回収できるようにした。秘密値やコマンド全文を公開ログへ出さない。preflight／保全baselineの進捗eventも追加。
+- 再開資材はrelease-a9f2deaa-r2へ転送・hash照合済み。同じapp a9f2deaa／build XLE-FT07_ebW1CI2ERHw7／Web・ops imageで、再buildなし。再開runnerはbackups/operator-intake-20261109-r2/run-release.py。正式反映・個人露出解消は引き続き未完了。
