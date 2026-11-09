@@ -1,4 +1,4 @@
-2026-11-09 多言語表示の横断是正：TOP／検索／探索候補／Graph／詳細の名前表示と、構成更新後の同一原文のテーマ訳文継続を共通化。main／3200／HTTPS βをapp39a84f4eへ反映し、PC／390pxと英題検索を確認。本番資材は転送照合済み、sudo切替と正式確認を残す。[表示契約](design/MULTILINGUAL_DISPLAY_COVERAGE.md)／[実測・再開](verification/MULTILINGUAL_DISPLAY_20261109.md)。
+2026-11-09 多言語表示の横断是正完了：TOP／検索／探索候補／Graph／詳細の名前表示と、構成更新後の同一原文のテーマ訳文継続を共通化。app39a84f4eをmain／3200／HTTPS β／正式サイトへ反映。正式構成版8の英題・説明・見出し・時期ラベル、英題検索、PC／390pxと言語切替を確認。DB・Worker・設定・KG不変。訳文未登録データや全データ英訳完了とは区別する。[表示契約](design/MULTILINGUAL_DISPLAY_COVERAGE.md)／[実測・制約](verification/MULTILINGUAL_DISPLAY_20261109.md)。
 
 2026-11-09 翻訳欄のスマホ表示是正：①原因確認・②修正／β確認・③正式反映と画面確認まで完了｜今回の表示修正は残作業なし｜工程は③まで。app9d39f7d2、β kmG5WncQ4B_AyPgirQCqe、正式 f-Ryn5yWRD-CNjoPfInPS。正式390pxでcheckbox16px／文章高さ41px、PCとチェック操作を確認。DB／Worker更新なし。既存の依頼状況取得エラーは別記。[完了結果・制約](verification/TRANSLATION_CONSENT_LAYOUT_20261109.md)。
 

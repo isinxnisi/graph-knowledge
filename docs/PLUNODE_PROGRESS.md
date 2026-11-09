@@ -1,4 +1,4 @@
-2026-11-09 多言語表示の横断是正：①原因確認・②修正／検証・③3200／HTTPS β実画面と本番資材転送照合まで完了｜残りは③sudo切替・正式確認｜今回は③まで。app39a84f4e、β lVThmoAMxlkrjkNqtWTne、正式候補7EFviEW9P6SUyGSaqGPRm。TOP／検索／探索候補／Graph／詳細の名前表示と同一原文のテーマ訳文継続を共通化。原本・DB・Worker不変、本番は旧版。[実測・再開](verification/MULTILINGUAL_DISPLAY_20261109.md)／[契約](design/MULTILINGUAL_DISPLAY_COVERAGE.md)。
+2026-11-09 多言語表示の横断是正：①原因確認・②修正／検証・③3200／HTTPS β／正式反映と実画面確認まで完了｜今回の残作業なし｜今回は③まで。app39a84f4e、β lVThmoAMxlkrjkNqtWTne、正式7EFviEW9P6SUyGSaqGPRm。TOP／検索／探索候補／Graph／詳細の欧文名、同一原文の構成版8の英訳継続、PC／390pxと言語切替を確認。DB・Worker・設定・KG不変。訳文未登録データと全画面監査の未実施は区別する。[実測・制約](verification/MULTILINGUAL_DISPLAY_20261109.md)／[契約](design/MULTILINGUAL_DISPLAY_COVERAGE.md)。
 
 2026-11-09 翻訳欄のスマホ表示是正：①原因確認・②修正／β確認・③正式反映と画面確認まで完了｜今回の表示修正は残作業なし｜工程は③まで。app9d39f7d2、β kmG5WncQ4B_AyPgirQCqe、正式 f-Ryn5yWRD-CNjoPfInPS。正式390pxでcheckbox16px／文章高さ41px、PCとチェック操作を確認。DB／Worker更新なし。既存の依頼状況取得エラーは別記。[完了結果・制約](verification/TRANSLATION_CONSENT_LAYOUT_20261109.md)。
 

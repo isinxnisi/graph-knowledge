@@ -1,6 +1,6 @@
 # 公開探索の多言語表示是正
 
-2026-11-09。現在地：①原因確認・②修正／検証・③localhost3200／HTTPS βの配置と実画面確認、本番資材転送照合まで完了。残りは③sudo切替と正式URL確認。今回は③まで。正式反映はまだ完了していない。
+2026-11-09。現在地：①原因確認・②修正／検証・③localhost3200／HTTPS β／本番の反映と実画面確認まで完了。今回の3工程は完了。下記の未翻訳データと対象外を、表示接続の是正と区別する。
 
 ## 原因と範囲
 
@@ -19,27 +19,37 @@
 
 - アプリsource：`39a84f4e1d64c12a5fb6c0f8f8e5b268dbf4a9b4`。実装修正は`21af3042`と`39a84f4e`で作業ブランチ／mainへ通常push済み。
 - localhost3200／HTTPS β：build `lVThmoAMxlkrjkNqtWTne`。Webのみ更新し、private設定14件、Worker PID、会員39／知識8 migration checksumを保持。DB migrationなし。旧buildは`backups/multilingual-20261109/next-before-20261109T192539`へ保管。
-- 正式候補：build `7EFviEW9P6SUyGSaqGPRm`、image `plunode-web:multilingual-39a84f4e`、config ID `sha256:4c40ffb94bd9a399e875ffc5e1003e56b08b60591f5e7fa1f0f40e46ec3023ae`、manifest ID `sha256:cd73aabb66764823327ee3d3ef3bad646e082acf2dd51636acc872b8f5296e25`。両buildは型検査込みで成功。
+- 正式配置：build `7EFviEW9P6SUyGSaqGPRm`、image `plunode-web:multilingual-39a84f4e`、config ID `sha256:4c40ffb94bd9a399e875ffc5e1003e56b08b60591f5e7fa1f0f40e46ec3023ae`、manifest ID `sha256:cd73aabb66764823327ee3d3ef3bad646e082acf2dd51636acc872b8f5296e25`。両buildは型検査込みで成功。
 - 正式imageを既存の正式確認用KGへ接続する一時containerで起動し、`GRAPH_DEPLOYMENT=production`の英語TOP 200、public-kgのrevision応答、β URL混入なし、build IDと既存AIラボartifact hashの一致を確認。portは公開せず、GETのみ実行してcontainerを除去した。最初はDBなし、次に未使用の7694を接続先にしたテスト設定で失敗したが、稼働中の正式確認用DBへ正しく接続した試験は成功。アプリやDBをこのために変更していない。
 - βのChrome実画面で、英語TOPのPLUTO制作者、他の対象、新着Entity／関係の端点、探索候補、通常Graphの起点・ノード・関係一覧・対象詳細を確認。`Takashi Nagasaki`を押して同じEntityの探索へ進める。英題`Webb’s Journey`でテーマ検索1件と遷移先を確認。
 - 390pxの英語探索候補・TOP、日本語へ切替後の人物名とテーマ原文を確認し、両言語で横overflowなし。一時viewportを解除した。PC画面も確認。実Googleは既存ログイン状態を使い、認証設定を変更していない。
-- βのテストテーマには英訳自体が未登録の説明・題名がある。それが原文で残ることと、今回の表示接続漏れを区別した。正式Theme版6→7→8は同じ原文と宣言言語であることを読取確認済みだが、新Webでの正式表示は切替後に確認する。
+- βのテストテーマには英訳自体が未登録の説明・題名がある。それが原文で残ることと、今回の表示接続漏れを区別した。正式Theme版6→7→8は同じ原文と宣言言語であり、新Webで構成版8の英題・説明・年表見出し・時期ラベルが表示されることまで確認した。
 - スクリーンショット：`C:/Users/nishr/.codex/tmp/multilingual-beta-top-20261109.jpg`、`multilingual-beta-search-20261109.jpg`、`multilingual-beta-graph-20261109.jpg`、`multilingual-beta-mobile-search-20261109.jpg`。後ろ3件も同じディレクトリ。
 
-## 本番切替・再開
+## 本番切替と正式受入
 
 `scripts/release-multilingual-production.py`は既存Webのみの公開手順を基に、現在のapp9d39f7d2／build `f-Ryn5yWRD-CNjoPfInPS`を照合する。private設定、会員39／知識9のchecksum、Worker／KGのcontainer、AIラボartifactを保持し、Web設定のbackup後にWeb imageだけを切り替える。DB復元・schema移行・Worker／OS更新を行わない。失敗時は互換性のある直前Webのみへ復帰する。
 
-資材を`/home/develop/plunode-multilingual-20261109/release-39a84f4e`へ転送し、archive内のconfig／layer／sourceと転送後checksum、runnerの`--check`を確認。sudo操作は未実行。
+資材を`/home/develop/plunode-multilingual-20261109/release-39a84f4e`へ転送し、archive内のconfig／layer／sourceと転送後checksum、runnerの`--check`を確認した。手順と準備記録は`0089613e`までmain／作業ブランチへpush後、本人のsudo入力で次を実行済み。
 
-本人入力用：
+実行済みコマンド（再実行用ではない）：
 
 ```powershell
 wsl -d Ubuntu -- python3 /home/isinxnisi/1.projects/7.graph-knowledge/backups/multilingual-20261109/run-release.py
 ```
 
-終了後、activation結果と正式英語TOP／探索候補／英題検索／同一Theme構成版8の訳文継続・原文を確認する。共有やCapsuleの固定断面は書き換えない。
+2026-11-09T10:41:48Zのbackup：`/opt/graph-knowledge/backups/multilingual-web-20261109T104148Z`。activation結果をSSHで読み取り、source／build／imageと、会員39・知識9のchecksum不変、Worker／設定／KG／AIラボartifact不変、DB復元なしを照合した。Webのみの変更のためDBのdump復元・migrationは行わない。本人が実行したrunnerの終了後にも共通ロックが空いていることをreviewで確認した。
 
-## 未確認・制約
+正式Chromeで以下を実操作した。
 
-正式Webの切替と正式URL確認を残す。英語の別表記や訳文自体が未登録の知識、原資料の引用・題名、ユーザーの自由文・外部広告を新しく全件翻訳する作業ではない。旧KG原文は保持する。今回確認した公開探索経路以外の全画面・全データの英訳完了とは扱わない。
+- [英語TOP](https://plunode.net/en)でPLUTOの3制作者、他の対象、新着Entity／関係の端点、左の探索候補が欧文表示となる。例：Naoki Urasawa、Takashi Nagasaki、Ken Watanabe、Inception。
+- 「Explore themes」→英題`Webb's Journey`で1件。タイトル・説明が英語で、同じTheme IDの構成版8へ進める。
+- [同じテーマの英語表示](https://plunode.net/en?ktheme=theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1&krev=8&kview=split)で、保存構成8、英題、時期なし情報、年表見出し、1989年等の本文と時期ラベル、期間の英語を確認。元の訳文を新版へ再登録せず継続表示できた。
+- 390px幅で英題と年表、横overflowなしを確認。日本語へ切り替えて、同じテーマの日本語原文と時期ラベルが保たれることを確認。一時viewportは解除済み。
+- 「Back to exploration」から通常探索へ戻り、`Explore from Takashi Nagasaki`で同じEntity IDの正式Graphへ進める。起点／選択／関係一覧／詳細の名前を確認。既存Googleログインは継続しており、今回Googleの再認証フローは実行していない。
+
+正式画面の証跡は`C:/Users/nishr/.codex/tmp/`の`multilingual-formal-top-20261109.jpg`、`multilingual-formal-search-20261109.jpg`、`multilingual-formal-theme-20261109.jpg`、`multilingual-formal-mobile-20261109.jpg`、`multilingual-formal-graph-20261109.jpg`。今回の確認は閲覧・検索・言語切替で、共有やCapsuleの固定断面を書き換えていない。
+
+## 制約・未確認
+
+今回の配置・正式確認の残作業はない。英語の別表記や訳文自体が未登録の知識、原資料の引用・題名、ユーザーの自由文・外部広告を新しく全件翻訳する作業ではない。正式の長崎尚志の説明・追加知識、英語別名がない作品名等には原文が残る。旧KG原文は保持する。今回確認した公開探索経路以外の全画面・全データの英訳完了とは扱わない。390pxはChromeのviewport確認であり、iPhone実機の操作は行っていない。
