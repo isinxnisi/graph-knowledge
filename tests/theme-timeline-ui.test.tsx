@@ -545,7 +545,7 @@ it("does not invent a relation arrow or a period entity for non-relational perio
 it("English timeline translates fixed controls, same-date labels, guides and expanded time details",()=>{
  const rs=[record("period","The telescope was deployed",{kind:"calendar",meaning:"duration",from:"2021-12-28",to:"2022-01-04",label:"Deployment"}),record("event","Deployment completed",{kind:"calendar",meaning:"point",from:"2022-01-04",label:"Completion"})];
  rs.forEach(r=>{r.evidence=[];r.scope="Recorded scope";});
- const {container}=render(<UiLocaleProvider initialLocale="en"><ThemeTimeline records={rs} entities={[{id:"subject",name:"Telescope",kind:"work"}]} focusedRecordId={null} onFocusRecord={vi.fn()} selectedRecordIds={[]} embedded compactControls/></UiLocaleProvider>);
+ const {container}=render(<UiLocaleProvider initialLocale="en"><ThemeTimeline records={rs} entities={[{id:"subject",name:"Telescope",kind:"work",description:""}]} focusedRecordId={null} onFocusRecord={vi.fn()} selectedRecordIds={[]} embedded compactControls/></UiLocaleProvider>);
  expect(screen.getByText("Same day")).toBeTruthy();expect(screen.getByRole("heading",{name:"Dates and durations"})).toBeTruthy();expect(screen.getAllByText(/Duration: 2021-12-28/).length).toBeGreaterThan(0);
  fireEvent.click(screen.getByRole("button",{name:"Timeline display settings"}));expect(screen.getByRole("combobox",{name:"Calendar scale"})).toBeTruthy();
  fireEvent.click(screen.getByText("The telescope was deployed").closest("button")!);expect(screen.getByText("Start")).toBeTruthy();expect(screen.getAllByText("End").length).toBeGreaterThan(0);

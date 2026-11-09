@@ -241,7 +241,7 @@ describe("time description locale",()=>{
   const original=JSON.stringify(value),label=themeTimeLabel(value,"en");
   expect(label).toContain("Duration: start");expect(label).toContain("Source notation: 原資料の表記");expect(label).toContain("作者の期間名");expect(label).not.toContain("期間：");expect(JSON.stringify(value)).toBe(original);
   expect(themeTimeLabel({...value,meaning:"occurrence-window"},"en")).toContain("Occurrence window:");
-  expect(themeTimeLabel({...value,meaning:"unclassified-range"},"en")).toContain("Time range (unclassified):");
+  expect(themeTimeLabel({...value,meaning:undefined},"en")).toContain("Time range (unclassified):");
   expect(themeTimeLabel(null,"en")).toBe("No time specified");expect(themeTimeLabel(value)).toContain("期間：開始");
  });
 });
