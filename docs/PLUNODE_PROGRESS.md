@@ -1,3 +1,5 @@
+2026-11-09 年表UI英語是正：①漏れ確認・②実装／59件と両build・③localhost／HTTPS βの英語と390px／PC確認まで完了｜残りは③正式Web切替・正式確認｜今回の工程は3まで。app 7e0030a6、β rxaLFSX_EqnMFhQ635Iav、正式候補 KueewANztR3-wx0mBDHhb。固定UIを修正し、作者が入力した期間名等の翻訳対象不足は別記。本番は旧buildで、sudo本人入力待ち。DB／Worker変更なし。[検証と再開](verification/TIMELINE_UI_LOCALE_20261109.md)。以下は各時点の履歴。
+
 2026-11-09 テーマ表示是正：①不足確認・②実装／34件と両build・③全環境反映と正式英訳／390px・PC確認まで完了｜残作業なし｜今回の工程は3まで。app bbd9503c、β TsVq7vQb6n5X9cGPCLM3o、正式 S36Jte03E0skpM32EgDrk。TOP／一覧／詳細の公開訳文接続とスマホの見出し幅を修正。DB・Worker変更なし。[検証・結果](verification/THEME_LOCALE_MOBILE_20261109.md)。以下は各時点の履歴。
 
 2026-11-09 ChatGPT訳文API是正：①不足照合・②実装／17件と両build・③全環境反映と同じAppからの公開確認まで完了｜残作業なし｜今回の工程は3まで。app bc486903、β B4MiXUlaSU-rC5jeP2a1h、正式 RWsvoeFimf3i8iA3_oAfH。既存ChatからWebb構成版6の英訳タイトルを登録・公開し、正式英語表示と日本語原文／固定12記録・4対象・7資料の保持を確認。追加移行・Worker／OS更新なし。[実測・制約](verification/KNOWLEDGE_CHATGPT_TRANSLATIONS_20261109.md)。以下は各時点の履歴。
