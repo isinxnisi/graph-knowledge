@@ -1,6 +1,5 @@
 "use client";
-import {entityDisplayName} from "../lib/domain/entity-display";
-import {knowledgeDisplayText} from "../lib/domain/knowledge-display";
+import {knowledgeDisplayText,knowledgeEntityDisplayName} from "../lib/domain/knowledge-display";
 import {useKnowledgeDisplayTranslations} from "../lib/client/use-knowledge-display-translations";
 import {useEffect,useRef,useState} from "react";
 import type {KnowledgeEntityVersion} from "../lib/domain/knowledge-foundation";
@@ -58,7 +57,7 @@ export default function KnowledgeEntitySearchResults({q,kind,excludeIds=[],onMat
  const recordRows=enabled&&records?.key===key?records.items.filter(r=>!excludeIds.includes(r.record.id)):[];
  const displayEntities=[...new Map([...current,...recordRows.flatMap(r=>r.entities)].map(e=>[e.id,e])).values()];
  const translations=useKnowledgeDisplayTranslations(displayEntities,recordRows.map(r=>r.record),undefined,locale);
- const entityName=(e:KnowledgeEntityVersion)=>{const text=knowledgeDisplayText(translations,{kind:'entity',id:e.id,revision:e.revision,field:'name'},locale,e.content.name);return text===e.content.name?entityDisplayName(e.content,locale):text;};
+ const entityName=(e:KnowledgeEntityVersion)=>knowledgeEntityDisplayName(e,translations,locale);
  const visibleIds=JSON.stringify(recordView?recordRows.map(r=>r.record.id):current.map(e=>e.id));
  const pending=enabled&&(busy||result?.key!==key)&&failure?.key!==key;
  useEffect(()=>{onMatches?.({q,kind,ids:JSON.parse(visibleIds) as string[],pending});},[q,kind,visibleIds,pending,onMatches]);

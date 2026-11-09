@@ -11,11 +11,16 @@ export function knowledgeDisplayText(translations:readonly KnowledgeDisplayTrans
 }
 
 /** The original snapshot and authored overrides remain untouched. Evidence stays in its source language. */
+export function knowledgeEntityDisplayName(entity:import("./knowledge-foundation").KnowledgeEntityVersion,translations:readonly KnowledgeDisplayTranslation[]|undefined,locale:string):string {
+ const name=knowledgeDisplayText(translations,{kind:"entity",id:entity.id,revision:entity.revision,field:"name"},locale,entity.content.name);
+ return name===entity.content.name?entityDisplayName(entity.content,locale):name;
+}
+
 export function knowledgeDisplaySnapshot(snapshot:KnowledgeSnapshot,locale:string):KnowledgeSnapshot {
   const text=(kind:KnowledgeTextTarget["kind"],v:{id:string;revision:number},field:KnowledgeTextTarget["field"],original:string)=>knowledgeDisplayText(snapshot.translations,{kind,id:v.id,revision:v.revision,field},locale,original);
   const timeline=snapshot.theme?knowledgeDisplayTimeline(snapshot.timeline,snapshot.theme,snapshot.translations,locale):snapshot.timeline;
   return {...snapshot,...(timeline?{timeline}:{}),
-    entities:snapshot.entities.map(v=>({...v,content:{...v.content,name:text("entity",v,"name",v.content.name)===v.content.name?entityDisplayName(v.content,locale):text("entity",v,"name",v.content.name)}})),
+    entities:snapshot.entities.map(v=>({...v,content:{...v.content,name:knowledgeEntityDisplayName(v,snapshot.translations,locale)}})),
     records:snapshot.records.map(v=>({...v,content:{...v.content,assertion:text("record",v,"assertion",v.content.assertion),scope:text("record",v,"scope",v.content.scope),...(v.content.relation?{relation:text("record",v,"relation",v.content.relation)}:{})}})),
     ...(snapshot.theme?{theme:{...snapshot.theme,content:{...snapshot.theme.content,title:text("theme",snapshot.theme,"title",snapshot.theme.content.title),description:text("theme",snapshot.theme,"description",snapshot.theme.content.description)}}}:{}),
   };

@@ -2,7 +2,7 @@
 import ExternalSourceLink from "./ExternalSourceLink";
 import {useKnowledgeDisplayTranslations} from "../lib/client/use-knowledge-display-translations";
 import {recordTimeTextTargets,timelineTextFieldLabel} from "../lib/domain/knowledge-timeline-text";
-import {knowledgeDisplayTime,knowledgeDisplayText} from "../lib/domain/knowledge-display";
+import {knowledgeDisplayTime,knowledgeDisplayText,knowledgeEntityDisplayName} from "../lib/domain/knowledge-display";
 import KnowledgeTranslationPanel, {type TranslationField} from "./KnowledgeTranslationPanel";
 import type {KnowledgeTranslationVersion} from "../lib/domain/knowledge-translation";
 import { themeTimeLabel } from "../lib/domain/theme-time";
@@ -16,7 +16,7 @@ export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme,o
   const { locale } = useUiLocale(), en = locale === "en";
   const translations=useKnowledgeDisplayTranslations(dto.entities,[dto.record],undefined,locale);
   const text=(field:"assertion"|"relation"|"scope",original:string)=>knowledgeDisplayText(translations,{kind:"record",id:dto.record.id,revision:dto.record.revision,field},locale,original);
-  const entityName=(e:KnowledgePublishedRecord["entities"][number])=>knowledgeDisplayText(translations,{kind:"entity",id:e.id,revision:e.revision,field:"name"},locale,e.content.name);
+  const entityName=(e:KnowledgePublishedRecord["entities"][number])=>knowledgeEntityDisplayName(e,translations,locale);
   const r = dto.record.content, typed = dto.legacyTyped;
   const name = (id: string | null) => {const e=dto.entities.find(e=>e.id===id);return e?entityName(e):(en ? "No subject" : "対象なし");};
   return <article>

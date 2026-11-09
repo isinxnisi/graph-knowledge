@@ -1,4 +1,5 @@
 "use client";
+import {entityDisplayName} from "../lib/domain/entity-display";
 import Icon from "./Icon";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerLabels } from "../lib/i18n/explorer";
@@ -482,7 +483,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       <div className={styles.relationPatches} ref={badgeLayer} aria-hidden="true" />
       <div className={styles.graphOverlay} data-testid="graph-overlay">{feedback}
         {Object.entries(graph.expansions).filter(([, meta]) => meta.active && meta.loading).map(([id, meta]) =>
-          <NeighborLoading key={`${id}:${meta.request}`} name={graph.nodes[id]?.name ?? ""} more={meta.expanded} />)}
+          <NeighborLoading key={`${id}:${meta.request}`} name={entityDisplayName(graph.nodes[id],locale)} more={meta.expanded} />)}
       </div>
       {notification && <div className={styles.canvasNotification}>{notification}</div>}
     </div>

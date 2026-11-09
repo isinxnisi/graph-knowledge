@@ -26,7 +26,7 @@ it("reuses unchanged text across composition editions without forging a translat
   expect(query.mock.calls.every(([sql])=>/^SELECT/.test(sql.trim()))).toBe(true);
 });
 it.each(["changed","reverted","language","removed"])("does not reuse across %s original content",async kind=>{
-  editions=kind==="changed"?[{...content,title:"別の意味"}]:kind==="reverted"?[content,{...content,title:"別の意味"},content]:kind==="language"?[{...content,textLanguages:{title:{tag:"en",basis:"declared"}}}]:[{}];
+  editions=kind==="changed"?[content,{...content,title:"別の意味"},content]:kind==="reverted"?[content,{...content,title:"別の意味"},content]:kind==="language"?[content,{...content,textLanguages:{title:{tag:"en",basis:"declared"}}},content]:[content,{},content];
   expect(await publicDisplayTranslations(c,[target],"en")).toEqual([]);
 });
 it("does not resurrect hidden exact or newer translations",async()=>{
