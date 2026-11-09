@@ -54,7 +54,7 @@ Creators APIの接続処理は実装し、固定送信先・秘密値非送出�
 - 390px：本文→根拠→元の年表、英語本文と解説を確認。直リンクが検索タブへ入る点、選択ボタンへ汎用CSSの太いborderが継承される点を発見し局所修正。
 - ブラウザによる幅の再現は実iPhoneそのものの確認ではない。正式サイトの実SEO応答、Googleのインデックス／順位、Search Console再クロールは本番承認後の確認対象。
 
-最終build・3200／HTTPS βの反映識別と実測は追補する。
+3200／HTTPS βへの最終反映と実操作結果は末尾に記録した。
 
 ## 起動・再開
 
@@ -73,3 +73,24 @@ DBのresetやmigrationは不要。比較テーマを別のβに再作成する�
 OGは200／1.85秒、image/png・1200×630、no-store。プレビューを画像として確認した。Satoriの複数テキスト要素のdisplay指定不足を実HTTPで検出し修正、PNGの末尾まで生成する回帰テストを追加した。編集用の問いの文字列がクライアントのstatic JSへ一括埋込みされていないことも確認。SNS側のカードやGoogleの登録状態を確認した意味ではない。
 
 狭幅の追加実操作：320pxで横方向のはみ出しなし（document幅310px）、390pxで英語の導入・写真・カード・根拠往復、1024pxで詳細幅788pxへ切り替わり、戻ると中央へ復帰。無理に三列を維持しない。日時なし情報A/Bの全6件到達、子軸のaround 09:52表示も確認。画像の実ファイルは1280×1306、表示用の寸法比・トリミング・creditを確認。
+
+## 3200／HTTPS βの最終反映・実操作
+
+アプリsourceは `aa0d6009eb31a6e3f233fc25e14f1e41fc045883`、β向けbuildは `w9CfEe6fPaVJhsJ0L6Whn`。作業ブランチ `codex/theme-reading-seo` を通常pushし、検証済み固定commitをmainへfast-forwardして通常pushした。今回と無関係な自動開発候補は取り込んでいない。mainの未追跡 `memo.txt` は保護した。
+
+mainの既存private runtimeと22設定ファイルのhashを保全し、生成物のcacheを除いて配置。前build `lVThmoAMxlkrjkNqtWTne` は `.local/theme-reading-beta-20261110/previous` へ保持した。既存launcherからWebだけを再起動し、5 Worker・DB・KG・Cloudflared・認証設定は変更していない。追加migrationなし。3200のHTTP 200と最終build／導入文のHTML出力を確認した。
+
+HTTPS βは既存Googleログイン状態で次を実操作した。
+
+- 年表のNASA資料ボタンから、その同じRecord／資料版の引用・該当箇所を直接展開。テーマ概要へ移り、戻ると `Launch Date / Vehicle` の開いた状態が保持された。
+- テーマ概要に、出版社で確認した書籍と本人提供のAmazonカレンダーを別の掲載理由・広告表記で表示。画像未確認と未販売の断定を区別した。購入や外部登録はしていない。
+- TOPの新着テーマの通常href `/t/reading-20261110%3Awebb%3Atheme` から、直リンクと同じ導入・画像・本文へ到達。既存の紹介テーマの選択・順序は変更していない。新テーマを紹介に選べば共通画像が使われる。
+- 英語390pxの直リンクはGraphタブで開き、英語のタイトル・導入・時期名・主文を表示。本文→根拠でDetailsへ移り、Back to readingで同じ年表へ戻れた。document幅380px／viewport390pxで横方向のはみ出しなし。実iPhoneではなくChrome viewportによる確認。
+- 既存 `β確認｜R4b 時間と訳文` を再訪・再編集。タイトルの未保存変更を破棄すると、保存済みの元タイトル・年表へ復帰した。既存Capsuleの内容は保存変更していない。
+- 新テーマからCapsuleの作成・編集画面へ入り、保存を試した。アカウントの既存20件上限で保存を拒否し、入力保持と理由を表示した。新規保存成功・新規共有まで確認したとは扱わない。他のCapsuleを削除して空きを作ることは行っていない。
+
+本文補足の実computed colorは `#5c6f83`、背景 `#fffefa`、11px。相対輝度式によるコントラストは5.13:1。今回のブラウザ確認はライト表示を中心とし、全コンポーネントの全状態に対するWCAG監査を完了した意味ではない。
+
+WSLの標準urllibによるHTTPS βの追加取得は403だった。Chrome上のβ閲覧は成功しており、この403をアプリ表示失敗や本番のクロール結果へ読み替えない。SEOのヘッダー・HTML・画像・サイトマップは、同じβ向けbuildのローカルHTTPと正式Hostの隔離契約テストで確認した。正式VPSは未配置のため、正式originの実HTTP・外部SNSカード・Search Console／Google検索登録は未確認。
+
+画面記録：`C:/Users/nishr/.codex/tmp/theme-reading-beta-desktop.png`、`C:/Users/nishr/.codex/tmp/theme-reading-beta-mobile-en.png`。一時3280は今回の比較用で、日常確認先は3200／HTTPS β。残る外部依存はCreators APIの実資格・認証設定、OneLinkの国別連携、実商品画像での確認。未決レイアウト2組は比較試作のまま保持し、本番公開と採用判断を今回の完了へ混ぜない。
