@@ -28,7 +28,7 @@ export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme,o
     {r.relation && <p lang={text("relation",r.relation)!==r.relation?locale:r.textLanguages?.relation?.tag}><strong>{text("relation",r.relation)}</strong></p>}<p lang={text("assertion",r.assertion)!==r.assertion?locale:r.textLanguages?.assertion?.tag}>{text("assertion",r.assertion)}</p>{r.textLanguages?.assertion&&<small className={css.meta}>{en?"Original language":"原文の言語"} · {r.textLanguages.assertion.tag}</small>}
     <KnowledgeTranslationPanel onRetain={onTranslation} fields={knowledgeRecordTranslationFields(dto,en)}/>
     {r.scope && <p>{en ? "Scope" : "範囲"}：{text("scope",r.scope)}</p>}
-    {r.times.map((t) => <p key={t.id}>{themeTimeLabel(t.time)}</p>)}
+    {r.times.map((t) => <p key={t.id}>{themeTimeLabel(t.time,locale)}</p>)}
     {typed?.event && <p>{en ? "Event occurrence" : "開催期間"}：{typed.event.metadata.period.from?.value ?? "?"} 〜 {typed.event.metadata.period.to?.value ?? "?"}<br /><span className={css.meta}>{en ? "Separate from a person's participation period." : "人物の参加期間とは別の情報です。"}</span></p>}
     {dto.semantics.status === "current" && dto.semantics.concept && <p className={css.meta}>{en ? "Meaning" : "意味対応"}：{dto.semantics.concept.label}</p>}
     {dto.semantics.status === "stale" && <p className={css.meta}>{en ? "This meaning mapping belongs to an earlier content revision." : "意味対応は旧内容へのものです。現在の意味条件には含めません。"}</p>}

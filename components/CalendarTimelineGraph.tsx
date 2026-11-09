@@ -1,5 +1,6 @@
 "use client";
 
+import {useUiLocale} from "../lib/client/ui-locale";
 import {
   Fragment,
   useMemo,
@@ -16,7 +17,7 @@ import { timelineRecordId, type TimelineDisplayRecord } from "../lib/domain/time
 import css from "./CalendarTimelineGraph.module.css";
 
 const colors = ["#397a85", "#aa713c", "#6878a2", "#8b668f", "#6d844f"];
-const unitNames = { year: "年", month: "月", day: "日",hour:"時間" };
+
 
 export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
   records,
@@ -33,6 +34,8 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
   onFocus: (id: string) => void;
   renderRecord: (record: R, index: number) => ReactNode;
 }) {
+  const {locale}=useUiLocale(),en=locale==="en";
+  const unitNames = en?{year:"Year",month:"Month",day:"Day",hour:"Hour"}:{year:"年",month:"月",day:"日",hour:"時間"};
   const container = useRef<HTMLDivElement>(null);
   const open = (id: string) => {
     onFocus(id);
@@ -62,8 +65,7 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
   return (
     <div className={css.surface} ref={container}>
       <p className={css.caption}>
-        {unitNames[graph.unit]}単位 ·
-        同じ単位内の行順は前後関係を表しません。行間は日数に比例しません。
+        {en?`${unitNames[graph.unit]} scale · Order within one unit is unspecified. Spacing is not to scale.`:`${unitNames[graph.unit]}単位 · 同じ単位内の行順は前後関係を表しません。行間は日数に比例しません。`}
       </p>
       <div className={css.scroll}>
         <div
@@ -75,7 +77,7 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
               gridTemplateRows: `repeat(${graph.rows.length}, minmax(34px, auto))`,
             } as CSSProperties
           }
-          aria-label="期間と出来事の年表グラフ"
+          aria-label={en?"Timeline of durations and events":"期間と出来事の年表グラフ"}
         >
           {graph.rows.map((row, index) => (
             <Fragment
@@ -90,12 +92,7 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
                     {row.label}
                     {row.count > 1 && (
                       <small>
-                        同じ
-                        {row.label.length === 4
-                          ? "年"
-                          : row.label.length === 7
-                            ? "月"
-                            : "日"}
+                        {en?`Same ${row.label.length===4?'year':row.label.length===7?'month':row.label.length>10?'hour':'day'}`:`同じ${row.label.length===4?'年':row.label.length===7?'月':row.label.length>10?'時間':'日'}`}
                       </small>
                     )}
                   </div>
@@ -135,14 +132,14 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
                       focusedRecordId === timelineRecordId(row.ending) || undefined
                     }
                     onClick={() => open(row.ending!.id)}
-                    title={themeTimeLabel(row.ending.time)}
+                    title={themeTimeLabel(row.ending.time,locale)}
                   >
                     <span>{shortName(row.ending)}</span>
                     <small>
                       {row.ending.time?.kind === "calendar" &&
                       row.ending.time.meaning === "duration"
-                        ? "終了側"
-                        : "候補の後端"}
+                        ? en?"End":"終了側"
+                        : en?"Latest possible time":"候補の後端"}
                     </small>
                   </button>
                 )}
@@ -200,14 +197,14 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
                   data-compact-range={range.compactRange || undefined}
                   data-uncertain={range.uncertainBoundary || undefined}
                   data-focused={focusedRecordId === timelineRecordId(record) || undefined}
-                  title={`${record.assertion} · ${themeTimeLabel(record.time)}`}
-                  aria-label={`時期の線を選ぶ：${record.assertion} · ${themeTimeLabel(record.time)}`}
+                  title={`${record.assertion} · ${themeTimeLabel(record.time,locale)}`}
+                  aria-label={`${en?"Select time marker: ":"時期の線を選ぶ："}${record.assertion} · ${themeTimeLabel(record.time,locale)}`}
                   aria-pressed={focusedRecordId === timelineRecordId(record)}
                   onClick={() => open(record.id)}
                 >
                   <i />
                   <span className={css.srOnly}>
-                    {themeTimeLabel(record.time)}
+                    {themeTimeLabel(record.time,locale)}
                   </span>
                 </button>
                 {meaning === "duration" &&

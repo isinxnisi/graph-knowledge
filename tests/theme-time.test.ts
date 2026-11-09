@@ -233,3 +233,15 @@ describe("calendar time meaning and uncertainty", () => {
     expect(document.nodes).toHaveLength(0);
   });
 });
+
+
+describe("time description locale",()=>{
+ it("localizes duration and uncertainty words without translating or rewriting authored labels",()=>{
+  const value={kind:"calendar" as const,meaning:"duration" as const,from:"2021-12-28",to:"2022-01-04",startLatest:"2021-12-29",label:"作者の期間名",expression:"原資料の表記"};
+  const original=JSON.stringify(value),label=themeTimeLabel(value,"en");
+  expect(label).toContain("Duration: start");expect(label).toContain("Source notation: 原資料の表記");expect(label).toContain("作者の期間名");expect(label).not.toContain("期間：");expect(JSON.stringify(value)).toBe(original);
+  expect(themeTimeLabel({...value,meaning:"occurrence-window"},"en")).toContain("Occurrence window:");
+  expect(themeTimeLabel({...value,meaning:"unclassified-range"},"en")).toContain("Time range (unclassified):");
+  expect(themeTimeLabel(null,"en")).toBe("No time specified");expect(themeTimeLabel(value)).toContain("期間：開始");
+ });
+});

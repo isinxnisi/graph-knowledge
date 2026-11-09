@@ -21,12 +21,12 @@ export const MAX_TIMELINE_INSET_DEPTH = 3;
 // Fallback groups never imply that two differently defined axes are comparable.
 // The signature is a view key, not a new domain identity or a time coordinate.
 function fallbackGroup(
-  time: ThemeTime | null,
+  time: ThemeTime | null, locale: string = "ja",
 ): Omit<ThemeTimelineGroup, "records"> {
   if (!time)
-    return { id: "fallback:none", kind: "none", label: "時期を定めない情報" };
+    return { id: "fallback:none", kind: "none", label: locale==="en"?"Undated information":"時期を定めない情報" };
   if (time.kind === "calendar")
-    return calendarValue(time.from)?.zone ? {id:"fallback:calendar:offset",kind:"calendar",label:"日時・期間（時区指定あり）",originLabel:"指定した時差で時刻を照合します。日時の原表記は各行に保持します。"} : { id: "fallback:calendar", kind: "calendar", label: "年月日・期間",originLabel:"時区未指定の日時に時差は補いません。" };
+    return calendarValue(time.from)?.zone ? {id:"fallback:calendar:offset",kind:"calendar",label:locale==="en"?"Dates and durations (with time zone)":"日時・期間（時区指定あり）",originLabel:locale==="en"?"Times are compared using their stated offsets. Each entry retains the source notation.":"指定した時差で時刻を照合します。日時の原表記は各行に保持します。"} : { id: "fallback:calendar", kind: "calendar", label: locale==="en"?"Dates and durations":"年月日・期間",originLabel:locale==="en"?"No time zone is inferred for dates or times without one.":"時区未指定の日時に時差は補いません。" };
   if (time.kind === "cycle")
     return {
       id:
@@ -151,7 +151,7 @@ export function themeTimelineIssues(
 /** No sorting or synthetic dates: each original time value and precision survives. */
 export function buildTimelineGroups<R extends TimedRecord>(
   records: R[],
-  config?: ThemeTimelineConfig,
+  config?: ThemeTimelineConfig, locale: string = "ja",
 ): ThemeTimelineGroup<R>[] {
   const groups = new Map<string, ThemeTimelineGroup<R>>();
   const recordIds = new Set(records.map((r) => r.id));
@@ -176,7 +176,7 @@ export function buildTimelineGroups<R extends TimedRecord>(
     if (explicit && record.time?.kind === explicit.kind)
       explicit.records.push(record);
     else {
-      const descriptor = fallbackGroup(record.time);
+      const descriptor = fallbackGroup(record.time,locale);
       if (!groups.has(descriptor.id))
         groups.set(descriptor.id, { ...descriptor, records: [] });
       groups.get(descriptor.id)!.records.push(record);
