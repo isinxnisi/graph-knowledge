@@ -3,6 +3,13 @@
 import copy,datetime,fcntl,importlib.util,json,os,pathlib,pwd,shutil,time
 ROOT=pathlib.Path('/opt/graph-knowledge')
 SOURCE='a5b82aae26e9d9f200b8e6b311a4a949bc81d973'
+OPS_SERVICES={'member-ops','knowledge-ops','knowledge-review','knowledge-patrol','knowledge-publisher'}
+
+def ops_services(config, previous_tag):
+ services={name for name,service in config['services'].items() if service.get('image')==previous_tag}
+ assert services==OPS_SERVICES, 'Unexpected operator image services: '+','.join(sorted(services))
+ return sorted(services)
+
 def main():
  assert os.geteuid()==0;os.umask(0o077);stage=pathlib.Path.cwd().resolve()
  assert str(stage).startswith('/root/plunode-timeline-text-20261109-')
@@ -41,14 +48,15 @@ def main():
  artifact=run(comp+['exec','-T','web','sha256sum','/app/data/ai-lab/initial.json']).split()[0]
  assert artifact==prev['aiArtifactSha256']
  assert run(['docker','run','--rm','--entrypoint','sha256sum',image['tag'],'/app/data/ai-lab/initial.json']).split()[0]==artifact
- original=(ROOT/'compose.yaml').read_text();candidate=h.patch_image(original,'web',image['tag']);assert prev['ops']['tag'] in candidate;candidate=candidate.replace(prev['ops']['tag'],ops['tag'])
- cp=ROOT/'compose.timeline-text-candidate.yaml';private(cp,candidate)
+ original=(ROOT/'compose.yaml').read_text();candidate=h.patch_image(original,'web',image['tag'])
  expected=copy.deepcopy(cfg);expected['services']['web']['image']=image['tag']
- changed_ops=[name for name,service in expected['services'].items() if service.get('image')==prev['ops']['tag']]
- assert set(changed_ops)=={'knowledge-ops','knowledge-review','knowledge-patrol','knowledge-publisher'}
- for name in changed_ops:expected['services'][name]['image']=ops['tag']
+ changed_ops=ops_services(cfg,prev['ops']['tag'])
+ for name in changed_ops:
+  candidate=h.patch_image(candidate,name,ops['tag'])
+  expected['services'][name]['image']=ops['tag']
+ cp=ROOT/'compose.timeline-text-candidate.yaml';private(cp,candidate)
  ccomp=['docker','compose','--env-file',str(ROOT/'app.env'),'-f',str(cp),'--profile','member','--profile','ops']
- assert json.loads(run(ccomp+['config','--format','json']))==expected,'Change exceeds Web and knowledge Worker images'
+ assert json.loads(run(ccomp+['config','--format','json']))==expected,'Change exceeds Web and the five explicit operator image references'
  backup=ROOT/'backups'/('timeline-text-runtime-'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ'));backup.mkdir(mode=0o700)
  for name in ['compose.yaml','app.env','knowledge.env']:
   shutil.copy2(ROOT/name,backup/name);(backup/name).chmod(0o600)
@@ -71,7 +79,7 @@ def main():
    if name!='compose.yaml':assert digest(ROOT/name)==sha
   result={'source':SOURCE,'build':m['build'],'webImage':loaded,'backup':str(backup),'memberLedgerCount':len(baseline[0]),'knowledgeLedgerCount':len(baseline[1]),'migrationsUnchanged':True,'workerImage':ops['tag'],'workersUpdated':True,'settingsUnchanged':True,'kgUnchanged':True,'aiArtifactUnchanged':True,'databaseRestored':False,'formalBrowserAcceptancePending':True}
   private(backup/'activated.json',json.dumps(result,indent=2));emit('activated',**result)
-  export=pathlib.Path('/home/develop/plunode-timeline-text-20261109')/('release-'+SOURCE[:8])/'activated.json'
+  export=pathlib.Path('/home/develop/plunode-timeline-text-20261109')/('release-'+SOURCE[:8]+'-r2')/'activated.json'
   private(export,json.dumps(result,indent=2));owner=pwd.getpwnam('develop');os.chown(export,owner.pw_uid,owner.pw_gid)
  except BaseException:
   # New translation target JSON is durable. Do not downgrade to binaries that
