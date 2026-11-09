@@ -1,7 +1,8 @@
+import {knowledgeDisplayText} from "../domain/knowledge-display";
+import {publicDisplayTranslations} from "./knowledge-display-translations";
 import {readKnowledgeRecordVersion} from './knowledge-record-version';
 import {readKnowledgeTextOriginal,readKnowledgeTranslation,readKnowledgeTranslationById} from "./knowledge-foundation";
-import {translationId} from "./knowledge-translation-storage";
-import {knowledgeDisplayTranslationsQuerySchema,type KnowledgeTranslationVersion} from "../domain/knowledge-translation";
+import {knowledgeDisplayTranslationsQuerySchema} from "../domain/knowledge-translation";
 import {identitySearchIds} from './knowledge-identity';
 import {identityGroup} from './knowledge-identity-resolution';
 import {readIdentityPaths} from './knowledge-identity-paths';
@@ -29,16 +30,6 @@ const pinKey = (kind: string, id: string, revision: number) => JSON.stringify([k
 const normalize = (v: string) => v.normalize("NFKC").toLocaleLowerCase();
 const schemaVersion = "002-publication.sql";
 
-
-/** The same public/version/original checks serve catalogue HTML and graph overlays. */
-async function publicDisplayTranslations(c:PoolClient,targets:KnowledgeTextTarget[],language:string){
-      const ids=[...new Set(targets.map(target=>translationId(target,language)))];
-      if(!ids.length)return [] as KnowledgeTranslationVersion[];
-      const heads=(await c.query("SELECT id FROM knowledge75.text_translation_heads WHERE id=ANY($1::text[]) AND visibility='public'",[ids])).rows;
-      const translations:KnowledgeTranslationVersion[]=[];
-      for(const head of heads){try{translations.push(await readKnowledgeTranslationById(c,head.id));}catch(e){if(!(e instanceof KnowledgeError)||e.status>=500)throw e;}}
-      return translations;
-}
 
 export async function ensureKnowledgePublicationSchema(pool: Pool) {
   await ensureKnowledgeFoundationSchema(pool);
@@ -267,7 +258,7 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
       const values:unknown[]=[];const conditions=["o.kind='theme'","o.visibility='public'","p.id IS NOT NULL"];
       const focusIds=q.entityId?await identityGroup(c,[q.entityId]):[];
       if(q.entityId){values.push(focusIds);conditions.push(`EXISTS (SELECT 1 FROM jsonb_array_elements(r.content->'entityPins') pin WHERE pin->>'id'=ANY($${values.length}::text[]))`);}
-      if(q.q){values.push("%"+normalize(q.q).replace(/[\\%_]/g,"\\$&")+"%");conditions.push(`lower(normalize(concat_ws(' ',r.content->>'title',r.content->>'description'),NFKC)) LIKE $${values.length} ESCAPE E'\\\\'`);}
+
       const candidates=(await c.query(`SELECT r.id,r.revision,(SELECT min(first.created_at) FROM knowledge75.revisions first WHERE first.kind='theme' AND first.id=r.id) AS first_created_at FROM knowledge75.objects o JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=o.current_revision LEFT JOIN knowledge75.published_revisions p ON p.kind=r.kind AND p.id=r.id AND p.revision=r.revision WHERE ${conditions.join(" AND ")} ORDER BY r.id`,values)).rows;
       const result:KnowledgeThemePage={themes:[]};
       for(const candidate of candidates){
@@ -278,9 +269,10 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
       // Original title/description and pins remain unchanged for authoring consumers.
       const targets:KnowledgeTextTarget[]=result.themes.flatMap(t=>[{kind:'theme',id:t.id,revision:t.revision,field:'title'},{kind:'theme',id:t.id,revision:t.revision,field:'description'}]);
       const translations=(await Promise.all(['ja','en'].map(language=>publicDisplayTranslations(c,targets,language)))).flat();
-      for(const theme of result.themes){const rows=translations.filter(t=>t.target.id===theme.id&&t.target.revision===theme.revision);if(rows.length)theme.translations=rows;}
+      for(const theme of result.themes){const rows=translations.filter(t=>(t.displayTarget??t.target).id===theme.id&&(t.displayTarget??t.target).revision===theme.revision);if(rows.length)theme.translations=rows;}
+      if(q.q)result.themes=result.themes.filter(t=>normalize([t.title,t.description,...(t.translations??[]).map(v=>v.text)].join(' ')).includes(normalize(q.q)));
       result.themes=result.themes.filter(t=>q.kind==='all'||(t.hasTimeline?'timeline':t.hasRelations?'graph':'context')===q.kind);
-      result.themes.sort((a,b)=>q.order==='name'?a.title.localeCompare(b.title,'ja')||a.id.localeCompare(b.id):(b.publishedAt??'').localeCompare(a.publishedAt??'')||a.id.localeCompare(b.id));
+      result.themes.sort((a,b)=>q.order==='name'?knowledgeDisplayText(a.translations,{kind:'theme',id:a.id,revision:a.revision,field:'title'},q.language,a.title).localeCompare(knowledgeDisplayText(b.translations,{kind:'theme',id:b.id,revision:b.revision,field:'title'},q.language,b.title),q.language)||a.id.localeCompare(b.id):(b.publishedAt??'').localeCompare(a.publishedAt??'')||a.id.localeCompare(b.id));
       return {...result,...(q.entityId?{focusIds}:{})};
     }),
     theme:(raw:unknown)=>read(async c=>{

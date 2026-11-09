@@ -1,4 +1,5 @@
 "use client";
+import { entityDisplayName } from "../lib/domain/entity-display";
 import Icon from "./Icon";
 import LegacyEntityTranslations from "./LegacyEntityTranslations";
 import { useUiLocale } from "../lib/client/ui-locale";
@@ -35,7 +36,7 @@ export default function EntityDetails({ entity, expansion, onExpand, onClose, on
     return () => controller.abort();
   }, [entity.id, attempt]);
   return <section aria-label={ui.entityDetails} className={styles.entityDetails}>
-    <h3>{entity.name}</h3><p className={styles.badge}>{ui.kinds[entity.kind]}</p>
+    <h3>{entityDisplayName(detail??entity,locale)}</h3><p className={styles.badge}>{ui.kinds[entity.kind]}</p>
     <p>{entity.description ?? ui.descriptionMissing}</p>
     {!detail && !error && <p role="status">{ui.entityLoading}</p>}
     {detail && <p>{ui.aliases}：{detail.aliases.length ? detail.aliases.join("、") : ui.unregistered}</p>}

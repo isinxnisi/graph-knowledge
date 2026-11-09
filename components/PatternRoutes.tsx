@@ -1,4 +1,6 @@
 "use client";
+import { entityDisplayName } from "../lib/domain/entity-display";
+
 import type { GraphState } from "../lib/client/graph-state";
 import { relationText } from "../lib/i18n/relation-condition";
 import { useUiLocale } from "../lib/client/ui-locale";
@@ -18,12 +20,12 @@ export default function PatternRoutes({ graph }: {
     <p className={styles.muted}>{text.coverage}</p>
     {!routes.length && !ex.loading && <p>{text.empty}</p>}
     <ul className={styles.patternRoutes}>{routes.map(([key, entry]) => <li key={key}>
-      <div className={styles.actions}><strong>{entry.route.nodeIds.map(id => graph.cacheNodes[id]?.name ?? id).join(" — ")}</strong>
+      <div className={styles.actions}><strong>{entry.route.nodeIds.map(id => entityDisplayName(graph.cacheNodes[id],locale) || id).join(" — ")}</strong>
         <span className={styles.muted}>{entry.open ? text.shown : text.verified}</span></div>
       <div className={styles.actions}>{entry.route.claimIds.map((id, i) => {
         const claim = graph.cacheClaims[id];
         return claim && <ReadingLink key={id} preserveExploration reference={{ kind: "claim", id, dataset: "public-kg" }}>
-          {i + 1}. {graph.cacheNodes[claim.subjectId]?.name} → {graph.cacheNodes[claim.objectId]?.name} · {qualificationLabel(claim, locale)} · {polarityLabel(claim, locale)} · {text.evidence}
+          {i + 1}. {entityDisplayName(graph.cacheNodes[claim.subjectId],locale)} → {entityDisplayName(graph.cacheNodes[claim.objectId],locale)} · {qualificationLabel(claim, locale)} · {polarityLabel(claim, locale)} · {text.evidence}
         </ReadingLink>;
       })}</div>
     </li>)}</ul>

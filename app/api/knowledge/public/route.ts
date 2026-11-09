@@ -17,7 +17,7 @@ export async function GET(request: Request) {
     let result: unknown;
     if (mode === "theme-home") result = await knowledgeThemeHome(service);
     else if (mode === "status") result = await service.status();
-    else if (mode === "themes") result = await service.themes({ ...(params.has("entityId") ? { entityId: params.get("entityId")! } : {}), ...(params.has("q") ? { q: params.get("q")! } : {}), ...(params.has("kind") ? {kind:params.get("kind")!} : {}), ...(params.has("order") ? {order:params.get("order")!} : {}) });
+    else if (mode === "themes") result = await service.themes({ ...(params.has("entityId") ? { entityId: params.get("entityId")! } : {}), ...(params.has("q") ? { q: params.get("q")! } : {}), ...(params.has("kind") ? {kind:params.get("kind")!} : {}), ...(params.has("order") ? {order:params.get("order")!} : {}), ...(params.has("language")?{language:params.get("language")!}:{}) });
     else if (mode === "theme") result = await service.theme({ themeId: params.get("themeId") ?? "", ...(params.has("revision") ? { revision: Number(params.get("revision")) } : {}) });
     else if (mode === "entities") {
       const scope=params.has('collection')?await knowledgeDiscoveryScope(service,params.get('collection')!,generation):null;

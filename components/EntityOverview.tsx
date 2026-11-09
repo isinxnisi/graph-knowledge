@@ -1,4 +1,5 @@
 "use client";
+import { entityDisplayName } from "../lib/domain/entity-display";
 import { focusDestination } from "../lib/client/focus-destination";
 import DialogCloseButton from "./DialogCloseButton";
 import { useDialogSizeMotion } from "../lib/client/use-dialog-size-motion";
@@ -85,7 +86,7 @@ export default function EntityOverview({ entity, dataset, restricted, onClose, o
     <div className={styles.detailHeading}><h2 id="overview-title">{labels.title}</h2><DialogCloseButton label={labels.close} onClick={dismiss} /></div>
     <div className={styles.overviewBody}>
     <p className={styles.muted}>{datasetLabels(dataset, locale).badge}</p>
-    <div className={styles.overviewEntity}><h3>{entity.name}</h3><span className={styles.badge}>{ui.kinds[entity.kind]}</span></div>
+    <div className={styles.overviewEntity}><h3>{entityDisplayName(entity,locale)}</h3><span className={styles.badge}>{ui.kinds[entity.kind]}</span></div>
     {entity.description && <p>{entity.description}</p>}
     <p className={styles.muted}>{labels.scope}</p>
     {!result && !failure && <p role="status">{labels.loading}</p>}

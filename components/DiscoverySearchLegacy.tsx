@@ -1,4 +1,5 @@
 "use client";
+import { entityDisplayName } from "../lib/domain/entity-display";
 import { useEffect, useRef, useState } from "react";
 import type { EntitySummary } from "../lib/domain/api";
 import { PREDICATE_KEYS, type Predicate } from "../lib/domain/predicates";
@@ -82,7 +83,7 @@ export default function DiscoverySearchLegacy({ initial, onClose, onChoose }: { 
         </section>
         <AnimatedDetails className={styles.refinements} summary={<><Icon name="settings"/><span>{text.refine}</span></>}>
           <div className={styles.refinementBody}><fieldset className={styles.kinds}><legend>{search.kind}</legend>{([null, ...SEARCH_KINDS] as const).map(kind => <button type="button" key={kind ?? "all"} aria-pressed={criteria.kind === kind} onClick={() => changed({ ...criteria, kind: criteria.kind === kind ? null : kind })}>{kind ? search.kinds[kind] : search.all}</button>)}</fieldset>
-          <div className={styles.connections}><h3>{text.connections}</h3><div className={styles.connectionChoices}><button type="button" aria-pressed={!criteria.around} onClick={() => changed({ ...criteria, around: undefined })}>{text.all}</button>{starts.map(entity => <button key={entity.id} type="button" aria-pressed={criteria.around === entity.id} onClick={() => changed({ ...criteria, around: criteria.around === entity.id ? undefined : entity.id })}>{text.around(entity.name)}</button>)}</div></div></div>
+          <div className={styles.connections}><h3>{text.connections}</h3><div className={styles.connectionChoices}><button type="button" aria-pressed={!criteria.around} onClick={() => changed({ ...criteria, around: undefined })}>{text.all}</button>{starts.map(entity => <button key={entity.id} type="button" aria-pressed={criteria.around === entity.id} onClick={() => changed({ ...criteria, around: criteria.around === entity.id ? undefined : entity.id })}>{text.around(entityDisplayName(entity,locale))}</button>)}</div></div></div>
         </AnimatedDetails>
         <div className={styles.selectionRail} aria-label={text.selected}>{chips.map(chip => <button key={chip.id} type="button" className={styles.selection} aria-label={text.remove(chip.label)} onClick={chip.remove}>{chip.label}<Icon name="close"/></button>)}{!chips.length && <span>{text.introduction}</span>}{chips.length > 0 && <button type="button" className={styles.quiet} onClick={() => changed({ q: "", kind: null, predicates: null })}>{text.reset}</button>}</div>
       </section>

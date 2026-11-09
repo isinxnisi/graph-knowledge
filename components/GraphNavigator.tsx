@@ -1,4 +1,6 @@
 "use client";
+import { entityDisplayName } from "../lib/domain/entity-display";
+
 import Icon from "./Icon";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerLabels } from "../lib/i18n/explorer";
@@ -25,8 +27,8 @@ export default function GraphNavigator({ nodes, selection, onNavigate, compact =
   const entities = Object.values(nodes);
   const normalize = (value: string) => value.normalize("NFKC").toLowerCase().trim();
   const term = normalize(query);
-  const matches = entities.filter(entity => [entity.name, entity.description ?? ""].some(value => normalize(value).includes(term)))
-    .sort((a, b) => a.name.localeCompare(b.name, "ja") || a.id.localeCompare(b.id));
+  const matches = entities.filter(entity => [entityDisplayName(entity,locale), entity.name, ...(entity.aliases??[]), entity.description ?? ""].some(value => normalize(value).includes(term)))
+    .sort((a, b) => entityDisplayName(a,locale).localeCompare(entityDisplayName(b,locale), locale) || a.id.localeCompare(b.id));
 
   return <section className={styles.graphNavigator} aria-label={text.title} onKeyDown={event => {
     if (open && event.key === "Escape") {
@@ -48,7 +50,7 @@ export default function GraphNavigator({ nodes, selection, onNavigate, compact =
               onNavigate(entity.id); setOpen(false); trigger.current?.focus();
             }}>
               <span className={styles.navigatorKindIcon}><Icon name={entity.kind === "work" ? "book" : entity.kind} /></span>
-              <span className={styles.navigatorText}><strong>{entity.name}</strong><span className={styles.navigatorKind}>{ui.kinds[entity.kind]}</span>
+              <span className={styles.navigatorText}><strong>{entityDisplayName(entity,locale)}</strong><span className={styles.navigatorKind}>{ui.kinds[entity.kind]}</span>
                 <span className={styles.navigatorDescription}>{entity.description ?? text.descriptionMissing}</span>
                 {ambiguous && <span className={styles.navigatorDescription}>ID：{entity.id}</span>}
               </span>

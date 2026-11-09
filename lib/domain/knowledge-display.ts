@@ -1,12 +1,13 @@
+import {entityDisplayName} from "./entity-display";
 import type {ThemeTime} from "./theme-workbench";
 import type {KnowledgeRecordVersion,KnowledgeThemeVersion,KnowledgeTimeline} from "./knowledge-foundation";
 import type {KnowledgeSnapshot} from "./knowledge-foundation";
-import {translationTargetKey,type KnowledgeTextTarget,type KnowledgeTranslationVersion} from "./knowledge-translation";
+import {translationTargetKey,type KnowledgeTextTarget,type KnowledgeTranslationVersion,type KnowledgeDisplayTranslation} from "./knowledge-translation";
 
 /** Presentation only. Never use the returned text as a new original or a saved snapshot. */
-export function knowledgeDisplayText(translations:readonly KnowledgeTranslationVersion[]|undefined,target:KnowledgeTextTarget,locale:string,original:string):string {
+export function knowledgeDisplayText(translations:readonly KnowledgeDisplayTranslation[]|undefined,target:KnowledgeTextTarget,locale:string,original:string):string {
   const key=translationTargetKey(target);
-  return translations?.find(t=>t.language===locale&&translationTargetKey(t.target)===key&&t.originalText===original)?.text??original;
+  return translations?.find(t=>t.language===locale&&translationTargetKey(t.displayTarget??t.target)===key&&t.originalText===original)?.text??original;
 }
 
 /** The original snapshot and authored overrides remain untouched. Evidence stays in its source language. */
@@ -14,7 +15,7 @@ export function knowledgeDisplaySnapshot(snapshot:KnowledgeSnapshot,locale:strin
   const text=(kind:KnowledgeTextTarget["kind"],v:{id:string;revision:number},field:KnowledgeTextTarget["field"],original:string)=>knowledgeDisplayText(snapshot.translations,{kind,id:v.id,revision:v.revision,field},locale,original);
   const timeline=snapshot.theme?knowledgeDisplayTimeline(snapshot.timeline,snapshot.theme,snapshot.translations,locale):snapshot.timeline;
   return {...snapshot,...(timeline?{timeline}:{}),
-    entities:snapshot.entities.map(v=>({...v,content:{...v.content,name:text("entity",v,"name",v.content.name)}})),
+    entities:snapshot.entities.map(v=>({...v,content:{...v.content,name:text("entity",v,"name",v.content.name)===v.content.name?entityDisplayName(v.content,locale):text("entity",v,"name",v.content.name)}})),
     records:snapshot.records.map(v=>({...v,content:{...v.content,assertion:text("record",v,"assertion",v.content.assertion),scope:text("record",v,"scope",v.content.scope),...(v.content.relation?{relation:text("record",v,"relation",v.content.relation)}:{})}})),
     ...(snapshot.theme?{theme:{...snapshot.theme,content:{...snapshot.theme.content,title:text("theme",snapshot.theme,"title",snapshot.theme.content.title),description:text("theme",snapshot.theme,"description",snapshot.theme.content.description)}}}:{}),
   };

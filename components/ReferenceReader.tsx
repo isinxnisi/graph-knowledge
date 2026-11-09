@@ -1,4 +1,5 @@
 "use client";
+import { entityDisplayName } from "../lib/domain/entity-display";
 import {AiLabRecordReturn} from "./AiLabLinks";
 import { focusDestination } from "../lib/client/focus-destination";
 import DialogCloseButton from "./DialogCloseButton";
@@ -51,7 +52,7 @@ function EntityReader({ reference, onExplore }: { reference: ReadingReference; o
   const entity = result?.data, text = readingLabels(locale);
   if (!entity) return <ReadStatus error={result?.error} retry={retry} />;
   return <section aria-label={text.linkedEntity}>
-    <h3>{entity.name}</h3><p className={styles.badge}>{explorerLabels(locale).kinds[entity.kind]}</p>
+    <h3>{entityDisplayName(entity,locale)}</h3><p className={styles.badge}>{explorerLabels(locale).kinds[entity.kind]}</p>
     <p>{entity.description ?? explorerLabels(locale).descriptionMissing}</p>
     <p>{explorerLabels(locale).aliases}：{entity.aliases.length ? entity.aliases.join("、") : explorerLabels(locale).unregistered}</p>
     {entity.event && <><dl className={styles.claimFacts}><dt>{eventParticipationLabels(locale).eventPeriod}</dt><dd>{formatPeriod(entity.event.period, locale)}</dd></dl><p>{eventParticipationLabels(locale).periodHelp}</p></>}
@@ -73,8 +74,8 @@ function ClaimReader({ reference, onExplore }: { reference: ReadingReference; on
     <ClaimCard referenceDataset={reference.dataset} claim={claim} nodes={nodes} title={text.claim} idPrefix="reference-" />
     <section aria-label={text.endpoints} className={css.endpoints}><h3>{text.endpoints}</h3><div className={css.endpointGrid}>
       {endpoints.map(({ id, resource }) => <div key={id} className={css.endpoint}>
-        <p className={css.endpointName}>{resource.result?.data && <span className={css.kind}><Icon name={resource.result.data.kind === "work" ? "book" : resource.result.data.kind} />{explorerLabels(locale).kinds[resource.result.data.kind]}</span>}<ReadingLink reference={{ kind: "entity", dataset: reference.dataset, id }}>{resource.result?.data?.name ?? id}</ReadingLink></p>
-        {resource.result?.data ? <><p>{resource.result.data.description}</p><button onClick={() => onExplore(resource.result!.data!)}>{text.exploreFrom(resource.result.data.name)}</button></> : <ReadStatus error={resource.result?.error} retry={resource.retry} />}
+        <p className={css.endpointName}>{resource.result?.data && <span className={css.kind}><Icon name={resource.result.data.kind === "work" ? "book" : resource.result.data.kind} />{explorerLabels(locale).kinds[resource.result.data.kind]}</span>}<ReadingLink reference={{ kind: "entity", dataset: reference.dataset, id }}>{resource.result?.data ? entityDisplayName(resource.result.data,locale) : id}</ReadingLink></p>
+        {resource.result?.data ? <><p>{resource.result.data.description}</p><button onClick={() => onExplore(resource.result!.data!)}>{text.exploreFrom(entityDisplayName(resource.result.data,locale))}</button></> : <ReadStatus error={resource.result?.error} retry={resource.retry} />}
       </div>)}
       </div><p className={styles.muted}>{text.exploreHelp}</p>
     </section>

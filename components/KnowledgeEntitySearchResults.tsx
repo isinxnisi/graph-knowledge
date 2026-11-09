@@ -1,4 +1,7 @@
 "use client";
+import {entityDisplayName} from "../lib/domain/entity-display";
+import {knowledgeDisplayText} from "../lib/domain/knowledge-display";
+import {useKnowledgeDisplayTranslations} from "../lib/client/use-knowledge-display-translations";
 import {useEffect,useRef,useState} from "react";
 import type {KnowledgeEntityVersion} from "../lib/domain/knowledge-foundation";
 import type {KnowledgeEntityPage} from "../lib/domain/knowledge-theme-reader";
@@ -53,16 +56,19 @@ export default function KnowledgeEntitySearchResults({q,kind,excludeIds=[],onMat
  },[enabled,key,parameters,retry]);
  const current=enabled&&result?.key===key?result.items.filter(e=>!excludeIds.includes(e.id)):[];
  const recordRows=enabled&&records?.key===key?records.items.filter(r=>!excludeIds.includes(r.record.id)):[];
+ const displayEntities=[...new Map([...current,...recordRows.flatMap(r=>r.entities)].map(e=>[e.id,e])).values()];
+ const translations=useKnowledgeDisplayTranslations(displayEntities,recordRows.map(r=>r.record),undefined,locale);
+ const entityName=(e:KnowledgeEntityVersion)=>{const text=knowledgeDisplayText(translations,{kind:'entity',id:e.id,revision:e.revision,field:'name'},locale,e.content.name);return text===e.content.name?entityDisplayName(e.content,locale):text;};
  const visibleIds=JSON.stringify(recordView?recordRows.map(r=>r.record.id):current.map(e=>e.id));
  const pending=enabled&&(busy||result?.key!==key)&&failure?.key!==key;
  useEffect(()=>{onMatches?.({q,kind,ids:JSON.parse(visibleIds) as string[],pending});},[q,kind,visibleIds,pending,onMatches]);
  if(!enabled)return null;
  const failed=failure?.key===key;
  return <section className={css.section} aria-label={recordView?en?'Additional knowledge':'新しく加わった知識':en?'Additional subjects':'新しく加わった対象'} aria-busy={busy}>
-  {!!recordRows.length&&<><h3>{en?'Additional knowledge':'新しく加わった知識'}</h3><ul>{recordRows.map(dto=><li key={dto.record.id}><button onClick={()=>onChooseRecord?onChooseRecord(dto.record.id):reading?.openRecord(dto.record.id)}><Icon name={dto.record.content.kind==='relation'?'graph':'book'}/><span>{dto.record.content.assertion}<small>{dto.entities.map(e=>e.content.name).join(' · ')}</small></span><Icon name="chevron"/></button></li>)}</ul></>}
+  {!!recordRows.length&&<><h3>{en?'Additional knowledge':'新しく加わった知識'}</h3><ul>{recordRows.map(dto=><li key={dto.record.id}><button onClick={()=>onChooseRecord?onChooseRecord(dto.record.id):reading?.openRecord(dto.record.id)}><Icon name={dto.record.content.kind==='relation'?'graph':'book'}/><span>{knowledgeDisplayText(translations,{kind:'record',id:dto.record.id,revision:dto.record.revision,field:'assertion'},locale,dto.record.content.assertion)}<small>{dto.entities.map(entityName).join(' · ')}</small></span><Icon name="chevron"/></button></li>)}</ul></>}
   {!!current.length&&<><h3>{en?'Additional subjects':'新しく加わった対象'}</h3><ul className={rows.results}>{current.map(e=><li key={e.id}><button onClick={()=>onChoose?onChoose(e):reading?.openEntity(e)}>
    <Icon name={e.content.kind==='work'||e.content.kind==='作品'?'book':e.content.kind==='organization'||e.content.kind==='組織'?'organization':e.content.kind==='event'||e.content.kind==='出来事'?'event':'person'}/>
-   <span className={rows.identity}><span className={rows.name}><strong>{e.content.name}</strong><small>{knowledgeKindLabel(e.content.kind,locale)}</small></span>{e.content.description&&<span className={rows.description}>{e.content.description}</span>}{e.content.aliases.length>0&&<span className={rows.aliases}>{en?'Aliases: ':'別名：'}{e.content.aliases.join('・')}</span>}</span><Icon name="chevron"/>
+   <span className={rows.identity}><span className={rows.name}><strong>{entityName(e)}</strong><small>{knowledgeKindLabel(e.content.kind,locale)}</small></span>{e.content.description&&<span className={rows.description}>{knowledgeDisplayText(translations,{kind:'entity',id:e.id,revision:e.revision,field:'description'},locale,e.content.description)}</span>}{e.content.aliases.length>0&&<span className={rows.aliases}>{en?'Aliases: ':'別名：'}{e.content.aliases.join('・')}</span>}</span><Icon name="chevron"/>
   </button></li>)}</ul></>}
   {failed&&<p role="status">{failure.message} <button onClick={()=>{if(!failure.restart&&result?.key===key&&result.page.hasMore)void load(true);else setRetry(v=>v+1);}}>{failure.restart?en?'Search again':'先頭から再検索':en?'Retry':'再試行'}</button></p>}
   {result?.key===key&&result.page.hasMore&&!failed&&<button disabled={busy} onClick={()=>void load(true)}>{busy?en?'Reading…':'読み込み中…':recordView?en?'More knowledge':'知識の続きを表示':en?'More subjects':'対象の続きを表示'}<Icon name="chevron"/></button>}

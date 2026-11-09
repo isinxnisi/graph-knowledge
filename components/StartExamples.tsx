@@ -1,3 +1,4 @@
+import { entityDisplayName } from "../lib/domain/entity-display";
 import Icon from "./Icon";
 import { useUiLocale } from "../lib/client/ui-locale";
 import type { EntitySummary } from "../lib/domain/api";
@@ -17,8 +18,8 @@ export default function StartExamples({ dataset, onChoose }: { dataset: DatasetM
     <p className={styles.muted}>{text.help}</p>
     <ul className={styles.results}>
       {examples.map((entity) => <li key={entity.id}>
-        <button type="button" className={styles.resultButton} aria-label={text.start(entity.name) + (examples.some((other) => other.id !== entity.id && other.name === entity.name) ? ` — ${entity.description}` : "")} onClick={() => onChoose(entity)}>
-          <Icon name={entity.kind === "work" ? "book" : entity.kind === "organization" ? "organization" : entity.kind === "event" ? "event" : "person"} /><strong>{entity.name}</strong><span>{kinds[entity.kind as keyof typeof kinds]}{examples.some((other) => other.id !== entity.id && other.name === entity.name) ? ` ／ ${entity.description}` : ""}</span>
+        <button type="button" className={styles.resultButton} aria-label={text.start(entityDisplayName(entity,locale)) + (examples.some((other) => other.id !== entity.id && other.name === entity.name) ? ` — ${entity.description}` : "")} onClick={() => onChoose(entity)}>
+          <Icon name={entity.kind === "work" ? "book" : entity.kind === "organization" ? "organization" : entity.kind === "event" ? "event" : "person"} /><strong>{entityDisplayName(entity,locale)}</strong><span>{kinds[entity.kind as keyof typeof kinds]}{examples.some((other) => other.id !== entity.id && other.name === entity.name) ? ` ／ ${entity.description}` : ""}</span>
         </button>
       </li>)}
     </ul>

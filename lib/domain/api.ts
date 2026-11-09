@@ -5,7 +5,8 @@ import { z } from "zod";
 import { DATASET_MODES } from "./dataset";
 import { entitySchema, claimSchema, citationSchema, sourceSchema } from "./fixture";
 
-export const entitySummarySchema = entitySchema.pick({ id: true, kind: true, name: true, description: true });
+export const entitySummarySchema = entitySchema.pick({ id: true, kind: true, name: true, description: true })
+  .extend({ aliases: entitySchema.shape.aliases.optional() });
 export const entityDetailSchema = entitySummarySchema.extend({ aliases: entitySchema.shape.aliases, event: eventMetadataSchema.nullable() });
 export const claimSummarySchema = claimSchema.omit({ visibility: true, createdAt: true, updatedAt: true })
   .extend({ contribution: contributionSchema.nullable(), organizationParticipation: organizationParticipationSchema.nullable(), eventParticipation: eventParticipationSchema.nullable(), sourceCount: z.number().int().nonnegative() });

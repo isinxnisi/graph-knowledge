@@ -21,7 +21,7 @@ function partialDate(properties: Properties, prefix: string): PartialDate | null
 
 export function entitySummary(properties: Properties): EntitySummary {
   storedEventMetadata(properties);
-  return entitySummarySchema.parse({ id: properties.id, kind: properties.kind, name: properties.name, description: properties.description ?? null });
+  return entitySummarySchema.parse({ id: properties.id, kind: properties.kind, name: properties.name, description: properties.description ?? null, ...(Array.isArray(properties.aliases) && properties.aliases.length ? { aliases: properties.aliases } : {}) });
 }
 export function entityDetail(properties: Properties) {
   return entityDetailSchema.parse({ ...entitySummary(properties), aliases: properties.aliases ?? [], event: storedEventMetadata(properties) });

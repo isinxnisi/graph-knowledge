@@ -1,4 +1,5 @@
 "use client";
+import { entityDisplayName } from "../lib/domain/entity-display";
 import { focusDestination } from "../lib/client/focus-destination";
 import { graphNoticePresentation } from "../lib/client/graph-notice";
 import GraphNotice from "./GraphNotice";
@@ -187,7 +188,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
   const selectedRelation = selection?.kind === "relation" ? relations[selection.id] : null;
   const selectedEntity = selection?.kind === "entity" ? graph.nodes[selection.id] : null;
   const selectedClaim = selection?.kind === "claim" ? graph.claims[selection.id] : null;
-  const selectionText = selectedEntity ? entityLabel(selectedEntity, graph.nodes, locale).replace("\n", " / ") : selectedClaim ? `${graph.nodes[selectedClaim.subjectId]?.name} → ${relationLabel(selectedClaim, locale)} → ${graph.nodes[selectedClaim.objectId]?.name}` : selectedRelation ? `${graph.nodes[selectedRelation.subjectId]?.name} → ${selectedRelation.label.replaceAll("\n", " / ")} → ${graph.nodes[selectedRelation.objectId]?.name}` : ui.unselected;
+  const selectionText = selectedEntity ? entityLabel(selectedEntity, graph.nodes, locale).replace("\n", " / ") : selectedClaim ? `${entityDisplayName(graph.nodes[selectedClaim.subjectId],locale)} → ${relationLabel(selectedClaim, locale)} → ${entityDisplayName(graph.nodes[selectedClaim.objectId],locale)}` : selectedRelation ? `${entityDisplayName(graph.nodes[selectedRelation.subjectId],locale)} → ${selectedRelation.label.replaceAll("\n", " / ")} → ${entityDisplayName(graph.nodes[selectedRelation.objectId],locale)}` : ui.unselected;
   const key = `${graph.generation}:${selection?.kind}:${selection?.id}`;
   const lastDetail = useRef<string | null>(null);
   useEffect(() => {
@@ -228,7 +229,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
           <div className={styles.graphHeading}><h2 id="graph-title">Graph</h2>
             <p data-testid="graph-counts">Entity {Object.keys(graph.nodes).length} / Claim {Object.keys(graph.claims).length}</p><p data-testid="relation-counts">Relation {Object.keys(relations).length}</p>
           </div>
-          <div className={styles.rootBar}><p className={styles.rootLabel} data-testid="exploration-root">{entry.root}：{graph.centerId ? graph.nodes[graph.centerId]?.name : entry.rootEmpty}</p>
+          <div className={styles.rootBar}><p className={styles.rootLabel} data-testid="exploration-root">{entry.root}：{graph.centerId ? entityDisplayName(graph.nodes[graph.centerId],locale) : entry.rootEmpty}</p>
             <button className={styles.copyExploration} aria-label={explorationUrlLabels(locale).copy} title={explorationUrlLabels(locale).copy} disabled={!urlState.ready || urlState.busy || !!urlState.failure || loading > 0} onClick={() => void urlState.copy()}><Icon name="copy" /><span>{explorationUrlLabels(locale).copy}</span></button><div lang={locale} className={styles.rootSaveActions}><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button></div>
             {previous && <button className={styles.restoreExploration} aria-label={overviewLabels(locale).restore} title={overviewLabels(locale).restore} onClick={restorePrevious}><Icon name="back" /><span>{overviewLabels(locale).restore}</span></button>}</div>
         </div>

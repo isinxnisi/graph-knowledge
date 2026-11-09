@@ -1,4 +1,6 @@
 "use client";
+import { entityDisplayName } from "../lib/domain/entity-display";
+
 import { useMemo } from "react";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { useDiscoveryPaths } from "../lib/client/use-discovery-paths";
@@ -23,7 +25,7 @@ export default function DiscoveryPaths({ compact = false, anchor, anchorId, pred
   const conditions=useMemo(()=>({predicates:predicate?[predicate]:null,contributionRoles:role?[role]:null}),[predicate,role]);
   const preset=ui.preset ?? null, template=preset ? resolvePathPreset(preset) : null;
   const query=useDiscoveryPaths(ui.open,anchorId,ui.depth,conditions,revision,preset), result=query.result;
-  const selected=result?.paths.find(p=>pathKey(p)===ui.selected), node=(id:string)=>result?.nodes.find(n=>n.id===id)?.name??id;
+  const selected=result?.paths.find(p=>pathKey(p)===ui.selected), node=(id:string)=>entityDisplayName(result?.nodes.find(n=>n.id===id),locale)||id;
   const choices=pathPresets.filter(p=>p.kinds[0]===anchor.kind);
   const partialReasons=result?.scan.reasons.map(reason=>({
     neighbors:t("一部の対象に未取得の記録があります。","Some entities have unread records."),
@@ -52,7 +54,7 @@ export default function DiscoveryPaths({ compact = false, anchor, anchorId, pred
     {ui.open&&<div className={styles.pathContent}>
       {template?<div className={styles.pathPurpose} data-testid="path-purpose">
         <div><strong>{template.title[en?1:0]}</strong><button onClick={()=>onChange({...ui,preset:null,selected:null,changed:true})}>{t("探し方だけ解除", "Remove only preset")}</button></div>
-        <p>{anchor.name}{t("から。", ": ")}{template.purpose[en?1:0]}</p><small>{template.shape[en?1:0]}</small>
+        <p>{entityDisplayName(anchor,locale)}{t("から。", ": ")}{template.purpose[en?1:0]}</p><small>{template.shape[en?1:0]}</small>
       </div>:<p className={styles.pathNote}>{ui.changed?t("探し方の制約を外して自由に探索中。下の関係・役割・段数で経路を探します。","Exploring freely after changing the preset. Routes use the relation, role and length shown below."):t("関係と段数を自由に選んで探索できます。", "Explore freely using relation filters and path length.")}</p>}
       <p className={styles.pathNote}>{predicate?explorationLabels(locale).predicates[predicate]:t("すべての関係","All relations")}{role?" · "+contributionLabels(locale).roles[role]:""} · {t("全段に適用・両方向・肯否とも含む","At every step · both directions and polarities")}{pageFilter&&t("。名前の絞込は一段目の表示だけに作用します。",". The name filter applies only to the one-step list.")}</p>
       <p className={styles.pathNote}>{t("経路は記録のつながりです。両端の直接関係・因果を示しません。","A route links records, not a direct or causal relation between its endpoints.")}</p>

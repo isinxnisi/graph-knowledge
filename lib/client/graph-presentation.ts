@@ -3,14 +3,16 @@ import { relationPresentationLabels } from "../i18n/relation-presentation";
 import { explorationLabels } from "../i18n/exploration";
 import { explorerLabels } from "../i18n/explorer";
 import type { EntitySummary, ClaimSummary } from "../domain/api";
+import { entityDisplayName } from "../domain/entity-display";
 
 // 同名がGraph内に存在するときだけ、登録済みの説明を補助ラベルに使う。
 export function entityLabel(entity: EntitySummary, nodes: Record<string, EntitySummary>, locale = "ja"): string {
-  const peers = Object.values(nodes).filter((node) => node.name === entity.name);
-  if (peers.length < 2) return entity.name;
+  const name = entityDisplayName(entity, locale);
+  const peers = Object.values(nodes).filter((node) => entityDisplayName(node, locale) === name);
+  if (peers.length < 2) return name;
   const description = entity.description?.split(/[、。]/)[0] || explorerLabels(locale).noDescription;
   const duplicateDescription = peers.some((node) => node.id !== entity.id && (node.description?.split(/[、。]/)[0] || explorerLabels(locale).noDescription) === description);
-  return `${entity.name}\n${description}${duplicateDescription ? ` (${entity.id.slice(0, 8)})` : ""}`;
+  return `${name}\n${description}${duplicateDescription ? ` (${entity.id.slice(0, 8)})` : ""}`;
 }
 
 // 永続IDではなく、向きとpredicateを含む表示専用の安定キー。

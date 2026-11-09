@@ -1,4 +1,5 @@
 "use client";
+import { entityDisplayName } from "../lib/domain/entity-display";
 import { useCallback, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { EntitySummary } from "../lib/domain/api";
@@ -81,7 +82,7 @@ export default function DiscoveryListPanel({ criteria, cursors, onChange, onPage
       </div><small>{en ? "Replaces relation and role only; keeps name, kind and scope." : "関係・役割だけを置換。名前・種別・範囲は保持します。"}</small></div>}
       <div className={styles.listGroup} role="group" aria-label={text.connections}><span className={styles.fieldLabel}>{en ? "Around" : "周辺"}</span><div className={styles.listOptions}>
         <button aria-pressed={!criteria.around} onClick={() => onChange({ ...criteria, around: undefined })}>{text.all}</button>
-        {query.starts.map(entity => <button key={entity.id} aria-pressed={criteria.around === entity.id} onClick={() => onChange({ ...criteria, around: criteria.around === entity.id ? undefined : entity.id })}>{text.around(entity.name)}</button>)}
+        {query.starts.map(entity => <button key={entity.id} aria-pressed={criteria.around === entity.id} onClick={() => onChange({ ...criteria, around: criteria.around === entity.id ? undefined : entity.id })}>{text.around(entityDisplayName(entity,locale))}</button>)}
       </div><small>{en ? "Only Claims directly connected to the selected subject. Relation and role must match that same Claim." : "選んだ対象に直接つながるClaimを検索。関係と役割も同じClaimで照合します。"}</small></div>
     </aside>
     <section className={styles.matches} aria-label={recordView ? en ? "Relation records" : "関係の記録" : en ? "Entity list" : "対象の一覧"} aria-busy={loading}>

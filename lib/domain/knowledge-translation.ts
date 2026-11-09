@@ -17,6 +17,9 @@ export const knowledgeDisplayTranslationsQuerySchema=z.strictObject({targets:z.a
 export const translationProposalSchema=z.strictObject({target:knowledgeTextTargetSchema,language:translationLanguageSchema,text:z.string().trim().max(4000),expectedRevision:z.number().int().nonnegative().default(0)});
 export const knowledgeTranslationVersionSchema=z.strictObject({id:knowledgeIdSchema,revision:knowledgeRevisionSchema,target:knowledgeTextTargetSchema,language:translationLanguageSchema,text:z.string().min(1).max(4000),originalText:z.string().min(1).max(4000),originalHash:z.string().regex(/^[a-f0-9]{64}$/),createdAt:z.string(),reason:z.string()});
 export type KnowledgeTranslationVersion=z.infer<typeof knowledgeTranslationVersionSchema>;
+/** Read-only overlay. The canonical translation retains its original target. */
+export const knowledgeDisplayTranslationSchema=knowledgeTranslationVersionSchema.extend({displayTarget:knowledgeTextTargetSchema.optional()});
+export type KnowledgeDisplayTranslation=z.infer<typeof knowledgeDisplayTranslationSchema>;
 export const translationCommandShape={action:z.literal("accept-translation"),target:knowledgeTextTargetSchema,language:translationLanguageSchema,text:z.string().trim().min(1).max(4000),originalHash:z.string().regex(/^[a-f0-9]{64}$/),expectedRevision:z.number().int().nonnegative()};
 export function translationIdentity(t:KnowledgeTextTarget,language:string){return [t.kind,t.id,t.revision,t.field,t.evidenceId??null,t.aliasIndex??null,language,...(t.timeId!==undefined||t.axisId!==undefined?["timeline",t.timeId??null,t.axisId??null]:[])];}
 export function knowledgeOriginalText(target:KnowledgeTextTarget,content:unknown):{text:string;language?:KnowledgeTextLanguage}{

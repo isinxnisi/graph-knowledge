@@ -1,3 +1,5 @@
+2026-11-09 多言語表示の横断是正：①原因確認完了・②修正／検証中｜残りは③実画面確認・反映｜今回は③まで。原名を直接表示する経路と、テーマ構成版更新で同一原文の訳が消える問題を共通化して修正。[契約](design/MULTILINGUAL_DISPLAY_COVERAGE.md)。
+
 2026-11-09 翻訳欄のスマホ表示是正：①原因確認・②修正／β確認・③正式反映と画面確認まで完了｜今回の表示修正は残作業なし｜工程は③まで。app9d39f7d2、β kmG5WncQ4B_AyPgirQCqe、正式 f-Ryn5yWRD-CNjoPfInPS。正式390pxでcheckbox16px／文章高さ41px、PCとチェック操作を確認。DB／Worker更新なし。既存の依頼状況取得エラーは別記。[完了結果・制約](verification/TRANSLATION_CONSENT_LAYOUT_20261109.md)。
 
 2026-11-09 翻訳欄のスマホ表示：①原因確認・②修正／実画面・両buildを完了、③3200／HTTPS βへ反映・本番資材転送照合済み｜残りは③本番切替・正式確認｜今回は③まで。app9d39f7d2、β kmG5WncQ4B_AyPgirQCqe、正式候補 f-Ryn5yWRD-CNjoPfInPS。チェック幅301→16px、文章高さ571→41pxを確認。[検証・再開](verification/TRANSLATION_CONSENT_LAYOUT_20261109.md)。
