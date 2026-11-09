@@ -26,12 +26,13 @@ export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme,o
   const name = (id: string | null) => {const e=dto.entities.find(e=>e.id===id);return e?entityName(e):(en ? "Name unavailable" : "名前を取得できません");};
   const [localEvidence,setLocalEvidence]=useState<string[]>([]);
   const assertion=text("assertion",r.assertion),scope=text("scope",r.scope),longScope=scope.length>170;
+  const heading=title||(r.kind==="relation"?`${name(r.subjectId)} → ${name(r.objectId)}`:assertion);
   const originalLanguage=r.textLanguages?.assertion?.tag;
   const languageName=originalLanguage?new Intl.DisplayNames([locale],{type:"language"}).of(originalLanguage)??originalLanguage:null;
   return <article className={css.detail}>
     {onBack&&<button className={css.back} onClick={onBack}><Icon name="back"/>{en?"Back to reading":"年表・図に戻る"}</button>}
     <KnowledgeReadingBadge kind={r.kind} polarity={r.polarity} en={en}/>
-    <h2>{title|| (r.kind==="relation"?`${name(r.subjectId)} → ${name(r.objectId)}`:assertion)}</h2>
+    {heading!==assertion&&<h2>{heading}</h2>}
     <p className={css.statement} lang={assertion!==r.assertion?locale:originalLanguage}>{assertion}</p>
 
     {explanations.length>0&&<ReadingDetailSection title={en?"Explanation":"解説"} icon="book">
