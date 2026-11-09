@@ -10,18 +10,18 @@
     "hook": "Webbが赤外線で見た宇宙は、私たちの宇宙観をどう広げたのか。",
     "lead": "赤外線で初期宇宙を見る理由から、打上げ・展開、最初の深宇宙画像へ。NASAとESAの資料を根拠に、望遠鏡を宇宙へひらいた工程と、観測がひらいた視野をたどります。",
     "image": {
-      "id": "webb-first-deep-field",
-      "src": "/theme-assets/webb-first-deep-field.jpg",
-      "width": 1024,
-      "height": 1045,
-      "kind": "photo",
-      "credit": "NASA, ESA, CSA, and STScI",
-      "sourceUrl": "https://esawebb.org/images/webb-first-deep-field/",
-      "termsUrl": "https://esawebb.org/copyright/",
+      "id": "webb-editorial-v1",
+      "src": "/theme-assets/webb-editorial-v1.png",
+      "width": 768,
+      "height": 512,
+      "kind": "illustration",
+      "alt": "金色の鏡と幾層もの遮熱膜を備えたWebbを、淡い水彩と細い線で描いた挿絵。",
+      "caption": "テーマの挿絵です。観測画像や技術図ではありません。",
+      "credit": "Plunode · AI生成イラスト",
+      "sourceUrl": "https://github.com/isinxnisi/graph-knowledge/blob/codex/theme-reading-seo/public/theme-assets/webb-editorial-v1.png",
+      "termsUrl": "https://github.com/isinxnisi/graph-knowledge/blob/codex/theme-reading-seo/docs/design/THEME_READING_VISUAL_ASSETS.md",
       "checkedAt": "2026-11-10",
-      "focus": "50% 50%",
-      "alt": "Webbが赤外線で捉えた銀河団SMACS 0723。色付けした複数波長の合成画像。",
-      "caption": "最初の深宇宙画像（2022年）"
+      "focus": "50% 50%"
     },
     "records": [
       {
@@ -119,18 +119,18 @@
     "hook": "How did Webb’s infrared view widen our picture of the universe?",
     "lead": "Why infrared observations? Follow Webb from launch and deployment to its first deep field, using NASA and ESA sources to connect the engineering journey with the view it opened.",
     "image": {
-      "id": "webb-first-deep-field",
-      "src": "/theme-assets/webb-first-deep-field.jpg",
-      "width": 1024,
-      "height": 1045,
-      "kind": "photo",
-      "credit": "NASA, ESA, CSA, and STScI",
-      "sourceUrl": "https://esawebb.org/images/webb-first-deep-field/",
-      "termsUrl": "https://esawebb.org/copyright/",
+      "id": "webb-editorial-v1",
+      "src": "/theme-assets/webb-editorial-v1.png",
+      "width": 768,
+      "height": 512,
+      "kind": "illustration",
+      "alt": "An ink-and-watercolour interpretation of Webb’s gold mirror and layered sunshield, surrounded by a few distant galaxies.",
+      "caption": "Editorial illustration, not an observation image or a technical diagram.",
+      "credit": "Plunode · AI-generated illustration",
+      "sourceUrl": "https://github.com/isinxnisi/graph-knowledge/blob/codex/theme-reading-seo/public/theme-assets/webb-editorial-v1.png",
+      "termsUrl": "https://github.com/isinxnisi/graph-knowledge/blob/codex/theme-reading-seo/docs/design/THEME_READING_VISUAL_ASSETS.md",
       "checkedAt": "2026-11-10",
-      "focus": "50% 50%",
-      "alt": "Webb’s infrared view of galaxy cluster SMACS 0723, a color composite of multiple wavelengths.",
-      "caption": "Webb’s first deep field (2022)"
+      "focus": "50% 50%"
     },
     "records": [
       {
@@ -228,18 +228,18 @@
     "hook": "Webbが赤外線で見た宇宙は、私たちの宇宙観をどう広げたのか。",
     "lead": "赤外線で初期宇宙を見る理由から、打上げ・展開、最初の深宇宙画像へ。NASAとESAの資料を根拠に、望遠鏡を宇宙へひらいた工程と、観測がひらいた視野をたどります。",
     "image": {
-      "id": "webb-first-deep-field",
-      "src": "/theme-assets/webb-first-deep-field.jpg",
-      "width": 1024,
-      "height": 1045,
-      "kind": "photo",
-      "credit": "NASA, ESA, CSA, and STScI",
-      "sourceUrl": "https://esawebb.org/images/webb-first-deep-field/",
-      "termsUrl": "https://esawebb.org/copyright/",
+      "id": "webb-editorial-v1",
+      "src": "/theme-assets/webb-editorial-v1.png",
+      "width": 768,
+      "height": 512,
+      "kind": "illustration",
+      "alt": "金色の鏡と幾層もの遮熱膜を備えたWebbを、淡い水彩と細い線で描いた挿絵。",
+      "caption": "テーマの挿絵です。観測画像や技術図ではありません。",
+      "credit": "Plunode · AI生成イラスト",
+      "sourceUrl": "https://github.com/isinxnisi/graph-knowledge/blob/codex/theme-reading-seo/public/theme-assets/webb-editorial-v1.png",
+      "termsUrl": "https://github.com/isinxnisi/graph-knowledge/blob/codex/theme-reading-seo/docs/design/THEME_READING_VISUAL_ASSETS.md",
       "checkedAt": "2026-11-10",
-      "focus": "50% 50%",
-      "alt": "Webbが赤外線で捉えた銀河団SMACS 0723。色付けした複数波長の合成画像。",
-      "caption": "最初の深宇宙画像（2022年）"
+      "focus": "50% 50%"
     },
     "records": [
       {
@@ -373,18 +373,18 @@
     "hook": "How did Webb’s infrared view widen our picture of the universe?",
     "lead": "Why infrared observations? Follow Webb from launch and deployment to its first deep field, using NASA and ESA sources to connect the engineering journey with the view it opened.",
     "image": {
-      "id": "webb-first-deep-field",
-      "src": "/theme-assets/webb-first-deep-field.jpg",
-      "width": 1024,
-      "height": 1045,
-      "kind": "photo",
-      "credit": "NASA, ESA, CSA, and STScI",
-      "sourceUrl": "https://esawebb.org/images/webb-first-deep-field/",
-      "termsUrl": "https://esawebb.org/copyright/",
+      "id": "webb-editorial-v1",
+      "src": "/theme-assets/webb-editorial-v1.png",
+      "width": 768,
+      "height": 512,
+      "kind": "illustration",
+      "alt": "An ink-and-watercolour interpretation of Webb’s gold mirror and layered sunshield, surrounded by a few distant galaxies.",
+      "caption": "Editorial illustration, not an observation image or a technical diagram.",
+      "credit": "Plunode · AI-generated illustration",
+      "sourceUrl": "https://github.com/isinxnisi/graph-knowledge/blob/codex/theme-reading-seo/public/theme-assets/webb-editorial-v1.png",
+      "termsUrl": "https://github.com/isinxnisi/graph-knowledge/blob/codex/theme-reading-seo/docs/design/THEME_READING_VISUAL_ASSETS.md",
       "checkedAt": "2026-11-10",
-      "focus": "50% 50%",
-      "alt": "Webb’s infrared view of galaxy cluster SMACS 0723, a color composite of multiple wavelengths.",
-      "caption": "Webb’s first deep field (2022)"
+      "focus": "50% 50%"
     },
     "records": [
       {
@@ -518,18 +518,18 @@
     "hook": "Webbが赤外線で見た宇宙は、私たちの宇宙観をどう広げたのか。",
     "lead": "赤外線で初期宇宙を見る理由から、打上げ・展開、最初の深宇宙画像へ。NASAとESAの資料を根拠に、望遠鏡を宇宙へひらいた工程と、観測がひらいた視野をたどります。",
     "image": {
-      "id": "webb-first-deep-field",
-      "src": "/theme-assets/webb-first-deep-field.jpg",
-      "width": 1024,
-      "height": 1045,
-      "kind": "photo",
-      "credit": "NASA, ESA, CSA, and STScI",
-      "sourceUrl": "https://esawebb.org/images/webb-first-deep-field/",
-      "termsUrl": "https://esawebb.org/copyright/",
+      "id": "webb-editorial-v1",
+      "src": "/theme-assets/webb-editorial-v1.png",
+      "width": 768,
+      "height": 512,
+      "kind": "illustration",
+      "alt": "金色の鏡と幾層もの遮熱膜を備えたWebbを、淡い水彩と細い線で描いた挿絵。",
+      "caption": "テーマの挿絵です。観測画像や技術図ではありません。",
+      "credit": "Plunode · AI生成イラスト",
+      "sourceUrl": "https://github.com/isinxnisi/graph-knowledge/blob/codex/theme-reading-seo/public/theme-assets/webb-editorial-v1.png",
+      "termsUrl": "https://github.com/isinxnisi/graph-knowledge/blob/codex/theme-reading-seo/docs/design/THEME_READING_VISUAL_ASSETS.md",
       "checkedAt": "2026-11-10",
-      "focus": "50% 50%",
-      "alt": "Webbが赤外線で捉えた銀河団SMACS 0723。色付けした複数波長の合成画像。",
-      "caption": "最初の深宇宙画像（2022年）"
+      "focus": "50% 50%"
     },
     "records": [
       {
@@ -666,18 +666,18 @@
     "hook": "How did Webb’s infrared view widen our picture of the universe?",
     "lead": "Why infrared observations? Follow Webb from launch and deployment to its first deep field, using NASA and ESA sources to connect the engineering journey with the view it opened.",
     "image": {
-      "id": "webb-first-deep-field",
-      "src": "/theme-assets/webb-first-deep-field.jpg",
-      "width": 1024,
-      "height": 1045,
-      "kind": "photo",
-      "credit": "NASA, ESA, CSA, and STScI",
-      "sourceUrl": "https://esawebb.org/images/webb-first-deep-field/",
-      "termsUrl": "https://esawebb.org/copyright/",
+      "id": "webb-editorial-v1",
+      "src": "/theme-assets/webb-editorial-v1.png",
+      "width": 768,
+      "height": 512,
+      "kind": "illustration",
+      "alt": "An ink-and-watercolour interpretation of Webb’s gold mirror and layered sunshield, surrounded by a few distant galaxies.",
+      "caption": "Editorial illustration, not an observation image or a technical diagram.",
+      "credit": "Plunode · AI-generated illustration",
+      "sourceUrl": "https://github.com/isinxnisi/graph-knowledge/blob/codex/theme-reading-seo/public/theme-assets/webb-editorial-v1.png",
+      "termsUrl": "https://github.com/isinxnisi/graph-knowledge/blob/codex/theme-reading-seo/docs/design/THEME_READING_VISUAL_ASSETS.md",
       "checkedAt": "2026-11-10",
-      "focus": "50% 50%",
-      "alt": "Webb’s infrared view of galaxy cluster SMACS 0723, a color composite of multiple wavelengths.",
-      "caption": "Webb’s first deep field (2022)"
+      "focus": "50% 50%"
     },
     "records": [
       {

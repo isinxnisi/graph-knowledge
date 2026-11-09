@@ -34,7 +34,7 @@ it("canonical links and legacy links preserve their pinned revision independentl
  expect(knowledgeThemeLocation(new URL("https://plunode.net/en/t/a%3Ab?krev=4&kview=split"))).toMatchObject({id:"a:b",revision:4,view:"split"});expect(knowledgeThemeLocation(new URL("https://plunode.net/?ktheme=old&krev=2"))).toMatchObject({id:"old",revision:2});const r={...emptyKnowledgeReference(),theme:{id:"a:b",revision:4},themeView:"timeline" as const};expect(knowledgeWorkspaceHref(new URL("https://plunode.net/en/t/a%3Ab"),r)).toContain("/en/t/a%3Ab?krev=4");expect(knowledgeWorkspaceHref(new URL("https://plunode.net/en/t/a%3Ab"),emptyKnowledgeReference())).toBe("/en");
 });
 it("editorial metadata is not inherited by another revision",()=>{
- const theme={id:"reading-20261110:webb:theme",...stamp,content:{title:"",description:"",recordPins:[],entityPins:[],sourcePins:[],mappingPins:[],initialView:"split" as const}};expect(themeReadingPresentation(theme,"ja")?.image?.credit).toContain("STScI");expect(themeReadingPresentation({...theme,revision:999},"ja")).toBeNull();
+ const theme={id:"reading-20261110:webb:theme",...stamp,content:{title:"",description:"",recordPins:[],entityPins:[],sourcePins:[],mappingPins:[],initialView:"split" as const}};expect(themeReadingPresentation(theme,"ja")?.image?.credit).toContain("Plunode");expect(themeReadingPresentation({...theme,revision:999},"ja")).toBeNull();
 });
 it("products are edition-pinned, deduplicated, independently regional and never follow arbitrary neighbors",()=>{
  const theme={id:"theme",...stamp,content:{title:"T",description:"",recordPins:[{id:"r",revision:1}],entityPins:[],sourcePins:[],mappingPins:[],initialView:"split" as const}},product=productCatalogue.products[0];

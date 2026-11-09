@@ -23,7 +23,7 @@ export function ThemeLink({ theme, onOpen, appearance = "row", showDescription =
   const type = knowledgeThemeTypeLabel(theme, en);
   const title=knowledgeDisplayText(theme.translations,{kind:"theme",id:theme.id,revision:theme.revision,field:"title"},locale,theme.title);
   const description=knowledgeDisplayText(theme.translations,{kind:"theme",id:theme.id,revision:theme.revision,field:"description"},locale,theme.description);
-  const presentation={image:theme.presentationImages?.[en?"en":"ja"]};
+  const presentation={image:theme.presentationImages?.[en?"en":"ja"],intro:theme.presentationIntros?.[en?"en":"ja"]};
   const icon = theme.hasTimeline ? "event" : theme.hasRelations === false ? "book" : "graph";
   const href = `${en?"/en":""}/t/${encodeURIComponent(theme.id)}${focusEntityId?"?kfocus="+encodeURIComponent(focusEntityId):""}`;
   function choose(event: MouseEvent<HTMLAnchorElement>) {
@@ -34,8 +34,8 @@ export function ThemeLink({ theme, onOpen, appearance = "row", showDescription =
     <Icon name={icon}/>{title}<span>{type}</span>
   </a>;
   if (appearance === "featured") return <a className={`${home.themeFeature} ${css.featureLink}`} href={href} target={openInNewTab ? "_blank" : undefined} rel={openInNewTab ? "noopener" : undefined} onClick={choose}>
-    <>{presentation?.image?<Image unoptimized className={css.themeImage} src={presentation.image.src} width={72} height={72} alt={presentation.image.alt} style={{objectPosition:presentation.image.focus}}/>:<Icon name={icon}/>}</><span><small>{type}</small><strong>{title}</strong>
-      {showDescription && theme.description && <span className={css.featureDescription}>{description}</span>}{presentation?.image&&<small className={css.imageCredit}>Image: {presentation.image.credit}</small>}
+    <>{presentation?.image?<Image unoptimized className={css.themeImage} data-kind={presentation.image.kind} src={presentation.image.src} width={96} height={80} alt={presentation.image.alt} style={{objectPosition:presentation.image.focus}}/>:<Icon name={icon}/>}</><span><small>{type}</small><strong>{title}</strong>
+      {showDescription && theme.description && <span className={css.featureDescription}>{presentation.intro?.hook||description}</span>}
     </span><Icon name="arrow"/>
   </a>;
   return <a className={`${results.resultRow} ${css.themeRow}`} href={href} target={openInNewTab ? "_blank" : undefined} rel={openInNewTab ? "noopener" : undefined} onClick={choose}>

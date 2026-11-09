@@ -24,6 +24,11 @@
 
 .statusLine{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--color-muted);font-size:12px}.home .statusLine button{display:inline-flex;align-items:center;gap:5px;border:0;background:transparent;padding:4px 0;min-height:32px;font-size:12px}.statusLine :global(.ui-icon){width:14px;height:14px}
 
-.themeImage{width:72px;height:72px;object-fit:cover;border-radius:7px;flex-shrink:0}
+.themeImage{width:96px;height:80px;object-fit:cover;border-radius:6px;flex-shrink:0}
+.themeImage[data-kind="illustration"]{object-fit:contain;border-radius:0}
+.home a.featureLink{gap:12px;padding:12px 10px;text-decoration:none;color:var(--color-text);align-items:center;background:color-mix(in srgb,#d8b78c 7%,var(--color-panel));}
+.home a.featureLink strong{font:500 16px/1.5 var(--font-editorial);}
+.home a.featureLink .featureDescription{font-size:12px;line-height:1.6;color:var(--color-text);}
+.home a.featureLink small{font-size:10px;}
 
 .imageCredit {font-size:10px;line-height:1.4;color:var(--color-muted);}
