@@ -78,7 +78,7 @@ export function knowledgeTimelineProjection(snapshot: KnowledgeSnapshot, options
       evidence: c.evidence.map(e => {
         const source = sourceByPin.get(JSON.stringify([e.source.id, e.source.revision]));
         if (!source) throw new Error("年表の固定版に引用資料の版がありません");
-        return { sourceId: source.id, sourceRevision: source.revision,
+        return { evidenceId:e.id, sourceId: source.id, sourceRevision: source.revision,
           title: source.content.title, url: source.content.url, bibliography: source.content.bibliography,
           locator: e.locator, excerpt: e.excerpt, stance: e.stance };
       }),

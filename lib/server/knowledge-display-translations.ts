@@ -44,3 +44,21 @@ export async function publicDisplayTranslations(c: PoolClient, targets: Knowledg
   }
   return result;
 }
+
+/** Only call after resolving this whole public snapshot in the SAME read transaction.
+ * The batch cannot grant access to arbitrary request targets. Hidden translation heads are excluded.
+ */
+export async function publicThemeSnapshotTranslations(c:PoolClient,resolved:import("../domain/knowledge-foundation").KnowledgeThemeResolved,language:string):Promise<KnowledgeDisplayTranslation[]>{
+ const {snapshot,theme}=resolved;
+ const content=new Map<string,unknown>(),targets:KnowledgeTextTarget[]=[];
+ const add=(kind:KnowledgeTextTarget["kind"],v:{id:string;revision:number;content:unknown},fields:KnowledgeTextTarget["field"][])=>{content.set(JSON.stringify([kind,v.id,v.revision]),v.content);for(const field of fields)try{knowledgeOriginalText({kind,id:v.id,revision:v.revision,field},v.content);targets.push({kind,id:v.id,revision:v.revision,field});}catch{}};
+ for(const e of snapshot.entities)add("entity",e,["name","description"]);
+ for(const s of snapshot.sources)add("source",s,["title","bibliography"]);
+ const {recordTimeTextTargets,themeTimelineTextTargets}=await import("../domain/knowledge-timeline-text");
+ for(const r of snapshot.records){add("record",r,["assertion","relation","scope"]);targets.push(...recordTimeTextTargets(r));for(const e of r.content.evidence)for(const field of ["excerpt","locator"] as const)if(e[field])targets.push({kind:"record",id:r.id,revision:r.revision,field,evidenceId:e.id});}
+ const ids=targets.map(t=>translationId(t,language));
+ const rows=(await c.query(`SELECT h.target,h.language,r.* FROM knowledge75.text_translation_heads h JOIN knowledge75.text_translation_revisions r ON r.id=h.id AND r.revision=h.current_revision WHERE h.id=ANY($1::text[]) AND h.language=$2 AND h.visibility='public'`,[ids,language])).rows;
+ const exact:KnowledgeDisplayTranslation[]=rows.flatMap(r=>{const body=content.get(JSON.stringify([r.target.kind,r.target.id,r.target.revision]));try{if(knowledgeOriginalText(r.target,body).text!==r.original_text)return [];return [{id:r.id,revision:Number(r.revision),target:r.target,language:r.language,text:r.text,originalText:r.original_text,originalHash:r.original_hash,reason:r.reason,createdAt:r.created_at.toISOString()}];}catch{return [];}});
+ const themeTargets:KnowledgeTextTarget[]=[{kind:"theme",id:theme.id,revision:theme.revision,field:"title"},...(theme.content.description?[{kind:"theme" as const,id:theme.id,revision:theme.revision,field:"description" as const}]:[]),...themeTimelineTextTargets(theme)];
+ return [...exact,...await publicDisplayTranslations(c,themeTargets,language)];
+}

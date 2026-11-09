@@ -1,0 +1,110 @@
+{
+  "products": [
+    {
+      "id": "book:9781426223822",
+      "workId": "book:infinite-cosmos",
+      "title": "Infinite Cosmos: Visions From the James Webb Space Telescope",
+      "author": "Ethan Siegel · Introduction by Brian Greene",
+      "edition": "Hardcover · National Geographic · 2024",
+      "language": "en",
+      "isbn": "9781426223822",
+      "metadataSource": "https://www.penguinrandomhouse.com/books/757535/infinite-cosmos-by-introduction-by-brian-greene-ethan-siegel/"
+    },
+    {
+      "id": "calendar:B0GMV4CK32",
+      "workId": "calendar:red-ember-webb",
+      "title": "RED EMBER James Webb Space Telescope 2027 Wall Calendar",
+      "author": "Red Ember",
+      "edition": "Wall calendar · 2027",
+      "language": "en",
+      "metadataSource": "https://www.amazon.co.jp/dp/B0GMV4CK32"
+    }
+  ],
+  "recommendations": [
+    {
+      "id": "webb-cosmos",
+      "target": {
+        "kind": "theme",
+        "id": "reading-20261110:webb:theme",
+        "revision": 1
+      },
+      "productId": "book:9781426223822",
+      "reason": {
+        "ja": "望遠鏡の開発の歩みと、Webbが見せた宇宙を写真から読みたい人へ。",
+        "en": "For readers who want to connect Webb’s development with the universe revealed in its images."
+      },
+      "order": 1,
+      "state": "public"
+    },
+    {
+      "id": "webb-cosmos-first-field",
+      "target": {
+        "kind": "record",
+        "id": "reading-20261110:webb:deep-field",
+        "revision": 1
+      },
+      "productId": "book:9781426223822",
+      "reason": {
+        "ja": "最初の深宇宙画像から、その後のWebbの写真をさらに読みたい人へ。",
+        "en": "Continue from the first deep field to more of Webb’s images."
+      },
+      "order": 2,
+      "state": "public"
+    },
+    {
+      "id": "webb-cosmos-telescope",
+      "target": {
+        "kind": "entity",
+        "id": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+        "revision": 1
+      },
+      "productId": "book:9781426223822",
+      "reason": {
+        "ja": "Webbという望遠鏡の開発と観測の両面を読む本です。",
+        "en": "Read about both the development and observations of the Webb telescope."
+      },
+      "order": 3,
+      "state": "public"
+    },
+    {
+      "id": "webb-calendar-theme",
+      "target": {
+        "kind": "theme",
+        "id": "reading-20261110:webb:theme",
+        "revision": 1
+      },
+      "productId": "calendar:B0GMV4CK32",
+      "reason": {
+        "ja": "Webbにちなんだ宇宙の画像を、日々のカレンダーでも眺めたい人へ。科学的な根拠資料ではありません。",
+        "en": "For enjoying space imagery in a daily calendar inspired by Webb. This is not a scientific source."
+      },
+      "order": 4,
+      "state": "public"
+    },
+    {
+      "id": "webb-calendar-entity",
+      "target": {
+        "kind": "entity",
+        "id": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+        "revision": 1
+      },
+      "productId": "calendar:B0GMV4CK32",
+      "reason": {
+        "ja": "Webbにちなんだ宇宙の画像を、日々のカレンダーでも眺めたい人へ。科学的な根拠資料ではありません。",
+        "en": "For enjoying space imagery in a daily calendar inspired by Webb. This is not a scientific source."
+      },
+      "order": 4,
+      "state": "public"
+    }
+  ],
+  "offers": [
+    {
+      "productId": "calendar:B0GMV4CK32",
+      "marketplace": "JP",
+      "asin": "B0GMV4CK32",
+      "affiliateUrl": "https://link.amazon/B0cLIilgt",
+      "status": "ready",
+      "checkedAt": "2026-11-09T16:50:00Z"
+    }
+  ]
+}

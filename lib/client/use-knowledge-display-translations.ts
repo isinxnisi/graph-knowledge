@@ -6,7 +6,7 @@ import {knowledgeDisplayTranslationSchema,translationTargetKey,type KnowledgeTex
 import {recordTimeTextTargets,themeTimelineTextTargets} from "../domain/knowledge-timeline-text";
 
 const empty:readonly KnowledgeDisplayTranslation[]=Object.freeze([]);
-export function useKnowledgeDisplayTranslations(entities:KnowledgeEntityVersion[],records:KnowledgeRecordVersion[],theme:KnowledgeThemeVersion|undefined,language:string):readonly KnowledgeDisplayTranslation[]{
+export function useKnowledgeDisplayTranslations(entities:KnowledgeEntityVersion[],records:KnowledgeRecordVersion[],theme:KnowledgeThemeVersion|undefined,language:string,enabled=true):readonly KnowledgeDisplayTranslation[]{
  const targets:KnowledgeTextTarget[]=[
   ...records.flatMap(recordTimeTextTargets),...(theme?themeTimelineTextTargets(theme):[]),
   ...entities.flatMap(e=>[{kind:"entity" as const,id:e.id,revision:e.revision,field:"name" as const},...(e.content.description?[{kind:"entity" as const,id:e.id,revision:e.revision,field:"description" as const}]:[])]),
@@ -17,7 +17,7 @@ export function useKnowledgeDisplayTranslations(entities:KnowledgeEntityVersion[
  const [loaded,setLoaded]=useState<{key:string;translations:readonly KnowledgeDisplayTranslation[]}>({key:"",translations:empty});
  useEffect(()=>{
   const controller=new AbortController(),query=JSON.parse(key) as {language:string;targets:KnowledgeTextTarget[]};
-  if(!query.targets.length)return;
+  if(!enabled||!query.targets.length)return;
   void (async()=>{try{
    const translations:KnowledgeDisplayTranslation[]=[];
    for(let i=0;i<query.targets.length;i+=100){
@@ -28,6 +28,6 @@ export function useKnowledgeDisplayTranslations(entities:KnowledgeEntityVersion[
    if(!controller.signal.aborted)setLoaded({key,translations});
   }catch{/* Originals remain usable when optional translations cannot be read. */}})();
   return()=>controller.abort();
- },[key]);
+ },[key,enabled]);
  return loaded.key===key?loaded.translations:empty;
 }

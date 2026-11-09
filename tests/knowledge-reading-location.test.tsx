@@ -68,3 +68,12 @@ it("固定版の選択投稿が競合しても勝手に替えず、明示操作�
  fireEvent.click(screen.getByRole("button",{name:"最新版を開いて選び直す"}));await flush();
  expect(selectRecord).toHaveBeenCalledWith(record.id,{latest:true});expect(fixed.snapshot.records[0].revision).toBe(1);
 });
+
+it("テーマ説明の一時表示は記録・出典の開閉と詳細DOMを保持する",async()=>{
+ HTMLElement.prototype.scrollIntoView=vi.fn();
+ const record={id:"fixed",revision:1,createdAt:"2026-11-10T00:00:00Z",reason:"",content:knowledgeRecordContentSchema.parse({kind:"note",assertion:"固定した本文",evidence:[{id:"e",source:{id:"source",revision:1},locator:"p.7",excerpt:"根拠の文章"}]})};
+ const snapshot={schemaVersion:1 as const,initialView:"graph" as const,records:[record],entities:[],sources:[{id:"source",revision:1,createdAt:record.createdAt,reason:"",content:knowledgeSourceContentSchema.parse({title:"資料",bibliography:"第1版"})}],mappings:[]};
+ const fixed={...theme,snapshot,records:[buildKnowledgePublishedRecord(record,snapshot)]},setThemeSelection=vi.fn();mocks.workspace={...mocks.workspace,activeTheme:fixed,retainedTheme:fixed,themeSelection:{kind:"record",id:"fixed",timeId:"original"},setThemeSelection};
+ function Both(){const r=useKnowledgeReading()!;return <>{r.center}<aside id="explorer-detail">{r.detail}</aside></>;}
+ render(<KnowledgeReading><Both/></KnowledgeReading>);await flush();fireEvent.click(screen.getByRole("button",{name:"引用と該当箇所を読む"}));expect(screen.getByText("根拠の文章")).toBeTruthy();const node=screen.getByText("根拠の文章");fireEvent.click(screen.getByRole("button",{name:"テーマについて"}));expect(setThemeSelection).not.toHaveBeenCalled();expect(screen.getByRole("button",{name:"選んだ記録に戻る"})).toBeTruthy();fireEvent.click(screen.getByRole("button",{name:"選んだ記録に戻る"}));expect(screen.getByText("根拠の文章")).toBe(node);expect(screen.getByRole("button",{name:"引用と該当箇所を読む"}).getAttribute("aria-expanded")).toBe("true");
+});

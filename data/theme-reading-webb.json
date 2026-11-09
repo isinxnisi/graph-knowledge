@@ -1,0 +1,158 @@
+{
+  "version": 1,
+  "id": "reading-20261110:webb:theme",
+  "title": "Webbが宇宙でひらくまで",
+  "description": "赤外線で初期宇宙を見る理由から、打上げ・展開、最初の深宇宙画像へ。NASAとESAの資料を根拠に、望遠鏡を宇宙へひらいた工程と、観測がひらいた視野をたどります。",
+  "englishTitle": "Webb’s Journey to Unfolding the Universe",
+  "englishDescription": "Why infrared observations? Follow Webb from launch and deployment to its first deep field, using NASA and ESA sources to connect the engineering journey with the view it opened.",
+  "sourceTheme": {
+    "id": "u3:fbaa9ee12f288cfa:theme",
+    "revision": 5
+  },
+  "sources": [
+    {
+      "id": "reading-20261110:webb:early-universe",
+      "content": {
+        "title": "NASA Science — Early Universe",
+        "url": "https://science.nasa.gov/mission/webb/early-universe/",
+        "language": "en"
+      }
+    },
+    {
+      "id": "reading-20261110:webb:first-field",
+      "content": {
+        "title": "ESA/Webb — Webb Delivers Deepest Infrared Image of Universe Yet",
+        "url": "https://esawebb.org/images/webb-first-deep-field/",
+        "language": "en"
+      }
+    }
+  ],
+  "records": [
+    {
+      "id": "reading-20261110:webb:infrared",
+      "content": {
+        "kind": "note",
+        "subjectId": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+        "assertion": "遠方の初期銀河から届く光は宇宙の膨張で波長が引き伸ばされる。Webbの赤外線観測は、その光を捉えて初期宇宙を調べるために選ばれた。",
+        "textLanguages": {
+          "assertion": {
+            "tag": "ja",
+            "basis": "declared"
+          }
+        },
+        "evidence": [
+          {
+            "id": "evidence-main",
+            "source": {
+              "id": "reading-20261110:webb:early-universe",
+              "revision": 1
+            },
+            "excerpt": "any light in that space will also stretch, shifting the light to longer wavelengths.",
+            "locator": "Introduction: Early Universe / cosmological redshift",
+            "stance": "support"
+          }
+        ]
+      },
+      "english": "Light from distant early galaxies is stretched to longer wavelengths as the universe expands. Webb observes infrared light to study that early universe."
+    },
+    {
+      "id": "reading-20261110:webb:launch-purpose",
+      "content": {
+        "kind": "note",
+        "subjectId": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+        "assertion": "打上げは観測のための始まりだった。Webbは、最初の星や銀河がどう形成されたかを調べるため、初期宇宙から届く光を捉えることを目指す。",
+        "textLanguages": {
+          "assertion": {
+            "tag": "ja",
+            "basis": "declared"
+          }
+        },
+        "evidence": [
+          {
+            "id": "evidence-main",
+            "source": {
+              "id": "reading-20261110:webb:early-universe",
+              "revision": 1
+            },
+            "excerpt": "",
+            "locator": "Introduction: Early Universe / scientific purpose",
+            "stance": "support"
+          }
+        ],
+        "aboutRecord": {
+          "id": "u3:fbaa9ee12f288cfa:record:6164c16405ffad14780c",
+          "revision": 1
+        }
+      },
+      "english": "Launch began the journey toward observation. Webb aims to capture early light to investigate how the first stars and galaxies formed."
+    },
+    {
+      "id": "reading-20261110:webb:deep-field",
+      "content": {
+        "kind": "episode",
+        "subjectId": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+        "assertion": "2022年7月12日に公開されたWebbの最初の深宇宙画像には、銀河団SMACS 0723と、その背後にある遠方銀河が写っている。",
+        "textLanguages": {
+          "assertion": {
+            "tag": "ja",
+            "basis": "declared"
+          }
+        },
+        "evidence": [
+          {
+            "id": "evidence-main",
+            "source": {
+              "id": "reading-20261110:webb:first-field",
+              "revision": 1
+            },
+            "excerpt": "The combined mass of this galaxy cluster acts as a gravitational lens",
+            "locator": "Image caption / gravitational lens",
+            "stance": "support"
+          }
+        ],
+        "times": [
+          {
+            "id": "date",
+            "time": {
+              "kind": "calendar",
+              "from": "2022-07-12",
+              "label": "最初の深宇宙画像"
+            }
+          }
+        ]
+      },
+      "english": "Released on July 12, 2022, Webb’s first deep-field image shows galaxy cluster SMACS 0723 and more distant galaxies behind it."
+    },
+    {
+      "id": "reading-20261110:webb:deep-field-meaning",
+      "content": {
+        "kind": "note",
+        "subjectId": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+        "assertion": "銀河団の重力レンズ効果が、背後の遠方銀河を拡大している。望遠鏡の感度と自然のレンズが組み合わさり、かすかな構造まで調べられる。",
+        "textLanguages": {
+          "assertion": {
+            "tag": "ja",
+            "basis": "declared"
+          }
+        },
+        "evidence": [
+          {
+            "id": "evidence-main",
+            "source": {
+              "id": "reading-20261110:webb:first-field",
+              "revision": 1
+            },
+            "excerpt": "",
+            "locator": "Image caption / distant galaxy structure",
+            "stance": "support"
+          }
+        ],
+        "aboutRecord": {
+          "id": "reading-20261110:webb:deep-field",
+          "revision": 1
+        }
+      },
+      "english": "The galaxy cluster acts as a gravitational lens, magnifying more distant galaxies. Together with Webb’s sensitivity, this makes faint structures accessible to study."
+    }
+  ]
+}

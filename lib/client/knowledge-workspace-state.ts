@@ -3,7 +3,7 @@ import { knowledgeIdSchema } from "../domain/knowledge-foundation";
 
 export const knowledgeSelectionSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("entity"), id: knowledgeIdSchema }),
-  z.object({ kind: z.literal("record"), id: knowledgeIdSchema }),
+  z.object({ kind: z.literal("record"), id: knowledgeIdSchema,timeId:knowledgeIdSchema.optional() }),
 ]).nullable();
 export type KnowledgeSelection = z.infer<typeof knowledgeSelectionSchema>;
 export type KnowledgeView = "graph" | "timeline" | "split";
@@ -34,7 +34,8 @@ export function parseKnowledgeReference(value: unknown): KnowledgeWorkspaceRefer
   return result.success ? result.data : null;
 }
 export function knowledgeThemeLocation(url: URL): { id: string; revision?: number; view?: KnowledgeView; focusEntityId?: string } | null {
-  const id = knowledgeIdSchema.safeParse(url.searchParams.get("ktheme"));
+  const canonical=url.pathname.match(/^\/(?:en\/)?t\/([^/]+)\/?$/);
+  const id = knowledgeIdSchema.safeParse(url.searchParams.get("ktheme")??(canonical?decodeURIComponent(canonical[1]):null));
   if (!id.success) return null;
   const rawRevision = url.searchParams.get("krev"), revision = rawRevision === null ? undefined : Number(rawRevision);
   if (revision !== undefined && (!Number.isSafeInteger(revision) || revision < 1)) return null;
@@ -45,8 +46,10 @@ export function knowledgeThemeLocation(url: URL): { id: string; revision?: numbe
 export function knowledgeWorkspaceHref(url: URL, value: KnowledgeWorkspaceReference): string {
   const next = new URL(url);
   for (const key of ["ktheme", "krev", "kview", "kfocus"]) next.searchParams.delete(key);
+  const canonical=/^\/(?:en\/)?t\/[^/]+\/?$/.test(next.pathname);
+  if(canonical)next.pathname=value.theme?(next.pathname.startsWith("/en/")?"/en":"")+"/t/"+encodeURIComponent(value.theme.id):(next.pathname.startsWith("/en/")?"/en":"/");
   if (value.theme) {
-    next.searchParams.set("ktheme", value.theme.id);
+    if(!canonical)next.searchParams.set("ktheme", value.theme.id);
     next.searchParams.set("krev", String(value.theme.revision));
     next.searchParams.set("kview", value.themeView);
     if(value.themeSelection?.kind==='entity')next.searchParams.set('kfocus',value.themeSelection.id);

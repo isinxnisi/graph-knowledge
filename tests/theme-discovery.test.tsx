@@ -11,10 +11,10 @@ const reply=(body:unknown)=>({ok:true,status:200,json:async()=>body});
 async function tick(){await act(()=>vi.advanceTimersByTimeAsync(260));}
 beforeEach(()=>vi.useFakeTimers());
 afterEach(()=>{cleanup();vi.useRealTimers();vi.unstubAllGlobals();});
-it("年表・関係図・解説を開く前に区別し、固定版への通常リンクも持つ",()=>{
+it("年表・関係図・解説を開く前に区別し、正規URLのリンクとクリック時の固定版を持つ",()=>{
  const open=vi.fn();render(<ThemeLink theme={timeline} onOpen={open}/>);
  expect(screen.getByText("年表・関係図")).toBeTruthy();
- const link=screen.getByRole("link");expect(link.getAttribute("href")).toContain("krev=2");
+ const link=screen.getByRole("link");expect(link.getAttribute("href")).toBe("/t/timeline");
  fireEvent.click(link);expect(open).toHaveBeenCalledWith({id:"timeline",revision:2});
  expect(knowledgeThemeTypeLabel(graph)).toBe("関係図");
  expect(knowledgeThemeTypeLabel({...timeline,hasRelations:false})).toBe("年表");
@@ -67,7 +67,7 @@ it("紹介・新着・検索は同じ初期応答の公開訳を使い、原文�
  const translations=[{id:'translation:'+ 'a'.repeat(48),revision:1,target:{kind:'theme' as const,id:timeline.id,revision:timeline.revision,field:'title' as const},language:'en',text:'Webb’s journey',originalText:timeline.title,originalHash:'a'.repeat(64),reason:'test',createdAt:'2026-11-09T00:00:00Z'}];
  const theme={...timeline,translations};
  const {rerender}=render(<UiLocaleProvider initialLocale="en"><ThemeLink theme={theme} onOpen={vi.fn()} appearance="featured"/></UiLocaleProvider>);
- expect(screen.getByText('Webb’s journey')).toBeTruthy();expect(screen.getByRole('link').getAttribute('href')).toContain('krev=2');expect(theme.title).toBe(timeline.title);
+ expect(screen.getByText('Webb’s journey')).toBeTruthy();expect(screen.getByRole('link').getAttribute('href')).toBe('/en/t/timeline');expect(theme.title).toBe(timeline.title);
  rerender(<UiLocaleProvider initialLocale="ja"><ThemeLink theme={theme} onOpen={vi.fn()} appearance="recent"/></UiLocaleProvider>);
  // Remount the provider when simulating a route language change.
  cleanup();render(<UiLocaleProvider initialLocale="ja"><ThemeLink theme={theme} onOpen={vi.fn()}/></UiLocaleProvider>);expect(screen.getByText(timeline.title)).toBeTruthy();

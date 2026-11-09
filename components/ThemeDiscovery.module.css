@@ -23,3 +23,7 @@
 }
 
 .statusLine{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--color-muted);font-size:12px}.home .statusLine button{display:inline-flex;align-items:center;gap:5px;border:0;background:transparent;padding:4px 0;min-height:32px;font-size:12px}.statusLine :global(.ui-icon){width:14px;height:14px}
+
+.themeImage{width:72px;height:72px;object-fit:cover;border-radius:7px;flex-shrink:0}
+
+.imageCredit {font-size:10px;line-height:1.4;color:var(--color-muted);}

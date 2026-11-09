@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { readKnowledge } from "../lib/client/use-knowledge-workspace";
 import { knowledgeThemeTypeLabel, type KnowledgeThemeSummary, type KnowledgeThemePage, type KnowledgeThemeHome } from "../lib/domain/knowledge-theme-reader";
@@ -22,8 +23,9 @@ export function ThemeLink({ theme, onOpen, appearance = "row", showDescription =
   const type = knowledgeThemeTypeLabel(theme, en);
   const title=knowledgeDisplayText(theme.translations,{kind:"theme",id:theme.id,revision:theme.revision,field:"title"},locale,theme.title);
   const description=knowledgeDisplayText(theme.translations,{kind:"theme",id:theme.id,revision:theme.revision,field:"description"},locale,theme.description);
+  const presentation={image:theme.presentationImages?.[en?"en":"ja"]};
   const icon = theme.hasTimeline ? "event" : theme.hasRelations === false ? "book" : "graph";
-  const href = `${en ? "/en" : "/"}?${new URLSearchParams({ ktheme: theme.id, krev: String(theme.revision), kview: theme.initialView,...(focusEntityId?{kfocus:focusEntityId}:{}) })}`;
+  const href = `${en?"/en":""}/t/${encodeURIComponent(theme.id)}${focusEntityId?"?kfocus="+encodeURIComponent(focusEntityId):""}`;
   function choose(event: MouseEvent<HTMLAnchorElement>) {
     if (openInNewTab || event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault(); onOpen({ id: theme.id, revision: theme.revision,...(focusEntityId?{focusEntityId}:{}) });
@@ -32,8 +34,8 @@ export function ThemeLink({ theme, onOpen, appearance = "row", showDescription =
     <Icon name={icon}/>{title}<span>{type}</span>
   </a>;
   if (appearance === "featured") return <a className={`${home.themeFeature} ${css.featureLink}`} href={href} target={openInNewTab ? "_blank" : undefined} rel={openInNewTab ? "noopener" : undefined} onClick={choose}>
-    <Icon name={icon}/><span><small>{type}</small><strong>{title}</strong>
-      {showDescription && theme.description && <span className={css.featureDescription}>{description}</span>}
+    <>{presentation?.image?<Image unoptimized className={css.themeImage} src={presentation.image.src} width={72} height={72} alt={presentation.image.alt} style={{objectPosition:presentation.image.focus}}/>:<Icon name={icon}/>}</><span><small>{type}</small><strong>{title}</strong>
+      {showDescription && theme.description && <span className={css.featureDescription}>{description}</span>}{presentation?.image&&<small className={css.imageCredit}>Image: {presentation.image.credit}</small>}
     </span><Icon name="arrow"/>
   </a>;
   return <a className={`${results.resultRow} ${css.themeRow}`} href={href} target={openInNewTab ? "_blank" : undefined} rel={openInNewTab ? "noopener" : undefined} onClick={choose}>

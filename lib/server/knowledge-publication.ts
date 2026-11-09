@@ -1,5 +1,6 @@
+import {themeReadingPresentation} from "./theme-reading-presentation";
 import {knowledgeDisplayText} from "../domain/knowledge-display";
-import {publicDisplayTranslations} from "./knowledge-display-translations";
+import {publicDisplayTranslations,publicThemeSnapshotTranslations} from "./knowledge-display-translations";
 import {readKnowledgeRecordVersion} from './knowledge-record-version';
 import {readKnowledgeTextOriginal,readKnowledgeTranslation,readKnowledgeTranslationById} from "./knowledge-foundation";
 import {knowledgeDisplayTranslationsQuerySchema} from "../domain/knowledge-translation";
@@ -262,7 +263,7 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
       const candidates=(await c.query(`SELECT r.id,r.revision,(SELECT min(first.created_at) FROM knowledge75.revisions first WHERE first.kind='theme' AND first.id=r.id) AS first_created_at FROM knowledge75.objects o JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=o.current_revision LEFT JOIN knowledge75.published_revisions p ON p.kind=r.kind AND p.id=r.id AND p.revision=r.revision WHERE ${conditions.join(" AND ")} ORDER BY r.id`,values)).rows;
       const result:KnowledgeThemePage={themes:[]};
       for(const candidate of candidates){
-        try{const resolved=await resolvePublicKnowledgeTheme(c,candidate.id,Number(candidate.revision));const {theme,snapshot}=resolved;result.themes.push({id:theme.id,revision:theme.revision,title:theme.content.title,description:theme.content.description,initialView:theme.content.initialView,hasTimeline:snapshot.records.some(r=>r.content.times.length>0),hasRelations:snapshot.records.some(r=>r.content.kind==='relation'),publishedAt:new Date(candidate.first_created_at).toISOString(),entityIds:snapshot.entities.map(e=>e.id)});}
+        try{const resolved=await resolvePublicKnowledgeTheme(c,candidate.id,Number(candidate.revision));const {theme,snapshot}=resolved;result.themes.push({id:theme.id,revision:theme.revision,title:theme.content.title,description:theme.content.description,initialView:theme.content.initialView,hasTimeline:snapshot.records.some(r=>r.content.times.length>0),hasRelations:snapshot.records.some(r=>r.content.kind==='relation'),publishedAt:new Date(candidate.first_created_at).toISOString(),entityIds:snapshot.entities.map(e=>e.id),presentationImages:Object.fromEntries((["ja","en"] as const).flatMap(locale=>{const image=themeReadingPresentation(theme,locale,snapshot)?.image;return image?[[locale,image]]:[]}))});}
         catch(error){if(error instanceof KnowledgeError && (error.status===403||error.status===404))continue;throw error;}
       }
       // Include optional display text in the same catalogue response, including SSR.
@@ -287,7 +288,7 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
         if(link&&knowledgeDigest(link.payload)!==link.sha256)throw new KnowledgeError("旧原本のhashが一致しません",503,"LEGACY_HASH_MISMATCH");
         return buildKnowledgePublishedRecord(record,{entities:snapshot.entities,sources:snapshot.sources,mappings:snapshot.mappings,...(link?{legacyLink:{dataset:link.dataset,legacyClaimId:link.legacy_claim_id,recordId:link.record_id,importedRevision:Number(link.imported_revision),payload:link.payload,sha256:link.sha256}}:{})});
       });
-      return {...resolved,records} satisfies KnowledgeThemeRead;
+      return {...resolved,records,presentation:themeReadingPresentation(resolved.theme,q.language??"ja",snapshot),...(q.language?{displayTranslations:await publicThemeSnapshotTranslations(c,resolved,q.language)}:{})} satisfies KnowledgeThemeRead;
     }),
     entities:(raw:unknown={})=>read(async c=>{
       const q=knowledgeEntityQuerySchema.parse(raw);const cursor=decodeCursor(q.cursor);const actual=await generation(c,q.generation??cursor?.generation);

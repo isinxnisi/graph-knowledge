@@ -61,3 +61,11 @@
 
 .workspace .themeInfo[aria-pressed="true"] { color: var(--color-accent); background: var(--color-accent-soft); }
 .themeCanvas { scroll-margin-top: 60px; }
+
+.workspace .themeHeader{position:static;flex-wrap:wrap;padding:0 0 8px;gap:4px 8px;margin-bottom:14px;border-bottom:0}
+.workspace .themeHeader h2{order:4;flex-basis:100%;white-space:normal;font:500 27px/1.35 var(--font-editorial);padding-top:3px}
+.themeHeader .return{margin-right:auto}.workspace .themeHeader>span{font-size:10px}.workspace .themeHeader .themeInfo{order:2}
+.prototype{margin-top:14px;font-size:11px;color:var(--color-muted)}.prototype summary{cursor:pointer}.prototype label{display:flex;gap:8px;align-items:center;margin:10px 0}.prototype select{min-width:0;max-width:100%}
+@media(max-width:800px){.workspace .themeHeader h2{font-size:23px}.workspace .themeHeader .themeInfo{min-width:36px;min-height:36px}}
+
+.sourceIndex{font-size:12px;margin-top:14px}.sourceIndex summary{cursor:pointer;color:var(--color-muted)}.sourceIndex ul{padding-left:18px}.sourceIndex li{margin:8px 0}.sourceIndex a{color:var(--color-accent)}

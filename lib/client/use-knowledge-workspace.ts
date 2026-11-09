@@ -1,4 +1,5 @@
 "use client";
+import {useUiLocale} from "./ui-locale";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { KnowledgeEntityVersion } from "../domain/knowledge-foundation";
 import type { KnowledgePublishedRecord } from "../domain/knowledge-publication";
@@ -76,12 +77,14 @@ function writeReference(s: State, push = false) {
 }
 
 /** Keeps ordinary exploration and a pinned Theme as two independent reading states. */
-export function useKnowledgeWorkspace({ initialRootId, embedded = false }: { initialRootId?: string; embedded?: boolean } = {}) {
-  const [state, setState] = useState<State>(() => ({ query: "", kind: "", normal: blankNormal(), entityPage: null, themes: [], activeTheme: null, retainedTheme: null, themeView: "graph", themeSelection: null, neighborPages: {}, normalRestoration: null, themeRestoration: null }));
+export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialTheme }: { initialRootId?: string; embedded?: boolean;initialTheme?:KnowledgeThemeRead } = {}) {
+  const {locale}=useUiLocale();
+  const localeRef=useRef(locale);useEffect(()=>{localeRef.current=locale;},[locale]);
+  const [state, setState] = useState<State>(() => ({ query: "", kind: "", normal: blankNormal(), entityPage: null, themes: [], activeTheme: initialTheme??null, retainedTheme: initialTheme??null, themeView: initialTheme?.theme.content.initialView??"graph", themeSelection: null, neighborPages: {}, normalRestoration: null, themeRestoration: null }));
   const current = useRef(state), alive = useRef(false), ready = useRef(false);
   const epoch = useRef(0), entitySearch = useRef(0), themeSearch = useRef(0), access = useRef<string | null>(null);
   const themeCriteria = useRef<{ q?: string; entityId?: string }>({});
-  const [busy, setBusy] = useState(false), [restoring, setRestoring] = useState(true);
+  const [busy, setBusy] = useState(false), [restoring, setRestoring] = useState(!initialTheme);
   const [searchingEntities, setSearchingEntities] = useState(false), [searchingThemes, setSearchingThemes] = useState(false);
   const [error, setError] = useState(""), [message, setMessage] = useState("");
   const [status, setStatus] = useState<KnowledgeWorkspaceStatus | null>(null);
@@ -127,7 +130,7 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false }: { ini
       }
       let theme: KnowledgeThemeRead | null = null;
       const wanted = override ?? (saved.theme ? { ...saved.theme, view: saved.themeView } : null);
-      if (wanted) try { theme = await readKnowledge<KnowledgeThemeRead>("theme", { themeId: wanted.id, revision: wanted.revision }); }
+      if (wanted) try { theme = await readKnowledge<KnowledgeThemeRead>("theme", { themeId: wanted.id, revision: wanted.revision, language:localeRef.current }); }
       catch (e) { if (!unavailable(e)) throw e; if (live(token)) setMessage("このテーマは現在閲覧できません。元の探索に戻りました。"); }
       if (!live(token)) return;
       const themes = await readKnowledge<KnowledgeThemePage>("themes").catch(() => ({ themes: [] }));
@@ -159,7 +162,11 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false }: { ini
       if(commonRoot && stored.rootId!==commonRoot){stored.rootId=commonRoot;stored.recordIds=[];stored.generation=null;stored.selection={kind:"entity",id:commonRoot};}
     }
     if (initialRootId && stored.rootId !== initialRootId) { stored.rootId = initialRootId; stored.recordIds = []; stored.selection = { kind: "entity", id: initialRootId }; stored.theme = null; }
-    queueMicrotask(() => { if (!disposed) void restore(stored, knowledgeThemeLocation(new URL(location.href))); });
+    queueMicrotask(() => { if(disposed)return;const wanted=knowledgeThemeLocation(new URL(location.href));
+      if(initialTheme&&wanted?.id===initialTheme.theme.id&&(!wanted.revision||wanted.revision===initialTheme.theme.revision)){
+        ready.current=true;setRestoring(false);update(s=>({...s,themeView:wanted.view??s.themeView,themeSelection:validSelection(wanted.focusEntityId?{kind:"entity",id:wanted.focusEntityId}:stored.themeSelection,initialTheme.records,initialTheme.snapshot.entities)}),"none");
+      }else void restore(stored,wanted);
+    });
     const pop = () => { void restore(parseKnowledgeReference(window.history.state?.[workspaceHistoryKey]) ?? emptyKnowledgeReference(), knowledgeThemeLocation(new URL(location.href))); };
     window.addEventListener("popstate", pop);
     return () => { disposed = true; alive.current = false; ready.current = false; pendingEpoch.current++; pendingEntitySearch.current++; pendingThemeSearch.current++; window.removeEventListener("popstate", pop); };
@@ -180,7 +187,7 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false }: { ini
         const candidateToken = themeSearch.current;
         const results = await Promise.allSettled([
           generation ? readKnowledge<GraphRead>("graph", { generation, recordIds: ids.join(",") }) : Promise.resolve(null),
-          heldTheme ? readKnowledge<KnowledgeThemeRead>("theme", { themeId: heldTheme.theme.id, revision: heldTheme.theme.revision }).then(value => ({ value, stopped: false })).catch(e => {
+          heldTheme ? readKnowledge<KnowledgeThemeRead>("theme", { themeId: heldTheme.theme.id, revision: heldTheme.theme.revision, language:localeRef.current }).then(value => ({ value, stopped: false })).catch(e => {
             if (!unavailable(e)) throw e;
             // A known stop takes effect even if another, independent read fails or stalls.
             if (live(token) && current.current.retainedTheme?.theme.id === heldTheme.theme.id && current.current.retainedTheme.theme.revision === heldTheme.theme.revision) {
@@ -285,7 +292,7 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false }: { ini
   async function openTheme(ref: { id: string; revision?: number; focusEntityId?: string }) {
     const token = begin();
     try {
-      const theme = await readKnowledge<KnowledgeThemeRead>("theme", { themeId: ref.id, revision: ref.revision });
+      const theme = await readKnowledge<KnowledgeThemeRead>("theme", { themeId: ref.id, revision: ref.revision, language:localeRef.current });
       if (!live(token)) return;
       update(s => { const same = s.retainedTheme?.theme.id === theme.theme.id && s.retainedTheme.theme.revision === theme.theme.revision; return { ...s, activeTheme: theme, retainedTheme: theme, themeView: same ? s.themeView : theme.theme.content.initialView, themeSelection: ref.focusEntityId?validSelection({kind:'entity',id:ref.focusEntityId},theme.records,theme.snapshot.entities):same ? s.themeSelection : null, ...(same ? {} : { themeCanvasView: undefined, themeRestoration: null }) }; }, "push");
     } catch (e) {

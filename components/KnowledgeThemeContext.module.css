@@ -26,3 +26,5 @@
  .context ul[data-expanded] .second, .mobileCount { display: block; }
  .context header .mobileOnly { display: flex; }
 }
+
+.reading{margin:18px 0 0;padding:14px 0}.reading header h3{font-size:13px;color:var(--color-text)}.reading ul{grid-template-columns:1fr;margin-top:8px}.reading li button{padding:10px 12px;border-bottom:1px solid var(--color-border)}.reading .meta{display:none}.reading .assertion{white-space:normal}.reading ul[hidden]{display:none}.reading .extra{display:block}

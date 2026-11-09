@@ -1,3 +1,15 @@
+.reading .rowText{gap:5px}
+.reading .assertion{font-size:14px;line-height:1.7;font-weight:600}
+.reading .rowMain{align-items:start}
+.reading .contextKind{display:none}
+.reading .openRow[aria-pressed="true"]{background:transparent}
+.readingActions{display:grid;gap:5px;margin:9px 0 3px}
+.readingActions button{display:flex;align-items:center;gap:7px;width:100%;min-width:0;padding:7px 9px!important;border:1px solid var(--color-border)!important;border-radius:7px!important;font-size:11px!important;background:var(--color-panel)}
+.readingActions button>span{flex:1;min-width:0;text-align:left;line-height:1.6}
+.readingActions :global(.ui-icon){width:13px;height:13px;flex-shrink:0}
+.reading .meta{font-size:10px;line-height:1.7}
+.reading .recordContext{margin-top:2px}
+@media(max-width:800px){.reading .assertion{font-size:14px}.readingActions button{min-height:38px}.reading .recordContext{font-size:11px}}
 .timeline {
   min-width: 0;
   color: var(--color-text);
@@ -785,3 +797,7 @@
 .embedded .headerAction :global(.ui-icon) { width: 15px; height: 15px; margin: 0; }
 .embedded .headerSettings:hover, .embedded .headerAction button:hover { background: var(--color-hover); }
 @media (max-width: 800px) { .embedded .headerSettings, .embedded .headerAction button { min-width: 34px; min-height: 34px; } }
+
+.readingSummary{font-size:13px;line-height:1.65;color:var(--color-text);margin:2px 0}.reading [data-record-id]{padding-block:8px}.reading [data-record-id] [class*=badges]{font-size:10px}
+
+.timeline.reading .openRow[aria-pressed="true"]{border:0;background:transparent}

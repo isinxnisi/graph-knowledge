@@ -1,0 +1,220 @@
+[
+  {
+    "version": 1,
+    "theme": {
+      "id": "reading-20261110:webb:theme",
+      "revision": 1
+    },
+    "locale": "ja",
+    "state": "checked",
+    "hook": "Webbが赤外線で見た宇宙は、私たちの宇宙観をどう広げたのか。",
+    "lead": "赤外線で初期宇宙を見る理由から、打上げ・展開、最初の深宇宙画像へ。NASAとESAの資料を根拠に、望遠鏡を宇宙へひらいた工程と、観測がひらいた視野をたどります。",
+    "image": {
+      "id": "webb-first-deep-field",
+      "src": "/theme-assets/webb-first-deep-field.jpg",
+      "width": 1024,
+      "height": 1045,
+      "kind": "photo",
+      "credit": "NASA, ESA, CSA, and STScI",
+      "sourceUrl": "https://esawebb.org/images/webb-first-deep-field/",
+      "termsUrl": "https://esawebb.org/copyright/",
+      "checkedAt": "2026-11-10",
+      "focus": "50% 50%",
+      "alt": "Webbが赤外線で捉えた銀河団SMACS 0723。色付けした複数波長の合成画像。",
+      "caption": "最初の深宇宙画像（2022年）"
+    },
+    "records": [
+      {
+        "target": {
+          "id": "u3:fbaa9ee12f288cfa:record:6164c16405ffad14780c",
+          "revision": 1
+        },
+        "shortTitle": "打上げ",
+        "explanations": [
+          {
+            "record": {
+              "id": "reading-20261110:webb:launch-purpose",
+              "revision": 1
+            },
+            "role": "importance"
+          }
+        ],
+        "timelineSummary": "Ariane 5がWebbを打ち上げた。"
+      },
+      {
+        "target": {
+          "id": "u3:fbaa9ee12f288cfa:record:5266d210bef739fd01c7",
+          "revision": 1
+        },
+        "shortTitle": "遮熱膜の展開工程",
+        "timelineSummary": "遮熱膜の展開は12月28日に始まり、1月4日に完了した。"
+      },
+      {
+        "target": {
+          "id": "u3:fbaa9ee12f288cfa:record:01b09a17397497ff7089",
+          "revision": 1
+        },
+        "shortTitle": "ミッドブームの展開",
+        "timelineSummary": "二つのミッドブームが伸び、遮熱膜を左右に広げた。"
+      },
+      {
+        "target": {
+          "id": "u3:fbaa9ee12f288cfa:record:3c3835bfbad3ba11cc66",
+          "revision": 1
+        },
+        "shortTitle": "最初の三層を張る",
+        "timelineSummary": "遮熱膜の最初の三層の張力調整が完了した。"
+      },
+      {
+        "target": {
+          "id": "u3:fbaa9ee12f288cfa:record:4436eff4fe3a881f705e",
+          "revision": 1
+        },
+        "shortTitle": "副鏡の展開と固定",
+        "timelineSummary": "副鏡の支持構造を展開し、所定の位置に固定した。"
+      },
+      {
+        "target": {
+          "id": "u3:fbaa9ee12f288cfa:record:9a36e6885184806be334",
+          "revision": 1
+        },
+        "shortTitle": "主鏡の展開完了",
+        "timelineSummary": "主鏡の最後の翼を展開・固定し、主要構造の展開を終えた。"
+      },
+      {
+        "target": {
+          "id": "u3:fbaa9ee12f288cfa:record:35d44a83e511fd13c1f9",
+          "revision": 1
+        },
+        "shortTitle": "L2へ到着",
+        "timelineSummary": "Webbが太陽・地球系L2付近の軌道へ入った。"
+      },
+      {
+        "target": {
+          "id": "reading-20261110:webb:deep-field",
+          "revision": 1
+        },
+        "shortTitle": "最初の深宇宙画像",
+        "explanations": [
+          {
+            "record": {
+              "id": "reading-20261110:webb:deep-field-meaning",
+              "revision": 1
+            },
+            "role": "importance"
+          }
+        ],
+        "timelineSummary": "銀河団SMACS 0723の最初の深宇宙画像を公開した。"
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "theme": {
+      "id": "reading-20261110:webb:theme",
+      "revision": 1
+    },
+    "locale": "en",
+    "state": "checked",
+    "hook": "How did Webb’s infrared view widen our picture of the universe?",
+    "lead": "Why infrared observations? Follow Webb from launch and deployment to its first deep field, using NASA and ESA sources to connect the engineering journey with the view it opened.",
+    "image": {
+      "id": "webb-first-deep-field",
+      "src": "/theme-assets/webb-first-deep-field.jpg",
+      "width": 1024,
+      "height": 1045,
+      "kind": "photo",
+      "credit": "NASA, ESA, CSA, and STScI",
+      "sourceUrl": "https://esawebb.org/images/webb-first-deep-field/",
+      "termsUrl": "https://esawebb.org/copyright/",
+      "checkedAt": "2026-11-10",
+      "focus": "50% 50%",
+      "alt": "Webb’s infrared view of galaxy cluster SMACS 0723, a color composite of multiple wavelengths.",
+      "caption": "Webb’s first deep field (2022)"
+    },
+    "records": [
+      {
+        "target": {
+          "id": "u3:fbaa9ee12f288cfa:record:6164c16405ffad14780c",
+          "revision": 1
+        },
+        "shortTitle": "Launch",
+        "explanations": [
+          {
+            "record": {
+              "id": "reading-20261110:webb:launch-purpose",
+              "revision": 1
+            },
+            "role": "importance"
+          }
+        ],
+        "timelineSummary": "Ariane 5 launched Webb."
+      },
+      {
+        "target": {
+          "id": "u3:fbaa9ee12f288cfa:record:5266d210bef739fd01c7",
+          "revision": 1
+        },
+        "shortTitle": "Deploying the sunshield",
+        "timelineSummary": "Sunshield deployment began on December 28 and finished on January 4."
+      },
+      {
+        "target": {
+          "id": "u3:fbaa9ee12f288cfa:record:01b09a17397497ff7089",
+          "revision": 1
+        },
+        "shortTitle": "Extending the mid-booms",
+        "timelineSummary": "Two mid-booms extended to spread the sunshield sideways."
+      },
+      {
+        "target": {
+          "id": "u3:fbaa9ee12f288cfa:record:3c3835bfbad3ba11cc66",
+          "revision": 1
+        },
+        "shortTitle": "Tensioning the first three layers",
+        "timelineSummary": "Tensioning of the first three sunshield layers was completed."
+      },
+      {
+        "target": {
+          "id": "u3:fbaa9ee12f288cfa:record:4436eff4fe3a881f705e",
+          "revision": 1
+        },
+        "shortTitle": "Deploying and securing the secondary mirror",
+        "timelineSummary": "The secondary mirror support structure was deployed and secured."
+      },
+      {
+        "target": {
+          "id": "u3:fbaa9ee12f288cfa:record:9a36e6885184806be334",
+          "revision": 1
+        },
+        "shortTitle": "Primary mirror deployment completed",
+        "timelineSummary": "The final primary mirror wing was deployed and secured, completing major structural deployments."
+      },
+      {
+        "target": {
+          "id": "u3:fbaa9ee12f288cfa:record:35d44a83e511fd13c1f9",
+          "revision": 1
+        },
+        "shortTitle": "Arrival at L2",
+        "timelineSummary": "Webb entered its orbit around Sun–Earth L2."
+      },
+      {
+        "target": {
+          "id": "reading-20261110:webb:deep-field",
+          "revision": 1
+        },
+        "shortTitle": "Webb’s first deep field",
+        "explanations": [
+          {
+            "record": {
+              "id": "reading-20261110:webb:deep-field-meaning",
+              "revision": 1
+            },
+            "role": "importance"
+          }
+        ],
+        "timelineSummary": "Webb’s first deep field of galaxy cluster SMACS 0723 was released."
+      }
+    ]
+  }
+]

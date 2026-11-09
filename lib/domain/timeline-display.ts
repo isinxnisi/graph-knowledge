@@ -10,6 +10,7 @@ export type TimelineDisplayRecord = {
   subject: string | null;
   object: string | null;
   assertion: string;
+  readingTitle?: string; readingSummary?:string;
   relation: string;
   scope: string;
   polarity: "affirmed" | "denied" | "uncertain";
@@ -17,6 +18,7 @@ export type TimelineDisplayRecord = {
   displayTime?: ThemeTime;
   revision: number;
   evidence: {
+    evidenceId?: string;
     title: string;
     url: string | null;
     locator: string;

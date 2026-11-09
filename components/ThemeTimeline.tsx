@@ -12,6 +12,7 @@ import { calendarMeaning, themeTimeLabel } from "../lib/domain/theme-time";
 import css from "./ThemeTimeline.module.css";
 import CalendarTimelineGraph from "./CalendarTimelineGraph";
 import Icon from "./Icon";
+import KnowledgeReadingBadge from "./KnowledgeReadingBadge";
 import {
   calendarLayoutBounds,
   type CalendarResolution,
@@ -24,7 +25,7 @@ type Props<R extends TimelineDisplayRecord> = {
   timeline?: ThemeTimelineConfig;
   focusedRecordId: string | null;
   focusedEntityId?: string;
-  onFocusRecord: (id: string | null) => void;
+  onFocusRecord: (id: string | null,timeId?:string) => void;
   selectedRecordIds: string[];
   onToggleSelected?: (id: string) => void;
   onEditRecord?: (record: R) => void;
@@ -34,6 +35,8 @@ type Props<R extends TimelineDisplayRecord> = {
   embedded?: boolean;
   headerAction?: ReactNode;
   emptyMessage?: string;
+  reading?: boolean;
+  onReadEvidence?:(recordId:string,evidenceId:string)=>void;
 };
 type Group<R extends TimelineDisplayRecord> = ThemeTimelineGroup<R>;
 type CalendarTime = Extract<
@@ -254,6 +257,8 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
   embedded = false,
   headerAction,
   emptyMessage,
+  reading=false,
+  onReadEvidence,
 }: Props<R>) {
   const {locale}=useUiLocale();const tr=(ja:string,en:string)=>locale==="en"?en:ja;
   selectionLabel??=tr("Capsuleに含める","Include in Capsule");emptyMessage??=tr("表示する記録がありません。","No records to display.");
@@ -290,6 +295,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
     );
   };
   const toggle = (id: string, open: boolean) => {
+    if(reading){setActiveRowId(id);const record=records.find(r=>r.id===id);if(record)onFocusRecord(timelineRecordId(record),record.timeId??undefined);return;}
     setExpanded((previous) => {
       const next = new Set(previous);
       if (open) next.delete(id);
@@ -384,13 +390,15 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
               <button
                 type="button"
                 className={css.openRow}
-                aria-expanded={open}
-                aria-controls={`${prefix}-${encodeURIComponent(group.id)}-${record.id}`}
+                aria-expanded={reading?undefined:open}
+                aria-pressed={reading?focusedRecordId===timelineRecordId(record):undefined}
+                aria-controls={reading?undefined:`${prefix}-${encodeURIComponent(group.id)}-${record.id}`}
                 onClick={() => toggle(record.id, open)}
               >
                 <span className={css.rowText}>
-                  <span className={css.assertion}>{record.assertion}</span>
+                  <span className={css.assertion}>{reading?record.readingTitle||record.assertion:record.assertion}</span>
                   <RecordContext record={record} entities={entities} focusedEntityId={focusedEntityId}/>
+                  {reading&&record.readingSummary&&<span className={css.readingSummary}>{record.readingSummary}</span>}{reading&&<KnowledgeReadingBadge kind={record.kind} polarity={record.polarity} en={locale==="en"}/>}
                   {(nested.length > 0 ||
                     (group.kind !== "calendar" && t?.label)) && (
                     <span className={css.meta}>
@@ -401,13 +409,13 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                     </span>
                   )}
                 </span>
-                <span
+                {!reading&&<span
                   className={css.chevron}
                   aria-hidden="true"
                   data-open={open || undefined}
                 >
                   ⌄
-                </span>
+                </span>}
               </button>
               {onShowGraph &&
                 (graphRecordIds === undefined ||
@@ -432,7 +440,11 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
             ) : (
               <Period record={record} />
             )}
-            <div
+            {reading&&<div className={css.readingActions}>
+              {record.evidence.map(e=><button key={e.evidenceId??e.sourceId} onClick={()=>e.evidenceId&&onReadEvidence?.(timelineRecordId(record),e.evidenceId)}><Icon name="link"/><span>{e.title}</span><Icon name="arrow"/></button>)}
+              {nested.length>0&&<button aria-expanded={expanded.has(record.id)} onClick={()=>setExpanded(before=>{const next=new Set(before);if(next.has(record.id))next.delete(record.id);else next.add(record.id);return next;})}><Icon name="chevron"/>{tr("詳しい時間軸を開く","Open detailed timeline")} · {nested.length}</button>}
+            </div>}
+            {!reading&&<div
               id={`${prefix}-${encodeURIComponent(group.id)}-${record.id}`}
               className={css.expansion}
               data-open={open || undefined}
@@ -495,13 +507,14 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                   {nested.map((g) => renderGroup(g, [...ancestors, group.id]))}
                 </div>
               </div>
-            </div>
+            </div>}
+            {reading&&expanded.has(record.id)&&nested.map(g=>renderGroup(g,[...ancestors,group.id]))}
           </div>
         </li>
       );
     };
     return (
-      <section
+    <section
         className={css.group}
         key={group.id}
         data-nested={ancestors.length > 0 || undefined}
@@ -526,7 +539,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
             )}
           </div>
           <span>{new Set(rows.map(timelineRecordId)).size}{tr("件"," records")}{new Set(rows.map(timelineRecordId)).size < rows.length ? ` · ${rows.length}${tr("時期"," times")}` : ""}</span>
-          {embedded && group.id === roots[0]?.id && !ancestors.length && (hasCalendar || subjects.length > 1) && <button className={css.headerSettings} aria-label={`${tr("年表の表示設定","Timeline display settings")}${settingsSummary ? `: ${settingsSummary}` : ""}`} aria-expanded={settingsOpen} aria-controls={`${prefix}-settings`} title={settingsSummary || undefined} onClick={() => setSettingsOpen(v => !v)}><Icon name="settings" /><span>{tr("表示設定","Display settings")}</span><Icon name="chevron" /></button>}
+          {embedded && group.id === roots[0]?.id && !ancestors.length && (hasCalendar || subjects.length > 1) && <button className={css.headerSettings} aria-label={`${tr("年表の表示設定","Timeline display settings")}${settingsSummary ? `${locale==="en"?": ":"："}${settingsSummary}` : ""}`} aria-expanded={settingsOpen} aria-controls={`${prefix}-settings`} title={settingsSummary || undefined} onClick={() => setSettingsOpen(v => !v)}><Icon name="settings" /><span>{tr("表示設定","Display settings")}</span><Icon name="chevron" /></button>}
           {embedded && group.id === roots[0]?.id && !ancestors.length && <span className={css.headerAction}>{headerAction}</span>}
         </header>
         {embedded && group.id === roots[0]?.id && !ancestors.length && <div id={`${prefix}-settings`} className={css.headerSettingsBody} hidden={!settingsOpen}>{readingControls}</div>}
@@ -584,7 +597,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
     </label>}
   </>;
   return (
-    <div className={`${css.timeline} ${embedded ? css.embedded : ""}`}>
+    <div className={`${css.timeline} ${embedded ? css.embedded : ""} ${reading?css.reading:""}`}>
       <div className={`${css.controls} ${compactControls ? css.compactControls : ""}`}>
         <details className={css.guide}>
           <summary>{compactControls && <Icon name="chevron" />}{tr("線の見方","Timeline guide")}</summary>
@@ -611,7 +624,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
           </p>
         </details>
         {embedded ? null : compactControls ? (hasCalendar || subjects.length > 1) && <details className={css.displaySettings}>
-          <summary aria-label={`${tr("年表の表示設定","Timeline display settings")}${settingsSummary ? `: ${settingsSummary}` : ""}`} title={settingsSummary || undefined}><Icon name="settings" /><span>{tr("表示設定","Display settings")}</span>{settingsSummary && <small>{settingsSummary}</small>}<span className={css.settingsChevron}><Icon name="chevron" /></span></summary>
+          <summary aria-label={`${tr("年表の表示設定","Timeline display settings")}${settingsSummary ? `${locale==="en"?": ":"："}${settingsSummary}` : ""}`} title={settingsSummary || undefined}><Icon name="settings" /><span>{tr("表示設定","Display settings")}</span>{settingsSummary && <small>{settingsSummary}</small>}<span className={css.settingsChevron}><Icon name="chevron" /></span></summary>
           <div className={css.displaySettingsBody}>{readingControls}</div>
         </details> : readingControls}
       </div>

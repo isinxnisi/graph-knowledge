@@ -1,3 +1,5 @@
+2026-11-10 テーマ閲覧UI・SEOの刷新：[現行設計](design/THEME_READING_REFRESH_20261110.md)／[β比較・検証・再開](verification/THEME_READING_REFRESH_BETA_20261110.md)。本番公開は別途承認。
+
 2026-11-09 多言語表示の横断是正完了：TOP／検索／探索候補／Graph／詳細の名前表示と、構成更新後の同一原文のテーマ訳文継続を共通化。app39a84f4eをmain／3200／HTTPS β／正式サイトへ反映。正式構成版8の英題・説明・見出し・時期ラベル、英題検索、PC／390pxと言語切替を確認。DB・Worker・設定・KG不変。訳文未登録データや全データ英訳完了とは区別する。[表示契約](design/MULTILINGUAL_DISPLAY_COVERAGE.md)／[実測・制約](verification/MULTILINGUAL_DISPLAY_20261109.md)。
 
 2026-11-09 翻訳欄のスマホ表示是正：①原因確認・②修正／β確認・③正式反映と画面確認まで完了｜今回の表示修正は残作業なし｜工程は③まで。app9d39f7d2、β kmG5WncQ4B_AyPgirQCqe、正式 f-Ryn5yWRD-CNjoPfInPS。正式390pxでcheckbox16px／文章高さ41px、PCとチェック操作を確認。DB／Worker更新なし。既存の依頼状況取得エラーは別記。[完了結果・制約](verification/TRANSLATION_CONSENT_LAYOUT_20261109.md)。
