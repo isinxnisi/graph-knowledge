@@ -1,0 +1,192 @@
+[
+  {
+    "id": "reading-20261110:webb:sunshield-background",
+    "target": {
+      "id": "u3:fbaa9ee12f288cfa:record:5266d210bef739fd01c7",
+      "revision": 1
+    },
+    "role": "background",
+    "english": "A tennis-court-sized sunshield could not fit unfolded inside the rocket. It travelled folded, then was opened remotely in space.",
+    "content": {
+      "kind": "note",
+      "subjectId": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+      "assertion": "テニスコートほどの遮熱膜を、そのままロケットに積むことはできない。折り畳んで打ち上げ、宇宙で遠隔操作により広げた。",
+      "textLanguages": {
+        "assertion": {
+          "tag": "ja",
+          "basis": "declared"
+        }
+      },
+      "aboutRecord": {
+        "id": "u3:fbaa9ee12f288cfa:record:5266d210bef739fd01c7",
+        "revision": 1
+      },
+      "evidence": [
+        {
+          "id": "evidence-main",
+          "source": {
+            "id": "u3:fbaa9ee12f288cfa:source:9cc89cda1ef7ab1b9ddb",
+            "revision": 1
+          },
+          "locator": "Paragraphs on folding and deployment, RELEASE 22-002",
+          "excerpt": "",
+          "stance": "support"
+        }
+      ]
+    }
+  },
+  {
+    "id": "reading-20261110:webb:sunshield-purpose",
+    "target": {
+      "id": "u3:fbaa9ee12f288cfa:record:5266d210bef739fd01c7",
+      "revision": 1
+    },
+    "role": "importance",
+    "english": "To detect faint infrared light, Webb needs a cold environment protected from heat. Five layers shield it from sunlight and heat from the Sun, Earth and Moon, helping the instruments cool.",
+    "content": {
+      "kind": "note",
+      "subjectId": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+      "assertion": "かすかな赤外線を捉えるために、Webbには熱から守られた冷たい環境が必要だった。5層の膜が太陽・地球・月の光と熱を遮り、観測機器を十分に冷やすのを助ける。",
+      "textLanguages": {
+        "assertion": {
+          "tag": "ja",
+          "basis": "declared"
+        }
+      },
+      "aboutRecord": {
+        "id": "u3:fbaa9ee12f288cfa:record:5266d210bef739fd01c7",
+        "revision": 1
+      },
+      "evidence": [
+        {
+          "id": "evidence-main",
+          "source": {
+            "id": "u3:fbaa9ee12f288cfa:source:9cc89cda1ef7ab1b9ddb",
+            "revision": 1
+          },
+          "locator": "Paragraphs on the five layers and 40 kelvins, RELEASE 22-002",
+          "excerpt": "",
+          "stance": "support"
+        }
+      ]
+    }
+  },
+  {
+    "id": "reading-20261110:webb:sunshield-next-steps",
+    "target": {
+      "id": "u3:fbaa9ee12f288cfa:record:5266d210bef739fd01c7",
+      "revision": 1
+    },
+    "role": "insight",
+    "english": "Unfolding the sunshield was one step on the way to observation. Mirror deployment, optical alignment and instrument calibration would follow before the first images.",
+    "content": {
+      "kind": "note",
+      "subjectId": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+      "assertion": "遮熱膜の展開は通過点。この後も鏡の展開、光学系の調整、観測機器の較正が続き、初めての観測に向けて準備を重ねる。",
+      "textLanguages": {
+        "assertion": {
+          "tag": "ja",
+          "basis": "declared"
+        }
+      },
+      "aboutRecord": {
+        "id": "u3:fbaa9ee12f288cfa:record:5266d210bef739fd01c7",
+        "revision": 1
+      },
+      "evidence": [
+        {
+          "id": "evidence-main",
+          "source": {
+            "id": "u3:fbaa9ee12f288cfa:source:9cc89cda1ef7ab1b9ddb",
+            "revision": 1
+          },
+          "locator": "Paragraph beginning \"The world’s largest and most complex\", RELEASE 22-002",
+          "excerpt": "",
+          "stance": "support"
+        }
+      ]
+    }
+  },
+  {
+    "id": "reading-20261110:webb:mid-booms-context",
+    "target": {
+      "id": "u3:fbaa9ee12f288cfa:record:01b09a17397497ff7089",
+      "revision": 1
+    },
+    "role": "background",
+    "english": "Two mid-booms pulled the folded membranes out sideways. Each layer was then tensioned to give the five-layer sunshield its final shape.",
+    "content": {
+      "kind": "note",
+      "subjectId": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+      "assertion": "畳まれた膜を左右へ引き出すのが、二つのミッドブーム。そのあと一枚ずつ膜を張り、5層の遮熱膜を最終的な形に整える。",
+      "textLanguages": {
+        "assertion": {
+          "tag": "ja",
+          "basis": "declared"
+        }
+      },
+      "aboutRecord": {
+        "id": "u3:fbaa9ee12f288cfa:record:01b09a17397497ff7089",
+        "revision": 1
+      },
+      "evidence": [
+        {
+          "id": "evidence-main",
+          "source": {
+            "id": "u3:fbaa9ee12f288cfa:source:9cc89cda1ef7ab1b9ddb",
+            "revision": 1
+          },
+          "locator": "Deployment order: mid-booms and final tensioning, RELEASE 22-002",
+          "excerpt": "",
+          "stance": "support"
+        }
+      ]
+    }
+  },
+  {
+    "id": "reading-20261110:webb:launch-purpose",
+    "target": {
+      "id": "u3:fbaa9ee12f288cfa:record:6164c16405ffad14780c",
+      "revision": 1
+    },
+    "role": "importance",
+    "english": "A folded telescope left Earth. Its destination was a view of light from the first stars and galaxies. Deployment and preparations in space would turn it into a working observatory.",
+    "content": {
+      "kind": "note",
+      "subjectId": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+      "assertion": "折り畳まれた望遠鏡が、地上を離れた。目指すのは、最初の星や銀河が生まれたころの光。ここから宇宙で機体をひらき、観測できる状態へ整えていく。",
+      "textLanguages": {
+        "assertion": {
+          "tag": "ja",
+          "basis": "declared"
+        }
+      },
+      "evidence": [
+        {
+          "id": "evidence-main",
+          "source": {
+            "id": "reading-20261110:webb:early-universe",
+            "revision": 1
+          },
+          "excerpt": "",
+          "locator": "Introduction: Early Universe / scientific purpose",
+          "stance": "support"
+        },
+        {
+          "id": "evidence-deployment",
+          "source": {
+            "id": "u3:fbaa9ee12f288cfa:source:9cc89cda1ef7ab1b9ddb",
+            "revision": 1
+          },
+          "locator": "Paragraph on folding to fit Ariane 5, RELEASE 22-002",
+          "excerpt": "",
+          "stance": "background"
+        }
+      ],
+      "aboutRecord": {
+        "id": "u3:fbaa9ee12f288cfa:record:6164c16405ffad14780c",
+        "revision": 1
+      }
+    }
+  }
+]

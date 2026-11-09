@@ -43,3 +43,32 @@
 .detail.detail h2 { font:400 23px/1.4 var(--font-editorial);margin:8px 0; }
 .detail.detail .statement { font-size:15px;line-height:1.75;margin-top:8px; }
 .detail .back { margin-bottom:6px; }
+
+/* Sources and explanations have stable reading columns, even when titles wrap. */
+.detail .sourceHeading { display:grid; grid-template-columns:16px minmax(0,1fr); align-items:start; column-gap:7px; row-gap:2px; }
+.sourceHeading > :first-child { margin-top:4px; }
+.sourceName { min-width:0; font-size:13px; line-height:1.6; }
+.sourceHeading .stance { grid-column:2; }
+.detail .sourceToggle { margin-left:23px; }
+.detail .explanation { padding:13px 15px; background:color-mix(in srgb,var(--color-demo) 44%,var(--color-panel)); }
+.detail .explanation h3 { font-size:15px; }
+.detail .explanation p { font-size:14px; line-height:1.75; margin:0; }
+.detail .explanation button { margin-top:5px; }
+.insights { margin:17px 0; }
+.insights ul { list-style:none; padding:0 0 0 4px; margin:0; }
+.insights li { position:relative; padding-left:16px; font-size:13px; line-height:1.75; margin:4px 0; }
+.insights li::before { content:""; position:absolute; left:1px; top:.7em; width:6px; height:6px; border-radius:50%; background:var(--color-accent); }
+.detail .insights button { border:0; background:transparent; padding:0 4px; font-size:11px; }
+.insights button :global(.ui-icon) { width:11px; height:11px; }
+.detail .back { display:flex; width:max-content; }
+.detail > .badges { margin-top:4px; }
+
+.detail .explanation[data-role="background"] { background:none; padding:0; margin:12px 0; }
+.detail .explanation[data-role="background"] h3 { font-size:12px; color:var(--color-muted); margin-bottom:3px; }
+.detail .explanation[data-role="background"] p { font-size:13px; }
+.detail .explanation[data-role="background"] button { margin-top:1px; }
+.detail.detail h3 { font-size:16px; line-height:1.55; margin-bottom:7px; }
+.detail .explanation[data-role="background"] h3 { font-size:12px; }
+.detail .sourceName { font-size:14px; }
+.detail .sourceToggle { min-height:28px; }
+@media(min-width:1248px){.detail .back{display:none}}

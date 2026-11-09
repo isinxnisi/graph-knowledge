@@ -1,6 +1,8 @@
-2026-11-10 テーマ閲覧の追調整：①原因確認・②密度と階層の調整・③検証／3200／HTTPS β反映まで完了｜今回の修正に残作業なし｜今回は③まで、本番未変更。app 0e9776da／β t5JBnVwJ-LNI-dyBki84N。先頭4件197〜231→88〜130px、37テスト・lint・型検査込みbuild、PC／390px日英の出典往復と320pxを確認。[実測](verification/THEME_READING_REFRESH_BETA_20261110.md)。
+2026-11-10 テーマ閲覧の受入是正：①参考画像・MDとの不足照合、②修正中｜残りは②解説と表示の接続・③実画面比較／3200／HTTPS β反映｜今回は③まで、本番未変更。前2回の「完了／残作業なし」は参考画像の視覚的到達を確認できておらず撤回。検証成功とデザインの受入を分ける。
 
-2026-11-10 テーマ閲覧UI・SEO：①仕様照合・②実装と実内容・③検証／3200／HTTPS β反映まで完了｜今回の残りは採用判断と別途承認後の本番公開｜今回は③まで。app aa0d6009、β build w9CfEe6fPaVJhsJ0L6Whn。日英・390／320／1024px、出典／概要の往復、実画像OGと初回HTML・公開境界を確認。商品API資格・OneLink実接続は未確認、配置A/Bは比較試作。本番未変更。[設計](design/THEME_READING_REFRESH_20261110.md)／[検証・制約](verification/THEME_READING_REFRESH_BETA_20261110.md)。
+2026-11-10 テーマ閲覧の追調整（完成扱いを撤回）：①原因確認・②密度と階層の調整・③検証／3200／HTTPS β反映の技術作業を実施｜参考画像に対する視覚・読書体験の不足あり｜今回は③まで、本番未変更。app 0e9776da／β t5JBnVwJ-LNI-dyBki84N。先頭4件197〜231→88〜130px、37テスト・lint・型検査込みbuild、PC／390px日英の出典往復と320pxを確認。[実測](verification/THEME_READING_REFRESH_BETA_20261110.md)。
+
+2026-11-10 テーマ閲覧UI・SEO（完成扱いを撤回）：①仕様照合・②実装と実内容・③検証／3200／HTTPS β反映の技術作業を実施｜当初依頼の視覚・読書体験に不足があり再修正｜今回は③まで。app aa0d6009、β build w9CfEe6fPaVJhsJ0L6Whn。日英・390／320／1024px、出典／概要の往復、実画像OGと初回HTML・公開境界を確認。商品API資格・OneLink実接続は未確認、配置A/Bは比較試作。本番未変更。[設計](design/THEME_READING_REFRESH_20261110.md)／[検証・制約](verification/THEME_READING_REFRESH_BETA_20261110.md)。
 
 2026-11-09 多言語表示の横断是正：①原因確認・②修正／検証・③3200／HTTPS β／正式反映と実画面確認まで完了｜今回の残作業なし｜今回は③まで。app39a84f4e、β lVThmoAMxlkrjkNqtWTne、正式7EFviEW9P6SUyGSaqGPRm。TOP／検索／探索候補／Graph／詳細の欧文名、同一原文の構成版8の英訳継続、PC／390pxと言語切替を確認。DB・Worker・設定・KG不変。訳文未登録データと全画面監査の未実施は区別する。[実測・制約](verification/MULTILINGUAL_DISPLAY_20261109.md)／[契約](design/MULTILINGUAL_DISPLAY_COVERAGE.md)。
 

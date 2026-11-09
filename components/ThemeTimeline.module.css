@@ -787,32 +787,42 @@
 @media (max-width: 800px) { .embedded .headerSettings, .embedded .headerAction button { min-width: 34px; min-height: 34px; } }
 
 
-.timeline.reading .openRow[aria-pressed="true"]{border:0;background:transparent}
 
-/* Reading rows carry one concrete sentence. Metadata and sources share its rhythm. */
-.reading .rowText { gap: 3px; }
-.reading .rowHeading { display: block; line-height: 1.65; }
-.reading .assertion { font-size: 13px; line-height: 1.65; font-weight: 600; }
-.reading .rowHeading > :first-child:not(.assertion) { margin-right: 6px; font-size: 10px; vertical-align: 1px; }
-.reading .rowHeading [class*="kind"], .reading .rowHeading [class*="status"] { padding: 1px 4px; gap: 3px; border-radius: 4px; }
-.reading .rowHeading :global(.ui-icon) { width: 11px; height: 11px; }
-.reading .contextKind { display: none; }
-.reading .recordContext { font-size: 10px; line-height: 1.5; margin-top: 1px; }
-.reading .content { padding-bottom: 5px; }
-.reading .rowMain { gap: 3px; padding-top: 5px; padding-bottom: 0; }
-.reading .openRow { min-height: 0; padding: 3px 4px; }
-.reading .graphJump { width: 27px; min-width: 27px; min-height: 29px; padding: 5px; }
-.reading .meta { font-size: 10px; line-height: 1.5; }
-.reading .content > p.meta { margin: 2px 4px 3px; }
-.readingActions { display: flex; align-items: center; flex-wrap: wrap; gap: 1px 10px; margin: 1px 4px 3px; }
-.reading .readingActions button { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; min-width: 0; min-height: 25px; padding: 2px 0; border: 0; border-radius: 0; background: transparent; font-size: 10px; line-height: 1.5; color: var(--color-accent); text-align: left; }
-.readingActions button > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.readingActions :global(.ui-icon) { width: 12px; height: 12px; flex-shrink: 0; }
-.readingActions :global(.ui-icon):last-child:not(:first-child) { display: none; }
-.reading .readingActions button:hover > span { text-decoration: underline; text-underline-offset: 3px; }
+/* Reading hierarchy: a main sentence, quiet context, optional background, and an explicit source. */
+.timeline.reading .openRow { min-height:0; padding:4px 5px; border:0; background:transparent; box-shadow:none; }
+.timeline.reading .openRow[aria-pressed="true"] { border:0; background:transparent; }
+.timeline.reading .openRow:focus:not(:focus-visible) { outline:none; }
+.timeline.reading .openRow:focus-visible { outline:1px solid var(--color-accent); outline-offset:1px; border-radius:3px; }
+.reading .rowText { gap:4px; }
+.reading .rowHeading { display:block; line-height:1.6; }
+.reading .assertion { font-size:14px; line-height:1.6; font-weight:600; }
+.rowContext { display:flex; flex-wrap:wrap; align-items:center; gap:3px 8px; }
+.reading .rowContext > :last-child { font-size:10px; }
+.reading .contextKind { display:none; }
+.reading .recordContext { font-size:11px; line-height:1.55; }
+.reading .content { padding:0 0 8px 6px; margin:2px 0 5px; }
+.reading .rowMain { gap:3px; padding-top:3px; padding-bottom:0; }
+.reading .row[data-focused] > .content { border-radius:7px; box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--color-accent) 22%,transparent); }
+.reading .graphJump { width:27px; min-width:27px; min-height:29px; padding:5px; }
+.reading .meta { font-size:10px; line-height:1.5; }
+.reading .content > p.meta { margin:2px 5px 4px; }
+.readingContext { margin:5px 5px 4px; }
+.readingContext > summary { display:inline-flex; align-items:center; gap:3px; cursor:pointer; list-style:none; font-size:11px; font-weight:500; color:var(--color-accent); min-height:23px; padding:0; }
+.reading .readingContext p { font-size:12px; line-height:1.6; margin:3px 0 0; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; }
+.reading .readingContext button { display:inline-flex; align-items:center; gap:4px; border:0; background:transparent; box-shadow:none; padding:2px 0; min-height:23px; font-size:11px; color:var(--color-accent); }
+.readingContext :global(.ui-icon) { width:11px; height:11px; }
+.readingActions { display:grid; gap:4px; margin:3px 5px 0; }
+.reading .readingActions button { display:flex; align-items:center; gap:7px; width:100%; max-width:100%; min-width:0; min-height:30px; padding:5px 8px; border:1px solid var(--color-border); border-radius:6px; background:var(--color-panel); box-shadow:0 1px 2px rgb(24 44 68/.025); font-size:11px; line-height:1.45; color:var(--color-accent); text-align:left; }
+.readingActions button > span { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.readingActions :global(.ui-icon) { width:13px; height:13px; flex-shrink:0; }
+.reading .readingActions button:hover { background:var(--color-hover); border-color:var(--color-control-border); }
 @media(max-width:800px) {
- .reading .assertion { font-size: 14px; }
- .reading .recordContext { font-size: 10px; }
- .reading .readingActions button { min-height: 32px; font-size: 11px; }
- .reading .graphJump { min-width: 32px; min-height: 36px; }
+ .reading .assertion { font-size:14px; }
+ .reading .recordContext { font-size:10px; }
+ .reading .readingContext p { font-size:12px; }
+ .reading .readingContext button { min-height:30px; }
+ .reading .readingActions button { min-height:36px; font-size:11px; }
+ .reading .graphJump { min-width:32px; min-height:36px; }
 }
+
+.readingContext > summary::-webkit-details-marker{display:none}.readingContext > summary .ui-icon{transform:rotate(-90deg)}.readingContext[open] > summary .ui-icon{transform:none}

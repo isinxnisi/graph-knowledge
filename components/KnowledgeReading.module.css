@@ -77,3 +77,16 @@
 .details .related { margin-top:16px;padding-top:12px; }
 .details .related h3 { font-size:13px;color:var(--color-text); }
 @media(max-width:800px) { .details h2,.details article h2 { font-size:22px; } }
+
+/* Theme and subject details use the same hierarchy as record details. */
+.workspace.details h2 { display:block; font:400 24px/1.4 var(--font-editorial); margin:8px 0 12px; }
+.workspace.details h3 { font-size:16px; line-height:1.55; margin-bottom:8px; color:var(--color-text); }
+.workspace.details > section > p { font-size:15px; line-height:1.8; margin-bottom:14px; }
+.workspace.details > section > p[class] { font-size:11px; color:var(--color-muted); }
+.workspace.details .return { display:flex; width:max-content; margin-bottom:12px; }
+.workspace.details .return:focus:not(:focus-visible) { outline:none; }
+.workspace.details .return:focus-visible { outline-width:1px; outline-offset:2px; }
+.workspace.details .related { margin-top:18px; padding-top:16px; }
+@media(max-width:800px){.workspace.details h2{font-size:23px}}
+
+.workspace.details > section > p.aboutHook{font:500 18px/1.6 var(--font-editorial);color:var(--color-text);margin:10px 0 12px}

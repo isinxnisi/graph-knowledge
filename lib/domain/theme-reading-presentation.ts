@@ -7,7 +7,7 @@ const image=z.object({id:z.string(),src:z.string().regex(/^\/theme-assets\/[a-zA
 export const themeReadingPresentationSchema=z.object({
  version:z.literal(1),theme:pin,locale:language,state:z.literal("checked"),
  hook:z.string().min(1).max(300),lead:z.string().max(1200),image:image.optional(),
- records:z.array(z.object({target:pin,shortTitle:z.string().min(1).max(180),timelineSummary:z.string().max(260).optional(),explanations:z.array(z.object({record:pin,role:z.enum(["background","importance","next"])})).default([])})).default([]),
+ records:z.array(z.object({target:pin,shortTitle:z.string().min(1).max(180),timelineSummary:z.string().max(260).optional(),explanations:z.array(z.object({record:pin,role:z.enum(["background","importance","insight","next"]),heading:z.string().min(1).max(100).optional()})).default([])})).default([]),
 });
 export type ThemeReadingPresentation=z.infer<typeof themeReadingPresentationSchema>;
 /** Use a supplied short heading or an authored time label; never truncate a claim mid-sentence. */
@@ -16,5 +16,5 @@ export function readingRecordTitle(record:KnowledgeRecordVersion,presentation?:T
 }
 export function readingExplanations(record:KnowledgeRecordVersion,snapshot:KnowledgeSnapshot,presentation?:ThemeReadingPresentation|null){
  const entry=presentation?.records.find(r=>r.target.id===record.id&&r.target.revision===record.revision);
- return (entry?.explanations??[]).flatMap(ref=>{const note=snapshot.records.find(r=>r.id===ref.record.id&&r.revision===ref.record.revision);return note?[{record:note,role:ref.role}]:[];});
+ return (entry?.explanations??[]).flatMap(ref=>{const note=snapshot.records.find(r=>r.id===ref.record.id&&r.revision===ref.record.revision);return note?[{record:note,role:ref.role,heading:ref.heading}]:[];});
 }

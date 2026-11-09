@@ -1,0 +1,146 @@
+[
+  {
+    "id": "reading-20261110:webb:sunshield-background",
+    "target": {
+      "id": "u3:fbaa9ee12f288cfa:record:5266d210bef739fd01c7",
+      "revision": 1
+    },
+    "role": "background",
+    "english": "The sunshield was folded to fit inside the rocket. Unfolding it in space was part of preparing Webb for observation.",
+    "content": {
+      "kind": "note",
+      "subjectId": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+      "assertion": "打上げ時はロケットに収めるため折り畳まれていた遮熱膜を、宇宙で広げる工程。観測を始める前に必要な準備だった。",
+      "textLanguages": {
+        "assertion": {
+          "tag": "ja",
+          "basis": "declared"
+        }
+      },
+      "aboutRecord": {
+        "id": "u3:fbaa9ee12f288cfa:record:5266d210bef739fd01c7",
+        "revision": 1
+      },
+      "evidence": [
+        {
+          "id": "evidence-main",
+          "source": {
+            "id": "u3:fbaa9ee12f288cfa:source:9cc89cda1ef7ab1b9ddb",
+            "revision": 1
+          },
+          "locator": "Paragraphs on folding and deployment, RELEASE 22-002",
+          "excerpt": "",
+          "stance": "support"
+        }
+      ]
+    }
+  },
+  {
+    "id": "reading-20261110:webb:sunshield-purpose",
+    "target": {
+      "id": "u3:fbaa9ee12f288cfa:record:5266d210bef739fd01c7",
+      "revision": 1
+    },
+    "role": "importance",
+    "english": "To observe faint infrared light, Webb needs to stay very cold. The five-layer sunshield blocks light and heat from the Sun, Earth and Moon so the instruments can reach the temperatures needed for observation.",
+    "content": {
+      "kind": "note",
+      "subjectId": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+      "assertion": "かすかな赤外線を観測するには、望遠鏡を十分に冷やす必要がある。5層の遮熱膜は太陽・地球・月の光と熱を遮り、観測機器が必要な低温に達するのを助ける。",
+      "textLanguages": {
+        "assertion": {
+          "tag": "ja",
+          "basis": "declared"
+        }
+      },
+      "aboutRecord": {
+        "id": "u3:fbaa9ee12f288cfa:record:5266d210bef739fd01c7",
+        "revision": 1
+      },
+      "evidence": [
+        {
+          "id": "evidence-main",
+          "source": {
+            "id": "u3:fbaa9ee12f288cfa:source:9cc89cda1ef7ab1b9ddb",
+            "revision": 1
+          },
+          "locator": "Paragraphs on the five layers and 40 kelvins, RELEASE 22-002",
+          "excerpt": "",
+          "stance": "support"
+        }
+      ]
+    }
+  },
+  {
+    "id": "reading-20261110:webb:sunshield-next-steps",
+    "target": {
+      "id": "u3:fbaa9ee12f288cfa:record:5266d210bef739fd01c7",
+      "revision": 1
+    },
+    "role": "insight",
+    "english": "Unfolding the sunshield did not mean science observations could begin immediately. Mirror deployment, optical alignment and instrument calibration still lay ahead.",
+    "content": {
+      "kind": "note",
+      "subjectId": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+      "assertion": "遮熱膜が開いても、すぐに観測が始まるわけではない。鏡の展開、光学系の調整、観測機器の較正が続く。",
+      "textLanguages": {
+        "assertion": {
+          "tag": "ja",
+          "basis": "declared"
+        }
+      },
+      "aboutRecord": {
+        "id": "u3:fbaa9ee12f288cfa:record:5266d210bef739fd01c7",
+        "revision": 1
+      },
+      "evidence": [
+        {
+          "id": "evidence-main",
+          "source": {
+            "id": "u3:fbaa9ee12f288cfa:source:9cc89cda1ef7ab1b9ddb",
+            "revision": 1
+          },
+          "locator": "Paragraph beginning \"The world’s largest and most complex\", RELEASE 22-002",
+          "excerpt": "",
+          "stance": "support"
+        }
+      ]
+    }
+  },
+  {
+    "id": "reading-20261110:webb:mid-booms-context",
+    "target": {
+      "id": "u3:fbaa9ee12f288cfa:record:01b09a17397497ff7089",
+      "revision": 1
+    },
+    "role": "background",
+    "english": "The booms pulled the folded membranes out sideways. Tensioning the five layers into their final shape followed.",
+    "content": {
+      "kind": "note",
+      "subjectId": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+      "assertion": "ブームは折り畳まれた膜を横へ引き出す役割を持つ。その後、5枚の膜を張り、最終的な形に整える工程が続く。",
+      "textLanguages": {
+        "assertion": {
+          "tag": "ja",
+          "basis": "declared"
+        }
+      },
+      "aboutRecord": {
+        "id": "u3:fbaa9ee12f288cfa:record:01b09a17397497ff7089",
+        "revision": 1
+      },
+      "evidence": [
+        {
+          "id": "evidence-main",
+          "source": {
+            "id": "u3:fbaa9ee12f288cfa:source:9cc89cda1ef7ab1b9ddb",
+            "revision": 1
+          },
+          "locator": "Deployment order: mid-booms and final tensioning, RELEASE 22-002",
+          "excerpt": "",
+          "stance": "support"
+        }
+      ]
+    }
+  }
+]
