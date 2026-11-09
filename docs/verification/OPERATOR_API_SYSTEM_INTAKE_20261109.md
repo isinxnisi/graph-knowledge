@@ -4,7 +4,7 @@
 
 ## 完了条件と現在地
 
-①露出箇所確認・②実装とβ検証・③既存データの限定補修と正式反映／確認の3工程。①・②を完了し、③は本番資材の転送・照合まで完了。本番の公開帰属はまだ是正前で、既存sudoの本人入力が残る。
+①露出箇所確認・②実装とβ検証・③既存データの限定補修と正式反映／確認の3工程。①・②・③を完了。正式Web／Workerの切替、既存43受付・42公開creditの補修、正式画面・公開API・同一受付の再送、暗号化backupのPC復号照合まで確認済み。
 
 ## 境界
 
@@ -37,3 +37,21 @@
 - 修正版で会員86表2.51秒、知識29表27.52秒の照合に成功。1MB text、行順変更で同値、重複行追加で相違、同値UPDATEでもtuple-version署名が変わることを、rollbackする一時表で確認。会員補修・復元検証、所有者／原本の保全契約は維持する。
 - コマンド失敗時のstderrはrootの0600診断へ残し、非公開のdevelop所有directoryへ回収できるようにした。秘密値やコマンド全文を公開ログへ出さない。preflight／保全baselineの進捗eventも追加。
 - 再開資材はrelease-a9f2deaa-r2へ転送・hash照合済み。同じapp a9f2deaa／build XLE-FT07_ebW1CI2ERHw7／Web・ops imageで、再buildなし。再開runnerはbackups/operator-intake-20261109-r2/run-release.py。正式反映・個人露出解消は引き続き未完了。
+
+
+## 正式反映・受入を完了
+
+2026-11-09、r2の本人sudo実行を受領し、正式URLの確認まで完了。
+
+- 正式app `a9f2deaa831992463cdb676d215be4c6bdcc6327`／build `XLE-FT07_ebW1CI2ERHw7`。Web manifest `sha256:0c694e8ec2525266e8f7692d40649bea75034d1075cf32791aa737ef0567e981`、ops `plunode-knowledge-ops:operator-intake-a9f2deaa`。localhost3200／HTTPS βは同app／build `ayda-KKHQdO56T_QdP8ju`で、今回の全環境反映を完了。
+- 正式の会員86表・知識33表を保全確認。別DBへの復元とplan→apply→applyで旧API固有形式の43受付を識別し、誤った公開credit42件を除去。正式でも同じ候補・原本digestを照合して補修し、私有owner・本文／訳文・取得断面・一般投稿・それ以外の表を保持した。会員39／知識9 migration checksum、private設定、KG・AI artifactは不変。実機の知識DBはβの29表より多い33表だが、全表を対象に保全照合している。
+- 正式backup `/opt/graph-knowledge/backups/operator-intake-20261109T064409Z`。PCで暗号化ファイルhash、RSA公開鍵の対応、RSA-OAEP鍵復号→AES復号→tarの内容を確認し、member.dump 4,130,127 bytes／knowledge.dump 231,463,696 bytesと旧設定hashを照合。平文tar・一時復号鍵は検証後に削除。暗号化SHA256 `64015956340b32ccf947036ca307d1d669bebccca967ef8c6e00227d1679309d`。
+- 正式互換API HTTP200とbuildを確認。実Chromeの既存Googleログインで、API分が個人の投稿一覧・未読通知へ出ないことを確認（該当アカウントの通常一覧は0件）。公開プロフィールの「知識への投稿」にAPI分がなく、訳文詳細にも個人バッジがない。一般投稿の記名／匿名は先述の実PGテストとβの通常投稿表示で検証したもので、正式へ検証用の新規一般投稿は作っていない。
+- 既知の公開訳文16件（タイトル1／補足6／年表9）を公開contributors APIから読み、全てHTTP200・contributors空配列。旧API requestのstatusは公開済みのまま取得できる。年表見出しの同じrequestId・payloadを接続済みAPIから再送し、公開版1・確認attempts1のままであること、再送後も公開creditが付かないことを確認。新しいAI確認や公開テストデータは追加していない。
+- 現在の正式Theme構成版8（14記録・5対象・7資料）と、旧版6（12記録・4対象・7資料）の読取を確認。今回の補修で、利用者がその後更新した版8を版6へ戻していない。
+- 既存ChatGPT Appの「ツールを更新」を実行し、案内APIからsystem-data intake／個人表示なしの新契約を取得した。この実行中チャットの既に読み込まれたtool説明には旧member-attribution文言が残っていたため、説明キャッシュの即時更新までは保証しない。サーバーの帰属判定・guide・公開表示は新契約である。OAuth権限や接続先・予定を変更していない。
+- 画面記録：`C:/Users/nishr/.codex/tmp/operator-intake-formal-list-20261109.png`、β通常投稿 `C:/Users/nishr/.codex/tmp/operator-intake-beta-20261109.png`。私有な実行・復号・公開API照合の原記録は、PCのignored `backups/operator-intake-20261109-r2/`へ保存。
+
+確認先：[正式訳文](https://plunode.net/translations?id=translation%3Aea7faf611345bbaffb6f4ffe3261da69ce095656b4f8168e&revision=1)／[個人の知識投稿](https://plunode.net/member/submissions)。訳文を開いて個人の寄与者リンクが出ないことを確認できる。一般ユーザーによる通常の訳文投稿は、従来の公開帰属を維持する。
+
+今回の3工程を完了とする。初回切替scriptの失敗・修正は履歴として保持する。公開済み本文や過去の正常なユーザー投稿を消す作業には広げていない。
