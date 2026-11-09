@@ -400,7 +400,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
 
                     <span className={css.assertion}>{reading?record.readingSummary||record.readingTitle||record.assertion:record.assertion}</span>
                   </span>
-                  <span className={css.rowContext}><RecordContext record={record} entities={entities} focusedEntityId={focusedEntityId}/>{reading&&<KnowledgeReadingBadge kind={record.kind} polarity={record.polarity} en={locale==="en"}/>}</span>
+                  <span className={css.rowContext}><RecordContext record={record} entities={entities} focusedEntityId={focusedEntityId}/>{reading&&<KnowledgeReadingBadge kind={record.kind} polarity={record.polarity} en={locale==="en"} showKind={false}/>}</span>
                   {(!reading&&(nested.length > 0 ||
                     (group.kind !== "calendar" && t?.label))) && (
                     <span className={css.meta}>

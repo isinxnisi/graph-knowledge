@@ -4,10 +4,11 @@ import { readKnowledge } from "../lib/client/use-knowledge-workspace";
 import type { KnowledgeThemePage } from "../lib/domain/knowledge-theme-reader";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { ThemeLink, type OpenTheme } from "./ThemeDiscovery";
+import ReadingDetailSection,{ReadingList} from "./ReadingDetailSection";
 export default function RelatedThemes({entityId,onOpen}:{entityId:string;onOpen:OpenTheme}) {
  const {locale}=useUiLocale();
  const [page,setPage]=useState<{id:string;value:KnowledgeThemePage}|null>(null);
  useEffect(()=>{let live=true;const read=()=>readKnowledge<KnowledgeThemePage>("themes",{entityId}).then(value=>{if(live)setPage({id:entityId,value});}).catch(()=>{if(live)setPage(null);});void read();const timer=setInterval(()=>void read(),30000);return()=>{live=false;clearInterval(timer);};},[entityId]);
  if(page?.id!==entityId||!page.value.themes.length)return null;
- return <section aria-label={locale==="en"?"Related themes":"関連するテーマ"}><h3>{locale==="en"?"Related themes":"関連するテーマ"}</h3>{page.value.themes.map(theme=><ThemeLink key={theme.id} theme={theme} onOpen={onOpen} focusEntityId={theme.entityIds.includes(entityId)?entityId:theme.entityIds.find(id=>page.value.focusIds?.includes(id))}/>)}</section>;
+ return <ReadingDetailSection ariaLabel={locale==="en"?"Related themes":"関連するテーマ"} title={locale==="en"?"Related themes":"関連するテーマ"} icon="event"><ReadingList key={entityId} noun={locale==="en"?"themes":"テーマ"} items={page.value.themes.map(theme=><ThemeLink key={theme.id} theme={theme} onOpen={onOpen} focusEntityId={theme.entityIds.includes(entityId)?entityId:theme.entityIds.find(id=>page.value.focusIds?.includes(id))}/>)}/></ReadingDetailSection>;
 }

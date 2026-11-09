@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { KnowledgePublishedRecord } from "../lib/domain/knowledge-publication";
 import { useUiLocale } from "../lib/client/ui-locale";
 import Icon from "./Icon";
+import ReadingDetailSection,{ReadingList} from "./ReadingDetailSection";
 import css from "./KnowledgeThemeContext.module.css";
 
 /** Undated knowledge belongs to the theme, independently of the chosen graph. */
@@ -13,9 +14,11 @@ export default function KnowledgeThemeContext({ records, selectedRecordId, onRea
   const [expanded, setExpanded] = useState(variant==="list");
   const context = records.filter((r) => r.record.content.times.length === 0);
   if (!context.length) return null;
+  if(variant==="list")return <ReadingDetailSection title={en?"Read more about this theme":"このテーマを深く読む"} icon="book" action={<small className={css.count}>{context.length}{en?" records":"件"}</small>}><ReadingList noun={en?"entries":"解説"} items={context.map(dto=><button key={dto.record.id} className={css.listRow} title={dto.record.content.assertion} aria-label={`${en?"Read content and evidence":"内容と根拠を読む"}：${dto.record.content.assertion}`} aria-pressed={selectedRecordId===dto.record.id} onClick={()=>onRead(dto.record.id)}><span>{dto.record.content.polarity!=="affirmed"&&<small>{dto.record.content.polarity==="denied"?(en?"Denied · ":"否定 · "):(en?"Uncertain · ":"不確実 · ")}</small>}{dto.record.content.assertion}</span><Icon name="arrow"/></button>)}/></ReadingDetailSection>;
+
   return <section className={[css.context,variant!=="compact"?css.reading:"",className].filter(Boolean).join(" ")} aria-label={en ? "Theme information" : "テーマの情報"}>
-    <header><h3><Icon name="book" />{variant==="list"?(en?"Read the background":"このテーマを深く読む"):(en ? "Theme information" : "テーマの情報")}<small>{context.length}{en ? " records" : "件"}</small></h3>
-      {variant!=="list"&&(context.length>1||variant==="collapsed") && <button className={`${css.more} ${variant==="compact"&&context.length === 2 && !expanded ? css.mobileOnly : ""}`} aria-label={expanded ? en ? "Show less" : "折りたたむ" : en ? "Read all theme information" : "テーマの情報をすべて見る"} aria-expanded={expanded} onClick={() => setExpanded((s) => !s)}>
+    <header><h3><Icon name="book" />{en ? "Theme information" : "テーマの情報"}<small>{context.length}{en ? " records" : "件"}</small></h3>
+      {(context.length>1||variant==="collapsed") && <button className={`${css.more} ${variant==="compact"&&context.length === 2 && !expanded ? css.mobileOnly : ""}`} aria-label={expanded ? en ? "Show less" : "折りたたむ" : en ? "Read all theme information" : "テーマの情報をすべて見る"} aria-expanded={expanded} onClick={() => setExpanded((s) => !s)}>
         {expanded ? en ? "Show less" : "折りたたむ" : variant==="collapsed"?(en?`Read ${context.length} records`:`${context.length}件を読む`): <><span className={css.desktopCount}>{en ? `${context.length - 2} more` : `ほか${context.length - 2}件`}</span><span className={css.mobileCount}>{en ? `${context.length - 1} more` : `ほか${context.length - 1}件`}</span></>}<Icon name="chevron" />
       </button>}
     </header>

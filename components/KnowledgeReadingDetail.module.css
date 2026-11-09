@@ -41,3 +41,5 @@
 @media(min-width:1248px) { .detail .back { display:none; } }
 @media(max-width:800px) { .detail .back { min-height:40px; } .sourceToggle { min-height:36px; } .detail .explanation .explanationSource { min-width:28px; min-height:28px; } }
 @media(prefers-reduced-motion:reduce) { .sourceToggle :global(.ui-icon) { transition:none; } }
+
+.insetBody { min-width:0; padding-left:23px; }

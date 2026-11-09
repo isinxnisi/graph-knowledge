@@ -80,7 +80,7 @@
 
 /* Theme and subject details use the same hierarchy as record details. */
 .workspace.details h2 { display:block; font:400 24px/1.4 var(--font-editorial); margin:8px 0 12px; }
-.workspace.details h3 { font-size:16px; line-height:1.55; margin-bottom:8px; color:var(--color-text); }
+.workspace.details h3 { font-size:14px; line-height:1.55; margin-bottom:8px; color:var(--color-text); }
 .workspace.details > section > p { font-size:15px; line-height:1.8; margin-bottom:14px; }
 .workspace.details > section > p[class] { font-size:11px; color:var(--color-muted); }
 .workspace.details .return { display:flex; width:max-content; margin-bottom:12px; }
@@ -90,3 +90,8 @@
 @media(max-width:800px){.workspace.details h2{font-size:23px}}
 
 .workspace.details > section > p.aboutHook{font:500 18px/1.6 var(--font-editorial);color:var(--color-text);margin:10px 0 12px}
+
+.insetBody { min-width:0; padding-left:23px; }
+.workspace.details .entityExplore { display:flex; align-items:center; gap:6px; margin:10px 0 0 23px; padding:5px 0; border:0; background:transparent; color:var(--color-accent); max-width:calc(100% - 23px); text-align:left; font-size:12px; line-height:1.6; }
+
+@media(min-width:1248px) { .workspace.details .entityReturn { display:none; } }

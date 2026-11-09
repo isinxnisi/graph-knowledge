@@ -5,6 +5,8 @@ import {render,screen,fireEvent,cleanup,act} from "@testing-library/react";
 import {it,expect,afterEach,vi} from "vitest";
 import KnowledgeReadingSources from "../components/KnowledgeReadingSources";
 import KnowledgeTimeline from "../components/KnowledgeTimeline";
+import KnowledgeRelatedInformation from "../components/KnowledgeRelatedInformation";
+import {ReadingList} from "../components/ReadingDetailSection";
 import KnowledgeThemeContext from "../components/KnowledgeThemeContext";
 import {knowledgeRecordContentSchema,knowledgeSourceContentSchema,type KnowledgeSnapshot} from "../lib/domain/knowledge-foundation";
 import {buildKnowledgePublishedRecord} from "../lib/domain/knowledge-publication";
@@ -22,11 +24,11 @@ it("source shortcut opens precisely the requested evidence and retains independe
 });
 it("reading selects a time annotation, exposes both source shortcuts and does not duplicate full scope or quote",()=>{
  const focus=vi.fn(),evidence=vi.fn();render(<KnowledgeTimeline snapshot={snapshot} reading focusedRecordId={null} onFocusRecord={focus} onReadEvidence={evidence}/>);
- const row=screen.getByText("Short heading",{exact:true}).closest("button")!;expect(row.hasAttribute("aria-expanded")).toBe(false);fireEvent.click(row);expect(focus).toHaveBeenLastCalledWith("r","start");expect(screen.queryByText(snapshot.records[0].content.scope)).toBeNull();expect(screen.queryByText("supporting passage")).toBeNull();fireEvent.click(screen.getByRole("button",{name:/Source B/}));expect(evidence).toHaveBeenLastCalledWith("r","e-b");
+ expect(screen.queryByText("出来事",{exact:true})).toBeNull();const row=screen.getByText("Short heading",{exact:true}).closest("button")!;expect(row.hasAttribute("aria-expanded")).toBe(false);fireEvent.click(row);expect(focus).toHaveBeenLastCalledWith("r","start");expect(screen.queryByText(snapshot.records[0].content.scope)).toBeNull();expect(screen.queryByText("supporting passage")).toBeNull();fireEvent.click(screen.getByRole("button",{name:/Source B/}));expect(evidence).toHaveBeenLastCalledWith("r","e-b");
 });
 it("both undated prototypes make every item reachable, including a one-item collapsed list",()=>{
  const records=Array.from({length:6},(_,i)=>buildKnowledgePublishedRecord({...snapshot.records[0],id:"note"+i,content:{...snapshot.records[0].content,assertion:"Note "+i,times:[]}},snapshot));
- const v=render(<KnowledgeThemeContext records={records} selectedRecordId={null} onRead={vi.fn()} variant="list"/>);expect(screen.getAllByRole("button",{name:/Note/})).toHaveLength(6);v.rerender(<KnowledgeThemeContext key="collapsed" records={records.slice(0,1)} selectedRecordId={null} onRead={vi.fn()} variant="collapsed"/>);expect(screen.queryByRole("button",{name:/Note/})).toBeNull();fireEvent.click(screen.getByRole("button",{name:/すべて|all theme/}));expect(screen.getByRole("button",{name:/Note 0/})).toBeTruthy();
+ const v=render(<KnowledgeThemeContext records={records} selectedRecordId={null} onRead={vi.fn()} variant="list"/>);expect(screen.getAllByRole("button",{name:/Note/})).toHaveLength(3);fireEvent.click(screen.getByRole("button",{name:"解説をさらに3件表示"}));expect(screen.getAllByRole("button",{name:/Note/})).toHaveLength(6);v.rerender(<KnowledgeThemeContext key="collapsed" records={records.slice(0,1)} selectedRecordId={null} onRead={vi.fn()} variant="collapsed"/>);expect(screen.queryByRole("button",{name:/Note/})).toBeNull();fireEvent.click(screen.getByRole("button",{name:/すべて|all theme/}));expect(screen.getByRole("button",{name:/Note 0/})).toBeTruthy();
 });
 it("canonical links and legacy links preserve their pinned revision independently",()=>{
  expect(knowledgeThemeLocation(new URL("https://plunode.net/en/t/a%3Ab?krev=4&kview=split"))).toMatchObject({id:"a:b",revision:4,view:"split"});expect(knowledgeThemeLocation(new URL("https://plunode.net/?ktheme=old&krev=2"))).toMatchObject({id:"old",revision:2});const r={...emptyKnowledgeReference(),theme:{id:"a:b",revision:4},themeView:"timeline" as const};expect(knowledgeWorkspaceHref(new URL("https://plunode.net/en/t/a%3Ab"),r)).toContain("/en/t/a%3Ab?krev=4");expect(knowledgeWorkspaceHref(new URL("https://plunode.net/en/t/a%3Ab"),emptyKnowledgeReference())).toBe("/en");
@@ -48,4 +50,18 @@ it("reading keeps context in details instead of adding a duplicate background di
  expect(screen.queryByText("背景",{exact:true})).toBeNull();expect(screen.queryByText("Why this happened")).toBeNull();expect(screen.queryByText("A separate conclusion")).toBeNull();
  v.rerender(<KnowledgeTimeline snapshot={{...context,records:context.records.map(r=>r.id==="r"?{...r,revision:2}:r)}} reading presentation={presentation} untimedInContext focusedRecordId={null} onFocusRecord={vi.fn()}/>);
  expect(screen.queryByText("Why this happened")).toBeNull();
+});
+
+it("reading lists initially expose three entries and reveal the rest without losing their order",()=>{
+ render(<ReadingList noun="テーマ" items={Array.from({length:7},(_,i)=><button key={i}>Theme {i}</button>)}/>);
+ expect(screen.getAllByRole("button",{name:/^Theme /})).toHaveLength(3);fireEvent.click(screen.getByRole("button",{name:"テーマをさらに3件表示"}));expect(screen.getAllByRole("button",{name:/^Theme /})).toHaveLength(6);fireEvent.click(screen.getByRole("button",{name:"テーマをさらに1件表示"}));expect(screen.getAllByRole("button",{name:/^Theme /})).toHaveLength(7);expect(screen.queryByRole("button",{name:/さらに/})).toBeNull();
+});
+it("the bounded knowledge list keeps fixed in-view versions and sends new public entries to their own route",async()=>{
+ const pinned=buildKnowledgePublishedRecord(snapshot.records[0],snapshot),newer={...pinned,record:{...pinned.record,revision:2,content:{...pinned.record.content,assertion:"Different newer text"}}};
+ const others=Array.from({length:4},(_,i)=>({...pinned,record:{...pinned.record,id:"public"+i,content:{...pinned.record.content,assertion:"Public "+i}}}));
+ const fetchMock=vi.spyOn(globalThis,"fetch").mockResolvedValue({ok:true,json:async()=>({records:[newer,...others],nextCursor:null})} as Response);
+ const open=vi.fn(),openPinned=vi.fn();try{
+  render(<KnowledgeRelatedInformation entityId="entity" inViewRecords={[pinned]} onOpen={open} onOpenInView={openPinned} inTheme/>);await act(async()=>{});
+  expect(screen.queryByText("Different newer text")).toBeNull();expect(screen.getAllByText(/^Public /)).toHaveLength(2);fireEvent.click(screen.getByText(pinned.record.content.assertion));expect(openPinned).toHaveBeenLastCalledWith("r");fireEvent.click(screen.getByRole("button",{name:"知識をさらに2件表示"}));expect(screen.getAllByText(/^Public /)).toHaveLength(4);fireEvent.click(screen.getByText("Public 3"));expect(open).toHaveBeenLastCalledWith("public3");
+ }finally{fetchMock.mockRestore();}
 });
