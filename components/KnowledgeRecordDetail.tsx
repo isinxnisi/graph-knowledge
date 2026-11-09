@@ -32,8 +32,12 @@ export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme,o
     <h2>{title|| (r.kind==="relation"?`${name(r.subjectId)} → ${name(r.objectId)}`:assertion)}</h2>
     <p className={css.statement} lang={assertion!==r.assertion?locale:originalLanguage}>{assertion}</p>
 
-    {explanations.filter(ref=>ref.role!=="insight").map(({dto:explanation,role,heading})=><section key={explanation.record.id} className={css.explanation} data-role={role}><h3><Icon name={role==="importance"?"lightbulb":"book"}/>{heading||(role==="importance"?(en?"Why it matters":"なぜ重要なのか"):role==="next"?(en?"Read next":"次に読む"):(en?"Background":"背景"))}</h3><p>{explanation.record.content.assertion}</p>{onRecord&&<button onClick={()=>onRecord(explanation.record.id)}>{en?"Explanation & sources":"解説の出典"} →</button>}</section>)}
-    {explanations.some(ref=>ref.role==="insight")&&<section className={css.insights}><h3><Icon name="list"/>{explanations.find(ref=>ref.role==="insight")?.heading||(en?"What this tells us":"この出来事でわかること")}</h3><ul>{explanations.filter(ref=>ref.role==="insight").map(({dto:explanation})=><li key={explanation.record.id}>{explanation.record.content.assertion}{onRecord&&<button onClick={()=>onRecord(explanation.record.id)} aria-label={en?"Read the source of this insight":"この解説の出典を読む"}><Icon name="external"/></button>}</li>)}</ul></section>}
+    {explanations.length>0&&<section className={css.section}>
+      <h3><Icon name="book"/>{en?"Explanation":"解説"}</h3>
+      <div className={css.explanation}>
+        {explanations.map(({dto:explanation})=><p key={explanation.record.id}>{explanation.record.content.assertion}{onRecord&&<button className={css.explanationSource} onClick={()=>onRecord(explanation.record.id)} aria-label={en?"Read this context and its sources":"この補足と出典を読む"} title={en?"Read this context and its sources":"この補足と出典を読む"}><Icon name="external"/></button>}</p>)}
+      </div>
+    </section>}
     <KnowledgeReadingSources dto={dto} locale={locale} translations={translations} openIds={openEvidenceIds??localEvidence} onOpen={onEvidenceOpen??setLocalEvidence} request={evidenceRequest}/>
     {dto.entities.length > 0 && <section className={css.section}><h3><Icon name="graph"/>{en?"Related subjects":"関係する対象"}</h3><div className={css.subjects}>{dto.entities.map(e=><button key={e.id} onClick={()=>onEntity(e.id)}>{entityName(e)}</button>)}</div></section>}
     {scope&&!longScope&&<p className={css.scope}>{en?"Scope: ":"範囲："}{scope}</p>}

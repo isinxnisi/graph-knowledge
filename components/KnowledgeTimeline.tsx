@@ -7,7 +7,7 @@ import {knowledgeDisplaySnapshot} from "../lib/domain/knowledge-display";
 import {useUiLocale} from "../lib/client/ui-locale";
 import { timelineRecordId } from "../lib/domain/timeline-display";
 import ThemeTimeline from "./ThemeTimeline";
-import {readingExplanations,readingRecordTitle,type ThemeReadingPresentation} from "../lib/domain/theme-reading-presentation";
+import {readingRecordTitle,type ThemeReadingPresentation} from "../lib/domain/theme-reading-presentation";
 
 /** The Explorer owns the selected immutable Record and the view switch. */
 export default function KnowledgeTimeline({ snapshot, focusedRecordId, focusedEntityId, onFocusRecord, onShowGraph, untimedInContext = false, headerAction, emptyMessage,reading=false,presentation,onReadEvidence }: {
@@ -31,10 +31,7 @@ export default function KnowledgeTimeline({ snapshot, focusedRecordId, focusedEn
     records={reading?projection.records.map(row=>{
       const record=display.records.find(r=>r.id===row.recordId)!;
       const editorial=presentation?.records.find(r=>r.target.id===record.id&&r.target.revision===record.revision);
-      const explanations=readingExplanations(record,display,presentation);
-      const explanation=explanations.find(ref=>ref.role==="background")??explanations.find(ref=>ref.role!=="insight");
-      return {...row,readingTitle:editorial?.shortTitle||row.displayTime?.label||readingRecordTitle(record,presentation),readingSummary:editorial?.timelineSummary,
-        readingContext:explanation&&explanation.role!=="insight"?{text:explanation.record.content.assertion,role:explanation.role}:undefined};
+      return {...row,readingTitle:editorial?.shortTitle||row.displayTime?.label||readingRecordTitle(record,presentation),readingSummary:editorial?.timelineSummary};
     }):projection.records}
     reading={reading}
     onReadEvidence={onReadEvidence}

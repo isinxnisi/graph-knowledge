@@ -40,12 +40,12 @@ it("products are edition-pinned, deduplicated, independently regional and never 
  const rows=contextualProducts(theme,snapshot,null,"JP",Date.parse("2026-11-10T02:00:00Z"),catalog);expect(rows).toHaveLength(1);expect(rows[0].status).toBe("unverified");expect(rows[0].reason.en).toBe("Why");expect(rows[0].alternatives[0].image).toBeUndefined();expect(contextualProducts(theme,snapshot,{kind:"entity",id:"outside"},"US",0,catalog)).toEqual([]);expect(contextualProducts(theme,snapshot,{kind:"record",id:"r"},"JP",0,catalog)[0].reason.en).toBe("Record");
 });
 
-it("reading context is pinned to its factual revision and keeps insight-only notes out of the timeline",()=>{
+it("reading keeps context in details instead of adding a duplicate background disclosure to the timeline",()=>{
  const note=(id:string,assertion:string)=>({id,...stamp,content:knowledgeRecordContentSchema.parse({kind:"note",assertion,aboutRecord:{id:"r",revision:1},evidence:snapshot.records[0].content.evidence})});
  const context={...snapshot,records:[...snapshot.records,note("background","Why this happened"),note("insight","A separate conclusion")]};
  const presentation=themeReadingPresentationSchema.parse({version:1,theme:{id:"t",revision:1},locale:"ja",state:"checked",hook:"Question",lead:"Introduction",records:[{target:{id:"r",revision:1},shortTitle:"Event",explanations:[{record:{id:"background",revision:1},role:"background"},{record:{id:"insight",revision:1},role:"insight"}]}]});
  const v=render(<KnowledgeTimeline snapshot={context} reading presentation={presentation} untimedInContext focusedRecordId={null} onFocusRecord={vi.fn()}/>);
- const background=screen.getByText("Why this happened").closest("details")!;expect(background.open).toBe(false);fireEvent.click(background.querySelector("summary")!);expect(background.open).toBe(true);expect(screen.queryByText("A separate conclusion")).toBeNull();
+ expect(screen.queryByText("背景",{exact:true})).toBeNull();expect(screen.queryByText("Why this happened")).toBeNull();expect(screen.queryByText("A separate conclusion")).toBeNull();
  v.rerender(<KnowledgeTimeline snapshot={{...context,records:context.records.map(r=>r.id==="r"?{...r,revision:2}:r)}} reading presentation={presentation} untimedInContext focusedRecordId={null} onFocusRecord={vi.fn()}/>);
  expect(screen.queryByText("Why this happened")).toBeNull();
 });

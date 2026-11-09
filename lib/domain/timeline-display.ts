@@ -11,7 +11,6 @@ export type TimelineDisplayRecord = {
   object: string | null;
   assertion: string;
   readingTitle?: string; readingSummary?:string;
-  readingContext?: {text:string;role:"background"|"importance"|"next"};
   relation: string;
   scope: string;
   polarity: "affirmed" | "denied" | "uncertain";
