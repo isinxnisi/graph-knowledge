@@ -1,3 +1,5 @@
+2026-11-09 翻訳欄のスマホ表示：①原因確認完了・②局所修正とbuild／画面確認中｜残りは②確認・③各環境反映｜今回は③まで。チェックボックスへの幅100%継承を局所修正し、本文を通常の横書きへ戻す。[検証・反映](verification/TRANSLATION_CONSENT_LAYOUT_20261109.md)。
+
 2026-11-09 運営APIのシステム投入是正：①確認・②実装／β・③正式補修／受入まで完了｜残作業なし｜今回の工程は③まで。app a9f2deaa、β ayda-KKHQdO56T_QdP8ju、正式 XLE-FT07_ebW1CI2ERHw7。43受付の誤帰属を補修し42公開creditを除去。原本・訳文・私有owner・最新Theme版8／旧版6を保持。正式画面、16公開訳文、同一受付再送とbackup復号を確認。[完了結果](verification/OPERATOR_API_SYSTEM_INTAKE_20261109.md)。以下は各時点の履歴。
 
 2026-11-09 運営API是正：③初回切替は保全確認SQLで停止・補修開始前に従来版へ復帰。確認処理を表単位・省メモリへ修正し86＋29表で検証、r2資材を転送照合済み｜残りは③再実行・既存分の是正・正式確認｜全体は③まで。app／imageはa9f2deaaのまま。[失敗・修正・再開](verification/OPERATOR_API_SYSTEM_INTAKE_20261109.md)。

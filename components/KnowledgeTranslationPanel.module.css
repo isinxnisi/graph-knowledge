@@ -2,11 +2,12 @@
 .panel summary{cursor:pointer;color:var(--color-accent);padding-block:.25rem}
 .body{padding:.5rem .65rem;border-inline-start:2px solid var(--color-border);overflow-wrap:anywhere}
 .controls{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center}
-.controls label{display:flex;gap:.35rem;align-items:center}
-.controls select{max-width:100%;padding:.25rem .5rem}
+.controls label{display:flex;gap:.35rem;align-items:center;min-width:0;max-width:100%}
+.controls select{min-width:0;max-width:100%;padding:.25rem .5rem}
 .body p{white-space:pre-wrap;margin-block:.65rem}
 .body small{display:block;opacity:.75;margin-block:.35rem}
 .body a,.body button{display:inline-flex;margin-block:.3rem;margin-inline-end:.6rem}
 .generation{border-block-start:1px solid var(--color-border);margin-top:.4rem;padding-top:.5rem}
-.generation .consent{display:flex;align-items:baseline;gap:.45rem;line-height:1.5}
-.consent input{flex:none;align-self:center}
+.generation .consent{display:grid;grid-template-columns:1rem minmax(0,1fr);align-items:start;gap:.45rem;line-height:1.5}
+.generation .consent input[type="checkbox"]{box-sizing:border-box;width:1rem;height:1rem;min-width:0;min-height:0;padding:0;margin:.2em 0 0}
+.consent span{min-width:0}
