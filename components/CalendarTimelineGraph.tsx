@@ -52,7 +52,7 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
     () => calendarGraph(records, resolution),
     [records, resolution],
   );
-  const shortName = (r: R) => r.time?.label || r.assertion;
+  const shortName = (r: R) => (r.displayTime ?? r.time)?.label || r.assertion;
   const lineStyle = (record: R) => {
     const range = graph.ranges.find((r) => r.record.id === record.id)!;
     return {
@@ -132,7 +132,7 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
                       focusedRecordId === timelineRecordId(row.ending) || undefined
                     }
                     onClick={() => open(row.ending!.id)}
-                    title={themeTimeLabel(row.ending.time,locale)}
+                    title={themeTimeLabel(row.ending.displayTime ?? row.ending.time,locale)}
                   >
                     <span>{shortName(row.ending)}</span>
                     <small>
@@ -197,14 +197,14 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
                   data-compact-range={range.compactRange || undefined}
                   data-uncertain={range.uncertainBoundary || undefined}
                   data-focused={focusedRecordId === timelineRecordId(record) || undefined}
-                  title={`${record.assertion} · ${themeTimeLabel(record.time,locale)}`}
-                  aria-label={`${en?"Select time marker: ":"時期の線を選ぶ："}${record.assertion} · ${themeTimeLabel(record.time,locale)}`}
+                  title={`${record.assertion} · ${themeTimeLabel(record.displayTime ?? record.time,locale)}`}
+                  aria-label={`${en?"Select time marker: ":"時期の線を選ぶ："}${record.assertion} · ${themeTimeLabel(record.displayTime ?? record.time,locale)}`}
                   aria-pressed={focusedRecordId === timelineRecordId(record)}
                   onClick={() => open(record.id)}
                 >
                   <i />
                   <span className={css.srOnly}>
-                    {themeTimeLabel(record.time,locale)}
+                    {themeTimeLabel(record.displayTime ?? record.time,locale)}
                   </span>
                 </button>
                 {meaning === "duration" &&

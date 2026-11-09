@@ -106,7 +106,7 @@ function calendarBoundariesOverlap(time: CalendarTime) {
 
 function timeText(record: TimelineDisplayRecord,locale:string="ja") {
   const tr=(ja:string,en:string)=>locale==="en"?en:ja;
-  const t = record.time;
+  const t = record.displayTime ?? record.time;
   if (!t) return tr("時期なし","Undated");
   if (t.kind === "calendar") return t.from + (t.to ? ` → ${t.to}` : "");
   if (t.kind === "cycle")
@@ -143,7 +143,7 @@ function orderedRecords<R extends TimelineDisplayRecord>(group: Group<R>) {
 function Period({ record }: { record: TimelineDisplayRecord }) {
   const {locale}=useUiLocale();const tr=(ja:string,en:string)=>locale==="en"?en:ja;
   const labels=locale==="en"?{point:"Point in time",duration:"Duration","occurrence-window":"Occurrence window","unclassified-range":"Time range · unclassified"}:meaningLabels;
-  const t = record.time;
+  const t = record.displayTime ?? record.time;
   if (t?.kind === "calendar") {
     const meaning = calendarMeaning(t);
     if (meaning === "point")
@@ -210,8 +210,9 @@ function Period({ record }: { record: TimelineDisplayRecord }) {
       </div>
     );
   }
-  if (!t || (t.kind !== "cycle" && (!t.to || t.to === t.from))) return null;
-  if (t.kind === "cycle" && t.from === t.to && !t.wrap) return null;
+  const original=record.time;
+  if (!t || (original?.kind !== "cycle" && (!original?.to || original.to === original.from))) return null;
+  if (original?.kind === "cycle" && original.from === original.to && !original.wrap) return null;
   return (
     <div className={css.period} aria-label={`${tr("期間","Duration")} ${timeText(record,locale)}`}>
       <span className={css.periodBar} aria-hidden="true" />
@@ -305,6 +306,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
 
   function renderGroup(group: Group<R>, ancestors: string[] = []) {
     if (ancestors.includes(group.id)) return null;
+    if(group.id.startsWith("fallback:")&&(group.kind==="cycle"||group.kind==="qualitative")){const t=group.records[0]?.displayTime;if(t&&t.kind!=="calendar")group={...group,label:t.axis};}
     const rows = orderedRecords(group);
     const subjectIds = [...new Set(rows.map((r) => r.subject).filter((id): id is string => id !== null))];
     const lanes = activeTrace
@@ -320,7 +322,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
         expanded.has(record.id) ||
         focusedRow?.id === record.id ||
         hasFocusedChild(record.id);
-      const t = record.time;
+      const t = record.displayTime ?? record.time;
       const label =
         group.kind === "none"
           ? tr("背景","Background")
@@ -426,7 +428,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                 )}
             </div>
             {group.kind === "calendar" ? (
-              <p className={css.meta}>{themeTimeLabel(record.time,locale)}</p>
+              <p className={css.meta}>{themeTimeLabel(record.displayTime ?? record.time,locale)}</p>
             ) : (
               <Period record={record} />
             )}

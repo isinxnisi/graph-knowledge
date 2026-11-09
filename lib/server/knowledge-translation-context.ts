@@ -25,7 +25,7 @@ export async function readTranslationGenerationInput(c:PoolClient,target:Knowled
  else if(target.kind==='source')surrounding={source:source({id:target.id,revision:target.revision,content:original.content as KnowledgeSourceContent})};
  else if(target.kind==='theme'){
   const t=original.content as KnowledgeThemeContent;
-  surrounding={theme:{id:target.id,revision:target.revision,title:t.title,description:clip(t.description,1200),textLanguages:t.textLanguages}};
+  surrounding={theme:{id:target.id,revision:target.revision,title:t.title,description:clip(t.description,1200),textLanguages:t.textLanguages,...(target.axisId?{axis:t.timeline?.axes.find(a=>a.id===target.axisId),inset:t.timeline?.insets.find(i=>i.axisId===target.axisId)}:{})}};
  }else{
   const {record,contextBasis}=await readKnowledgeRecordVersion(c,{id:target.id,revision:target.revision}),r=record.record.content;
   const describe=(value:typeof record)=>{references.push({kind:"record",id:value.record.id,revision:value.record.revision});return ({
@@ -34,7 +34,7 @@ export async function readTranslationGenerationInput(c:PoolClient,target:Knowled
    polarity:value.record.content.polarity,scope:value.record.content.scope,
    direction:'subjectId -> relation -> objectId (do not reverse the participants)',
    subjectId:value.record.content.subjectId,objectId:value.record.content.objectId,
-   entities:value.entities.map(entity),textLanguages:value.record.content.textLanguages,
+   entities:value.entities.map(entity),...(target.timeId?{time:value.record.content.times.find(t=>t.id===target.timeId)}:{}),textLanguages:value.record.content.textLanguages,
   });};
   let about:unknown;
   if(r.aboutRecord)about=describe((await readKnowledgeRecordVersion(c,r.aboutRecord)).record);

@@ -14,6 +14,7 @@ export type TimelineDisplayRecord = {
   scope: string;
   polarity: "affirmed" | "denied" | "uncertain";
   time: ThemeTime | null;
+  displayTime?: ThemeTime;
   revision: number;
   evidence: {
     title: string;

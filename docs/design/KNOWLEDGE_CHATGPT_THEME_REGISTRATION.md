@@ -65,3 +65,12 @@ package内の新しいEntityは、名称と分類（name／kind）を基本に�
 投稿者は認証済み会員に紐付け、`attribution:profile` を既定とし、既存の寄与者表示・活動履歴・結果通知を使う。`anonymous` は公開表示だけ匿名で、内部所有者は保持。確認先とデータ方針はguideのdisclosureで提示し、既存の送信同意版と一緒に記録する。
 
 1呼出しは1原文項目・1言語。既存会員投稿の20受付／時間・同時保存100件、既存の共通AI予算と再試行を共用する。新しい別枠・課金・Worker・DB migrationは追加しない。元の作成packageへ訳文を混ぜるとRecord掲載やTheme版と混同するため、公開した原本の参照を受けてから別操作で届ける。新規テーマ作成時も、その公開結果を読んで同じ会話から訳文を続けて登録できる。
+
+
+### 年表の文章も訳文へ含める（2026-11-09是正）
+
+テーマの年表見出し・軸の説明・子軸見出しを`axisLabel`／`axisOriginLabel`／`insetLabel`（`axisId`必須）、記録の時期ラベル・周期／定性の軸名・周期単位・段階の意味・開始終了の段階名を`timeLabel`／`timeAxis`／`timeUnit`／`timeCoordinateMeaning`／`timeFrom`／`timeTo`（`timeId`必須）として既存の訳文APIへ含める。`read_theme.translationTargets`は存在する原文と正確なselectorを返し、Chat側が内部のJSONパスを推測する必要をなくす。
+
+日付・数値座標・比較順序のキー・原資料の表記／引用は翻訳で書き換えない。定性の段階名は表示値だけを訳し、配置・グループ・順序は原本座標を使う。範囲の補足（scope）も公開済みの訳文を年表に反映する。既存のtop-level訳文IDは保持し、新selectorがある対象だけidentityへ識別子を追加する。
+
+受付・同値性確認・公開可否・原文hashと版の照合・寄与者・利用量・明示的なCapsule取込は従来と共通。DB migrationは不要だが、新対象のschemaを処理するWebと知識Workerは同じsourceへ更新する。原語の資料引用を残すことと、年表用の説明文が翻訳対象から抜けていることを混同しない。

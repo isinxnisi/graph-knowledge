@@ -1,3 +1,5 @@
+import {recordTimeTextTargets,themeTimelineTextTargets} from "../domain/knowledge-timeline-text";
+import {knowledgeOriginalText} from "../domain/knowledge-translation";
 import type {Pool} from 'pg';
 import {createKnowledgeFoundationService,KnowledgeError} from './knowledge-foundation';
 import {verifyKnowledgeReadSchema} from './knowledge-publication-preview';
@@ -16,7 +18,8 @@ export function createThemeAuthoringReader(pool:Pool,origin:string){
  }
  async function read(theme:string,revision?:number){
   const result=await foundation.resolveTheme(reader,themeId(theme),revision);
-  return {...result,target:{id:result.theme.id,revision:result.theme.revision},url:url(result.theme.id,result.theme.revision)};
+  const translationTargets=[...themeTimelineTextTargets(result.theme),...result.snapshot.records.flatMap(recordTimeTextTargets)].map(target=>({target,original:knowledgeOriginalText(target,target.kind==='theme'?result.theme.content:result.snapshot.records.find(r=>r.id===target.id)!.content).text}));
+  return {...result,translationTargets,target:{id:result.theme.id,revision:result.theme.revision},url:url(result.theme.id,result.theme.revision)};
  }
  async function find(kind:'theme'|'entity'|'record'|'source',query:string,cursor:number){
   // Candidates are bounded and independently checked for public dependencies.

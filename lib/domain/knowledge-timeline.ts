@@ -1,3 +1,4 @@
+import {knowledgeDisplayTime} from "./knowledge-display";
 import type { KnowledgeRecordVersion, KnowledgeSnapshot, KnowledgeTimeline } from "./knowledge-foundation";
 import type { ThemeTimelineConfig } from "./theme-workbench";
 import type { TimelineDisplayRecord, TimelineDisplayEntity } from "./timeline-display";
@@ -52,7 +53,7 @@ export function knowledgeTimelineLayout(records: KnowledgeRecordVersion[], timel
 
 /** Read only the supplied fixed snapshot. Never fetch current entity/source
  * heads and never create a fake subject, URL, quotation, or period entity. */
-export function knowledgeTimelineProjection(snapshot: KnowledgeSnapshot, options: { untimedInContext?: boolean } = {}): {
+export function knowledgeTimelineProjection(snapshot: KnowledgeSnapshot, options: { untimedInContext?: boolean; locale?: string } = {}): {
   records: TimelineDisplayRecord[];
   entities: TimelineDisplayEntity[];
   timeline?: ThemeTimelineConfig;
@@ -71,7 +72,7 @@ export function knowledgeTimelineProjection(snapshot: KnowledgeSnapshot, options
     if ([c.subjectId, c.objectId].some(id => id !== null && !entityIds.has(id)))
       throw new Error("年表の固定版に対象がありません");
     return {
-      ...row, revision: record.revision, kind: c.kind,
+      ...row, ...(row.timeId&&options.locale?{displayTime:knowledgeDisplayTime(record,row.timeId,snapshot.translations,options.locale)}:{}), revision: record.revision, kind: c.kind,
       subject: c.subjectId, object: c.objectId,
       assertion: c.assertion, relation: c.relation, polarity: c.polarity, scope: c.scope,
       evidence: c.evidence.map(e => {

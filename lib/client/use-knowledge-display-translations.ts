@@ -3,9 +3,12 @@ import {useEffect,useState} from "react";
 import type {KnowledgeEntityVersion,KnowledgeRecordVersion,KnowledgeThemeVersion} from "../domain/knowledge-foundation";
 import {knowledgeTranslationVersionSchema,translationTargetKey,type KnowledgeTextTarget,type KnowledgeTranslationVersion} from "../domain/knowledge-translation";
 
+import {recordTimeTextTargets,themeTimelineTextTargets} from "../domain/knowledge-timeline-text";
+
 const empty:readonly KnowledgeTranslationVersion[]=Object.freeze([]);
 export function useKnowledgeDisplayTranslations(entities:KnowledgeEntityVersion[],records:KnowledgeRecordVersion[],theme:KnowledgeThemeVersion|undefined,language:string):readonly KnowledgeTranslationVersion[]{
  const targets:KnowledgeTextTarget[]=[
+  ...records.flatMap(recordTimeTextTargets),...(theme?themeTimelineTextTargets(theme):[]),
   ...entities.flatMap(e=>[{kind:"entity" as const,id:e.id,revision:e.revision,field:"name" as const},...(e.content.description?[{kind:"entity" as const,id:e.id,revision:e.revision,field:"description" as const}]:[])]),
   ...records.flatMap(r=>[{kind:"record" as const,id:r.id,revision:r.revision,field:"assertion" as const},...(r.content.relation?[{kind:"record" as const,id:r.id,revision:r.revision,field:"relation" as const}]:[]),...(r.content.scope?[{kind:"record" as const,id:r.id,revision:r.revision,field:"scope" as const}]:[])]),
   ...(theme?[{kind:"theme" as const,id:theme.id,revision:theme.revision,field:"title" as const},...(theme.content.description?[{kind:"theme" as const,id:theme.id,revision:theme.revision,field:"description" as const}]:[])]:[]),

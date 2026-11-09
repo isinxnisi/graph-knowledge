@@ -1,4 +1,5 @@
 "use client";
+import {timelineTextFieldLabel} from "../lib/domain/knowledge-timeline-text";
 import {translationTargetKey} from "../lib/domain/knowledge-translation";
 import type {KnowledgeSubmissionContent,KnowledgeSubmissionContext} from "../lib/domain/knowledge-submission";
 import {translationTextLimit} from "../lib/domain/knowledge-translation";
@@ -7,7 +8,7 @@ export default function KnowledgeTranslationItem({item,context,disabled,onChange
  const en=locale==='en',t=item.translation!,original=context?.texts?.find(v=>translationTargetKey(v.target)===translationTargetKey(t.target));
  return <section id={'submission-'+item.key}>
   <h3>{en?'Translation':'訳文の投稿・訂正'}</h3><p className={css.meta}>{en?'Translate the complete meaning. The original and its sources stay unchanged.':'原文の意味を保って訳してください。原文・根拠は変更しません。'}</p>
-  <div className={css.row}><span>{en?'Original revision':'原文の内容版'} {t.target.revision} · {({name:en?'Name':'名前',description:en?'Description':'説明',aliases:en?'Alias':'別名',title:en?'Title':'題名',bibliography:en?'Bibliography':'書誌',assertion:en?'Statement':'本文',relation:en?'Arrow label':'矢印の言葉',scope:en?'Scope':'範囲',excerpt:en?'Quotation':'引用',locator:en?'Source location':'記載箇所'})[t.target.field]}</span><span>{en?'Translation language':'訳文の言語'}：{t.language==='ja'?'日本語':t.language==='en'?'English':t.language}</span></div>
+  <div className={css.row}><span>{en?'Original revision':'原文の内容版'} {t.target.revision} · {(t.target.timeId||t.target.axisId?timelineTextFieldLabel(t.target,en):({name:en?'Name':'名前',description:en?'Description':'説明',aliases:en?'Alias':'別名',title:en?'Title':'題名',bibliography:en?'Bibliography':'書誌',assertion:en?'Statement':'本文',relation:en?'Arrow label':'矢印の言葉',scope:en?'Scope':'範囲',excerpt:en?'Quotation':'引用',locator:en?'Source location':'記載箇所'})[t.target.field as "name"])}</span><span>{en?'Translation language':'訳文の言語'}：{t.language==='ja'?'日本語':t.language==='en'?'English':t.language}</span></div>
   <blockquote lang={original?.language?.tag}>{original?.text??item.record.assertion}</blockquote>
   {original?.translation&&<details><summary>{en?'Previous translation':'訂正前の訳文'} · {original.translation.revision}</summary><p lang={t.language}>{original.translation.text}</p></details>}
   <label>{en?'Proposed translation (required)':'訳文（必須）'}<textarea rows={4} lang={t.language} disabled={disabled} maxLength={translationTextLimit(t.target)} value={t.text} onChange={e=>onChange(e.target.value)} placeholder={en?'Write a faithful translation of the original above':'上の原文を、選んだ言語で訳してください'}/></label>

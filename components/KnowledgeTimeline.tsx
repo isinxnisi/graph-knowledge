@@ -20,7 +20,7 @@ export default function KnowledgeTimeline({ snapshot, focusedRecordId, focusedEn
   emptyMessage?: string;
 }) {
   const {locale}=useUiLocale();
-  const projection = useMemo(() => knowledgeTimelineProjection(knowledgeDisplaySnapshot(snapshot,locale), { untimedInContext }), [snapshot, locale,untimedInContext]);
+  const projection = useMemo(() => knowledgeTimelineProjection(knowledgeDisplaySnapshot(snapshot,locale), { untimedInContext,locale }), [snapshot, locale,untimedInContext]);
   return <ThemeTimeline
     {...projection}
     emptyMessage={emptyMessage}

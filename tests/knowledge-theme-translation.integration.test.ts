@@ -32,9 +32,9 @@ beforeEach(async()=>{
  await pool.query('TRUNCATE member_knowledge.submissions CASCADE');await pool.query('DELETE FROM member_knowledge.review_attempts');await pool.query('DELETE FROM member_knowledge.review_projects');
  await pool.query('INSERT INTO "user"(id,name,email,"emailVerified","createdAt","updatedAt",active,locale) VALUES($1,$2,$3,true,now(),now(),true,$7),($4,$5,$6,true,now(),now(),true,$7) ON CONFLICT(id) DO UPDATE SET active=true',[owner,'Operator','translation-owner@example.org',other,'Other operator','translation-other@example.org','ja']);
  await knowledge.query('DROP SCHEMA IF EXISTS knowledge75 CASCADE');foundation=createKnowledgeFoundationService(knowledge);
- await foundation.execute(operator,{action:'create-bundle',requestId:randomUUID(),reason:'Isolated public translation originals',entities:[{id:'entity',content:{name:'対象A',kind:'person',textLanguages:{name:{tag:'ja',basis:'declared'}}}}],sources:[{id:'source',content:{title:'一次資料',url:'https://example.org/source',language:'ja'}}],records:[{id:'record',content:{kind:'note',subjectId:'entity',assertion:'対象Aは2003年に設立した。',textLanguages:{assertion:{tag:'ja',basis:'declared'}},evidence:[{id:'q',source:{id:'source',revision:1},locator:'本文',excerpt:'対象Aは2003年に設立した。'}]}}]});
+ await foundation.execute(operator,{action:'create-bundle',requestId:randomUUID(),reason:'Isolated public translation originals',entities:[{id:'entity',content:{name:'対象A',kind:'person',textLanguages:{name:{tag:'ja',basis:'declared'}}}}],sources:[{id:'source',content:{title:'一次資料',url:'https://example.org/source',language:'ja'}}],records:[{id:'record',content:{kind:'note',subjectId:'entity',assertion:'対象Aは2003年に設立した。',times:[{id:'founding',time:{kind:'calendar',from:'2003',label:'設立の年'}}],textLanguages:{assertion:{tag:'ja',basis:'declared'}},evidence:[{id:'q',source:{id:'source',revision:1},locator:'本文',excerpt:'対象Aは2003年に設立した。'}]}}]});
  await migrateKnowledgeTranslations(knowledge);await migrateKnowledgeIdentities(knowledge);await ensureKnowledgePublicationSchema(knowledge);
- await foundation.execute(operator,{action:'create-theme',requestId:randomUUID(),id:'theme',title:'Aの歴史',textLanguages:{title:{tag:'ja',basis:'declared'}},recordPins:[{id:'record',revision:1}],reason:'Public theme'});
+ await foundation.execute(operator,{action:'create-theme',requestId:randomUUID(),id:'theme',title:'Aの歴史',timeline:{version:1,axes:[{id:'history',kind:'calendar',label:'設立までの歩み'}],placements:[{recordId:'record',timeId:'founding',axisId:'history'}],insets:[]},textLanguages:{title:{tag:'ja',basis:'declared'}},recordPins:[{id:'record',revision:1}],reason:'Public theme'});
  await knowledge.query("INSERT INTO knowledge75.published_revisions(kind,id,revision) SELECT kind,id,current_revision FROM knowledge75.objects ON CONFLICT DO NOTHING");
  await queue.heartbeat(cfg);
 },30000);
@@ -90,4 +90,16 @@ it('serves only public fixed-version translations in the same theme catalogue wi
  const page=await catalogue.themes();expect(page.themes[0]).toMatchObject({title:'Aの歴史',revision:1,translations:[{text:'A history',language:'en',target}]});
  await knowledge.query("UPDATE knowledge75.text_translation_heads SET visibility='hidden'");
  expect((await catalogue.themes()).themes[0].translations).toBeUndefined();
+});
+
+it('publishes temporal headings and time labels through the same review pipeline without editing the original Theme or dates',async()=>{
+ const s=service(),before=await foundation.resolveTheme({kind:'reader',id:'fixture'},'theme');
+ for(const [target,text] of [[{kind:'theme',id:'theme',revision:1,field:'axisLabel',axisId:'history'},'History before founding'],[{kind:'record',id:'record',revision:1,field:'timeLabel',timeId:'founding'},'Year of founding']] as const){
+  const v={...input(),translation:{target,language:'en',text,expectedRevision:0}};
+  expect(await publish(s,v)).toMatchObject({state:'published'});
+  expect((await s.read(owner,{theme:v.theme,target,language:'en'})).translation?.text).toBe(text);
+ }
+ expect(await foundation.resolveTheme({kind:'reader',id:'fixture'},'theme')).toEqual(before);
+ await foundation.execute(operator,{action:'set-visibility',requestId:randomUUID(),kind:'source',id:'source',expectedStatusRevision:1,visibility:'hidden',reason:'Hide source'});
+ await expect(s.read(owner,{theme:{id:'theme',revision:1},target:{kind:'theme',id:'theme',revision:1,field:'axisLabel',axisId:'history'},language:'en'})).rejects.toBeTruthy();
 });
