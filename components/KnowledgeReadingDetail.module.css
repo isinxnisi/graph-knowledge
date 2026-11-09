@@ -11,11 +11,11 @@
 .detail .statement{font-size:15px;line-height:1.8;margin-top:10px;white-space:pre-wrap}
 .detail .scope{font-size:11px;color:var(--color-muted);line-height:1.7;margin:4px 0 13px;white-space:pre-wrap}
 .detail .scopeLong{font-size:11px;color:var(--color-muted);line-height:1.7;margin:12px 0 0;white-space:pre-wrap}
-.explanation{margin:16px 0;padding:14px;background:var(--color-demo, var(--color-page));border-radius:8px}
+.explanation{margin:13px 0;padding:12px;background:var(--color-demo, var(--color-page));border-radius:8px}
 .explanation p{font-size:13px;line-height:1.8;margin-bottom:7px}
 .explanation button{font-size:11px!important;padding:2px 0!important;border:0!important;background:transparent!important}
-.sources{border-top:1px solid var(--color-border);margin-top:18px;padding-top:15px}
-.source{padding:9px 0;border-bottom:1px solid var(--color-border);scroll-margin-top:12px}
+.sources{border-top:1px solid var(--color-border);margin-top:15px;padding-top:12px}
+.source{padding:7px 0;border-bottom:1px solid var(--color-border);scroll-margin-top:12px}
 .source:last-child{border-bottom:0}
 .sourceHeading{display:flex;align-items:baseline;gap:6px;font-size:13px;flex-wrap:wrap}
 .sourceHeading>a,.sourceHeading>strong{flex:1;min-width:0}
@@ -39,3 +39,7 @@
 @media(prefers-reduced-motion:reduce){.sourceToggle :global(.ui-icon){transition:none}}
 
 .meta{font-size:11px;color:var(--color-muted)}.actions{display:flex;flex-wrap:wrap;gap:8px}
+
+.detail.detail h2 { font:400 23px/1.4 var(--font-editorial);margin:8px 0; }
+.detail.detail .statement { font-size:15px;line-height:1.75;margin-top:8px; }
+.detail .back { margin-bottom:6px; }

@@ -396,11 +396,13 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                 onClick={() => toggle(record.id, open)}
               >
                 <span className={css.rowText}>
-                  <span className={css.assertion}>{reading?record.readingTitle||record.assertion:record.assertion}</span>
+                  <span className={css.rowHeading}>
+                    {reading&&<KnowledgeReadingBadge kind={record.kind} polarity={record.polarity} en={locale==="en"}/>}
+                    <span className={css.assertion}>{reading?record.readingSummary||record.readingTitle||record.assertion:record.assertion}</span>
+                  </span>
                   <RecordContext record={record} entities={entities} focusedEntityId={focusedEntityId}/>
-                  {reading&&record.readingSummary&&<span className={css.readingSummary}>{record.readingSummary}</span>}{reading&&<KnowledgeReadingBadge kind={record.kind} polarity={record.polarity} en={locale==="en"}/>}
-                  {(nested.length > 0 ||
-                    (group.kind !== "calendar" && t?.label)) && (
+                  {(!reading&&(nested.length > 0 ||
+                    (group.kind !== "calendar" && t?.label))) && (
                     <span className={css.meta}>
                       {group.kind !== "calendar" ? t?.label : ""}
                       {nested.length
@@ -436,12 +438,13 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                 )}
             </div>
             {group.kind === "calendar" ? (
-              <p className={css.meta}>{themeTimeLabel(record.displayTime ?? record.time,locale)}</p>
+              (!reading || (t?.kind === "calendar" && (t.to || t.startLatest || t.endEarliest))) &&
+              <p className={css.meta}>{themeTimeLabel(reading&&t?.kind==="calendar"?{...t,label:""}:record.displayTime??record.time,locale)}</p>
             ) : (
               <Period record={record} />
             )}
             {reading&&<div className={css.readingActions}>
-              {record.evidence.map(e=><button key={e.evidenceId??e.sourceId} onClick={()=>e.evidenceId&&onReadEvidence?.(timelineRecordId(record),e.evidenceId)}><Icon name="link"/><span>{e.title}</span><Icon name="arrow"/></button>)}
+              {record.evidence.map(e=><button key={e.evidenceId??e.sourceId} title={e.title} aria-label={e.title} onClick={()=>e.evidenceId&&onReadEvidence?.(timelineRecordId(record),e.evidenceId)}><Icon name="link"/><span>{e.title}</span><Icon name="arrow"/></button>)}
               {nested.length>0&&<button aria-expanded={expanded.has(record.id)} onClick={()=>setExpanded(before=>{const next=new Set(before);if(next.has(record.id))next.delete(record.id);else next.add(record.id);return next;})}><Icon name="chevron"/>{tr("詳しい時間軸を開く","Open detailed timeline")} · {nested.length}</button>}
             </div>}
             {!reading&&<div

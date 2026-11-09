@@ -345,3 +345,6 @@
 }
 .graph .range[data-compact-range]::before { top: 13px; }
 .graph .range[data-compact-range]::after { bottom: 13px; }
+
+/* A compact preface leaves the shared calendar axis unchanged. */
+.caption { margin: 7px 0 9px; }

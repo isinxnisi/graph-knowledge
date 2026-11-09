@@ -21,7 +21,7 @@ it("source shortcut opens precisely the requested evidence and retains independe
 });
 it("reading selects a time annotation, exposes both source shortcuts and does not duplicate full scope or quote",()=>{
  const focus=vi.fn(),evidence=vi.fn();render(<KnowledgeTimeline snapshot={snapshot} reading focusedRecordId={null} onFocusRecord={focus} onReadEvidence={evidence}/>);
- const row=screen.getByRole("button",{name:/^Short heading/});expect(row.hasAttribute("aria-expanded")).toBe(false);fireEvent.click(row);expect(focus).toHaveBeenLastCalledWith("r","start");expect(screen.queryByText(snapshot.records[0].content.scope)).toBeNull();expect(screen.queryByText("supporting passage")).toBeNull();fireEvent.click(screen.getByRole("button",{name:/Source B/}));expect(evidence).toHaveBeenLastCalledWith("r","e-b");
+ const row=screen.getByText("Short heading",{exact:true}).closest("button")!;expect(row.hasAttribute("aria-expanded")).toBe(false);fireEvent.click(row);expect(focus).toHaveBeenLastCalledWith("r","start");expect(screen.queryByText(snapshot.records[0].content.scope)).toBeNull();expect(screen.queryByText("supporting passage")).toBeNull();fireEvent.click(screen.getByRole("button",{name:/Source B/}));expect(evidence).toHaveBeenLastCalledWith("r","e-b");
 });
 it("both undated prototypes make every item reachable, including a one-item collapsed list",()=>{
  const records=Array.from({length:6},(_,i)=>buildKnowledgePublishedRecord({...snapshot.records[0],id:"note"+i,content:{...snapshot.records[0].content,assertion:"Note "+i,times:[]}},snapshot));

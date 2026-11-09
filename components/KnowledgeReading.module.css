@@ -36,9 +36,9 @@
 .themeCanvas { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
 .themeCanvas > div:first-child { flex: 1; min-height: 0; height: auto !important; border: 0; border-radius: 0; }
 .details { line-height: 1.8; }
-.details article h2 { font-family: var(--font-body); font-size: 16px; line-height: 1.7; }
-.details article p { font-size: 13px; white-space: pre-wrap; }
-.details article button { margin: 0 0 5px; font-size: 12px; }
+.details article h2 { font: 400 23px/1.4 var(--font-editorial); }
+.details article p { white-space: pre-wrap; }
+
 .related { border-top: 1px solid var(--color-border); padding-top: 15px; margin-top: 18px; }
 .related h3 { color: var(--color-muted); font-size: 12px; }
 .notice { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12px; line-height: 1.7; background: var(--color-accent-soft); border-left: 3px solid var(--color-accent); padding: 8px 12px; margin-bottom: 8px; }
@@ -62,10 +62,18 @@
 .workspace .themeInfo[aria-pressed="true"] { color: var(--color-accent); background: var(--color-accent-soft); }
 .themeCanvas { scroll-margin-top: 60px; }
 
-.workspace .themeHeader{position:static;flex-wrap:wrap;padding:0 0 8px;gap:4px 8px;margin-bottom:14px;border-bottom:0}
-.workspace .themeHeader h2{order:4;flex-basis:100%;white-space:normal;font:500 27px/1.35 var(--font-editorial);padding-top:3px}
+.workspace .themeHeader{position:static;flex-wrap:wrap;padding:0 0 8px;gap:4px 8px;margin-bottom:9px;border-bottom:0}
+.workspace .themeHeader h2{order:4;flex-basis:100%;white-space:normal;font:500 27px/1.35 var(--font-editorial);padding-top:1px}
 .themeHeader .return{margin-right:auto}.workspace .themeHeader>span{font-size:10px}.workspace .themeHeader .themeInfo{order:2}
 .prototype{margin-top:14px;font-size:11px;color:var(--color-muted)}.prototype summary{cursor:pointer}.prototype label{display:flex;gap:8px;align-items:center;margin:10px 0}.prototype select{min-width:0;max-width:100%}
 @media(max-width:800px){.workspace .themeHeader h2{font-size:23px}.workspace .themeHeader .themeInfo{min-width:36px;min-height:36px}}
 
 .sourceIndex{font-size:12px;margin-top:14px}.sourceIndex summary{cursor:pointer;color:var(--color-muted)}.sourceIndex ul{padding-left:18px}.sourceIndex li{margin:8px 0}.sourceIndex a{color:var(--color-accent)}
+
+.details { font-size:14px;line-height:1.75; }
+.details h2 { display:block;font:400 23px/1.4 var(--font-editorial);margin:8px 0 10px; }
+.details h3 { font-size:14px;line-height:1.55; }
+.details > section > p { font-size:14px;line-height:1.75; }
+.details .related { margin-top:16px;padding-top:12px; }
+.details .related h3 { font-size:13px;color:var(--color-text); }
+@media(max-width:800px) { .details h2,.details article h2 { font-size:22px; } }
