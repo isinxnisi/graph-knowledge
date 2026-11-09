@@ -1,3 +1,5 @@
+2026-11-09 翻訳欄のスマホ表示是正：幅100%がcheckboxへ継承された崩れを局所修正。3200／HTTPS βで390px・320px・PC、日本語／英語とチェック操作を確認。本番資材は転送・照合済み、sudo切替と正式確認を残す。[検証・再開](verification/TRANSLATION_CONSENT_LAYOUT_20261109.md)。
+
 2026-11-09 運営APIのシステム投入是正：①確認・②実装／β・③正式補修／受入まで完了｜残作業なし｜今回の工程は③まで。app a9f2deaa、β ayda-KKHQdO56T_QdP8ju、正式 XLE-FT07_ebW1CI2ERHw7。43受付の誤帰属を補修し42公開creditを除去。原本・訳文・私有owner・最新Theme版8／旧版6を保持。正式画面、16公開訳文、同一受付再送とbackup復号を確認。[完了結果](verification/OPERATOR_API_SYSTEM_INTAKE_20261109.md)。以下は各時点の履歴。
 
 2026-11-09 運営API是正：③の再開資材まで準備済み。初回は保全確認SQLで停止し正式は従来版へ復帰。確認処理を修正・86＋29表で検証し、同じapp／imageのr2を転送・照合。本番補修は未実行。[検証・再開](verification/OPERATOR_API_SYSTEM_INTAKE_20261109.md)。
