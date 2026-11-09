@@ -147,6 +147,13 @@ async function publicContribution(owner=alice.id,attribution:"profile"|"anonymou
 }
 const publicGet=(kind:string,id:string,revision?:number)=>contributors.GET(request('/api/knowledge/contributors?'+new URLSearchParams({kind,...(kind==='profile'?{handle:id}:{id}),...(revision?{revision:String(revision)}:{})})));
 describe("public attribution with real member PostgreSQL and fixture KG visibility gates",()=>{
+ it("system API intake has no badge or profile activity even if old personal credit flags remain",async()=>{
+  const v=await publicContribution();
+  await pool().query("UPDATE member_knowledge.submission_revisions SET source_capsule='{\"kind\":\"operator-api\"}'::jsonb WHERE submission_id=$1",[v.source.id]);
+  for(const [kind,id] of [['record',v.recordId],['entity',v.entityIds[0]],['theme',v.themeIds[0]]])expect((await (await publicGet(kind,id)).json()).contributors).toEqual([]);
+  expect((await (await publicGet('profile',v.handle)).json()).activities).toEqual([]);
+  expect((await (await feedback.GET(request(endpoint,alice.cookie,'GET',undefined,{'x-member-user':alice.id}))).json()).submissionIds).not.toContain(v.source.id);
+ });
  it("only finalized accepted publications show a profile; private owner/submission IDs never project",async()=>{
   const draft=await publicContribution(alice.id,"profile",false);expect((await (await publicGet("record",draft.recordId)).json()).contributors).toEqual([]);
   const v=await publicContribution();const response=await publicGet("record",v.recordId),data=await response.json();expect(data.contributors).toHaveLength(1);expect(data.contributors[0]).toMatchObject({recordId:v.recordId,revision:1,anonymous:false,person:{handle:v.handle}});

@@ -20,8 +20,9 @@ const stamp=(v:unknown)=>v instanceof Date?v.toISOString():String(v);
 export async function submissionNotificationSummary(c:Pool|PoolClient,ownerId:string){
  const rows=(await c.query(`WITH unread AS (SELECT DISTINCT e.submission_id FROM member_knowledge.feedback_events e
  JOIN member_knowledge.submissions s ON s.id=e.submission_id
+ JOIN member_knowledge.submission_revisions r ON r.submission_id=s.id AND r.revision=s.current_revision
  LEFT JOIN member_knowledge.feedback_seen seen ON seen.submission_id=e.submission_id AND seen.revision=e.revision
- WHERE s.owner_id=$1 AND e.id>COALESCE(seen.through_event_id,0))
+ WHERE s.owner_id=$1 AND COALESCE(r.source_capsule->>'kind','')<>'operator-api' AND e.id>COALESCE(seen.through_event_id,0))
  SELECT submission_id,count(*) OVER() AS total FROM unread ORDER BY submission_id LIMIT 200`,[ownerId])).rows;
  return {unreadCount:Number(rows[0]?.total??0),submissionIds:rows.map(row=>row.submission_id as string)};
 }

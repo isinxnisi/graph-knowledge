@@ -16,6 +16,10 @@ export async function ensurePublicationContributorSchema(pool:Pool){
 }
 type ContributorInput={decisionId:string;ownerId:string;attribution:'profile'|'anonymous';recordId:string;submissionId:string;submissionRevision:number;operation:string;entityIds:string[];themeIds:string[]};
 export async function persistPublicationContributor(c:PoolClient,v:ContributorInput){
+ const origin=(await c.query("SELECT source_capsule->>'kind' AS kind FROM member_knowledge.submission_revisions WHERE submission_id=$1 AND revision=$2",[v.submissionId,v.submissionRevision])).rows[0]?.kind;
+ // System intake has no public member credit. Ownership and decisions remain
+ // in the private submission/audit ledger, independently of public profiles.
+ if(origin==='operator-api')return;
  await c.query(`INSERT INTO member_knowledge.publication_contributors(decision_id,owner_id,submission_id,submission_revision,attribution,activity_public,record_id,operation,entity_ids,theme_ids) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT(decision_id) DO NOTHING`,[v.decisionId,v.ownerId,v.submissionId,v.submissionRevision,v.attribution,v.attribution==='profile',v.recordId,v.operation,v.entityIds,v.themeIds]);
  const row=(await c.query('SELECT * FROM member_knowledge.publication_contributors WHERE decision_id=$1',[v.decisionId])).rows[0];
  if(!row||row.owner_id!==v.ownerId||row.submission_id!==v.submissionId||row.submission_revision!==v.submissionRevision||row.attribution!==v.attribution||row.record_id!==v.recordId||row.operation!==v.operation||JSON.stringify(row.entity_ids)!==JSON.stringify(v.entityIds)||JSON.stringify(row.theme_ids)!==JSON.stringify(v.themeIds))throw new MemberError(409,'CONTRIBUTION_CONFLICT');
@@ -28,7 +32,7 @@ export async function finalizePublicationContributor(c:PoolClient,id:string,resu
  await c.query('UPDATE member_knowledge.publication_contributors SET record_revision=$2,published_at=COALESCE(published_at,clock_timestamp()) WHERE decision_id=$1',[id,result.revision]);
 }
 const query=z.strictObject({kind:z.enum(['record','entity','theme','profile','translation']).default('record'),id:knowledgeIdSchema.optional(),handle:publicHandleSchema.optional(),revision:z.coerce.number().int().positive().optional(),cursor:z.string().max(1000).optional()});
-const columns=`SELECT c.*,to_char(c.published_at AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS published_time,p.handle,p.display_name,p.icon,p.official,u.image AS provider_image,u.active FROM member_knowledge.publication_contributors c LEFT JOIN "user" u ON u.id=c.owner_id LEFT JOIN public_profile p ON p.user_id=u.id`;
+const columns=`SELECT c.*,to_char(c.published_at AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS published_time,p.handle,p.display_name,p.icon,p.official,u.image AS provider_image,u.active FROM (SELECT pc.* FROM member_knowledge.publication_contributors pc WHERE NOT EXISTS(SELECT 1 FROM member_knowledge.submission_revisions original WHERE original.submission_id=pc.submission_id AND original.revision=pc.submission_revision AND original.source_capsule->>'kind'='operator-api')) c LEFT JOIN "user" u ON u.id=c.owner_id LEFT JOIN public_profile p ON p.user_id=u.id`;
 function dto(r:QueryResultRow){const visible=publicProfilesEnabled()&&r.attribution==='profile'&&r.active===true&&r.handle;return {id:r.decision_id,recordId:r.record_id,revision:r.record_revision,operation:r.operation,publishedAt:r.published_time,anonymous:r.attribution==='anonymous',person:visible?{handle:r.handle,displayName:r.display_name,icon:r.icon,official:!!r.official,imageUrl:publicProfileImage(r.icon,r.provider_image)}:null};}
 export function createKnowledgeContributors(pool:Pool){
  return {async read(request:Request){

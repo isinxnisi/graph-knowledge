@@ -26,9 +26,9 @@ export function themeTranslationCapture(owner:string,input:SubmitThemeTranslatio
 }
 
 /** Only public, pinned Theme contents. Uses the existing member translation
- * queue, attribution, notifications and budget; never edits an original/Theme. */
+ * queue and budget. Operator provenance is private, not member activity. */
 export function createThemeTranslationAuthoring(pool:Pool,knowledge:Pool,origin:string,authorize:(owner:string)=>Promise<void>,options:{afterCapture?:()=>Promise<void>}={}){
- const reader=createThemeAuthoringReader(knowledge,origin),store=createKnowledgeSubmissionService(pool,{memberStore:true,dataset:'public-kg'}),reviews=createReviewQueue(pool);
+ const reader=createThemeAuthoringReader(knowledge,origin),store=createKnowledgeSubmissionService(pool,{memberStore:true,dataset:'public-kg',trustedOrigin:'operator-api'}),reviews=createReviewQueue(pool);
  let ready:Promise<void>|undefined;
  async function allowed(owner:string){
   await authorize(owner);
@@ -68,7 +68,7 @@ export function createThemeTranslationAuthoring(pool:Pool,knowledge:Pool,origin:
     const issues=submissionIntentIssues(command.content,context);if(issues.length)throw new KnowledgeError(issues.join(' '),400,'INVALID_TRANSLATION');
     await c.query('COMMIT');
    }catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}
-   captured=await store.execute(owner,command,{content:command.content,captured:context});
+   captured=await store.execute(owner,command,{content:command.content,captured:context,operatorApiRequestId:input.requestId});
   }
   await options.afterCapture?.();
   if((await store.get(owner,captured.id)).state==='cancelled')return response(owner,input.requestId);

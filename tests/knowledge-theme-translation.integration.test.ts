@@ -13,6 +13,10 @@ import {createReviewQueue,reviewConfigSchema} from '../lib/server/knowledge-revi
 import {runKnowledgeReviewOnce} from '../scripts/knowledge-review-worker';
 import {createKnowledgeAcceptance} from '../lib/server/knowledge-acceptance';
 import {captureKnowledgeCapsule} from '../lib/client/capsule-knowledge';
+import {repairOperatorTranslationPrivacy} from '../lib/server/knowledge-operator-intake';
+import {submissionNotificationSummary} from '../lib/server/member/knowledge-submission-feedback';
+import {persistPublicationContributor,finalizePublicationContributor} from '../lib/server/member/knowledge-contributors';
+import {PUBLICATION_CONSENT_VERSION} from '../lib/domain/knowledge-review-job';
 const pool=new Pool({connectionString:process.env.MEMBER_DATABASE_URL,max:6}),knowledge=new Pool({connectionString:process.env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL,max:4});
 const owner=randomUUID(),other=randomUUID(),operator={kind:'operator' as const,id:'fixture'};
 let foundation:ReturnType<typeof createKnowledgeFoundationService>;
@@ -61,21 +65,57 @@ async function publish(s:ReturnType<typeof service>,v:SubmitThemeTranslation){
  await s.submit(owner,v);await pool.query("UPDATE member_knowledge.review_attempts SET started_at=clock_timestamp()-interval '2 minutes'");const dispatch=vi.fn(async()=>response());expect(await runKnowledgeReviewOnce(queue,cfg,dispatch)).toBe(true);expect(dispatch).toHaveBeenCalledTimes(1);
  const engine=createKnowledgeAcceptance(pool,knowledge,{});expect(await engine.run(cfg)).toBe(true);expect(await s.cancel(owner,v.requestId)).toMatchObject({state:'published'});await engine.run(cfg);return s.status(owner,v.requestId);
 }
-it('publishes and corrects a translation through normal review, preserving original/theme/Capsule editions and named attribution',async()=>{
+it('publishes system translations through common review while retaining only private operator ownership',async()=>{
  const s=service(),v=input(),resolved=await foundation.resolveTheme({kind:'reader',id:'fixture'},'theme'),cap=captureKnowledgeCapsule({title:'Saved',snapshot:resolved.snapshot}),saved=knowledgeDigest(cap);
  const accepted=await publish(s,v);expect(accepted).toMatchObject({state:'published',review:{items:[{state:'published',publication:{kind:'translation',revision:1}}]}});
  const read=await s.read(owner,{theme:v.theme,target,language:'en'});expect(read.translation).toMatchObject({revision:1,text:'A history'});expect((await foundation.resolveTheme({kind:'reader',id:'fixture'},'theme')).theme).toEqual(resolved.theme);
  expect((await foundation.get({kind:'reader',id:'fixture'},'theme','theme')).revision).toBe(1);expect(knowledgeDigest(cap)).toBe(saved);
- const contribution=(await pool.query('SELECT operation,attribution FROM member_knowledge.publication_contributors WHERE submission_id=$1',[accepted.submissionId])).rows[0];expect(contribution).toEqual({operation:'translate-text',attribution:'profile'});
+ expect((await pool.query('SELECT * FROM member_knowledge.publication_contributors WHERE submission_id=$1',[accepted.submissionId])).rows).toEqual([]);
+ expect((await pool.query('SELECT owner_id FROM member_knowledge.submissions WHERE id=$1',[accepted.submissionId])).rows[0].owner_id).toBe(owner);
+ expect((await pool.query("SELECT source_capsule->>'kind' AS kind FROM member_knowledge.submission_revisions WHERE submission_id=$1 AND revision=1",[accepted.submissionId])).rows[0].kind).toBe('operator-api');
+ expect(await createKnowledgeSubmissionService(pool,{memberStore:true,dataset:'public-kg'}).list(owner)).toEqual([]);
+ expect(await submissionNotificationSummary(pool,owner)).toMatchObject({unreadCount:0});
  await expect(s.submit(owner,{...input(),translation:{...v.translation,text:'History of A'}})).rejects.toMatchObject({code:'TRANSLATION_CONFLICT'});
  const update={...input(),translation:{...v.translation,text:'History of A',expectedRevision:1}};expect(await publish(s,update)).toMatchObject({state:'published',review:{items:[{publication:{revision:2}}]}});
  expect(await s.read(owner,{theme:v.theme,target,language:'en',revision:1})).toMatchObject({translation:{text:'A history',revision:1}});
  expect(await s.cancel(owner,update.requestId)).toMatchObject({state:'published'});expect((await s.read(owner,{theme:v.theme,target,language:'en'})).translation?.text).toBe('History of A');
  expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.revisions WHERE kind='theme'")).rows[0].n).toBe(1);
 });
-it('retains anonymous ownership while publishing no named activity',async()=>{
+it('retains private ownership independently of the legacy attribution preference',async()=>{
  const s=service(),v={...input(),attribution:'anonymous' as const};const result=await publish(s,v);
- expect((await pool.query('SELECT owner_id,attribution,activity_public FROM member_knowledge.publication_contributors WHERE submission_id=$1',[result.submissionId])).rows[0]).toMatchObject({owner_id:owner,attribution:'anonymous',activity_public:false});
+ expect((await pool.query('SELECT * FROM member_knowledge.publication_contributors WHERE submission_id=$1',[result.submissionId])).rows).toEqual([]);
+ expect((await pool.query('SELECT owner_id FROM member_knowledge.submissions WHERE id=$1',[result.submissionId])).rows[0].owner_id).toBe(owner);
+});
+
+it('keeps completed system history outside personal draft capacity and system pending capacity',async()=>{
+ const s=service(),v=input(),accepted=await publish(s,v),ids=Array.from({length:100},()=>randomUUID());
+ await pool.query("INSERT INTO member_knowledge.submissions(id,owner_id,current_revision,state_version,state) SELECT id,$2,1,1,'queued' FROM unnest($1::uuid[]) id",[ids,owner]);
+ await pool.query("INSERT INTO member_knowledge.submission_revisions(submission_id,revision,raw_input,content,digest,source_capsule,reference_context) SELECT id,1,r.raw_input,r.content,r.digest,r.source_capsule,r.reference_context FROM unnest($1::uuid[]) id CROSS JOIN member_knowledge.submission_revisions r WHERE r.submission_id=$2 AND r.revision=1",[ids,accepted.submissionId]);
+ await pool.query("INSERT INTO member_knowledge.submission_receipts(submission_id,revision,digest,submitted_at) SELECT id,1,'fixture',clock_timestamp()-interval '2 days' FROM unnest($1::uuid[]) id",[ids]);
+ await pool.query("INSERT INTO member_knowledge.review_jobs(id,submission_id,revision,item_key,submitted_digest,consent_version,consent_profile_id,state) SELECT gen_random_uuid(),id,1,'translation','fixture',$2,'google-gemini-free-publish-v1','published' FROM unnest($1::uuid[]) id",[ids,PUBLICATION_CONSENT_VERSION]);
+ const store=createKnowledgeSubmissionService(pool,{memberStore:true,dataset:'public-kg'}),draft=await store.get(owner,accepted.submissionId),manual=randomUUID();
+ await expect(store.execute(owner,{action:'save',requestId:randomUUID(),id:manual,expectedVersion:0,content:{...draft.content,title:'個人の草稿'}})).resolves.toMatchObject({id:manual});
+ expect((await store.list(owner)).map(x=>x.id)).toEqual([manual]);
+ await expect(s.submit(owner,{...input(),translation:{...v.translation,text:'History of A',expectedRevision:1}})).resolves.toMatchObject({state:'processing'});
+});
+
+it('repairs old API credits without modifying originals, personal form drafts, ownership or immutable retries',async()=>{
+ const s=service(),v=input(),result=await publish(s,v),publication=result.review!.items[0].publication!;
+ // The old API captured the exact same server template without a route marker.
+ await pool.query("UPDATE member_knowledge.submission_revisions SET source_capsule=(source_capsule-'requestId')||'{\"kind\":\"selection\"}'::jsonb WHERE submission_id=$1",[result.submissionId]);
+ const decision=(await pool.query('SELECT id FROM member_knowledge.publication_decisions WHERE job_id=(SELECT id FROM member_knowledge.review_jobs WHERE submission_id=$1)',[result.submissionId])).rows[0].id;
+ const c=await pool.connect();try{await persistPublicationContributor(c,{decisionId:decision,ownerId:owner,attribution:'profile',recordId:publication.id!,submissionId:result.submissionId,submissionRevision:1,operation:'translate-text',entityIds:[],themeIds:['theme']});await finalizePublicationContributor(c,decision,{id:publication.id!,revision:publication.revision!});}finally{c.release();}
+ const store=createKnowledgeSubmissionService(pool,{memberStore:true,dataset:'public-kg'}),draft=await store.get(owner,result.submissionId);
+ const manualId=randomUUID();await store.execute(owner,{action:'save',requestId:randomUUID(),id:manualId,expectedVersion:0,content:{...draft.content,title:'訳文の投稿',items:draft.content.items.map(i=>({...i,about:undefined}))}},{content:{...draft.content,title:'訳文の投稿',items:draft.content.items.map(i=>({...i,about:undefined}))},captured:draft.context});
+ const before=(await pool.query('SELECT raw_input,content,digest FROM member_knowledge.submission_revisions WHERE submission_id=$1',[result.submissionId])).rows;
+ expect(await repairOperatorTranslationPrivacy(pool,[owner])).toMatchObject({systemIntakes:1,personalCredits:1,applied:false});
+ expect(await repairOperatorTranslationPrivacy(pool,[owner],true)).toMatchObject({systemIntakes:1,personalCredits:1,applied:true});
+ expect(await repairOperatorTranslationPrivacy(pool,[owner],true)).toMatchObject({systemIntakes:1,personalCredits:0});
+ expect((await pool.query('SELECT raw_input,content,digest FROM member_knowledge.submission_revisions WHERE submission_id=$1',[result.submissionId])).rows).toEqual(before);
+ expect((await pool.query('SELECT * FROM member_knowledge.publication_contributors WHERE submission_id=$1',[result.submissionId])).rows).toEqual([]);
+ expect((await pool.query('SELECT owner_id FROM member_knowledge.submissions WHERE id=$1',[result.submissionId])).rows[0].owner_id).toBe(owner);
+ expect((await store.list(owner)).map(x=>x.id)).toEqual([manualId]);
+ expect(await s.submit(owner,v)).toMatchObject({state:'published',submissionId:result.submissionId});
 });
 it('never submits a later member edit when retrying an interrupted capture',async()=>{
  const v=input(),s=createThemeTranslationAuthoring(pool,knowledge,'https://plunode.net',authorize,{afterCapture:async()=>{throw Error('lost');}});await expect(s.submit(owner,v)).rejects.toThrow('lost');

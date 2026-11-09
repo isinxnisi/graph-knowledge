@@ -48,7 +48,7 @@ const dto = (row: QueryResultRow): KnowledgeSubmission => ({
 
 /** Private repository. Member mode locks/rechecks the authenticated user in
  * the same database transaction. This never writes to public knowledge. */
-export function createKnowledgeSubmissionService(pool: Pool, options?: { memberStore: true; dataset: DatasetMode }) {
+export function createKnowledgeSubmissionService(pool: Pool, options?: { memberStore: true; dataset: DatasetMode; trustedOrigin?:'operator-api' }) {
   const schema=options?.memberStore ? "member_knowledge" : "knowledge75";
   let verified: Promise<void> | undefined;
   let reviewVerified:Promise<void>|undefined;
@@ -82,13 +82,13 @@ export function createKnowledgeSubmissionService(pool: Pool, options?: { memberS
     async replay(ownerId:string,requestId:string,digest:string){return transaction(owner(ownerId),async c=>{const row=(await c.query(`SELECT digest,response FROM ${schema}.submission_requests WHERE owner_id=$1 AND request_id=$2`,[ownerId,requestId])).rows[0];if(!row)return null;if(row.digest!==digest)throw new KnowledgeError("同じ操作IDの内容が異なります",409,"REQUEST_CONFLICT");return row.response as KnowledgeSubmission;});},
     async list(ownerId: string) {
       ownerId=owner(ownerId);
-      return transaction(ownerId,async c=>(await c.query(`SELECT s.id,s.state,s.state_version AS version,s.current_revision AS revision,s.created_at,s.updated_at,r.content->>'title' AS title,jsonb_array_length(r.content->'items') AS item_count,to_jsonb(r)->'source_capsule'->>'title' AS capsule_title FROM ${schema}.submissions s JOIN ${schema}.submission_revisions r ON r.submission_id=s.id AND r.revision=s.current_revision WHERE s.owner_id=$1 ORDER BY s.updated_at DESC,s.id LIMIT 200`,[ownerId])).rows.map(r=>({id:r.id,state:r.state,version:r.version,revision:r.revision,title:r.title,itemCount:r.item_count,capsuleTitle:r.capsule_title,createdAt:stamp(r.created_at),updatedAt:stamp(r.updated_at)})));
+      return transaction(ownerId,async c=>(await c.query(`SELECT s.id,s.state,s.state_version AS version,s.current_revision AS revision,s.created_at,s.updated_at,r.content->>'title' AS title,jsonb_array_length(r.content->'items') AS item_count,to_jsonb(r)->'source_capsule'->>'title' AS capsule_title FROM ${schema}.submissions s JOIN ${schema}.submission_revisions r ON r.submission_id=s.id AND r.revision=s.current_revision WHERE s.owner_id=$1 AND COALESCE(to_jsonb(r)->'source_capsule'->>'kind','')<>'operator-api' ORDER BY s.updated_at DESC,s.id LIMIT 200`,[ownerId])).rows.map(r=>({id:r.id,state:r.state,version:r.version,revision:r.revision,title:r.title,itemCount:r.item_count,capsuleTitle:r.capsule_title,createdAt:stamp(r.created_at),updatedAt:stamp(r.updated_at)})));
     },
     async get(ownerId: string, id: string) {
       ownerId = owner(ownerId); id = z.uuidv4().parse(id);
       return transaction(ownerId, c => read(c, ownerId, id));
     },
-    async execute(ownerId: string, raw: unknown, publicCapture?:{content:KnowledgeSubmission["content"];captured:unknown}): Promise<KnowledgeSubmission> {
+    async execute(ownerId: string, raw: unknown, publicCapture?:{content:KnowledgeSubmission["content"];captured:unknown;operatorApiRequestId?:string}): Promise<KnowledgeSubmission> {
       ownerId = owner(ownerId);
       if (Buffer.byteLength(JSON.stringify(raw)) > 128_000) throw new KnowledgeError("投稿が128KBを超えています", 413, "TOO_LARGE");
       let input = knowledgeTranslationCaptureSchema.safeParse(raw).success?knowledgeTranslationCaptureSchema.parse(raw):knowledgeSelectionCaptureSchema.safeParse(raw).success?knowledgeSelectionCaptureSchema.parse(raw):knowledgePublicCaptureSchema.safeParse(raw).success?knowledgePublicCaptureSchema.parse(raw):knowledgeSubmissionCaptureSchema.safeParse(raw).success ? knowledgeSubmissionCaptureSchema.parse(raw) : knowledgeSubmissionCommandSchema.parse(raw);
@@ -128,19 +128,22 @@ export function createKnowledgeSubmissionService(pool: Pool, options?: { memberS
         if (seed?.state === "cancelled") throw new KnowledgeError("取消済みの投稿です", 409, "CANCELLED");
         if(options?.memberStore && !sourceCapsule && seed)sourceCapsule=(await c.query(`SELECT source_capsule FROM ${schema}.submission_revisions WHERE submission_id=$1 AND revision=$2`,[input.id,seed.current_revision])).rows[0]?.source_capsule??null;
         if(input.action==='save'&&publicCapture)sourceCapsule={...((sourceCapsule as object|null)??{kind:"references"}),captured:publicCapture.captured};
+        // Trusted server routing only; never derive public identity from a
+        // caller-controlled title, account role or submission content field.
+        if(input.action==='save'&&options?.trustedOrigin==='operator-api')sourceCapsule={...((sourceCapsule as object|null)??{}),kind:'operator-api',...(publicCapture?.operatorApiRequestId?{requestId:z.uuidv4().parse(publicCapture.operatorApiRequestId)}:{})};
         if(options?.memberStore){
           const n=Number((await c.query(`SELECT count(*) AS n FROM ${schema}.submission_requests WHERE owner_id=$1 AND created_at>clock_timestamp()-interval '10 minutes'`,[ownerId])).rows[0].n);
           if(n>=120&&input.action!=="cancel")throw new KnowledgeError("少し待ってから操作してください",429,"RATE_LIMITED");
-          if(input.action==="submit" && Number((await c.query(`SELECT count(*) AS n FROM ${schema}.submission_receipts r JOIN ${schema}.submissions s ON s.id=r.submission_id WHERE s.owner_id=$1 AND r.submitted_at>clock_timestamp()-interval '1 hour'`,[ownerId])).rows[0].n)>=20)throw new KnowledgeError("受付上限です。時間をおいて再試行してください",429,"RATE_LIMITED");
+          if(input.action==="submit" && Number((await c.query(`SELECT count(*) AS n FROM ${schema}.submission_receipts r JOIN ${schema}.submissions s ON s.id=r.submission_id JOIN ${schema}.submission_revisions original ON original.submission_id=r.submission_id AND original.revision=r.revision WHERE s.owner_id=$1 AND (COALESCE(original.source_capsule->>'kind','')='operator-api')=$2 AND r.submitted_at>clock_timestamp()-interval '1 hour'`,[ownerId,options.trustedOrigin==='operator-api'])).rows[0].n)>=20)throw new KnowledgeError("受付上限です。時間をおいて再試行してください",429,"RATE_LIMITED");
           if(input.action==="save"){
-            const bytes=Number((await c.query(`SELECT COALESCE(sum(octet_length(r.raw_input::text)+octet_length(r.content::text)+COALESCE(octet_length(r.source_capsule::text),0)),0)+(SELECT COALESCE(sum(octet_length(response::text)),0) FROM ${schema}.submission_requests WHERE owner_id=$1) AS n FROM ${schema}.submission_revisions r JOIN ${schema}.submissions s ON s.id=r.submission_id WHERE s.owner_id=$1`,[ownerId])).rows[0].n);
-            if(bytes+Buffer.byteLength(JSON.stringify(input.content))*4+Buffer.byteLength(JSON.stringify(sourceCapsule))*2+4096>20_000_000 || (seed?.current_revision??0)>=100)throw new KnowledgeError("投稿の保存容量上限です",422,"STORAGE_LIMIT");
+            const bytes=options.trustedOrigin?0:Number((await c.query(`SELECT COALESCE(sum(octet_length(r.raw_input::text)+octet_length(r.content::text)+COALESCE(octet_length(r.source_capsule::text),0)),0)+(SELECT COALESCE(sum(octet_length(request.response::text)),0) FROM ${schema}.submission_requests request LEFT JOIN ${schema}.submission_revisions original ON original.submission_id=(request.response->>'id')::uuid AND original.revision=(request.response->>'revision')::integer WHERE request.owner_id=$1 AND COALESCE(original.source_capsule->>'kind','')<>'operator-api') AS n FROM ${schema}.submission_revisions r JOIN ${schema}.submissions s ON s.id=r.submission_id WHERE s.owner_id=$1 AND COALESCE(r.source_capsule->>'kind','')<>'operator-api'`,[ownerId])).rows[0].n);
+            if(!options.trustedOrigin&&bytes+Buffer.byteLength(JSON.stringify(input.content))*4+Buffer.byteLength(JSON.stringify(sourceCapsule))*2+4096>20_000_000 || (seed?.current_revision??0)>=100)throw new KnowledgeError("投稿の保存容量上限です",422,"STORAGE_LIMIT");
           }
         }
         if (input.action === "save") {
           const revision = seed ? seed.current_revision + 1 : 1;
           if (!seed) {
-            const count = Number((await c.query(`SELECT count(*) AS n FROM ${schema}.submissions WHERE owner_id=$1 AND state<>'cancelled'`, [ownerId])).rows[0].n);
+            const count = Number((await c.query(`SELECT count(*) AS n FROM ${schema}.submissions s JOIN ${schema}.submission_revisions original ON original.submission_id=s.id AND original.revision=s.current_revision WHERE s.owner_id=$1 AND s.state<>'cancelled' AND (COALESCE(to_jsonb(original)->'source_capsule'->>'kind','')='operator-api')=$2 ${options?.trustedOrigin?`AND (NOT EXISTS(SELECT 1 FROM ${schema}.review_jobs j WHERE j.submission_id=s.id AND j.revision=s.current_revision) OR EXISTS(SELECT 1 FROM ${schema}.review_jobs j WHERE j.submission_id=s.id AND j.revision=s.current_revision AND j.state NOT IN('published','needs-changes','declined','cancelled')))` : ''}`, [ownerId,options?.trustedOrigin==='operator-api'])).rows[0].n);
             if (count >= 100) throw new KnowledgeError("保存できる投稿の上限です", 429, "LIMIT_REACHED");
             await c.query(`INSERT INTO ${schema}.submissions(id,owner_id,current_revision,state_version,state) VALUES($1,$2,1,1,'draft')`, [input.id, ownerId]);
           } else await c.query(`UPDATE ${schema}.submissions SET current_revision=$2,state_version=state_version+1,state='draft',updated_at=clock_timestamp() WHERE id=$1`, [input.id, revision]);
