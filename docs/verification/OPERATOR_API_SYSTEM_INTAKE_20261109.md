@@ -4,7 +4,7 @@
 
 ## 完了条件と現在地
 
-①露出箇所確認・②実装とβ検証・③既存データの限定補修と正式反映／確認の3工程。現在は②の実装・検証中で、本番の公開帰属はまだ是正前。
+①露出箇所確認・②実装とβ検証・③既存データの限定補修と正式反映／確認の3工程。①・②を完了し、③は本番資材の転送・照合まで完了。本番の公開帰属はまだ是正前で、既存sudoの本人入力が残る。
 
 ## 境界
 
@@ -16,4 +16,14 @@
 
 ## 検証・配置
 
-検証・β／正式反映の結果は実施後に追記する。既存のa5b82aae／正式build vdygDVSqogk2drMutfW3Uから、今回の修正だけを追加する。無関係な自動開発変更・設定・KG／OS更新は含めない。
+- app source `a9f2deaa831992463cdb676d215be4c6bdcc6327`。localhost3200／HTTPS βへbuild `ayda-KKHQdO56T_QdP8ju`を反映。本番候補は `XLE-FT07_ebW1CI2ERHw7`。
+- 訳文APIの単体／schema／MCP 11件＋実PostgreSQL統合10件、通知／帰属の実PostgreSQL 16件、計37件に成功。一般ユーザーの記名／匿名、system投入100件と個人草稿容量、未読除外、旧API分補修・再実行・不変digest／owner・同一request再送を検証。関連lint・型検査とβ／正式buildに成功。
+- βのmember DB 86表をbackupして別の内部networkの一時PGへ復元し、同じ正式ops image／補修CLIでplan→apply→applyを確認。βの旧API固有形式該当は0件で、通常フォームの訳文投稿は保持。初回の稼働中dumpと取得後fingerprintの比較はWorker更新で一致せず、Web／β Worker停止中の一貫したsnapshotで再検証して成功した。正式も停止後にbackup・fingerprintを採る。
+- βは14 private設定と会員39件のmigration checksumを保持。Webとβ Workerを再開。実Googleセッションで年表と個人投稿28件／未読15件の通常表示を確認。HTTPのlocalhost版IDも一致。HTTPS βは実Chromeで確認（Python UAはCloudflare1010で拒否されるため、HTTP確認成功とは扱わない）。
+- 正式Web image `plunode-web:operator-intake-a9f2deaa`、manifest `sha256:0c694e8ec2525266e8f7692d40649bea75034d1075cf32791aa737ef0567e981`。ops `plunode-knowledge-ops:operator-intake-a9f2deaa`、manifest `sha256:7f8b3272dd4c05105af7155b457e677af647ad3cdfb4a9c0a46d7a9798cec00d`。archiveの全layer／configを検証し、VPSへの転送hashとrunner `--check`に成功。
+- 正式切替scriptは現在のa5b82aae／build vdygDVSqogk2drMutfW3U、Web＋ops5alias、private設定hash、会員39／知識9 checksumを固定。最新member／knowledge backup・別DBで限定補修と再実行・既知16API requestの一致・暗号化復号hash確認を通してから、同じ補修を正式へ適用する。更新対象以外の全表fingerprintと知識全表、private owner／本文／取得断面digestを比較する。
+- `scripts/release-operator-intake-production.py`はWebと3 Workerを切替。元の本文や版を削除せず、schema migration、KG／OS、認証／予算設定を変更しない。失敗時は古いdumpでDBを戻さず、補修開始後は互換の新runtimeへ復帰する。
+
+## 正式反映の再開
+
+開発PCのPowerShellで `wsl -d Ubuntu -- python3 /home/isinxnisi/1.projects/7.graph-knowledge/backups/operator-intake-20261109/run-release.py`。既存sudoはパスワード要求のため本人入力が必要。完了後はactivated記録、暗号化backup、既知訳文の公開creditなし、プロフィール／未読、同じrequestの再送を正式URLで確認する。現時点では正式の修正完了・個人露出解消とは報告しない。

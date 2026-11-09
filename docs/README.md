@@ -1,5 +1,7 @@
 2026-11-09 年表の文章の英訳是正：①不足整理・②実装／検証・③全環境反映と9訳文の通常公開・正式PC／390px確認まで完了｜今回の3工程は完了。app a5b82aae、β 1ZiD7iwB_PfTU1c2DCBLR、正式 vdygDVSqogk2drMutfW3U。見出し・時期ラベル・詳細補足を訳文へ接続し、正式Theme版6と原本snapshotを保持。会員39／知識9 migration・設定・KGは不変、切替手順補修6270664b。[完了結果・制約](verification/TIMELINE_TEXT_TRANSLATIONS_20261109.md)。以下は各時点の履歴。
 
+
+- 2026-11-09 運営APIのシステム投入是正：[検証・正式反映の再開](verification/OPERATOR_API_SYSTEM_INTAKE_20261109.md)。個人の投稿帰属／活動／通知から分離し、一般投稿を保持。本番切替は未完了。
 2026-11-09 年表UI英語是正：①漏れ確認・②実装／59件と両build・③全環境反映と正式Duration／Same day・390px／PC確認まで完了｜今回の3工程は完了。app 7e0030a6、β rxaLFSX_EqnMFhQ635Iav、正式 KueewANztR3-wx0mBDHhb。会員39／知識9・Worker・設定は保持。入力された期間名等の訳文対象不足と、読込中／補助ラベルの別の漏れは残件として記録。[検証と制約](verification/TIMELINE_UI_LOCALE_20261109.md)。以下は各時点の履歴。
 
 2026-11-09 年表UI英語是正：①漏れ確認・②実装／59件と両build・③localhost／HTTPS βの英語と390px／PC確認まで完了｜残りは③正式Web切替・正式確認｜今回の工程は3まで。app 7e0030a6、β rxaLFSX_EqnMFhQ635Iav、正式候補 KueewANztR3-wx0mBDHhb。固定UIを修正し、作者が入力した期間名等の翻訳対象不足は別記。本番は旧buildで、sudo本人入力待ち。DB／Worker変更なし。[検証と再開](verification/TIMELINE_UI_LOCALE_20261109.md)。以下は各時点の履歴。
