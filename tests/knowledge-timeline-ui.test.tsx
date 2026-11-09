@@ -74,16 +74,16 @@ it("opens settings below the heading and retains their values after closing", ()
   fireEvent.click(summary);
   expect(summary.getAttribute("aria-expanded")).toBe("true");
   fireEvent.change(screen.getByRole("combobox", { name: "暦の表示単位" }), { target: { value: "month" } });
-  fireEvent.change(screen.getByRole("combobox", { name: "たどる対象" }), { target: { value: "b" } });
+  fireEvent.change(screen.getByRole("combobox", { name: "線でたどる" }), { target: { value: "b" } });
   expect(summary.getAttribute("aria-label")).toBe("年表の表示設定：月 · 対象b");
   fireEvent.click(summary);
   expect(summary.getAttribute("aria-expanded")).toBe("false");
-  expect(screen.queryByRole("combobox", { name: "たどる対象" })).toBeNull();
+  expect(screen.queryByRole("combobox", { name: "線でたどる" })).toBeNull();
   expect(screen.getAllByRole("button", { name: /^装画と挿絵を手掛けた/ })).toHaveLength(2);
   expect(onFocus).not.toHaveBeenCalled();
   fireEvent.click(summary);
   expect((screen.getByRole("combobox", { name: "暦の表示単位" }) as HTMLSelectElement).value).toBe("month");
-  expect((screen.getByRole("combobox", { name: "たどる対象" }) as HTMLSelectElement).value).toBe("b");
+  expect((screen.getByRole("combobox", { name: "線でたどる" }) as HTMLSelectElement).value).toBe("b");
 });
 
 it("does not add phantom range endings for coarse dated events in the normal knowledge timeline", () => {

@@ -14,7 +14,7 @@ test("検索の応答が止まっても再検索でき、入力変更による�
   });
   try {
     await page.goto("/");
-    const search = page.getByRole("region", { name: "対象を探す", exact: true });
+    const search = page.getByRole("region", { name: "名前から探す", exact: true });
     await search.getByLabel("名前・別名").fill("青葉");
     await page.clock.install();
     await search.getByRole("button", { name: "名前で検索", exact: true }).click();

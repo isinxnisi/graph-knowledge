@@ -1,5 +1,5 @@
 const ja = {
-  title: "対象を探す", name: "名前・別名", kind: "検索対象", all: "すべて",
+  title: "名前から探す", name: "名前・別名", kind: "検索対象", all: "すべて",
   kinds: { person: "人物", work: "作品", organization: "組織", event: "出来事" },
   discoverConnections: "つながりを見つける", searchByName: "名前で検索",
   submit: "検索", submitting: "検索中…", loading: "検索結果を取得中…",
@@ -11,7 +11,7 @@ const ja = {
   aliases: "別名", count: (count: number) => `${count}件の候補`,
 };
 const en: typeof ja = {
-  title: "Find an entity",
+  title: "Find by name",
   name: "Name or alias",
   kind: "Search for",
   all: "All kinds",

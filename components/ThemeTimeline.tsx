@@ -64,7 +64,7 @@ function RecordContext({
   const entity = (id: string) => {
     const value = entities.find((e) => e.id === id);
     return (
-      <span className={css.entityTag} data-entity-id={id} data-subject-focus={focusedEntityId===id||undefined} title={focusedEntityId===id?tr("探索から選択している対象","Subject selected in exploration"):undefined}>
+      <span className={css.entityTag} data-entity-id={id} data-subject-focus={focusedEntityId===id||undefined} title={focusedEntityId===id?tr("探索で選択中","Selected in exploration"):undefined}>
         <i
           className={css.entityShape}
           data-shape={value?.kind === "人物" ? "circle" : "round-rectangle"}
@@ -558,7 +558,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
         ) : (
           <>
             {lanes.length > 0 && group.kind !== "none" && (
-              <div className={css.laneKey} aria-label={tr("たどっている主語の対象","Subjects being followed")}>
+              <div className={css.laneKey} aria-label={tr("線でたどっている名前","Names being followed")}>
                 {lanes.map((id) => (
                   <span key={id}>
                     <i style={{ backgroundColor: color(id) }} />
@@ -566,7 +566,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                   </span>
                 ))}
                 {!activeTrace && subjectIds.length > 5 && (
-                  <small>{tr("ほかの対象は上の選択欄から","Choose other subjects above")}</small>
+                  <small>{tr("ほかの名前は上の選択欄から","Choose other names above")}</small>
                 )}
               </div>
             )}
@@ -592,9 +592,9 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
         <option value="auto">{tr("自動","Auto")}</option><option value="year">{tr("年","Year")}</option><option value="month">{tr("月","Month")}</option><option value="day">{tr("日","Day")}</option><option value="hour">{tr("時間","Hour")}</option>
       </select>
     </label>}
-    {subjects.length > 1 && <label className={css.traceSelect}>{tr("たどる対象","Follow a subject")}
-      <select aria-label={tr("たどる対象","Follow a subject")} value={activeTrace} onChange={(e) => setTrace(e.target.value)}>
-        <option value="">{subjects.length > 5 ? tr("先頭の5対象","First 5 subjects") : tr("すべて","All")}</option>
+    {subjects.length > 1 && <label className={css.traceSelect}>{tr("線でたどる","Follow connections for")}
+      <select aria-label={tr("線でたどる","Follow connections for")} value={activeTrace} onChange={(e) => setTrace(e.target.value)}>
+        <option value="">{subjects.length > 5 ? tr("先頭の5件","First 5 names") : tr("すべて","All")}</option>
         {subjects.map((id) => <option key={id} value={id}>{name(id)}</option>)}
       </select>
     </label>}
