@@ -22,10 +22,21 @@
 - Chromeの実画面で英語の表示設定・Auto/Year/Month/Day/Hour・Timeline guide／Graph guide・日単位の説明・Same year・Time range (unclassified)を確認。年単位からAutoへ戻し設定を閉じた。390×844と1920pxで横はみ出しなし。実iPhone端末では未確認。
 - βに保存済みのWebb期間は未分類範囲であり、英語Duration／Same dayは今回の英語fixtureで確認。正式テーマの該当データによる実画面確認は切替後に行う。作者が入力した期間名が日本語のままであることを確認し、固定UIと混同しない。
 
-### 正式資材と残り
+### 切替前の正式資材と残り（履歴）
 
 正式候補build `KueewANztR3-wx0mBDHhb`、tag `plunode-web:timeline-ui-7e0030a6`。config ID `sha256:68d46d1007d873dd9a24fa8a5e9bc3538f6a0c3dcad3e1535ce57a0260ed7f98`、manifest ID `sha256:84742692603050d0fbc4806ebc3e274f637977c2a579d5745d44f981ec46d9de`。standaloneの起動・正式build・robots HTTP200・既存AI公開artifactのhash一致を確認。archiveのconfig／manifest／layers／sourceの照合と転送先checksum照合を完了した。
 
 **正式VPSは未更新**。現行source `bbd9503c`／build `S36Jte03E0skpM32EgDrk`から、Webだけを切替する準備済み。実物Compose・env hash・会員39／知識9 migration checksumを再照合し、Web構成をbackupして短い再起動を行う。DB／Worker／OS／KG／AI artifactは更新しない。失敗時は保存形式が同じ直前Webへ戻し、DB dumpを復元しない。
 
 実行待ちrunnerは開発PCの`/home/isinxnisi/1.projects/7.graph-knowledge/backups/timeline-ui-20261109/run-release.py`。VPSのsudoには本人のterminal入力が必要。runnerは共通guardを取得・解放する。切替実行・正式URLのDuration／Same day確認が残る。
+
+
+### 正式切替後の受入完了
+
+本人のsudo実行後、遠隔activation.logを取得しsource／build／imageと不変判定を照合した。正式build `KueewANztR3-wx0mBDHhb` の静的manifestがHTTP200。構成backupは`/opt/graph-knowledge/backups/timeline-ui-web-20261109T004449Z`。会員39／知識9・全migration checksum、Worker・設定・KG・AI artifactは不変で、DB復元も行っていない。
+
+正式英語URLのWebb構成版6で、実データの`Duration: 2021-12-28 → 2022-01-04`と`Same day`を実Chromeで確認した。390×844と通常1920pxで横はみ出しなし。確認後はviewport overrideを解除。localhost3200とWindowsからのHTTPS βも同じβbuildでHTTP200を再確認した（WSL urllibは403のためWindowsで照合）。追加build・全テスト再実行は行わず、前工程の59件・lint・型検査込み両buildを活用した。
+
+確認URL: https://plunode.net/en?ktheme=theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1&krev=6&kview=split
+
+証跡: 開発PC `C:/Users/nishr/.codex/tmp/timeline-ui-locale-formal-20261109.png`。実iPhoneの確認は行っていない。作者入力の期間名・軸名・範囲の補足など、未訳の登録文字列は残る。また今回の実画面で、テーマ読込中の固定文言と分割幅separatorの補助ラベルに日本語が残ることを別途記録した。今回修正した期間／同日表記の本番反映と、全画面・全データの多言語完了を混同しない。
