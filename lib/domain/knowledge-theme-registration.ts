@@ -1,4 +1,5 @@
 import {z} from 'zod';
+import {productPinSchema,productAuthoringCommandSchema} from "./product-authoring";
 import {readThemeTranslationSchema,submitThemeTranslationSchema} from './knowledge-theme-translation';
 import {missionMcpPackageSchema} from './knowledge-mission-mcp';
 import {knowledgeThemeContentSchema,knowledgePinSchema,knowledgeTimelineSchema,knowledgeIdSchema} from './knowledge-foundation';
@@ -15,6 +16,7 @@ export const themeRegistrationInputSchema=z.strictObject({
  package:missionMcpPackageSchema.nullable().default(null),
  recordKeys:z.array(z.string().min(1).max(160)).max(20).default([]),
  recordPins:z.array(knowledgePinSchema).max(200).default([]),
+ productPins:z.array(productPinSchema).max(24).optional().describe("Optional exact product revisions returned by save_product. Images and products may be added later."),
  timeline:knowledgeTimelineSchema.optional(),
 }).superRefine((v,c)=>{
  const keys=v.package?.items.map(i=>i.key)??[];
@@ -36,6 +38,7 @@ export const themeUpdateInputSchema=z.strictObject({
   description:z.string().max(8000).optional(),
   textLanguages:knowledgeThemeContentSchema.shape.textLanguages,
   initialView:z.enum(['graph','timeline','split']).optional(),
+  productPins:z.array(productPinSchema).max(24).optional().describe("Complete product selection for the new theme edition. Omit to retain; [] removes only from the new edition."),
   timeline:knowledgeTimelineSchema.nullable().optional(),
  }).default({}),
  package:missionMcpPackageSchema.nullable().default(null),
@@ -61,6 +64,7 @@ export type ThemeUpdateInput=z.infer<typeof themeUpdateInputSchema>;
 export const themeAuthoringRequestSchema=z.union([themeRegistrationInputSchema,themeUpdateInputSchema]);
 export type ThemeAuthoringRequest=z.infer<typeof themeAuthoringRequestSchema>;
 export const themeRegistrationCommandSchema=z.discriminatedUnion('action',[
+ ...productAuthoringCommandSchema.options,
  readThemeTranslationSchema.extend({action:z.literal('read-translation')}),
  submitThemeTranslationSchema.safeExtend({action:z.literal('submit-translation')}),
  z.strictObject({action:z.literal('translation-status'),requestId:z.uuidv4()}),

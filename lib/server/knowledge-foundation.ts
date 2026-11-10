@@ -397,7 +397,7 @@ export function createKnowledgeFoundationService(pool: Pool,options:{prepareSche
             timeline=appendKnowledgeTimelineRecord(timeline,cmd.record.id,r.times,definitions,knowledgeDigest);
           }
           const snapshot=await capture(c,recordPins,{timeline,initialView:old.content.initialView,publicOnly:true});
-          await put('theme',p.id,{...old.content,...snapshotPins(snapshot),...(timeline?{timeline}:{})},h.current_revision+1,'確認済みの投稿をテーマへ追加');
+          await put('theme',p.id,{...old.content,readingBaseRevision:undefined,...snapshotPins(snapshot),...(timeline?{timeline}:{})},h.current_revision+1,'確認済みの投稿をテーマへ追加');
           appliedThemes.push({id:p.id,revision:h.current_revision+1});
         }
         result={...(result as object),...(appliedThemes.length?{themes:appliedThemes}:{}),disposition:unchanged?(themeChanged?'theme-linked':'existing'):cmd.expectedRevision?'updated':'created'};
@@ -426,7 +426,7 @@ export function createKnowledgeFoundationService(pool: Pool,options:{prepareSche
         result = await put(cmd.kind, cmd.id, content, cmd.expectedRevision + 1, cmd.reason);
       } else if (cmd.action === "create-theme") {
         const snapshot = await capture(c, cmd.recordPins, { entityPins: cmd.entityPins, sourcePins: cmd.sourcePins, timeline: cmd.timeline, initialView: cmd.initialView, publicOnly: true });
-        result = await put("theme", cmd.id, { title: cmd.title, description: cmd.description, ...(cmd.textLanguages ? { textLanguages: cmd.textLanguages } : {}), ...snapshotPins(snapshot), ...(cmd.timeline ? { timeline: cmd.timeline } : {}), initialView: cmd.initialView }, 1, cmd.reason);
+        result = await put("theme", cmd.id, { title: cmd.title, description: cmd.description, ...(cmd.productPins ? {productPins:cmd.productPins}:{}), ...(cmd.textLanguages ? { textLanguages: cmd.textLanguages } : {}), ...snapshotPins(snapshot), ...(cmd.timeline ? { timeline: cmd.timeline } : {}), initialView: cmd.initialView }, 1, cmd.reason);
       } else if (cmd.action === "edit-theme") {
         const h = await head(c, "theme", cmd.id, "FOR UPDATE"); expected(h.current_revision, cmd.expectedRevision);
         if(h.visibility!=="public")throw new KnowledgeError("公開中のテーマを選び直してください",409,"REFERENCE_NOT_PUBLIC");
@@ -441,7 +441,15 @@ export function createKnowledgeFoundationService(pool: Pool,options:{prepareSche
           return p?[{id:p.id,revision:p.revision}]:[];
         });
         const snapshot=await capture(c,cmd.recordPins,{entityPins,mappingPins,timeline:cmd.timeline,initialView:cmd.initialView,publicOnly:true});
-        const content={title:cmd.title,description:cmd.description,...(cmd.textLanguages?{textLanguages:cmd.textLanguages}:{}),...snapshotPins(snapshot),...(cmd.timeline?{timeline:cmd.timeline}:{}),initialView:cmd.initialView};
+        const content={title:cmd.title,description:cmd.description,...((cmd.productPins??old.content.productPins)?{productPins:cmd.productPins??old.content.productPins}:{}),...(cmd.textLanguages?{textLanguages:cmd.textLanguages}:{}),...snapshotPins(snapshot),...(cmd.timeline?{timeline:cmd.timeline}:{}),initialView:cmd.initialView};
+        // Product selection is editorial metadata: preserve the checked reading/SEO
+        // presentation only when every knowledge/text/time pin is unchanged.
+        const readingBody=(value:Record<string,unknown>)=>{const {productPins,readingBaseRevision,...body}=value;void productPins;void readingBaseRevision;return knowledgeDigest(body);};
+        if((cmd.productPins!==undefined||old.content.productPins!==undefined)&&readingBody(content)===readingBody(old.content)){
+          const editions=(await c.query("SELECT revision,content FROM knowledge75.revisions WHERE kind='theme' AND id=$1 AND revision<=$2 ORDER BY revision DESC LIMIT 50",[cmd.id,old.revision])).rows;
+          const origin=old.content.readingBaseRevision??[...editions].reverse().find(v=>readingBody(v.content)===readingBody(content))?.revision??old.revision;
+          Object.assign(content,{readingBaseRevision:Number(origin)});
+        }
         result=knowledgeDigest(content)===knowledgeDigest(old.content)?old:await put("theme",cmd.id,content,cmd.expectedRevision+1,cmd.reason);
       } else if (cmd.action === "refresh-theme") {
         const h = await head(c, "theme", cmd.id, "FOR UPDATE"); expected(h.current_revision, cmd.expectedRevision);
@@ -453,7 +461,7 @@ export function createKnowledgeFoundationService(pool: Pool,options:{prepareSche
           records.push(...cmd.recordPins);
         } else for (const p of old.content.recordPins) records.push(pin(await version(c, "record", p.id)));
         const snapshot = await capture(c, records, { entityPins: cmd.entityPins, sourcePins: cmd.sourcePins, timeline: old.content.timeline, initialView: old.content.initialView, publicOnly: h.visibility === "public" });
-        result = await put("theme", cmd.id, { ...old.content, ...snapshotPins(snapshot) }, cmd.expectedRevision + 1, cmd.reason);
+        result = await put("theme", cmd.id, { ...old.content, readingBaseRevision:undefined, ...snapshotPins(snapshot) }, cmd.expectedRevision + 1, cmd.reason);
       } else if (cmd.action === "set-visibility" || cmd.action === "set-confirmation") {
         const h = await head(c, cmd.kind, cmd.id, "FOR UPDATE"); expected(h.status_revision, cmd.expectedStatusRevision);
         if (cmd.action === "set-confirmation") expected(h.current_revision, cmd.expectedContentRevision);

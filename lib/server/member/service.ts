@@ -21,6 +21,7 @@ import { createCapsuleSharing } from "./sharing";
 import { createCapsuleDiscussion } from "./discussion";
 import { z } from "zod";
 import { activeMember, deleteMember, memberTransaction } from "./operations";
+import {createProductEditorialHttp} from "./product-editorial-http";
 import {createSiteOperationsService,isSiteOperator} from "./site-operations";
 import { createCommunityService } from "./community";
 import { memberProfileUpdateSchema } from "../../domain/member-profile";
@@ -60,6 +61,7 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
     submissionFeedback: createMemberSubmissionFeedback(pool,config.origin,owner),
     accounts: createPublicProfiles(pool, config.origin, owner, config.secret),
     community: createCommunityService(pool, config.origin, owner, config.secret, dataset),
+    products:createProductEditorialHttp(pool,config.origin,owner),
     operator: createSiteOperationsService(pool, config.origin, owner, config.secret),
     ...createCapsuleSharing(pool, dataset, config.origin, owner, config.secret),
     ...createCapsuleDiscussion(pool, dataset, config.origin, owner),

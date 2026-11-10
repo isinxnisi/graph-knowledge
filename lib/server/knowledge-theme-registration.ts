@@ -3,6 +3,7 @@ import {readFile} from 'node:fs/promises';
 import path from 'node:path';
 import type {Pool,PoolClient,QueryResultRow} from 'pg';
 import {z} from 'zod';
+import {validateProductPins} from './member/product-editorial';
 import {themeAuthoringRequestSchema} from '../domain/knowledge-theme-registration';
 import {knowledgeCommandSchema,type KnowledgePin} from '../domain/knowledge-foundation';
 import {createKnowledgeFoundationService,knowledgeDigest,KnowledgeError} from './knowledge-foundation';
@@ -55,6 +56,7 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
  async function submit(owner:string,raw:unknown){
   await current(pool,owner);
   const input=themeAuthoringRequestSchema.parse(raw),hash=knowledgeDigest(input);
+  const productPins='target' in input?input.changes.productPins:input.productPins;if(productPins)await validateProductPins(pool,productPins);
   await ensure();
   const saved=(await pool.query('SELECT owner_id,input_hash,state FROM knowledge_missions.theme_registrations WHERE request_id=$1',[input.requestId])).rows[0];
   if(saved){if(saved.owner_id!==owner||saved.input_hash!==hash)throw new KnowledgeError('同じ受付IDに異なる内容は送れません。',409,'REQUEST_CHANGED');return {requestId:input.requestId,state:saved.state,replayed:true};}
@@ -165,12 +167,13 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
      const id=resolve(v.parentRecordId);return id?[{...v,parentRecordId:id}]:[];
     })};
    }
-   const command=knowledgeCommandSchema.parse('target' in input&&baseline?{
+   const requestedProducts='target' in input?input.changes.productPins:input.productPins;if(requestedProducts)await validateProductPins(c,requestedProducts);
+    const command=knowledgeCommandSchema.parse('target' in input&&baseline?{
     action:'edit-theme',requestId:r.request_id,id:r.theme_id,expectedRevision:input.target.revision,
     title:input.changes.title??baseline.content.title,description:input.changes.description??baseline.content.description,
     textLanguages:input.changes.textLanguages?{...baseline.content.textLanguages,...input.changes.textLanguages}:baseline.content.textLanguages,
-    initialView:input.changes.initialView??baseline.content.initialView,recordPins:pins,timeline,reason:input.reason,
-   }:{action:'create-theme',requestId:r.request_id,id:r.theme_id,...(!('target' in input)?{title:input.title,description:input.description,textLanguages:input.textLanguages,initialView:input.initialView}:{}),recordPins:pins,timeline,reason:'ChatGPTから受け付けた運営テーマ。原資料確認を通った公開記録の版を構成へ固定。'});
+    initialView:input.changes.initialView??baseline.content.initialView,productPins:input.changes.productPins??baseline.content.productPins,recordPins:pins,timeline,reason:input.reason,
+   }:{action:'create-theme',requestId:r.request_id,id:r.theme_id,...(!('target' in input)?{title:input.title,description:input.description,textLanguages:input.textLanguages,initialView:input.initialView,productPins:input.productPins}:{}),recordPins:pins,timeline,reason:'ChatGPTから受け付けた運営テーマ。原資料確認を通った公開記録の版を構成へ固定。'});
    const result=await foundation.execute({kind:'operator',id:actorId(r.owner_id)},command) as {id:string;revision:number};
    await options.afterThemeCommit?.();
    await savePublished(c,r,result,excluded);return true;

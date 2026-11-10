@@ -1,0 +1,124 @@
+{
+  "creatorsConfigured": false,
+  "httpAuthenticated": true,
+  "mcpHandler": true,
+  "realChatGptSessionTested": false,
+  "images": [
+    {
+      "name": "attached-calendar",
+      "imageId": "086241d28d8699b9a318508794ccff1b0b58d19660fad0a8445affeb8d7cc710",
+      "url": "/api/knowledge/product-images/086241d28d8699b9a318508794ccff1b0b58d19660fad0a8445affeb8d7cc710",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 338320,
+      "thumbnailBytes": 120380,
+      "original": {
+        "width": 1254,
+        "height": 1254,
+        "bytes": 2650053,
+        "format": "png"
+      },
+      "role": "illustration"
+    },
+    {
+      "name": "portrait",
+      "imageId": "06a0a2e83249c97c651378126a5732d50eba05c3fd3834cda7f29863c47bbe5e",
+      "url": "/api/knowledge/product-images/06a0a2e83249c97c651378126a5732d50eba05c3fd3834cda7f29863c47bbe5e",
+      "width": 600,
+      "height": 1600,
+      "bytes": 20492,
+      "thumbnailBytes": 6392,
+      "original": {
+        "width": 600,
+        "height": 1600,
+        "bytes": 44679,
+        "format": "png"
+      },
+      "role": "illustration"
+    },
+    {
+      "name": "landscape",
+      "imageId": "7d164a9d29664b29db8e538f29d38a19ece28ab16d7d9b9733d241125990ae99",
+      "url": "/api/knowledge/product-images/7d164a9d29664b29db8e538f29d38a19ece28ab16d7d9b9733d241125990ae99",
+      "width": 1600,
+      "height": 533,
+      "bytes": 17516,
+      "thumbnailBytes": 4802,
+      "original": {
+        "width": 2400,
+        "height": 800,
+        "bytes": 51256,
+        "format": "png"
+      },
+      "role": "illustration"
+    },
+    {
+      "name": "white",
+      "imageId": "76e89181b5c7212407d395dea3ed71bcad48b095ba6b5ba24d1ece897721c87b",
+      "url": "/api/knowledge/product-images/76e89181b5c7212407d395dea3ed71bcad48b095ba6b5ba24d1ece897721c87b",
+      "width": 900,
+      "height": 900,
+      "bytes": 15680,
+      "thumbnailBytes": 8682,
+      "original": {
+        "width": 900,
+        "height": 900,
+        "bytes": 15337,
+        "format": "png"
+      },
+      "role": "illustration"
+    },
+    {
+      "name": "transparent",
+      "imageId": "b9b30c04e76f872784d2d03bce79724bc7d096ca89ad3df298aec6f1a83ff83e",
+      "url": "/api/knowledge/product-images/b9b30c04e76f872784d2d03bce79724bc7d096ca89ad3df298aec6f1a83ff83e",
+      "width": 800,
+      "height": 600,
+      "bytes": 16994,
+      "thumbnailBytes": 25056,
+      "original": {
+        "width": 800,
+        "height": 600,
+        "bytes": 22168,
+        "format": "png"
+      },
+      "role": "illustration"
+    }
+  ],
+  "product": {
+    "id": "calendar:B0GMV4CK32",
+    "revision": 4
+  },
+  "preservation": {
+    "previousTheme": 3,
+    "previousKnowledgeUnchanged": true,
+    "readingPresentationRetained": true,
+    "qaTheme": {
+      "id": "theme:9de8183d5957121be1b1e9d39a3b047aa7a596a6411c9718",
+      "before": 1,
+      "after": 3
+    },
+    "oldImageStillAvailable": true,
+    "newImageAvailable": true,
+    "capsuleSaved": true,
+    "capsuleImagePinRetained": true,
+    "limitedShareRead": true,
+    "shareRevoked": true
+  },
+  "garbageCollection": {
+    "graceDays": 7,
+    "unusedRemoved": true,
+    "referencedPreserved": true,
+    "reuploadAfterExpiry": true
+  },
+  "checks": [
+    "anonymous 401",
+    "cross-origin 403",
+    "SVG 400",
+    "multipart file upload",
+    "same request replay unchanged",
+    "MCP save_product + update_theme handler",
+    "same provenance reused for all image types",
+    "Creators API unconfigured"
+  ]
+}

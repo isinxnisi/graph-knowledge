@@ -1,11 +1,8 @@
 import {z} from "zod";
 import catalogue from "../../data/theme-products.json";
 import type {KnowledgeSnapshot,KnowledgeThemeVersion} from "./knowledge-foundation";
-const target=z.object({kind:z.enum(["theme","entity","record"]),id:z.string(),revision:z.number().int().positive()});
-export const productSchema=z.object({id:z.string(),workId:z.string(),title:z.string(),author:z.string(),edition:z.string(),language:z.string(),isbn:z.string().optional(),metadataSource:z.url()});
-export const offerSchema=z.object({productId:z.string(),marketplace:z.enum(["JP","US","UK"]),asin:z.string().regex(/^[A-Z0-9]{10}$/),affiliateUrl:z.url().refine(v=>{const u=new URL(v);return u.protocol==="https:"&&["www.amazon.co.jp","www.amazon.com","www.amazon.co.uk","amzn.to","link.amazon"].includes(u.hostname);}),status:z.enum(["ready","unavailable","error"]),checkedAt:z.iso.datetime(),image:z.object({url:z.url().refine(v=>{const u=new URL(v);return u.protocol==="https:"&&["m.media-amazon.com","images-na.ssl-images-amazon.com","images-eu.ssl-images-amazon.com"].includes(u.hostname);}),width:z.number().positive(),height:z.number().positive(),provider:z.literal("creators-api"),expiresAt:z.iso.datetime()}).optional()});
-export const productCatalogueSchema=z.object({products:z.array(productSchema),recommendations:z.array(z.object({id:z.string(),target,productId:z.string(),reason:z.object({ja:z.string(),en:z.string()}),order:z.number(),state:z.enum(["public","draft"])})),offers:z.array(offerSchema)});
-export type ProductCatalogue=z.infer<typeof productCatalogueSchema>;
+import {productCatalogueSchema,target,type ProductCatalogue} from "./product-contract";
+export {productSchema,offerSchema,productCatalogueSchema,type ProductCatalogue} from "./product-contract";
 export const productCatalogue=productCatalogueSchema.parse(catalogue);
 const data=productCatalogue;
 export function contextualProducts(theme:KnowledgeThemeVersion,snapshot:KnowledgeSnapshot,selection:{kind:"record"|"entity";id:string}|null,marketplace:"JP"|"US"|"UK",now=Date.now(),catalog:ProductCatalogue=data){

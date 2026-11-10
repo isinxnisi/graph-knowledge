@@ -9,8 +9,10 @@ const cache=new Map<string,{expires:number;value:z.infer<typeof offerSchema>[]}>
 /** Optional external enrichment only: public graph/record reads never wait for Amazon. Secrets never enter the DTO. */
 export async function creatorsOffers(ids:string[],marketplace:keyof typeof markets,fetcher:typeof fetch=fetch){
  const file=process.env.PRODUCTS_CREATORS_CONFIG;if(!file)return {provider:"unconfigured" as const,offers:[]};
- const info=await lstat(file);if(!info.isFile()||info.isSymbolicLink()||info.uid!==process.getuid?.()||(info.mode&0o777)!==0o600)throw Error("Product provider configuration unavailable");
- const config=configSchema.parse(JSON.parse(await readFile(file,"utf8"))),partner=config.partners?.[marketplace];if(!partner)return {provider:"unsupported" as const,offers:[]};
+ let config:z.infer<typeof configSchema>;
+ try{const info=await lstat(file);if(!info.isFile()||info.isSymbolicLink()||info.uid!==process.getuid?.()||(info.mode&0o777)!==0o600)throw Error("Product provider configuration unavailable");config=configSchema.parse(JSON.parse(await readFile(file,"utf8")));}
+ catch{return {provider:"error" as const,offers:[]};}
+ const partner=config.partners?.[marketplace];if(!partner)return {provider:"unsupported" as const,offers:[]};
  const items=config.items.filter(i=>i.marketplace===marketplace&&ids.includes(i.productId)).slice(0,10);if(!items.length)return {provider:"unverified" as const,offers:[]};
  const key=JSON.stringify([file,marketplace,items]),hit=cache.get(key);if(hit&&hit.expires>Date.now())return {provider:"creators-api" as const,offers:hit.value};
  const load=async()=>{
@@ -26,4 +28,10 @@ export async function creatorsOffers(ids:string[],marketplace:keyof typeof marke
   }catch{const values=items.map(i=>offerSchema.parse({...i,affiliateUrl:"https://"+markets[marketplace]+"/dp/"+i.asin,status:"error",checkedAt}));cache.set(key,{expires:Date.now()+60000,value:values});return values;}
  };
  let work=pending.get(key);if(!work){work=load().finally(()=>pending.delete(key));pending.set(key,work);}return {provider:"creators-api" as const,offers:await work};
+}
+
+export function mergeProductOffers(registered:import("../domain/theme-products").ProductCatalogue["offers"],fetched:import("../domain/theme-products").ProductCatalogue["offers"]){
+ const merged=new Map(registered.map(o=>[o.productId+":"+o.marketplace,o]));
+ for(const o of fetched){const key=o.productId+":"+o.marketplace,old=merged.get(key);if(old?.status==="ready"){merged.set(key,{...old,...(o.status==="ready"&&o.image?{image:o.image}:{})});}else if(o.status==="ready")merged.set(key,o);}
+ return [...merged.values()];
 }

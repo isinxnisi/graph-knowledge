@@ -1,6 +1,8 @@
 import type { CSSProperties } from "react";
 
 const paths = {
+  shopping: <><path d="M5 8h14l1 13H4Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></>,
+  image: <><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 6-6 4 4 3-3 5 5"/></>,
   edit: <><path d="m15 4 5 5M4 20l5-1L21 7a2.1 2.1 0 0 0-3-3L6 16Z" /></>,
   text: <><path d="M4 5h16M12 5v15M8 20h8" /></>,
   undo: <><path d="M8 5 3 10l5 5M3 10h11a6 6 0 0 1 0 12" /></>,

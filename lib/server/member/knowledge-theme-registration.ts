@@ -1,4 +1,5 @@
 import {Pool} from 'pg';
+import {dispatchProductAuthoring} from './product-editorial';
 import {MemberError} from './http';
 import {createThemeTranslationAuthoring} from '../knowledge-theme-translation';
 import {z} from 'zod';
@@ -24,6 +25,7 @@ export async function dispatchThemeRegistration(owner:string,raw:ThemeRegistrati
  try{
   const command=themeRegistrationCommandSchema.parse(raw);
   await registration.authorize(owner);
+  if(command.action==="upload-product-image"||command.action==="save-product"||command.action==="read-product")return await dispatchProductAuthoring(memberRuntime().pool,owner,command);
   if(command.action==='read-translation'){const {action,...input}=command;void action;return await translations!.read(owner,input);}
   if(command.action==='submit-translation'){const {action,...input}=command;void action;return await translations!.submit(owner,input);}
   if(command.action==='translation-status')return await translations!.status(owner,command.requestId);

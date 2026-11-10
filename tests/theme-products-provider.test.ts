@@ -10,6 +10,10 @@ it("資格未設定では通信せず、正常取得・欠品・通信失敗を�
  const dir=await mkdtemp(path.join(tmpdir(),"theme-products-"));
  try{
   const file=path.join(dir,"private.json");process.env.PRODUCTS_CREATORS_CONFIG=file;
+  expect(await creatorsOffers(["book"],"JP",fetcher)).toEqual({provider:"error",offers:[]});
+  await writeFile(file,'invalid-json',{mode:0o600});
+  expect(await creatorsOffers(["book"],"JP",fetcher)).toEqual({provider:"error",offers:[]});
+  expect(fetcher).not.toHaveBeenCalled();
   await writeFile(file,JSON.stringify({credentialVersion:"3.3",clientId:"fixture-client",clientSecret:"private-fixture-secret",partners:{JP:"fixture-22",US:"fixture-20"},items:[{productId:"book",asin:"B0GMV4CK32",marketplace:"JP"},{productId:"missing",asin:"142622382X",marketplace:"JP"},{productId:"book",asin:"B0GMV4CK32",marketplace:"US"}]}),{mode:0o600});
   fetcher.mockResolvedValueOnce(Response.json({access_token:"fixture-token",expires_in:3600})).mockResolvedValueOnce(Response.json({itemsResult:{items:[{asin:"B0GMV4CK32",detailPageURL:"https://www.amazon.co.jp/dp/B0GMV4CK32?tag=fixture-22",images:{primary:{medium:{url:"https://m.media-amazon.com/images/I/fixture.jpg",width:80,height:120}}}}]}}));
   const result=await creatorsOffers(["book","missing"],"JP",fetcher);expect(result.offers.map(o=>o.status)).toEqual(["ready","unavailable"]);expect(result.offers[0].image?.provider).toBe("creators-api");expect(JSON.stringify(result)).not.toMatch(/secret|fixture-token|clientId/);

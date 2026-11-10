@@ -1,3 +1,4 @@
+import {collectUnusedProductImages} from '../lib/server/member/product-editorial';
 import {createThemeRegistrations} from '../lib/server/knowledge-theme-registration';
 import {assertKnowledgeWorker,reviewMemberScope} from "../lib/server/knowledge-deployment";
 import {createKnowledgeImports} from '../lib/server/knowledge-import';
@@ -46,8 +47,10 @@ async function main(){
   const importIndex=process.argv.indexOf('--import-evaluation');
   if(importIndex>=0){const text=await privateText(path.resolve(process.argv[importIndex+1]),256000);const n=await queue.importEvaluation(JSON.parse(text),createHash('sha256').update(text).digest('hex'),config);console.log(JSON.stringify({event:'review-usage-import',imported:n}));return;}
   const key=(await privateText(config.apiKeyFile,8192)).trim();
+  let nextAssetCollection=0;
   const heartbeat=setInterval(()=>{void queue.heartbeat(config).catch(()=>{stopping=true;});},15000);heartbeat.unref();
   try{while(!stopping){assertKnowledgeWorker("review-worker",auth.origin);const worked=await runKnowledgeReviewOnce(queue,config,lease=>callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire) as ReturnType<typeof geminiReviewRequest>}),acceptance?lease=>acceptance.validateReview(lease.jobId):undefined);const moderated=knowledge?await runKnowledgeModeration(pool,knowledge):false;const accepted=acceptance?await acceptance.run(config):false;
+   if(Date.now()>=nextAssetCollection){await collectUnusedProductImages(pool);nextAssetCollection=Date.now()+86400000;}
    let generated=false;
    if(translations&&!worked){try{await translations.recover();const lease=await translations.claim(config);if(lease){generated=true;await translations.finish(lease,await translations.canSend(lease)?await callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire)}):{state:'not-sent'});}}catch{console.error('Translation processing temporarily unavailable; retained jobs will resume.');}}
    let imported=false,themed=false;if(imports){try{themed=await themes?.recoverOne()??false;await webImports?.recoverOne();imported=await imports.processNext(config,lease=>stopping?Promise.resolve({state:'not-sent' as const}):callGeminiReview({apiKey:key,model:lease.model,request:JSON.parse(lease.wire)}));}catch{console.error('Import processing temporarily unavailable; retained packages will resume.');}}
