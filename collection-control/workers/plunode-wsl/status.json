@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-10T18:48:05.776722+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-10T19:53:27.244568+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-10T18:48:05.776722+00:00",
+    "eligibleAt": "2026-11-10T19:53:27.244568+00:00",
     "windowEndAt": "2026-11-10T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-59-dot-kubo-two-20261028",
+    "startedAt": "2026-11-10T18:48:27.244571+00:00",
+    "limitAt": "2026-11-10T19:43:27.244568+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-58-dot-takeuchi-two-20261028",
     "endedAt": "2026-11-10T18:38:05.776724+00:00"
@@ -192,5 +196,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-10T18:38:43.896667+00:00"
+  "checkedAt": "2026-11-10T18:48:33.767343+00:00"
 }
