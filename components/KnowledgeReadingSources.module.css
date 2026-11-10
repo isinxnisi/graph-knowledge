@@ -18,3 +18,5 @@
 .quotation small,.bibliography { font-size:10px; line-height:1.6; color:var(--color-muted); }
 @media(max-width:800px) { .source .heading > button.toggle { min-height:44px; margin-top:-6px; } .sourceLink { font-size:13px; } }
 @media(prefers-reduced-motion:reduce) { .toggle :global(.ui-icon) { transition:none; } }
+
+.sourceLink > span > a > bdi:first-child,.sourceLink > span > button > bdi:first-child { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; }

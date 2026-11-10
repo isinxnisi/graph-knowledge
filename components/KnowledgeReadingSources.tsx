@@ -22,7 +22,7 @@ export default function KnowledgeReadingSources({dto,locale,translations,openIds
  const passageId=`${passagePrefix}-${index}`;
  return <div key={e.id} className={css.source} data-evidence-id={e.id}>
  <div className={css.heading}>
- <div className={css.sourceLink}>{source?.content.url?<ExternalSourceLink href={source.content.url} label={title} locale={locale}/>:<strong>{title}</strong>}{e.stance!=="support"&&<small className={css.stance}>{en?{refute:"Counterevidence",background:"Background source"}[e.stance]:{refute:"この記述への反証",background:"背景を知る資料"}[e.stance]}</small>}</div>
+ <div className={css.sourceLink} title={title}>{source?.content.url?<ExternalSourceLink href={source.content.url} label={title} locale={locale}/>:<strong>{title}</strong>}{e.stance!=="support"&&<small className={css.stance}>{en?{refute:"Counterevidence",background:"Background source"}[e.stance]:{refute:"この記述への反証",background:"背景を知る資料"}[e.stance]}</small>}</div>
  <button type="button" data-evidence-toggle className={css.toggle} aria-expanded={open} aria-controls={passageId} aria-label={`${en?"Read the quotation and location":"引用と掲載箇所を読む"}：${title}`} onClick={()=>onOpen(open?openIds.filter(id=>id!==e.id):[...openIds,e.id])}>{en?"Quote":"引用"}<Icon name="chevron"/></button>
  </div>
  {open&&<div id={passageId} className={css.quotation}><p className={css.locator}>{original("locator",e.locator)}</p>{source?.content.bibliography&&<KnowledgeSourceBibliography value={source.content.bibliography} locale={locale} className={css.bibliography}/>} {e.excerpt&&<blockquote lang={original("excerpt",e.excerpt)!==e.excerpt?locale:e.textLanguages?.excerpt?.tag}>{original("excerpt",e.excerpt)}</blockquote>}<small>{en?"Source revision":"資料版"} {e.source.revision}</small></div>}
