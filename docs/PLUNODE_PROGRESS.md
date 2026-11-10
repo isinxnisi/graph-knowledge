@@ -1,3 +1,5 @@
+2026-11-10 圧縮手順の是正：③初回はWorker終了待ちで停止前に中断｜3分待機を廃止しWSL停止直後のDiskPartと工程別の復帰へ修正、6項目確認｜残りは③管理者実行と復帰確認、今回は③まで。本番未変更。[実測・再開](verification/DEV_STORAGE_COMPACTION_20261110.md)。
+
 2026-11-10 開発PC容量整理：①調査・②不要cache整理完了｜残りは③管理者によるWSL／Docker圧縮と復帰確認｜今回は③まで、本番未変更。[実測・実行手順](verification/DEV_STORAGE_COMPACTION_20261110.md)。
 
 2026-11-10 テーマ詳細の再整理：②読み順・出典・解説からの戻りと重複余白を是正し、③3200／HTTPS βへ配置｜最終の余白修正版の実画面確認はツールの起動パス障害で未了｜今回の工程は③まで、本番未変更。app36c244b4／build JdHoCpoWRBOXmGG1awuil。PC／390px／320px日英の往復は直前buildで確認、30件・lint・型検査込みbuild成功。[確認範囲と未了](verification/THEME_READING_REFRESH_BETA_20261110.md)。

@@ -28,11 +28,11 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Users\nishr\.codex\t
 
 このPCの実物で確認したUbuntuのext4.vhdxとDockerのdocker_data.vhdxだけを対象にする。Dockerの小さいengine diskやUbuntu-24.04は対象外。全WSLが一時停止するため、共有Kevと別プロジェクトのローカルサービスも停止する。本番VPSには接続しない。
 
-手順は、元のcontainer／volume状態を記録 → Plunodeの4 timerを一時停止（実行中なら終了待ち）→ 稼働containerを通常停止 → 2 filesystemをtrim／sync → Docker通常停止／WSL shutdown → 排他openで停止確認 → detached VHDへDiskPart compact → Ubuntu／Docker再開 → 元の稼働container・既存β／PC Workerを復帰、timer状態を復元する。AutopilotのWindows有効／無効設定は変更しない。format・WSL unregister・factory reset・volume削除・zero fillは含めない。
+手順は、元のcontainer／volume状態を記録 → Plunodeの4 timerを一時停止（実行中の指定taskはStop-ScheduledTaskで停止）→ 稼働containerを通常停止 → 2 filesystemをtrim／sync → Docker通常停止／WSL shutdown → あらかじめ作った入力ファイルで直ちにDiskPart compact → Ubuntu／Docker再開 → 元の稼働container・既存β／PC Workerを復帰、timer状態を復元する。AutopilotのWindows有効／無効設定は変更しない。format・WSL unregister・factory reset・volume削除・zero fillは含めない。
 
-途中失敗時もfinallyで復帰を試みる。3分後も稼働中のtimerがあれば圧縮前に中断し、強制終了しない。Docker通常停止が失敗した場合も強制停止へ進まない。DiskPartは実物パスのselect／compact／exitだけを生成し、エラーを成功扱いしない。
+途中失敗時もfinallyで復帰を試みる。初回はWorker終了待ち3分で止まったため、その待機を廃止した。指定した収集等のtask以外やAutopilotを停止しない。Docker通常停止が失敗した場合も強制停止へ進まない。DiskPartは実物パスのselect／compact／exitだけを生成し、エラーを成功扱いしない。
 
-終了結果は同じWindowsフォルダの `compact-result.json` と `diskpart-0.log`／`diskpart-1.log` に残る。圧縮完了・実回収量・復帰完了は、この結果と後続確認前には確定しない。
+終了結果は同じWindowsフォルダの `compact-result.json` と `diskpart-compact.log` に残る。圧縮完了・実回収量・復帰完了は、この結果と後続確認前には確定しない。
 
 ## 実施済みの確認
 
@@ -44,3 +44,13 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Users\nishr\.codex\t
 ## 圧縮後の残確認
 
 VHDサイズとC空き、元のcontainer／volume／image、既存timer状態、DB／Kev、localhost3200／HTTPS β、正式側PC Workerの復帰を確認する。停止でAutopilot holdは失われるため、作業再開時に新しいholdを取得・reviewする。
+
+## 初回実行の中断と再開手順の是正
+
+本人の初回実行は2026-11-10 19:03〜19:06 JST。Plunode-CollectionWorkerの終了待ちで中断し、Docker／WSL停止・DiskPartには到達しなかった。Ubuntu 182,219,440,128 bytes／Docker 98,668,904,448 bytesは前後同じ。初回結果はWindows privateフォルダの `compact-result.json.first-attempt` に保持した。4 timerは元の有効状態へ戻っている。
+
+Workerの実装は単発onceだが、1サイクルが3分以内に終わる保証はない。復帰用finallyが停止前の中断でもβ起動を要求したため、既存3200を「occupied」として重ねて失敗扱いした。確認時点ではWeb／containerは継続稼働しており、復帰処理の失敗表示とサービス停止を混同しない。
+
+修正版では、4 taskの新規起動を一時停止して実行中の指定taskを停止する。DiskPartの5行（Ubuntu select／compact、Docker select／compact、exit）を先にWindowsへ作り、WSL shutdownの直後に1回のDiskPartへ渡す。間に3秒待機・WSLの再照会・パス確認・ファイル生成を挟まない。DiskPart自身が使用中のVHDを拒否する。圧縮終了前にWSLやDockerを再開しない。失敗時も実際に停止を試みた工程だけ復帰し、既存のβはPID・cwd・コマンドを照合して起動を重ねない。
+
+`powershell.exe`（Windows PowerShell）で6項目を確認：稼働taskのdisable→stop、待機taskはdisableだけ、shutdown→DiskPartの順、shutdown失敗時はDiskPart未実行、停止前中断ではDocker／βを再起動しないこと、実際の稼働中βを所有者照合して保持すること。前5項目は副作用をmock、最後は実WSL境界の非破壊確認。管理者停止／DiskPart実処理は次の本人実行と後続確認を残す。
