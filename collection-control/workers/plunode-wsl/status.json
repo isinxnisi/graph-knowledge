@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-10T18:59:08.119401+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-10T20:04:26.670290+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-10T18:59:08.119401+00:00",
+    "eligibleAt": "2026-11-10T20:04:26.670290+00:00",
     "windowEndAt": "2026-11-10T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-60-dot-ichikawa-houseki-20261028",
+    "startedAt": "2026-11-10T18:59:26.670293+00:00",
+    "limitAt": "2026-11-10T19:54:26.670290+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-59-dot-kubo-two-20261028",
     "endedAt": "2026-11-10T18:49:08.119404+00:00"
@@ -192,5 +196,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-10T18:49:44.886760+00:00"
+  "checkedAt": "2026-11-10T18:59:33.065589+00:00"
 }
