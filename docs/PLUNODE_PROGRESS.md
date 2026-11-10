@@ -1,3 +1,5 @@
+2026-11-10 容量整理・復帰完了：①不要物調査・②cache整理・③本人の手動圧縮後、既存12 container／β5 Worker／正式API向けPC2 Workerを復帰確認｜今回の③まで完了。VHD合計約99.4 GiB縮小、C空き約107.7 GiB。3200／HTTPS βのTOP・同じテーマが200、既存build継続・本番未変更。次回はWSLを使うCodexも終了してからWindows側で圧縮する。[実測・注意点](verification/DEV_STORAGE_COMPACTION_20261110.md)。
+
 2026-11-10 圧縮手順の是正：③初回はWorker終了待ちで停止前に中断｜3分待機を廃止しWSL停止直後のDiskPartと工程別の復帰へ修正、6項目確認｜残りは③管理者実行と復帰確認、今回は③まで。本番未変更。[実測・再開](verification/DEV_STORAGE_COMPACTION_20261110.md)。
 
 2026-11-10 開発PC容量整理：①調査・②不要cache整理完了｜残りは③管理者によるWSL／Docker圧縮と復帰確認｜今回は③まで、本番未変更。[実測・実行手順](verification/DEV_STORAGE_COMPACTION_20261110.md)。

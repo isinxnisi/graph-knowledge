@@ -1,6 +1,6 @@
 # 開発PCの不要物整理とWSL／Docker圧縮（2026-11-10）
 
-①調査・②不要物整理を実施。③オフライン圧縮・再起動後の確認は管理者コマンドの実行待ち。本番VPS・アプリsource／build・DB形式は変更しない。
+①調査・②不要物整理・③本人による手動圧縮と既存サービスの復帰確認まで完了。本番VPS・アプリsource／build・DB形式は変更していない。以下の自動補助手順は今回未完走であり、次回の既定手順にはしない。
 
 ## 削除したもの
 
@@ -16,7 +16,7 @@ Docker Desktopはsettings-store.jsonへのrenameでAccess deniedを表示して�
 
 旧Workerの取得用bare Gitには、整理前から空のobject 21件と壊れたrefがあった。再試行の一時pack増加を確認したため、既存Worker lock中に同じ既存remoteのcontrol／mainだけを別bare cacheへfetchした。Git connectivityと既存control-headのancestorを確認後、cacheだけを交換した。旧cacheは233 MiBのまま `control-corrupt-preserved-20261110.git` へ退避。収集済みデータ・runtime・config・control-head・Workerコードは保持した。復旧cacheのconnectivityは成功。
 
-## 管理者による圧縮
+## 当初の自動補助手順（未完走・次回は要見直し）
 
 実行資材は `scripts/compact-dev-storage.ps1`。WSL内から実行すると停止後にログ先へ書けないため、Windows側へ置いた同一内容のファイルを使う。
 
@@ -54,3 +54,27 @@ Workerの実装は単発onceだが、1サイクルが3分以内に終わる保�
 修正版では、4 taskの新規起動を一時停止して実行中の指定taskを停止する。DiskPartの5行（Ubuntu select／compact、Docker select／compact、exit）を先にWindowsへ作り、WSL shutdownの直後に1回のDiskPartへ渡す。間に3秒待機・WSLの再照会・パス確認・ファイル生成を挟まない。DiskPart自身が使用中のVHDを拒否する。圧縮終了前にWSLやDockerを再開しない。失敗時も実際に停止を試みた工程だけ復帰し、既存のβはPID・cwd・コマンドを照合して起動を重ねない。
 
 `powershell.exe`（Windows PowerShell）で6項目を確認：稼働taskのdisable→stop、待機taskはdisableだけ、shutdown→DiskPartの順、shutdown失敗時はDiskPart未実行、停止前中断ではDocker／βを再起動しないこと、実際の稼働中βを所有者照合して保持すること。前5項目は副作用をmock、最後は実WSL境界の非破壊確認。管理者停止／DiskPart実処理は次の本人実行と後続確認を残す。
+
+## 手動圧縮後の復帰完了（20:14 JST確認）
+
+2回目の自動補助は19:19〜19:22 JST、既存12 containerの通常停止・trim後にDocker Desktop本体の停止timeoutで中断した。DiskPartには未到達で、その後の復帰もDockerの500応答で止まった。自動手順が成功したとは扱わない。
+
+本人から、CodexがWSLのプロセスを保持していたためそれを終了し、その後に圧縮できたとの報告を受けた。実機のVHD縮小で圧縮結果を確認した。**次回はWSLを使うCodexセッション／workspaceも終了し、独立したWindows管理者端末で停止直後に圧縮する。CodexがWSLへ接続したままの自動helperを繰り返す手順は使わない。**
+
+| 資材 | 圧縮前 | 圧縮後・復帰確認時 |
+| --- | ---: | ---: |
+| Ubuntu ext4.vhdx | 182,219,440,128 bytes（169.71 GiB） | 98,145,665,024 bytes（91.41 GiB） |
+| Docker docker_data.vhdx | 98,668,904,448 bytes（91.89 GiB） | 75,995,545,600 bytes（70.78 GiB） |
+| Cドライブの空き | 8,953,413,632 bytes（2回目開始時） | 115,623,911,424 bytes（約107.68 GiB） |
+
+VHD合計は復帰確認時で約99.42 GiB縮小。稼働再開後の書込みで多少増えるため、削除したlogical cache合計やtrim報告値と物理回収量を混同しない。
+
+Docker Desktopは本人の圧縮後にengineが起動していたが、既存containerは停止したままだった。保全baselineと21 containerのID／image、61 volumeを照合し、停止前に稼働していた12 containerだけを復帰した。DB／共有Kevを先に起動し、続けてWeb／別プロジェクトWorker／既存cloudflaredを起動。停止前の各mountの種別・volume名・source・destinationも一致し、休止中だった旧実験containerは起動していない。
+
+既存launcherでβ Web／5 Worker、本番API向けPC collection／readerの2 Workerを再開した。実行PIDとcwdを確認。会員PostgreSQL・resale PostgreSQL・共有Kevはhealthy、resale WebはHTTP 200。cloudflared-resale-researchは既存HTTP/2で接続した。
+
+localhost3200とHTTPS βのTOPが200、同じテーマURL `/t/reading-20261110%3Awebb%3Atheme?krev=3&kview=split` も200でWebb本文を確認した。初回TOP要求では起動直後のNeo4j処理が既存10秒timeoutに達して500になったが、DB起動完了後の再要求は正常。設定やtimeoutは変更していない。iPhone実機の再読込は本人側の確認として残し、復帰確認をUIの追加受入とは扱わない。
+
+βのbuildは `JdHoCpoWRBOXmGG1awuil`（既存app36c244b4）を継続し、再buildなし。本番VPSは未変更。Plunodeの4 Windows taskは既存の有効状態へ復帰している。GraphKnowledge-Autopilotは開始前からDisabledで、その状態を変更していない。今回のholdは別途取得して終了時に解放する。
+
+実測のprivate記録：Windows側 `resumed-result.json`。管理者で実行した補助scriptの失敗結果とは分けて保存した。
