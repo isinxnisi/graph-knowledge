@@ -96,12 +96,12 @@
   },
   "requestSha256": "78ffd17af073fb5ff238579eca1957d2be68063bca8157b4cac2eba3f2f88eb3",
   "kind": "collect-review",
-  "phase": "waiting-lock",
-  "generation": 13575,
+  "phase": "waiting-control",
+  "generation": 13576,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
-  "updatedAt": "2026-11-04T00:50:07+00:00",
+  "updatedAt": "2026-11-10T10:07:59+00:00",
   "result": {
     "jobId": "issue-25-utc-recovery-r0009-dcce01b7349906fb",
     "collectionUnchanged": false,
@@ -128,5 +128,5 @@
     "datasets/collection-decision-drafts/issue-25-utc-recovery-09/5d45f047df77beefd96e8ce7a3b134a4f6d869ea994f71141953a87424a5e4a7/issue-25-utc-recovery-09-identity-draft.json"
   ],
   "retryAt": 1793710239.2216966,
-  "message": "共通ロック使用中。次回に再確認する。"
+  "message": "Execution gate: outside-window"
 }
