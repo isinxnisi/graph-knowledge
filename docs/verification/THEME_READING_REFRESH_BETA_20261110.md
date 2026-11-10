@@ -186,3 +186,26 @@ app `3f385782`、β build `6NetGM7Qk5b_A9O-CUDKB` を3200とHTTPS βへ反映。
 - `C:/Users/nishr/.codex/tmp/theme-reading-sections-beta-entity.png`：3件で区切った知識一覧と、関連テーマ・本の導線。
 
 **追加指摘への修正版をβで比較できる状態とする。参考画像と同等の品質だという利用者の合格、未決試作A/Bの採用、元依頼全体のデザイン完成、本番公開を意味しない。** 挿絵は科学的資料ではなく、制作記録と生成プロンプトを設計書へ残した。
+
+
+## 詳細の読み順・往復・共通余白を是正（2026-11-10）
+
+配置：app `36c244b4bac1bd89d5f9105e223fbd60f1fccaff`、build `JdHoCpoWRBOXmGG1awuil`。mainと作業branch `codex/theme-reading-seo` を揃え、localhost3200とHTTPS βのWebを更新。本番VPSは未変更。DB変更なし。既存21設定ファイルのhashとWorker PIDを保持。private配置manifestはmain `.local/theme-reading-spacing-beta-20261110/manifest.json`。
+
+### 操作と確認結果
+
+- 記録本文→解説の出典→具体名付きの親記録への戻りをPCと390pxで操作。中央の元の選択と固定版を保持した。
+- 年表の出典入口は対応する引用を詳細で開く。引用を閉じたあと解説へ進み、親へ戻っても閉じたまま、中央の打上げ行と点を選択したまま保持した。消費済みの出典表示要求を再実行しない。
+- 親の引用開閉・版保持、テーマ説明との往復を含む位置テスト8件、出典・一覧9件、年表UI8件、SEO5件の計30件成功。変更TSXのESLintと型検査込みpublic-kg build成功。最終の余白修正はCSSのみで、再build成功。
+- 資料名／サイト名／引用のまとまりをPC、390px、英語320pxで確認。引用は同じ資料の直下に開く。通常の支持ラベルは省略し、背景・反証を区別する。320pxで長い資料名の表示高さ41.59px（2行）と、詳細の横overflowなしを確認した（app4e875435の段階）。完全な資料名はリンクのaccessible nameとtitleに保持する。
+- 日付の年月日を折り返さず、日付精度と軸位置は変更しない。390pxの年月日timeの幅59px・高さ16.5px・横overflowなしを確認した。
+- 「機器」は表示側の独自集約だったため廃止し、「関係図でたどる」の章に実名を置いた。Entityの保存分類は変更しない。
+- 画像説明に管理用GitHubリンクを表示しないことを、テーマ概要のリンクDOMで確認した。NASA等の科学資料への外部リンクと安全確認は保持する。
+
+### 最終の余白是正と未確認事項
+
+ユーザーの追加画像で、共通のSVG末尾余白7px＋部品gap7pxが見出しと本文の7px差を生んでいたことを特定した。閲覧領域のアイコン余白を重複させず、章のアイコン16px＋gap7px＝本文字下げ23pxへ統一。テーマ名直下もtitle padding・header padding・margin・hero marginが積み重なっていたため、見出しCSSを統合して8pxにした。別担当の読取レビューでも該当セレクタと詳細・出典の左余白を照合した。
+
+ただし、最終の余白修正の実画面確認は未実施。確認ツールのNode起動が「ディレクトリ名が無効です」（os error267）で停止した。Windowsから `\\wsl.localhost\Ubuntu\home\isinxnisi\1.projects\7.graph-knowledge` は見つからず、同じ実体の `\\wsl$\Ubuntu\home\isinxnisi\1.projects\7.graph-knowledge` は参照可能。WSLでのコード・build・サービス操作は継続できた。Chromeの再起動が必要と判明したわけではない。確認用の一時320px設定の明示解除もこの停止で未実行（確認用タブのみ）。最終buildのlocalhostとHTTPS応答・本文への接続は別途HTTPで照合した。最後に視覚確認できたbuildと、最後の余白修正版を同一の確認結果として扱わない。
+
+今回も全体デザインの採用・合格と技術チェックを分ける。新しいAmazon API接続・書影利用資格・OneLinkの実接続は確認しておらず、以前の制約を解消したとは扱わない。本番公開は別承認。

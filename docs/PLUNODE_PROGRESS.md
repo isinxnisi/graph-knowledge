@@ -1,3 +1,5 @@
+2026-11-10 テーマ詳細の再整理：②読み順・出典・解説からの戻りと重複余白を是正し、③3200／HTTPS βへ配置｜最終の余白修正版の実画面確認はツールの起動パス障害で未了｜今回の工程は③まで、本番未変更。app36c244b4／build JdHoCpoWRBOXmGG1awuil。PC／390px／320px日英の往復は直前buildで確認、30件・lint・型検査込みbuild成功。[確認範囲と未了](verification/THEME_READING_REFRESH_BETA_20261110.md)。
+
 2026-11-10 β接続復旧：①障害確認・②Docker／WSLと既存サービス復帰・③同じHTTPSテーマURLと390px表示を確認｜今回の復旧工程は③まで。本番・UI buildは未変更。[復旧記録](verification/BETA_RECOVERY_20261110.md)。
 
 2026-11-10 テーマ閲覧の追加是正：③年表バッジ撤去・初期3件と左余白・挿絵による導入を3200／HTTPS βへ反映し、PC／390px／320px・日英を確認｜追加修正の技術工程は③まで、本番未変更｜全体デザインの合格・採用とは区別する。app f6c92274／build yBSq7WA2LKbpeks4fN_hQ。[実測と残る制約](verification/THEME_READING_REFRESH_BETA_20261110.md)。
