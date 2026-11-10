@@ -30,6 +30,10 @@
   color: var(--color-muted);
   overflow-wrap: anywhere;
 }
+.dateLabel { display:block; max-width:100%; }
+.dateValue { white-space:nowrap; overflow-wrap:normal; }
+.dateClock { display:block; overflow-wrap:normal; white-space:normal; }
+.dateZone { display:block; }
 .date small {
   display: block;
   font-size: 9px;
@@ -282,6 +286,7 @@
   }
   .date {
     font-size: 10px;
+    padding-right: 2px;
   }
   .date small {
     font-size: 8px;

@@ -14,9 +14,8 @@ import { useUiLocale } from "../lib/client/ui-locale";
 import KnowledgeContributors from "./KnowledgeContributors";
 import css from "./KnowledgeReadingDetail.module.css";
 import ReadingDetailSection from "./ReadingDetailSection";
-import { knowledgeRelatedHeading } from "../lib/client/knowledge-kind-label";
 
-export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme,onTranslation,title,onBack,explanations=[],openEvidenceIds,onEvidenceOpen,evidenceRequest,displayTranslations }: {displayTranslations?:readonly KnowledgeDisplayTranslation[];onTranslation?:(v:KnowledgeTranslationVersion)=>void;onRecord?:(id:string)=>void;onTheme?:(id:string)=>void; dto: KnowledgePublishedRecord; onEntity: (id: string) => void;title?:string;onBack?:()=>void;explanations?:{dto:KnowledgePublishedRecord;role:"importance"|"background"|"insight"|"next";heading?:string}[];openEvidenceIds?:string[];onEvidenceOpen?:(ids:string[])=>void;evidenceRequest?:EvidenceRequest|null }) {
+export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme,onTranslation,title,onBack,backLabel,nestedBack=false,explanations=[],openEvidenceIds,onEvidenceOpen,evidenceRequest,displayTranslations }: {displayTranslations?:readonly KnowledgeDisplayTranslation[];onTranslation?:(v:KnowledgeTranslationVersion)=>void;onRecord?:(id:string)=>void;onTheme?:(id:string)=>void; dto: KnowledgePublishedRecord; onEntity: (id: string) => void;title?:string;onBack?:()=>void;backLabel?:string;nestedBack?:boolean;explanations?:{dto:KnowledgePublishedRecord;role:"importance"|"background"|"insight"|"next";heading?:string}[];openEvidenceIds?:string[];onEvidenceOpen?:(ids:string[])=>void;evidenceRequest?:EvidenceRequest|null }) {
   const { locale } = useUiLocale(), en = locale === "en";
   const loadedTranslations=useKnowledgeDisplayTranslations(dto.entities,[dto.record],undefined,locale,displayTranslations===undefined);
   const translations=[...(displayTranslations??[]),...loadedTranslations];
@@ -30,19 +29,20 @@ export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme,o
   const originalLanguage=r.textLanguages?.assertion?.tag;
   const languageName=originalLanguage?new Intl.DisplayNames([locale],{type:"language"}).of(originalLanguage)??originalLanguage:null;
   return <article className={css.detail}>
-    {onBack&&<button className={css.back} onClick={onBack}><Icon name="back"/>{en?"Back to reading":"年表・図に戻る"}</button>}
+    {onBack&&<button data-detail-back className={css.back} data-nested={nestedBack||undefined} onClick={onBack} title={backLabel}><Icon name="back"/><span>{backLabel||(en?"Back to reading":"年表・図に戻る")}</span></button>}
     <KnowledgeReadingBadge kind={r.kind} polarity={r.polarity} en={en}/>
     {heading!==assertion&&<h2>{heading}</h2>}
     <p className={css.statement} lang={assertion!==r.assertion?locale:originalLanguage}>{assertion}</p>
 
+    {scope&&!longScope&&<p className={css.scope}>{en?"Scope: ":"範囲："}{scope}</p>}
     {explanations.length>0&&<ReadingDetailSection title={en?"Explanation":"解説"} icon="book">
       <div className={css.explanation}>
-        {explanations.map(({dto:explanation})=><p key={explanation.record.id}>{explanation.record.content.assertion}{onRecord&&<button className={css.explanationSource} onClick={()=>onRecord(explanation.record.id)} aria-label={en?"Read this context and its sources":"この補足と出典を読む"} title={en?"Read this context and its sources":"この補足と出典を読む"}><Icon name="external"/></button>}</p>)}
+        {explanations.map(({dto:explanation})=><p key={explanation.record.id}>{explanation.record.content.assertion}{onRecord&&<button className={css.explanationSource} data-detail-record={explanation.record.id} onClick={()=>onRecord(explanation.record.id)} aria-label={en?"Read the sources for this explanation":"この解説の出典を読む"}>{en?"Sources":"出典"}<Icon name="chevron"/></button>}</p>)}
       </div>
     </ReadingDetailSection>}
     <KnowledgeReadingSources dto={dto} locale={locale} translations={translations} openIds={openEvidenceIds??localEvidence} onOpen={onEvidenceOpen??setLocalEvidence} request={evidenceRequest}/>
-    {dto.entities.length > 0 && <ReadingDetailSection title={knowledgeRelatedHeading(dto.entities.map(e=>e.content.kind),locale)} icon="graph"><div className={css.subjects}>{dto.entities.map(e=><button key={e.id} onClick={()=>onEntity(e.id)}>{entityName(e)}</button>)}</div></ReadingDetailSection>}
-    {scope&&!longScope&&<p className={css.scope}>{en?"Scope: ":"範囲："}{scope}</p>}
+    {dto.entities.length > 0 && <ReadingDetailSection title={en?"Follow these connections":"関係図でたどる"} icon="graph"><div className={css.subjects}>{dto.entities.map(e=><button key={e.id} onClick={()=>onEntity(e.id)}>{entityName(e)}</button>)}</div></ReadingDetailSection>}
+
     <details className={css.recordInfo}><summary><Icon name="chevron"/>{en?"Record information, translation & context":"記録情報・翻訳・補足"}</summary><div className={css.insetBody}>
     {r.aboutRecord&&<p className={css.meta}>{en?"About this knowledge: ":"この知識・関係について："}{onRecord?<button onClick={()=>onRecord(r.aboutRecord!.id)}>{en?"Read the original":"元の知識を読む"}</button>:<a href={"/?krecord="+encodeURIComponent(r.aboutRecord.id)}>{en?"Read the original":"元の知識を読む"}</a>} · {en?"Revision":"内容版"} {r.aboutRecord.revision}</p>}
     {r.aboutTheme&&<p className={css.meta}>{en?"About this theme: ":"このテーマについて："}{onTheme?<button onClick={()=>onTheme(r.aboutTheme!)}>{en?"Open theme":"テーマを読む"}</button>:<a href={"/?ktheme="+encodeURIComponent(r.aboutTheme)}>{en?"Open theme":"テーマを読む"}</a>}</p>}

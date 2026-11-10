@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import React from "react";
-import {act,cleanup,fireEvent,render,screen} from "@testing-library/react";
+import {act,cleanup,fireEvent,render,screen,within} from "@testing-library/react";
 import {afterEach,beforeEach,expect,it,vi} from "vitest";
 import KnowledgeReading,{useKnowledgeReading} from "../components/KnowledgeReading";
 import {MemberClientError} from "../lib/client/member-api";
@@ -75,5 +75,26 @@ it("テーマ説明の一時表示は記録・出典の開閉と詳細DOMを保�
  const snapshot={schemaVersion:1 as const,initialView:"graph" as const,records:[record],entities:[],sources:[{id:"source",revision:1,createdAt:record.createdAt,reason:"",content:knowledgeSourceContentSchema.parse({title:"資料",bibliography:"第1版"})}],mappings:[]};
  const fixed={...theme,snapshot,records:[buildKnowledgePublishedRecord(record,snapshot)]},setThemeSelection=vi.fn();mocks.workspace={...mocks.workspace,activeTheme:fixed,retainedTheme:fixed,themeSelection:{kind:"record",id:"fixed",timeId:"original"},setThemeSelection};
  function Both(){const r=useKnowledgeReading()!;return <>{r.center}<aside id="explorer-detail">{r.detail}</aside></>;}
- render(<KnowledgeReading><Both/></KnowledgeReading>);await flush();fireEvent.click(screen.getByRole("button",{name:"資料の該当箇所を読む"}));expect(screen.getByText("根拠の文章")).toBeTruthy();const node=screen.getByText("根拠の文章");fireEvent.click(screen.getByRole("button",{name:"テーマについて"}));expect(setThemeSelection).not.toHaveBeenCalled();expect(screen.getByRole("button",{name:"選んだ記録に戻る"})).toBeTruthy();fireEvent.click(screen.getByRole("button",{name:"選んだ記録に戻る"}));expect(screen.getByText("根拠の文章")).toBe(node);expect(screen.getByRole("button",{name:"資料の該当箇所を読む"}).getAttribute("aria-expanded")).toBe("true");
+ render(<KnowledgeReading><Both/></KnowledgeReading>);await flush();fireEvent.click(screen.getByRole("button",{name:"引用と掲載箇所を読む：資料"}));expect(screen.getByText("根拠の文章")).toBeTruthy();const node=screen.getByText("根拠の文章");fireEvent.click(screen.getByRole("button",{name:"テーマについて"}));expect(setThemeSelection).not.toHaveBeenCalled();expect(screen.getByRole("button",{name:"選んだ記録に戻る"})).toBeTruthy();fireEvent.click(screen.getByRole("button",{name:"選んだ記録に戻る"}));expect(screen.getByText("根拠の文章")).toBe(node);expect(screen.getByRole("button",{name:"引用と掲載箇所を読む：資料"}).getAttribute("aria-expanded")).toBe("true");
+});
+
+it("解説の出典を読んだあと固定版の元記録と引用へ戻れ、図の選択を奪わない",async()=>{
+ HTMLElement.prototype.scrollIntoView=vi.fn();HTMLElement.prototype.scrollTo=vi.fn();
+ const stamp={revision:1,createdAt:"2026-11-10T00:00:00Z",reason:""};
+ const evidence=[{id:"e",source:{id:"source",revision:1},locator:"p.7",excerpt:"根拠の文章"}];
+ const original={id:"original",...stamp,content:knowledgeRecordContentSchema.parse({kind:"episode",assertion:"元の出来事の本文",evidence})};
+ const note={id:"note",...stamp,content:knowledgeRecordContentSchema.parse({kind:"note",assertion:"出来事の意味を説明する文章",aboutRecord:{id:"original",revision:1},evidence})};
+ const snapshot={schemaVersion:1 as const,initialView:"graph" as const,records:[original,note],entities:[],sources:[{id:"source",...stamp,content:knowledgeSourceContentSchema.parse({title:"資料",bibliography:"第1版"})}],mappings:[]};
+ const fixed={...theme,snapshot,records:snapshot.records.map(r=>buildKnowledgePublishedRecord(r,snapshot)),presentation:{locale:"ja",records:[{target:{id:"original",revision:1},shortTitle:"元の出来事",explanations:[{record:{id:"note",revision:1},role:"background"}]}]}};
+ const select=vi.fn();mocks.workspace={...mocks.workspace,activeTheme:fixed,retainedTheme:fixed,themeSelection:{kind:"record",id:"original",timeId:"saved-time"},setThemeSelection:select};
+ function Both(){const r=useKnowledgeReading()!;return <>{r.center}<aside id="explorer-detail">{r.detail}</aside></>;}
+ render(<KnowledgeReading><Both/></KnowledgeReading>);await flush();
+ fireEvent.click(screen.getByRole("button",{name:"引用と掲載箇所を読む：資料"}));
+ fireEvent.click(screen.getByRole("button",{name:"この解説の出典を読む"}));await flush();
+ expect(within(document.getElementById("explorer-detail")!).queryByText("元の出来事の本文")).toBeNull();
+ expect(screen.getByRole("button",{name:"元の出来事に戻る"})).toBeTruthy();expect(select).not.toHaveBeenCalled();
+ fireEvent.click(screen.getByRole("button",{name:"元の出来事に戻る"}));await flush();
+ expect(within(document.getElementById("explorer-detail")!).getByText("元の出来事の本文")).toBeTruthy();expect(screen.getByText("根拠の文章")).toBeTruthy();
+ expect(screen.getByRole("button",{name:"引用と掲載箇所を読む：資料"}).getAttribute("aria-expanded")).toBe("true");
+ expect(select).not.toHaveBeenCalled();expect(fixed.snapshot.records[0].revision).toBe(1);
 });

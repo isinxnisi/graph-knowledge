@@ -13,8 +13,8 @@
 .section,.sources { border-top:1px solid var(--color-border); margin-top:14px; padding-top:14px; }
 .detail .explanation p { font-size:14px; line-height:1.75; margin:0 0 10px; }
 .detail .explanation p:last-child { margin-bottom:0; }
-.detail .explanation .explanationSource { display:inline-flex; align-items:center; justify-content:center; vertical-align:baseline; min-width:22px; min-height:22px; margin:0 0 0 3px; padding:0 3px; border:0; background:transparent; box-shadow:none; color:var(--color-accent); }
-.explanationSource :global(.ui-icon) { width:12px; height:12px; }
+.detail .explanation .explanationSource { display:inline-flex; align-items:center; gap:2px; vertical-align:baseline; min-width:0; min-height:24px; margin:0 0 0 6px; padding:0 2px; border:0; border-radius:0; background:transparent; box-shadow:none; color:var(--color-accent); font-size:11px; white-space:nowrap; }
+.explanationSource :global(.ui-icon) { width:11px; height:11px; transform:rotate(-90deg); }
 .source { padding:0 0 9px; margin-bottom:9px; border-bottom:1px solid var(--color-border); scroll-margin-top:12px; }
 .source:last-child { padding-bottom:0; margin-bottom:0; border-bottom:0; }
 .detail .sourceHeading { display:grid; grid-template-columns:16px minmax(0,1fr); align-items:start; column-gap:7px; row-gap:2px; font-size:13px; }
@@ -34,12 +34,21 @@
 .recordInfo summary { display:flex; align-items:center; gap:5px; min-height:32px; cursor:pointer; }
 .recordInfo p { font-size:11px; line-height:1.7; margin-bottom:7px; }
 .recordInfo :global(button) { font-size:11px!important; }
-.detail .back { display:flex; align-items:center; gap:5px; width:max-content; border:0; background:transparent; padding:3px 0; font-size:12px; margin-bottom:6px; }
+.detail .back { display:flex; align-items:center; gap:5px; max-width:100%; width:max-content; border:0; background:transparent; padding:3px 0; font-size:12px; margin-bottom:6px; }
 .detail > .badges { margin-top:4px; }
 .meta { font-size:11px; color:var(--color-muted); }
 .actions { display:flex; flex-wrap:wrap; gap:8px; }
-@media(min-width:1248px) { .detail .back { display:none; } }
+@media(min-width:1248px) { .detail .back:not([data-nested]) { display:none; } }
 @media(max-width:800px) { .detail .back { min-height:40px; } .sourceToggle { min-height:36px; } .detail .explanation .explanationSource { min-width:28px; min-height:28px; } }
 @media(prefers-reduced-motion:reduce) { .sourceToggle :global(.ui-icon) { transition:none; } }
 
 .insetBody { min-width:0; padding-left:23px; }
+
+.detail .back > span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.detail .back :global(.ui-icon) { flex-shrink:0; }
+.detail .explanation .explanationSource:hover { text-decoration:underline; }
+
+.detail .statement { line-height:1.7; }
+.detail .explanation p { line-height:1.7; }
+.detail .subjects button { min-height:30px; line-height:1.5; }
+@media(max-width:800px) { .detail .subjects button { min-height:36px; } }

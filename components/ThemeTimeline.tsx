@@ -444,7 +444,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
               <Period record={record} />
             )}
             {reading&&<div className={css.readingActions}>
-              {record.evidence.map(e=><button key={e.evidenceId??e.sourceId} title={e.title} aria-label={e.title} onClick={()=>e.evidenceId&&onReadEvidence?.(timelineRecordId(record),e.evidenceId)}><Icon name="link"/><span>{e.title}</span><Icon name="external"/></button>)}
+              {record.evidence.map(e=><button key={e.evidenceId??e.sourceId} title={tr("出典を読む：","Read source: ")+e.title} aria-label={tr("出典を読む：","Read source: ")+e.title} onClick={()=>e.evidenceId&&onReadEvidence?.(timelineRecordId(record),e.evidenceId)}><Icon name="book"/><span>{e.title}</span><Icon name="chevron"/></button>)}
               {nested.length>0&&<button aria-expanded={expanded.has(record.id)} onClick={()=>setExpanded(before=>{const next=new Set(before);if(next.has(record.id))next.delete(record.id);else next.add(record.id);return next;})}><Icon name="chevron"/>{tr("詳しい時間軸を開く","Open detailed timeline")} · {nested.length}</button>}
             </div>}
             {!reading&&<div

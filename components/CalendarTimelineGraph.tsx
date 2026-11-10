@@ -18,6 +18,16 @@ import css from "./CalendarTimelineGraph.module.css";
 
 const colors = ["#397a85", "#aa713c", "#6878a2", "#8b668f", "#6d844f"];
 
+/** Keep the civil date intact; clock and offset can use their own lines in the gutter. */
+function CalendarDateLabel({ label }: { label: string }) {
+  const [date, clock] = label.split("T");
+  const parts = clock?.match(/^([^Z+-]+)(Z|[+-]\d{2}:\d{2})?$/);
+  return <time dateTime={label} className={css.dateLabel} aria-label={label}>
+    <span className={css.dateValue}>{date}</span>
+    {clock && <span className={css.dateClock}>T{parts?.[1] ?? clock}{parts?.[2] && <span className={css.dateZone}>{parts[2]}</span>}</span>}
+  </time>;
+}
+
 
 export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
   records,
@@ -89,7 +99,7 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
                     className={css.date}
                     style={{ gridRow: `${index + 1} / span ${row.count}` }}
                   >
-                    {row.label}
+                    <CalendarDateLabel label={row.label} />
                     {row.count > 1 && (
                       <small>
                         {en?`Same ${row.label.length===4?'year':row.label.length===7?'month':row.label.length>10?'hour':'day'}`:`同じ${row.label.length===4?'年':row.label.length===7?'月':row.label.length>10?'時間':'日'}`}

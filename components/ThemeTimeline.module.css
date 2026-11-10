@@ -818,3 +818,9 @@
  .reading .readingActions button { min-height:36px; font-size:11px; }
  .reading .graphJump { min-width:32px; min-height:36px; }
 }
+
+/* A source shortcut opens this reader, not a new external page. Keep it secondary. */
+.timeline.reading .readingActions button { min-height:28px; padding:3px 0; border:0; border-radius:0; background:transparent; box-shadow:none; }
+.timeline.reading .readingActions button:hover { background:transparent; text-decoration:underline; }
+.readingActions button > :global(.ui-icon):last-child { transform:rotate(-90deg); width:11px; height:11px; }
+@media(max-width:800px) { .timeline.reading .readingActions button { min-height:32px; font-size:11px; } }

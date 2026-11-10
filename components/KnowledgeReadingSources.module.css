@@ -1,0 +1,20 @@
+.sources { min-width:0; }
+.source { min-width:0; padding:0 0 10px; margin-bottom:10px; border-bottom:1px solid var(--color-border); scroll-margin-top:12px; }
+.source:last-child { padding-bottom:0; margin-bottom:0; border-bottom:0; }
+.heading { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:start; gap:8px; }
+.sourceLink { min-width:0; font-size:13px; line-height:1.6; }
+.sourceLink > span { display:block; max-width:100%; }
+.source .sourceLink > span > a,.source .sourceLink > span > button { display:grid; grid-template-columns:minmax(0,1fr) 13px; align-items:start; gap:2px 5px; width:100%; min-width:0; text-decoration:none; }
+.sourceLink > span > a > bdi:first-child,.sourceLink > span > button > bdi:first-child { grid-column:1; grid-row:1; text-decoration:underline; text-underline-offset:3px; overflow-wrap:anywhere; }
+.sourceLink > span > a > bdi:nth-child(2),.sourceLink > span > button > bdi:nth-child(2) { grid-column:1; grid-row:2; font-size:10px; line-height:1.5; color:var(--color-muted); text-decoration:none; }
+.sourceLink > span > a > svg,.sourceLink > span > button > svg { grid-column:2; grid-row:1; width:12px; height:12px; margin-top:4px; }
+.stance { display:block; margin-top:3px; font-size:10px; line-height:1.5; color:var(--color-muted); }
+.source .heading > button.toggle { display:inline-flex; align-items:center; justify-content:center; gap:3px; min-height:30px; min-width:44px; margin:-3px 0 0; padding:3px 4px; border:0; border-radius:4px; background:transparent; box-shadow:none; color:var(--color-accent); font-size:11px; line-height:1.5; white-space:nowrap; }
+.toggle :global(.ui-icon) { width:12px; height:12px; flex-shrink:0; transition:transform .16s; }
+.toggle[aria-expanded="true"] :global(.ui-icon) { transform:rotate(180deg); }
+.quotation { margin:8px 0 0; border-inline-start:2px solid var(--color-border); padding-inline-start:10px; font-size:12px; line-height:1.75; overflow-wrap:anywhere; }
+.quotation .locator { margin:0; font-size:11px; line-height:1.6; color:var(--color-muted); }
+.quotation blockquote { margin:6px 0; line-height:1.75; white-space:pre-wrap; }
+.quotation small,.bibliography { font-size:10px; line-height:1.6; color:var(--color-muted); }
+@media(max-width:800px) { .source .heading > button.toggle { min-height:44px; margin-top:-6px; } .sourceLink { font-size:13px; } }
+@media(prefers-reduced-motion:reduce) { .toggle :global(.ui-icon) { transition:none; } }
