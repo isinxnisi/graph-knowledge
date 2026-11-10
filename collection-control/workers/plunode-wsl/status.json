@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-10T20:41:58.846022+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-10T21:47:35.974526+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-10T20:41:58.846022+00:00",
-    "windowEndAt": "2026-11-10T22:00:00+00:00"
+    "eligibleAt": "2026-11-11T00:00:00+00:00",
+    "windowEndAt": "2026-11-11T03:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-71-dot-tezuka-hinotori-com-20261029",
+    "startedAt": "2026-11-10T20:42:35.974529+00:00",
+    "limitAt": "2026-11-10T21:37:35.974526+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-70-dot-fujikof-doraemon-20261029",
     "endedAt": "2026-11-10T20:31:58.846024+00:00"
@@ -192,5 +196,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-10T20:32:28.421736+00:00"
+  "checkedAt": "2026-11-10T20:42:42.389236+00:00"
 }
