@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-04T00:22:22.859937+00:00",
-  "phase": "outside-window",
+  "nextStartAt": "2026-11-10T19:06:24.257572+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
-    "reason": "outside-window",
-    "eligibleAt": "2026-11-10T18:00:00+00:00",
+    "reason": "interval",
+    "eligibleAt": "2026-11-10T19:06:24.257572+00:00",
     "windowEndAt": "2026-11-10T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-51-dot-araki-rohan-20261027",
+    "startedAt": "2026-11-10T18:01:24.257575+00:00",
+    "limitAt": "2026-11-10T18:56:24.257572+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-5-dot-tezuka-adolf-20261025-batch-01",
     "endedAt": "2026-11-04T00:12:22.859942+00:00"
@@ -192,5 +196,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-10T17:59:57.537001+00:00"
+  "checkedAt": "2026-11-10T18:01:30.894849+00:00"
 }
