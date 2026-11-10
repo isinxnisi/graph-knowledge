@@ -1,3 +1,5 @@
+2026-11-10 開発PC容量整理：①調査・②不要cache整理完了｜残りは③管理者によるWSL／Docker圧縮と復帰確認｜今回は③まで、本番未変更。[実測・実行手順](verification/DEV_STORAGE_COMPACTION_20261110.md)。
+
 2026-11-10 テーマ閲覧UI・SEOの刷新：[現行設計](design/THEME_READING_REFRESH_20261110.md)／[β比較・検証・再開](verification/THEME_READING_REFRESH_BETA_20261110.md)。本番公開は別途承認。
 
 2026-11-09 多言語表示の横断是正完了：TOP／検索／探索候補／Graph／詳細の名前表示と、構成更新後の同一原文のテーマ訳文継続を共通化。app39a84f4eをmain／3200／HTTPS β／正式サイトへ反映。正式構成版8の英題・説明・見出し・時期ラベル、英題検索、PC／390pxと言語切替を確認。DB・Worker・設定・KG不変。訳文未登録データや全データ英訳完了とは区別する。[表示契約](design/MULTILINGUAL_DISPLAY_COVERAGE.md)／[実測・制約](verification/MULTILINGUAL_DISPLAY_20261109.md)。
