@@ -54,7 +54,7 @@ export default function ThemeTimeFields({ time }: { time: ThemeTime | null }) {
           <option value="occurrence-window">この範囲のどこかで起きた</option>
           {calendar && calendarMeaning(calendar) === "unclassified-range" && (
             <option value="unclassified-range">
-              元の範囲を保つ（意味未区別）
+              元の日付の範囲を保つ
             </option>
           )}
         </select>

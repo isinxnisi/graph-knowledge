@@ -29,12 +29,12 @@ export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme,o
   const originalLanguage=r.textLanguages?.assertion?.tag;
   const languageName=originalLanguage?new Intl.DisplayNames([locale],{type:"language"}).of(originalLanguage)??originalLanguage:null;
   return <article className={css.detail}>
-    {onBack&&<button data-detail-back className={css.back} data-nested={nestedBack||undefined} onClick={onBack} title={backLabel}><Icon name="back"/><span>{backLabel||(en?"Back to reading":"年表・図に戻る")}</span></button>}
-    <KnowledgeReadingBadge kind={r.kind} polarity={r.polarity} en={en}/>
+    <div className={css.detailNav}>{onBack&&<button data-detail-back className={css.back} data-nested={nestedBack||undefined} onClick={onBack} title={backLabel}><Icon name="back"/><span>{backLabel||(en?"Back to reading":"年表・図に戻る")}</span></button>}
+    <KnowledgeReadingBadge kind={r.kind} polarity={r.polarity} en={en}/></div>
     {heading!==assertion&&<h2>{heading}</h2>}
     <p className={css.statement} lang={assertion!==r.assertion?locale:originalLanguage}>{assertion}</p>
 
-    {scope&&!longScope&&<p className={css.scope}>{en?"Scope: ":"範囲："}{scope}</p>}
+    {scope&&!longScope&&<p className={css.scope}>{scope}</p>}
     {explanations.length>0&&<ReadingDetailSection title={en?"Explanation":"解説"} icon="book">
       <div className={css.explanation}>
         {explanations.map(({dto:explanation})=><p key={explanation.record.id}>{explanation.record.content.assertion}{onRecord&&<button className={css.explanationSource} data-detail-record={explanation.record.id} onClick={()=>onRecord(explanation.record.id)} aria-label={en?"Read the sources for this explanation":"この解説の出典を読む"}>{en?"Sources":"出典"}<Icon name="chevron"/></button>}</p>)}
@@ -43,12 +43,12 @@ export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme,o
     <KnowledgeReadingSources dto={dto} locale={locale} translations={translations} openIds={openEvidenceIds??localEvidence} onOpen={onEvidenceOpen??setLocalEvidence} request={evidenceRequest}/>
     {dto.entities.length > 0 && <ReadingDetailSection title={en?"Follow these connections":"関係図でたどる"} icon="graph"><div className={css.subjects}>{dto.entities.map(e=><button key={e.id} onClick={()=>onEntity(e.id)}>{entityName(e)}</button>)}</div></ReadingDetailSection>}
 
-    <details className={css.recordInfo}><summary><Icon name="chevron"/>{en?"Record information, translation & context":"記録情報・翻訳・補足"}</summary><div className={css.insetBody}>
+    <details className={css.recordInfo}><summary><Icon name="chevron"/>{en?"About this record":"この記録について"}</summary><div className={css.insetBody}>
     {r.aboutRecord&&<p className={css.meta}>{en?"About this knowledge: ":"この知識・関係について："}{onRecord?<button onClick={()=>onRecord(r.aboutRecord!.id)}>{en?"Read the original":"元の知識を読む"}</button>:<a href={"/?krecord="+encodeURIComponent(r.aboutRecord.id)}>{en?"Read the original":"元の知識を読む"}</a>} · {en?"Revision":"内容版"} {r.aboutRecord.revision}</p>}
     {r.aboutTheme&&<p className={css.meta}>{en?"About this theme: ":"このテーマについて："}{onTheme?<button onClick={()=>onTheme(r.aboutTheme!)}>{en?"Open theme":"テーマを読む"}</button>:<a href={"/?ktheme="+encodeURIComponent(r.aboutTheme)}>{en?"Open theme":"テーマを読む"}</a>}</p>}
     <div className={css.meta}>{en ? "Content revision" : "内容版"} {dto.record.revision} · {r.polarity === "affirmed" ? en ? "Affirmed" : "肯定" : r.polarity === "denied" ? en ? "Denied" : "否定" : en ? "Uncertain" : "不確実"}</div>
     {r.relation && <p lang={text("relation",r.relation)!==r.relation?locale:r.textLanguages?.relation?.tag}>{en?"Relation: ":"矢印の言葉："}{text("relation",r.relation)}</p>}{languageName&&<p>{en?"Original language: ":"原文の言語："}{languageName}</p>}
-    <KnowledgeTranslationPanel onRetain={onTranslation} fields={knowledgeRecordTranslationFields(dto,en)}/>
+
     {scope&&longScope&&<p className={css.scopeLong}>{en?"Scope: ":"範囲："}{scope}</p>}
     {r.times.map((t) => <p key={t.id}>{themeTimeLabel(knowledgeDisplayTime(dto.record,t.id,translations,locale),locale)}</p>)}
     {typed?.event && <p>{en ? "Event occurrence" : "開催期間"}：{typed.event.metadata.period.from?.value ?? "?"} 〜 {typed.event.metadata.period.to?.value ?? "?"}<br /><span className={css.meta}>{en ? "Separate from a person's participation period." : "人物の参加期間とは別の情報です。"}</span></p>}
@@ -56,6 +56,7 @@ export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme,o
     {dto.semantics.status === "stale" && <p className={css.meta}>{en ? "This meaning mapping belongs to an earlier content revision." : "意味対応は旧内容へのものです。現在の意味条件には含めません。"}</p>}
     <KnowledgeContributors id={dto.record.id} revision={dto.record.revision}/>
     </div></details>
+    <KnowledgeTranslationPanel onRetain={onTranslation} fields={knowledgeRecordTranslationFields(dto,en)}/>
   </article>;
 }
 

@@ -18,3 +18,6 @@
  .hero .lead {grid-column:1/-1;grid-row:3;font-size:12px;line-height:1.65;padding-left:5px;}
  .hero:not([data-art]) .about,.hero:not([data-art]) .hook,.hero:not([data-art]) .lead {grid-column:1;}
 }
+
+@container (min-width:780px){.hero:has(>button:last-child){grid-template-columns:150px minmax(0,1fr) minmax(150px,19%)}.hero:not([data-art]):has(>button:last-child){grid-template-columns:minmax(0,1fr) minmax(150px,19%)}}
+@container (max-width:779px){.hero>button:last-child{grid-column:1/-1;justify-self:start;max-width:100%;margin-inline-start:5px}.hero>button:last-child img{width:36px;height:36px}}

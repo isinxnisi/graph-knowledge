@@ -1,6 +1,6 @@
 .section { container-type:inline-size; }
 .section .affiliation { color:var(--color-muted); font-size:11px; line-height:1.5; font-weight:400; }
-.region { display:flex; justify-content:flex-end; margin:0 0 8px; }
+.region { display:flex;flex-wrap:wrap;align-items:center;gap:3px 9px; }
 .region label { display:inline-flex; align-items:center; gap:6px; font-size:10px; color:var(--color-muted); }
 .region select { width:auto; max-width:105px; min-height:28px; padding:2px 22px 2px 7px; font:inherit; border:1px solid var(--color-border); border-radius:5px; background:var(--color-panel); color:var(--color-text); }
 .card { min-width:0; margin:0 0 10px; padding:12px; border:1px solid var(--color-border); border-radius:9px; background:color-mix(in srgb,var(--color-panel) 94%,var(--color-accent) 6%); }
@@ -43,3 +43,8 @@
 
 .figure figcaption span { display:block; }
 .figure figcaption a { color:inherit; }
+
+button.teaser{display:inline-flex;align-items:center;justify-self:end;gap:9px;min-width:0;max-width:240px;padding:4px 6px;color:var(--color-text);background:transparent;border:0;text-align:start;line-height:1.35}
+.teaser img{width:44px;height:44px;object-fit:contain;flex:none;border-radius:3px}
+.teaser span{min-width:0}.teaser small,.teaser strong{display:block}.teaser small{font-size:10px;color:var(--color-muted)}.teaser strong{font-size:12px;font-weight:550}.teaser:hover strong{text-decoration:underline}
+.teaser :global(.ui-icon){flex:none;width:13px}

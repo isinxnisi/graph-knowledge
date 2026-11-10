@@ -48,7 +48,7 @@ describe("calendar time meaning and uncertainty", () => {
     expect(parsed).toEqual(base);
     expect(calendarMeaning(base)).toBe("unclassified-range");
     expect(themeTimeLabel(parsed)).toBe(
-      "時期の範囲（未区別）：1985〜1989 · 資料の原表現",
+      "1985〜1989 · 資料の原表現",
     );
     expect(
       themeTimeSchema.parse({ kind: "calendar", from: "1985", label: "" }),
@@ -179,7 +179,7 @@ describe("calendar time meaning and uncertainty", () => {
       ),
     ).toContain("発生時期の幅");
     expect(themeRecordSearchText(record("legacy", base), [])).toContain(
-      "未区別",
+      "1985〜1989",
     );
   });
 
@@ -241,7 +241,7 @@ describe("time description locale",()=>{
   const original=JSON.stringify(value),label=themeTimeLabel(value,"en");
   expect(label).toContain("Duration: start");expect(label).toContain("Source notation: 原資料の表記");expect(label).toContain("作者の期間名");expect(label).not.toContain("期間：");expect(JSON.stringify(value)).toBe(original);
   expect(themeTimeLabel({...value,meaning:"occurrence-window"},"en")).toContain("Occurrence window:");
-  expect(themeTimeLabel({...value,meaning:undefined},"en")).toContain("Time range (unclassified):");
+  expect(themeTimeLabel({...value,meaning:undefined},"en")).toContain("2021-12-28 – 2022-01-04");
   expect(themeTimeLabel(null,"en")).toBe("No time specified");expect(themeTimeLabel(value)).toContain("期間：開始");
  });
 });

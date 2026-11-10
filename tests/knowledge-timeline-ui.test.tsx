@@ -99,9 +99,9 @@ it("does not add phantom range endings for coarse dated events in the normal kno
   for (const name of ["1989年9月の検討会", "1996年の提言", "日付のある出来事"]) {
     expect(screen.getByRole("button", { name: new RegExp("^時期の線を選ぶ：" + name) }).hasAttribute("data-point")).toBe(true);
   }
-  expect(screen.queryByText("候補の後端")).toBeNull();
+  expect(screen.queryByText("ここまで")).toBeNull();
   expect(screen.getByRole("button", { name: /^時期の線を選ぶ：実際の期間/ }).hasAttribute("data-point")).toBe(false);
-  expect(screen.getByText("終了側").closest("button")).toBeTruthy();
+  expect(screen.getAllByText("終了").find(el=>el.closest("button"))).toBeTruthy();
   expect(JSON.stringify(data)).toBe(original);
 });
 
@@ -113,10 +113,10 @@ it("shows a coarse month as a window when a day-precise event inside it is also 
   const data: KnowledgeSnapshot = { ...s, records: rows.map(row => ({ ...s.records[0], id: row.id, content: knowledgeRecordContentSchema.parse({ ...s.records[0].content, assertion: row.assertion, times: [{ id: "when", time: row.time }] }) })) };
   const view = render(<KnowledgeTimeline snapshot={data} focusedRecordId={null} onFocusRecord={vi.fn()} />);
   expect(screen.getByRole("button", { name: /^時期の線を選ぶ：月まで分かる出来事/ }).hasAttribute("data-point")).toBe(false);
-  expect(screen.getByText("候補の後端")).toBeTruthy();
+  expect(screen.getByText("ここまで")).toBeTruthy();
   view.rerender(<KnowledgeTimeline snapshot={{ ...data, records: data.records.slice(0,1) }} focusedRecordId={null} onFocusRecord={vi.fn()} />);
   expect(screen.getByRole("button", { name: /^時期の線を選ぶ：月まで分かる出来事/ }).hasAttribute("data-point")).toBe(true);
-  expect(screen.queryByText("候補の後端")).toBeNull();
+  expect(screen.queryByText("ここまで")).toBeNull();
 });
 
 

@@ -7,16 +7,30 @@ import Icon from "./Icon";
 import ReadingDetailSection,{ReadingList} from "./ReadingDetailSection";
 import css from "./ThemeProducts.module.css";
 export type ProductCardItem=ReturnType<typeof contextualProducts>[number];
-export default function ThemeProducts({theme,selection=null}:{theme:{id:string;revision:number};selection?:{kind:"record"|"entity";id:string}|null}){
- const {locale}=useUiLocale(),en=locale==="en",[market,setMarket]=useState("JP"),[state,setState]=useState<{key:string;items:ProductCardItem[];error:boolean}>({key:"",items:[],error:false});
- const key=JSON.stringify({themeId:theme.id,revision:String(theme.revision),marketplace:market,alternatives:"1",...(selection?{kind:selection.kind,id:selection.id}:{})});
- useEffect(()=>{const c=new AbortController();void fetch("/api/knowledge/theme-products?"+new URLSearchParams(JSON.parse(key)),{signal:c.signal}).then(async r=>{if(!r.ok)throw Error();const v=await r.json();setState({key,items:v.products,error:false});}).catch(()=>{if(!c.signal.aborted)setState({key,items:[],error:true});});return()=>c.abort();},[key]);
- if(state.key!==key)return null;if(state.error)return <p className={css.notice}>{en?"Related items are temporarily unavailable.":"関連アイテムを一時的に読み込めません。"}</p>;if(!state.items.length)return null;
- return <RelatedProducts items={state.items} market={market} onMarket={setMarket} en={en}/>;
+type ThemeRef={id:string;revision:number};
+type Selection={kind:"record"|"entity";id:string};
+export function useThemeItems(theme?:ThemeRef,selection?:Selection|null){
+ const [market,setMarket]=useState("JP"),[state,setState]=useState<{key:string;items:ProductCardItem[];error:boolean}>({key:"",items:[],error:false});
+ const key=theme?JSON.stringify({themeId:theme.id,revision:String(theme.revision),marketplace:market,alternatives:"1",...(selection?{kind:selection.kind,id:selection.id}:{})}):"";
+ useEffect(()=>{if(!key)return;const c=new AbortController();void fetch("/api/knowledge/theme-products?"+new URLSearchParams(JSON.parse(key)),{signal:c.signal}).then(async r=>{if(!r.ok)throw Error();const v=await r.json();if(!c.signal.aborted)setState({key,items:v.products,error:false});}).catch(()=>{if(!c.signal.aborted)setState({key,items:[],error:true});});return()=>c.abort();},[key]);
+ return {market,onMarket:setMarket,items:state.key===key?state.items:[],error:state.key===key&&state.error};
+}
+export default function ThemeProducts({theme,selection=null}:{theme:ThemeRef;selection?:Selection|null}){
+ const {locale}=useUiLocale();return <ThemeItemsResult result={useThemeItems(theme,selection)} en={locale==="en"}/>;
+}
+export function ThemeItemsResult({result,en}:{result:ReturnType<typeof useThemeItems>;en:boolean}){
+ if(result.error)return <p className={css.notice}>{en?"Related items are temporarily unavailable.":"関連アイテムを一時的に読み込めません。"}</p>;
+ return result.items.length?<RelatedProducts {...result} en={en}/>:null;
+}
+export function ItemTeaser({item,en,onOpen}:{item:ProductCardItem;en:boolean;onOpen:(button:HTMLButtonElement)=>void}){
+ const {product}=item,image=product.image,[failed,setFailed]=useState(false);
+ const title=product.displayName?.[en?"en":"ja"]||product.title;
+ return <button type="button" className={css.teaser} onClick={e=>onOpen(e.currentTarget)}>
+ {image&&!failed&&<Image unoptimized src={image.url+(image.url.startsWith("/api/knowledge/product-images/")?"?size=small":"")} alt="" width={44} height={44} onError={()=>setFailed(true)}/>}
+ <span><small>{en?"Related item":"関連アイテム"}{image?.role==="illustration"&&!failed&&(en?" · Illustrative image":" ・ 紹介用イメージ")}</small><strong>{title}</strong></span><Icon name="arrow"/></button>;
 }
 export function RelatedProducts({items,market,onMarket,en}:{items:ProductCardItem[];market:string;onMarket:(value:string)=>void;en:boolean}){
- return <ReadingDetailSection className={css.section} title={en?"Related items":"関連アイテム"} icon="shopping" action={<span className={css.affiliation}>{en?"Amazon affiliate":"Amazonアフィリエイト"}</span>}>
- <div className={css.region}><label>{en?"Store region":"購入地域"}<select aria-label={en?"Store region":"購入地域"} value={market} onChange={e=>onMarket(e.target.value)}><option value="JP">{en?"Japan":"日本"}</option><option value="US">{en?"United States":"米国"}</option><option value="UK">{en?"United Kingdom":"英国"}</option></select></label></div>
+ return <ReadingDetailSection className={css.section} title={en?"Related items":"関連アイテム"} icon="shopping" action={<div className={css.region}><span className={css.affiliation}>{en?"Amazon affiliate":"Amazonアフィリエイト"}</span><label>{en?"Store region":"購入地域"}<select aria-label={en?"Store region":"購入地域"} value={market} onChange={e=>onMarket(e.target.value)}><option value="JP">{en?"Japan":"日本"}</option><option value="US">{en?"United States":"米国"}</option><option value="UK">{en?"United Kingdom":"英国"}</option></select></label></div>}>
  <ReadingList key={market} noun={en?"items":"アイテム"} items={items.map(item=><ProductCard key={item.product.id} item={item} en={en}/>)}/>
  {items.some(i=>i.offer?.status==="ready"||i.alternatives.length>0)&&<p className={css.disclosure}>{en?"As an Amazon Associate, Plunode earns from qualifying purchases.":"Amazonのアソシエイトとして、Plunodeは適格販売により収入を得ています。"}</p>}
  </ReadingDetailSection>;

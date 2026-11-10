@@ -52,3 +52,6 @@
 .detail .explanation p { line-height:1.7; }
 .detail.detail .subjects button { min-height:30px; line-height:1.5; }
 @media(max-width:800px) { .detail.detail .subjects button { min-height:36px; } }
+
+.detailNav {display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;margin-bottom:8px;}
+.detail .detailNav > * {margin:0;}

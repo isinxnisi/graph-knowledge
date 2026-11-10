@@ -10,7 +10,7 @@ import ThemeTimeline from "./ThemeTimeline";
 import {readingRecordTitle,type ThemeReadingPresentation} from "../lib/domain/theme-reading-presentation";
 
 /** The Explorer owns the selected immutable Record and the view switch. */
-export default function KnowledgeTimeline({ snapshot, focusedRecordId, focusedEntityId, onFocusRecord, onShowGraph, untimedInContext = false, headerAction, emptyMessage,reading=false,presentation,onReadEvidence }: {
+export default function KnowledgeTimeline({ snapshot, focusedRecordId, focusedEntityId, onFocusRecord, onShowGraph, untimedInContext = false, headerAction, emptyMessage,reading=false,presentation }: {
   snapshot: KnowledgeSnapshot;
   focusedRecordId: string | null;
   focusedEntityId?: string;
@@ -21,7 +21,6 @@ export default function KnowledgeTimeline({ snapshot, focusedRecordId, focusedEn
   emptyMessage?: string;
   reading?:boolean;
   presentation?:ThemeReadingPresentation|null;
-  onReadEvidence?:(recordId:string,evidenceId:string)=>void;
 }) {
   const {locale}=useUiLocale();
   const projection = useMemo(() => knowledgeTimelineProjection(knowledgeDisplaySnapshot(snapshot,locale), { untimedInContext,locale }), [snapshot, locale,untimedInContext]);
@@ -34,7 +33,6 @@ export default function KnowledgeTimeline({ snapshot, focusedRecordId, focusedEn
       return {...row,readingTitle:editorial?.shortTitle||row.displayTime?.label||readingRecordTitle(record,presentation),readingSummary:editorial?.timelineSummary};
     }):projection.records}
     reading={reading}
-    onReadEvidence={onReadEvidence}
     emptyMessage={emptyMessage}
     embedded
     headerAction={headerAction}

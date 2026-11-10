@@ -98,3 +98,10 @@
 
 .editRecord :global(.ui-icon) { width:16px; height:16px; }
 .editRecord { gap:7px; }
+
+.details .guideTitle { margin: 8px 0 12px; font-size: 1.25rem; }
+.details p.guideSource { margin:0; padding:5px 0; line-height:1.5; }
+.details .guideSource button { text-align:start; white-space:normal; }
+.guideTools { border-top:1px solid var(--color-border); margin-top:12px; padding-top:8px; }
+
+.stage{container-type:inline-size}

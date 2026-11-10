@@ -4,7 +4,7 @@
 .heading { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:start; gap:8px; }
 .sourceLink { min-width:0; font-size:13px; line-height:1.6; }
 .sourceLink > span { display:block; max-width:100%; }
-.source .sourceLink > span > a,.source .sourceLink > span > button { display:grid; grid-template-columns:minmax(0,1fr) 13px; align-items:start; gap:2px 5px; width:100%; min-width:0; text-decoration:none; }
+.source .sourceLink > span > a,.source .sourceLink > span > button { display:grid; grid-template-columns:minmax(0,1fr) 13px; align-items:start; gap:2px 5px; width:fit-content; max-width:100%; min-width:0; text-decoration:none; }
 .sourceLink > span > a > bdi:first-child,.sourceLink > span > button > bdi:first-child { grid-column:1; grid-row:1; text-decoration:underline; text-underline-offset:3px; overflow-wrap:anywhere; }
 .sourceLink > span > a > bdi:nth-child(2),.sourceLink > span > button > bdi:nth-child(2) { grid-column:1; grid-row:2; font-size:10px; line-height:1.5; color:var(--color-muted); text-decoration:none; }
 .sourceLink > span > a > svg,.sourceLink > span > button > svg { grid-column:2; grid-row:1; width:12px; height:12px; margin-top:4px; }

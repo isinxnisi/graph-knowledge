@@ -148,8 +148,8 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
                     <small>
                       {row.ending.time?.kind === "calendar" &&
                       row.ending.time.meaning === "duration"
-                        ? en?"End":"終了側"
-                        : en?"Latest possible time":"候補の後端"}
+                        ? en?"End":"終了"
+                        : row.ending.time?.kind==="calendar" && row.ending.time.meaning==="occurrence-window" ? (en?"Latest possible date":"この日までのどこか") : (en?"Last date shown":"ここまで")}
                     </small>
                   </button>
                 )}

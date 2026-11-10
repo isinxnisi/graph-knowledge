@@ -33,7 +33,7 @@ export function themeTimeLabel(time: ThemeTime | null, locale: string = "ja"): s
         text = en?`Occurrence window: ${range(time.from,time.to)} (somewhere within this range)`:`発生時期の幅：${range(time.from, time.to)}（この間のどこか）`;
         break;
       case "unclassified-range":
-        text = en?`Time range (unclassified): ${range(time.from,time.to)}`:`時期の範囲（未区別）：${range(time.from, time.to)}`;
+        text = en && time.to && time.to !== time.from ? `${time.from} – ${time.to}` : range(time.from,time.to);
         break;
       default:
         text = time.from;

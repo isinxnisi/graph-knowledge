@@ -22,9 +22,9 @@ it("source shortcut opens precisely the requested evidence and retains independe
  function Host(){const [ids,set]=React.useState<string[]>([]);return <KnowledgeReadingSources dto={dto} locale="en" translations={[]} openIds={ids} onOpen={value=>{opened=value;set(value);}} request={{recordId:"r",evidenceId:"e-b",token:1}}/>;}
  render(<Host/>);await act(async()=>{});expect(opened).toEqual(["e-b"]);expect(screen.getByText("opposing passage")).toBeTruthy();expect(screen.queryByText("supporting passage")).toBeNull();fireEvent.click(screen.getAllByRole("button",{name:/quotation|passage|引用|該当/})[0]);expect(opened).toEqual(["e-b","e-a"]);
 });
-it("reading selects a time annotation, exposes both source shortcuts and does not duplicate full scope or quote",()=>{
- const focus=vi.fn(),evidence=vi.fn();render(<KnowledgeTimeline snapshot={snapshot} reading focusedRecordId={null} onFocusRecord={focus} onReadEvidence={evidence}/>);
- expect(screen.queryByText("出来事",{exact:true})).toBeNull();const row=screen.getByText("Short heading",{exact:true}).closest("button")!;expect(row.hasAttribute("aria-expanded")).toBe(false);fireEvent.click(row);expect(focus).toHaveBeenLastCalledWith("r","start");expect(screen.queryByText(snapshot.records[0].content.scope)).toBeNull();expect(screen.queryByText("supporting passage")).toBeNull();fireEvent.click(screen.getByRole("button",{name:/Source B/}));expect(evidence).toHaveBeenLastCalledWith("r","e-b");
+it("reading selects a time annotation, leaves source links to the detail pane and does not duplicate full scope or quote",()=>{
+ const focus=vi.fn();render(<KnowledgeTimeline snapshot={snapshot} reading focusedRecordId={null} onFocusRecord={focus}/>);
+ expect(screen.queryByText("出来事",{exact:true})).toBeNull();const row=screen.getByText("Short heading",{exact:true}).closest("button")!;expect(row.hasAttribute("aria-expanded")).toBe(false);fireEvent.click(row);expect(focus).toHaveBeenLastCalledWith("r","start");expect(screen.queryByText(snapshot.records[0].content.scope)).toBeNull();expect(screen.queryByText("supporting passage")).toBeNull();expect(screen.queryByRole("button",{name:/Source B/})).toBeNull();
 });
 it("both undated prototypes make every item reachable, including a one-item collapsed list",()=>{
  const records=Array.from({length:6},(_,i)=>buildKnowledgePublishedRecord({...snapshot.records[0],id:"note"+i,content:{...snapshot.records[0].content,assertion:"Note "+i,times:[]}},snapshot));

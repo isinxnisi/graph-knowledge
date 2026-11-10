@@ -257,7 +257,7 @@ it("distinguishes duration, uncertain occurrence and unclassified legacy ranges 
   expect(within(window).getByText(/この間のどこかで発生/)).toBeTruthy();
   expect(
     screen
-      .getByLabelText(/^時期の範囲（未区別）：1984〜1990/)
+      .getByLabelText(/^1984〜1990/)
       .getAttribute("data-meaning"),
   ).toBe("unclassified-range");
   const durationLine = screen.getByRole("button", {
@@ -435,7 +435,7 @@ it("connects each same-date item to its own heading and keeps its endpoint links
       .getByRole("button", { name: /^同日の出来事/ })
       .getAttribute("aria-expanded"),
   ).toBe("true");
-  fireEvent.click(screen.getByRole("button", { name: /活動A.*終了側/ }));
+  fireEvent.click(screen.getByRole("button", { name: /活動A.*終了/ }));
   expect(
     screen
       .getByRole("button", { name: /^活動が続いた/ })

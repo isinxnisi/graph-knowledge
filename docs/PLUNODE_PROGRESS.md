@@ -1,3 +1,5 @@
+2026-11-11 テーマ閲覧：年表の出典行と詳細の重複を整理し、関連商品の画像付き入口を比較試作。実装・3200・HTTPS β確認まで完了｜今回はβ比較まで。本番未変更。Webbの閲覧URLへ `?itemEntry=1` を付けると導入に入口を追加。390／1500／1920pxで画像・商品欄・閲覧への復帰と横溢れなしを確認。
+
 2026-11-10 容量整理・復帰完了：①不要物調査・②cache整理・③本人の手動圧縮後、既存12 container／β5 Worker／正式API向けPC2 Workerを復帰確認｜今回の③まで完了。VHD合計約99.4 GiB縮小、C空き約107.7 GiB。3200／HTTPS βのTOP・同じテーマが200、既存build継続・本番未変更。次回はWSLを使うCodexも終了してからWindows側で圧縮する。[実測・注意点](verification/DEV_STORAGE_COMPACTION_20261110.md)。
 
 2026-11-10 商品カード・運営画像API：①確認・②実装・③3200／HTTPS βの登録・表示確認まで完了｜今回の3工程は完了、本番未変更｜48テスト・型検査込みbuild、PC／390／320px・日英・画像各比率／失敗時を確認。HTTPファイル→画像ID→商品版→テーマ版→購入リンク、旧版・Capsule／共有・未参照GCを実測。β build zOd5nbdXYX3d0CrC9Mg14。実ChatGPT新ツール取得・Creators接続は未確認、地域A/Bは比較案として保持。[設計とAPI](design/PRODUCT_CARDS_OPERATOR_IMAGES_20261110.md)／[画面・実測・制約](verification/PRODUCT_CARDS_OPERATOR_IMAGES_20261110.md)。

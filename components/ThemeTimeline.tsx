@@ -36,7 +36,6 @@ type Props<R extends TimelineDisplayRecord> = {
   headerAction?: ReactNode;
   emptyMessage?: string;
   reading?: boolean;
-  onReadEvidence?:(recordId:string,evidenceId:string)=>void;
 };
 type Group<R extends TimelineDisplayRecord> = ThemeTimelineGroup<R>;
 type CalendarTime = Extract<
@@ -48,7 +47,7 @@ const meaningLabels = {
   point: "時点",
   duration: "期間",
   "occurrence-window": "発生時期の幅",
-  "unclassified-range": "時期の範囲 · 未区別",
+  "unclassified-range": "資料に記された時期",
 };
 
 function RecordContext({
@@ -145,7 +144,7 @@ function orderedRecords<R extends TimelineDisplayRecord>(group: Group<R>) {
 
 function Period({ record }: { record: TimelineDisplayRecord }) {
   const {locale}=useUiLocale();const tr=(ja:string,en:string)=>locale==="en"?en:ja;
-  const labels=locale==="en"?{point:"Point in time",duration:"Duration","occurrence-window":"Occurrence window","unclassified-range":"Time range · unclassified"}:meaningLabels;
+  const labels=locale==="en"?{point:"Point in time",duration:"Duration","occurrence-window":"Occurrence window","unclassified-range":"Dates in the source"}:meaningLabels;
   const t = record.displayTime ?? record.time;
   if (t?.kind === "calendar") {
     const meaning = calendarMeaning(t);
@@ -207,7 +206,7 @@ function Period({ record }: { record: TimelineDisplayRecord }) {
         )}
         {meaning === "unclassified-range" && (
           <p className={css.rangeNote}>
-            {tr("続いた期間か、発生時期の幅かは未区別です","Not classified as a duration or an occurrence window")}
+            {tr("この日付だけでは、いつ始まり、いつ終わったかは分かりません。","These dates alone do not establish when the event began or ended.")}
           </p>
         )}
       </div>
@@ -258,7 +257,6 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
   headerAction,
   emptyMessage,
   reading=false,
-  onReadEvidence,
 }: Props<R>) {
   const {locale}=useUiLocale();const tr=(ja:string,en:string)=>locale==="en"?en:ja;
   selectionLabel??=tr("Capsuleに含める","Include in Capsule");emptyMessage??=tr("表示する記録がありません。","No records to display.");
@@ -443,8 +441,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
             ) : (
               <Period record={record} />
             )}
-            {reading&&<div className={css.readingActions}>
-              {record.evidence.map(e=><button key={e.evidenceId??e.sourceId} title={tr("出典を読む：","Read source: ")+e.title} aria-label={tr("出典を読む：","Read source: ")+e.title} onClick={()=>e.evidenceId&&onReadEvidence?.(timelineRecordId(record),e.evidenceId)}><Icon name="book"/><span>{e.title}</span><Icon name="chevron"/></button>)}
+            {reading&&nested.length>0&&<div className={css.readingActions}>
               {nested.length>0&&<button aria-expanded={expanded.has(record.id)} onClick={()=>setExpanded(before=>{const next=new Set(before);if(next.has(record.id))next.delete(record.id);else next.add(record.id);return next;})}><Icon name="chevron"/>{tr("詳しい時間軸を開く","Open detailed timeline")} · {nested.length}</button>}
             </div>}
             {!reading&&<div
