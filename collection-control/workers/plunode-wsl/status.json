@@ -26,31 +26,26 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-10T21:35:39.115799+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-10T20:41:58.846022+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-10T21:35:39.115799+00:00",
+    "eligibleAt": "2026-11-10T20:41:58.846022+00:00",
     "windowEndAt": "2026-11-10T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-70-dot-fujikof-doraemon-20261029",
-    "startedAt": "2026-11-10T20:30:39.115801+00:00",
-    "limitAt": "2026-11-10T21:25:39.115799+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-69-dot-ishinomori-three-20261029",
-    "endedAt": "2026-11-10T20:19:54.043118+00:00"
+    "requestId": "issue-70-dot-fujikof-doraemon-20261029",
+    "endedAt": "2026-11-10T20:31:58.846024+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 3,
     "waiting-control": 28,
     "completed": 25,
-    "awaiting-recovery": 5,
-    "running": 1
+    "awaiting-recovery": 6
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -197,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-10T20:31:20.308161+00:00"
+  "checkedAt": "2026-11-10T20:32:28.421736+00:00"
 }
