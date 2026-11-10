@@ -50,5 +50,5 @@
 
 .detail .statement { line-height:1.7; }
 .detail .explanation p { line-height:1.7; }
-.detail .subjects button { min-height:30px; line-height:1.5; }
-@media(max-width:800px) { .detail .subjects button { min-height:36px; } }
+.detail.detail .subjects button { min-height:30px; line-height:1.5; }
+@media(max-width:800px) { .detail.detail .subjects button { min-height:36px; } }

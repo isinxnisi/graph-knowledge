@@ -1,3 +1,5 @@
+/* Reader controls use gap; do not also inherit the legacy icon margin. */
+.workspace :global(.ui-icon) { margin-inline:0; }
 .workspace [hidden] { display: none !important; }
 .workspace h2 { display: flex; align-items: center; gap: 7px; }
 .workspace h2 :global(.ui-icon) { width: 17px; height: 17px; }
@@ -25,10 +27,12 @@
 .canvasFrame > div:first-child { height: clamp(380px,58dvh,680px); }
 .recordStrip { display: flex; gap: 6px; flex-wrap: wrap; padding-top: 12px; }
 .recordStrip button { font-size: 12px; }
-.themeHeader { display: flex; flex-wrap: nowrap; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; position: sticky; top: 0; z-index: 14; background: var(--color-panel); padding: 2px 0; border-bottom: 1px solid var(--color-border); }
-.workspace .themeHeader h2 { flex: 1; min-width: 0; order: 1; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.6; margin: 0; }
-.themeHeader > span { order: 2; white-space: nowrap; }
-.workspace .themeInfo { order: 3; display: inline-flex; align-items: center; justify-content: center; padding: 5px; border: 0; background: transparent; }
+/* One controls row and one full-width title; the following hero owns no extra top gap. */
+.workspace .themeHeader { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:4px 8px; position:static; margin:0 0 8px; padding:0; border:0; background:var(--color-panel); }
+.workspace .themeHeader h2 { display:block; flex:1 0 100%; min-width:0; order:4; margin:0; padding:0; overflow-wrap:anywhere; white-space:normal; font:500 27px/1.35 var(--font-editorial); }
+.workspace .themeHeader > span { order:2; white-space:nowrap; font-size:10px; }
+.themeHeader .return { margin-right:auto; }
+.workspace .themeInfo { order:2; display:inline-flex; align-items:center; justify-content:center; padding:5px; border:0; background:transparent; }
 .workspace .return { display: inline-flex; align-items: center; gap: 5px; padding: 3px 0; border: 0; background: none; font-size: 12px; white-space: nowrap; }
 .viewTabs { display: flex; gap: 5px; padding: 2px 0 12px; }
 .viewTabs button { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; }
@@ -46,11 +50,11 @@
 @media (max-width: 800px) {
  .viewTabs { padding: 4px 0 9px; }
  .viewTabs button { flex: 1; min-height: 40px; padding: 6px; }
- .workspace .themeHeader { gap: 2px 5px; flex-wrap: wrap; }
- .workspace .themeHeader .return { margin-right: auto; min-height: 36px; }
- .workspace .themeHeader h2 { order: 4; flex: 1 0 100%; white-space: normal; overflow-wrap: anywhere; line-height: 1.4; padding: 1px 0 8px; }
- .themeHeader h2 { font-size: 17px; }
- .themeHeader > span { display: none; }
+ .workspace .themeHeader { gap:4px 5px; }
+ .workspace .themeHeader .return { min-height:36px; }
+ .workspace .themeHeader h2 { font-size:23px; }
+ .workspace .themeHeader > span { display:none; }
+ .workspace .themeHeader .themeInfo { min-width:36px; min-height:36px; }
  .canvasFrame:not(.themeCanvas) > div:first-child { height: min(58dvh,560px); min-height: 330px; }
 
  .themeCards { grid-template-columns: 1fr; }
@@ -62,11 +66,7 @@
 .workspace .themeInfo[aria-pressed="true"] { color: var(--color-accent); background: var(--color-accent-soft); }
 .themeCanvas { scroll-margin-top: 60px; }
 
-.workspace .themeHeader{position:static;flex-wrap:wrap;padding:0 0 8px;gap:4px 8px;margin-bottom:9px;border-bottom:0}
-.workspace .themeHeader h2{order:4;flex-basis:100%;white-space:normal;font:500 27px/1.35 var(--font-editorial);padding-top:1px}
-.themeHeader .return{margin-right:auto}.workspace .themeHeader>span{font-size:10px}.workspace .themeHeader .themeInfo{order:2}
 .prototype{margin-top:14px;font-size:11px;color:var(--color-muted)}.prototype summary{cursor:pointer}.prototype label{display:flex;gap:8px;align-items:center;margin:10px 0}.prototype select{min-width:0;max-width:100%}
-@media(max-width:800px){.workspace .themeHeader h2{font-size:23px}.workspace .themeHeader .themeInfo{min-width:36px;min-height:36px}}
 
 .sourceIndex{font-size:12px;margin-top:14px}.sourceIndex summary{cursor:pointer;color:var(--color-muted)}.sourceIndex ul{padding-left:18px}.sourceIndex li{margin:8px 0}.sourceIndex a{color:var(--color-accent)}
 
@@ -95,3 +95,6 @@
 .workspace.details .entityExplore { display:flex; align-items:center; gap:6px; margin:10px 0 0 23px; padding:5px 0; border:0; background:transparent; color:var(--color-accent); max-width:calc(100% - 23px); text-align:left; font-size:12px; line-height:1.6; }
 
 @media(min-width:1248px) { .workspace.details .entityReturn { display:none; } }
+
+.editRecord :global(.ui-icon) { width:16px; height:16px; }
+.editRecord { gap:7px; }
