@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-10T20:39:33.766913+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-10T19:45:14.717471+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-10T20:39:33.766913+00:00",
+    "eligibleAt": "2026-11-10T19:45:14.717471+00:00",
     "windowEndAt": "2026-11-10T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-65-dot-inoue-three-20261029",
-    "startedAt": "2026-11-10T19:34:33.766916+00:00",
-    "limitAt": "2026-11-10T20:29:33.766913+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-62-dot-akutami-jujutsu-20261028",
-    "endedAt": "2026-11-10T19:24:08.871932+00:00"
+    "requestId": "issue-65-dot-inoue-three-20261029",
+    "endedAt": "2026-11-10T19:35:14.717473+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 3,
-    "waiting-control": 34,
-    "completed": 21,
+    "waiting-control": 33,
+    "completed": 22,
     "awaiting-recovery": 4
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-10T19:34:40.312937+00:00"
+  "checkedAt": "2026-11-10T19:35:50.392113+00:00"
 }
