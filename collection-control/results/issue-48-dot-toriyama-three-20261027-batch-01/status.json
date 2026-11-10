@@ -83,11 +83,11 @@
   "requestSha256": "42647bce621bda1430fe1abe5ac77fda6be97db99885827eefd7248346e104ce",
   "kind": "collect-review",
   "phase": "waiting-control",
-  "generation": 3514,
+  "generation": 3518,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-10T21:52:03+00:00",
+  "updatedAt": "2026-11-10T22:05:01+00:00",
   "result": {
     "jobId": "issue-48-dot-toriyama-three-20261027-r0001-bfe689d065a388d9",
     "collectionUnchanged": false,
@@ -114,5 +114,5 @@
     "datasets/collection-decision-drafts/issue-48-dot-toriyama-three-20261027-batch-01/4607282644225dd3f239445ba377ba5750cee423ac0cabd972fb0e5285417d6a/issue-48-dot-toriyama-three-20261027-batch-01-identity-draft.json"
   ],
   "retryAt": 1793709723.4435904,
-  "message": "Execution gate: closing-window"
+  "message": "Execution gate: outside-window"
 }
