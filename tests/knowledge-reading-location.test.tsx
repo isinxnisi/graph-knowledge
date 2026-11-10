@@ -92,8 +92,8 @@ it("解説の出典を読んだあと固定版の元記録と引用へ戻れ、�
  fireEvent.click(screen.getByRole("button",{name:"引用と掲載箇所を読む：資料"}));
  fireEvent.click(screen.getByRole("button",{name:"この解説の出典を読む"}));await flush();
  expect(within(document.getElementById("explorer-detail")!).queryByText("元の出来事の本文")).toBeNull();
- expect(screen.getByRole("button",{name:"元の出来事に戻る"})).toBeTruthy();expect(select).not.toHaveBeenCalled();
- fireEvent.click(screen.getByRole("button",{name:"元の出来事に戻る"}));await flush();
+ expect(screen.getByRole("button",{name:"「元の出来事」に戻る"})).toBeTruthy();expect(select).not.toHaveBeenCalled();
+ fireEvent.click(screen.getByRole("button",{name:"「元の出来事」に戻る"}));await flush();
  expect(within(document.getElementById("explorer-detail")!).getByText("元の出来事の本文")).toBeTruthy();expect(screen.getByText("根拠の文章")).toBeTruthy();
  expect(screen.getByRole("button",{name:"引用と掲載箇所を読む：資料"}).getAttribute("aria-expanded")).toBe("true");
  expect(select).not.toHaveBeenCalled();expect(fixed.snapshot.records[0].revision).toBe(1);
