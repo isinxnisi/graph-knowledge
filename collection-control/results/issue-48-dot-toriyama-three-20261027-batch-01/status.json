@@ -82,12 +82,12 @@
   },
   "requestSha256": "42647bce621bda1430fe1abe5ac77fda6be97db99885827eefd7248346e104ce",
   "kind": "collect-review",
-  "phase": "waiting-lock",
-  "generation": 3238,
+  "phase": "waiting-control",
+  "generation": 3239,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-04T00:50:37+00:00",
+  "updatedAt": "2026-11-10T10:08:54+00:00",
   "result": {
     "jobId": "issue-48-dot-toriyama-three-20261027-r0001-bfe689d065a388d9",
     "collectionUnchanged": false,
@@ -114,5 +114,5 @@
     "datasets/collection-decision-drafts/issue-48-dot-toriyama-three-20261027-batch-01/4607282644225dd3f239445ba377ba5750cee423ac0cabd972fb0e5285417d6a/issue-48-dot-toriyama-three-20261027-batch-01-identity-draft.json"
   ],
   "retryAt": 1793709723.4435904,
-  "message": "共通ロック使用中。次回に再確認する。"
+  "message": "Execution gate: outside-window"
 }
