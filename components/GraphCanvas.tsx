@@ -27,7 +27,7 @@ import styles from "./Explorer.module.css";
 import AnimatedDetails from "./AnimatedDetails";
 import NeighborLoading from "./NeighborLoading";
 
-export type CanvasContent = { nodes: { id: string; label: string; kind: string; badge?: string; shape?: CapsuleNodeShape; textStyle?: string; textFormat?: CanvasTextFormat; proposalState?: ProposalState }[]; relations: Record<string, CanvasRelation> };
+export type CanvasContent = { nodes: { id: string; label: string; kind: string; description?: string; badge?: string; shape?: CapsuleNodeShape; textStyle?: string; textFormat?: CanvasTextFormat; proposalState?: ProposalState }[]; relations: Record<string, CanvasRelation> };
 export type GraphContextMenuRequest = {
   kind: "node" | "edge" | "background"; id?: string; selectedKeys: string[];
   clientX: number; clientY: number; position: { x: number; y: number }; source: "pointer" | "keyboard";
@@ -55,6 +55,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
   useEffect(() => { canvasOptions.current = { contentOnly, content, currentKeys, selectionMode, onSelectionChange, onMove, onContextMenu, interactionBlocked }; });
   const viewChange = useRef(onViewChange);
   useEffect(() => { viewChange.current = onViewChange; }, [onViewChange]);
+  const caption = useRef<HTMLDivElement>(null);
   const container = useRef<HTMLDivElement>(null);
   const badgeLayer = useRef<HTMLDivElement>(null);
   const core = useRef<Core | null>(null);
@@ -249,8 +250,31 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     const removeBadges = attachGraphBadges(cy, badgeLayer.current!, styles.relationPatch,
       (id, originalEvent) => choose(id, { originalEvent }, false),
       styles.entityPatch, (id, event) => openContext(id, "edge", event.clientX, event.clientY, "pointer"));
-    cy.on("mouseover", "node", event => { event.target.addClass("hovered"); if (event.target.data("kind") !== "text") container.current!.title = [event.target.data("fullLabel"), event.target.data("badge")].filter(Boolean).join(" · "); });
-    cy.on("mouseout", "node", event => { event.target.removeClass("hovered"); container.current!.removeAttribute("title"); });
+    const host=container.current, tip=caption.current!;
+    let captionId:string|null=null;
+    function hideCaption(){tip.hidden=true;captionId=null;host.removeAttribute("title");}
+    function showCaption(node:cytoscape.NodeSingular){
+      hideCaption();
+      const description=node.data("description");
+      if(!description||canvasOptions.current.interactionBlocked)return;
+      captionId=node.id();
+      tip.children[0].textContent=node.data("fullLabel");
+      tip.children[1].textContent=description;
+      tip.hidden=false;
+      const bounds=node.renderedBoundingBox({includeLabels:false}),gap=8;
+      const left=(bounds.x1+bounds.x2-tip.offsetWidth)/2,below=bounds.y2+gap;
+      tip.style.left=Math.max(gap,Math.min(host.clientWidth-tip.offsetWidth-gap,left))+"px";
+      tip.style.top=Math.max(gap,Math.min(host.clientHeight-tip.offsetHeight-gap,below+tip.offsetHeight+gap<=host.clientHeight?below:bounds.y1-tip.offsetHeight-gap))+"px";
+    }
+    cy.on("mouseover", "node", event=>{
+      const node=event.target;node.addClass("hovered");
+      if(node.data("description")){if(window.matchMedia("(any-hover: hover)").matches)showCaption(node);}
+      else if(node.data("kind")!=="text")host.title=[node.data("fullLabel"),node.data("badge")].filter(Boolean).join(" · ");
+    });
+    cy.on("mouseout", "node", event=>{event.target.removeClass("hovered");hideCaption();});
+    cy.on("pan zoom grab tapstart remove resize",hideCaption);
+    host.addEventListener("pointerleave",hideCaption);
+    host.addEventListener("blur",hideCaption);
     function choose(id: string, event: Pick<cytoscape.EventObject, "originalEvent">, isNode: boolean) {
       if (canvasOptions.current.interactionBlocked) return;
       const touch = isGraphTouchEvent(event.originalEvent);
@@ -297,6 +321,14 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
         original?.clientX ?? box.left + rendered.x, original?.clientY ?? box.top + rendered.y, "pointer");
     });
     const keyboardContext = (event: KeyboardEvent) => {
+      if(event.key==="Escape"){hideCaption();return;}
+      if(!canvasOptions.current.interactionBlocked&&!event.altKey&&!event.ctrlKey&&!event.metaKey&&!event.shiftKey){
+        if((event.key==="ArrowRight"||event.key==="ArrowLeft")){
+          const nodes=cy.nodes().filter(n=>Boolean(n.data("description")));
+          if(nodes.length){event.preventDefault();const idx=nodes.map(n=>n.id()).indexOf(captionId??"");showCaption(nodes[idx<0?(event.key==="ArrowLeft"?nodes.length-1:0):(idx+(event.key==="ArrowLeft"?-1:1)+nodes.length)%nodes.length]);return;}
+        }
+        if(event.key==="Enter"&&captionId){event.preventDefault();const id=captionId;hideCaption();handlers.current.onEntity(id);return;}
+      }
       if (event.key !== "ContextMenu" && !(event.shiftKey && event.key === "F10")) return;
       if (!canvasOptions.current.onContextMenu || canvasOptions.current.interactionBlocked || event.isComposing) return;
       event.preventDefault(); event.stopPropagation();
@@ -334,7 +366,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     cy.on("drag pan zoom cxttapstart", () => input.cancel());
     const resize = new ResizeObserver(resizeCanvas);
     resize.observe(container.current);
-    return () => { motion.current?.dispose(); motion.current = null; removeBadges(); input.dispose(); cancelClicks(); surface.removeEventListener("keydown", keyboardContext); relationGestures.current = null; gestures.current = null; contentGestures.current = null; touchInput.current = null; themeObserver.disconnect(); resize.disconnect(); cy.destroy(); core.current = null; viewportSize.current = null; pendingFocus.current = null; generation.current = -1; initialLayoutDone.current = false; };
+    return () => { motion.current?.dispose(); motion.current = null; removeBadges(); input.dispose(); cancelClicks(); hideCaption();surface.removeEventListener("blur",hideCaption);surface.removeEventListener("pointerleave",hideCaption);surface.removeEventListener("keydown", keyboardContext); relationGestures.current = null; gestures.current = null; contentGestures.current = null; touchInput.current = null; themeObserver.disconnect(); resize.disconnect(); cy.destroy(); core.current = null; viewportSize.current = null; pendingFocus.current = null; generation.current = -1; initialLayoutDone.current = false; };
   }, []);
 
   useEffect(() => {
@@ -479,7 +511,8 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
           cancelGestures(); resizeCanvas(); core.current?.fit(undefined, 24);
         }}><Icon name="fit" /></button>
       </div>
-      <div className={styles.cySurface} ref={container} onPointerDownCapture={resizeCanvas} data-testid="graph-canvas" tabIndex={0} onContextMenu={event => { if (onContextMenu) event.preventDefault(); }} data-focus-destination role="img" aria-label={ui.graphAria} />
+      <div className={styles.cySurface} ref={container} onPointerDownCapture={resizeCanvas} data-testid="graph-canvas" tabIndex={0} onContextMenu={event => { if (onContextMenu) event.preventDefault(); }} data-focus-destination role="img" aria-label={ui.graphAria+(content?.nodes.some(n=>n.description)?(locale==="en"?". Left and right arrows: read about nodes. Enter: open details.":"。左右キーでノードの説明、Enterで詳細。"):"")} />
+      <div ref={caption} className={styles.nodeCaption} role="status" hidden><strong/><span/></div>
       <div className={styles.relationPatches} ref={badgeLayer} aria-hidden="true" />
       <div className={styles.graphOverlay} data-testid="graph-overlay">{feedback}
         {Object.entries(graph.expansions).filter(([, meta]) => meta.active && meta.loading).map(([id, meta]) =>

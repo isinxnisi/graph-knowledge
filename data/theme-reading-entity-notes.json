@@ -1,0 +1,38 @@
+[
+  {
+    "id": "u3:fbaa9ee12f288cfa:entity:2150227765693eb35671",
+    "revision": 1,
+    "ja": "18枚の六角形の鏡を組み合わせた、Webbの大きな金色の鏡。遠い天体から届く光を集め、副鏡へ送る。",
+    "en": "Webb’s large golden mirror is made of 18 hexagonal segments. It collects light from distant objects and reflects it toward the secondary mirror."
+  },
+  {
+    "id": "u3:fbaa9ee12f288cfa:entity:2c1cdc5fe1fe713027b1",
+    "revision": 1,
+    "ja": "主鏡の前に3本の支柱で支えられた小さな鏡。主鏡が集めた光を観測機器に向けて送り返す。",
+    "en": "A small mirror held in front of Webb’s main mirror by three struts. It reflects the collected light back toward the instruments."
+  },
+  {
+    "id": "u3:fbaa9ee12f288cfa:entity:622b4dac4047aebf573f",
+    "revision": 1,
+    "ja": "Webbを折りたたんだ状態で宇宙へ運んだ欧州のロケット。2021年12月25日、フランス領ギアナから打ち上げられた。",
+    "en": "The European rocket that carried Webb into space, with the telescope folded inside. It lifted off from French Guiana on December 25, 2021."
+  },
+  {
+    "id": "u3:fbaa9ee12f288cfa:entity:e523f9d32d200d4c8981",
+    "revision": 1,
+    "ja": "地球から見て太陽と反対の方向に約150万km離れた地点。Webbはここに静止せず、その周りを回りながら観測する。",
+    "en": "A point about 1.5 million kilometres from Earth, away from the Sun. Webb follows an orbit around this point as it observes the sky."
+  },
+  {
+    "id": "u3:fbaa9ee12f288cfa:entity:e7a84d267f62548ef726",
+    "revision": 1,
+    "ja": "遠い宇宙から届く赤外線をとらえる宇宙望遠鏡。打上げ後に鏡と遮熱膜を広げ、星や銀河を観測する。",
+    "en": "A space telescope that detects infrared light. After launch, Webb unfolded its mirrors and sunshield to observe stars and galaxies."
+  },
+  {
+    "id": "u3:fbaa9ee12f288cfa:entity:f64a5eb36a6705edc7d2",
+    "revision": 1,
+    "ja": "望遠鏡と太陽の間に広げる5層の薄い膜。太陽・地球・月からの熱を遮り、かすかな赤外線をとらえるために鏡や機器を低温に保つ。",
+    "en": "Five thin layers stretched between the telescope and the Sun. They shield the mirrors and instruments from heat from the Sun, Earth and Moon so Webb can detect faint infrared light."
+  }
+]

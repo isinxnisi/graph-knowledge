@@ -5,10 +5,20 @@ import type { KnowledgeThemePage } from "../lib/domain/knowledge-theme-reader";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { ThemeLink, type OpenTheme } from "./ThemeDiscovery";
 import ReadingDetailSection,{ReadingList} from "./ReadingDetailSection";
-export default function RelatedThemes({entityId,onOpen}:{entityId:string;onOpen:OpenTheme}) {
+export default function RelatedThemes({entityId,onOpen,catalogue}:{entityId:string;catalogue?:KnowledgeThemePage["themes"];onOpen:OpenTheme}) {
  const {locale}=useUiLocale();
  const [page,setPage]=useState<{id:string;value:KnowledgeThemePage}|null>(null);
- useEffect(()=>{let live=true;const read=()=>readKnowledge<KnowledgeThemePage>("themes",{entityId}).then(value=>{if(live)setPage({id:entityId,value});}).catch(()=>{if(live)setPage(null);});void read();const timer=setInterval(()=>void read(),30000);return()=>{live=false;clearInterval(timer);};},[entityId]);
- if(page?.id!==entityId||!page.value.themes.length)return null;
- return <ReadingDetailSection ariaLabel={locale==="en"?"Related themes":"関連するテーマ"} title={locale==="en"?"Related themes":"関連するテーマ"} icon="event"><ReadingList key={entityId} noun={locale==="en"?"themes":"テーマ"} items={page.value.themes.map(theme=><ThemeLink key={theme.id} theme={theme} onOpen={onOpen} focusEntityId={theme.entityIds.includes(entityId)?entityId:theme.entityIds.find(id=>page.value.focusIds?.includes(id))}/>)}/></ReadingDetailSection>;
+ const [attempt,retry]=useState(0);
+ const [failure,setFailure]=useState("");
+ useEffect(()=>{
+  if(catalogue)return;
+  let live=true;
+  void readKnowledge<KnowledgeThemePage>("themes",{entityId}).then(value=>{if(live)setPage({id:entityId,value});}).catch(()=>{if(live)setFailure(entityId);});
+  return()=>{live=false;};
+ },[entityId,catalogue,attempt]);
+ const current=page?.id===entityId?page.value:undefined;
+ const themes=catalogue?catalogue.filter(t=>t.entityIds.includes(entityId)||Object.hasOwn(t.focusAliases??{},entityId)):current?.themes;
+ if(themes?.length===0)return null;
+ const en=locale==="en",title=en?"Related themes":"関連するテーマ";
+ return <ReadingDetailSection ariaLabel={title} title={title} icon="event">{themes?<ReadingList key={entityId} noun={en?"themes":"テーマ"} items={themes.map(t=><ThemeLink key={t.id} theme={t} onOpen={onOpen} focusEntityId={t.entityIds.includes(entityId)?entityId:t.focusAliases?.[entityId]??t.entityIds.find(id=>current?.focusIds?.includes(id))}/>)}/>:failure===entityId?<button onClick={()=>{setFailure("");retry(v=>v+1);}}>{en?"Retry":"再取得"}</button>:<small role="status">{en?"Loading themes…":"テーマを読み込み中…"}</small>}</ReadingDetailSection>;
 }

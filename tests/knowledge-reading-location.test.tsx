@@ -13,7 +13,7 @@ vi.mock("../components/GraphCanvas",()=>({default:()=> <div>保持中の図</div
 vi.mock("../components/KnowledgeSubmissionAvailability",()=>({useKnowledgeSubmissionsEnabled:()=>true}));
 vi.mock("../lib/client/use-knowledge-display-translations",()=>({useKnowledgeDisplayTranslations:()=>[]}));
 vi.mock("../lib/client/knowledge-submission-handoff",async()=>({...await vi.importActual("../lib/client/knowledge-submission-handoff"),createSelectionSubmission:mocks.capture}));
-const theme={theme:{id:"theme",revision:1,content:{title:"テーマ",recordPins:[],description:""}},records:[],snapshot:{entities:[],records:[]}};
+const theme={theme:{id:"theme",revision:1,content:{title:"テーマ",recordPins:[],description:""}},records:[],snapshot:{entities:[],records:[],sources:[]}};
 function Reader(){const r=useKnowledgeReading()!;return <><span>既存Explorer</span><button onClick={()=>r.openRecord("record-1")}>記録を開く</button><div>{r.center}</div></>;}
 async function flush(){await act(async()=>{for(let n=0;n<10;n++)await Promise.resolve();});}
 beforeEach(()=>{mocks.close.mockClear();history.replaceState({},"","/?ktheme=theme");mocks.workspace={normal:{records:[],entities:[],epoch:0,selection:null},activeTheme:theme,retainedTheme:theme,themeSelection:null,themeView:"graph",busy:false,restoring:false,error:"",message:"",status:null,closeTheme:mocks.close};});
@@ -90,7 +90,7 @@ it("解説の出典を読んだあと固定版の元記録と引用へ戻れ、�
  function Both(){const r=useKnowledgeReading()!;return <>{r.center}<aside id="explorer-detail">{r.detail}</aside></>;}
  render(<KnowledgeReading><Both/></KnowledgeReading>);await flush();
  fireEvent.click(screen.getByRole("button",{name:"引用と掲載箇所を読む：資料"}));
- fireEvent.click(screen.getByRole("button",{name:"この解説の出典を読む"}));await flush();
+ fireEvent.click(screen.getByRole("button",{name:"解説1の出典を読む"}));await flush();
  expect(within(document.getElementById("explorer-detail")!).queryByText("元の出来事の本文")).toBeNull();
  expect(screen.getByRole("button",{name:"「元の出来事」に戻る"})).toBeTruthy();expect(select).not.toHaveBeenCalled();
  fireEvent.click(screen.getByRole("button",{name:"「元の出来事」に戻る"}));await flush();

@@ -7,7 +7,7 @@ import { roleIdSchema } from "./contribution";
 
 export type KnowledgeThemePage = { focusIds?: string[]; themes: {
   id: string; revision: number; title: string; description: string; translations?: KnowledgeDisplayTranslation[]; presentationIntros?:Partial<Record<"ja"|"en",{hook:string;lead:string}>>; presentationImages?:Partial<Record<"ja"|"en",NonNullable<import("./theme-reading-presentation").ThemeReadingPresentation["image"]>>>;
-  initialView: "graph" | "timeline" | "split"; hasTimeline: boolean; hasRelations?: boolean; publishedAt?: string; entityIds: string[];
+  initialView: "graph" | "timeline" | "split"; hasTimeline: boolean; hasRelations?: boolean; publishedAt?: string; entityIds: string[]; focusAliases?: Record<string,string>;
 }[] };
 /** A Theme fixes its own versions. It is not re-resolved against an active generation. */
 export type KnowledgeThemeRead = {
@@ -31,7 +31,7 @@ export const knowledgeEntityQuerySchema = z.strictObject({
 });
 
 export type KnowledgeThemeSummary = KnowledgeThemePage["themes"][number];
-export type KnowledgeThemeHome = { featured: KnowledgeThemeSummary[]; recent: KnowledgeThemeSummary[]; total: number };
+export type KnowledgeThemeHome = { relatedCatalogue?: KnowledgeThemeSummary[]; featured: KnowledgeThemeSummary[]; recent: KnowledgeThemeSummary[]; total: number };
 export function knowledgeThemeKind(theme: KnowledgeThemeSummary) { return theme.hasTimeline ? "timeline" : theme.hasRelations === false ? "context" : "graph"; }
 export function knowledgeThemeTypeLabel(theme: KnowledgeThemeSummary, en = false) {
   return theme.hasTimeline ? theme.hasRelations ? en ? "Timeline · relation diagram" : "年表・関係図" : en ? "Timeline" : "年表" : theme.hasRelations === false ? en ? "Reading" : "解説" : en ? "Relation diagram" : "関係図";

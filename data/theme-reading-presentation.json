@@ -515,8 +515,8 @@
     },
     "locale": "ja",
     "state": "checked",
-    "hook": "Webbが赤外線で見た宇宙は、私たちの宇宙観をどう広げたのか。",
-    "lead": "赤外線で初期宇宙を見る理由から、打上げ・展開、最初の深宇宙画像へ。NASAとESAの資料を根拠に、望遠鏡を宇宙へひらいた工程と、観測がひらいた視野をたどります。",
+    "hook": "Webbはなぜ、望遠鏡を折り畳んで宇宙へ運んだのか。",
+    "lead": "ロケットに収めるには、鏡も遮熱膜も広げたままでは大きすぎる。小さく畳んだ望遠鏡が宇宙で姿を変え、遠い銀河の光を写すまでをたどります。",
     "image": {
       "id": "webb-editorial-v1",
       "src": "/theme-assets/webb-editorial-v1.png",
@@ -548,7 +548,8 @@
             "heading": "宇宙のはじまりに近づくために"
           }
         ],
-        "timelineSummary": "Ariane 5がWebbを打ち上げた。"
+        "timelineSummary": "Ariane 5がWebbを打ち上げた。",
+        "chapterQuestion": "どんな姿でロケットに乗った？"
       },
       {
         "target": {
@@ -581,7 +582,8 @@
             "role": "insight",
             "heading": "観測まで、まだ続く準備"
           }
-        ]
+        ],
+        "chapterQuestion": "暗い宇宙で、なぜ日よけが要る？"
       },
       {
         "target": {
@@ -651,7 +653,8 @@
             "role": "importance"
           }
         ],
-        "timelineSummary": "銀河団SMACS 0723の最初の深宇宙画像を公開した。"
+        "timelineSummary": "銀河団SMACS 0723の最初の深宇宙画像を公開した。",
+        "chapterQuestion": "広げた望遠鏡には、何が写った？"
       }
     ]
   },
@@ -663,8 +666,8 @@
     },
     "locale": "en",
     "state": "checked",
-    "hook": "How did Webb’s infrared view widen our picture of the universe?",
-    "lead": "Why infrared observations? Follow Webb from launch and deployment to its first deep field, using NASA and ESA sources to connect the engineering journey with the view it opened.",
+    "hook": "Why did Webb go into space folded up?",
+    "lead": "The mirror and sunshield were too large to fit inside the rocket fully open. Follow the folded telescope from launch to the moment it could reveal distant galaxies.",
     "image": {
       "id": "webb-editorial-v1",
       "src": "/theme-assets/webb-editorial-v1.png",
@@ -696,7 +699,8 @@
             "heading": "On the way to the first stars and galaxies"
           }
         ],
-        "timelineSummary": "Ariane 5 launched Webb."
+        "timelineSummary": "Ariane 5 launched Webb.",
+        "chapterQuestion": "How did Webb fit inside its rocket?"
       },
       {
         "target": {
@@ -729,7 +733,8 @@
             "role": "insight",
             "heading": "What still lay ahead"
           }
-        ]
+        ],
+        "chapterQuestion": "Why does a telescope in dark space need a sunshield?"
       },
       {
         "target": {
@@ -799,7 +804,8 @@
             "role": "importance"
           }
         ],
-        "timelineSummary": "Webb’s first deep field of galaxy cluster SMACS 0723 was released."
+        "timelineSummary": "Webb’s first deep field of galaxy cluster SMACS 0723 was released.",
+        "chapterQuestion": "What did the unfolded telescope reveal?"
       }
     ]
   }

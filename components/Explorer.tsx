@@ -70,7 +70,7 @@ import RelatedThemes from "./RelatedThemes";
 
 type ExplorerProps = { dataset?: DatasetMode; initialRoot?: string; services?: PublicServicesPolicy; publicOverview?: import("react").ReactNode; discoveryHome?: DiscoveryHomeData; knowledgeEnabled?: boolean; knowledgeOperatorEnabled?: boolean; initialThemes?: KnowledgeThemeHome | null;initialKnowledgeTheme?:import("../lib/domain/knowledge-theme-reader").KnowledgeThemeRead };
 export default function Explorer(props: ExplorerProps) {
-  return props.knowledgeEnabled ? <KnowledgeReading initialTheme={props.initialKnowledgeTheme} operatorEnabled={props.knowledgeOperatorEnabled}><ExplorerBody {...props}/></KnowledgeReading> : <ExplorerBody {...props} />;
+  return props.knowledgeEnabled ? <KnowledgeReading relatedCatalogue={props.initialThemes?.relatedCatalogue} initialTheme={props.initialKnowledgeTheme} operatorEnabled={props.knowledgeOperatorEnabled}><ExplorerBody {...props}/></KnowledgeReading> : <ExplorerBody {...props} />;
 }
 function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview, discoveryHome, knowledgeOperatorEnabled, initialThemes,initialKnowledgeTheme }: ExplorerProps) {
   const knowledge=useKnowledgeReading(),submissionsEnabled=useKnowledgeSubmissionsEnabled();
@@ -272,7 +272,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
         {discoveryRoute && discoveryRoute.conditionKey === graph.conditionKey && <DiscoveryGraphRoute path={discoveryRoute.path} graph={graph} onClear={() => setDiscoveryRoute(null)} onClaim={id => { selectClaim(id); moveToPane("detail"); }} />}
         {selectedEntity && <EntityDetails dataset={dataset} key={key} entity={selectedEntity} expansion={graph.expansions[selectedEntity.id]} onExpand={(more) => void expand(selectedEntity.id, more)} onClose={() => close(selectedEntity.id)} restricted={restricted} onOverview={() => setOverview(selectedEntity)} onSwitch={(mode) => switchFrom(selectedEntity, mode)} />}
         {selectedEntity && knowledge && <KnowledgeRelatedInformation key={selectedEntity.id} entityId={selectedEntity.id} onOpen={knowledge.openRecord}/> }
-        {selectedEntity && knowledge && <RelatedThemes entityId={selectedEntity.id} onOpen={knowledge.openTheme} />}
+        {selectedEntity && knowledge && <RelatedThemes catalogue={initialThemes?.relatedCatalogue} entityId={selectedEntity.id} onOpen={knowledge.openTheme} />}
         {selectedEntity && graph.centerId && <GraphPath key={`path:${key}`} nodes={graph.nodes} relations={relations} rootId={graph.centerId} targetId={selectedEntity.id} onRelation={(id) => {
           selectRelation(id); moveToPane("detail");
           focusDestination(document.getElementById("explorer-detail"));

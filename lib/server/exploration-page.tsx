@@ -26,7 +26,7 @@ export async function ExplorationPage({ locale, id,initialKnowledgeTheme }: { lo
   const isHome = dataset === "public-kg" && !id&&!initialKnowledgeTheme;
   const [home, initialThemes, services] = await Promise.all([
     isHome ? discoveryHomeData() : undefined,
-    isHome && knowledgeEnabled ? initialKnowledgeThemeHome() : undefined,
+    dataset === "public-kg" && knowledgeEnabled ? initialKnowledgeThemeHome() : undefined,
     publicationPolicy(),
   ]);
   return <Explorer initialKnowledgeTheme={initialKnowledgeTheme} knowledgeOperatorEnabled={knowledgeOperatorEnabled} knowledgeEnabled={knowledgeEnabled} dataset={dataset} initialRoot={id} services={services} publicOverview={overview} discoveryHome={home} initialThemes={initialThemes} />;

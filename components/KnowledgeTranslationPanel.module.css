@@ -1,8 +1,8 @@
 .panel{margin-block:.65rem;font-size:.85rem}
 .panel summary{cursor:pointer;color:var(--color-accent);padding-block:.25rem}
 .body{padding:.5rem .65rem;border-inline-start:2px solid var(--color-border);overflow-wrap:anywhere}
-.controls{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center}
-.controls label{display:flex;gap:.35rem;align-items:center;min-width:0;max-width:100%}
+.controls{display:grid;gap:.45rem;align-items:center}
+.controls label{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:.5rem;align-items:center;min-width:0;max-width:100%}
 .controls select{min-width:0;max-width:100%;padding:.25rem .5rem}
 .body p{white-space:pre-wrap;margin-block:.65rem}
 .body small{display:block;opacity:.75;margin-block:.35rem}
@@ -11,3 +11,9 @@
 .generation .consent{display:grid;grid-template-columns:1rem minmax(0,1fr);align-items:start;gap:.45rem;line-height:1.5}
 .generation .consent input[type="checkbox"]{box-sizing:border-box;width:1rem;height:1rem;min-width:0;min-height:0;padding:0;margin:.2em 0 0}
 .consent span{min-width:0}
+
+.embedded { font-size:13px; }
+.embedded .body { padding:.25rem 0 .6rem; border:0; }
+.embedded .controls { grid-template-columns:minmax(0,2fr) minmax(5.7rem,1fr); align-items:start; gap:.6rem; }
+.embedded .controls label { grid-template-columns:minmax(0,1fr); gap:.18rem; font-size:12px; }
+.embedded select { width:100%; }

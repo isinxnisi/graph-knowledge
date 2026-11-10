@@ -7,7 +7,8 @@ const image=z.object({id:z.string(),src:z.string().regex(/^\/theme-assets\/[a-zA
 export const themeReadingPresentationSchema=z.object({
  version:z.literal(1),theme:pin,locale:language,state:z.literal("checked"),
  hook:z.string().min(1).max(300),lead:z.string().max(1200),image:image.optional(),
- records:z.array(z.object({target:pin,shortTitle:z.string().min(1).max(180),timelineSummary:z.string().max(260).optional(),explanations:z.array(z.object({record:pin,role:z.enum(["background","importance","insight","next"]),heading:z.string().min(1).max(100).optional()})).default([])})).default([]),
+ entityNotes:z.array(z.object({target:pin,text:z.string().min(1).max(500)})).optional(),
+ records:z.array(z.object({target:pin,chapterQuestion:z.string().min(1).max(180).optional(),shortTitle:z.string().min(1).max(180),timelineSummary:z.string().max(260).optional(),explanations:z.array(z.object({record:pin,role:z.enum(["background","importance","insight","next"]),heading:z.string().min(1).max(100).optional()})).default([])})).default([]),
 });
 export type ThemeReadingPresentation=z.infer<typeof themeReadingPresentationSchema>;
 /** Use a supplied short heading or an authored time label; never truncate a claim mid-sentence. */

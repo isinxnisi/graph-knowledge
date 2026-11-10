@@ -1,3 +1,4 @@
+import {resolveIdentityGroups} from "./knowledge-identity-resolution";
 import {themeReadingPresentation} from "./theme-reading-presentation";
 import {knowledgeDisplayText} from "../domain/knowledge-display";
 import {publicDisplayTranslations,publicThemeSnapshotTranslations} from "./knowledge-display-translations";
@@ -254,7 +255,7 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
       const theme=q.theme?(await resolvePublicKnowledgeTheme(c,q.theme.id,q.theme.revision)).theme:undefined;
       return {generation:actual.id,translationsChecked:!!q.translations.length,snapshot:await translated({schemaVersion:1,initialView:'graph',records:records.map(r=>r.record),entities,sources,mappings,...(theme?{theme}:{})}),unavailable} satisfies CapsuleUpdateResponse;
     }),
-    themes:(raw:unknown={})=>read(async c=>{
+    themes:(raw:unknown={},withAliases=false)=>read(async c=>{
       const q=knowledgeThemeListQuerySchema.parse(raw);
       const values:unknown[]=[];const conditions=["o.kind='theme'","o.visibility='public'","p.id IS NOT NULL"];
       const focusIds=q.entityId?await identityGroup(c,[q.entityId]):[];
@@ -274,6 +275,10 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
       if(q.q)result.themes=result.themes.filter(t=>normalize([t.title,t.description,...(t.translations??[]).map(v=>v.text)].join(' ')).includes(normalize(q.q)));
       result.themes=result.themes.filter(t=>q.kind==='all'||(t.hasTimeline?'timeline':t.hasRelations?'graph':'context')===q.kind);
       result.themes.sort((a,b)=>q.order==='name'?knowledgeDisplayText(a.translations,{kind:'theme',id:a.id,revision:a.revision,field:'title'},q.language,a.title).localeCompare(knowledgeDisplayText(b.translations,{kind:'theme',id:b.id,revision:b.revision,field:'title'},q.language,b.title),q.language)||a.id.localeCompare(b.id):(b.publishedAt??'').localeCompare(a.publishedAt??'')||a.id.localeCompare(b.id));
+      if(withAliases && result.themes.some(t=>t.entityIds.length)){
+        const groups=await resolveIdentityGroups(c,result.themes.flatMap(t=>t.entityIds));
+        for(const t of result.themes)t.focusAliases=Object.fromEntries(t.entityIds.flatMap(pin=>(groups.get(pin)??[]).filter(id=>id!==pin).map(id=>[id,pin])));
+      }
       return {...result,...(q.entityId?{focusIds}:{})};
     }),
     theme:(raw:unknown)=>read(async c=>{

@@ -645,3 +645,14 @@
  .themeColumns[data-active-pane="detail"]>:global(#explorer-detail){display:block}
  .themeColumns[data-active-pane="detail"]>:global(#explorer-graph){display:none}
 }
+
+.nodeCaption {
+  position: absolute; z-index: 4; pointer-events: none; width: max-content;
+  max-width: min(28ch, calc(100% - 16px)); box-sizing: border-box;
+  padding: .55rem .72rem; border: 1px solid var(--color-border); border-radius: 8px;
+  color: var(--color-text); background: var(--color-panel); box-shadow: var(--shadow-panel);
+  font-size: .79rem; line-height: 1.55; overflow-wrap: anywhere;
+}
+.nodeCaption strong,.nodeCaption span {display:block}
+.nodeCaption strong {margin-bottom:.15rem}
+.nodeCaption span {display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:5;overflow:hidden}

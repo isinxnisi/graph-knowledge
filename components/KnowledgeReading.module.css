@@ -100,8 +100,22 @@
 .editRecord { gap:7px; }
 
 .details .guideTitle { margin: 8px 0 12px; font-size: 1.25rem; }
-.details p.guideSource { margin:0; padding:5px 0; line-height:1.5; }
-.details .guideSource button { text-align:start; white-space:normal; }
+.details p.guideSource { display:grid; grid-template-columns:var(--icon-column) minmax(0,1fr); column-gap:var(--text-gap); align-items:baseline; margin:0; padding:4px 0; line-height:1.45; }
+.guideSource small {font-variant-numeric:tabular-nums;color:var(--color-muted)}
+.edition summary {cursor:pointer;font-size:.82rem;color:var(--color-muted);padding:5px 0}
+.details .guideSource button { display:block; width:fit-content; min-height:24px; padding:0; border:0; background:none; box-shadow:none; color:var(--color-accent); font:inherit; text-align:start; white-space:normal; }
+.details .guideSource button:hover {text-decoration:underline}
 .guideTools { border-top:1px solid var(--color-border); margin-top:12px; padding-top:8px; }
 
 .stage{container-type:inline-size}
+
+.chapters{margin:0;padding-inline-start:1.4rem;list-style-type:decimal-leading-zero}
+.chapters li::marker{font-size:.78em;color:var(--muted)}
+.chapters button,.chapterNext{background:none;border:0;color:var(--accent);text-align:start;cursor:pointer}
+.chapters button{display:inline-flex;align-items:baseline;gap:.5rem;padding:.45rem .35rem;line-height:1.5}
+.chapters button:hover,.chapterNext:hover{text-decoration:underline}
+.chapters svg,.chapterNext svg{width:1em;height:1em;flex:none}
+.chapterNext{display:flex;align-items:center;gap:.6rem;padding:.75rem 0}
+.chapterNext small{white-space:nowrap}
+
+.workspace.details > section > p[data-entity-caption] {margin: .4rem 0 .65rem; line-height: 1.65; overflow-wrap: anywhere;}

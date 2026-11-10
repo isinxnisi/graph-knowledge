@@ -21,13 +21,14 @@ async function featuredIds(): Promise<string[]> {
   }
 }
 
-type ThemeReader = { themes: () => Promise<KnowledgeThemePage> };
+type ThemeReader = { themes: (raw?:unknown,withAliases?:boolean) => Promise<KnowledgeThemePage> };
 /** The HTML and the refresh endpoint use the same authorised catalogue. No process cache. */
 export async function knowledgeThemeHome(service?: ThemeReader): Promise<KnowledgeThemeHome> {
   const reader = service ?? await knowledgePublicationPreview();
-  const [page, ids] = await Promise.all([reader.themes(), featuredIds()]);
+  const [page, ids] = await Promise.all([reader.themes({},true), featuredIds()]);
   const byId = new Map(page.themes.map(theme => [theme.id, theme]));
   return {
+    relatedCatalogue: page.themes.map(({id,revision,title,entityIds,focusAliases,initialView,hasTimeline,hasRelations,translations})=>({id,revision,title,description:"",entityIds,focusAliases,initialView,hasTimeline,hasRelations,translations:translations?.filter(v=>(v.displayTarget??v.target).field==="title")})),
     featured: ids.flatMap(id => byId.has(id) ? [byId.get(id)!] : []),
     recent: page.themes.slice(0, 8), total: page.themes.length,
   };

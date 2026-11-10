@@ -55,3 +55,19 @@
 
 .detailNav {display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;margin-bottom:8px;}
 .detail .detailNav > * {margin:0;}
+
+/* The section already reserves a gutter; keep the text on its heading axis. */
+ul.explanation { margin:0; padding:0; list-style:disc outside; }
+.explanation li { line-height:1.7; margin-block:0 .48em; }
+.explanation li:last-child { margin-bottom:0; }
+.explanation li::marker { color:var(--color-accent); font-size:.78em; }
+.recordTools { margin-top:14px; border-top:1px solid var(--color-border); }
+.toolRow { display:flex; align-items:center; gap:4px 14px; flex-wrap:wrap; }
+.detail .toolRow > :is(button,a) { display:inline-flex; align-items:center; gap:4px; min-height:36px; margin:0; padding:0; border:0; border-radius:0; background:none; box-shadow:none; font:inherit; font-size:12px; color:var(--color-accent); text-decoration:none; }
+.detail .toolRow > a { margin-inline-start:auto; }
+.toolRow :global(.ui-icon) { width:13px;height:13px; }
+.toolRow button[aria-expanded=true] { font-weight:600; }
+.toolRow button[aria-expanded=true] :global(.ui-icon) { transform:rotate(180deg); }
+.infoBody { padding:6px 0 10px; font-size:12px; }
+.detail .infoBody p,.infoBody .meta { margin:0 0 4px; font-size:12px; line-height:1.55; }
+@media(max-width:800px){.detail .toolRow > :is(button,a){min-height:42px}}
