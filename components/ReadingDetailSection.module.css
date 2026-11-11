@@ -13,8 +13,8 @@
 @media(max-width:800px) { .more > button.moreButton { min-height:40px; } }
 
 .section .header > button.sourceToggle { display:inline-flex;align-items:center;gap:.35em;min-height:32px;width:auto;margin:0;padding:0 3px;border:0;box-shadow:none;background:transparent;color:var(--color-accent);font-size:12px; }
-.sourceToggle :global(.ui-icon) { width:12px;height:12px;transform:rotate(90deg); }
-.sourceToggle[aria-expanded="true"] :global(.ui-icon) { transform:rotate(-90deg); }
+.sourceToggle :global(.ui-icon) { width:12px;height:12px;transform:none; }
+.sourceToggle[aria-expanded="true"] :global(.ui-icon) { transform:rotate(180deg); }
 .openSources { max-block-size:min(40dvh,20rem);overflow:auto;scrollbar-gutter:stable; }
 
 .numberedSources > .body { padding-inline-start:0; }

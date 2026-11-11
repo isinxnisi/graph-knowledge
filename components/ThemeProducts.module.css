@@ -1,19 +1,23 @@
 .section { container-type:inline-size; }
 .section .affiliation { color:var(--color-muted); font-size:11px; line-height:1.5; font-weight:400; }
 .region { display:flex;flex-wrap:wrap;align-items:center;gap:3px 9px; }
-.region label { display:inline-flex; align-items:center; gap:6px; font-size:10px; color:var(--color-muted); }
-.region select { width:auto; max-width:105px; min-height:28px; padding:2px 22px 2px 7px; font:inherit; border:1px solid var(--color-border); border-radius:5px; background:var(--color-panel); color:var(--color-text); }
+.section .region label { display:inline-flex; align-items:center; gap:6px; font-size:10px; color:var(--color-muted); }
+.regionControl { position:relative; display:inline-flex; min-width:68px; max-width:115px; }
+.section .regionControl select { appearance:none; -webkit-appearance:none; width:100%; min-width:0; min-height:32px; box-sizing:border-box; padding:4px 25px 4px 9px; font:inherit; font-size:12px; line-height:1.5; border:1px solid var(--color-border); border-radius:5px; background:var(--color-panel); color:var(--color-text); }
+.regionControl > :global(.ui-icon) { position:absolute; right:8px; top:50%; width:12px; height:12px; margin:0; transform:translateY(-50%); pointer-events:none; }
 .card { min-width:0; margin:0 0 10px; padding:12px; border:1px solid var(--color-border); border-radius:9px; background:color-mix(in srgb,var(--color-panel) 94%,var(--color-accent) 6%); }
-.main { display:grid; grid-template-columns:136px minmax(0,1fr); align-items:start; gap:12px; }
-.figure { min-width:0; margin:0; }
+.main { display:grid; grid-template: "image copy" auto / 136px minmax(0,1fr); align-items:start; gap:12px; }
+.figure { grid-area:image; min-width:0; margin:0; }
 .imageFrame { position:relative; aspect-ratio:1/1; width:100%; overflow:hidden; display:grid; place-items:center; background:color-mix(in srgb,var(--color-panel) 97%,var(--color-text) 3%); border-radius:5px; }
 .imageFrame img { position:absolute; inset:0; display:block; width:100%; height:100%; object-fit:contain; }
 .figure figcaption { margin-top:4px; font-size:10px; line-height:1.45; text-align:center; color:var(--color-muted); }
-.copy { min-width:0; }
+.copy { grid-area:copy; min-width:0; }
+.identity { grid-area:copy; min-width:0; }
+.description { grid-area:description; min-width:0; }
 .copy h4 { margin:0; font-size:14px; line-height:1.55; color:var(--color-text); font-weight:600; overflow-wrap:anywhere; }
 .badges { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
 .badges span { display:inline-block; padding:1px 5px; border-radius:3px; background:color-mix(in srgb,var(--color-border) 40%,transparent); color:var(--color-muted); font-size:10px; line-height:1.6; }
-.copy .reason { margin:7px 0 0; font-size:12px; line-height:1.7; color:var(--color-text); }
+.description .reason { margin:7px 0 0; font-size:12px; line-height:1.7; color:var(--color-text); }
 .fullTitle { margin-top:6px; font-size:10px; color:var(--color-muted); }
 .fullTitle summary { cursor:pointer; }
 .fullTitle p { margin:4px 0 0; font-size:11px; line-height:1.6; overflow-wrap:anywhere; }
@@ -31,11 +35,12 @@
 .noImage :global(.ui-icon) { width:18px; height:18px; }
 .disclosure { margin:8px 0 0; font-size:11px; line-height:1.65; color:var(--color-muted); }
 .notice { font-size:12px; color:var(--color-muted); }
-@container(max-width:350px) { .main { grid-template-columns:128px minmax(0,1fr); gap:10px; } }
-@container(max-width:290px) { .main { grid-template-columns:minmax(0,1fr); gap:10px; } .figure { width:152px; margin:0 auto; } }
+@container(max-width:350px) { .main { grid-template: "image copy" auto "description description" auto / 128px minmax(0,1fr); gap:10px; } .copy { display:contents; } .description .reason { margin-top:0; } }
+@container(max-width:290px) { .main { grid-template: "image" auto "copy" auto "description" auto / minmax(0,1fr); gap:10px; } .figure { width:152px; margin:0 auto; } }
 @media(max-width:800px) { .card a.buy { min-height:42px; } }
 
-.main:has(.noImage) { grid-template-columns:minmax(0,1fr); gap:5px; }
+.main:has(.noImage) { grid-template: "image" auto "copy" auto "description" auto / minmax(0,1fr); gap:5px; }
+.main:has(.noImage) .copy { display:contents; }
 .figure:has(.noImage) { width:auto; margin:0; display:flex; gap:6px; align-items:center; }
 .imageFrame:has(.noImage) { aspect-ratio:auto; width:auto; background:transparent; min-height:20px; }
 .figure:has(.noImage) figcaption { margin:0; }

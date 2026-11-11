@@ -33,3 +33,17 @@ Windows版Chromeで同じβ内容を読んだ再測定：
 既存Linux WebKitも試したが、GTK等の共有ライブラリ不足で起動できなかった。実機を再現した確認の成功とは扱わず、巨大なブラウザ環境の追加導入やアプリの倍率抑制はこの調査では実施していない。今回の調査によるCSS・βbuild・本番の変更はない。
 
 参考：Google公式Chrome on iOSのエンジン説明 https://developer.chrome.com/blog/chromium-chronicle-28 ／iPhone版拡大操作 https://support.google.com/chrome/answer/96810?hl=ja&co=GENIE.Platform%3DiOS
+
+## iPhone差を受けたレイアウト修正
+
+追加の利用条件を決める必要はなく、現在のレスポンシブ配置を修正する。一般ユーザーの文字拡大・ズーム機能を禁止せず、text-size-adjustも一律抑止しない。
+
+- 商品欄の幅が350px以下では、画像と商品名・属性の下に紹介文を配置し、本文はカード幅を使う。375px検証で紹介文の幅は143→281px。画像128pxと1:1 containは維持。
+- 広い欄は従来の画像と文章の横並び。290px以下の欄は画像・名前・紹介を縦に並べ、細い文章欄を作らない。画像なしも既存の簡潔な表示を継続。
+- 地域選択はselect要素のまま、appearance:noneと専用の下向き矢印で外観を統一。共有Explorerのfont・padding指定の混入も局所的に避け、標準状態の高さ32pxを確認。外部リンク・市場・広告表記・紹介用イメージ表示を保持。
+- 出典一覧の展開矢印も、閉じた状態は下向き・開いた状態は上向きへ揃える。
+- 商品カード既存3テスト成功、型検査込みbuild成功。375／390／1500pxの実画面で購入リンク、画像比率、文章欄、横溢れなしを確認した。375pxで商品名17px・紹介文15pxへ拡大しても本文幅を保持した。これはiOS実機の完全再現とは区別する。
+- 最終build mC8_zstMue9vhKHd_C0Cjを3200／HTTPS βへ反映し、上記を実画面で再確認。地域のUS→JP選択後も有効な購入リンクを確認。利用者のiPhone実機での最終確認は未了。
+- 比較画像：C:/Users/nishr/.codex/tmp/plunode-item-entry/iphone-width-375.png（変更前）、mobile-product-after-375.png／mobile-product-pane-375.png（変更後）、mobile-product-large-375.png（文字拡大時）。画像を開いて確認した。
+- 前回のbuild作業領域の古い配置backupはビルド対象の外へ移して保持した。今回の最終buildの型検査は約11秒。不要な再検証拡大は行わず、変更箇所の既存テストと実表示を確認。
+- 本番・DB・Worker・画像データは変更していない。
