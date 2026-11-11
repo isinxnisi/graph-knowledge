@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-11T19:37:32.863400+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-11T20:42:55.128052+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-11T19:37:32.863400+00:00",
+    "eligibleAt": "2026-11-11T20:42:55.128052+00:00",
     "windowEndAt": "2026-11-11T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-48-dot-toriyama-three-20261027-batch-01",
+    "startedAt": "2026-11-11T19:37:55.128055+00:00",
+    "limitAt": "2026-11-11T20:32:55.128052+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-25-utc-recovery-07",
     "endedAt": "2026-11-11T19:27:32.863402+00:00"
@@ -192,5 +196,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-11T19:27:45.850868+00:00"
+  "checkedAt": "2026-11-11T19:38:01.618030+00:00"
 }
