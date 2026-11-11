@@ -44,8 +44,9 @@
   "requestsByPhase": {
     "blocked": 12,
     "waiting-control": 4,
-    "completed": 40,
-    "awaiting-recovery": 6
+    "completed": 39,
+    "awaiting-recovery": 6,
+    "retry-wait": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -192,5 +193,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-11T15:29:56.771595+00:00"
+  "checkedAt": "2026-11-11T15:41:46.666641+00:00"
 }
