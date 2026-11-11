@@ -824,3 +824,7 @@
 .timeline.reading .readingActions button:hover { background:transparent; text-decoration:underline; }
 .readingActions button > :global(.ui-icon):last-child { transform:rotate(-90deg); width:11px; height:11px; }
 @media(max-width:800px) { .timeline.reading .readingActions button { min-height:32px; font-size:11px; } }
+
+/* Relationship context uses the entire record width, beyond the graph-action column. */
+.reading .readingContext { display:flex; flex-wrap:wrap; align-items:center; gap:3px 8px; min-width:0; padding:0 5px 3px; }
+.readingContext > :last-child { font-size:10px; }

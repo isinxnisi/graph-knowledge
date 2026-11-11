@@ -124,3 +124,9 @@
 .chapterNext small { white-space:nowrap; }
 
 .workspace.details > section > p[data-entity-caption] {margin: .4rem 0 .65rem; line-height: 1.65; overflow-wrap: anywhere;}
+
+/* The mobile introduction previews this paragraph; the theme guide retains it in full. */
+.mobileLead { display:none; }
+@media(max-width:800px) {
+ .workspace.details > section > p.mobileLead { display:block; margin:0 0 12px; font-size:14px; line-height:1.7; color:var(--color-text); }
+}

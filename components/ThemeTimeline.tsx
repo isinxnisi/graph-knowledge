@@ -398,7 +398,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
 
                     <span className={css.assertion}>{reading?record.readingSummary||record.readingTitle||record.assertion:record.assertion}</span>
                   </span>
-                  <span className={css.rowContext}><RecordContext record={record} entities={entities} focusedEntityId={focusedEntityId}/>{reading&&<KnowledgeReadingBadge kind={record.kind} polarity={record.polarity} en={locale==="en"} showKind={false}/>}</span>
+                  {!reading&&<span className={css.rowContext}><RecordContext record={record} entities={entities} focusedEntityId={focusedEntityId}/></span>}
                   {(!reading&&(nested.length > 0 ||
                     (group.kind !== "calendar" && t?.label))) && (
                     <span className={css.meta}>
@@ -435,6 +435,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                   </button>
                 )}
             </div>
+            {reading&&<div className={css.readingContext}><RecordContext record={record} entities={entities} focusedEntityId={focusedEntityId}/><KnowledgeReadingBadge kind={record.kind} polarity={record.polarity} en={locale==="en"} showKind={false}/></div>}
             {group.kind === "calendar" ? (
               (!reading || (t?.kind === "calendar" && (t.to || t.startLatest || t.endEarliest))) &&
               <p className={css.meta}>{themeTimeLabel(reading&&t?.kind==="calendar"?{...t,label:""}:record.displayTime??record.time,locale)}</p>
