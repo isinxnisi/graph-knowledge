@@ -26,30 +26,26 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-11T07:28:57.287753+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-11T06:34:38.158242+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-11T07:28:57.287753+00:00",
+    "eligibleAt": "2026-11-11T06:34:38.158242+00:00",
     "windowEndAt": "2026-11-11T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-49-dot-hara-souten-20261027-batch-01",
-    "startedAt": "2026-11-11T06:23:57.287755+00:00",
-    "limitAt": "2026-11-11T07:18:57.287753+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-48-dot-toriyama-three-20261027-batch-01",
-    "endedAt": "2026-11-11T06:13:32.259006+00:00"
+    "requestId": "issue-49-dot-hara-souten-20261027-batch-01",
+    "endedAt": "2026-11-11T06:24:38.158246+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 13,
-    "completed": 37,
+    "completed": 38,
     "awaiting-recovery": 6,
-    "waiting-control": 6
+    "waiting-control": 5
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -196,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-11T06:24:03.931096+00:00"
+  "checkedAt": "2026-11-11T06:24:45.702855+00:00"
 }
