@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-10T21:48:00.530939+00:00",
-  "phase": "outside-window",
+  "nextStartAt": "2026-11-11T01:05:44.244270+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
-    "reason": "outside-window",
-    "eligibleAt": "2026-11-11T00:00:00+00:00",
+    "reason": "interval",
+    "eligibleAt": "2026-11-11T01:05:44.244270+00:00",
     "windowEndAt": "2026-11-11T03:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-25-manga23-20261019-repair1-batch-06",
+    "startedAt": "2026-11-11T00:00:44.244272+00:00",
+    "limitAt": "2026-11-11T00:55:44.244270+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-25-manga23-20261019-repair1-batch-05",
     "endedAt": "2026-11-10T21:38:00.530942+00:00"
@@ -192,5 +196,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-10T23:59:00.190989+00:00"
+  "checkedAt": "2026-11-11T00:00:50.858209+00:00"
 }
