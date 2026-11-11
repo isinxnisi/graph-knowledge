@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-11T06:12:33.105751+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-11T07:17:51.943479+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-11T06:12:33.105751+00:00",
+    "eligibleAt": "2026-11-11T07:17:51.943479+00:00",
     "windowEndAt": "2026-11-11T09:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-48-dot-toriyama-three-20261027-batch-01",
+    "startedAt": "2026-11-11T06:12:51.943486+00:00",
+    "limitAt": "2026-11-11T07:07:51.943479+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-46-dot-aoyama-three-20261027-batch-01",
     "endedAt": "2026-11-11T06:02:33.105753+00:00"
@@ -192,5 +196,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-11T06:04:19.385507+00:00"
+  "checkedAt": "2026-11-11T06:12:58.499501+00:00"
 }
