@@ -88,11 +88,11 @@
   "requestSha256": "ff7d5f47f8fb69cb81ef360ee3b8cf3adeaaf3b7da6274a7e7a5b1a376f52c70",
   "kind": "collect-review",
   "phase": "waiting-lock",
-  "generation": 2717,
+  "generation": 2718,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-11T07:03:21+00:00",
+  "updatedAt": "2026-11-11T07:06:46+00:00",
   "result": {
     "jobId": "issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052",
     "collectionUnchanged": false,
