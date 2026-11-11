@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-11 19:03:53 JST。
+確認: 2026-11-11 19:06:56 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -79,19 +79,16 @@ Issue確認結果:
     "checkedAt": "2026-11-03T17:28:58+00:00"
   },
   "collection-control/issue-sources/60.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
-    "checkedAt": "2026-11-11T10:01:37+00:00"
+    "status": "registered: issue-60-dot-ichikawa-houseki-20261028",
+    "checkedAt": "2026-11-11T10:04:56+00:00"
   },
   "collection-control/issue-sources/61.json": {
-    "status": "held",
-    "reason": "<urlopen error _ssl.c:990: The handshake operation timed out>",
-    "checkedAt": "2026-11-11T10:02:09+00:00"
+    "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
+    "checkedAt": "2026-11-11T10:04:57+00:00"
   },
   "collection-control/issue-sources/62.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno 104] Connection reset by peer>",
-    "checkedAt": "2026-11-11T10:02:16+00:00"
+    "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
+    "checkedAt": "2026-11-11T10:04:58+00:00"
   },
   "collection-control/issue-sources/64.json": {
     "status": "registered: issue-64-dot-oda-onepiece-20261029",
