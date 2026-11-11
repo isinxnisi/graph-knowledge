@@ -26,30 +26,26 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-11T20:54:00.690845+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-11T19:59:42.843750+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-11T20:54:00.690845+00:00",
+    "eligibleAt": "2026-11-11T19:59:42.843750+00:00",
     "windowEndAt": "2026-11-11T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-56-dot-urushibara-two-20261028-batch-01",
-    "startedAt": "2026-11-11T19:49:00.690847+00:00",
-    "limitAt": "2026-11-11T20:44:00.690845+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-48-dot-toriyama-three-20261027-batch-01",
-    "endedAt": "2026-11-11T19:38:35.683038+00:00"
+    "requestId": "issue-56-dot-urushibara-two-20261028-batch-01",
+    "endedAt": "2026-11-11T19:49:42.843751+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 13,
-    "completed": 41,
+    "completed": 42,
     "awaiting-recovery": 6,
-    "waiting-control": 2
+    "waiting-control": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -196,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-11T19:49:07.227600+00:00"
+  "checkedAt": "2026-11-11T19:49:49.230286+00:00"
 }
