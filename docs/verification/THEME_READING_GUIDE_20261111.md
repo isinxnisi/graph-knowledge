@@ -80,3 +80,24 @@ Windows版Chromeで同じβ内容を読んだ再測定：
 - 1500×900pxのPCでも全文の導入と年表・関係図・詳細を確認。変更前後の実画面を開いて確認した。画像と操作結果は開発PCの `C:/Users/nishr/.codex/tmp/plunode-item-entry/real-height-before.png`、`real-height-after-606.png`、`real-height-after-631.png`、`real-height-desktop-after.png`、`real-height-results.log`。
 - 利用者のiPhoneにこの修正版を表示した後の実寸・見た目は未確認。上記は実機から受領した幅・高さを使ったWindows Chromeでの確認で、iOSの最終受入とは区別する。診断画面のopt-inは引き続きβ限定。
 - 本番・DB・Worker・テーマ原本・翻訳データは変更していない。今回の3工程は技術的な配置調整までであり、テーマ閲覧全体のデザイン合格と扱わない。
+
+
+## 商品欄の大きさ・配置の是正（同日追加）
+
+利用者の修正後iPhone写真で、導入は改善した一方、商品欄の大きさ・崩れを再指摘された。導入と年表の配置修正だけで商品欄まで改善したとは扱わない。
+
+実際の375px幅のCSSで、商品名h4へExplorer共通のmargin-bottom:12pxが入り、正式な商品名のsummaryへ共通のmin-height:44px・上下padding各10pxが適用されていた。前回は地域selectの共通スタイルを避けたが、この2箇所は残っていた。画像128pxと本文欄143pxの組合せも、実機の折り返し増加に弱かった。
+
+- 商品名の余白を商品部品内で明示し、正式名は商品名・購入属性の近くへ移した。開閉欄は32pxの操作高・上下2pxのpadding・同じ開閉矢印へ揃える。
+- 商品欄が狭いときの画像枠を96pxへ変更し、商品名欄を143→179pxに広げる。1:1 containと紹介用イメージ表示を維持する。広いPC欄の画像は136pxを継続。商品名14px・紹介文12pxの本文サイズは縮小しない。
+- 狭い欄の見出しは、関連アイテムの下に短いAmazonアフィリエイト表示、その右に購入地域を置く固定の並びとした。行全体の偶然の折り返しに任せない。
+- 紹介・購入ボタンの間に独立した正式名行を置かず、購入までの余白を減らす。購入先・版・言語・広告参加者の表示は維持する。
+- 実機の値を取得できたため、調査用MobileDisplayCheckとその専用テストを削除し、閲覧時の固定表示を外した。古い ?displayCheck=1 のURLでも計測パネルを出さない。
+
+確認結果：
+- 商品カード既存3テスト、型検査込みbuild成功。build 5uVsyUVL49KxHWlCtggbeを3200／HTTPS βへ反映。
+- 375pxの同じカード高さ325.3→235.3px、商品名下の余白12→0px、summary 44→32px、商品名欄143→179px。購入ボタンは42px高を維持。PCは136pxの画像で確認。
+- ローカル320×606／375×606／1500×900、HTTPS β375×631で、横溢れなし・正方形画像・正式名の開閉・購入リンクを確認。USの未対応案内→JPの購入ボタン復帰、広告表記・参加者表示の保持も確認。
+- 375pxで商品名を16px・紹介を14pxへ拡大した追加確認でも横溢れなし、カード約266px。これは文章が増えた条件への確認で、iPhone実機と同一の字体の再現ではない。
+- 変更前後を実画面で開いて確認。開発PCの C:/Users/nishr/.codex/tmp/plunode-item-entry/ に product-whole-before.png、product-whole-after-375-beta.png、product-whole-after-320.png、product-whole-after-1500.png、product-whole-after-larger-text.png、product-whole-results.log を保持。
+- 修正版のiPhone実機は未確認。本番・データ・Worker・SEO・テーマの導入と保存共有の処理は変更していない。今回の商品欄の是正と、閲覧UI全体のデザイン受入を区別する。

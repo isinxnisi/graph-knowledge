@@ -1,5 +1,4 @@
 "use client";
-import MobileDisplayCheck from "./MobileDisplayCheck";
 import {themeTimelineTextTargets,timelineTextFieldLabel} from "../lib/domain/knowledge-timeline-text";
 import {KnowledgeIdentityPeers} from "./KnowledgeIdentityPeers";
 import {useKnowledgeDisplayTranslations} from "../lib/client/use-knowledge-display-translations";
@@ -195,5 +194,5 @@ export default function KnowledgeReading({children,operatorEnabled=true,initialT
           <details className={css.related}><summary>{en?"Names, description & translation":"名前・説明・翻訳"}</summary><div className={css.insetBody}>{selectedEntity.content.aliases.length>0&&<p>{selectedEntity.content.aliases.join(" · ")}</p>}<KnowledgeTranslationPanel onRetain={keepTranslation} fields={[{label:en?'Name':'名前',target:{kind:'entity',id:selectedEntity.id,revision:selectedEntity.revision,field:'name'}},...selectedEntity.content.aliases.map((alias,aliasIndex)=>({label:(en?'Alias: ':'別名：')+alias,target:{kind:'entity' as const,id:selectedEntity.id,revision:selectedEntity.revision,field:'aliases' as const,aliasIndex}})),...(selectedEntity.content.description?[{label:en?'Description':'説明',target:{kind:'entity' as const,id:selectedEntity.id,revision:selectedEntity.revision,field:'description' as const}}]:[])]}/><KnowledgeContributors kind="entity" id={selectedEntity.id}/><KnowledgeIdentityPeers key={selectedEntity.id+":"+selectedEntity.revision} id={selectedEntity.id}/><a className={css.editRecord} href={'/member/submissions?'+new URLSearchParams({entity:selectedEntity.id,revision:String(selectedEntity.revision)})} target="_blank" rel="noopener noreferrer"><Icon name="edit"/>{en?'Correct name or description':'名前・説明の訂正を提案'} ↗</a></div></details>
         </> : active ? null : <p className={base.muted}>{en ? "Choose a name or connection in the graph to read its explanation and sources." : "図の名前や線を選ぶと、説明と出典を読めます。"}</p>}
 </div></div>};
- return <ReadingContext value={value}>{children}<MobileDisplayCheck/>{createdCapsule&&<CapsuleWorkspace initial={createdCapsule} isNew onClose={()=>setCreatedCapsule(null)}/>}</ReadingContext>;
+ return <ReadingContext value={value}>{children}{createdCapsule&&<CapsuleWorkspace initial={createdCapsule} isNew onClose={()=>setCreatedCapsule(null)}/>}</ReadingContext>;
 }
