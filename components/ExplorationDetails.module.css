@@ -5,12 +5,20 @@
 .entity .explore > button > svg { width: 16px; height: 16px; margin: 0; }
 .entity .explore > button > svg:last-child { width: 12px; transform: rotate(-90deg); color: var(--color-muted); }
 .entity .explore > button:hover { background: var(--color-hover); }
-.branch { margin: 3px 0 12px; color: var(--color-muted); font-size: 12px; }
-.entity .branch > button { display: inline-flex; gap: 6px; align-items: center; padding: 6px 0; background: transparent; border: 0; box-shadow: none; font-size: 12px; }
-.entity .branch > button > svg { width: 13px; height: 13px; margin: 0; }
-.branch > p { margin: 4px 0; }
-.tools { border-top: 1px solid var(--color-border); padding: 9px 0 0; display: flex; align-items: flex-start; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; }
-.tools > details[open] { flex-basis: 100%; }
+.branch { margin: 0 0 10px; color: var(--color-muted); font-size: 12px; }
+.entity .branch > button { display: grid; grid-template-columns: 17px minmax(0, 1fr); gap: 9px; align-items: center; width: 100%; padding: 9px 0; text-align: left; background: transparent; border: 0; border-radius: 0; box-shadow: none; font-size: 13px; line-height: 1.5; }
+.entity .branch > button > svg { width: 16px; height: 16px; margin: 0; }
+.entity .branch > button:hover:not(:disabled) { background: var(--color-hover); }
+.branch > p { margin: 4px 0 4px 26px; }
+.tools { border-top: 1px solid var(--color-border); padding-top: 5px; display: grid; gap: 0; font-size: 12px; }
+.entity .tools > details { min-width: 0; margin: 0; }
+.entity .tools > details > summary { display: grid; grid-template-columns: 17px minmax(0, 1fr); align-items: center; column-gap: 9px; width: 100%; min-height: 32px; margin: 0; padding: 7px 0; color: var(--color-muted); font-size: 12px; line-height: 1.5; cursor: pointer; list-style: none; }
+.entity .tools > details > summary::-webkit-details-marker { display: none; }
+.entity .tools > details > summary::marker { content: ''; }
+.entity .tools > details > summary::before { content: ''; justify-self: center; width: 5px; height: 5px; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: rotate(-45deg); transition: transform 160ms ease; }
+.entity .tools > details[open] > summary::before { transform: rotate(45deg); }
+.entity .tools > details > summary:hover, .entity .tools > details[open] > summary { color: var(--color-accent); }
+.entity .tools > details > div { margin: 2px 0 8px 26px; padding: 0; }
 .metadata { min-width: 0; }
 .metadata > summary, .quotation > summary { display: flex; align-items: center; gap: 7px; padding: 5px 0; list-style: none; color: var(--color-muted); cursor: pointer; font-size: 12px; }
 .metadata > summary::-webkit-details-marker, .quotation > summary::-webkit-details-marker { display: none; }
@@ -31,5 +39,5 @@
 .record.record h5 a { min-height: 0; }
 .quotation > div { margin: 7px 0 4px; }
 .record.record > div:last-child { margin-top: 4px; }
-@media(max-width:760px) { .entity .explore > button, .entity .branch > button, .metadata > summary, .quotation > summary { min-height: 40px; } }
-@media(prefers-reduced-motion:reduce) { .metadata > summary::before, .quotation > summary::before { transition: none; } }
+@media(max-width:800px) { .entity .explore > button, .entity .branch > button, .entity .tools > details > summary, .metadata > summary, .quotation > summary { min-height: 44px; } }
+@media(prefers-reduced-motion:reduce) { .entity .tools > details > summary::before, .metadata > summary::before, .quotation > summary::before { transition: none; } }

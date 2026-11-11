@@ -763,6 +763,13 @@
 .embedded > .controls > .guide > summary { width: 100%; }
 .embedded .groupHeader > div:first-child { flex: 1; min-width: 0; }
 .embedded .groupHeader { align-items: center; gap: 8px; }
+
+/* Capsule owns the only vertical scroller on a phone. Keep long timelines in
+   document flow, so a swipe can reach the graph after the final record. */
+@media (max-width: 800px) {
+  .embedded.mobileDocumentFlow { height: auto; overflow: visible; }
+  .embedded.mobileDocumentFlow .readingBody { flex: none; overflow: visible; }
+}
 .headerSettings { display: inline-flex; align-items: center; justify-content: center; gap: 5px; font-size: 11px; padding: 4px; border: 0; background: transparent; color: var(--color-muted); flex-shrink: 0; min-height: 32px; }
 .headerSettings :global(.ui-icon) { width: 13px; height: 13px; }
 .headerSettings[aria-expanded="true"] :global(.ui-icon):last-child { transform: rotate(180deg); }

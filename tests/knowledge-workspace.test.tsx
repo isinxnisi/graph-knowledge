@@ -212,6 +212,49 @@ it("Backで元探索を再読込し、遅いTheme読込が閉じた画面を再�
   expect(result.current.activeTheme).toBeNull();
 });
 
+it.each([false, true])("検索モーダルだけのBack/Forwardではテーマ・選択・Canvas世代を保持する（初期本文=%s）", async initial => {
+  const api = server(); if (initial) history.replaceState({}, "", "/t/theme");
+  const { result } = renderHook(() => useKnowledgeWorkspace(initial ? { embedded: true, initialTheme: theme } : {}));
+  await flush(); if (!initial) await act(() => result.current.openTheme({ id: "theme", revision: 3 }));
+  act(() => {
+    result.current.setThemeView("timeline"); result.current.setThemeSelection({ kind: "record", id: "r1" });
+    result.current.captureThemeView({ positions: { a: { x: 90, y: 120 } }, pan: { x: 40, y: 30 }, zoom: .8, initialLayoutDone: true });
+  });
+  const before = result.current, requests = api.requests.length, href = location.href, base = structuredClone(history.state);
+  const modal = { ...base, plunodeDiscovery: { entry: "themes" }, discoveryReturnFocus: "search" };
+  history.pushState(modal, "", href);
+  for (const destination of [base, modal, base]) {
+    history.replaceState(destination, "", href);
+    await act(async () => { window.dispatchEvent(new PopStateEvent("popstate", { state: destination })); }); await flush();
+    expect(api.requests).toHaveLength(requests); expect(result.current.activeTheme).toBe(before.activeTheme);
+    expect(result.current.normal).toBe(before.normal); expect(result.current.themeSelection).toBe(before.themeSelection);
+    expect(result.current.themeCanvasView).toBe(before.themeCanvasView); expect(result.current.themeRestoration).toBeNull();
+    expect(result.current.themeView).toBe("timeline"); expect(result.current.restoring).toBe(false);
+  }
+});
+
+it("同じURLでも探索の履歴情報が変わったBackは認可付きで復元する", async () => {
+  const { api, result } = await setup(); await act(() => result.current.openTheme({ id: "theme", revision: 3 }));
+  const base = structuredClone(history.state), href = location.href;
+  act(() => result.current.setThemeSelection({ kind: "record", id: "r1" }));
+  expect(location.href).toBe(href); const requests = api.requests.length;
+  history.replaceState(base, "", href);
+  await act(async () => { window.dispatchEvent(new PopStateEvent("popstate", { state: base })); }); await flush();
+  expect(api.requests.slice(requests).map(p => p.get("mode"))).toContain("theme");
+  expect(result.current.activeTheme?.theme.id).toBe("theme"); expect(result.current.themeSelection).toBeNull();
+});
+
+it("初期テーマ取得中の検索閉鎖は取得を重ねず、到着した本文を保持する", async () => {
+  history.replaceState({}, "", "/?ktheme=theme");
+  const api = server(), pending = api.hold("status"), { result } = renderHook(() => useKnowledgeWorkspace()); await flush();
+  history.pushState({ plunodeDiscovery: { entry: "themes" } }, "", location.href);
+  history.replaceState({}, "", location.href);
+  await act(async () => { window.dispatchEvent(new PopStateEvent("popstate", { state: {} })); }); await flush();
+  expect(api.requests.filter(p => p.get("mode") === "status")).toHaveLength(1);
+  await pending.finish(); await flush();
+  expect(result.current.activeTheme?.theme.id).toBe("theme"); expect(result.current.restoring).toBe(false);
+});
+
 it("応答本文が停止しても15秒で再試行可能にする", async () => {
   vi.stubGlobal("fetch", vi.fn(async () => ({ ok: true, status: 200, json: () => new Promise(() => {}) })));
   const outcome = readKnowledge("status").catch(e => e);

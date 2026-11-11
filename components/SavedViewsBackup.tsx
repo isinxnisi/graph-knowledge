@@ -7,7 +7,7 @@ import type { DatasetMode } from "../lib/domain/dataset";
 import { exportSavedViews, importSavedViews, parseSavedViewsBackup, planSavedViewsImport, SavedViewsError, SAVED_VIEWS_FILE_LIMIT, type SavedView } from "../lib/client/saved-views";
 import { savedViewLabels } from "../lib/i18n/saved-views";
 import { relationSummary } from "../lib/i18n/relation-condition";
-import styles from "./Explorer.module.css";
+import styles from "./SavedCollections.module.css";
 
 export default function SavedViewsBackup({ dataset, views, ready, disabled, onImported }: {
   dataset: DatasetMode; views: SavedView[]; ready: boolean; disabled: boolean;
@@ -77,7 +77,7 @@ export default function SavedViewsBackup({ dataset, views, ready, disabled, onIm
   };
   return <details className={styles.savedViewsBackup}>
     <summary>{text.backup}</summary>
-    <p className={styles.muted}>{text.backupHelp}</p>
+    <p className={styles.muted}>{text.local}</p><p className={styles.muted}>{text.help}</p><p className={styles.muted}>{text.backupHelp}</p>
     <button disabled={!ready || disabled || !views.length} onClick={download}>{text.export}</button>
     <label htmlFor="saved-views-file">{text.importFile}</label>
     <input ref={input} id="saved-views-file" type="file" accept=".json,application/json" disabled={!ready || disabled}

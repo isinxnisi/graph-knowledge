@@ -13,6 +13,6 @@ export default function CapsuleKnowledgeTimeline({document,focused,onFocus,onSho
  const display=knowledgeDisplaySnapshot(snapshot,locale),records=display.records.map(record=>buildKnowledgePublishedRecord(record,display));
  return <div className={css.knowledgeTimeline}>
   <KnowledgeThemeContext className={css.themeContext} records={records} selectedRecordId={focused} onRead={onFocus}/>
-  <KnowledgeTimeline emptyMessage={locale==="en"?"Edit relations and add dates to show a timeline here.":"関係を編集して時期を追加すると、ここに年表が表示されます。"} snapshot={snapshot} focusedRecordId={focused} onFocusRecord={onFocus} untimedInContext onShowGraph={onShowGraph} headerAction={<button aria-label={locale==="en"?split?"Close relation diagram":"Show relation diagram":split?"関係図を閉じる":"関係図を並べて表示"} aria-pressed={split} onClick={onToggleGraph}><Icon name="panel"/></button>}/>
+  <KnowledgeTimeline mobileDocumentFlow emptyMessage={locale==="en"?"Edit relations and add dates to show a timeline here.":"関係を編集して時期を追加すると、ここに年表が表示されます。"} snapshot={snapshot} focusedRecordId={focused} onFocusRecord={onFocus} untimedInContext onShowGraph={onShowGraph} headerAction={<button aria-label={locale==="en"?split?"Close relation diagram":"Show relation diagram":split?"関係図を閉じる":"関係図を並べて表示"} aria-pressed={split} onClick={onToggleGraph}><Icon name="panel"/></button>}/>
  </div>;
 }

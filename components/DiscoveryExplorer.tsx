@@ -72,6 +72,7 @@ export default function DiscoveryExplorer({ lab = false, presetBrowser = false, 
   const catalogRestore = useRef<number | null>(null);
   const catalogRequest = useRef<AbortController | null>(null);
   const [context, setContext] = useState<DiscoveryContext>(initialContext);
+  const [worldFiltersOpen, setWorldFiltersOpen] = useState(false);
   const [pathUi,setPathUi] = useState<PathUi>({scope:"",open:false,depth:2,selected:null});
   const [lookupOpen, setLookupOpen] = useState(false), [lookupQ, setLookupQ] = useState("");
   const [undo, setUndo] = useState<{ context: DiscoveryContext; label: Label; lookupOpen: boolean; lookupQ: string; pathUi: PathUi; reader?: "records" | "paths" } | null>(null);
@@ -288,7 +289,8 @@ export default function DiscoveryExplorer({ lab = false, presetBrowser = false, 
           <div className={styles.conditionActions} data-idle={!undo && !hasConditions && !lookupQ || undefined}><button className={styles.undo} disabled={!undo} onClick={() => { if (undo) { setContext(undo.context); setPathUi(undo.pathUi); setLookupOpen(undo.lookupOpen); setLookupQ(undo.lookupQ); setUndo(null); if (undo.reader) setCatalog(old=>({...old,reader:undo.reader!})); setCursors([null]); } }}>{undo ? t("取り消す：" + textOf(undo.label, locale), "Undo: " + textOf(undo.label, locale)) : t("取り消す", "Undo")}</button><button className={styles.clearAll} disabled={!hasConditions && !lookupQ} onClick={clearAll}>{t("すべての条件を解除", "Clear all criteria")}</button></div>
         </section>}
         <div className={styles.workspace} data-entry={entry} data-selected={!!context.anchor || undefined}>
-        <aside className={styles.editor}>
+        {entry === "worlds" && <button className={styles.mobileFilterToggle} aria-expanded={worldFiltersOpen} aria-controls="discovery-world-filters" onClick={() => setWorldFiltersOpen(value => !value)}><Icon name="settings"/>{t("分野・つながりを選ぶ", "Interests & relations")}<Icon name="chevron"/></button>}
+        <aside className={styles.editor} id={entry === "worlds" ? "discovery-world-filters" : undefined} data-open={worldFiltersOpen || undefined}>
         <section className={styles.entryPanel}>
           <div id="prototype-entry" key={entry} role={variant === "tabs" ? "tabpanel" : undefined} aria-labelledby={variant === "tabs" ? "prototype-tab-" + entry : undefined}>
             {entry === "connections" ? <>

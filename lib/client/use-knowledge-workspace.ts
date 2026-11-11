@@ -75,6 +75,11 @@ function writeReference(s: State, push = false) {
   try { sessionStorage.setItem(workspaceStorageKey + location.pathname, JSON.stringify(value)); } catch { /* Private storage can be unavailable. In-memory reading still works. */ }
   try { window.history[push ? "pushState" : "replaceState"]({ ...window.history.state, [workspaceHistoryKey]: value }, "", href); } catch { /* Do not lose the reading state when browser history is rate-limited. */ }
 }
+function workspaceNavigation() {
+  // Search dialogs add history entries at the same URL. Their own markers do
+  // not change the reading destination; only this reader's reference and URL do.
+  return JSON.stringify([location.href, parseKnowledgeReference(window.history.state?.[workspaceHistoryKey])]);
+}
 
 /** Keeps ordinary exploration and a pinned Theme as two independent reading states. */
 export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialTheme }: { initialRootId?: string; embedded?: boolean;initialTheme?:KnowledgeThemeRead } = {}) {
@@ -82,6 +87,7 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
   const localeRef=useRef(locale);useEffect(()=>{localeRef.current=locale;},[locale]);
   const [state, setState] = useState<State>(() => ({ query: "", kind: "", normal: blankNormal(), entityPage: null, themes: [], activeTheme: initialTheme??null, retainedTheme: initialTheme??null, themeView: initialTheme?.theme.content.initialView??"graph", themeSelection: null, neighborPages: {}, normalRestoration: null, themeRestoration: null }));
   const current = useRef(state), alive = useRef(false), ready = useRef(false);
+  const navigation = useRef<string | null>(null);
   const epoch = useRef(0), entitySearch = useRef(0), themeSearch = useRef(0), access = useRef<string | null>(null);
   const themeCriteria = useRef<{ q?: string; entityId?: string }>({});
   const [busy, setBusy] = useState(false), [restoring, setRestoring] = useState(!initialTheme);
@@ -90,7 +96,9 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
   const [status, setStatus] = useState<KnowledgeWorkspaceStatus | null>(null);
   const update = useCallback((fn: (s: State) => State, history: "replace" | "push" | "none" = "replace") => {
     const next = fn(current.current); current.current = next; setState(next);
-    if (ready.current && history !== "none") writeReference(next, history === "push");
+    if (ready.current && history !== "none") {
+      writeReference(next, history === "push"); navigation.current = workspaceNavigation();
+    }
   }, []);
   const begin = () => { const token = ++epoch.current; ready.current = true; setRestoring(false); setBusy(true); setError(""); setMessage(""); return token; };
   const live = (token: number) => alive.current && token === epoch.current;
@@ -151,6 +159,7 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
 
   useEffect(() => {
     alive.current = true;
+    navigation.current = workspaceNavigation();
     let disposed = false; const pendingEpoch = epoch, pendingEntitySearch = entitySearch, pendingThemeSearch = themeSearch;
     const stored = savedReference() ?? emptyKnowledgeReference();
     if (embedded) {
@@ -167,7 +176,12 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
         ready.current=true;setRestoring(false);update(s=>({...s,themeView:wanted.view??s.themeView,themeSelection:validSelection(wanted.focusEntityId?{kind:"entity",id:wanted.focusEntityId}:stored.themeSelection,initialTheme.records,initialTheme.snapshot.entities)}),"none");
       }else void restore(stored,wanted);
     });
-    const pop = () => { void restore(parseKnowledgeReference(window.history.state?.[workspaceHistoryKey]) ?? emptyKnowledgeReference(), knowledgeThemeLocation(new URL(location.href))); };
+    const pop = () => {
+      const next = workspaceNavigation();
+      if (next === navigation.current) return;
+      navigation.current = next;
+      void restore(parseKnowledgeReference(window.history.state?.[workspaceHistoryKey]) ?? emptyKnowledgeReference(), knowledgeThemeLocation(new URL(location.href)));
+    };
     window.addEventListener("popstate", pop);
     return () => { disposed = true; alive.current = false; ready.current = false; pendingEpoch.current++; pendingEntitySearch.current++; pendingThemeSearch.current++; window.removeEventListener("popstate", pop); };
     // Initial URL is consumed once. User navigation is handled by popstate.

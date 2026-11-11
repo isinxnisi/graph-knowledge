@@ -33,6 +33,7 @@ type Props<R extends TimelineDisplayRecord> = {
   graphRecordIds?: readonly string[];
   compactControls?: boolean;
   embedded?: boolean;
+  mobileDocumentFlow?: boolean;
   headerAction?: ReactNode;
   emptyMessage?: string;
   reading?: boolean;
@@ -254,6 +255,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
   graphRecordIds,
   compactControls = false,
   embedded = false,
+  mobileDocumentFlow = false,
   headerAction,
   emptyMessage,
   reading=false,
@@ -607,7 +609,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
     </label>}
   </>;
   return (
-    <div className={`${css.timeline} ${embedded ? css.embedded : ""} ${reading?css.reading:""}`}>
+    <div className={`${css.timeline} ${embedded ? css.embedded : ""} ${reading?css.reading:""} ${mobileDocumentFlow ? css.mobileDocumentFlow : ""}`}>
       <div className={`${css.controls} ${compactControls ? css.compactControls : ""}`}>
         <details className={css.guide}>
           <summary>{compactControls && <Icon name="chevron" />}{tr("線の見方","Timeline guide")}</summary>

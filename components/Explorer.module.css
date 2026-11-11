@@ -770,8 +770,17 @@
   .explorer .searchPaneToggle { display: grid; place-items: center; position: absolute; z-index: 1; top: 10px; right: 6px; width: 30px; height: 30px; min-height: 30px; margin: 0; padding: 0; border: 0; background: transparent; color: var(--color-muted); border-radius: 6px; box-shadow: none; }
   .searchPaneToggle > :global(.ui-icon) { width: 17px; height: 17px; margin: 0; transform: scaleX(-1); }
   .explorer .searchPaneToggle:hover { color: var(--color-accent); background: var(--color-hover); }
-  .columns.searchCollapsed { --search-pane-width: 40px; }
-  .columns.searchCollapsed > .searchPane { padding: 0; border: 0; box-shadow: none; background: transparent; overflow: visible; }
-  .searchCollapsed .searchPaneContent { display: none; }
-  .searchCollapsed .searchPaneToggle { top: 0; right: 0; width: 40px; height: 36px; background: var(--color-panel); border: 1px solid var(--color-border); }
+  :global(html[data-search-panel-collapsed="true"]) .columns { --search-pane-width: 40px; }
+  :global(html[data-search-panel-collapsed="true"]) .columns > .searchPane { padding: 0; border: 0; box-shadow: none; background: transparent; overflow: visible; }
+  :global(html[data-search-panel-collapsed="true"]) .searchPaneContent { display: none; }
+  :global(html[data-search-panel-collapsed="true"]) .searchPaneToggle { top: 0; right: 0; width: 40px; height: 36px; background: var(--color-panel); border: 1px solid var(--color-border); }
+}
+
+.searchRail{display:none}
+@media(min-width:801px){
+:global(html[data-search-panel-collapsed="true"]) .searchRail{display:grid;gap:6px;padding-top:46px}
+.explorer .searchRail button{display:grid;place-items:center;width:40px;height:40px;min-height:40px;padding:0;margin:0;border:0;border-radius:8px;box-shadow:none;background:transparent;color:var(--color-accent)}
+.explorer .searchRail button:hover:not(:disabled){background:var(--color-hover)}
+.explorer .searchRail button:disabled{color:var(--color-muted);opacity:.45}
+.searchRail button>:global(.ui-icon){width:18px;height:18px;margin:0}
 }

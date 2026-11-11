@@ -54,28 +54,30 @@ export default function DiscoveryListPanel({ criteria, cursors, onChange, onPage
     const next = PREDICATE_KEYS.filter(p => p === predicate ? !criteria.predicates?.includes(p) : criteria.predicates?.includes(p));
     onChange({ ...criteria, predicates: next.length ? next : null });
   };
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const clear = () => onChange({ q: "", kind: null, predicates: null, presentation: "list", recordView, contributionRole: null });
   return <div id="discovery-list-panel" role="tabpanel" aria-labelledby="prototype-tab-list" className={styles.listWorkspace}>
-    <aside className={styles.listFilters}>
-      <div className={styles.sectionHeading}><h3>{en ? "List filters" : "一覧の条件"}</h3><button className={styles.clearAll} onClick={clear}>{text.clear}</button></div>
+    <aside className={styles.listFilters} data-open={filtersOpen || undefined}>
+      <div className={styles.sectionHeading}><h3>{en ? "List filters" : "一覧の条件"}</h3><button className={styles.mobileFilterToggle} aria-expanded={filtersOpen} aria-controls="discovery-list-filters" onClick={() => setFiltersOpen(value => !value)}><Icon name="settings"/>{en ? "Filters" : "絞り込み"}<Icon name="chevron"/></button><button className={styles.clearAll} onClick={clear}>{text.clear}</button></div>
       <div className={styles.listOptions} role="group" aria-label={en ? "Result unit" : "結果の種類"}>
         <button aria-pressed={!recordView} onClick={() => onChange({ ...criteria, recordView: false })}>{en ? "Entities" : "対象の一覧"}</button>
         <button aria-pressed={recordView} onClick={() => onChange({ ...criteria, recordView: true })}>{en ? "Relation records" : "関係の記録"}</button>
       </div>
+      <div className={styles.listFilterBody} id="discovery-list-filters">
       <div className={styles.listGroup} role="group" aria-label={search.kind}><span className={styles.fieldLabel}>{search.kind}</span><div className={styles.listOptions}>
         {([null, ...SEARCH_KINDS] as const).map(kind => <button key={kind ?? "all"} aria-pressed={criteria.kind === kind} onClick={() => onChange({ ...criteria, kind: criteria.kind === kind ? null : kind })}>{kind ? search.kinds[kind] : search.all}</button>)}
       </div></div>
       <div className={styles.listGroup} role="group" aria-label={en ? "Published scope" : "収録済みの範囲"}><span className={styles.fieldLabel}>{en ? "Scope" : "収録範囲"}</span><div className={styles.listOptions}>
         <button aria-pressed={!criteria.theme} onClick={() => onChange({ ...criteria, theme: undefined })}>{en ? "All" : "全体"}</button>
         {DISCOVERY_THEMES.filter(theme => displayed?.themes?.includes(theme) || criteria.theme === theme).map(theme => <button key={theme} data-theme={theme} aria-pressed={criteria.theme === theme} onClick={() => onChange({ ...criteria, theme: criteria.theme === theme ? undefined : theme, around: undefined })}>{text.themes[theme].title}</button>)}
-      </div><small>{en ? "Around published starting points, up to two steps. These are not world classifications." : "実在する紹介対象から2段階までの範囲。世界の分類条件とは異なります。"}</small></div>
+      </div><small>{en ? "Explore up to two connections from the featured people and works." : "紹介している人物や作品から、つながり2段階までを探します。"}</small></div>
       <div className={styles.listGroup} role="group" aria-label={text.cutsTitle}><span className={styles.fieldLabel}>{en ? "Relations" : "関係"}</span><div className={styles.listOptions} data-testid="discovery-cuts">
         {cuts.map(predicate => <button key={predicate} aria-pressed={!!criteria.predicates?.includes(predicate)} title={text.relationCount(counts.get(predicate) ?? 0)} onClick={() => toggleCut(predicate)}>{text.cuts[predicate]}</button>)}
       </div><small>{text.cutsHint}</small></div>
       {(criteria.predicates?.length === 1 && criteria.predicates[0] === "CONTRIBUTED_TO" || criteria.contributionRole) && <div className={styles.listGroup} role="group" aria-label={en ? "Production role" : "制作役割"}><span className={styles.fieldLabel}>{en ? "Role" : "制作役割"}</span><div className={styles.listOptions}>
         <button aria-pressed={!criteria.contributionRole} onClick={() => onChange({ ...criteria, contributionRole: null })}>{en ? "Any role" : "限定なし"}</button>
         {CONTRIBUTION_ROLE_IDS.map(role => <button key={role} data-record-role={role} aria-pressed={criteria.contributionRole === role} onClick={() => onChange({ ...criteria, contributionRole: role })}>{contributionLabels(locale).roles[role]}</button>)}
-      </div><small>{en ? "Exact role on the same production Claim. Broader credits are not inferred." : "同じ制作Claimに明記された役割だけ。広い制作記録からは推定しません。"}</small></div>}
+      </div><small>{en ? "Only roles explicitly recorded in the production credit." : "制作の記録に明記された役割で絞り込みます。"}</small></div>}
       {problem && <div className={styles.unavailable} role="alert"><p>{problem[en ? 1 : 0]}</p><button onClick={() => onChange({ ...criteria, contributionRole: null })}>{en ? "Remove only the role" : "制作役割だけ外す"}</button><button onClick={() => onChange({ ...criteria, predicates: ["CONTRIBUTED_TO"] })}>{en ? "Use only Production" : "関係を作品づくりだけに戻す"}</button></div>}
       {recordView && <div className={styles.listGroup}><span className={styles.fieldLabel}>{en ? "Try a query" : "検索例"}</span><div className={styles.listOptions}>
         {recordPresets.map(preset => <button key={preset.id} data-record-preset={preset.id} onClick={() => onChange({ ...criteria, predicates: [...preset.predicates], contributionRole: preset.contributionRole })}>{preset.title[en ? 1 : 0]}</button>)}
@@ -83,7 +85,8 @@ export default function DiscoveryListPanel({ criteria, cursors, onChange, onPage
       <div className={styles.listGroup} role="group" aria-label={text.connections}><span className={styles.fieldLabel}>{en ? "Around" : "周辺"}</span><div className={styles.listOptions}>
         <button aria-pressed={!criteria.around} onClick={() => onChange({ ...criteria, around: undefined })}>{text.all}</button>
         {query.starts.map(entity => <button key={entity.id} aria-pressed={criteria.around === entity.id} onClick={() => onChange({ ...criteria, around: criteria.around === entity.id ? undefined : entity.id })}>{text.around(entityDisplayName(entity,locale))}</button>)}
-      </div><small>{en ? "Only Claims directly connected to the selected subject. Relation and role must match that same Claim." : "選んだ対象に直接つながるClaimを検索。関係と役割も同じClaimで照合します。"}</small></div>
+      </div><small>{en ? "Only connections directly linked to the selected name." : "選んだ名前に直接つながる関係を表示します。"}</small></div>
+      </div>
     </aside>
     <section className={styles.matches} aria-label={recordView ? en ? "Relation records" : "関係の記録" : en ? "Entity list" : "対象の一覧"} aria-busy={loading}>
       <form className={styles.keyword} data-testid="discovery-keyword" onSubmit={event => { event.preventDefault(); if (recordView) records.retry(); else query.retry(); }}>

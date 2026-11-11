@@ -12,17 +12,17 @@
 .dialog svg { width: 16px; height: 16px; flex: 0 0 auto; vertical-align: middle; }
 .dialog :is(button,a) > svg { margin: 0; }
 .header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 17px 28px; border-bottom: 1px solid var(--color-border); flex: 0 0 auto; }
-.header > div:first-child { display: flex; align-items: center; gap: 24px; }
+.header > div:first-child { display: flex; align-items: center; gap: 24px; min-width: 0; }
 .brand { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 650; letter-spacing: .1em; }
 .brand > svg { width: 21px; height: 21px; color: var(--color-accent); }
 .brand > span { font-size: 10px; font-weight: 400; letter-spacing: .02em; color: var(--color-muted); padding-left: 8px; border-left: 1px solid var(--color-border); }
-.header h2 { font: 400 22px/1.4 var(--font-editorial); margin: 0; }
+.dialog .header h2 { font: 400 22px/1.4 var(--font-editorial); margin: 0; white-space: nowrap; }
 .header h2:focus { outline: none; }
-.headerActions { display: flex; align-items: center; gap: 18px; }
+.headerActions { display: flex; align-items: center; gap: 18px; flex: 0 0 auto; }
 .language { display: flex; gap: 1px; }
 .dialog .language button[aria-pressed] { min-width: 28px; min-height: 28px; padding: 2px 5px; font-size: 10px; color: var(--color-muted); border:1px solid transparent; }
 .dialog .language button[aria-pressed="true"] { color: var(--color-text); font-weight: 650; background: var(--color-page); }
-.dialog .close { width: 32px; padding: 0; border-radius: 50%; background: var(--color-page); }
+.dialog .headerActions .close { flex: 0 0 32px; width: 32px; height: 32px; min-height: 32px; padding: 0; border-radius: 50%; background: var(--color-page); }
 .body { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; padding: 0 28px 24px; }
 .entryNav { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; min-height: 54px; padding-top: 4px; background: var(--color-panel); border-bottom: 1px solid var(--color-border); }
 .tabs { display: flex; gap: 24px; align-self: stretch; }
@@ -51,7 +51,7 @@
 .dialog .clearAll { font-size: 11px; color: var(--color-muted); text-decoration: underline; text-underline-offset: 3px; }
 .selectionSummary[data-empty] { padding-block: 9px; border-bottom: 0; }
 .selectionSummary[data-empty] .subjectChip > button:first-child { font: 12px/1.5 system-ui, sans-serif; color: var(--color-muted); }
-.workspace { display: grid; grid-template-columns: 310px minmax(0, 1fr); gap: 30px; align-items: start; padding-top: 20px; }
+.workspace { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 24px; align-items: start; padding-top: 20px; }
 .editor { display: flex; flex-direction: column; gap: 20px; padding-right: 24px; border-right: 1px solid var(--color-border); min-width: 0; }
 .entryPanel { min-width: 0; }
 .entryPanel > div { animation: recordAppear 140ms ease-out; }
@@ -135,7 +135,7 @@
 .recordList { display: grid; column-gap: 24px; }
 .matches { container: lab-results / inline-size; }
 @container lab-results (min-width: 680px) {
-  .recordList { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .recordList { grid-template-columns: minmax(0,1fr); }
   .claim:has(.evidence) { grid-column: 1 / -1; }
 }
 .claim { min-width: 0; padding: 13px 0; border-bottom: 1px solid var(--color-border); animation: recordAppear 180ms ease-out; }
@@ -177,12 +177,13 @@
 @keyframes recordAppear { from { opacity: .4; transform: translateY(3px); } to { opacity: 1; transform: none; } }
 @media (max-width: 850px) {
   .dialog { width: calc(100vw - 16px); height: calc(100dvh - 16px); border-radius: 12px; }
-  .header { padding: 12px 16px; }
+  .header { padding: 10px 16px; gap: 12px; }
   .header > div:first-child { gap: 12px; }
   .brand { font-size: 11px; }
   .brand > span { display: none; }
-  .header h2 { font-size: 18px; }
+  .dialog .header h2 { font-size: 18px; }
   .headerActions { gap: 10px; }
+  .dialog .headerActions .close { flex-basis: 44px; width: 44px; height: 44px; min-height: 44px; }
   .body { padding: 0 16px 20px; scrollbar-gutter: auto; }
   .entryNav { min-height: 49px; }
   .tabs { gap: 18px; }
@@ -251,7 +252,7 @@
   .evidence { padding: 7px; }
 }
 @media (max-width: 360px) {
-  .header h2 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .header .brand { display: none; }
   .body { padding-inline: 12px; }
   .header { padding-inline: 12px; }
   .tabs { gap: 12px; }
@@ -277,9 +278,12 @@
 /* A 100%-wide action row includes its inset; an added margin would overflow the reader. */
 .selectionChip { max-width: 100%; }
 .selectionChip > span { min-width: 0; overflow-wrap: anywhere; }
-.listWorkspace { display: grid; grid-template-columns: 310px minmax(0,1fr); gap: 30px; padding-top: 20px; align-items: start; }
-.listFilters { display: grid; gap: 18px; min-width: 0; padding-right: 24px; border-right: 1px solid var(--color-border); }
+.listWorkspace { display: grid; grid-template-columns: 250px minmax(0,1fr); gap: 24px; padding-top: 20px; align-items: start; }
+.listFilters { display: grid; gap: 14px; min-width: 0; padding-right: 20px; border-right: 1px solid var(--color-border); }
 .listFilters > .sectionHeading { margin-bottom: 0; }
+.listFilters > .sectionHeading h3 { font:600 13px/1.5 var(--font-body); }
+.listFilterBody { display:grid; gap:16px; }
+.dialog .mobileFilterToggle { display:none; }
 .listGroup { min-width: 0; }
 .listGroup > .fieldLabel { display: block; margin-bottom: 5px; }
 .listOptions { display: flex; flex-wrap: wrap; gap: 4px; min-width: 0; }
@@ -291,7 +295,19 @@
 .listWorkspace .keyword { scroll-margin-top: 64px; }
 @media (max-width: 850px) {
   .listWorkspace { grid-template-columns: minmax(0,1fr); gap: 18px; padding-top: 14px; }
-  .listFilters { border: 0; padding: 0; gap: 11px; }
+  .listFilters { border:0; padding:0; gap:8px; }
+  .listFilters > .sectionHeading { min-height:34px; align-items:center; }
+  .listFilters > .sectionHeading h3 { display:none; }
+  .dialog .mobileFilterToggle { display:inline-flex; padding-inline:0; font-size:12px; }
+  .mobileFilterToggle > svg { width:13px; height:13px; }
+  .mobileFilterToggle > svg:last-child { transition:transform 160ms ease; }
+  .mobileFilterToggle[aria-expanded="true"] > svg:last-child { transform:rotate(180deg); }
+  .workspace[data-entry="worlds"] { gap:10px; }
+  .workspace[data-entry="worlds"] > .mobileFilterToggle { align-self:flex-start; }
+  .workspace[data-entry="worlds"] > .editor { display:flex; width:100%; box-sizing:border-box; gap:12px; padding:0 0 12px; border:0; border-bottom:1px solid var(--color-border); }
+  .workspace[data-entry="worlds"] > .editor:not([data-open]) { display:none; }
+  .listFilters:not([data-open]) > .listFilterBody { display:none; }
+  .listFilterBody { gap:12px; padding-block:5px 12px; border-bottom:1px solid var(--color-border); }
   .listGroup { display: grid; grid-template-columns: 54px minmax(0,1fr); gap: 2px 6px; align-items: start; }
   .listGroup > .fieldLabel { padding-top: 6px; }
   .listGroup > small { grid-column: 2; font-size: 9px; margin-top: 2px; }

@@ -32,7 +32,7 @@
 .home .statusLine button { display: inline-flex; align-items: center; gap: 5px; border: 0; background: transparent; padding: 4px 0; min-height: 32px; font-size: 12px; }
 .statusLine :global(.ui-icon) { width: 14px; height: 14px; }
 
-@media (max-width: 800px) {
+@media (max-width: 850px) {
   .featured { grid-auto-columns: min(320px, calc(100% - 20px)); }
   .featured:has(> div:only-child) { grid-auto-columns: 100%; }
   .home .heading { align-items: center; margin-bottom: 8px; }
@@ -40,7 +40,10 @@
   .home a.featureLink { grid-template-columns: 68px minmax(0, 1fr) 12px; gap: 10px; padding: 10px; min-height: 122px; }
   .themeImage { width: 68px; height: 76px; }
   .home a.featureLink strong { font-size: 16px; }
-  .filters .mobileToggle { display: inline-flex; align-items: center; gap: 5px; }
+  .filters .mobileToggle { display: inline-flex; align-items: center; gap: 6px; padding: 4px 0; min-height: 34px; font-size: 12px; border: 0; background: transparent; }
+  .mobileToggle > :global(.ui-icon):last-child { transition: transform 140ms ease; }
+  .mobileToggle[aria-expanded="true"] > :global(.ui-icon):last-child { transform: rotate(180deg); }
+  .filters .filterBody { padding: 5px 0 12px; border-bottom: 1px solid var(--color-border); }
   .filters:not([data-open]) .filterBody { display: none; }
 }
-@media (prefers-reduced-motion: reduce) { .home a.featureLink { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .home a.featureLink, .mobileToggle > :global(.ui-icon):last-child { transition: none; } }

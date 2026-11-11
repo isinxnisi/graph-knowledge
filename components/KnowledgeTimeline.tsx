@@ -10,7 +10,7 @@ import ThemeTimeline from "./ThemeTimeline";
 import {readingRecordTitle,type ThemeReadingPresentation} from "../lib/domain/theme-reading-presentation";
 
 /** The Explorer owns the selected immutable Record and the view switch. */
-export default function KnowledgeTimeline({ snapshot, focusedRecordId, focusedEntityId, onFocusRecord, onShowGraph, untimedInContext = false, headerAction, emptyMessage,reading=false,presentation }: {
+export default function KnowledgeTimeline({ snapshot, focusedRecordId, focusedEntityId, onFocusRecord, onShowGraph, untimedInContext = false, headerAction, emptyMessage,reading=false,presentation, mobileDocumentFlow=false }: {
   snapshot: KnowledgeSnapshot;
   focusedRecordId: string | null;
   focusedEntityId?: string;
@@ -20,6 +20,7 @@ export default function KnowledgeTimeline({ snapshot, focusedRecordId, focusedEn
   headerAction?: ReactNode;
   emptyMessage?: string;
   reading?:boolean;
+  mobileDocumentFlow?: boolean;
   presentation?:ThemeReadingPresentation|null;
 }) {
   const {locale}=useUiLocale();
@@ -35,6 +36,7 @@ export default function KnowledgeTimeline({ snapshot, focusedRecordId, focusedEn
     reading={reading}
     emptyMessage={emptyMessage}
     embedded
+    mobileDocumentFlow={mobileDocumentFlow}
     headerAction={headerAction}
     compactControls
     focusedRecordId={focusedRecordId}

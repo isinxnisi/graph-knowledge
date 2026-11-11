@@ -1,0 +1,143 @@
+/* Three saved collections share one modal rhythm. Storage/import is secondary. */
+.conditionDialog,
+.drawer {
+  box-sizing: border-box;
+  width: min(700px, calc(var(--dialog-width, 100vw) - 32px));
+  max-width: none;
+  max-height: calc(var(--dialog-height, 100dvh) - 32px);
+  padding: 22px 24px;
+  color: var(--color-text);
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  box-shadow: 0 16px 64px rgb(15 31 48 / .16);
+  font-size: 14px;
+  line-height: 1.55;
+  overflow: auto;
+  overscroll-behavior: contain;
+  overflow-wrap: anywhere;
+}
+.conditionDialog::backdrop,
+.drawer::backdrop { background: rgb(24 37 50 / .3); backdrop-filter: blur(3px); }
+.drawer {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  height: auto;
+  max-height: min(690px, calc(var(--dialog-height, 100dvh) - 32px));
+  overflow: hidden;
+}
+.conditionTitle { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 10px; }
+.savedViews .conditionTitle h2,
+.drawer .conditionTitle h2 { display: flex; align-items: center; gap: 9px; margin: 0; font-size: 22px; line-height: 1.4; font-weight: 500; }
+.conditionTitle h2 svg { flex: none; width: 19px; height: 19px; color: var(--color-accent); }
+.conditionDialog .intro { margin: 0 0 18px; color: var(--color-muted); font-size: 13px; }
+.muted, .resultCount { color: var(--color-muted); font-size: 12px; line-height: 1.55; }
+.conditionDialog p, .drawer p { margin: 6px 0; }
+.conditionDialog button,
+.drawer button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 11px;
+  border: 1px solid var(--color-control-border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-accent);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+.conditionDialog button:hover:not(:disabled),
+.drawer button:hover:not(:disabled) { background: var(--color-hover); }
+.conditionDialog button:disabled,
+.drawer button:disabled { cursor: default; opacity: .55; }
+.conditionDialog button[data-variant="primary"],
+.drawer button[data-variant="primary"] { background: var(--color-accent); color: var(--color-on-accent); border-color: transparent; }
+.conditionDialog button[data-variant="primary"]:hover:not(:disabled) { filter: brightness(.95); }
+.conditionDialog button svg, .drawer button svg { width: 16px; height: 16px; flex: none; }
+.conditionDialog .iconButton, .drawer .iconButton { width: 34px; height: 34px; padding: 7px; border-color: transparent; flex: none; }
+.savedViewForm { display: grid; gap: 7px; margin: 18px 0 22px; padding: 13px 15px; border-radius: 8px; background: color-mix(in srgb, var(--color-accent-soft) 40%, var(--color-panel)); }
+.savedViewForm p { margin: 0; }
+.savedViewForm label, .workspaceSelection label { font-size: 12px; color: var(--color-muted); }
+.saveControls { display: flex; gap: 8px; align-items: stretch; }
+.saveControls input { flex: 1; min-width: 0; }
+.saveControls button { flex: none; min-width: 64px; }
+.conditionDialog input:not([type="checkbox"]),
+.conditionDialog select {
+  box-sizing: border-box;
+  width: 100%; min-width: 0; min-height: 36px;
+  padding: 7px 9px; color: var(--color-text); background: var(--color-panel);
+  border: 1px solid var(--color-control-border); border-radius: 5px;
+  font: inherit; font-size: 14px;
+}
+.conditionDialog input[type="checkbox"] { width: auto; flex: none; }
+.savedViewForm .replaceButton { justify-self: start; max-width: 100%; padding: 4px 0; border: 0; font-size: 12px; text-align: left; justify-content: flex-start; }
+.listHeading { display: flex; align-items: baseline; gap: 12px; justify-content: space-between; margin: 18px 0 6px; }
+.listHeading h3 { margin: 0; font-size: 14px; font-weight: 600; }
+.listHeading > span { color: var(--color-muted); font-size: 12px; }
+.savedViewList, .libraryResults > ul { list-style: none; margin: 0; padding: 0; }
+.savedViewList > li { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 6px; border-bottom: 1px solid var(--color-border); }
+.savedViewList > li > p { grid-column: 1 / -1; }
+.savedViewList .viewLink { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 12px 2px; gap: 12px; border: 0; text-align: left; border-radius: 3px; }
+.viewLink > span { display: grid; min-width: 0; gap: 2px; }
+.viewLink strong { font-size: 14px; font-weight: 600; color: var(--color-text); }
+.viewLink time { display: block; }
+.workspaceSelection { display: grid; gap: 6px; margin: 10px 0; }
+.workspaceSummary { margin: 10px 0 16px; padding: 5px 0 14px; border-bottom: 1px solid var(--color-border); }
+.workspaceSummary h4 { font-size: 15px; font-weight: 600; margin: 0 0 3px; }
+.workspaceSummary > p { font-size: 12px; color: var(--color-muted); }
+.workspaceSummary .actions { margin-top: 12px; }
+.actions { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.confirmation { padding: 12px; margin: 12px 0; border: 1px solid var(--color-control-border); border-radius: 6px; }
+.empty { padding: 20px 0; color: var(--color-muted); font-size: 13px; }
+.error { color: var(--color-error, var(--color-text)); padding: 9px 0; }
+.savedViewsBackup { margin-top: 20px; padding-top: 12px; border-top: 1px solid var(--color-border); font-size: 13px; }
+.savedViewsBackup summary { width: fit-content; max-width: 100%; cursor: pointer; color: var(--color-muted); padding: 4px 0; }
+.savedViewsBackup[open] summary { margin-bottom: 8px; color: var(--color-text); }
+.savedViewsBackup > label { display: block; margin: 12px 0 5px; font-size: 12px; color: var(--color-muted); }
+.savedViewsBackup > button { margin: 7px 0; }
+.savedViewsBackup > section { margin-top: 12px; border-top: 1px solid var(--color-border); padding-top: 10px; }
+.savedViewsBackup h4 { font-size: 14px; margin: 0 0 8px; }
+.savedViewsBackup input[type="file"] { padding: 7px; font-size: 12px; }
+.backupPreview { list-style: none; margin: 10px 0; padding: 0; }
+.backupPreview > li { padding: 8px 0; border-top: 1px solid var(--color-border); }
+.library { min-height: 0; max-height: min(644px, calc(var(--dialog-height, 100dvh) - 78px)); display: flex; flex-direction: column; }
+.library .conditionTitle { flex: none; margin-bottom: 16px; }
+.identity { min-width: 0; }
+.libraryFilters { display: flex; flex-wrap: wrap; flex: none; gap: 2px; border-bottom: 1px solid var(--color-border); padding-bottom: 9px; }
+.drawer .library .libraryFilters button { border: 1px solid transparent; min-height: 34px; padding: 6px 8px; font-size: 12px; gap: 5px; color: var(--color-muted); background: transparent; }
+.drawer .library .libraryFilters button[aria-pressed="true"] { color: var(--color-accent); background: var(--color-accent-soft); }
+.libraryFilters button:last-child { margin-left: auto; }
+.libraryResults { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.libraryResults .resultCount { margin: 10px 0 0; }
+.libraryResults > ul > li { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; column-gap: 10px; row-gap: 2px; padding: 12px 0; border-bottom: 1px solid var(--color-border); }
+.capsuleContent { flex: 1; min-width: 0; }
+.drawer .capsuleContent h3 { font-size: 14px; margin: 0; font-weight: 600; }
+.drawer .library .titleButton { display: block; padding: 2px 0; min-height: 0; border: 0; background: transparent; text-align: left; color: var(--color-text); font-size: 14px; line-height: 1.55; font-weight: 600; }
+.capsuleMeta { grid-column: 1 / -1; display: flex; align-items: center; flex-wrap: wrap; column-gap: 14px; row-gap: 2px; }
+.drawer .capsuleMeta p { font-size: 12px; color: var(--color-muted); margin: 0; }
+.drawer .library .capsuleMeta .importButton { padding: 3px 0; min-height: 26px; border: 0; font-size: 12px; line-height: 1.5; text-align: left; }
+.drawer .library .capsuleMeta .importButton:hover:not(:disabled) { background: transparent; text-decoration: underline; text-underline-offset: 3px; }
+.libraryResults .actions { flex-wrap: nowrap; justify-content: flex-end; align-self: start; gap: 2px; }
+.drawer .libraryResults .actions > button { min-width: 32px; min-height: 34px; padding: 6px; border: 1px solid transparent; background: transparent; }
+.drawer .library .iconButton { min-height: 34px; border-color: transparent; }
+
+.badge { display: inline-flex; gap: 4px; align-items: center; font-size: 11px; color: var(--color-muted); margin-right: 8px; }
+@media (max-width: 560px) {
+  .conditionDialog, .drawer { width: calc(var(--dialog-width, 100vw) - 20px); max-height: calc(var(--dialog-height, 100dvh) - 24px); padding: 16px; border-radius: 12px; }
+  .drawer { max-height: min(690px, calc(var(--dialog-height, 100dvh) - 24px)); }
+  .library { max-height: min(656px, calc(var(--dialog-height, 100dvh) - 58px)); }
+  .savedViews .conditionTitle h2, .drawer .conditionTitle h2 { font-size: 20px; gap: 7px; }
+  .conditionDialog input:not([type="checkbox"]), .conditionDialog select { font-size: 16px; }
+  .savedViewForm { padding: 11px 12px; }
+  .libraryFilters { gap: 2px; }
+  .drawer .library .libraryFilters button { padding: 6px; min-height: 44px; }
+  .libraryFilters button > span { font-size: 11px; }
+  .libraryResults > ul > li { column-gap: 6px; }
+  .drawer .library .capsuleMeta .importButton { min-height: 32px; }
+}

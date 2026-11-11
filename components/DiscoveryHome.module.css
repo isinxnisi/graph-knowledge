@@ -1,6 +1,6 @@
 .home {
   container: discovery-home / inline-size;
-  padding: 22px;
+  padding: 20px;
   background: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-panel);
@@ -13,7 +13,7 @@
 @keyframes discoveryReveal { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
 /* The first screen offers a search and a complete example, at the same level. */
-.welcome { display: grid; gap: 20px; align-items: center; }
+.welcome { display: grid; gap: 20px; align-items: center; padding-bottom: 22px; border-bottom: 1px solid var(--color-border); }
 .introduction { min-width: 0; }
 .home .eyebrow { margin: 0 0 10px; color: var(--color-muted); font-size: 10px; letter-spacing: .1em; }
 .home .introduction h2 { max-width: 19em; margin: 0 0 12px; font: 400 clamp(25px, 2.1vw, 32px)/1.4 var(--font-editorial); text-wrap: balance; }
@@ -49,7 +49,7 @@
 
 /* Content sections share a heading rhythm. Lists remain quieter than entry cards. */
 .home .fields h3, .home .recent h3, .home .search h3 { margin: 0 0 12px; font: 400 21px/1.4 var(--font-editorial); }
-.fields, .recent { margin-top: 28px; }
+.fields, .recent { margin-top: 24px; }
 .fieldGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 10px; }
 .home .fieldGrid a, .themeFeature { display: flex; align-items: flex-start; gap: 10px; padding: 10px; text-decoration: none; color: var(--color-text); border-radius: 6px; background: var(--color-canvas); transition: background-color 160ms ease; }
 .fieldGrid a > :global(.ui-icon), .themeFeature > :global(.ui-icon) { color: var(--color-accent); flex: 0 0 auto; width: 16px; margin-top: 3px; }
@@ -81,13 +81,13 @@
 .home .compactCopy { display: none; }
 
 @container discovery-home (min-width: 720px) {
-  .welcome { grid-template-columns: minmax(0, 1fr) minmax(330px, .95fr); gap: 30px; }
+  .welcome { grid-template-columns: minmax(0, 1fr) minmax(310px, .9fr); gap: 28px; }
   .introduction > p:not(.eyebrow) { max-width: 40em; }
   .recentGroups { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 28px; }
 }
 @media (max-width: 800px) {
   .home { margin: 6px; padding: 14px; }
-  .welcome { gap: 14px; }
+  .welcome { gap: 14px; padding-bottom: 16px; }
   .home .fullCopy, .home .eyebrow, .home .creditsLabel { display: none; }
   .home .compactCopy { display: inline; }
   .home .introduction h2 { font-size: 25px; line-height: 1.4; margin-bottom: 8px; }

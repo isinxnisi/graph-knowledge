@@ -29,6 +29,25 @@ beforeEach(() => {
   });
 });
 afterEach(() => { cleanup(); created.cores = []; created.resizeCallbacks = []; vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+it("補助操作を閉じても複数選択モードを保ち、EscはGraphの外へ伝播しない", () => {
+  const graph = emptyPatternGraph(root, relation), close = vi.fn();
+  render(<div onKeyDown={close}><GraphCanvas graph={graph} selection={null} onEntity={vi.fn()} onRelation={vi.fn()} onToggleEntity={vi.fn()} /></div>);
+  const more = screen.getByRole("button", {name:"複数選択・移動履歴"});
+  fireEvent.click(more);
+  expect(more.getAttribute("aria-expanded")).toBe("true");
+  const selection = screen.getByRole("button", {name:"複数選択"});
+  fireEvent.click(selection);
+  selection.focus();
+  fireEvent.keyDown(selection, {key:"Escape"});
+  expect(close).not.toHaveBeenCalled();
+  expect(document.activeElement).toBe(more);
+  expect(more.getAttribute("aria-expanded")).toBe("false");
+  expect(selection.getAttribute("aria-pressed")).toBe("true");
+  fireEvent.click(more);
+  fireEvent.pointerDown(screen.getByTestId("graph-canvas"));
+  expect(more.getAttribute("aria-expanded")).toBe("false");
+  expect(selection.getAttribute("aria-pressed")).toBe("true");
+});
 it("既存Canvasへ完全経路の和集合を渡すと配置し、閉じると共有分だけ残す", () => {
   const a = route(100, 2), b = route(100, 3), graph = openPatternNode(mergePatternPage(emptyPatternGraph(root, relation), page([a, b]), null), a.nodeIds[1]);
   const props = { selection: null, onEntity: vi.fn(), onRelation: vi.fn(), onToggleEntity: vi.fn() };
@@ -37,6 +56,25 @@ it("既存Canvasへ完全経路の和集合を渡すと配置し、閉じると�
   expect(new Set(cy.nodes().map(n => JSON.stringify(n.position()))).size).toBe(4);
   rerender(<GraphCanvas {...props} graph={closeExpansion(graph, a.nodeIds[1])} />);
   expect(cy.nodes()).toHaveLength(2); expect(cy.edges()).toHaveLength(1);
+});
+
+it.each([true, false])("全体表示はtouch時だけ下端の操作を避け、保存視点の復元は変えない（touch=%s）", async touch => {
+  vi.stubGlobal("matchMedia", () => ({ matches: touch, addEventListener() {}, removeEventListener() {} }));
+  const graph = mergePatternPage(emptyPatternGraph(root, relation), page([route(100, 2)]), null);
+  const props = {graph, selection:null, onEntity:vi.fn(), onRelation:vi.fn(), onToggleEntity:vi.fn()};
+  const rendered = render(<GraphCanvas {...props}/>); await act(async () => {});
+  const cy = created.cores[0];vi.spyOn(cy,"width").mockReturnValue(345);vi.spyOn(cy,"height").mockReturnValue(400);
+  await act(async () => {cy.nodes().forEach((node,index)=>{node.position({x:100,y:index*600});});});
+  const positions = Object.fromEntries(cy.nodes().map(node=>[node.id(),{...node.position()}]));
+  fireEvent.click(screen.getByRole("button",{name:"全体を表示"}));
+  const fitted=cy.elements().renderedBoundingBox();
+  expect(fitted.y1).toBeGreaterThanOrEqual(23.9);
+  if(touch)expect(fitted.y2).toBeLessThanOrEqual(400-68-23.9);
+  else expect((fitted.y1+fitted.y2)/2).toBeCloseTo(200);
+  expect(Object.fromEntries(cy.nodes().map(node=>[node.id(),{...node.position()}]))).toEqual(positions);
+  const generation=graph.generation+1;
+  await act(async()=>rendered.rerender(<GraphCanvas {...props} graph={{...graph,generation}} restoration={{generation,view:{positions,pan:{x:20,y:50},zoom:.8,initialLayoutDone:true}}}/>));
+  expect(cy.pan()).toEqual({x:20,y:50});expect(cy.zoom()).toBe(.8);
 });
 
 it("同じ作品で一段からpatternへ適用した時も、新しいNodeを原点へ重ねず配置する", () => {

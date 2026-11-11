@@ -7,7 +7,7 @@ import type { DatasetMode } from "../lib/domain/dataset";
 import { exportWorkspace, importWorkspace, parseWorkspaceBackup, WorkspaceError, WORKSPACE_FILE_LIMIT, type SavedWorkspace } from "../lib/client/saved-workspace";
 import { workspaceLabels } from "../lib/i18n/workspace";
 import { relationSummary } from "../lib/i18n/relation-condition";
-import styles from "./Explorer.module.css";
+import styles from "./SavedCollections.module.css";
 
 export default function WorkspaceBackup({ dataset, workspace, full, ready, disabled, onImported }: {
   dataset: DatasetMode; workspace: SavedWorkspace | null; full: boolean; ready: boolean; disabled: boolean;
@@ -68,7 +68,7 @@ export default function WorkspaceBackup({ dataset, workspace, full, ready, disab
   };
   return <details className={styles.savedViewsBackup}>
     <summary>{text.backup}</summary>
-    <p className={styles.muted}>{text.backupHelp}</p>
+    <p className={styles.muted}>{text.local}</p><p className={styles.muted}>{text.help}</p><p className={styles.muted}>{text.backupHelp}</p>
     <button disabled={!ready || disabled || !workspace} onClick={download}>{text.export}</button>
     <label><input type="checkbox" checked={replace} disabled={!ready || disabled || (!workspace && !replace) || reading || !!preview}
       onChange={event => setReplace(event.target.checked)} />{workspace ? text.importReplaceSelected(workspace.title) : text.importReplace}</label>

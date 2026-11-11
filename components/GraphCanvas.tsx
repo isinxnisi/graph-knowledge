@@ -24,6 +24,7 @@ import { attachGraphTouchInput, createNodeClickHandler, createRelationClickHandl
 import { attachGraphBadges } from "../lib/client/graph-badges";
 import { createGraphMotion } from "../lib/client/graph-motion";
 import styles from "./Explorer.module.css";
+import canvasStyles from "./GraphCanvas.module.css";
 import AnimatedDetails from "./AnimatedDetails";
 import NeighborLoading from "./NeighborLoading";
 
@@ -33,6 +34,17 @@ export type GraphContextMenuRequest = {
   clientX: number; clientY: number; position: { x: number; y: number }; source: "pointer" | "keyboard";
 };
 const noSelection: string[] = [];
+/** Fit commands leave room for the floating touch controls. Restoring a saved
+ * view and ordinary pan/zoom never pass here, so authored viewpoints stay exact. */
+function keepFitAboveTouchToolbar(cy: Core, elements: cytoscape.CollectionArgument = cy.elements(), padding = 40) {
+  if (!window.matchMedia("(max-width: 800px) and (hover: none) and (pointer: coarse)").matches || !elements.length) return;
+  const width = cy.width(), height = cy.height() - 68;
+  if (width <= padding * 2 || height <= padding * 2) return;
+  const bounds = elements.boundingBox();
+  const zoom = Math.min(cy.zoom(), (width - padding * 2) / Math.max(1, bounds.w), (height - padding * 2) / Math.max(1, bounds.h));
+  cy.zoom(zoom);
+  cy.pan({ x: width / 2 - (bounds.x1 + bounds.x2) / 2 * cy.zoom(), y: height / 2 - (bounds.y1 + bounds.y2) / 2 * cy.zoom() });
+}
 function fitElementsInViewport(cy: Core, selected: CollectionReturnValue) {
   const elements = selected.union(selected.connectedNodes());
   cy.fit(elements, 40);
@@ -46,6 +58,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
   const ui = explorerLabels(locale);
   const viewportLabels = graphViewportLabels(locale);
   const [zoom, setZoom] = useState(1);
+  const [mobileToolsOpen, setMobileToolsOpen] = useState(false);
   // null follows the surrounding detail selection; [] explicitly clears it.
   const [multiple, setMultiple] = useState<string[] | null>(null), [selectionMode, setSelectionMode] = useState(false);
   const [movementCounts, setMovementCounts] = useState({ past: 0, future: 0 });
@@ -436,13 +449,13 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     if (restored) {
       Object.entries(content ? additionalPositions(restored.positions, renderedNodes.filter(n => !restored.positions[n.id]).map(n => n.id), relations, null) : restorationPositions(graph, restored)).forEach(([id, point]) => cy.getElementById(id).position(point));
       if (Object.keys(restored.positions).some((id) => nodeIds.has(id))) { cy.zoom(restored.zoom); cy.pan(restorationPan(restored, { width: cy.width(), height: cy.height() })); if (restored.recenter) cy.center(); }
-      else cy.fit(undefined, 40);
+      else { cy.fit(undefined, 40); keepFitAboveTouchToolbar(cy); }
       if (rootReady || contentOnly && renderedNodes.length > 0) initialLayoutDone.current = true;
     } else if (contentOnly && !initialLayoutDone.current && newNodes.length) {
       const ids = cy.nodes().map(node => node.id());
       const positions = contentPositions(ids, relations, cy.width() < cy.height());
       Object.entries(positions).forEach(([id, point]) => cy.getElementById(id).position(point));
-      cy.fit(undefined, 40); cy.zoom(Math.min(1.15, cy.zoom())); cy.center();
+      cy.fit(undefined, 40); cy.zoom(Math.min(1.15, cy.zoom())); cy.center(); keepFitAboveTouchToolbar(cy);
       initialLayoutDone.current = true;
     } else if (!initialLayoutDone.current && graph.centerId && rootReady) {
       const compact = window.matchMedia("(max-width: 800px)").matches;
@@ -452,7 +465,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       // 狭い画面の初回だけは全Nodeを収める。追加展開・領域切替では倍率を変えない。
       const hasMore = graph.execution?.type === "pattern" ? graph.execution.hasMore : graph.expansions[graph.centerId]?.hasMore;
       cy.zoom(compact ? Math.min(1.15, cy.zoom()) : Math.min(1.15, Math.max(hasMore ? 0.65 : 0.8, cy.zoom())));
-      cy.center(); initialLayoutDone.current = true;
+      cy.center(); keepFitAboveTouchToolbar(cy); initialLayoutDone.current = true;
     } else if ((reset || initialLayoutDone.current) && newNodes.length) {
       const newIds = newNodes.map((node) => node.id);
       const existing = Object.fromEntries(cy.nodes().filter((node) => !newIds.includes(node.id())).map((node) => [node.id(), { ...(node as cytoscape.NodeSingular).position() }]));
@@ -466,7 +479,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       newIds.forEach((id) => cy.getElementById(id).position(positions[id]));
       // A condition change can retain the center and add new nodes. Position
       // those nodes before fitting; their initial (0,0) is not a layout.
-      if (reset) { cy.fit(cy.nodes(), 60); if (cy.zoom() > 1.2) cy.zoom(1.2); cy.center(); }
+      if (reset) { cy.fit(cy.nodes(), 60); if (cy.zoom() > 1.2) cy.zoom(1.2); cy.center(); keepFitAboveTouchToolbar(cy, cy.nodes(), 60); }
     }
     // 距離依存の曲率は配置後に計算し、手動ドラッグ後も更新する。
     const updateRoutes = () => {
@@ -498,22 +511,25 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
   }, [selection, graph, content, currentKeys, selectedKeys, multiple]);
 
   return <>
-    <div className={`${styles.canvas} ${fillHeight ? styles.workspaceCanvas : ""} ${navigation ? styles.withNavigation : ""}`}>
+    <div className={`${styles.canvas} ${canvasStyles.canvas} ${fillHeight ? styles.workspaceCanvas : ""} ${navigation ? styles.withNavigation : ""}`}>
       {navigation && <div className={styles.canvasNavigation} onPointerDown={event => event.stopPropagation()} onDoubleClick={event => event.stopPropagation()} onWheel={event => event.stopPropagation()}>{navigation}</div>}
-      <div className={`${styles.viewportTools} ${styles.canvasViewportTools}`} role="group" aria-label={viewportLabels.title} onPointerDown={event => event.stopPropagation()} onWheel={event => event.stopPropagation()}>
-        {controls === "full" && <button aria-pressed={selectionMode} aria-label={locale === "en" ? "Multiple selection" : "複数選択"} title={locale === "en" ? "Multiple selection · Ctrl / ⌘ click" : "複数選択 · Ctrl / ⌘クリック"} onClick={() => setSelectionMode(v => !v)}><Icon name="copy" /></button>}
-        {controls === "full" && !onMove && <><button aria-label={locale === "en" ? "Undo move" : "移動を元に戻す"} disabled={!movementCounts.past} onClick={() => restoreMovement("past")}>↶</button><button aria-label={locale === "en" ? "Redo move" : "移動をやり直す"} disabled={!movementCounts.future} onClick={() => restoreMovement("future")}>↷</button></>}
-        <button aria-label={viewportLabels.selection} disabled={!canFocusSelection || interactionBlocked} title={`${viewportLabels.selection} — ${viewportLabels.selectionHelp}`} onClick={showSelection}><Icon name="focus" /></button>
-        <button aria-label={viewportLabels.zoomIn} title={viewportLabels.zoomIn} disabled={!hasNodes || interactionBlocked || zoom >= 2} onClick={() => changeZoom(1.25)}><Icon name="plus" /></button>
-        <output aria-label={viewportLabels.zoom} aria-live="off">{Math.round(zoom * 100)}%</output>
-        <button aria-label={viewportLabels.zoomOut} title={viewportLabels.zoomOut} disabled={!hasNodes || interactionBlocked || zoom <= 0.15} onClick={() => changeZoom(1 / 1.25)}><Icon name="minus" /></button>
-        <button aria-label={viewportLabels.fit} title={viewportLabels.fit} disabled={!hasNodes || interactionBlocked} onClick={() => {
-          cancelGestures(); resizeCanvas(); core.current?.fit(undefined, 24);
+      <div className={canvasStyles.toolbar} data-controls={controls} role="group" aria-label={viewportLabels.title} onPointerDown={event => event.stopPropagation()} onWheel={event => event.stopPropagation()} onKeyDown={event => { if(event.key === "Escape" && mobileToolsOpen){ event.stopPropagation(); setMobileToolsOpen(false); event.currentTarget.querySelector<HTMLButtonElement>("[data-graph-control=more]")?.focus(); } }} onBlur={event => { if(!event.currentTarget.contains(event.relatedTarget as Node | null)) setMobileToolsOpen(false); }}>
+        <div className={canvasStyles.secondaryControls} data-open={mobileToolsOpen || undefined}>
+        {controls === "full" && <button data-graph-control="select" aria-pressed={selectionMode} aria-label={locale === "en" ? "Multiple selection" : "複数選択"} title={locale === "en" ? "Multiple selection · Ctrl / ⌘ click" : "複数選択 · Ctrl / ⌘クリック"} onClick={() => setSelectionMode(v => !v)}><Icon name="copy" /></button>}
+        {controls === "full" && !onMove && <><button data-graph-control="undo" aria-label={locale === "en" ? "Undo move" : "移動を元に戻す"} disabled={!movementCounts.past} onClick={() => restoreMovement("past")}>↶</button><button data-graph-control="redo" aria-label={locale === "en" ? "Redo move" : "移動をやり直す"} disabled={!movementCounts.future} onClick={() => restoreMovement("future")}>↷</button></>}
+        </div>
+        <button data-graph-control="center" aria-label={viewportLabels.selection} disabled={!canFocusSelection || interactionBlocked} title={`${viewportLabels.selection} — ${viewportLabels.selectionHelp}`} onClick={showSelection}><Icon name="focus" /></button>
+        <button data-graph-control="plus" aria-label={viewportLabels.zoomIn} title={viewportLabels.zoomIn} disabled={!hasNodes || interactionBlocked || zoom >= 2} onClick={() => changeZoom(1.25)}><Icon name="plus" /></button>
+        <output data-graph-control="percentage" aria-label={viewportLabels.zoom} aria-live="off">{Math.round(zoom * 100)}%</output>
+        <button data-graph-control="minus" aria-label={viewportLabels.zoomOut} title={viewportLabels.zoomOut} disabled={!hasNodes || interactionBlocked || zoom <= 0.15} onClick={() => changeZoom(1 / 1.25)}><Icon name="minus" /></button>
+        <button data-graph-control="fit" aria-label={viewportLabels.fit} title={viewportLabels.fit} disabled={!hasNodes || interactionBlocked} onClick={() => {
+          cancelGestures(); resizeCanvas(); const cy = core.current; if(cy){cy.fit(undefined, 24);keepFitAboveTouchToolbar(cy,cy.elements(),24);}
         }}><Icon name="fit" /></button>
+        {controls === "full" && <button className={canvasStyles.moreControl} data-graph-control="more" aria-label={locale === "en" ? "Selection and move history" : "複数選択・移動履歴"} aria-expanded={mobileToolsOpen} data-active={selectionMode || undefined} onClick={() => setMobileToolsOpen(value => !value)}><Icon name="more" /></button>}
       </div>
-      <div className={styles.cySurface} ref={container} onPointerDownCapture={resizeCanvas} data-testid="graph-canvas" tabIndex={0} onContextMenu={event => { if (onContextMenu) event.preventDefault(); }} data-focus-destination role="img" aria-label={ui.graphAria+(content?.nodes.some(n=>n.description)?(locale==="en"?". Left and right arrows: read about nodes. Enter: open details.":"。左右キーでノードの説明、Enterで詳細。"):"")} />
+      <div className={`${styles.cySurface} ${canvasStyles.surface}`} ref={container} onPointerDownCapture={() => {setMobileToolsOpen(false); resizeCanvas();}} data-testid="graph-canvas" tabIndex={0} onContextMenu={event => { if (onContextMenu) event.preventDefault(); }} data-focus-destination role="img" aria-label={ui.graphAria+(content?.nodes.some(n=>n.description)?(locale==="en"?". Left and right arrows: read about nodes. Enter: open details.":"。左右キーでノードの説明、Enterで詳細。"):"")} />
       <div ref={caption} className={styles.nodeCaption} role="status" hidden><strong/><span/></div>
-      <div className={styles.relationPatches} ref={badgeLayer} aria-hidden="true" />
+      <div className={`${styles.relationPatches} ${canvasStyles.badges}`} ref={badgeLayer} aria-hidden="true" />
       <div className={styles.graphOverlay} data-testid="graph-overlay">{feedback}
         {Object.entries(graph.expansions).filter(([, meta]) => meta.active && meta.loading).map(([id, meta]) =>
           <NeighborLoading key={`${id}:${meta.request}`} name={entityDisplayName(graph.nodes[id],locale)} more={meta.expanded} />)}

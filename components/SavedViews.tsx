@@ -1,4 +1,5 @@
 "use client";
+import Icon from "./Icon";
 import DialogCloseButton from "./DialogCloseButton";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { contentMessage } from "../lib/i18n/content";
@@ -11,7 +12,7 @@ import { editSavedViews, readSavedViews, savedViewsKey, SavedViewsError, SAVED_V
 import { savedViewLabels } from "../lib/i18n/saved-views";
 import { conditionSummary } from "../lib/i18n/exploration-entry";
 import { useDialogBackdrop } from "../lib/client/use-dialog-backdrop";
-import styles from "./Explorer.module.css";
+import styles from "./SavedCollections.module.css";
 import SavedViewsBackup from "./SavedViewsBackup";
 import { legacyRelation } from "../lib/client/relation-state";
 import type { RelationCondition } from "../lib/domain/relation-conditions";
@@ -101,27 +102,25 @@ export default function SavedViews({ dataset, root, conditions, relation, onOpen
     }
   };
   return <dialog lang={locale} ref={dialog} className={`${styles.conditionDialog} ${styles.savedViews}`} aria-labelledby="saved-views-title" onCancel={event => { event.preventDefault(); close(); }} {...backdrop}>
-    <div className={styles.conditionTitle}><h2 id="saved-views-title">{text.title}</h2><DialogCloseButton label={text.close} onClick={close} /></div>
-    <p>{text.help}</p><p className={styles.muted}>{text.local}</p>
+    <div className={styles.conditionTitle}><h2 id="saved-views-title"><Icon name="bookmark" />{text.title}</h2><DialogCloseButton label={text.close} onClick={close} /></div>
+    <p className={styles.intro}>{locale === "en" ? "Keep a starting point and its search conditions." : "気になる起点と条件を保存して、また訪れる。"}</p>
     {root ? <form className={styles.savedViewForm} onSubmit={event => { event.preventDefault(); save(); }}>
-      <p>{text.root}：<strong>{root.name}</strong><span className={styles.muted}> / {root.description}</span></p>
+      <p>{text.root}：<strong>{root.name}</strong></p>
       <p className={styles.muted}>{relation ? relationSummary(relation, locale) : summary(conditions, locale)}</p>
       <label htmlFor="saved-view-name">{text.name}</label>
-      <input id="saved-view-name" value={title} maxLength={SAVED_VIEW_TITLE_LIMIT} required onChange={event => setTitle(event.target.value)} />
-      <button disabled={!ready || !!opening || !title.trim() || views.length >= SAVED_VIEW_LIMIT}>{text.save}</button>
+      <div className={styles.saveControls}><input id="saved-view-name" value={title} maxLength={SAVED_VIEW_TITLE_LIMIT} required onChange={event => setTitle(event.target.value)} />
+      <button data-variant="primary" aria-label={text.save} disabled={!ready || !!opening || !title.trim() || views.length >= SAVED_VIEW_LIMIT}>{locale === "en" ? "Save" : "保存"}</button></div>
     </form> : <p className={styles.empty}>{text.noRoot}</p>}
     {message && <p role="status">{contentMessage(message, locale)}</p>}
     {storageError && <div role="alert" className={styles.error}><p>{contentMessage(storageError, locale)}</p><button onClick={reload}>{text.retry}</button></div>}
-    <h3>{text.list}（{views.length} / {SAVED_VIEW_LIMIT}）</h3>
+    <div className={styles.listHeading}><h3>{text.list}</h3><span>{views.length} / {SAVED_VIEW_LIMIT}</span></div>
     {views.length >= SAVED_VIEW_LIMIT && <p>{text.limit}</p>}
     {ready && views.length === 0 && <p className={styles.empty}>{text.empty}</p>}
     <ul className={styles.savedViewList}>{views.map(view => <li key={view.id}>
-      <h4>{view.title}</h4><p className={styles.muted}>{relationSummary(view.relation, locale)}</p>
-      <p className={styles.muted}><time dateTime={view.createdAt}>{text.savedAt(view.createdAt)}</time></p>
-      <div className={styles.actions}>
-        <button disabled={!ready || !!opening} aria-label={text.openNamed(view.title)} onClick={() => void open(view)}>{opening === view.id ? text.opening : text.open}</button>
-        <button disabled={!ready || !!opening} aria-label={text.removeNamed(view.title)} onClick={() => remove(view.id)}>{text.remove}</button>
-      </div>
+      <button className={styles.viewLink} disabled={!ready || !!opening} aria-label={text.openNamed(view.title)} onClick={() => void open(view)}>
+        <span><strong>{view.title}</strong><span className={styles.muted}>{relationSummary(view.relation, locale)}</span><time className={styles.muted} dateTime={view.createdAt}>{text.savedAt(view.createdAt)}</time></span><Icon name="arrow" />
+      </button>
+      <button className={styles.iconButton} disabled={!ready || !!opening} title={text.removeNamed(view.title)} aria-label={text.removeNamed(view.title)} onClick={() => remove(view.id)}><Icon name="trash" /></button>
       {opening === view.id && <p role="status">{text.opening}</p>}
       {openError?.id === view.id && <p role="alert" className={styles.error}>{contentMessage(openError.message, locale)}</p>}
     </li>)}</ul>

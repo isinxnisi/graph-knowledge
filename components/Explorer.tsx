@@ -15,6 +15,7 @@ import { trackPublicEvent } from "../lib/client/public-events";
 import { rememberExplorationReturn } from "../lib/client/account-navigation";
 import { explorationUrlLabels } from "../lib/i18n/exploration-url";
 import { useExplorationUrl } from "../lib/client/use-exploration-url";
+import { useSearchPanelPreference } from "../lib/client/use-search-panel-preference";
 import { designLabels } from "../lib/i18n/design";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerLabels, explorerMessage } from "../lib/i18n/explorer";
@@ -87,12 +88,11 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
   const entry = entryLabels(locale);
   const panes = explorerPaneLabels(locale);
   const [activePane, setActivePane] = useState<"search" | "graph" | "detail">(initialKnowledgeTheme || discoveryHome || initialRoot ? "graph" : "search");
-  const [searchCollapsed, setSearchCollapsed] = useState(false);
+  const [searchCollapsed, toggleSearchPanel] = useSearchPanelPreference();
   const paneNavigation = useRef<HTMLElement>(null);
   const previousPane = useRef(activePane);
   const paneFocusRequested = useRef(false);
   const moveToPane = (pane: "search" | "graph" | "detail") => {
-    if (pane === "search") setSearchCollapsed(false);
     paneFocusRequested.current = pane !== activePane;
     setActivePane(pane);
   };
@@ -111,7 +111,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
   const [discoveryCriteria, setDiscoveryCriteria] = useState<DiscoveryCriteria | null>(null);
   const closeDiscovery = useCallback((source?: string | null) => {
     setDiscoveryCriteria(null);
-    if (source === "list" || source === "more" || source === "search") { setSearchCollapsed(false); setActivePane("search"); }
+    if (source === "list" || source === "more" || source === "search") setActivePane("search");
     else if (source === "home") setActivePane("graph");
   }, [setDiscoveryCriteria,setActivePane]);
   useEffect(() => {
@@ -219,9 +219,15 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
     </nav>
     <div lang={locale} aria-live="polite" className={styles.urlRestoreFeedback} hidden={knowledge?.active}>{urlState.busy && <p role="status" className={styles.urlRestoreMessage}>{explorationUrlLabels(locale).restoring}</p>}{urlState.failure && <div role="alert" className={`${styles.urlRestoreMessage} ${styles.error}`}><p>{urlState.failure}</p><div className={styles.actions}><button onClick={urlState.retry}>{explorationUrlLabels(locale).retry}</button>{urlState.canRestart && <button onClick={urlState.restart}>{relationText(locale).restart}</button>}<button onClick={urlState.abandon}>{explorationUrlLabels(locale).abandon}</button></div></div>}</div>
     <main inert={!knowledge?.active && (urlState.busy || !!urlState.failure) || !!capsuleSession} data-active-pane={activePane} className={`${styles.columns} ${detailWide ? styles.wideDetails : ""} ${knowledge?.active?styles.themeColumns:""} ${atHome?styles.homeColumns:""} ${searchCollapsed?styles.searchCollapsed:""}`}>
-      <div id="explorer-search" role="group" tabIndex={-1} data-focus-destination aria-label={panes.search} className={`${styles.panel} ${styles.searchPane}`}><button type="button" className={styles.searchPaneToggle} aria-expanded={!searchCollapsed} aria-controls="explorer-search-content" aria-label={locale === "en" ? searchCollapsed ? "Open search panel" : "Collapse search panel" : searchCollapsed ? "検索パネルを開く" : "検索パネルを閉じる"} title={locale === "en" ? searchCollapsed ? "Open search panel" : "Collapse search panel" : searchCollapsed ? "検索パネルを開く" : "検索パネルを閉じる"} onClick={() => setSearchCollapsed(value => !value)}><Icon name="panel" /></button><div id="explorer-search-content" className={styles.searchPaneContent}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} onDiscover={openDiscovery} /><div lang={locale} className={styles.localActions}><h3>{designLabels(locale).tools}</h3><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />My Capsules</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div></div>
+      <div id="explorer-search" role="group" tabIndex={-1} data-focus-destination aria-label={panes.search} className={`${styles.panel} ${styles.searchPane}`}><button type="button" className={styles.searchPaneToggle} aria-expanded={!searchCollapsed} aria-controls="explorer-search-content" aria-label={locale === "en" ? searchCollapsed ? "Open search panel" : "Collapse search panel" : searchCollapsed ? "検索パネルを開く" : "検索パネルを閉じる"} title={locale === "en" ? searchCollapsed ? "Open search panel" : "Collapse search panel" : searchCollapsed ? "検索パネルを開く" : "検索パネルを閉じる"} onClick={toggleSearchPanel}><Icon name="panel" /></button><nav className={styles.searchRail} aria-label={designLabels(locale).tools}>
+        <button type="button" aria-label={locale === "en" ? "Search" : "検索"} title={locale === "en" ? "Search" : "検索"} onClick={() => openDiscovery({ q: "", kind: null, presentation: "explore" })}><Icon name="search" /></button>
+        <button type="button" disabled={knowledge?.active} aria-label={savedViewLabels(locale).launch} title={knowledge?.active ? locale === "en" ? "Return to exploration to use saved views" : "探索に戻ると保存ビューを利用できます" : savedViewLabels(locale).launch} onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" /></button>
+        <button type="button" disabled={knowledge?.active} aria-label={workspaceLabels(locale).launch} title={knowledge?.active ? locale === "en" ? "Return to exploration to save your progress" : "探索に戻ると途中保存を利用できます" : workspaceLabels(locale).launch} onClick={() => setWorkspaceOpen(true)}><Icon name="history" /></button>
+        <button type="button" aria-label="My Capsules" title="My Capsules" onClick={() => setCapsuleOpen(true)}><Icon name="capsule" /></button>
+      </nav><div id="explorer-search-content" className={styles.searchPaneContent}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} onDiscover={openDiscovery} /><div lang={locale} className={styles.localActions}><h3>{designLabels(locale).tools}</h3><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />My Capsules</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div></div>
       <div id="explorer-graph" role="group" tabIndex={-1} data-focus-destination data-discovery-home={atHome || undefined} aria-label={panes.graph} className={styles.centralScroll}>
       {atHome && <DiscoveryHome data={discoveryHome!} initialThemes={initialThemes} onTheme={knowledge?.openTheme} onThemeSearch={knowledge?()=>openDiscovery({q:"",kind:null,presentation:"themes"}):undefined} onDiscover={() => openDiscovery({ q: "", kind: null, presentation: "explore" })} onSearch={() => {
+        if (searchCollapsed) toggleSearchPanel();
         moveToPane("search");
         requestAnimationFrame(() => document.querySelector<HTMLInputElement>("#explorer-search input")?.focus({ preventScroll: true }));
       }} />}

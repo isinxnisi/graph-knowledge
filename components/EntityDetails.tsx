@@ -52,11 +52,11 @@ export default function EntityDetails({ entity, expansion, onExpand, onClose, on
     </nav>
     <div className={detailCss.branch}>
       <button onClick={expansion?.open ? onClose : () => onExpand(false)} disabled={!expansion?.open && expansion?.loading}>
-        <Icon name={expansion?.open ? "minus" : "plus"} />{locale === "en" ? (expansion?.open ? "Collapse connections in the graph" : "Expand connections in the graph") : (expansion?.open ? "図のつながりを閉じる" : "図につながりを広げる")}
+        <Icon name={expansion?.open ? "minus" : "plus"} /><span>{locale === "en" ? (expansion?.open ? "Collapse connections in the graph" : "Expand connections in the graph") : (expansion?.open ? "図のつながりを閉じる" : "図につながりを広げる")}</span>
       </button>
       {expansion?.loading && <p role="status">{expansion.expanded ? ui.moreLoading : ui.neighborsLoading}</p>}
       {expansion?.error && <div role="alert" className={styles.error}><p>{explorerMessage(expansion.error, locale)}</p><button onClick={() => onExpand(expansion.open && expansion.expanded)}>{ui.graphRetry}</button></div>}
-      {expansion?.open && expansion.hasMore && <button onClick={() => onExpand(true)} disabled={expansion.loading || expansion.blocked}>{expansion.loading ? ui.moreLoading : ui.more}</button>}
+      {expansion?.open && expansion.hasMore && <button onClick={() => onExpand(true)} disabled={expansion.loading || expansion.blocked}><Icon name="plus" /><span>{expansion.loading ? ui.moreLoading : ui.more}</span></button>}
     </div>
     <div className={detailCss.tools}>
       <details className={detailCss.metadata}><summary>{locale === "en" ? "Names & link" : "別名・閲覧リンク"}</summary><div>

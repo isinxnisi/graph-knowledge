@@ -472,7 +472,8 @@ it("adds a timeline through the relation form, validates dates and retains its p
  click("Undo");expect(screen.getByRole('button',{name:'Show timeline'})).toBeTruthy();click("Redo");click("Save");
  await waitFor(()=>expect(save).toHaveBeenCalledOnce());const saved=save.mock.calls[0][0];expect(saved.document!.relations[0].times?.[0].time).toMatchObject({from:'2021-12',to:'2022-01',meaning:'duration'});expect(saved.document!.knowledge!.snapshot.records).toEqual([]);
  view.unmount();render(<CapsuleStudio capsule={saved} onSave={saveResult}/>);expect(screen.getByRole('button',{name:'Show relation diagram only'})).toBeTruthy();
-});
+ // This full edit/validate/undo/redo/save/reopen sequence exceeds 5s in jsdom.
+},15_000);
 it("opts into a timeline without adding dates and can discard that choice",()=>{
  const original=capsule();render(<CapsuleStudio capsule={original} onSave={saveResult}/>);click('Edit');click('Show timeline');
  expect(screen.getByRole('button',{name:'Show relation diagram only'})).toBeTruthy();expect(original.document!.knowledge).toBeUndefined();click('Discard');click('Discard changes');expect(screen.queryByRole('button',{name:'Show relation diagram only'})).toBeNull();
@@ -495,7 +496,7 @@ it("imports source updates as one undoable draft edit, preserving author content
  expect(save).not.toHaveBeenCalled();expect(Object.values(mocks.canvas!.content!.relations)[0].label).toContain("supported observations");
  click("Undo");expect(screen.queryByText("Source updates imported into the draft. Save to confirm.")).toBeNull();expect(Object.values(mocks.canvas!.content!.relations)[0].label).toContain("helped");click("Redo");click("Save");await waitFor(()=>expect(save).toHaveBeenCalledTimes(1));
  const imported=save.mock.calls[0][0];expect(imported.document!.relations[0].note).toBe("My authored note");expect(imported.document!.relations[0].origin).toMatchObject({revision:2});
- expect(JSON.parse(String(fetcher.mock.calls[0][1]?.body))).toEqual({recordIds:["record-a"],entityIds:["object-a","object-b"],includeTheme:false});
+ expect(JSON.parse(String(fetcher.mock.calls[0][1]?.body))).toEqual({recordIds:["record-a"],entityIds:["object-a","object-b"],includeTheme:false,translations:[]});
 });
 it("requires renewed review when the source changes during comparison and cancels without changing the Capsule",async()=>{
  const {c,response}=knowledgeUpdateFixture(),newer=structuredClone(response);newer.snapshot.records[0].revision=3;newer.snapshot.records[0].content.relation="changed again";

@@ -1,4 +1,5 @@
 "use client";
+import Icon from "./Icon";
 import DialogCloseButton from "./DialogCloseButton";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { contentMessage } from "../lib/i18n/content";
@@ -12,7 +13,7 @@ import { ClientApiError } from "../lib/client/api";
 import { useDialogBackdrop } from "../lib/client/use-dialog-backdrop";
 import { workspaceLabels } from "../lib/i18n/workspace";
 import { relationSummary } from "../lib/i18n/relation-condition";
-import styles from "./Explorer.module.css";
+import styles from "./SavedCollections.module.css";
 import WorkspaceBackup from "./WorkspaceBackup";
 
 const textMessages = workspaceLabels();
@@ -108,24 +109,23 @@ export default function WorkspaceDialog({ dataset, graph, captureView, onOpen, o
   const loading = Object.values(graph.expansions).some(meta => meta.loading) || graph.execution?.type === "pattern" && graph.execution.loading;
   const tooLarge = Object.values(graph.expansions).reduce((sum, meta) => sum + meta.pages.length, 0) > WORKSPACE_PAGE_LIMIT;
   return <dialog lang={locale} ref={dialog} className={`${styles.conditionDialog} ${styles.savedViews}`} aria-labelledby="workspace-title" onCancel={event => { event.preventDefault(); close(); }} {...backdrop}>
-    <div className={styles.conditionTitle}><h2 id="workspace-title">{text.title}</h2><DialogCloseButton buttonRef={closeButton} label={text.close} onClick={close} /></div>
-    <p>{graph.execution?.type === "pattern" ? (locale === "en" ? "Save the complete path references, visibility and positions. Every saved path is verified against the current public KG when resumed." : "完全経路の参照・開閉・配置を保存します。再開時は保存した全経路を現在の公開KGで再検証します。") : text.help}</p><p className={styles.muted}>{text.local}</p>
+    <div className={styles.conditionTitle}><h2 id="workspace-title"><Icon name="history" />{text.title}</h2><DialogCloseButton buttonRef={closeButton} label={text.close} onClick={close} /></div>
+    <p className={styles.intro}>{locale === "en" ? "Save the open branches and layout to continue later." : "開いたつながりと配置を保存して、続きから探索する。"}</p>
     {graph.centerId ? <form className={styles.savedViewForm} onSubmit={event => { event.preventDefault(); save(); }}>
       <p>{text.root}：<strong>{graph.nodes[graph.centerId]?.name}</strong></p>
       <label htmlFor="workspace-name">{text.name}</label>
-      <input ref={nameInput} id="workspace-name" maxLength={80} required value={title} onChange={event => setTitle(event.target.value)} />
-      <button disabled={!ready || !!progress || loading || tooLarge || !title.trim() || workspaces.length >= WORKSPACE_COUNT_LIMIT}>{text.save}</button>
-      {workspace && <button type="button" disabled={!ready || !!progress || loading || tooLarge || !title.trim()}
+      <div className={styles.saveControls}><input ref={nameInput} id="workspace-name" maxLength={80} required value={title} onChange={event => setTitle(event.target.value)} />
+      <button data-variant="primary" aria-label={text.save} disabled={!ready || !!progress || loading || tooLarge || !title.trim() || workspaces.length >= WORKSPACE_COUNT_LIMIT}>{locale === "en" ? "Save" : "保存"}</button></div>
+      {workspace && <button className={styles.replaceButton} type="button" disabled={!ready || !!progress || loading || tooLarge || !title.trim()}
         onClick={() => save(true)}>{text.replaceSelected(workspace.title)}</button>}
       {workspaces.length >= WORKSPACE_COUNT_LIMIT && <p>{text.countLimit}</p>}
       {loading && <p role="status">{text.loading}</p>}{tooLarge && <p>{text.limit}</p>}
     </form> : <p className={styles.empty}>{text.noRoot}</p>}
     {message && <p role="status">{contentMessage(message, locale)}</p>}
     {error && <div className={styles.error} role="alert"><p>{contentMessage(error, locale)}</p><button disabled={!!progress} onClick={refresh}>{text.retry}</button>{workspace?.relation.type === "pattern" && <button disabled={!!progress} onClick={() => void open(true)}>{locale === "en" ? "Restart with the same conditions" : "同じ条件で探索を再開"}</button>}</div>}
-    <h3>{text.stored}</h3>
-    <p className={styles.muted}>{text.count(workspaces.length, WORKSPACE_COUNT_LIMIT)}</p>
+    <div className={styles.listHeading}><h3>{text.stored}</h3><span>{text.count(workspaces.length, WORKSPACE_COUNT_LIMIT)}</span></div>
     {ready && workspaces.length === 0 && <p className={styles.empty}>{text.empty}</p>}
-    {workspaces.length > 0 && <div className={styles.savedViewForm}>
+    {workspaces.length > 0 && <div className={styles.workspaceSelection}>
       <label htmlFor="workspace-selection">{text.select}</label>
       <select ref={selection} id="workspace-selection" value={workspace?.id ?? ""} disabled={!ready || !!progress} onChange={event => {
         setSelectedId(event.target.value || null); setRemoving(null); setMessage(null); setError(null);
@@ -135,14 +135,14 @@ export default function WorkspaceDialog({ dataset, graph, captureView, onOpen, o
       </select>
       {!workspace && <p>{text.chooseHelp}</p>}
     </div>}
-    {workspace && <div className={styles.savedViewForm}>
+    {workspace && <div className={styles.workspaceSummary}>
       <h4>{workspace.title}</h4>
       <p className={styles.muted}><time dateTime={workspace.savedAt}>{text.savedAt(workspace.savedAt)}</time></p>
       <p>{relationSummary(workspace.relation, locale)}</p>
       <p>{(workspace.execution.type === "adjacent" ? text.scope(workspace.execution.branches.length, workspace.execution.branches.reduce((sum, branch) => sum + branch.pages, 0)) : `${workspace.execution.routes.length} ${locale === "en" ? "complete paths" : "経路"}`)}</p>
-      <div className={styles.actions}><button disabled={!ready || !!progress} onClick={() => void open()}>{text.open}</button><button disabled={!ready || !!progress} onClick={() => setRemoving(workspace)}>{text.remove}</button></div>
+      <div className={styles.actions}><button data-variant="primary" disabled={!ready || !!progress} onClick={() => void open()}>{text.open}</button><button disabled={!ready || !!progress} onClick={() => setRemoving(workspace)}>{text.remove}</button></div>
     </div>}
-    {removing && <div className={styles.savedViewForm}>
+    {removing && <div className={styles.confirmation}>
       <p>{text.removeHelp(removing.title)}</p>
       <div className={styles.actions}><button disabled={!ready || !!progress || !workspaces.some(item => item.id === removing.id)} onClick={remove}>{text.confirmRemove}</button>
         <button onClick={() => setRemoving(null)}>{text.keep}</button></div>

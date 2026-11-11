@@ -133,7 +133,7 @@ describe("保存ビューの操作と失敗", () => {
     await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("起点を確認できません"));
     expect(callbacks.onOpen).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: "また辿る関係を開く" }));
-    await waitFor(() => expect(callbacks.onOpen).toHaveBeenCalledWith({ ...root, name: "最新の名前" }, all));
+    await waitFor(() => expect(callbacks.onOpen).toHaveBeenCalledWith({ ...root, name: "最新の名前", aliases: [] }, all));
     expect(callbacks.onClose).toHaveBeenCalledOnce();
   });
   it("閉じた後の遅延応答は探索へ適用しない", async () => {
