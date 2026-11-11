@@ -96,12 +96,12 @@
   },
   "requestSha256": "67aa46a50204029b93086cb11c41b6251061d0fa3fc2ed6f131aaadc0e078a56",
   "kind": "collect-review",
-  "phase": "waiting-control",
-  "generation": 13913,
+  "phase": "waiting-lock",
+  "generation": 13946,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
-  "updatedAt": "2026-11-11T00:02:45+00:00",
+  "updatedAt": "2026-11-11T01:18:44+00:00",
   "result": {
     "jobId": "issue-25-utc-recovery-r0003-4e7b3edf51e9545b",
     "collectionUnchanged": false,
@@ -128,5 +128,5 @@
     "datasets/collection-decision-drafts/issue-25-utc-recovery-03/ccb73e2f413433913cd3338750b53428ed346165db8363a62dba44f004f0a9f0/issue-25-utc-recovery-03-normal-draft.json"
   ],
   "retryAt": 1793718818.0254438,
-  "message": "Execution gate: interval"
+  "message": "共通ロック使用中。次回に再確認する。"
 }
