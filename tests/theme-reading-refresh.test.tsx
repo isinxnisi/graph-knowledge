@@ -1,12 +1,12 @@
 vi.mock("server-only",()=>({}));
 // @vitest-environment jsdom
 import React from "react";
-import {render,screen,fireEvent,cleanup,act} from "@testing-library/react";
+import {render,screen,fireEvent,cleanup,act,waitFor} from "@testing-library/react";
 import {it,expect,afterEach,vi} from "vitest";
 import KnowledgeReadingSources from "../components/KnowledgeReadingSources";
 import KnowledgeTimeline from "../components/KnowledgeTimeline";
 import KnowledgeRelatedInformation from "../components/KnowledgeRelatedInformation";
-import {ReadingList} from "../components/ReadingDetailSection";
+import {ReadingList,ReadingSources} from "../components/ReadingDetailSection";
 import KnowledgeThemeContext from "../components/KnowledgeThemeContext";
 import {knowledgeRecordContentSchema,knowledgeSourceContentSchema,type KnowledgeSnapshot} from "../lib/domain/knowledge-foundation";
 import {buildKnowledgePublishedRecord} from "../lib/domain/knowledge-publication";
@@ -28,7 +28,7 @@ it("reading selects a time annotation, leaves source links to the detail pane an
 });
 it("both undated prototypes make every item reachable, including a one-item collapsed list",()=>{
  const records=Array.from({length:6},(_,i)=>buildKnowledgePublishedRecord({...snapshot.records[0],id:"note"+i,content:{...snapshot.records[0].content,assertion:"Note "+i,times:[]}},snapshot));
- const v=render(<KnowledgeThemeContext records={records} selectedRecordId={null} onRead={vi.fn()} variant="list"/>);expect(screen.getAllByRole("button",{name:/Note/})).toHaveLength(3);fireEvent.click(screen.getByRole("button",{name:"エピソードをさらに3件表示"}));expect(screen.getAllByRole("button",{name:/Note/})).toHaveLength(6);v.rerender(<KnowledgeThemeContext key="collapsed" records={records.slice(0,1)} selectedRecordId={null} onRead={vi.fn()} variant="collapsed"/>);expect(screen.queryByRole("button",{name:/Note/})).toBeNull();fireEvent.click(screen.getByRole("button",{name:/すべて|all theme/}));expect(screen.getByRole("button",{name:/Note 0/})).toBeTruthy();
+ const v=render(<KnowledgeThemeContext records={records} selectedRecordId={null} onRead={vi.fn()} variant="list"/>);expect(screen.getAllByRole("button",{name:/Note/})).toHaveLength(3);fireEvent.click(screen.getByRole("button",{name:"このテーマを深く読む：すべて見る"}));expect(screen.getAllByRole("button",{name:/Note/})).toHaveLength(6);v.rerender(<KnowledgeThemeContext key="collapsed" records={records.slice(0,1)} selectedRecordId={null} onRead={vi.fn()} variant="collapsed"/>);expect(screen.queryByRole("button",{name:/Note/})).toBeNull();fireEvent.click(screen.getByRole("button",{name:/すべて|all theme/}));expect(screen.getByRole("button",{name:/Note 0/})).toBeTruthy();
 });
 it("canonical links and legacy links preserve their pinned revision independently",()=>{
  expect(knowledgeThemeLocation(new URL("https://plunode.net/en/t/a%3Ab?krev=4&kview=split"))).toMatchObject({id:"a:b",revision:4,view:"split"});expect(knowledgeThemeLocation(new URL("https://plunode.net/?ktheme=old&krev=2"))).toMatchObject({id:"old",revision:2});const r={...emptyKnowledgeReference(),theme:{id:"a:b",revision:4},themeView:"timeline" as const};expect(knowledgeWorkspaceHref(new URL("https://plunode.net/en/t/a%3Ab"),r)).toContain("/en/t/a%3Ab?krev=4");expect(knowledgeWorkspaceHref(new URL("https://plunode.net/en/t/a%3Ab"),emptyKnowledgeReference())).toBe("/en");
@@ -52,11 +52,21 @@ it("reading keeps context in details instead of adding a duplicate background di
  expect(screen.queryByText("Why this happened")).toBeNull();
 });
 
-it("reading lists initially expose three entries and reveal the rest without losing their order",()=>{
+it("reading lists use one reversible control for three entries or the whole list",()=>{
  render(<ReadingList noun="テーマ" items={Array.from({length:7},(_,i)=><button key={i}>Theme {i}</button>)}/>);
- expect(screen.getAllByRole("button",{name:/^Theme /})).toHaveLength(3);fireEvent.click(screen.getByRole("button",{name:"テーマをさらに3件表示"}));expect(screen.getAllByRole("button",{name:/^Theme /})).toHaveLength(6);fireEvent.click(screen.getByRole("button",{name:"テーマをさらに1件表示"}));expect(screen.getAllByRole("button",{name:/^Theme /})).toHaveLength(7);expect(screen.queryByRole("button",{name:/さらに/})).toBeNull();
- fireEvent.click(screen.getByRole("button",{name:"3件に戻す"}));expect(screen.getAllByRole("button",{name:/^Theme /})).toHaveLength(3);
- expect(screen.queryByRole("button",{name:"3件に戻す"})).toBeNull();expect(screen.getByRole("button",{name:"テーマをさらに3件表示"}).getAttribute("aria-expanded")).toBe("false");
+ const toggle=screen.getByRole("button",{name:"テーマ：すべて見る"});
+ expect(screen.getAllByRole("button",{name:/^Theme /})).toHaveLength(3);
+ fireEvent.click(toggle);expect(screen.getAllByRole("button",{name:/^Theme /})).toHaveLength(7);
+ expect(screen.getByRole("button",{name:"テーマ：閉じる"})).toBe(toggle);
+ fireEvent.click(toggle);expect(screen.getAllByRole("button",{name:/^Theme /})).toHaveLength(3);
+ expect(toggle.getAttribute("aria-expanded")).toBe("false");
+});
+it("theme source expansion uses the same heading control and keeps all sources in the normal flow",()=>{
+ render(<ReadingSources items={Array.from({length:8},(_,i)=><a key={i} href={"#source"+i}>Source {i}</a>)}/>);
+ const toggle=screen.getByRole("button",{name:"出典：すべて見る"});
+ expect(screen.getAllByRole("link")).toHaveLength(3);fireEvent.click(toggle);
+ expect(screen.getAllByRole("link")).toHaveLength(8);expect(screen.getByRole("button",{name:"出典：閉じる"})).toBe(toggle);
+ fireEvent.click(toggle);expect(screen.getAllByRole("link")).toHaveLength(3);
 });
 it("the bounded knowledge list keeps fixed in-view versions and sends new public entries to their own route",async()=>{
  const pinned=buildKnowledgePublishedRecord(snapshot.records[0],snapshot),newer={...pinned,record:{...pinned.record,revision:2,content:{...pinned.record.content,assertion:"Different newer text"}}};
@@ -64,6 +74,45 @@ it("the bounded knowledge list keeps fixed in-view versions and sends new public
  const fetchMock=vi.spyOn(globalThis,"fetch").mockResolvedValue({ok:true,json:async()=>({records:[newer,...others],nextCursor:null})} as Response);
  const open=vi.fn(),openPinned=vi.fn();try{
   render(<KnowledgeRelatedInformation entityId="entity" inViewRecords={[pinned]} onOpen={open} onOpenInView={openPinned} inTheme/>);await act(async()=>{});
-  expect(screen.queryByText("Different newer text")).toBeNull();expect(screen.getAllByText(/^Public /)).toHaveLength(2);fireEvent.click(screen.getByText(pinned.record.content.assertion));expect(openPinned).toHaveBeenLastCalledWith("r");fireEvent.click(screen.getByRole("button",{name:"知識をさらに2件表示"}));expect(screen.getAllByText(/^Public /)).toHaveLength(4);fireEvent.click(screen.getByText("Public 3"));expect(open).toHaveBeenLastCalledWith("public3");
+  expect(screen.queryByText("Different newer text")).toBeNull();expect(screen.getAllByText(/^Public /)).toHaveLength(2);fireEvent.click(screen.getByText(pinned.record.content.assertion));expect(openPinned).toHaveBeenLastCalledWith("r");fireEvent.click(screen.getByRole("button",{name:"関連する知識：すべて見る"}));expect(screen.getAllByText(/^Public /)).toHaveLength(4);fireEvent.click(screen.getByText("Public 3"));expect(open).toHaveBeenLastCalledWith("public3");
+ }finally{fetchMock.mockRestore();}
+});
+
+
+it("evidence navigation opens a source beyond the initial three and still lets the list close",async()=>{
+ HTMLElement.prototype.scrollIntoView=vi.fn();
+ const record={...snapshot.records[0],content:{...snapshot.records[0].content,evidence:Array.from({length:5},(_,i)=>({...snapshot.records[0].content.evidence[0],id:"e-"+i,excerpt:"Passage "+i}))}};
+ const dto=buildKnowledgePublishedRecord(record,snapshot);
+ function Host(){const [ids,set]=React.useState<string[]>([]);return <KnowledgeReadingSources dto={dto} locale="en" translations={[]} openIds={ids} onOpen={set} request={{recordId:"r",evidenceId:"e-4",token:2}}/>;}
+ render(<Host/>);await act(async()=>{});
+ expect(screen.getByText("Passage 4")).toBeTruthy();expect(screen.getAllByRole("button",{name:/Read the quotation/})).toHaveLength(5);
+ fireEvent.click(screen.getByRole("button",{name:"Sources：Show less"}));
+ expect(screen.getAllByRole("button",{name:/Read the quotation/})).toHaveLength(3);
+});
+
+it("related knowledge fetches later pages only while expanded, keeps loaded pages and cancels on close",async()=>{
+ const pinned=buildKnowledgePublishedRecord(snapshot.records[0],snapshot);
+ const entries=(start:number,count:number)=>Array.from({length:count},(_,i)=>({...pinned,record:{...pinned.record,id:"entry"+(start+i),content:{...pinned.record.content,assertion:"Entry "+(start+i)}}}));
+ let pendingSignal:AbortSignal|undefined;
+ const fetchMock=vi.spyOn(globalThis,"fetch").mockImplementation(async(_url,options)=>{
+  const url=String(_url);
+  if(!url.includes("cursor="))return {ok:true,json:async()=>({records:entries(0,5),nextCursor:"page-2"})} as Response;
+  if(url.includes("page-2"))return {ok:true,json:async()=>({records:entries(5,4),nextCursor:"page-3"})} as Response;
+  pendingSignal=options?.signal as AbortSignal;
+  return new Promise<Response>((_resolve,reject)=>pendingSignal?.addEventListener("abort",()=>reject(new DOMException("Aborted","AbortError"))));
+ });
+ try{
+  render(<KnowledgeRelatedInformation entityId="paged" onOpen={vi.fn()}/>);
+  await waitFor(()=>expect(screen.getAllByText(/^Entry /)).toHaveLength(3));
+  expect(fetchMock).toHaveBeenCalledTimes(1);
+  const toggle=screen.getByRole("button",{name:"関連する知識：すべて見る"});fireEvent.click(toggle);
+  await waitFor(()=>expect(fetchMock).toHaveBeenCalledTimes(3));
+  expect(screen.getAllByText(/^Entry /)).toHaveLength(9);expect(String(fetchMock.mock.calls[1][0])).toContain("limit=50");
+  fireEvent.click(screen.getByRole("button",{name:"関連する知識：閉じる"}));
+  expect(pendingSignal?.aborted).toBe(true);expect(screen.getAllByText(/^Entry /)).toHaveLength(3);
+  expect(screen.getByRole("button",{name:"関連する知識：すべて見る"})).toBe(toggle);
+  fireEvent.click(toggle);await waitFor(()=>expect(fetchMock).toHaveBeenCalledTimes(4));
+  expect(screen.getAllByText(/^Entry /)).toHaveLength(9);
+  expect(fetchMock.mock.calls.filter(([url])=>String(url).includes("page-2"))).toHaveLength(1);
  }finally{fetchMock.mockRestore();}
 });

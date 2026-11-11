@@ -35,10 +35,13 @@
 .body { min-width: 0; padding-inline-start: calc(var(--icon-column) + var(--text-gap)); }
 .body > :first-child { margin-top: 0; }
 .body > :last-child { margin-bottom: 0; }
-.list { min-width: 0; }
+.list { min-width: 0; list-style: none; padding: 0; margin: 0; }
+.listControls { display: inline-flex; align-items: baseline; gap: 10px; margin-inline-start: auto; }
+.count { color: var(--color-muted); font-size: 11px; line-height: 1.5; white-space: nowrap; }
+.loading { margin: 6px 0 0; color: var(--color-muted); font-size: 12px; line-height: 1.5; }
 .more { display: flex; justify-content: flex-end; clear: both; margin-top: 6px; }
 .more > button.moreButton,
-.section .header > button.sourceToggle {
+.section .listControls > button.sourceToggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -56,17 +59,14 @@
   line-height: 1.5;
 }
 .moreButton:hover, .sourceToggle:hover { text-decoration: underline; text-underline-offset: 3px; }
-.moreIcon, .sourceToggle :global(.ui-icon) { width: 12px; height: 12px; transition: transform 160ms ease; }
+.moreButton :global(.ui-icon), .sourceToggle :global(.ui-icon) { width: 12px; height: 12px; transition: transform 160ms ease; }
 .moreButton:disabled { opacity: .6; }
 .sourceToggle[aria-expanded="true"] :global(.ui-icon),
-.collapseButton :global(.ui-icon) { transform: rotate(180deg); }
-.openSources { max-block-size: min(40dvh, 20rem); overflow: auto; scrollbar-gutter: stable; }
+.moreButton[aria-expanded="true"] :global(.ui-icon) { transform: rotate(180deg); }
 .numberedSources > .body { padding-inline-start: 0; }
-.more.listActions { justify-content: space-between; gap: 12px; }
-.listMore { margin-inline-start: auto !important; }
 @media (max-width: 800px) {
-  .more > button.moreButton, .section .header > button.sourceToggle { min-height: 36px; }
+  .more > button.moreButton, .section .listControls > button.sourceToggle { min-height: 36px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .moreIcon, .sourceToggle :global(.ui-icon) { transition: none; }
+  .moreButton :global(.ui-icon), .sourceToggle :global(.ui-icon) { transition: none; }
 }

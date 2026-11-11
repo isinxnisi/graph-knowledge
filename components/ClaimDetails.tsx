@@ -28,6 +28,7 @@ import RelationOverview from "./RelationOverview";
 import { relationPresentationLabels } from "../lib/i18n/relation-presentation";
 import styles from "./Explorer.module.css";
 import Icon from "./Icon";
+import detailCss from "./ExplorationDetails.module.css";
 
 function usableUrl(source: SourceDetail): boolean {
   if (!source.url || source.isDemo) return false;
@@ -74,8 +75,8 @@ export function ClaimCard({ claim, nodes, title, dataset, referenceDataset = dat
   const term = contribution ? (contribution.roleId ? roleText.roles[contribution.roleId] : null)
     : claim.predicate === "AFFILIATED_WITH" ? (position ? positionText.positions[position.positionId] : null)
     : claim.predicate === "PARTICIPATED_IN" ? (eventParticipation ? eventText.roles[eventParticipation.roleId] : null) : null;
-  return <article id={`${idPrefix}claim-${claim.id}`} tabIndex={-1} className={styles.claimCard} data-testid={`claim-card-${claim.id}`}>
-    <header className={styles.recordHeader}><h4>{title}</h4><span className={claim.polarity === "denied" ? styles.recordDenied : styles.recordStatus}>{claim.polarity === "denied" ? text.recordDenied : text.recordAffirmed}</span></header>
+  return <article id={`${idPrefix}claim-${claim.id}`} tabIndex={-1} className={`${styles.claimCard} ${detailCss.record}`} data-testid={`claim-card-${claim.id}`}>
+    <header className={styles.recordHeader}><h4>{title}</h4>{claim.polarity === "denied" && <span className={styles.recordDenied}>{text.recordDenied}</span>}</header>
     {filmTrial && <p role="note" data-testid="film-trial-claim">{locale === "en" ? "Isolated beta trial claim. Not formally accepted or published to production." : "隔離betaの試験用Claimです。正式受入・本番公開は行っていません。"}</p>}
     {term && <p className={styles.recordTerm}>{term}</p>}
     {contribution?.scope && <p className={styles.recordScopeHint}>{text.verifiedPublication}：{contribution.scope.volumeLabel ?? roleText.volumeUnknown}{contribution.scope.editionLabel ? ` / ${contribution.scope.editionLabel}` : ""}</p>}
@@ -88,11 +89,10 @@ export function ClaimCard({ claim, nodes, title, dataset, referenceDataset = dat
     {!withinRelation && !!claim.citations.length && <h5 className={styles.evidenceTitle}>{text.evidenceTitle}</h5>}
     {claim.citations.map((citation, index) => <section id={`${idPrefix}citation-${citation.id}`} key={citation.id} className={styles.citation} aria-label={ui.citation}>
       <p className={styles.sourceEyebrow}>{ui.source(index + 1)} · {ui.sourceKinds[citation.source.kind]} <span>{text.sourceStances[citation.stance]}</span></p>
-      <h5>{citation.source.title}</h5>
+      <h5>{usableUrl(citation.source) ? <ExternalSourceLink href={citation.source.url!} label={citation.source.title} locale={locale} onOpen={() => trackPublicEvent("source_open")}/> : citation.source.title}</h5>
+      <details className={detailCss.quotation}><summary>{locale === "en" ? "Quotation & source details" : "引用・掲載箇所"}</summary><div>
       <p className={styles.sourceLocator}>{ui.locator}：{citation.locator}</p>
-      {citation.source.url && <p>{usableUrl(citation.source)
-        ? <ExternalSourceLink href={citation.source.url} label={text.openSource} locale={locale} ariaLabel={ui.openSource} onOpen={() => trackPublicEvent("source_open")}/>
-        : <span>{ui.demoUrl}：{citation.source.url}</span>}</p>}
+      {citation.source.url && !usableUrl(citation.source) && <p>{ui.demoUrl}：{citation.source.url}</p>}
       {citation.eventParticipationEvidence && <p><strong>{eventText.evidence}：</strong>{citation.eventParticipationEvidence.originalText}<br />{eventText.language}：{citation.eventParticipationEvidence.language}</p>}
       {citation.positionEvidence && <p><strong>{positionText.evidence}：</strong>{citation.positionEvidence.originalText}<br />{positionText.language}：{citation.positionEvidence.language}</p>}
       {citation.roleEvidence && <p><strong>{roleText.evidence}：</strong>{citation.roleEvidence.originalText}<br />{roleText.language}：{citation.roleEvidence.language}</p>}
@@ -104,6 +104,7 @@ export function ClaimCard({ claim, nodes, title, dataset, referenceDataset = dat
       {citation.source.edition && <p>{ui.edition}：{citation.source.edition}</p>}
       {citation.accessedAt && <p>{ui.accessed}：{formatDate({ value: citation.accessedAt, precision: "day" }, locale)}</p>}
       {citation.source.note && <p className={styles.muted}>{citation.source.note}</p>}
+      </div></details>
       </div></details>
     </section>)}
     <details className={`${styles.recordScope} ${styles.disclosure}`}><summary>{text.recordScope}</summary><div className={styles.disclosureBody}>
@@ -117,8 +118,8 @@ export function ClaimCard({ claim, nodes, title, dataset, referenceDataset = dat
     {claim.predicate === "AFFILIATED_WITH" && !position && <p className={styles.muted}>{text.noPosition}</p>}
     {claim.predicate === "PARTICIPATED_IN" && !eventParticipation && <p className={styles.muted}>{text.noEventRole}</p>}
     </div></details>
-    {dataset && <div className={styles.recordPermalink}><ReadingLink reference={{ kind: "claim", dataset, id: claim.id }}><Icon name="link" />{text.recordLink}</ReadingLink><span>{text.recordLinkHelp}</span></div>}
-    {dataset==="public-kg"&&<LegacyRecordTranslations id={claim.id}/>}
+    {dataset && <div className={styles.recordPermalink}><ReadingLink reference={{ kind: "claim", dataset, id: claim.id }}><Icon name="link" />{locale === "en" ? "Open the record link" : "記録のリンクを開く"}</ReadingLink></div>}
+    {dataset==="public-kg"&&<LegacyRecordTranslations key={claim.id} id={claim.id}/>}
   </article>;
 }
 
@@ -169,10 +170,10 @@ function ClaimDetailsSession({ onDataChanged, revision, dataset, id, nodes, clai
   // The graph already knows both endpoints, even while evidence is unavailable.
   const relation = claimSummary ?? visibleClaims?.[0] ?? primary?.claim;
   const endpoints = relation ? [...new Set([relation.subjectId, relation.objectId])].filter(id => nodes[id]) : [];
-  return <section aria-label={ui.claimDetails} className={styles.relationDetails}>
+  return <section aria-label={ui.claimDetails} className={`${styles.relationDetails} ${detailCss.relation}`}>
     {mode === "relation" && <RelationOverview claims={visibleClaims ?? shown} nodes={nodes} />}
     {onInspectEntity && endpoints.length > 0 && <nav aria-label={text.endpoints} className={styles.relationEndpoints}>
-      <h4>{text.endpoints}</h4>
+      <h4><Icon name="graph" />{[...new Set(endpoints.map(entityId => ui.kinds[nodes[entityId].kind]))].join(locale === "en" ? " · " : "・")}</h4>
       <div className={styles.endpointPair}>{endpoints.map((entityId, index) => <div key={entityId} className={styles.endpointItem}>
         {index > 0 && <span className={styles.endpointDirection} aria-hidden="true"><Icon name="arrow" /></span>}
         <button aria-label={text.inspectEntity(entityLabel(nodes[entityId], nodes, locale).replace("\n", " / "))} title={text.inspectEntity(entityLabel(nodes[entityId], nodes, locale).replace("\n", " / "))} onClick={() => onInspectEntity(entityId)} className={styles.endpointButton}>
@@ -181,7 +182,7 @@ function ClaimDetailsSession({ onDataChanged, revision, dataset, id, nodes, clai
           <span className={styles.endpointAction} aria-hidden="true"><Icon name="chevron" /></span>
         </button>
       </div>)}</div>
-      <p className={styles.endpointHelp}>{text.endpointHelp}</p>
+
     </nav>}
     <h3 className={styles.recordsHeading}>{mode === "relation" ? text.claimsTitle : ui.claimTitle}</h3>
     {!primary && !error && <p role="status">{ui.claimLoading}</p>}
@@ -191,7 +192,7 @@ function ClaimDetailsSession({ onDataChanged, revision, dataset, id, nodes, clai
       {pending > 0 && <p role="status">{text.loadingProgress(claims.length, claimIds.length)}</p>}
       {failedCount > 0 && <div className={styles.error} role="alert"><p>{text.failed(failedCount)}</p><p>{text.partial}</p><button disabled={pending > 0} onClick={retry}>{ui.otherRetry}</button></div>}
       {mode === "relation" ? <>
-        <p className={styles.muted}>{text.sourcesIntro}</p>
+
         {claims.length > 1 && <nav className={styles.claimNavigation} aria-label={ui.claimNavigation}>{claims.map(claim => <button key={claim.id} onClick={() => moveToClaim(claim.id)}>{text.jump(claimNumber(claim.id))}</button>)}</nav>}
         {groups.filter(group => group.claims.length).map(group => <section key={group.key} className={styles.claimGroup} data-testid={`claim-group-${group.key}`} aria-label={group.title}>
           {(group.key !== "shown" || unseen.length > 0 || outside.length > 0) && <h4>{group.title} · {text.claimCount(group.claims.length)}</h4>}

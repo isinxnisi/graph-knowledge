@@ -4,12 +4,12 @@ import {act,cleanup,fireEvent,render,screen,within} from "@testing-library/react
 import {afterEach,beforeEach,expect,it,vi} from "vitest";
 import KnowledgeReading,{useKnowledgeReading} from "../components/KnowledgeReading";
 import {MemberClientError} from "../lib/client/member-api";
-import {knowledgeRecordContentSchema,knowledgeSourceContentSchema} from "../lib/domain/knowledge-foundation";
+import {knowledgeEntityContentSchema,knowledgeRecordContentSchema,knowledgeSourceContentSchema} from "../lib/domain/knowledge-foundation";
 import {buildKnowledgePublishedRecord} from "../lib/domain/knowledge-publication";
 const mocks=vi.hoisted(()=>({workspace:{} as Record<string,unknown>,close:vi.fn(),capture:vi.fn()}));
 vi.mock("next/navigation",()=>({useSearchParams:()=>new URLSearchParams(location.search)}));
-vi.mock("../lib/client/use-knowledge-workspace",()=>({useKnowledgeWorkspace:()=>mocks.workspace,readKnowledge:vi.fn()}));
-vi.mock("../components/GraphCanvas",()=>({default:()=> <div>保持中の図</div>}));
+vi.mock("../lib/client/use-knowledge-workspace",()=>({useKnowledgeWorkspace:()=>mocks.workspace,readKnowledge:vi.fn(async()=>({items:[],hasMore:false,cursor:null}))}));
+vi.mock("../components/GraphCanvas",()=>({default:({onEntity}:{onEntity?:(id:string)=>void})=> <div>保持中の図<button onClick={()=>onEntity?.("entity-1")}>図の名前を選ぶ</button></div>}));
 vi.mock("../components/KnowledgeSubmissionAvailability",()=>({useKnowledgeSubmissionsEnabled:()=>true}));
 vi.mock("../lib/client/use-knowledge-display-translations",()=>({useKnowledgeDisplayTranslations:()=>[]}));
 vi.mock("../lib/client/knowledge-submission-handoff",async()=>({...await vi.importActual("../lib/client/knowledge-submission-handoff"),createSelectionSubmission:mocks.capture}));
@@ -125,14 +125,39 @@ it.each([false,true])("テーマ情報は選んだ本文とその根拠を直接
 });
 
 
-it("選択のないテーマ概要も閉じた状態を保ち、必要なときに開き直せる",async()=>{
+it("非同期で開いた未選択テーマの概要も閉じた状態を保ち、必要なときに開き直せる",async()=>{
  HTMLElement.prototype.scrollIntoView=vi.fn();HTMLElement.prototype.scrollTo=vi.fn();
  function Both(){const r=useKnowledgeReading()!;return <>{r.center}<aside id="explorer-detail">{r.detail}</aside></>;}
- render(<KnowledgeReading><Both/></KnowledgeReading>);await flush();const detail=within(document.getElementById("explorer-detail")!);
+ mocks.workspace={...mocks.workspace,activeTheme:null,retainedTheme:null,busy:true};
+ const {rerender}=render(<KnowledgeReading><Both/></KnowledgeReading>);await flush();
+ mocks.workspace={...mocks.workspace,activeTheme:theme,retainedTheme:theme,busy:false};
+ rerender(<KnowledgeReading><Both/></KnowledgeReading>);await flush();const detail=within(document.getElementById("explorer-detail")!);
  expect(detail.getByRole("heading",{name:"このテーマを深く読む"})).toBeTruthy();
  fireEvent.click(detail.getByRole("button",{name:"閲覧に戻る"}));await flush();
  expect(detail.queryByRole("heading",{name:"このテーマを深く読む"})).toBeNull();
  expect(detail.getByText("年表の出来事や図の名前を選ぶと、内容と出典を読めます。")).toBeTruthy();
  fireEvent.click(detail.getByRole("button",{name:"エピソード・豆知識を見る"}));await flush();
  expect(detail.getByRole("heading",{name:"このテーマを深く読む"})).toBeTruthy();
+});
+
+
+it("テーマ概要から図の名前を選ぶと、その名前の説明へ切り替わる",async()=>{
+ HTMLElement.prototype.scrollIntoView=vi.fn();HTMLElement.prototype.scrollTo=vi.fn();
+ const stamp={revision:1,createdAt:"2026-11-10T00:00:00Z",reason:""};
+ const entities=[{id:"entity-1",...stamp,content:knowledgeEntityContentSchema.parse({name:"Ariane 5",kind:"rocket",description:"Webbを打ち上げたロケット"})},{id:"entity-2",...stamp,content:knowledgeEntityContentSchema.parse({name:"Webb",kind:"telescope"})}];
+ const record={id:"launch",...stamp,content:knowledgeRecordContentSchema.parse({kind:"relation",subjectId:"entity-1",objectId:"entity-2",relation:"打ち上げた",assertion:"Ariane 5がWebbを打ち上げた。",evidence:[{id:"e",source:{id:"source",revision:1},locator:"本文"}]})};
+ const snapshot={schemaVersion:1 as const,initialView:"graph" as const,records:[record],entities,sources:[{id:"source",...stamp,content:knowledgeSourceContentSchema.parse({title:"打上げの資料",bibliography:"第1版"})}],mappings:[]};
+ const fixed={...theme,snapshot,records:[buildKnowledgePublishedRecord(record,snapshot)]};
+ const select=vi.fn((selection:unknown)=>{mocks.workspace={...mocks.workspace,themeSelection:selection};});
+ mocks.workspace={...mocks.workspace,activeTheme:fixed,retainedTheme:fixed,setThemeSelection:select};
+ function Both(){const r=useKnowledgeReading()!;return <>{r.center}<aside id="explorer-detail">{r.detail}</aside></>;}
+ render(<KnowledgeReading><Both/></KnowledgeReading>);await flush();
+ const detail=within(document.getElementById("explorer-detail")!);
+ fireEvent.click(screen.getByRole("button",{name:"テーマについて"}));
+ expect(detail.getByRole("heading",{name:"このテーマを深く読む"})).toBeTruthy();
+ fireEvent.click(screen.getByRole("button",{name:"図の名前を選ぶ"}));await flush();
+ expect(select).toHaveBeenCalledWith({kind:"entity",id:"entity-1"});
+ expect(detail.queryByRole("heading",{name:"このテーマを深く読む"})).toBeNull();
+ expect(detail.getByRole("heading",{name:"Ariane 5"})).toBeTruthy();
+ expect(detail.getByText("Webbを打ち上げたロケット")).toBeTruthy();
 });

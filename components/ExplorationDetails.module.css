@@ -1,0 +1,35 @@
+/* Reading hierarchy shared by the original graph's entity and relation details. */
+.entity { min-width: 0; }
+.explore { display: grid; padding-top: 8px; border-top: 1px solid var(--color-border); }
+.entity .explore > button { display: grid; grid-template-columns: 17px minmax(0, 1fr) 12px; align-items: center; gap: 9px; width: 100%; padding: 9px 0; border: 0; border-radius: 0; background: transparent; text-align: left; font-size: 13px; line-height: 1.5; box-shadow: none; }
+.entity .explore > button > svg { width: 16px; height: 16px; margin: 0; }
+.entity .explore > button > svg:last-child { width: 12px; transform: rotate(-90deg); color: var(--color-muted); }
+.entity .explore > button:hover { background: var(--color-hover); }
+.branch { margin: 3px 0 12px; color: var(--color-muted); font-size: 12px; }
+.entity .branch > button { display: inline-flex; gap: 6px; align-items: center; padding: 6px 0; background: transparent; border: 0; box-shadow: none; font-size: 12px; }
+.entity .branch > button > svg { width: 13px; height: 13px; margin: 0; }
+.branch > p { margin: 4px 0; }
+.tools { border-top: 1px solid var(--color-border); padding: 9px 0 0; display: flex; align-items: flex-start; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; }
+.tools > details[open] { flex-basis: 100%; }
+.metadata { min-width: 0; }
+.metadata > summary, .quotation > summary { display: flex; align-items: center; gap: 7px; padding: 5px 0; list-style: none; color: var(--color-muted); cursor: pointer; font-size: 12px; }
+.metadata > summary::-webkit-details-marker, .quotation > summary::-webkit-details-marker { display: none; }
+.metadata > summary::before, .quotation > summary::before { content: ''; width: 5px; height: 5px; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: rotate(-45deg); transition: transform 160ms ease; }
+.metadata[open] > summary::before, .quotation[open] > summary::before { transform: rotate(45deg); }
+.metadata > div { margin: 5px 0 7px 12px; }
+.metadata p { margin: 0 0 7px; }
+.metadata p > span { color: var(--color-muted); margin-right: 8px; }
+.metadata a { display: inline-flex; align-items: center; gap: 5px; }
+.metadata a svg { width: 13px; }
+.relation > nav:first-of-type { margin-bottom: 14px; }
+.relation > nav:first-of-type h4 { display: flex; align-items: center; gap: 7px; color: var(--color-text); font-size: 12px; }
+.relation > nav:first-of-type h4 svg { width: 15px; height: 15px; }
+.relation > h3 { font: 600 14px/1.5 var(--font-body-family, system-ui, sans-serif) !important; }
+.record.record { margin-top: 10px; padding-top: 12px; }
+.record.record > section[aria-label] { padding: 0 0 0 12px; margin: 10px 0; border: 0; border-left: 2px solid var(--color-border); border-radius: 0; background: transparent; }
+.record.record h5 { margin: 4px 0; font-size: 13px; font-weight: 500; line-height: 1.6; }
+.record.record h5 a { min-height: 0; }
+.quotation > div { margin: 7px 0 4px; }
+.record.record > div:last-child { margin-top: 4px; }
+@media(max-width:760px) { .entity .explore > button, .entity .branch > button, .metadata > summary, .quotation > summary { min-height: 40px; } }
+@media(prefers-reduced-motion:reduce) { .metadata > summary::before, .quotation > summary::before { transition: none; } }

@@ -29,7 +29,6 @@
 
 .reading{margin:18px 0 0;padding:14px 0}.reading header h3{font-size:13px;color:var(--color-text)}.reading ul{grid-template-columns:1fr;margin-top:8px}.reading li button{padding:10px 12px;border-bottom:1px solid var(--color-border)}.reading .meta{display:none}.reading .assertion{white-space:normal}.reading ul[hidden]{display:none}.reading .extra{display:block}
 
-.count { color:var(--color-muted);font-size:11px; }
 button.listRow { display:grid;grid-template-columns:minmax(0,1fr) 14px;align-items:start;gap:10px;width:100%;padding:9px 0;text-align:left;border:0;border-radius:0;border-bottom:1px solid var(--color-border);box-shadow:none;background:transparent;font-size:14px;line-height:1.65;color:var(--color-text); }
 .listRow>span {min-width:0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden; }
 .listRow :global(.ui-icon) { width:13px;height:13px;flex-shrink:0;margin-top:4px;color:var(--color-accent); }

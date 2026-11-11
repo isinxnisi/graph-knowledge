@@ -1,12 +1,20 @@
 "use client";
-import {useCallback,useEffect,useState} from 'react';
+import {useCallback,useEffect,useId,useState} from 'react';
 import {z} from 'zod';
 import type {KnowledgeTextTarget} from '../lib/domain/knowledge-translation';
 import {translationGenerationStatusSchema,translationGenerationDisclosure,type TranslationGenerationStatus} from '../lib/domain/knowledge-translation-generation';
 import {memberRequest,MemberClientError} from '../lib/client/member-api';
 import {useMemberSession} from '../lib/client/use-member-identity';
 import css from './KnowledgeTranslationPanel.module.css';
-export default function KnowledgeTranslationGenerate({target,language,en}:{target:KnowledgeTextTarget;language:string;en:boolean}){
+type Props={target:KnowledgeTextTarget;language:string;en:boolean};
+export default function KnowledgeTranslationGenerate(props:Props){
+ const [open,setOpen]=useState(false),contentId=useId();
+ return <>
+  <button type="button" className={css.textAction} aria-expanded={open} aria-controls={contentId} onClick={()=>setOpen(value=>!value)}>{open?(props.en?'Close draft tools':'下書きを閉じる'):(props.en?'Generate a draft':'自動で下書き')}</button>
+  {open&&<div className={css.generation} id={contentId}><TranslationDraftRequest {...props}/></div>}
+ </>;
+}
+function TranslationDraftRequest({target,language,en}:Props){
  const identity=useMemberSession(),userId=identity.status==='authenticated'?identity.user?.id:undefined;
  const [status,setStatus]=useState<TranslationGenerationStatus|null>(null),[busy,setBusy]=useState(false),[consent,setConsent]=useState(false),[error,setError]=useState<string|null>(null);
  const key=JSON.stringify(target);
@@ -18,7 +26,7 @@ export default function KnowledgeTranslationGenerate({target,language,en}:{targe
  const pending=status&&['queued','running','retry','quota'].includes(status.state);
  const link='/member/submissions?'+new URLSearchParams({translate:JSON.stringify(target),language,...(status?.state==='ready'?{generation:status.id}:{})});
  if(!userId)return <small>{en?'Sign in to request an automatic translation.':'ログインすると自動翻訳を依頼できます。'}</small>;
- return <div className={css.generation}>
+ return <div className={css.generationContent}>
   {error&&<p role="alert">{error}</p>}
   {status?.state==='ready'?<><small>{en?'Generated draft · not published':'自動生成の草稿・未公開'}</small><p lang={language}>{status.text}</p><a href={link}>{en?'Check and edit this draft':'この訳文を確認・編集する'} →</a></>:pending?<><p role="status">{!status.workerAvailable?(en?'Waiting for translation processing to resume.':'翻訳処理の再開を待っています。'):status.reason||(en?'Waiting to generate a translation.':'訳文の生成待ちです。')}{status.nextAttemptAt&&<> · {new Date(status.nextAttemptAt).toLocaleString(en?'en':'ja')} {en?'or later':'以降'}</>}</p><button disabled={busy} onClick={()=>void run('status')}>{en?'Check result':'結果を確認'}</button><button disabled={busy} onClick={()=>void run('cancel')}>{en?'Cancel request':'依頼を取り消す'}</button></>:<>
    {status?.reason&&<p role="status">{status.reason}</p>}
