@@ -50,7 +50,7 @@
 .notice { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12px; line-height: 1.7; background: var(--color-accent-soft); border-left: 3px solid var(--color-accent); padding: 8px 12px; margin-bottom: 8px; }
 
 .details { font-size: 14px; line-height: 1.65; }
-.details h2 { display: block; font: 400 23px/1.4 var(--font-editorial); margin: 8px 0 10px; }
+.workspace.details h2 { display: block; font: 400 23px/1.4 var(--font-editorial); margin: 8px 0 10px; }
 .details h3 { font-size: 14px; line-height: 1.55; color: var(--color-text); }
 .details article p { white-space: pre-wrap; }
 .details .return { margin-bottom: 8px; }
@@ -93,7 +93,7 @@
  .workspace .themeHeader .themeInfo { min-width: 36px; min-height: 36px; }
  .canvasFrame:not(.themeCanvas) > div:first-child { height: min(58dvh,560px); min-height: 330px; }
  .themeCards { grid-template-columns: 1fr; }
- .details h2 { font-size: 22px; }
+ .workspace.details h2 { font-size: 22px; }
  .details .return { min-height: 36px; margin-bottom: 4px; }
  .details p.mobileLead { display: block; margin: 0 0 12px; font-size: 13px; line-height: 1.7; color: var(--color-text); }
  .guideTools > details > summary { min-height: 36px; padding-block: 7px; }

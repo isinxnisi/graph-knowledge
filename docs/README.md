@@ -1,3 +1,5 @@
+2026-11-11 探索画面全体のデザイン調整：[共通ルール・変更前後・βの確認範囲](verification/EXPLORER_DESIGN_UNIFICATION_20261111.md)。TOP・通常Graph・テーマ・左右ペインを調整、3200／HTTPS βへ反映。本番未変更。
+
 2026-11-10 商品カード・運営画像APIをローカル3200／HTTPS βへ反映：[設計と登録経路](design/PRODUCT_CARDS_OPERATOR_IMAGES_20261110.md)／[画面・実測・接続状況](verification/PRODUCT_CARDS_OPERATOR_IMAGES_20261110.md)。本番は未変更。
 
 2026-11-10 容量整理・復帰完了：①不要物調査・②cache整理・③本人の手動圧縮後、既存12 container／β5 Worker／正式API向けPC2 Workerを復帰確認｜今回の③まで完了。VHD合計約99.4 GiB縮小、C空き約107.7 GiB。3200／HTTPS βのTOP・同じテーマが200、既存build継続・本番未変更。次回はWSLを使うCodexも終了してからWindows側で圧縮する。[実測・注意点](verification/DEV_STORAGE_COMPACTION_20261110.md)。
