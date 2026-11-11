@@ -36,6 +36,7 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
   highlightedSubject,
   onFocus,
   renderRecord,
+  compactDates = false,
 }: {
   records: R[];
   resolution: CalendarResolution;
@@ -43,6 +44,7 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
   highlightedSubject: string;
   onFocus: (id: string) => void;
   renderRecord: (record: R, index: number) => ReactNode;
+  compactDates?: boolean;
 }) {
   const {locale}=useUiLocale(),en=locale==="en";
   const unitNames = en?{year:"Year",month:"Month",day:"Day",hour:"Hour"}:{year:"年",month:"月",day:"日",hour:"時間"};
@@ -73,7 +75,7 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
     } as CSSProperties;
   };
   return (
-    <div className={css.surface} ref={container}>
+    <div className={css.surface} ref={container} data-compact-dates={compactDates || undefined}>
       <p className={css.caption}>
         {en?`${unitNames[graph.unit]} scale · Order within one unit is unspecified. Spacing is not to scale.`:`${unitNames[graph.unit]}単位 · 同じ単位内の行順は前後関係を表しません。行間は日数に比例しません。`}
       </p>

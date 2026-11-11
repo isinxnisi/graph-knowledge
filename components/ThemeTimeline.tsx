@@ -546,6 +546,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
         {embedded && group.id === roots[0]?.id && !ancestors.length && <div id={`${prefix}-settings`} className={css.headerSettingsBody} hidden={!settingsOpen}>{readingControls}</div>}
         {group.kind === "calendar" ? (
           <CalendarTimelineGraph
+            compactDates={reading}
             records={rows}
             resolution={resolution}
             focusedRecordId={focusedRecordId}

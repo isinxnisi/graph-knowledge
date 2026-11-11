@@ -101,3 +101,18 @@ Windows版Chromeで同じβ内容を読んだ再測定：
 - 375pxで商品名を16px・紹介を14pxへ拡大した追加確認でも横溢れなし、カード約266px。これは文章が増えた条件への確認で、iPhone実機と同一の字体の再現ではない。
 - 変更前後を実画面で開いて確認。開発PCの C:/Users/nishr/.codex/tmp/plunode-item-entry/ に product-whole-before.png、product-whole-after-375-beta.png、product-whole-after-320.png、product-whole-after-1500.png、product-whole-after-larger-text.png、product-whole-results.log を保持。
 - 修正版のiPhone実機は未確認。本番・データ・Worker・SEO・テーマの導入と保存共有の処理は変更していない。今回の商品欄の是正と、閲覧UI全体のデザイン受入を区別する。
+
+
+## スマホ年表の本文を左へ寄せる比較案（同日追加）
+
+利用者の切貼りイメージを基に、スマホでは左の日付専用列を使わず、本文のすぐ上に日付を置く配置を実装した。日付・本文の左端を合わせ、軸・点・期間・接続線は引き続き同じ場所で読めるようにする。600px以下の閲覧用年表に限って適用し、PCの左日付列、編集時の年表、日付の意味やcalendarGraphの順序・点化規則は変更しない。
+
+単に日付を上へ移すだけの初回案では、追加した日付行により全体の高さが増えた。そのため、行末の余白と共通Explorerから継承した関係図ボタンの高さを併せて調整した。本文の文字サイズを変えず、日付の行高と点・期間の共通anchorを18px移動して、本文と線の対応を保つ。期間の終了点・境界だけの行にも必要な高さを確保する。日付は年・月・日・時刻の値を保持し、同一単位のグループはまとめて表示する。
+
+確認：
+- 既存3ファイル39テスト、型検査込みbuild成功。最終build cQ_baZi3wcorn1TdKs_Eqを3200とHTTPS βへ配置。
+- 同じ375pxのWebb年表で、本文領域の左端133→72px、幅218→279px。関係図ボタンのある主文欄も182→243px。日付は主文の文字開始位置へ整列。8件の年表全体は約951.8→916.6pxで、幅を広げても全体の高さが増えない配置まで調整した。改善量は文章長により異なり、全テーマで同じ行数を保証しない。
+- ローカル320×606／375×606、HTTPS β375×631で、横溢れなし、日付が本文に重ならないこと、全8個の時期マーク（7点・1範囲）の保持、点の中心／期間両端とconnectorのY座標差1px以内を確認。
+- 期間の線を選択→詳細→年表へ戻る、表示設定で年→自動へ戻す操作を両環境で確認。1500×900pxのPCは左日付列78pxを保ち、線の選択と表示単位切替を確認した。PC用の戻るボタンは意図的に非表示であり、初回ブラウザ検証のPC待機timeoutはこの操作前提の誤り。PCは選択を保持してその場で図と詳細を読めることを確認し直した。
+- 変更前後を実画面で開いて確認。C:/Users/nishr/.codex/tmp/plunode-item-entry/ の timeline-mobile-left-before.png／.log、timeline-mobile-left-final-375-beta.png、timeline-mobile-left-final-320.png、timeline-mobile-left-final-1500.png、timeline-mobile-left-results.log、timeline-mobile-left-desktop.logを保持。
+- 修正後のiPhone実機表示は未確認。利用者がβで比較できる配置案として提示する。今回の変更は本番・DB・Worker・テーマ原本・SEO・保存共有を変更しない。閲覧UI全体のデザイン受入完了とは扱わない。

@@ -353,3 +353,17 @@
 
 /* A compact preface leaves the shared calendar axis unchanged. */
 .caption { margin: 7px 0 9px; }
+
+
+/* Phone reading: reserve space above the text for dates, rather than a left column.
+   The common anchor offset keeps point, duration and boundary connectors aligned. */
+@media (max-width:600px) {
+ .surface[data-compact-dates] .graph { --gutter:0px; --anchor:38px; }
+ .surface[data-compact-dates] .date { grid-column:3; align-self:start; padding:2px 0 0 14px; font-size:11px; line-height:1.4; pointer-events:none; }
+ .surface[data-compact-dates] .dateLabel { display:inline-flex; flex-wrap:wrap; align-items:baseline; gap:0 5px; }
+ .surface[data-compact-dates] .dateClock, .surface[data-compact-dates] .dateZone { display:inline; }
+ .surface[data-compact-dates] .date small { display:inline; margin:0 0 0 6px; }
+ .surface[data-compact-dates] .records { padding-top:18px; padding-bottom:0; min-height:48px; box-sizing:border-box; }
+ .surface[data-compact-dates] .graph .ending { min-height:28px; }
+ .surface[data-compact-dates] .recordList > li > div:nth-child(3) { padding-bottom:4px; margin-bottom:0; }
+}
