@@ -109,9 +109,8 @@
       "checkedAt": "2026-11-11T10:04:56+00:00"
     },
     "collection-control/issue-sources/61.json": {
-      "status": "held",
-      "reason": "GitHub Issue read failed: HTTP 503",
-      "checkedAt": "2026-11-11T16:25:10+00:00"
+      "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
+      "checkedAt": "2026-11-11T16:33:19+00:00"
     },
     "collection-control/issue-sources/62.json": {
       "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
@@ -193,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-11T16:31:18.290274+00:00"
+  "checkedAt": "2026-11-11T16:37:22.232418+00:00"
 }
