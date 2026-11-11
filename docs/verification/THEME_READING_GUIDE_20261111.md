@@ -173,3 +173,10 @@ Windows版Chromeで同じβ内容を読んだ再測定：
 - `mobile-shell.spec.ts` の高さ条件を新配置へ更新。ただし既存E2Eの2ケースは、バーの検証に到達する前の「表示確認の利用者のアカウントメニュー」が見つからず失敗した。既存の認証表示fixtureを使う全経路は未完走であり、今回成功した実画面の経路確認とは区別する。認証仕様の変更は今回行わない。
 - 比較画像は開発PCの `C:/Users/nishr/.codex/tmp/plunode-item-entry/bottom-nav-before.png`、`bottom-nav-after-375.png`、`bottom-nav-after-375-beta.png`、`bottom-nav-after-320.png`、`bottom-nav-detail-375.png`、`bottom-nav-actual-dark-beta.png`。変更後画像を開いて確認。
 - iPhone実機の安全領域・アドレスバー伸縮・ソフトウェアキーボードでの最終確認は未了。デスクトップChromeの幅変更をiPhoneでの検証成功とは扱わない。本番・DB・Workerは未変更。
+
+
+## 下部ナビの半透明グラデーション
+
+- 利用者の追加指示に従い、楕円の外枠は透明度88%→58%、選択背景は92%→48%のグラデーションへ変更。配色変数を共用し、16pxのbackdrop blurをSafari用の接頭辞付き指定と併記した。寸法・本文の確保領域・切替処理は維持。
+- 型検査込みbuild成功、`xrL1FChEN9n4bPGPBzNPp`を3200／HTTPS βへ反映。背景だけの変更のため既存の広いテスト一式は再実行せず、Chromeの320×606（local）・375×631（β）で実際の半透明gradient／blur、ライト・dark-brown、検索→Graph→詳細→復帰、横溢れなし・44pxの操作領域を確認。1500pxではバー非表示を確認。
+- 実画面を開いて確認：C:/Users/nishr/.codex/tmp/plunode-item-entry/nav-glass-light-375.png、nav-glass-dark-375.png（320px版も保存）。iPhone実機は未確認。本番未変更。
