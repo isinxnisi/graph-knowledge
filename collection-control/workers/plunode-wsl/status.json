@@ -57,8 +57,9 @@
       "checkedAt": "2026-11-03T17:37:45+00:00"
     },
     "collection-control/issue-sources/5.json": {
-      "status": "registered: issue-5-dot-tezuka-adolf-20261025",
-      "checkedAt": "2026-11-03T17:28:51+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno 104] Connection reset by peer>",
+      "checkedAt": "2026-11-11T15:25:16+00:00"
     },
     "collection-control/issue-sources/42.json": {
       "status": "registered: issue-42-dot-matsumoto-three-20261026",
@@ -192,5 +193,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-11T15:08:01.161139+00:00"
+  "checkedAt": "2026-11-11T15:26:54.743625+00:00"
 }
