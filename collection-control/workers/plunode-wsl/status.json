@@ -26,30 +26,26 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-11T08:26:06.606364+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-11T07:31:46.999513+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-11T08:26:06.606364+00:00",
+    "eligibleAt": "2026-11-11T07:31:46.999513+00:00",
     "windowEndAt": "2026-11-11T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-65-dot-inoue-three-20261029-batch-01",
-    "startedAt": "2026-11-11T07:21:06.606366+00:00",
-    "limitAt": "2026-11-11T08:16:06.606364+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-58-dot-takeuchi-two-20261028-batch-01",
-    "endedAt": "2026-11-11T07:09:47.714245+00:00"
+    "requestId": "issue-65-dot-inoue-three-20261029-batch-01",
+    "endedAt": "2026-11-11T07:21:46.999517+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 13,
-    "completed": 41,
+    "completed": 42,
     "awaiting-recovery": 6,
-    "waiting-control": 2
+    "waiting-control": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -196,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-11T07:21:13.043484+00:00"
+  "checkedAt": "2026-11-11T07:21:48.891124+00:00"
 }
