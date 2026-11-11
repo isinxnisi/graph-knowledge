@@ -26,30 +26,26 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-11T07:17:51.943479+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-11T06:23:32.259005+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-11T07:17:51.943479+00:00",
+    "eligibleAt": "2026-11-11T06:23:32.259005+00:00",
     "windowEndAt": "2026-11-11T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-48-dot-toriyama-three-20261027-batch-01",
-    "startedAt": "2026-11-11T06:12:51.943486+00:00",
-    "limitAt": "2026-11-11T07:07:51.943479+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-46-dot-aoyama-three-20261027-batch-01",
-    "endedAt": "2026-11-11T06:02:33.105753+00:00"
+    "requestId": "issue-48-dot-toriyama-three-20261027-batch-01",
+    "endedAt": "2026-11-11T06:13:32.259006+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 13,
-    "completed": 36,
+    "completed": 37,
     "awaiting-recovery": 6,
-    "waiting-control": 7
+    "waiting-control": 6
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -196,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-11T06:12:58.499501+00:00"
+  "checkedAt": "2026-11-11T06:13:40.458404+00:00"
 }
