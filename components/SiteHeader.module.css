@@ -38,3 +38,12 @@
   .header .brand{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
   .header .brandLink{justify-content:center;width:44px;height:44px;gap:0}
 }
+
+/* The header is a quiet frame for the explorer, with equal icon touch areas. */
+@media (min-width: 801px) {
+  .header { padding: 8px 16px; gap: 14px; }
+  .description { font-size: 11px; line-height: 1.55; }
+}
+@media (max-width: 800px) {
+  .header .capsulesEntry { border-color: transparent; background: transparent; box-shadow: none; }
+}

@@ -51,16 +51,18 @@ export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme,o
       <button aria-expanded={tool==="translation"} aria-controls={toolId+"translation"} onClick={()=>setTool(tool==="translation"?null:"translation")}>{en?"Translations":"翻訳"}<Icon name="chevron"/></button>
       {correction}
     </div><div id={toolId+"info"} hidden={tool!=="info"} className={css.infoBody}>
-    {r.aboutRecord&&<p className={css.meta}>{en?"About this knowledge: ":"この知識・関係について："}{onRecord?<button onClick={()=>onRecord(r.aboutRecord!.id)}>{en?"Read the original":"元の知識を読む"}</button>:<a href={"/?krecord="+encodeURIComponent(r.aboutRecord.id)}>{en?"Read the original":"元の知識を読む"}</a>} · {en?"Revision":"内容版"} {r.aboutRecord.revision}</p>}
-    {r.aboutTheme&&<p className={css.meta}>{en?"About this theme: ":"このテーマについて："}{onTheme?<button onClick={()=>onTheme(r.aboutTheme!)}>{en?"Open theme":"テーマを読む"}</button>:<a href={"/?ktheme="+encodeURIComponent(r.aboutTheme)}>{en?"Open theme":"テーマを読む"}</a>}</p>}
-    <div className={css.meta}>{en ? "Content revision" : "内容版"} {dto.record.revision} · {r.polarity === "affirmed" ? en ? "Affirmed" : "肯定" : r.polarity === "denied" ? en ? "Denied" : "否定" : en ? "Uncertain" : "不確実"}</div>
-    {r.relation && <p lang={text("relation",r.relation)!==r.relation?locale:r.textLanguages?.relation?.tag}>{en?"Relation: ":"矢印の言葉："}{text("relation",r.relation)}</p>}{languageName&&<p>{en?"Original language: ":"原文の言語："}{languageName}</p>}
-
-    {scope&&longScope&&<p className={css.scopeLong}>{en?"Scope: ":"範囲："}{scope}</p>}
-    {r.times.map((t) => <p key={t.id}>{themeTimeLabel(knowledgeDisplayTime(dto.record,t.id,translations,locale),locale)}</p>)}
-    {typed?.event && <p>{en ? "Event occurrence" : "開催期間"}：{typed.event.metadata.period.from?.value ?? "?"} 〜 {typed.event.metadata.period.to?.value ?? "?"}<br /><span className={css.meta}>{en ? "Separate from a person's participation period." : "人物の参加期間とは別の情報です。"}</span></p>}
-    {dto.semantics.status === "current" && dto.semantics.concept && <p className={css.meta}>{en ? "Meaning" : "意味対応"}：{dto.semantics.concept.label}</p>}
-    {dto.semantics.status === "stale" && <p className={css.meta}>{en ? "This meaning mapping belongs to an earlier content revision." : "意味対応は旧内容へのものです。現在の意味条件には含めません。"}</p>}
+    <dl className={css.metadata}>
+      <dt>{en ? "Content revision" : "内容版"}</dt><dd>{dto.record.revision} · {r.polarity === "affirmed" ? en ? "Affirmed" : "肯定" : r.polarity === "denied" ? en ? "Denied" : "否定" : en ? "Uncertain" : "不確実"}</dd>
+      {r.aboutRecord&&<><dt>{en?"About":"元の知識"}</dt><dd>{onRecord?<button onClick={()=>onRecord(r.aboutRecord!.id)}>{en?"Read the original":"元の知識を読む"}</button>:<a href={"/?krecord="+encodeURIComponent(r.aboutRecord.id)}>{en?"Read the original":"元の知識を読む"}</a>} · {en?"Revision":"内容版"} {r.aboutRecord.revision}</dd></>}
+      {r.aboutTheme&&<><dt>{en?"Theme":"テーマ"}</dt><dd>{onTheme?<button onClick={()=>onTheme(r.aboutTheme!)}>{en?"Open theme":"テーマを読む"}</button>:<a href={"/?ktheme="+encodeURIComponent(r.aboutTheme)}>{en?"Open theme":"テーマを読む"}</a>}</dd></>}
+      {r.relation&&<><dt>{en?"Relation":"矢印の言葉"}</dt><dd lang={text("relation",r.relation)!==r.relation?locale:r.textLanguages?.relation?.tag}>{text("relation",r.relation)}</dd></>}
+      {languageName&&<><dt>{en?"Original language":"原文の言語"}</dt><dd>{languageName}</dd></>}
+      {scope&&longScope&&<><dt>{en?"Scope":"範囲"}</dt><dd>{scope}</dd></>}
+      {r.times.length>0&&<><dt>{en?"Time":"時期"}</dt><dd>{r.times.map(t=><p key={t.id}>{themeTimeLabel(knowledgeDisplayTime(dto.record,t.id,translations,locale),locale)}</p>)}</dd></>}
+      {typed?.event&&<><dt>{en?"Event occurrence":"開催期間"}</dt><dd>{typed.event.metadata.period.from?.value??"?"} 〜 {typed.event.metadata.period.to?.value??"?"}<br/><span className={css.meta}>{en?"Separate from a person's participation period.":"人物の参加期間とは別の情報です。"}</span></dd></>}
+      {dto.semantics.status==="current"&&dto.semantics.concept&&<><dt>{en?"Meaning":"意味対応"}</dt><dd>{dto.semantics.concept.label}</dd></>}
+      {dto.semantics.status==="stale"&&<><dt>{en?"Meaning":"意味対応"}</dt><dd>{en?"This meaning mapping belongs to an earlier content revision.":"意味対応は旧内容へのものです。現在の意味条件には含めません。"}</dd></>}
+    </dl>
     <KnowledgeContributors id={dto.record.id} revision={dto.record.revision}/>
     </div><div id={toolId+"translation"} hidden={tool!=="translation"}>{tool==="translation"&&<KnowledgeTranslationPanel embedded onRetain={onTranslation} fields={knowledgeRecordTranslationFields(dto,en)}/>}</div></footer>
   </article>;

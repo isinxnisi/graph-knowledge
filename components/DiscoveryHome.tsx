@@ -48,27 +48,29 @@ export default function DiscoveryHome({ data, onSearch, onDiscover, onTheme, onT
   const explore = () => trackPublicEvent("explore_start");
   const featured = data.features.find(f => f.entity.name === "PLUTO") ?? data.features[0];
   return <section className={styles.home} aria-labelledby="discovery-home-title" data-testid="discovery-home" lang={locale}>
-    <header className={styles.introduction} data-discovery-reveal><p className={styles.eyebrow}>{text.eyebrow}</p><h2 id="discovery-home-title">{text.title}</h2><p><span className={styles.fullCopy}>{text.introduction}</span><span className={styles.compactCopy}>{text.introductionCompact}</span></p>
+    <div className={styles.welcome} data-discovery-reveal>
+    <header className={styles.introduction}><p className={styles.eyebrow}>{text.eyebrow}</p><h2 id="discovery-home-title">{text.title}</h2><p><span className={styles.fullCopy}>{text.introduction}</span><span className={styles.compactCopy}>{text.introductionCompact}</span></p>
       <div className={styles.introMeta}><span>{text.access}</span>{data.counts && <span>{text.knowledge(data.counts.entities.toLocaleString(locale), data.counts.claims.toLocaleString(locale))}</span>}</div>
       <button className={styles.searchLaunch} onClick={onDiscover} aria-haspopup="dialog" data-testid="discovery-search-entry" data-discovery-launch="home"><Icon name="search" /><span>{discoverySearchLabels(locale).homeEntry}</span><Icon name="arrow" /></button>
     </header>
-    {data.unavailable && <p role="status">{text.unavailable}</p>}
-    {featured && <a className={styles.featured} href={href(featured.entity.id)} onClick={explore} data-testid="discovery-featured" data-discovery-reveal>
+    {featured && <a className={styles.featured} href={href(featured.entity.id)} onClick={explore} data-testid="discovery-featured">
       <p className={styles.eyebrow}>{text.featured}</p><h3>{featured.entity.name === "PLUTO" ? <><span className={styles.fullCopy}>{text.featureTitle}</span><span className={styles.compactCopy}>{text.featureTitleCompact}</span></> : entityDisplayName(featured.entity,locale)}</h3>
       {featured.entity.name === "PLUTO" && <p className={styles.featureDescription}><span className={styles.fullCopy}>{text.featureDescription}</span><span className={styles.compactCopy}>{text.featureDescriptionCompact}</span></p>}
       <FeatureMap feature={featured} locale={locale} /><span className={styles.start}><Icon name="graph" />{text.explore(entityDisplayName(featured.entity,locale))}<Icon name="arrow" /></span>
     </a>}
+    </div>
+    {data.unavailable && <p role="status">{text.unavailable}</p>}
     {onTheme && onThemeSearch && <HomeThemes state={themes} onOpen={onTheme} onBrowse={onThemeSearch} part="featured" />}
     {!!data.features.filter(f => f !== featured).length && <section className={styles.fields} aria-labelledby="discovery-fields-title" data-discovery-reveal><h3 id="discovery-fields-title">{onTheme ? locale === "en" ? "Explore more names" : "ほかの名前から探す" : text.fields}</h3><div className={styles.fieldGrid}>
       {data.features.filter(f => f !== featured).map(f => <a key={f.entity.id} href={href(f.entity.id)} onClick={explore} data-testid="discovery-field"><Icon name={f.entity.kind === "event" ? "event" : f.entity.kind === "organization" ? "organization" : "person"} /><span><small>{f.entity.kind === "event" ? text.event : f.entity.kind === "organization" ? text.science : text.manga}</small><strong>{entityDisplayName(f.entity,locale)}</strong><span>{f.entity.kind === "event" ? text.eventDescription : f.entity.kind === "organization" ? text.scienceDescription : text.mangaDescription}</span></span><Icon name="arrow" /></a>)}
     </div></section>}
     {onTheme && onThemeSearch && <HomeThemes state={themes} onOpen={onTheme} onBrowse={onThemeSearch} part="recent" />}
     <section className={styles.recent} aria-labelledby="discovery-recent-title" data-discovery-reveal><h3 id="discovery-recent-title">{text.recent}</h3>
-      <h4>{text.entities}</h4><ul>{data.recentEntities.map(({ entity, addedAt }) => <li key={entity.id}><a href={href(entity.id)} onClick={explore}><strong>{entityDisplayName(entity,locale)}</strong><span>{kinds[entity.kind]}</span></a><time dateTime={addedAt}>{addedAt.slice(0, 10)}</time></li>)}</ul>
-      <h4>{text.claims}</h4><ul>{data.recentClaims.map(({ claim, subject, object, addedAt }) => {
+      <div className={styles.recentGroups}><div><h4>{text.entities}</h4><ul>{data.recentEntities.map(({ entity, addedAt }) => <li key={entity.id}><a href={href(entity.id)} onClick={explore}><strong>{entityDisplayName(entity,locale)}</strong><span>{kinds[entity.kind]}</span></a><time dateTime={addedAt}>{addedAt.slice(0, 10)}</time></li>)}</ul>
+      </div><div><h4>{text.claims}</h4><ul>{data.recentClaims.map(({ claim, subject, object, addedAt }) => {
         const relation = Object.values(displayRelations({ [claim.id]: claim }, locale))[0];
         return <li key={claim.id} className={styles.recentClaim}><div><a href={href(subject.id)} onClick={explore}>{entityDisplayName(subject,locale)}</a><span className={styles.relation}>{relation.label.replaceAll("\n", " · ")}</span><a href={href(object.id)} onClick={explore}>{entityDisplayName(object,locale)}</a><small><a href={localizedPublicHref("/", locale) + readingHref({ kind: "claim", dataset: "public-kg", id: claim.id }).slice(1)}>{text.evidence}</a></small></div><time dateTime={addedAt}>{addedAt.slice(0, 10)}</time></li>;
-      })}</ul>
+      })}</ul></div></div>
       {!data.recentEntities.length && !data.recentClaims.length && !data.unavailable && <p>{text.noRecent}</p>}<p className={styles.note}>{text.dateNote}</p>
     </section>
     <section className={styles.search} data-discovery-reveal><div><h3>{text.searchTitle}</h3><p>{text.searchHint}</p></div><button onClick={onSearch}><Icon name="search" />{text.search}<Icon name="arrow" /></button></section>

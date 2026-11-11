@@ -36,17 +36,19 @@ export default function EntityDetails({ entity, expansion, onExpand, onClose, on
     return () => controller.abort();
   }, [entity.id, attempt]);
   return <section aria-label={ui.entityDetails} className={styles.entityDetails}>
-    <h3>{entityDisplayName(detail??entity,locale)}</h3><p className={styles.badge}>{ui.kinds[entity.kind]}</p>
-    <p>{entity.description ?? ui.descriptionMissing}</p>
+    <header className={styles.entityHeading}>
+      <span className={styles.entityKind}><Icon name={entity.kind === "work" ? "book" : entity.kind} />{ui.kinds[entity.kind]}</span>
+      <h3>{entityDisplayName(detail ?? entity, locale)}</h3>
+      <p className={styles.entityDescription}>{detail?.description ?? entity.description ?? ui.descriptionMissing}</p>
+    </header>
     {!detail && !error && <p role="status">{ui.entityLoading}</p>}
-    {detail && <p>{ui.aliases}：{detail.aliases.length ? detail.aliases.join("、") : ui.unregistered}</p>}
-    {dataset==="public-kg"&&<LegacyEntityTranslations key={entity.id} id={entity.id}/>}
     {detail?.event && <><dl className={styles.claimFacts}><dt>{eventParticipationLabels(locale).eventPeriod}</dt><dd>{formatPeriod(detail.event.period, locale)}</dd></dl><p className={styles.muted}>{eventParticipationLabels(locale).periodHelp}</p></>}
     {error && <div role="alert" className={styles.error}><p>{explorerMessage(error, locale)}</p><button onClick={() => { setError(null); setDetail(null); setAttempt((value) => value + 1); }}>{ui.entityRetry}</button></div>}
-    {dataset && <p><ReadingLink reference={{ kind: "entity", dataset, id: entity.id }} /></p>}
-    <button onClick={onOverview}><Icon name="graph" />{overviewLabels(locale).open}</button>
-    <RootActions restricted={restricted} disabled={missing} onSwitch={onSwitch} />
-    {<><div className={styles.actions}>
+    <nav className={styles.entityExploreActions} aria-label={locale === "en" ? "Explore connections" : "つながりをたどる"}>
+      <button className={styles.entityOverviewAction} onClick={onOverview}><Icon name="graph" />{overviewLabels(locale).open}<Icon name="chevron" /></button>
+      <RootActions restricted={restricted} disabled={missing} onSwitch={onSwitch} />
+    </nav>
+    <div className={styles.entityBranch}><div className={styles.actions}>
       {expansion?.open ? <button onClick={onClose}>{ui.closeBranch}</button> : <button onClick={() => onExpand(false)}>{expansion?.pages.length ? ui.reopenBranch : ui.expand}</button>}
     </div>
     {!expansion?.open && !!expansion?.pages.length && <p className={styles.muted}>{ui.restoreHelp}</p>}
@@ -57,6 +59,11 @@ export default function EntityDetails({ entity, expansion, onExpand, onClose, on
     {expansion?.expanded && !expansion.hasMore && <p className={styles.muted}>{ui.fetched}</p>}
     {expansion?.open && expansion.hasMore && <button onClick={() => onExpand(true)} disabled={expansion.loading || expansion.blocked}>
       {expansion.loading ? ui.moreLoading : ui.more}
-    </button>}</>}
+    </button>}</div>
+    <div className={styles.entityMetadata}>
+      {!!detail?.aliases.length && <p><span>{ui.aliases}</span>{detail.aliases.join(locale === "en" ? ", " : "、")}</p>}
+      {dataset && <ReadingLink reference={{ kind: "entity", dataset, id: entity.id }} />}
+      {dataset === "public-kg" && <LegacyEntityTranslations key={entity.id} id={entity.id} />}
+    </div>
   </section>;
 }

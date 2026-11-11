@@ -87,7 +87,6 @@
 .graphGuide p { font-size: 11px; line-height: 1.6; margin-bottom: 4px; }
 .explorer .adjacentJump { display: inline-flex; align-items: center; gap: 4px; min-height: 32px; padding: 4px 0; font-size: 11px; border: 0; background: transparent; color: var(--color-muted); }
 .adjacentJump :global(.ui-icon) { width: 13px; height: 13px; }
-@media (min-width: 1248px) and (max-width: 1340px) { .columns:not(.wideDetails) { grid-template-columns: 190px minmax(0, 1fr) 250px; } }
 @media (max-width: 800px) {
   .columns { padding: 0 !important; }
   .centralScroll { scrollbar-gutter: auto; scrollbar-width: none; }
@@ -661,3 +660,104 @@
 .nodeCaption strong,.nodeCaption span {display:block}
 .nodeCaption strong {margin-bottom:.15rem}
 .nodeCaption span {display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:5;overflow:hidden}
+
+
+/* Shared explorer rhythm: the graph keeps the space; controls and reading panes
+   use the same text edge and a small, deliberate set of spacings. */
+@media (min-width: 1200px) {
+  .columns { grid-template-columns: clamp(196px, 14.3vw, 220px) minmax(280px, 1fr) clamp(304px, 24vw, 360px); gap: 10px; padding: 10px; }
+  .columns.themeColumns { grid-template-columns: clamp(196px, 14.3vw, 220px) minmax(440px, 1fr) clamp(320px, 24vw, 360px); }
+  .columns.wideDetails { grid-template-columns: 190px minmax(280px, 1fr) clamp(380px, 34vw, 500px); }
+  .columns.homeColumns { grid-template-columns: clamp(196px, 14.3vw, 220px) minmax(0, 1fr); }
+  .columns.homeColumns > aside { display: none; }
+}
+.columns > .panel:first-child { padding: 14px; }
+.columns > aside { padding: 16px; }
+.graphPanel { padding: 14px; }
+.graphHeader { align-items: center; gap: 6px 12px; padding-bottom: 8px; margin-bottom: 0; }
+.graphHeading { gap: 4px 10px; }
+.graphHeading h2 { font-size: 22px; line-height: 1.3; }
+.graphHeading p { font-size: 11px; }
+.rootLabel { font-size: 12px; line-height: 1.5; }
+.conditionBar { gap: 6px 10px; padding: 7px 0; margin-bottom: 10px; }
+.conditionActions > button { border-color: transparent; background: transparent; padding: 3px 5px; }
+.graphFooter { align-items: center; margin-top: 4px; }
+.graphGuide > summary { gap: 6px; font-size: 12px; }
+.graphGuide > div { padding: 2px 0 4px 18px; border: 0; }
+.graphGuide p { font-size: 12px; line-height: 1.6; }
+.explorer .adjacentJump { font-size: 12px; }
+.adjacencyPanel { padding: 10px 14px; }
+.adjacencyDisclosure > summary { margin: 0; padding: 4px 0; background: transparent; border-radius: 0; font-size: 13px; font-weight: 600; }
+.detailHeading { align-items: center; gap: 6px 10px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--color-border); }
+.detailHeading h2 { display: flex; align-items: center; gap: 7px; font: 600 14px/1.5 var(--font-body-family, system-ui, sans-serif); letter-spacing: 0; }
+.detailHeading h2 > :global(.ui-icon) { width: 16px; height: 16px; margin: 0; flex: none; }
+.detailHeading > button { border-color: transparent; background: transparent; font-size: 11px; padding: 3px 0; }
+.detailHeading:has([data-dialog-close]) { border: 0; padding: 0; }
+.localActions { padding-top: 14px; margin: 14px 0; gap: 2px; }
+.localActions h3 { font-size: 12px; line-height: 1.5; margin-bottom: 3px; }
+.localActions button { gap: 7px; padding: 6px 0; line-height: 1.5; }
+.localActions button > :global(.ui-icon) { width: 16px; height: 16px; margin: 0; flex: none; }
+.startExamples { margin-top: 14px; padding-top: 14px; }
+.startExamples h3 { font-size: 14px; font-weight: 600; line-height: 1.5; margin-bottom: 4px; }
+.startExamples > p { font-size: 12px; line-height: 1.6; margin-bottom: 8px; }
+.startExamples .results { display: grid; gap: 0; }
+.startExamples .results li { margin: 0; }
+.startExamples .resultButton { grid-template-columns: 16px minmax(0, 1fr); column-gap: 7px; row-gap: 1px; padding: 10px 0 !important; border: 0 !important; border-bottom: 1px solid var(--color-border) !important; border-radius: 0; background: transparent; }
+.startExamples .resultButton > :global(.ui-icon) { width: 16px; height: 16px; margin: 0; }
+.startExamples .resultButton strong { line-height: 1.55; }
+.startExamples .resultButton span { font-size: 11px; line-height: 1.5; }
+
+/* Ordinary graph details use the same hierarchy as theme reading. */
+.entityHeading { margin-bottom: 12px; }
+.entityKind { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 7px; color: var(--color-muted); font-size: 12px; line-height: 1.5; }
+.entityKind > :global(.ui-icon) { width: 15px; height: 15px; margin: 0; color: var(--color-accent); }
+.entityHeading h3 { margin: 0 0 8px; font: 400 25px/1.35 var(--font-editorial); overflow-wrap: anywhere; }
+.entityHeading .entityDescription { font-size: 14px; line-height: 1.7; margin: 0; }
+.entityExploreActions { padding-top: 10px; border-top: 1px solid var(--color-border); }
+.entityExploreActions .entityOverviewAction { display: flex; align-items: center; width: 100%; gap: 7px; min-height: 36px; padding: 5px 0; border-color: transparent; background: transparent; font-size: 13px; line-height: 1.5; }
+.entityOverviewAction > :global(.ui-icon) { width: 16px; height: 16px; margin: 0; flex: none; }
+.entityOverviewAction > :global(.ui-icon):last-child { width: 12px; height: 12px; margin-left: auto; transform: rotate(-90deg); }
+.entityExploreActions .rootActions { margin: 4px 0 10px; gap: 6px; }
+.entityExploreActions .rootActions button { font-size: 12px; line-height: 1.5; padding: 7px 10px; border-color: var(--color-border); }
+.entityBranch { margin-bottom: 12px; }
+.entityBranch .actions { gap: 6px; }
+.entityBranch .actions button { border-color: transparent; background: transparent; padding: 4px 0; font-size: 12px; }
+.entityBranch > p { font-size: 12px; line-height: 1.6; margin: 4px 0 0; }
+.entityMetadata { padding-top: 10px; border-top: 1px solid var(--color-border); font-size: 12px; line-height: 1.6; }
+.entityMetadata > p { margin: 0 0 8px; color: var(--color-muted); }
+.entityMetadata > p > span { display: block; font-size: 11px; margin-bottom: 2px; }
+.entityMetadata > a { font-size: 12px; }
+.relationOverview { margin-bottom: 12px; padding-bottom: 12px; }
+.relationMeaning { font: 400 23px/1.4 var(--font-editorial); }
+.relationPair { font-size: 13px; line-height: 1.65; }
+.relationEndpoints { margin-bottom: 16px; }
+.relationEndpoints h4 { margin: 0 0 5px; font-size: 12px; line-height: 1.5; font-weight: 500; }
+.endpointPair { border: 1px solid var(--color-border); border-radius: 8px; padding: 4px 10px; background: color-mix(in srgb, var(--color-canvas) 65%, var(--color-panel)); }
+.endpointButton { min-height: 36px; gap: 7px; }
+.endpointIdentity strong { font-size: 13px; }
+.endpointDirection { height: 0; overflow: hidden; }
+.endpointHelp { margin: 6px 0 0; font-size: 11px; line-height: 1.55; }
+.recordsHeading { font: 600 14px/1.5 var(--font-body-family, system-ui, sans-serif); margin: 0 0 8px; }
+.relationDetails .claimCard { padding: 12px 0 0; margin: 12px 0 16px; }
+.recordHeader { align-items: center; gap: 7px; margin-bottom: 5px; }
+.recordTerm { font-size: 17px; line-height: 1.5; margin-bottom: 7px; }
+.citation { padding: 10px 12px; border-color: color-mix(in srgb, var(--color-border) 80%, transparent); background: var(--color-canvas); box-shadow: none; }
+.citation h5 { font-size: 14px; line-height: 1.6; margin: 5px 0 6px; }
+.citation p { font-size: 13px; line-height: 1.65; }
+.citation .sourceEyebrow, .citation .sourceLocator { font-size: 11px; line-height: 1.6; }
+.citation .disclosure { margin: 6px 0 0; }
+.disclosure > summary { gap: 7px; font-size: 12px; }
+.claimFacts { column-gap: 12px; row-gap: 4px; }
+.graphPath { margin-top: 16px; padding-top: 12px; }
+.graphPath > h3 { font: 600 14px/1.5 var(--font-body-family, system-ui, sans-serif); margin-bottom: 5px; }
+
+@media (max-width: 800px) {
+  .graphPanel { padding: 12px; }
+  .columns > .panel:first-child, .columns > aside { padding: 14px; padding-bottom: var(--pane-nav-clearance); }
+  .detailHeading { margin-bottom: 12px; padding-bottom: 6px; }
+  .detailHeading h2 { font-size: 14px; }
+  .entityHeading h3 { font-size: 24px; }
+  .entityExploreActions .entityOverviewAction, .entityExploreActions .rootActions button, .entityBranch .actions button, .endpointButton { min-height: 44px; }
+  .localActions button { padding: 6px 0; }
+  .conditionActions > button { padding: 4px 6px; }
+}
