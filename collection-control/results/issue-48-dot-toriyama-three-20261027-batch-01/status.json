@@ -83,11 +83,11 @@
   "requestSha256": "42647bce621bda1430fe1abe5ac77fda6be97db99885827eefd7248346e104ce",
   "kind": "collect-review",
   "phase": "waiting-lock",
-  "generation": 3986,
+  "generation": 3987,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-11T18:02:20+00:00",
+  "updatedAt": "2026-11-11T18:07:24+00:00",
   "result": {
     "jobId": "issue-48-dot-toriyama-three-20261027-r0001-bfe689d065a388d9",
     "collectionUnchanged": false,
