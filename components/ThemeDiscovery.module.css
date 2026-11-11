@@ -32,3 +32,15 @@
 .home a.featureLink small{font-size:10px;}
 
 .imageCredit {font-size:10px;line-height:1.4;color:var(--color-muted);}
+
+@media(max-width:800px) {
+  .featured { grid-auto-columns:min(310px,calc(100% - 22px)); }
+  .featured:has(> div:only-child) { grid-auto-columns:100%; }
+  .home .heading { align-items:center; margin-bottom:8px; }
+  .home .heading h3 { margin:0; }
+  .home a.featureLink { display:grid; grid-template-columns:64px minmax(0,1fr) 14px; gap:10px; min-height:108px; padding:10px; }
+  .themeImage { width:64px; height:64px; }
+  .home a.featureLink > :global(.ui-icon):first-child { justify-self:center; margin:0; }
+  .home a.featureLink strong { font-size:15px; line-height:1.45; }
+  .home a.featureLink .featureDescription { font-size:11px; line-height:1.6; }
+}

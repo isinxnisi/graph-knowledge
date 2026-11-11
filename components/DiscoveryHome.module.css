@@ -78,3 +78,25 @@
   .home .featured, .home .fieldGrid a, .themeFeature { transition: none; }
 }
 .home .prototypeLink { display: inline-block; padding: 10px 0; margin-top: 2px; font-size: 11px; color: var(--color-accent); text-underline-offset: 4px; }
+
+/* Phone Home keeps a readable lead and a compact, complete starting example. */
+.home .compactCopy { display:none; }
+@media (max-width:800px) {
+  .home { padding:12px; }
+  .home .fullCopy, .home .eyebrow, .home .creditsLabel { display:none; }
+  .home .compactCopy { display:inline; }
+  .home .introduction h2 { line-height:1.4; margin-bottom:8px; }
+  .introduction > p:not(.eyebrow) { font-size:12px; line-height:1.7; }
+  .home .searchLaunch { margin-top:12px; }
+  .home .featured { margin-top:12px; padding:10px 12px; }
+  .home .featured h3 { font-size:18px; line-height:1.45; margin-bottom:6px; text-wrap:balance; }
+  .home .featureDescription { line-height:1.7; }
+  .featureVisual { grid-template-columns:72px minmax(0,1fr); gap:12px; margin:8px 0; }
+  .constellation strong { font-size:20px; }
+  .credits { gap:4px; }
+  .credits li { gap:6px; }
+  .credits li > div { display:flex; flex-wrap:wrap; align-items:baseline; gap:0 6px; }
+  .home .start { font-size:12px; line-height:1.6; }
+  .fields, .recent { margin-top:20px; }
+  .home .fields h3, .home .recent h3 { font-size:18px; line-height:1.4; margin-bottom:8px; }
+}

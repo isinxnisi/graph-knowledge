@@ -48,14 +48,14 @@ export default function DiscoveryHome({ data, onSearch, onDiscover, onTheme, onT
   const explore = () => trackPublicEvent("explore_start");
   const featured = data.features.find(f => f.entity.name === "PLUTO") ?? data.features[0];
   return <section className={styles.home} aria-labelledby="discovery-home-title" data-testid="discovery-home" lang={locale}>
-    <header className={styles.introduction} data-discovery-reveal><p className={styles.eyebrow}>{text.eyebrow}</p><h2 id="discovery-home-title">{text.title}</h2><p>{text.introduction}</p>
+    <header className={styles.introduction} data-discovery-reveal><p className={styles.eyebrow}>{text.eyebrow}</p><h2 id="discovery-home-title">{text.title}</h2><p><span className={styles.fullCopy}>{text.introduction}</span><span className={styles.compactCopy}>{text.introductionCompact}</span></p>
       <div className={styles.introMeta}><span>{text.access}</span>{data.counts && <span>{text.knowledge(data.counts.entities.toLocaleString(locale), data.counts.claims.toLocaleString(locale))}</span>}</div>
       <button className={styles.searchLaunch} onClick={onDiscover} aria-haspopup="dialog" data-testid="discovery-search-entry" data-discovery-launch="home"><Icon name="search" /><span>{discoverySearchLabels(locale).homeEntry}</span><Icon name="arrow" /></button>
     </header>
     {data.unavailable && <p role="status">{text.unavailable}</p>}
     {featured && <a className={styles.featured} href={href(featured.entity.id)} onClick={explore} data-testid="discovery-featured" data-discovery-reveal>
-      <p className={styles.eyebrow}>{text.featured}</p><h3>{featured.entity.name === "PLUTO" ? text.featureTitle : entityDisplayName(featured.entity,locale)}</h3>
-      {featured.entity.name === "PLUTO" && <p className={styles.featureDescription}>{text.featureDescription}</p>}
+      <p className={styles.eyebrow}>{text.featured}</p><h3>{featured.entity.name === "PLUTO" ? <><span className={styles.fullCopy}>{text.featureTitle}</span><span className={styles.compactCopy}>{text.featureTitleCompact}</span></> : entityDisplayName(featured.entity,locale)}</h3>
+      {featured.entity.name === "PLUTO" && <p className={styles.featureDescription}><span className={styles.fullCopy}>{text.featureDescription}</span><span className={styles.compactCopy}>{text.featureDescriptionCompact}</span></p>}
       <FeatureMap feature={featured} locale={locale} /><span className={styles.start}><Icon name="graph" />{text.explore(entityDisplayName(featured.entity,locale))}<Icon name="arrow" /></span>
     </a>}
     {onTheme && onThemeSearch && <HomeThemes state={themes} onOpen={onTheme} onBrowse={onThemeSearch} part="featured" />}

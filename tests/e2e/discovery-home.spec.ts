@@ -1,7 +1,8 @@
 import { test, expect, type Page } from "@playwright/test";
 import type { Core } from "cytoscape";
 const pluto = "2b7c6289-d050-4dc0-93e3-9307681253cc";
-const view = (page: Page) => page.getByTestId("graph-canvas").evaluate(el => {
+const graphCanvas = (page: Page) => page.locator("#explorer-graph > section").getByTestId("graph-canvas");
+const view = (page: Page) => graphCanvas(page).evaluate(el => {
   const cy = (el as unknown as { _cyreg?: { cy: Core } })._cyreg?.cy;
   return cy ? { points: Object.fromEntries(cy.nodes().map(n => [n.id(), n.position()])), edges: cy.edges().map(e => e.id()).sort(), zoom: cy.zoom() } : { points: {}, edges: [], zoom: 0 };
 });
@@ -21,22 +22,23 @@ for (const locale of ["ja", "en"]) for (const width of [1440, 390, 320]) test(`$
     const rows = [...el.querySelectorAll('[data-testid="featured-credit"]')];
     return rows.every((row, i) => {
       const name = row.querySelector("strong")!.getBoundingClientRect(), role = row.querySelector("div > span")!.getBoundingClientRect();
-      return name.left >= card.left && role.right <= card.right && role.top >= name.bottom - 1
+      return name.left >= card.left && role.right <= card.right
+        && (innerWidth < 800 ? role.left >= name.right - 1 && Math.abs(role.top - name.top) < 8 : role.top >= name.bottom - 1)
         && (!i || row.getBoundingClientRect().top >= rows[i - 1].getBoundingClientRect().bottom - 1)
         && [row.querySelector("strong")!, row.querySelector("div > span")!].every(node => node.scrollWidth <= node.clientWidth + 1);
     });
   });
   expect(creditsFit).toBe(true);
   await expect(home).toContainText(locale === "en" ? "Recently added knowledge" : "最近加わった知識");
-  await expect(page.getByTestId("graph-canvas")).toBeHidden();
+  await expect(graphCanvas(page)).toBeHidden();
   if (width < 800) { await expect(page.getByRole("button", { name: "Home", exact: true })).toHaveAttribute("aria-pressed", "true"); expect((await page.getByTestId("site-header").boundingBox())!.height).toBeLessThanOrEqual(56); }
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
   await page.screenshot({ path: info.outputPath(`home-${locale}-${width}.png`), fullPage: true, animations: "disabled" });
   await page.getByTestId("discovery-featured").click();
   await expect.poll(async () => Object.keys((await view(page)).points).length).toBe(4);
-  await page.getByTestId("graph-canvas").evaluate(el => { const cy = (el as unknown as { _cyreg: { cy: Core } })._cyreg.cy; cy.nodes().filter(n => n.data("label") === "浦沢直樹").first().emit("tap"); });
+  await graphCanvas(page).evaluate(el => { const cy = (el as unknown as { _cyreg: { cy: Core } })._cyreg.cy; cy.nodes().filter(n => n.data("label") === "浦沢直樹").first().emit("tap"); });
   await expect.poll(async () => Object.keys((await view(page)).points).length).toBe(12);
-  await page.getByTestId("graph-canvas").evaluate(el => { const cy = (el as unknown as { _cyreg: { cy: Core } })._cyreg.cy; cy.nodes().first().shift({ x: 67, y: -35 }); cy.zoom(.71); cy.emit("dragfree"); });
+  await graphCanvas(page).evaluate(el => { const cy = (el as unknown as { _cyreg: { cy: Core } })._cyreg.cy; cy.nodes().first().shift({ x: 67, y: -35 }); cy.zoom(.71); cy.emit("dragfree"); });
   await expect(page).toHaveURL(new RegExp(`/explore/${pluto}\\?s=`)); const before = await view(page);
   await page.getByRole("link", { name: locale === "en" ? "Plunode Home" : "Plunode ホーム", exact: true }).click();
   await expect(page).toHaveURL(info.project.use.baseURL! + root); await expect(home).toBeVisible();
