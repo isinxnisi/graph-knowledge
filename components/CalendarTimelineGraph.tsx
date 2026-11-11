@@ -136,6 +136,7 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
                     {renderRecord(row.record, records.indexOf(row.record))}
                   </ul>
                 )}
+                {compactDates&&!row.record&&!row.ending&&<span className={css.mobileBoundaryDate}><CalendarDateLabel label={row.label}/></span>}
                 {row.ending && (
                   <button
                     type="button"
@@ -146,6 +147,7 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
                     onClick={() => open(row.ending!.id)}
                     title={themeTimeLabel(row.ending.displayTime ?? row.ending.time,locale)}
                   >
+                    {compactDates&&<span className={css.mobileEndingDate}><CalendarDateLabel label={row.label}/></span>}
                     <span>{shortName(row.ending)}</span>
                     <small>
                       {row.ending.time?.kind === "calendar" &&

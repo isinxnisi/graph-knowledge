@@ -394,6 +394,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                 onClick={() => toggle(record.id, open)}
               >
                 <span className={css.rowText}>
+                  {reading&&t?.kind==="calendar"&&<span className={css.readingDate}>{themeTimeLabel({...t,label:""},locale)}</span>}
                   <span className={css.rowHeading}>
 
                     <span className={css.assertion}>{reading?record.readingSummary||record.readingTitle||record.assertion:record.assertion}</span>
@@ -438,7 +439,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
             {reading&&<div className={css.readingContext}><RecordContext record={record} entities={entities} focusedEntityId={focusedEntityId}/><KnowledgeReadingBadge kind={record.kind} polarity={record.polarity} en={locale==="en"} showKind={false}/></div>}
             {group.kind === "calendar" ? (
               (!reading || (t?.kind === "calendar" && (t.to || t.startLatest || t.endEarliest))) &&
-              <p className={css.meta}>{themeTimeLabel(reading&&t?.kind==="calendar"?{...t,label:""}:record.displayTime??record.time,locale)}</p>
+              <p className={css.calendarMeta+" "+css.meta}>{themeTimeLabel(reading&&t?.kind==="calendar"?{...t,label:""}:record.displayTime??record.time,locale)}</p>
             ) : (
               <Period record={record} />
             )}

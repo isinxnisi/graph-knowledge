@@ -355,15 +355,16 @@
 .caption { margin: 7px 0 9px; }
 
 
-/* Phone reading: reserve space above the text for dates, rather than a left column.
-   The common anchor offset keeps point, duration and boundary connectors aligned. */
+/* Dates belong to the record's own hit target on phones. The rail meets its date line. */
+.mobileEndingDate, .mobileBoundaryDate { display:none; }
 @media (max-width:600px) {
- .surface[data-compact-dates] .graph { --gutter:0px; --anchor:38px; }
- .surface[data-compact-dates] .date { grid-column:3; align-self:start; padding:2px 0 0 14px; font-size:11px; line-height:1.4; pointer-events:none; }
- .surface[data-compact-dates] .dateLabel { display:inline-flex; flex-wrap:wrap; align-items:baseline; gap:0 5px; }
- .surface[data-compact-dates] .dateClock, .surface[data-compact-dates] .dateZone { display:inline; }
- .surface[data-compact-dates] .date small { display:inline; margin:0 0 0 6px; }
- .surface[data-compact-dates] .records { padding-top:18px; padding-bottom:0; min-height:48px; box-sizing:border-box; }
- .surface[data-compact-dates] .graph .ending { min-height:28px; }
- .surface[data-compact-dates] .recordList > li > div:nth-child(3) { padding-bottom:4px; margin-bottom:0; }
+ .surface[data-compact-dates] .graph { --gutter:0px; --anchor:18px; }
+ .surface[data-compact-dates] .date { display:none; }
+ .surface[data-compact-dates] .records { padding-bottom:0; }
+ .surface[data-compact-dates] .recordList > li > div:nth-child(3) { padding-bottom:6px; margin-bottom:6px; }
+ .surface[data-compact-dates] .graph .ending { flex-wrap:wrap; align-items:baseline; gap:2px 6px; min-height:0; margin-top:0; padding:9px 5px 6px; }
+ .surface[data-compact-dates] .ending .mobileEndingDate { display:block; flex:0 0 100%; max-width:100%; font-size:11px; line-height:18px; }
+ .surface[data-compact-dates] .mobileBoundaryDate { display:block; padding:9px 0 7px 5px; font-size:11px; line-height:18px; color:var(--color-muted); }
+ .mobileEndingDate .dateLabel, .mobileBoundaryDate .dateLabel { display:inline-flex; flex-wrap:wrap; gap:0 5px; }
+ .mobileEndingDate .dateClock, .mobileEndingDate .dateZone, .mobileBoundaryDate .dateClock, .mobileBoundaryDate .dateZone { display:inline; }
 }
