@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-11T19:04:26.327530+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-11T20:09:35.552267+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-11T19:04:26.327530+00:00",
+    "eligibleAt": "2026-11-11T20:09:35.552267+00:00",
     "windowEndAt": "2026-11-11T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-62-dot-akutami-jujutsu-20261028",
+    "startedAt": "2026-11-11T19:04:35.552269+00:00",
+    "limitAt": "2026-11-11T19:59:35.552267+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-51-dot-araki-rohan-20261027",
     "endedAt": "2026-11-11T18:54:26.327533+00:00"
@@ -192,5 +196,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-11T18:57:05.697452+00:00"
+  "checkedAt": "2026-11-11T19:04:42.086743+00:00"
 }
