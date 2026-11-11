@@ -88,8 +88,9 @@
       "checkedAt": "2026-11-03T17:28:54+00:00"
     },
     "collection-control/issue-sources/56.json": {
-      "status": "registered: issue-56-dot-urushibara-two-20261028",
-      "checkedAt": "2026-11-03T17:24:44+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+      "checkedAt": "2026-11-11T11:58:29+00:00"
     },
     "collection-control/issue-sources/57.json": {
       "status": "registered: issue-57-dot-oshima-two-20261028",
@@ -191,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-11T11:50:55.730333+00:00"
+  "checkedAt": "2026-11-11T12:01:35.544212+00:00"
 }
