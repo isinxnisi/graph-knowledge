@@ -62,12 +62,12 @@
   },
   "requestSha256": "eb477d506c841cab54e59cd71a517fa9dda4e94776f24ae107cc0beb9cc3e43f",
   "kind": "issue-prepare",
-  "phase": "completed",
-  "generation": 2746,
+  "phase": "retry-wait",
+  "generation": 3190,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-10T19:23:21+00:00",
+  "updatedAt": "2026-11-11T12:26:28+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -185,5 +185,6 @@
     }
   },
   "executionComplete": true,
-  "retryAt": 1793722628.7399256
+  "retryAt": 1794400118.5548751,
+  "message": "<urlopen error [Errno 104] Connection reset by peer>"
 }
