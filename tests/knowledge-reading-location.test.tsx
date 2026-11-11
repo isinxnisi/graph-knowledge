@@ -98,3 +98,41 @@ it("解説の出典を読んだあと固定版の元記録と引用へ戻れ、�
  expect(screen.getByRole("button",{name:"引用と掲載箇所を読む：資料"}).getAttribute("aria-expanded")).toBe("true");
  expect(select).not.toHaveBeenCalled();expect(fixed.snapshot.records[0].revision).toBe(1);
 });
+
+
+it.each([false,true])("テーマ情報は選んだ本文とその根拠を直接開き、一覧へ戻る（旧問いの装飾: %s）",async withOldQuestion=>{
+ HTMLElement.prototype.scrollIntoView=vi.fn();HTMLElement.prototype.scrollTo=vi.fn();
+ const stamp={revision:1,createdAt:"2026-11-10T00:00:00Z",reason:""};
+ const original={id:"launch",...stamp,content:knowledgeRecordContentSchema.parse({kind:"episode",assertion:"打上げの記録",times:[{id:"day",time:{kind:"calendar",from:"2021-12-25"}}],evidence:[{id:"launch-e",source:{id:"launch-source",revision:1},locator:"p.1",excerpt:"打上げの根拠"}]})};
+ const note={id:"trivia",...stamp,content:knowledgeRecordContentSchema.parse({kind:"note",assertion:"望遠鏡を折り畳んだ理由についての豆知識",aboutRecord:{id:"launch",revision:1},evidence:[{id:"trivia-e",source:{id:"trivia-source",revision:1},locator:"p.2",excerpt:"豆知識の根拠"}]})};
+ const snapshot={schemaVersion:1 as const,initialView:"graph" as const,records:[original,note],entities:[],sources:[{id:"launch-source",...stamp,content:knowledgeSourceContentSchema.parse({title:"打上げの資料",bibliography:"第1版"})},{id:"trivia-source",...stamp,content:knowledgeSourceContentSchema.parse({title:"豆知識の資料",bibliography:"第2版"})}],mappings:[]};
+ const fixed={...theme,snapshot,records:snapshot.records.map(r=>buildKnowledgePublishedRecord(r,snapshot)),...(withOldQuestion?{presentation:{locale:"ja",records:[{target:{id:"launch",revision:1},chapterQuestion:"どんな姿でロケットに乗った？",shortTitle:"打上げ",explanations:[]}]}}:{})};
+ const select=vi.fn();mocks.workspace={...mocks.workspace,activeTheme:fixed,retainedTheme:fixed,themeSelection:{kind:"record",id:"launch"},setThemeSelection:select};
+ function Both(){const r=useKnowledgeReading()!;return <>{r.center}<aside id="explorer-detail">{r.detail}</aside></>;}
+ render(<KnowledgeReading><Both/></KnowledgeReading>);await flush();
+ fireEvent.click(screen.getByRole("button",{name:"テーマについて"}));
+ const detail=within(document.getElementById("explorer-detail")!);
+ expect(detail.getByRole("heading",{name:"エピソード・豆知識"})).toBeTruthy();
+ expect(detail.getByRole("button",{name:"内容と根拠を読む："+original.content.assertion})).toBeTruthy();
+ expect(detail.queryByRole("button",{name:"どんな姿でロケットに乗った？"})).toBeNull();
+ fireEvent.click(detail.getByRole("button",{name:"内容と根拠を読む："+note.content.assertion}));await flush();
+ const article=within(document.getElementById("explorer-detail")!.querySelector("article")!);
+ expect(article.getByText(note.content.assertion)).toBeTruthy();expect(article.queryByText(original.content.assertion)).toBeNull();expect(article.queryByText("背景・解説",{exact:true})).toBeNull();
+ expect(article.getByText("豆知識の資料")).toBeTruthy();expect(article.queryByText("打上げの資料")).toBeNull();
+ fireEvent.click(article.getByRole("button",{name:"引用と掲載箇所を読む：豆知識の資料"}));expect(article.getByText("豆知識の根拠")).toBeTruthy();
+ fireEvent.click(article.getByRole("button",{name:"一覧に戻る"}));await flush();
+ expect(detail.getByRole("heading",{name:"エピソード・豆知識"})).toBeTruthy();expect(detail.getByRole("button",{name:"内容と根拠を読む："+note.content.assertion})).toBeTruthy();expect(select).not.toHaveBeenCalled();
+});
+
+
+it("選択のないテーマ概要も閉じた状態を保ち、必要なときに開き直せる",async()=>{
+ HTMLElement.prototype.scrollIntoView=vi.fn();HTMLElement.prototype.scrollTo=vi.fn();
+ function Both(){const r=useKnowledgeReading()!;return <>{r.center}<aside id="explorer-detail">{r.detail}</aside></>;}
+ render(<KnowledgeReading><Both/></KnowledgeReading>);await flush();const detail=within(document.getElementById("explorer-detail")!);
+ expect(detail.getByRole("heading",{name:"このテーマを深く読む"})).toBeTruthy();
+ fireEvent.click(detail.getByRole("button",{name:"閲覧に戻る"}));await flush();
+ expect(detail.queryByRole("heading",{name:"このテーマを深く読む"})).toBeNull();
+ expect(detail.getByText("年表の出来事や図の名前を選ぶと、内容と出典を読めます。")).toBeTruthy();
+ fireEvent.click(detail.getByRole("button",{name:"エピソード・豆知識を見る"}));await flush();
+ expect(detail.getByRole("heading",{name:"このテーマを深く読む"})).toBeTruthy();
+});

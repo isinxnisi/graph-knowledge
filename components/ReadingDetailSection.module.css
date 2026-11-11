@@ -18,3 +18,7 @@
 .openSources { max-block-size:min(40dvh,20rem);overflow:auto;scrollbar-gutter:stable; }
 
 .numberedSources > .body { padding-inline-start:0; }
+
+.more.listActions { justify-content:space-between; gap:12px; }
+.listMore { margin-inline-start:auto!important; }
+.collapseButton :global(.ui-icon) { transform:rotate(180deg); }

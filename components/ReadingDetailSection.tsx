@@ -1,5 +1,5 @@
 "use client";
-import {useId,useState,type ComponentProps,type ReactNode,type Ref} from "react";
+import {useId,useRef,useState,type ComponentProps,type ReactNode,type Ref} from "react";
 import {useUiLocale} from "../lib/client/ui-locale";
 import Icon from "./Icon";
 import css from "./ReadingDetailSection.module.css";
@@ -10,8 +10,14 @@ export function ReadingMore({label,onClick,busy=false}:{label:string;onClick:()=
  return <div className={css.more}><button className={css.moreButton} type="button" disabled={busy} onClick={onClick}>{label}<Icon name={busy?"refresh":"chevron"}/></button></div>;
 }
 export function ReadingList({items,noun}:{items:ReactNode[];noun:string}) {
- const {locale}=useUiLocale(),[visible,setVisible]=useState(3),remaining=items.length-visible,count=Math.min(3,remaining);
- return <><div className={css.list}>{items.slice(0,visible)}</div>{remaining>0&&<ReadingMore label={locale==="en"?`Show ${count} more ${noun}`:`${noun}をさらに${count}件表示`} onClick={()=>setVisible(value=>value+3)}/>}</>;
+ const {locale}=useUiLocale(),en=locale==="en",[visible,setVisible]=useState(3),listId=useId(),more=useRef<HTMLButtonElement>(null);
+ const remaining=items.length-visible,count=Math.min(3,remaining),expanded=visible>3&&items.length>3;
+ const moreLabel=en?`Show ${count} more ${noun}`:`${noun}をさらに${count}件表示`;
+ function collapse(){setVisible(3);requestAnimationFrame(()=>more.current?.focus());}
+ return <><div id={listId} className={css.list}>{items.slice(0,visible)}</div>{items.length>3&&<div className={`${css.more} ${css.listActions}`}>
+   {expanded&&<button className={`${css.moreButton} ${css.collapseButton}`} type="button" aria-controls={listId} aria-expanded onClick={collapse}>{en?"Show first 3":"3件に戻す"}<Icon name="chevron"/></button>}
+   {remaining>0&&<button ref={more} className={`${css.moreButton} ${css.listMore}`} type="button" aria-controls={listId} aria-expanded={expanded} aria-label={moreLabel} onClick={()=>setVisible(value=>Math.min(items.length,value+3))}>{en?`Show ${count} more`:`さらに${count}件`}<Icon name="chevron"/></button>}
+ </div>}</>;
 }
 
 export function ReadingSources({items}:{items:ReactNode[]}) {

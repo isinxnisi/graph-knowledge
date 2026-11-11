@@ -109,20 +109,6 @@
 
 .stage{container-type:inline-size}
 
-.guideChapters > div { padding-inline-start:0; }
-.chapters { margin:0; padding:0; list-style:none; counter-reset:chapter; }
-.chapters li { counter-increment:chapter; margin:0; }
-.workspace.details .chapters button { display:grid; grid-template-columns:16px minmax(0,1fr) 14px; align-items:baseline; gap:6px; width:100%; min-height:42px; margin:0; padding:9px 0; border:0; border-radius:0; box-shadow:none; background:transparent; color:var(--color-text); font:inherit; font-size:14px; font-weight:500; line-height:1.65; text-align:start; cursor:pointer; }
-.chapters button::before { content:counter(chapter,decimal-leading-zero); color:var(--color-muted); font-size:11px; font-weight:400; font-variant-numeric:tabular-nums; }
-.workspace.details .chapters button:hover { background:var(--color-hover); color:var(--color-accent); }
-.workspace.details .chapters button:focus-visible { outline:2px solid var(--color-accent); outline-offset:2px; border-radius:3px; }
-.chapters button > span { min-width:0; }
-.chapters button > svg { width:13px; height:13px; align-self:center; color:var(--color-accent); }
-.workspace.details .chapterNext { display:flex; align-items:center; gap:8px; width:100%; min-height:40px; margin:0; padding:9px 0; border:0; border-radius:0; box-shadow:none; background:transparent; color:var(--color-accent); text-align:start; cursor:pointer; }
-.chapterNext:hover { text-decoration:underline; }
-.chapterNext svg { width:14px; height:14px; flex:none; }
-.chapterNext small { white-space:nowrap; }
-
 .workspace.details > section > p[data-entity-caption] {margin: .4rem 0 .65rem; line-height: 1.65; overflow-wrap: anywhere;}
 
 /* The mobile introduction previews this paragraph; the theme guide retains it in full. */
