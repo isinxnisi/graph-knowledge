@@ -20,7 +20,11 @@ for (const [width, height] of [[375, 667], [320, 568]]) test(`${width}x${height}
   const canvas = page.getByTestId("graph-canvas");
   await expect.poll(() => canvas.evaluate(el => (el as unknown as { _cyreg: { cy: Core } })._cyreg.cy.nodes().length)).toBe(4);
   expect((await header.boundingBox())!.height).toBeLessThanOrEqual(56);
-  expect((await nav.boundingBox())!.height).toBeLessThanOrEqual(46);
+  const navBox = (await nav.boundingBox())!;
+  expect(navBox.height).toBeLessThanOrEqual(56);
+  expect(navBox.y).toBeGreaterThanOrEqual(page.viewportSize()!.height - 90);
+  expect(navBox.y + navBox.height).toBeLessThanOrEqual(page.viewportSize()!.height);
+  expect(await nav.evaluate(el => getComputedStyle(el).borderRadius)).toBe("999px");
   expect((await canvas.boundingBox())!.y).toBeLessThanOrEqual(230);
   expect((await canvas.locator("..").boundingBox())!.height).toBeGreaterThanOrEqual(360);
   await canvas.evaluate(el => { (el as unknown as { _cyreg: { cy: Core } })._cyreg.cy.nodes().filter(n => n.data("label") === "浦沢直樹").first().emit("tap"); });

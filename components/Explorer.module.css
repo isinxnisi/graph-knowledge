@@ -280,10 +280,15 @@
 
 .paneNavigation { display: none; }
 @media (max-width: 800px) {
-  .paneNavigation { display: flex; gap: 6px; padding: 6px 8px; flex: 0 0 auto; background: var(--color-panel); border-bottom: 1px solid var(--color-border); }
-  .paneNavigation button { flex: 1; min-height: 44px; text-align: center; border: 0 !important; border-radius: 0; background: transparent; position: relative; color: var(--color-muted); }
-  .paneNavigation button[aria-pressed="true"] { color: var(--color-accent-strong); background: var(--color-accent-soft); }
-  .paneNavigation button[aria-pressed="true"]::after { content: ""; position: absolute; bottom: 0; left: 16px; right: 16px; height: 3px; border-radius: 3px 3px 0 0; background: var(--color-accent); }
+  /* The floating phone switcher owns a reserved area, including the safe inset. */
+  .explorer, .explorer ~ footer { --pane-nav-clearance:calc(76px + env(safe-area-inset-bottom,0px)); }
+  .explorer { box-sizing:border-box; padding-bottom:var(--pane-nav-clearance); }
+  .explorer ~ footer { padding-bottom:var(--pane-nav-clearance); }
+  .explorer .paneNavigation { display:flex; position:fixed; z-index:25; left:max(12px,env(safe-area-inset-left,0px)); right:max(12px,env(safe-area-inset-right,0px)); bottom:calc(10px + env(safe-area-inset-bottom,0px)); max-width:360px; min-height:52px; margin:0 auto; padding:3px; gap:0; border:1px solid var(--color-border); border-radius:999px; background:var(--color-panel); box-shadow:0 4px 18px rgb(20 40 65 / .12); }
+  .explorer .paneNavigation button { display:flex; align-items:center; justify-content:center; gap:6px; flex:1; min-width:0; min-height:44px; margin:0; padding:4px 8px; font-size:13px; line-height:1.4; text-align:center; border:0 !important; border-radius:999px; background:transparent; position:relative; color:var(--color-muted); }
+  .explorer .paneNavigation button > :global(.ui-icon) { width:16px; height:16px; margin:0; flex:none; }
+  .explorer .paneNavigation button[aria-pressed="true"] { color:var(--color-accent-strong); background:var(--color-accent-soft); font-weight:600; }
+  .paneNavigation button[aria-pressed="true"]::after { content:none; }
   .columns, .wideDetails { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 6px; overflow: hidden; }
   /* Keep the mounted Canvas measurable while hidden, including during pending requests. */
   .columns > * { grid-area: 1 / 1; visibility: hidden; pointer-events: none; }
@@ -552,8 +557,6 @@
 .detailHeading:has([data-dialog-close]), .conditionTitle:has([data-dialog-close]) { flex-wrap: nowrap; align-items: flex-start; }
 .detailHeading:has([data-dialog-close]) h2, .conditionTitle:has([data-dialog-close]) h2 { min-width: 0; flex: 1; }
 @media (max-width: 800px) {
-  .paneNavigation { gap: 0; padding: 0 6px; }
-  .paneNavigation button { padding: 4px 8px; }
   .graphHeader { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 0 4px; padding-bottom: 4px; margin: 0; align-items: center; }
   .graphHeading { grid-column: 1; grid-row: 1; gap: 4px; flex-wrap: nowrap; }
   .graphHeading h2 { font-size: 17px; }
