@@ -807,23 +807,12 @@
 .reading .graphJump { width:27px; min-width:27px; min-height:29px; padding:5px; }
 .reading .meta { font-size:10px; line-height:1.5; }
 .reading .content > p.meta { margin:2px 5px 4px; }
-.readingActions { display:grid; gap:4px; margin:3px 5px 0; }
-.reading .readingActions button { display:flex; align-items:center; gap:7px; width:100%; max-width:100%; min-width:0; min-height:30px; padding:5px 8px; border:1px solid var(--color-border); border-radius:6px; background:var(--color-panel); box-shadow:0 1px 2px rgb(24 44 68/.025); font-size:11px; line-height:1.45; color:var(--color-accent); text-align:left; }
-.readingActions button > span { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.readingActions :global(.ui-icon) { width:13px; height:13px; flex-shrink:0; }
-.reading .readingActions button:hover { background:var(--color-hover); border-color:var(--color-control-border); }
 @media(max-width:800px) {
  .reading .assertion { font-size:14px; }
  .reading .recordContext { font-size:10px; }
- .reading .readingActions button { min-height:36px; font-size:11px; }
  .reading .graphJump { min-width:32px; min-height:36px; }
 }
 
-/* A source shortcut opens this reader, not a new external page. Keep it secondary. */
-.timeline.reading .readingActions button { min-height:28px; padding:3px 0; border:0; border-radius:0; background:transparent; box-shadow:none; }
-.timeline.reading .readingActions button:hover { background:transparent; text-decoration:underline; }
-.readingActions button > :global(.ui-icon):last-child { transform:rotate(-90deg); width:11px; height:11px; }
-@media(max-width:800px) { .timeline.reading .readingActions button { min-height:32px; font-size:11px; } }
 
 /* Relationship context uses the entire record width, beyond the graph-action column. */
 .reading .readingContext { display:flex; flex-wrap:wrap; align-items:center; gap:3px 8px; min-width:0; padding:0 5px 3px; }
@@ -839,3 +828,29 @@
  .timeline.reading .rowText:has(.readingDate) { gap:2px; }
  .timeline.reading .calendarMeta { display:none; }
 }
+
+
+/* A nested sequence continues its parent record; its toggle is its only heading. */
+.insetDisclosure { margin:4px 5px 0; min-width:0; }
+.timeline.reading .insetToggle { display:flex; align-items:center; gap:6px; width:100%; min-height:32px; margin:0; padding:4px 0; border:0; border-radius:0; box-shadow:none; background:transparent; color:var(--color-accent); font-size:12px; line-height:1.5; text-align:start; cursor:pointer; }
+.insetToggle > :global(.ui-icon) { width:12px; height:12px; flex:none; margin:0; transform:rotate(-90deg); transition:transform 200ms ease; }
+.insetToggle[aria-expanded="true"] > :global(.ui-icon) { transform:none; }
+.insetToggle > span { min-width:0; overflow-wrap:anywhere; }
+.insetToggle > small { flex:none; white-space:nowrap; font-size:10px; font-weight:400; color:var(--color-muted); }
+.insetExpansion { display:grid; grid-template-rows:0fr; opacity:0; visibility:hidden; transition:grid-template-rows 220ms ease, opacity 160ms ease, visibility 0s linear 220ms; }
+.insetExpansion[data-open] { grid-template-rows:1fr; opacity:1; visibility:visible; transition:grid-template-rows 220ms ease, opacity 160ms ease, visibility 0s; }
+.insetClip { min-height:0; overflow:hidden; }
+.timeline.reading .group[data-nested] { margin:2px 0 3px; padding:0; border:0; border-radius:0; background:transparent; }
+.reading .group[data-nested] .laneKey { display:none; }
+.reading .group[data-nested] .row { grid-template-columns:52px calc(var(--lane-count) * 11px) minmax(0,1fr); }
+.timeline.reading .group[data-nested] .date { font-size:11px; line-height:1.5; padding:12px 5px 0 0; }
+.reading .group[data-nested] .content { padding-bottom:5px; margin-bottom:2px; }
+.timeline.reading .insetOrigin { margin:0 0 3px; font-size:10px; line-height:1.6; color:var(--color-muted); }
+@media(prefers-reduced-motion:reduce) {
+ .insetExpansion, .insetExpansion[data-open], .insetToggle > :global(.ui-icon) { transition:none; }
+}
+
+
+/* Name a shared subject once, rather than repeating it under every short step. */
+.reading .group[data-nested][data-shared-subject] > .laneKey { display:flex; padding:2px 0 3px; margin:0; font-size:10px; }
+.reading .readingContext[data-shared-subject] > .recordContext:not([data-record-kind="relation"]) { display:none; }

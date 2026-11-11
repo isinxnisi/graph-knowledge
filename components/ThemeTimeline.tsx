@@ -308,11 +308,12 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
     (g) => !g.parentRecordId || !records.some((r) => r.id === g.parentRecordId),
   );
 
-  function renderGroup(group: Group<R>, ancestors: string[] = []) {
+  function renderGroup(group: Group<R>, ancestors: string[] = [], inline = false) {
     if (ancestors.includes(group.id)) return null;
     if(group.id.startsWith("fallback:")&&(group.kind==="cycle"||group.kind==="qualitative")){const t=group.records[0]?.displayTime;if(t&&t.kind!=="calendar")group={...group,label:t.axis};}
     const rows = orderedRecords(group);
     const subjectIds = [...new Set(rows.map((r) => r.subject).filter((id): id is string => id !== null))];
+    const sharedSubject = reading&&ancestors.length>0&&group.kind!=="calendar"&&subjectIds.length===1&&(!activeTrace||activeTrace===subjectIds[0])&&rows.every(r=>r.subject===subjectIds[0]);
     const lanes = activeTrace
       ? subjectIds.filter((id) => id === activeTrace)
       : subjectIds.slice(0, 5);
@@ -436,15 +437,20 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                   </button>
                 )}
             </div>
-            {reading&&<div className={css.readingContext}><RecordContext record={record} entities={entities} focusedEntityId={focusedEntityId}/><KnowledgeReadingBadge kind={record.kind} polarity={record.polarity} en={locale==="en"} showKind={false}/></div>}
+            {reading&&<div className={css.readingContext} data-shared-subject={sharedSubject||undefined}><RecordContext record={record} entities={entities} focusedEntityId={focusedEntityId}/><KnowledgeReadingBadge kind={record.kind} polarity={record.polarity} en={locale==="en"} showKind={false}/></div>}
             {group.kind === "calendar" ? (
               (!reading || (t?.kind === "calendar" && (t.to || t.startLatest || t.endEarliest))) &&
               <p className={css.calendarMeta+" "+css.meta}>{themeTimeLabel(reading&&t?.kind==="calendar"?{...t,label:""}:record.displayTime??record.time,locale)}</p>
             ) : (
               <Period record={record} />
             )}
-            {reading&&nested.length>0&&<div className={css.readingActions}>
-              {nested.length>0&&<button aria-expanded={expanded.has(record.id)} onClick={()=>setExpanded(before=>{const next=new Set(before);if(next.has(record.id))next.delete(record.id);else next.add(record.id);return next;})}><Icon name="chevron"/>{tr("詳しい時間軸を開く","Open detailed timeline")} · {nested.length}</button>}
+            {reading&&nested.length>0&&<div className={css.insetDisclosure}>
+              <button type="button" className={css.insetToggle} aria-expanded={expanded.has(record.id)} aria-controls={`${prefix}-${encodeURIComponent(group.id)}-${record.id}-insets`} onClick={()=>setExpanded(before=>{const next=new Set(before);if(next.has(record.id))next.delete(record.id);else next.add(record.id);return next;})}>
+                <Icon name="chevron"/><span>{nested.length===1?nested[0].label:tr("詳しい流れ","Detailed sequence")}</span><small>{new Set(nested.flatMap(g=>g.records.map(timelineRecordId))).size}{tr("件"," records")}</small>
+              </button>
+              <div id={`${prefix}-${encodeURIComponent(group.id)}-${record.id}-insets`} className={css.insetExpansion} data-open={expanded.has(record.id)||undefined} aria-hidden={!expanded.has(record.id)} inert={!expanded.has(record.id)}>
+                <div className={css.insetClip}>{nested.map(g=>renderGroup(g,[...ancestors,group.id],nested.length===1))}</div>
+              </div>
             </div>}
             {!reading&&<div
               id={`${prefix}-${encodeURIComponent(group.id)}-${record.id}`}
@@ -510,7 +516,6 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                 </div>
               </div>
             </div>}
-            {reading&&expanded.has(record.id)&&nested.map(g=>renderGroup(g,[...ancestors,group.id]))}
           </div>
         </li>
       );
@@ -520,14 +525,15 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
         className={css.group}
         key={group.id}
         data-nested={ancestors.length > 0 || undefined}
+        data-shared-subject={sharedSubject||undefined}
         aria-label={group.label}
       >
-        <header className={css.groupHeader}>
+        {!inline&&<header className={css.groupHeader}>
           <div>
             <h3>{group.label}</h3>
-            {(group.kind !== "calendar" || group.originLabel) && (
+            {(reading?Boolean(group.originLabel):(group.kind !== "calendar" || group.originLabel)) && (
               <p>
-                {group.kind === "none"
+                {reading?group.originLabel:<>{group.kind === "none"
                   ? tr("日付を補わず、背景や文脈として読む","Read as background or context without assigning a date")
                   : group.kind === "qualitative" && !group.order?.length
                     ? tr("順序の指定なし · 登録順で表示","No order specified · shown in registration order")
@@ -536,14 +542,15 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                       : tr("行の間隔は経過時間を表しません","Row spacing does not represent elapsed time")}
                 {group.originLabel
                   ? `${group.kind === "calendar" ? "" : " · "}${group.originLabel}`
-                  : ""}
+                  : ""}</>}
               </p>
             )}
           </div>
           <span>{new Set(rows.map(timelineRecordId)).size}{tr("件"," records")}{new Set(rows.map(timelineRecordId)).size < rows.length ? ` · ${rows.length}${tr("時期"," times")}` : ""}</span>
           {embedded && group.id === roots[0]?.id && !ancestors.length && (hasCalendar || subjects.length > 1) && <button className={css.headerSettings} aria-label={`${tr("年表の表示設定","Timeline display settings")}${settingsSummary ? `${locale==="en"?": ":"："}${settingsSummary}` : ""}`} aria-expanded={settingsOpen} aria-controls={`${prefix}-settings`} title={settingsSummary || undefined} onClick={() => setSettingsOpen(v => !v)}><Icon name="settings" /><span>{tr("表示設定","Display settings")}</span><Icon name="chevron" /></button>}
           {embedded && group.id === roots[0]?.id && !ancestors.length && <span className={css.headerAction}>{headerAction}</span>}
-        </header>
+        </header>}
+        {inline&&group.originLabel&&<p className={css.insetOrigin}>{group.originLabel}</p>}
         {embedded && group.id === roots[0]?.id && !ancestors.length && <div id={`${prefix}-settings`} className={css.headerSettingsBody} hidden={!settingsOpen}>{readingControls}</div>}
         {group.kind === "calendar" ? (
           <CalendarTimelineGraph
@@ -623,7 +630,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
             </span>
           </div>
           <p className={css.help}>
-            {tr("線の接続先が、その点・期間の記録です。両端付きの線は続いた期間、丸い端の破線は発生候補の幅です。不確かな期間境界だけを点線にします。表示単位の内に収まる出来事は点、期間は短い両端付きの線で示します。元の日付・意味は行を開いて確認できます。時間が重なっても所属や因果は作りません。暦以外の細い対象線は、同じ主語をたどる案内です。","Each connector leads to its record. Capped lines show durations; dashed lines with round ends show occurrence windows. Only uncertain duration boundaries are dotted. Events within one display unit appear as points; durations keep short capped lines. Open an entry for its original dates and meaning. Overlapping times do not imply membership or causality. Thin subject lines on non-calendar axes help you follow the same subject.")}
+            {tr("線の接続先が、その点・期間の記録です。両端付きの線は続いた期間、丸い端の破線は発生候補の幅です。不確かな期間境界だけを点線にします。表示単位の内に収まる出来事は点、期間は短い両端付きの線で示します。元の日付・意味は行を開いて確認できます。時間が重なっても所属や因果は作りません。暦以外の細い対象線は、同じ主語をたどる案内です。行の間隔は経過時間の長さを表しません。","Each connector leads to its record. Capped lines show durations; dashed lines with round ends show occurrence windows. Only uncertain duration boundaries are dotted. Events within one display unit appear as points; durations keep short capped lines. Open an entry for its original dates and meaning. Overlapping times do not imply membership or causality. Thin subject lines on non-calendar axes help you follow the same subject. Row spacing does not represent elapsed time.")}
           </p>
         </details>
         {embedded ? null : compactControls ? (hasCalendar || subjects.length > 1) && <details className={css.displaySettings}>
