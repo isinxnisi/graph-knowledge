@@ -26,7 +26,7 @@ ChatGPTの添付は公式file input契約を使う。tool名はupload_editorial_
 
 用途はtheme-illustration／product-illustration／product-photo。運営用HTTPの既存multipartアップロードも維持する。Creators APIは任意であり、Amazonの外部画像は無条件に自前保存しない。
 
-ファイルは信頼するChatGPT添付用HTTPSホストに限定し、公開DNS回答を検査して接続先を固定する。redirectは追わず、認証情報付きURL・private IP・圧縮応答を拒否する。取得上限8 MiB・20秒。短命な署名付きdownload URLやfile_idをDB／ログへ保存しない。実際のホストでの添付転送が未確認なら、allowlistとの実接続も未確認である。
+ファイルは信頼するChatGPT添付用HTTPSホストに限定し、公開DNS回答を検査して接続先を固定する。redirectは追わず、認証情報付きURL・private IP・圧縮応答を拒否する。取得上限8 MiB・20秒。短命な署名付きdownload URLやfile_idをDB／ログへ保存しない。実際の添付転送でoaisdmntprkoreacentral.blob.core.windows.netを観測し、この正確なホストを共通の許可判定へ追加した。任意のAzureホストを許可しない。ホスト側の配信先が増える場合は、観測と検査を経て追加する。
 
 magic bytes・画素数・形式を検査し、長辺1600、thumbnail長辺640まで縦横比を保持して軽量化する。元ファイルは恒久保存せず、一時ファイルも作らない。寸法・元容量・処理後容量を応答する。
 
@@ -47,5 +47,11 @@ presentationは言語別の完全な選択。省略は継続、[]は新しい版
 運営のsystem intake／内部監査を維持し、公開の投稿者badge・個人活動・会員通知は追加しない。収集専用tokenを勝手にcompose権限へ昇格しない。ChatGPT側が古いscopeを保持する場合は既存Appの更新・本人OAuth同意で接続を整える。
 
 既存beta Appはcollection用の5操作で、実確認時の再接続もmissions:collectのみを要求していた。現在の23操作のcompose handler確認、認証付きHTTP、実ChatGPTの取得ツール一覧は別の確認対象である。正式Appへβの試験データを送ったり、本番配置を更新したりして代用しない。
+
+## 既存Appの更新とβ通信の復旧
+
+既存の「Plunode資料収集 API（β）」のApp ID／接続先を維持して「ツールを更新」を行う。旧tokenも認証済み運営者であることを確認した上で新操作の定義を取得できるが、実行はthemes:composeを必須とする。各操作にOAuth scopeのmetadataを付け、未同意の実行にはmcp/www_authenticateのinsufficient_scopeを返す。既存の収集専用tokenを無断で昇格しない。
+
+このPCではWSLの外向きTCPが失敗し、同じURLはWindowsで取得できる。開発βだけの明示opt-inとして、Windows標準curlのHTTPS通信を利用する。許可先・公開IPv4の固定・通常のTLS検証・redirect禁止・容量／時間上限を維持し、署名付きURLはstdinだけに渡す。トークン検証で参照する公開鍵は同じβ Webの固定loopback URLから取得し、issuer／audience／署名／expiry／scope／DPoPの検査を維持する。新しい待受port・常駐proxy・全体のDNS変更は追加しない。本番runtimeでは有効化できない。private設定は~/.local/state/plunode-previews/beta-windows-https.json、owner本人／0600／{"enabled":true}に限定する。WSL通信復旧後はこのopt-inを外して通常経路に戻せる。
 
 進捗・実測・残件は[検証記録](../verification/THEME_AUTHORING_COMPLETE_20261112.md)を参照。

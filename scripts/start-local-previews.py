@@ -118,6 +118,14 @@ def beta_knowledge():
         values.update(KNOWLEDGE_MISSION_MCP_ENABLED='1', KNOWLEDGE_MISSION_MCP_CLIENT=str(client))
     if values.get('KNOWLEDGE_THEME_REGISTRATION_ENABLED') == '1' and not mcp.exists():
         raise ValueError('Theme registration requires the existing ChatGPT connection profile')
+    transport = STATE / 'beta-windows-https.json'
+    if transport.exists():
+        info = transport.lstat()
+        if transport.is_symlink() or info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) != 0o600 or json.loads(transport.read_text()) != {'enabled': True}:
+            raise ValueError('Unexpected private Windows HTTPS transport configuration')
+        if not Path('/mnt/c/Windows/System32/curl.exe').is_file():
+            raise ValueError('Windows system curl is unavailable')
+        values['PLUNODE_WINDOWS_HTTPS_TRANSPORT'] = '1'
     return {**values,'THEME_WORKBENCH_ENABLED':'0'}
 
 

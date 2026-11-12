@@ -1,3 +1,4 @@
+import {windowsBetaHttps,windowsBetaHttpsEnabled} from '../windows-beta-https';
 import {isPublicRoutableHost} from '@better-auth/core/utils/host';
 import type {ClientMetadataResourceFetch} from '@better-auth/oauth-provider';
 import {Resolver} from 'node:dns/promises';
@@ -36,6 +37,7 @@ export const fetchMissionClientMetadataResource:ClientMetadataResourceFetch=asyn
  for(const name of ['accept','if-none-match','if-modified-since']){
   const value=webRequest.headers.get(name);if(value!==null)headers[name]=value;
  }
+ if(windowsBetaHttpsEnabled())return windowsBetaHttps(url,pinned.address,'metadata',signal,webRequest.method,Object.fromEntries(Object.entries(headers).filter(([key])=>key!=='host')));
  return new Promise((resolve,reject)=>{
   const req=request(url,{agent:false,headers,method:webRequest.method,servername:url.hostname,signal,family:4,
    lookup:(_host,options,callback)=>{

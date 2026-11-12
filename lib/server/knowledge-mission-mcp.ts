@@ -7,7 +7,7 @@ import {registerThemeMcpTools} from './knowledge-theme-registration-mcp';
 import type {ThemeRegistrationCommand} from '../domain/knowledge-theme-registration';
 
 
-export function createMissionMcpHandler(call:(value:MissionToolCommand)=>Promise<unknown>,authoring?:{call:(value:ThemeRegistrationCommand)=>Promise<unknown>}){
+export function createMissionMcpHandler(call:(value:MissionToolCommand)=>Promise<unknown>,authoring?:{call:(value:ThemeRegistrationCommand)=>Promise<unknown>;authChallenge?:string}){
  return createMcpHandler(()=>{
   const server=new McpServer({name:'plunode-collection',version:'1.0.0'});
   const annotations={readOnlyHint:false,destructiveHint:false,openWorldHint:false};
@@ -32,7 +32,7 @@ export function createMissionMcpHandler(call:(value:MissionToolCommand)=>Promise
    description:'Record why this plan could not be completed. Never replace a real failure with an empty successful result. The existing server manages retries.',
    inputSchema:z.strictObject({runId:z.uuidv4(),reason:z.enum(['network','source-unavailable','search-unavailable','limit','invalid-package'])}),annotations:{...annotations,idempotentHint:true},
   },input=>result({action:'fail',...input}));
-  if(authoring)registerThemeMcpTools(server,authoring.call);
+  if(authoring)registerThemeMcpTools(server,authoring.call,authoring.authChallenge);
   return server;
  },{maxRequestBodySize:2100000});
 }

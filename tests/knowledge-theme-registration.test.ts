@@ -48,3 +48,12 @@ it('requires an explicit target/reason and preserves omitted update fields inste
  expect(()=>themeUpdateInputSchema.parse({...update,changes:{}})).toThrow();
  expect(()=>themeUpdateInputSchema.parse({...update,recordPins:[{id:'a',revision:1}],removeRecordIds:['a']})).toThrow();
 });
+
+it('lets an old operator connection discover new tools but challenges before executing without compose scope',async()=>{
+ const compose=vi.fn(),challenge='Bearer error="insufficient_scope", scope="missions:collect themes:compose"';
+ const handler=createMissionMcpHandler(vi.fn(),{call:compose,authChallenge:challenge});
+ const list=(await(await handler.fetch(rpc('tools/list',{}))).json()).result.tools;
+ expect(list).toHaveLength(23);expect(list.find((v:{name:string})=>v.name==='update_theme')._meta.securitySchemes).toEqual([{type:'oauth2',scopes:['missions:collect','themes:compose']}]);
+ const res=(await(await handler.fetch(rpc('tools/call',{name:'get_theme_authoring_guide',arguments:{}}))).json()).result;
+ expect(res.isError).toBe(true);expect(res._meta['mcp/www_authenticate']).toEqual([challenge]);expect(compose).not.toHaveBeenCalled();
+});
