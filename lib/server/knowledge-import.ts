@@ -218,7 +218,7 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
    const prepared=await prepare(l);
    const reservation=await tx(async c=>{if(!await stillCurrent(c,l))return null;
     const res=await reserveKnowledgeAI(c,config,{purpose:'collection-check',policy:'knowledge-import-v1',inputReserved:Buffer.byteLength(prepared.wire)+1024,outputReserved:2048});
-    if(res.state!=='reserved'){await c.query("UPDATE knowledge_import.items SET state=$2,reason=$3,next_attempt=$4,lease_token=NULL,lease_until=NULL WHERE id=$1",[l.item.id,res.state==='wait'?'quota':'needs-changes',res.state==='wait'?res.reason:'一度に確認できる情報量を超えています。項目を分けてください。',res.state==='wait'?res.wait:new Date()]);return null;}
+    if(res.state!=='reserved'){await c.query("UPDATE knowledge_import.items SET state=$2,reason=$3,next_attempt=$4,prepare_attempts=CASE WHEN $5 THEN GREATEST(prepare_attempts-1,0) ELSE prepare_attempts END,lease_token=NULL,lease_until=NULL WHERE id=$1",[l.item.id,res.state==='wait'?'quota':'needs-changes',res.state==='wait'?res.reason:'一度に確認できる情報量を超えています。項目を分けてください。',res.state==='wait'?res.wait:new Date(),res.state==='wait']);return null;}
     await c.query('INSERT INTO knowledge_import.attempts(id,item_id,model,wire,wire_digest,proofs,duplicates) VALUES($1,$2,$3,$4,$5,$6,$7)',[res.id,l.item.id,config.model,prepared.wire,createHash('sha256').update(prepared.wire).digest('hex'),JSON.stringify(prepared.proofs),JSON.stringify(prepared.duplicates)]);
     await c.query('UPDATE knowledge_import.items SET prepared=$2,current_attempt=$3,attempts=attempts+1 WHERE id=$1',[l.item.id,JSON.stringify(prepared),res.id]);return res;
    });

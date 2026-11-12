@@ -1,4 +1,6 @@
 import { z } from "zod";
+import {windowsBetaHttpsEnabled} from "./windows-beta-https";
+import {windowsBetaGeminiFetch} from "./windows-beta-gemini";
 import { knowledgeReviewInputSchema, type KnowledgeReviewInput } from "../domain/knowledge-review";
 import {duplicateAdviceSchema,type DuplicateReview} from './knowledge-duplicates';
 
@@ -92,7 +94,7 @@ export async function callGeminiReview(options: { apiKey: string; model: string;
   const timeoutMs = options.timeoutMs ?? 60_000;
   if (timeoutMs < 1 || timeoutMs > 120_000) throw new Error("Invalid review deadline");
   try {
-    const response = await (options.fetcher ?? fetch)(`https://generativelanguage.googleapis.com/v1beta/models/${options.model}:generateContent`, {
+    const response = await (options.fetcher ?? (windowsBetaHttpsEnabled()?windowsBetaGeminiFetch:fetch))(`https://generativelanguage.googleapis.com/v1beta/models/${options.model}:generateContent`, {
       method: "POST", redirect: "error",
       headers: { "x-goog-api-key": options.apiKey, "Content-Type": "application/json", "Api-Revision": "2026-05-20" },
       body: wire, signal: AbortSignal.timeout(timeoutMs),

@@ -1,3 +1,5 @@
+2026-11-13 黒澤テーマ5項目の審査復旧：①原因調査・②β限定Gemini通信と待機時の準備回数誤消費を補修・③同じ受付の5/5項目が各1回の実審査で通常公開まで完了｜今回の工程は③まで完了、テーマ全体は対象外の入力不足4項目とG07待ち。63件／lint／型検査込みbuild `U6iCFUid7NzBsoPe811rF`、3200／HTTPS β・既存Appのpublished確認。利用制限・画像／商品／入力を保持、本番未変更。[原因・保全・結果](verification/KUROSAWA_AI_REVIEW_BETA_20261113.md)。以下は各時点の履歴。
+
 2026-11-13 黒澤テーマの原資料取得：①原因特定・②β限定通信修正・③同じ受付の通常Worker確認まで実施｜今回の工程は③まで、残りはCriterion取得制限・既存AI接続待機・別件の入力不足4項目。WSL HTTPS timeoutを既存Windows transportへ接続し、5/6項目は原資料照合通過、G07はCloudflare 403 challengeを再試行待ちへ区別。40件／lint／型検査込みbuild `DQjHhCsjCwWG7qI0Gmvdm`、3200／HTTPS βと既存App確認。受付・画像・商品・入力保持、本番未変更。[実測と残件](verification/KUROSAWA_SOURCE_FETCH_BETA_20261113.md)。以下は各時点の履歴。
 
 2026-11-13 会話から改訂するテーマ品質ガイド：[保存とAPI契約](design/THEME_QUALITY_GUIDE_20261112.md)／[実接続・検証](verification/THEME_QUALITY_GUIDE_20261112.md)。品質Markdownは運営DBの版付きコンテンツとして管理し、固定の技術schemaと分離。本文の稼働正本をGitへ複製しない。β限定、本番・定期実行は別。

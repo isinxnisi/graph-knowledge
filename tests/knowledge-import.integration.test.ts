@@ -121,6 +121,12 @@ describe('authenticated immutable external knowledge packages',()=>{
   const id=await send();await core.processNext(cfg,async l=>{const r=response(l.wire);r.raw.modelVersion='gemini-3.5-flash-lite';return r;});
   expect((await status(id)).items[0].state).toBe('retry');expect((await status(id)).items[0].usage.requests).toBe(1);
  });
+ it('does not consume preparation retries while the shared project is paused',async()=>{
+  const id=await send();await pool.query("UPDATE member_knowledge.review_projects SET paused_until=clock_timestamp()+interval '10 minutes',pause_reason='fixture-pause' WHERE project_id=$1",[cfg.projectId]);
+  for(let n=0;n<9;n++){await core.processNext(cfg,dispatch);await pool.query("UPDATE knowledge_import.items SET next_attempt=clock_timestamp()-interval '1 second' WHERE package_id=$1",[id]);}
+  expect((await pool.query('SELECT prepare_attempts FROM knowledge_import.items WHERE package_id=$1',[id])).rows[0].prepare_attempts).toBe(0);expect(dispatch).not.toHaveBeenCalled();
+  await pool.query("UPDATE member_knowledge.review_projects SET paused_until=NULL,pause_reason='' WHERE project_id=$1",[cfg.projectId]);await core.processNext(cfg,dispatch);expect(dispatch).toHaveBeenCalledOnce();expect((await status(id)).items[0].state).toBe('applied');
+ });
  it('shares the global project allowance instead of creating an import-only quota',async()=>{
   const id=await send();await pool.query("INSERT INTO member_knowledge.review_attempts(id,project_id,provider,model,policy,purpose,state,quota_day,quota_month,input_reserved,output_reserved,request_charge) SELECT gen_random_uuid(),$1,'gemini',$2,'fixture','evaluation','delivery-unknown',(clock_timestamp() AT TIME ZONE 'America/Los_Angeles')::date,to_char(clock_timestamp() AT TIME ZONE 'America/Los_Angeles','YYYY-MM'),100,100,1 FROM generate_series(1,80)",[cfg.projectId,cfg.model]);
   await core.processNext(cfg,dispatch);expect((await status(id)).items[0].state).toBe('quota');expect(dispatch).not.toHaveBeenCalled();
