@@ -50,24 +50,39 @@ it('reads public fields belonging to the exact theme, rejecting unrelated and hi
  await expect(s.read(owner,{theme:v.theme,target,language:'en'})).rejects.toBeTruthy();
 });
 it('keeps retries immutable and owner-scoped, and does not resurrect a cancellation',async()=>{
- const s=service(),v=input();const results=await Promise.all([s.submit(owner,v),s.submit(owner,v)]);expect(results.every(r=>r.state==='processing')).toBe(true);
- expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.submissions')).rows[0].n).toBe(1);expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.review_jobs')).rows[0].n).toBe(1);
+ const s=service(),v=input();const results=await Promise.all([s.submit(owner,v),s.submit(owner,v)]);expect(results.every(r=>r.state==='published')).toBe(true);
+ expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.submissions')).rows[0].n).toBe(1);expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.review_jobs')).rows[0].n).toBe(0);
  await expect(s.submit(owner,{...v,translation:{...v.translation,text:'Different'}})).rejects.toMatchObject({code:'REQUEST_CONFLICT'});
  await expect(s.status(other,v.requestId)).rejects.toMatchObject({code:'NOT_FOUND'});
- expect(await s.cancel(owner,v.requestId)).toMatchObject({state:'cancelled'});await s.submit(owner,v);expect(await s.status(owner,v.requestId)).toMatchObject({state:'cancelled'});expect(await queue.claim(cfg)).toBeNull();
+ expect(await s.cancel(owner,v.requestId)).toMatchObject({state:'published'});await s.submit(owner,v);expect(await s.status(owner,v.requestId)).toMatchObject({state:'published'});expect(await queue.claim(cfg)).toBeNull();
 });
 it('resumes a lost acknowledgement without silently queueing a read, and refuses changed proposals',async()=>{
  const v=input(),hook=vi.fn().mockRejectedValueOnce(Error('Lost response')),s=createThemeTranslationAuthoring(pool,knowledge,'https://plunode.net',authorize,{afterCapture:hook});
  await expect(s.submit(owner,v)).rejects.toThrow('Lost response');expect(await s.status(owner,v.requestId)).toMatchObject({state:'saved'});expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.review_jobs')).rows[0].n).toBe(0);
- expect(await s.submit(owner,v)).toMatchObject({state:'processing'});expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.submissions')).rows[0].n).toBe(1);
+ expect(await s.submit(owner,v)).toMatchObject({state:'published'});expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.submissions')).rows[0].n).toBe(1);
 });
 async function publish(s:ReturnType<typeof service>,v:SubmitThemeTranslation){
- await s.submit(owner,v);await pool.query("UPDATE member_knowledge.review_attempts SET started_at=clock_timestamp()-interval '2 minutes'");const dispatch=vi.fn(async()=>response());expect(await runKnowledgeReviewOnce(queue,cfg,dispatch)).toBe(true);expect(dispatch).toHaveBeenCalledTimes(1);
- const engine=createKnowledgeAcceptance(pool,knowledge,{});expect(await engine.run(cfg)).toBe(true);expect(await s.cancel(owner,v.requestId)).toMatchObject({state:'published'});await engine.run(cfg);return s.status(owner,v.requestId);
+ const result=await s.submit(owner,v);expect(result).toMatchObject({state:'published'});
+ expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.review_jobs')).rows[0].n).toBe(0);
+ expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.review_attempts')).rows[0].n).toBe(0);
+ return result;
 }
-it('publishes system translations through common review while retaining only private operator ownership',async()=>{
+// Historical fixture deliberately recreates the superseded member-review path
+// to protect compatibility/privacy repair; new operator registration never uses it.
+async function legacyPublish(v:SubmitThemeTranslation){
+ const s=createThemeTranslationAuthoring(pool,knowledge,'https://plunode.net',authorize,{afterCapture:async()=>{throw Error('historical capture');}});
+ await expect(s.submit(owner,v)).rejects.toThrow('historical capture');
+ const id=themeTranslationOperationId(owner,v.requestId,'submission');
+ await pool.query("UPDATE member_knowledge.submission_revisions SET source_capsule=jsonb_set(source_capsule,'{kind}','\"selection\"'::jsonb) WHERE submission_id=$1",[id]);
+ const store=createKnowledgeSubmissionService(pool,{memberStore:true,dataset:'public-kg'}),draft=await store.get(owner,id);
+ const queued=await store.execute(owner,{action:'submit',requestId:themeTranslationOperationId(owner,v.requestId,'submit'),id,expectedVersion:draft.version});
+ await queue.authorize(owner,{action:'review',requestId:themeTranslationOperationId(owner,v.requestId,'review'),id,expectedVersion:queued.version,consentVersion:PUBLICATION_CONSENT_VERSION});
+ const dispatch=vi.fn(async()=>response());expect(await runKnowledgeReviewOnce(queue,cfg,dispatch)).toBe(true);expect(dispatch).toHaveBeenCalledTimes(1);
+ const engine=createKnowledgeAcceptance(pool,knowledge,{});expect(await engine.run(cfg)).toBe(true);await engine.run(cfg);return service().status(owner,v.requestId);
+}
+it('publishes operator translations without member review or AI while retaining only private operator ownership',async()=>{
  const s=service(),v=input(),resolved=await foundation.resolveTheme({kind:'reader',id:'fixture'},'theme'),cap=captureKnowledgeCapsule({title:'Saved',snapshot:resolved.snapshot}),saved=knowledgeDigest(cap);
- const accepted=await publish(s,v);expect(accepted).toMatchObject({state:'published',review:{items:[{state:'published',publication:{kind:'translation',revision:1}}]}});
+ const accepted=await publish(s,v);expect(accepted).toMatchObject({state:'published',publication:{kind:'translation',revision:1},review:null});
  const read=await s.read(owner,{theme:v.theme,target,language:'en'});expect(read.translation).toMatchObject({revision:1,text:'A history'});expect((await foundation.resolveTheme({kind:'reader',id:'fixture'},'theme')).theme).toEqual(resolved.theme);
  expect((await foundation.get({kind:'reader',id:'fixture'},'theme','theme')).revision).toBe(1);expect(knowledgeDigest(cap)).toBe(saved);
  expect((await pool.query('SELECT * FROM member_knowledge.publication_contributors WHERE submission_id=$1',[accepted.submissionId])).rows).toEqual([]);
@@ -76,7 +91,7 @@ it('publishes system translations through common review while retaining only pri
  expect(await createKnowledgeSubmissionService(pool,{memberStore:true,dataset:'public-kg'}).list(owner)).toEqual([]);
  expect(await submissionNotificationSummary(pool,owner)).toMatchObject({unreadCount:0});
  await expect(s.submit(owner,{...input(),translation:{...v.translation,text:'History of A'}})).rejects.toMatchObject({code:'TRANSLATION_CONFLICT'});
- const update={...input(),translation:{...v.translation,text:'History of A',expectedRevision:1}};expect(await publish(s,update)).toMatchObject({state:'published',review:{items:[{publication:{revision:2}}]}});
+ const update={...input(),translation:{...v.translation,text:'History of A',expectedRevision:1}};expect(await publish(s,update)).toMatchObject({state:'published',publication:{revision:2}});
  expect(await s.read(owner,{theme:v.theme,target,language:'en',revision:1})).toMatchObject({translation:{text:'A history',revision:1}});
  expect(await s.cancel(owner,update.requestId)).toMatchObject({state:'published'});expect((await s.read(owner,{theme:v.theme,target,language:'en'})).translation?.text).toBe('History of A');
  expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.revisions WHERE kind='theme'")).rows[0].n).toBe(1);
@@ -96,11 +111,11 @@ it('keeps completed system history outside personal draft capacity and system pe
  const store=createKnowledgeSubmissionService(pool,{memberStore:true,dataset:'public-kg'}),draft=await store.get(owner,accepted.submissionId),manual=randomUUID();
  await expect(store.execute(owner,{action:'save',requestId:randomUUID(),id:manual,expectedVersion:0,content:{...draft.content,title:'個人の草稿'}})).resolves.toMatchObject({id:manual});
  expect((await store.list(owner)).map(x=>x.id)).toEqual([manual]);
- await expect(s.submit(owner,{...input(),translation:{...v.translation,text:'History of A',expectedRevision:1}})).resolves.toMatchObject({state:'processing'});
+ await expect(s.submit(owner,{...input(),translation:{...v.translation,text:'History of A',expectedRevision:1}})).resolves.toMatchObject({state:'published'});
 });
 
 it('repairs old API credits without modifying originals, personal form drafts, ownership or immutable retries',async()=>{
- const s=service(),v=input(),result=await publish(s,v),publication=result.review!.items[0].publication!;
+ const s=service(),v=input(),result=await legacyPublish(v),publication=result.review!.items[0].publication!;
  // The old API captured the exact same server template without a route marker.
  await pool.query("UPDATE member_knowledge.submission_revisions SET source_capsule=(source_capsule-'requestId')||'{\"kind\":\"selection\"}'::jsonb WHERE submission_id=$1",[result.submissionId]);
  const decision=(await pool.query('SELECT id FROM member_knowledge.publication_decisions WHERE job_id=(SELECT id FROM member_knowledge.review_jobs WHERE submission_id=$1)',[result.submissionId])).rows[0].id;
@@ -132,7 +147,7 @@ it('serves only public fixed-version translations in the same theme catalogue wi
  expect((await catalogue.themes()).themes[0].translations).toBeUndefined();
 });
 
-it('publishes temporal headings and time labels through the same review pipeline without editing the original Theme or dates',async()=>{
+it('publishes temporal headings and time labels through the operator route without editing the original Theme or dates',async()=>{
  const s=service(),before=await foundation.resolveTheme({kind:'reader',id:'fixture'},'theme');
  for(const [target,text] of [[{kind:'theme',id:'theme',revision:1,field:'axisLabel',axisId:'history'},'History before founding'],[{kind:'record',id:'record',revision:1,field:'timeLabel',timeId:'founding'},'Year of founding']] as const){
   const v={...input(),translation:{target,language:'en',text,expectedRevision:0}};
@@ -142,4 +157,24 @@ it('publishes temporal headings and time labels through the same review pipeline
  expect(await foundation.resolveTheme({kind:'reader',id:'fixture'},'theme')).toEqual(before);
  await foundation.execute(operator,{action:'set-visibility',requestId:randomUUID(),kind:'source',id:'source',expectedStatusRevision:1,visibility:'hidden',reason:'Hide source'});
  await expect(s.read(owner,{theme:{id:'theme',revision:1},target:{kind:'theme',id:'theme',revision:1,field:'axisLabel',axisId:'history'},language:'en'})).rejects.toBeTruthy();
+});
+
+it('rejects accidental operator review authorization and never claims an old operator job',async()=>{
+ const v=input(),s=createThemeTranslationAuthoring(pool,knowledge,'https://plunode.net',authorize,{afterCapture:async()=>{throw Error('pause');}});
+ await expect(s.submit(owner,v)).rejects.toThrow('pause');
+ const store=createKnowledgeSubmissionService(pool,{memberStore:true,dataset:'public-kg'}),draft=await store.get(owner,themeTranslationOperationId(owner,v.requestId,'submission'));
+ const queued=await store.execute(owner,{action:'submit',requestId:randomUUID(),id:draft.id,expectedVersion:draft.version});
+ await expect(queue.authorize(owner,{action:'review',requestId:randomUUID(),id:draft.id,expectedVersion:queued.version,consentVersion:PUBLICATION_CONSENT_VERSION})).rejects.toMatchObject({code:'OPERATOR_INTAKE_NOT_REVIEWABLE'});
+ await pool.query("INSERT INTO member_knowledge.review_jobs(id,submission_id,revision,item_key,submitted_digest,consent_version,consent_profile_id,state) VALUES(gen_random_uuid(),$1,$2,'translation',$3,$4,'google-gemini-free-publish-v1','queued')",[draft.id,draft.revision,draft.digest,PUBLICATION_CONSENT_VERSION]);
+ expect(await queue.claim(cfg)).toBeNull();expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.review_attempts')).rows[0].n).toBe(0);
+});
+it('publishes an operator translation while the member AI review feature is disabled',async()=>{
+ vi.stubEnv('KNOWLEDGE_REVIEW_ENABLED','0');try{expect(await service().submit(owner,input())).toMatchObject({state:'published'});}finally{vi.stubEnv('KNOWLEDGE_REVIEW_ENABLED','1');}
+});
+
+it('keeps an interrupted translation cancellable before any publication',async()=>{
+ const v=input(),s=createThemeTranslationAuthoring(pool,knowledge,'https://plunode.net',authorize,{afterCapture:async()=>{throw Error('capture-only');}});
+ await expect(s.submit(owner,v)).rejects.toThrow('capture-only');expect(await service().cancel(owner,v.requestId)).toMatchObject({state:'cancelled'});
+ expect(await service().submit(owner,v)).toMatchObject({state:'cancelled'});
+ expect((await service().read(owner,{theme:v.theme,target,language:'en'})).translation).toBeNull();
 });

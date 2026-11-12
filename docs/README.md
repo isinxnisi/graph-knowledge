@@ -1,3 +1,5 @@
+2026-11-13 運営テーマの誤ったAI審査接続を是正：①原因確認・②専用経路／誤接続防止・③β反映と同じ受付の保全確認まで完了｜今回の工程は③まで。作成・更新・訳文登録のAI送信を除き、原資料／参照／版／重複確認と一般投稿審査を保持。build `Or2YQ9OYCQ3RtY56T3Jey`、3200／HTTPS β・既存Appのguide／同じ受付確認。既存公開5項目・入力／画像／商品参照／過去利用量保持、今回の追加AI送信0。本番未変更。G07は403後の原資料日次上限で本日17:00 JST待ち、入力不足4項目と別残件。[原因・境界・確認範囲](verification/OPERATOR_THEME_NO_AI_20261113.md)。以下は各時点の履歴。
+
 2026-11-13 黒澤テーマ5項目の審査復旧：①原因調査・②β限定Gemini通信と待機時の準備回数誤消費を補修・③同じ受付の5/5項目が各1回の実審査で通常公開まで完了｜今回の工程は③まで完了、テーマ全体は対象外の入力不足4項目とG07待ち。63件／lint／型検査込みbuild `U6iCFUid7NzBsoPe811rF`、3200／HTTPS β・既存Appのpublished確認。利用制限・画像／商品／入力を保持、本番未変更。[原因・保全・結果](verification/KUROSAWA_AI_REVIEW_BETA_20261113.md)。以下は各時点の履歴。
 
 2026-11-13 黒澤テーマの原資料取得：①原因特定・②β限定通信修正・③同じ受付の通常Worker確認まで実施｜今回の工程は③まで、残りはCriterion取得制限・既存AI接続待機・別件の入力不足4項目。WSL HTTPS timeoutを既存Windows transportへ接続し、5/6項目は原資料照合通過、G07はCloudflare 403 challengeを再試行待ちへ区別。40件／lint／型検査込みbuild `DQjHhCsjCwWG7qI0Gmvdm`、3200／HTTPS βと既存App確認。受付・画像・商品・入力保持、本番未変更。[実測と残件](verification/KUROSAWA_SOURCE_FETCH_BETA_20261113.md)。以下は各時点の履歴。

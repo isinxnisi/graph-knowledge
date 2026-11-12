@@ -77,12 +77,13 @@ it('rechecks operator activity and the current public scope before composition a
  expect((await service.status(owner,b.requestId)).theme).toBeNull();
  const c=input();await expect(service.submit(owner,c)).rejects.toMatchObject({code:'REVISION_NOT_PUBLIC'});
 });
-it('passes new information through the ordinary durable evidence review before composing',async()=>{
- await createReviewQueue(pool).heartbeat(cfg);
+it('publishes operator information with verified sources and zero AI calls even when AI is paused',async()=>{
+ await createReviewQueue(pool).heartbeat(cfg);await pool.query("UPDATE member_knowledge.review_projects SET paused_until=clock_timestamp()+interval '1 day' WHERE project_id=$1",[cfg.projectId]);
  const pkg={format:'plunode-knowledge-package',schemaVersion:1,namespace:'theme.fixture',packageId:'a-device',revision:1,entityPins:[{id:'a',revision:1}],entities:[{id:'b',content:{name:'B',kind:'instrument'}}],sources:[{id:'s',content:{title:'Instrument source',url:'https://example.org/instrument'}}],items:[{key:'connection',operation:'create-relation',record:{kind:'relation',subjectId:'a',objectId:'b',relation:'operates',assertion:'A operates B.',times:[{id:'event',time:{kind:'calendar',from:'2030-01-01',meaning:'point'}}],evidence:[{id:'proof',source:{id:'s',revision:1},locator:'Instrument',excerpt:'A operates B.'}]}}]};
  const v={...input(),recordPins:[],package:pkg,timeline:{version:1,axes:[{id:'calendar',kind:'calendar',label:'Events'}],placements:[{recordId:'item:connection',timeId:'event',axisId:'calendar'}],insets:[]}};await service.submit(owner,v);await service.recoverOne();expect(await service.status(owner,v.requestId)).toMatchObject({state:'processing',theme:null,receipt:{state:'processing'}});
  const dispatch=vi.fn(async()=>({state:'received' as const,status:200,raw:{responseId:'fixture',modelVersion:cfg.model,usageMetadata:{promptTokenCount:100,candidatesTokenCount:20,thoughtsTokenCount:0,totalTokenCount:120},candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify({suitability:'legitimate',support:'supported',reason:'Source supports this fact.'})}]}}]}}));
- await inbox.processNext(cfg,dispatch);expect(dispatch).toHaveBeenCalledTimes(1);
+ await inbox.processNext(cfg,dispatch);expect(dispatch).not.toHaveBeenCalled();
+ expect((await pool.query('SELECT count(*)::int n FROM knowledge_import.attempts')).rows[0].n).toBe(0);
  // Publisher completion is a separate tested boundary; no Neo4j process is used
  // in this isolated Member/PG integration test.
  await pool.query("UPDATE knowledge_import.items SET state='published' WHERE state='applied'");await wake();await service.recoverOne();
@@ -135,12 +136,13 @@ it('recovers a committed edit after a lost acknowledgement without a second revi
  expect(await service.status(owner,v.requestId)).toMatchObject({state:'published',theme:{id:t.id,revision:2}});
  expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.revisions WHERE kind='theme' AND id=$1",[t.id])).rows[0].n).toBe(2);
 });
-it('accepts a new source URL and theme-only background without partially changing the theme during review',async()=>{
+it('accepts a new source URL and theme-only background without partially changing the theme during source verification',async()=>{
  const t=await theme();await createReviewQueue(pool).heartbeat(cfg);
  const pkg={format:'plunode-knowledge-package',schemaVersion:1,namespace:'theme.direct',packageId:'background',revision:1,sources:[{id:'source',content:{title:'Independent public source',url:'https://example.org/theme-background',language:'en'}}],items:[{key:'background',operation:'add-information',about:{kind:'theme',id:t.id,revision:1},themes:[{id:t.id,revision:1}],record:{kind:'note',aboutTheme:t.id,assertion:'This theme places A in its wider context.',evidence:[{id:'proof',source:{id:'source',revision:1},locator:'Context paragraph',excerpt:'A has a wider context.'}]}}]};
  const v={...edit(t,{}),package:pkg};await service.submit(owner,v);await service.recoverOne();
  const dispatch=vi.fn(async()=>({state:'received' as const,status:200,raw:{responseId:'fixture',modelVersion:cfg.model,usageMetadata:{promptTokenCount:100,candidatesTokenCount:20,thoughtsTokenCount:0,totalTokenCount:120},candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify({suitability:'legitimate',support:'supported',reason:'The cited source supports this background.'})}]}}]}}));
- await inbox.processNext(cfg,dispatch);expect(dispatch).toHaveBeenCalledTimes(1);
+ await inbox.processNext(cfg,dispatch);expect(dispatch).not.toHaveBeenCalled();
+ expect((await pool.query('SELECT count(*)::int n FROM knowledge_import.attempts')).rows[0].n).toBe(0);
  expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id)).revision).toBe(1);
  await pool.query("UPDATE knowledge_import.items SET state='published' WHERE state='applied'");await wake();await service.recoverOne();
  const result=await service.status(owner,v.requestId);expect(result,JSON.stringify(result)).toMatchObject({state:'published',theme:{id:t.id,revision:2}});
@@ -164,4 +166,33 @@ it('registers generic theme editorial data and image via normal intake, retains 
  const bad={...edit({id:latest.theme.id,revision:2},{}),changes:{presentation:[{locale:'ja',hook:'Invalid',lead:'',records:[{target:{id:'not-in-theme',revision:1},shortTitle:'Foreign record'}]}]}};
  await service.submit(owner,bad);await service.recoverOne();expect(await service.status(owner,bad.requestId)).toMatchObject({state:'needs-changes',theme:null});
  expect((await foundation().get({kind:'reader',id:'fixture'},'theme',latest.theme.id)).revision).toBe(2);
+});
+
+it('does not treat a generic web delivery or namespace as operator theme authority',async()=>{
+ const pkg={format:'plunode-knowledge-package',schemaVersion:1,namespace:'theme.fixture',packageId:'not-a-theme',revision:1,entityPins:[{id:'a',revision:1}],sources:[{id:'s',content:{title:'Source',url:'https://example.org/other'}}],items:[{key:'other',operation:'add-information',about:{kind:'entity',id:'a',revision:1},record:{kind:'note',subjectId:'a',assertion:'A has another function.',evidence:[{id:'proof',source:{id:'s',revision:1},locator:'Body',excerpt:'A has another function.'}]}}]};
+ await createReviewQueue(pool).heartbeat(cfg);await pool.query('UPDATE member_knowledge.review_projects SET paused_until=NULL WHERE project_id=$1',[cfg.projectId]);
+ await web.deliver(owner,randomUUID(),pkg);
+ const dispatch=vi.fn(async()=>({state:'not-sent' as const}));await inbox.processNext(cfg,dispatch);expect(dispatch).toHaveBeenCalledTimes(1);
+ expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.objects WHERE kind='record'")).rows[0].n).toBe(1);
+});
+it('blocks operator intake on a source failure, retaining its receipt with no AI attempt',async()=>{
+ const {SourceCheckError}=await import('../lib/server/knowledge-source-verification');
+ inbox=createKnowledgeImports(pool,knowledge,(id,c)=>webImportPrincipal(pool,id,c),{verify:async()=>{throw new SourceCheckError('Fixture 403',true);}});
+ web=createWebKnowledgeImports(pool,()=>inbox);service=createThemeRegistrations(pool,knowledge,web,inbox);
+ const pkg={format:'plunode-knowledge-package',schemaVersion:1,namespace:'theme.fixture',packageId:'source-fails',revision:1,entityPins:[{id:'a',revision:1}],sources:[{id:'s',content:{title:'Source',url:'https://example.org/blocked'}}],items:[{key:'blocked',operation:'add-information',about:{kind:'entity',id:'a',revision:1},record:{kind:'note',subjectId:'a',assertion:'Blocked source fact.',evidence:[{id:'proof',source:{id:'s',revision:1},locator:'Body',excerpt:'Blocked source fact.'}]}}]};
+ const v={...input(),recordPins:[],package:pkg};await service.submit(owner,v);await service.recoverOne();
+ const dispatch=vi.fn(async()=>({state:'not-sent' as const}));await inbox.processNext(cfg,dispatch);expect(dispatch).not.toHaveBeenCalled();
+ expect(await service.status(owner,v.requestId)).toMatchObject({state:'processing',theme:null,receipt:{items:[{key:'blocked',state:'retry'}]}});
+ expect((await pool.query('SELECT count(*)::int n FROM knowledge_import.attempts')).rows[0].n).toBe(0);
+});
+
+it('reuses an exact existing record on operator update without AI or a duplicate record',async()=>{
+ const t=await theme();
+ const pkg={format:'plunode-knowledge-package',schemaVersion:1,namespace:'theme.fixture',packageId:'duplicate',revision:1,entityPins:[{id:'a',revision:1}],sourcePins:[{id:'base',revision:1}],items:[{key:'same',operation:'add-information',about:{kind:'entity',id:'a',revision:1},record:{kind:'note',subjectId:'a',assertion:'A is an organization.',evidence:[{id:'base',source:{id:'base',revision:1},locator:'Name',excerpt:'A is an organization.'}]}}]};
+ const v={...edit(t,{description:'Updated via the same theme'}),package:pkg};await service.submit(owner,v);await service.recoverOne();
+ const dispatch=vi.fn(async()=>({state:'not-sent' as const}));await inbox.processNext(cfg,dispatch);expect(dispatch).not.toHaveBeenCalled();
+ await pool.query("UPDATE knowledge_import.items SET state='published' WHERE state='applied'");await wake();await service.recoverOne();
+ expect(await service.status(owner,v.requestId)).toMatchObject({state:'published',theme:{id:t.id,revision:2}});
+ expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.objects WHERE kind='record'")).rows[0].n).toBe(1);
+ expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id,1)).content.description).toBe('資料からたどるテーマ');
 });

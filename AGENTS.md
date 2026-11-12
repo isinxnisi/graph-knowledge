@@ -8,6 +8,8 @@ Read docs/PROJECT_CONTEXT.md and docs/ARCHITECTURE.md before changing this proje
 
 AI関連の設計・作業前に [共通Kevの接続・責務と検証方針](docs/design/AI_PROCESSING_DIRECTION.md) を読む。Kevは他プロジェクトも使う独立サービスであり、利用は公開APIを原則とする。Kev本体の変更が必要なら目的・他利用者への影響・代替案を整理し、実施前にユーザーへ相談する。
 
+ChatGPT運営テーマの作成・更新・訳文登録はシステム投入経路であり、AI審査へ接続しない。原資料・参照・版・重複の確認と、一般ユーザー投稿のAI審査を混同しない。変更時は [運営テーマ登録の現行契約](docs/design/KNOWLEDGE_CHATGPT_THEME_REGISTRATION.md) と「運営登録のAI送信0／一般投稿の審査維持」の回帰テストを確認する。
+
 ## 自動開発との協調（手動セッション）
 
 手動セッションの通常の完了手順は、必要な検証→日本語メッセージでコミット→設定済みupstreamへの通常pushまでとする。pushの結果も完了報告に含める。

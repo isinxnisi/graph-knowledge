@@ -1,3 +1,4 @@
+import {operatorThemeIntake} from './operator-theme-intake';
 import {verifyTranslationReviewContext,type TranslationReviewSnapshot} from "./knowledge-translation-context";
 import {GEMINI_TRANSLATION_POLICY} from "./gemini-knowledge-review";
 import {randomUUID,createHash} from 'node:crypto';
@@ -13,7 +14,7 @@ import {verifySourceExcerpt,SourceCheckError,type SourceProof} from './knowledge
 import {submissionReviewEvidence} from '../domain/knowledge-submission-intent';
 import {submissionReviewInput} from '../domain/knowledge-review-job';
 import {reuseDuplicatePlan,verifyAcceptanceReferences,verifyAcceptedSemantics,verifyLegacyCommand,type AcceptancePlan} from './knowledge-acceptance';
-import {captureDuplicates,commonDuplicatePins,type DuplicateCapture} from './knowledge-duplicates';
+import {captureDuplicates,commonDuplicatePins,duplicateMatch,type DuplicateCapture} from './knowledge-duplicates';
 import {knownSourceDocuments,retainSourceAcquisitions} from './knowledge-source-registry';
 import {geminiReviewRequest,geminiDuplicateReviewRequest,parseGeminiReview,type GeminiCallResult} from './gemini-knowledge-review';
 import {reserveKnowledgeAI,quotaDate,nextQuotaDay} from './knowledge-ai-budget';
@@ -21,7 +22,7 @@ import {reviewRetryAt,aiFailureDiagnostic,REVIEW_SENDS_PER_ITEM_DAY} from './kno
 import type {ReviewConfig} from './knowledge-review-queue';
 
 type Prepared=ReturnType<typeof prepareImportPlan>&{proofs:SourceProof[];duplicates:DuplicateCapture|null;wire:string};
-type Decision={translationReview?:{policy:string;snapshot:TranslationReviewSnapshot;wireDigest:string;attemptId:string};plan:AcceptancePlan;proofs:SourceProof[];guard:{record:unknown;common:unknown}|null};
+type Decision={operatorTheme?:{requestId:string;ownerId:string};translationReview?:{policy:string;snapshot:TranslationReviewSnapshot;wireDigest:string;attemptId:string};plan:AcceptancePlan;proofs:SourceProof[];guard:{record:unknown;common:unknown}|null};
 type WireResult=GeminiCallResult|{state:'not-sent'};
 const terminal=['published','existing','cancelled','declined','needs-changes'];
 const errorReason=(e:unknown)=>e instanceof SourceCheckError||e instanceof KnowledgeError?e.message:e instanceof z.ZodError?'項目の対象・内容・資料の形式を確認してください。':'処理との接続が一時的に不安定です。内容は保持し、自動で再試行します。';
@@ -102,14 +103,15 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
     if(await recoverApplied(c,pkg,item))return null;
     const p=await active(pkg.principal_id,c);
     if(!p||p.namespace!==pkg.namespace||pkg.cancelled_at){await c.query("UPDATE knowledge_import.items SET state='cancelled',reason='受付または送信資格が停止されています。',lease_token=NULL,lease_until=NULL WHERE id=$1",[item.id]);return null;}
+    const operator=await operatorThemeIntake(c,pkg.id,p);
     let retained=!!item.decision;
-    if(item.state==='running'&&item.current_attempt){
+    if(!operator&&item.state==='running'&&item.current_attempt){
      const a=(await c.query('SELECT a.*,t.response FROM member_knowledge.review_attempts a JOIN knowledge_import.attempts t ON t.id=a.id WHERE a.id=$1 FOR UPDATE OF a',[item.current_attempt])).rows[0];
      if(!a?.response){await c.query("UPDATE member_knowledge.review_attempts SET state=CASE WHEN state='reserved' THEN 'not-sent' ELSE 'delivery-unknown' END,request_charge=CASE WHEN state='reserved' THEN 0 ELSE 1 END,input_actual=CASE WHEN state='reserved' THEN 0 ELSE input_actual END,output_actual=CASE WHEN state='reserved' THEN 0 ELSE output_actual END,finished_at=clock_timestamp() WHERE id=$1 AND state IN('reserved','sending')",[item.current_attempt]);await c.query("UPDATE knowledge_import.items SET state='retry',reason='前の送信結果を確認できません。間隔を空けて自動で再試行します。',next_attempt=$2,lease_token=NULL,lease_until=NULL WHERE id=$1",[item.id,reviewRetryAt(item.attempts)]);return null;}
      retained=retained||a.response.state==='received';
     }
     const day=quotaDate(new Date()),sent=(await c.query('SELECT COALESCE(sum(a.request_charge),0)::int n FROM knowledge_import.attempts t JOIN member_knowledge.review_attempts a ON a.id=t.id WHERE t.item_id=$1 AND a.quota_day=$2',[item.id,day])).rows[0].n;
-    if(!retained&&(sent>=REVIEW_SENDS_PER_ITEM_DAY||item.prepare_day===day&&item.prepare_attempts>=8)){await c.query("UPDATE knowledge_import.items SET state='quota',reason='この項目の本日の再試行上限を待っています。',next_attempt=$2 WHERE id=$1",[item.id,nextQuotaDay(new Date())]);return null;}
+    if(!retained&&(!operator&&sent>=REVIEW_SENDS_PER_ITEM_DAY||item.prepare_day===day&&item.prepare_attempts>=8)){await c.query("UPDATE knowledge_import.items SET state='quota',reason='この項目の本日の再試行上限を待っています。',next_attempt=$2 WHERE id=$1",[item.id,nextQuotaDay(new Date())]);return null;}
     const token=randomUUID();await c.query("UPDATE knowledge_import.items SET state='running',lease_token=$2,lease_until=clock_timestamp()+interval '180 seconds',prepare_attempts=CASE WHEN prepare_day=$3 THEN prepare_attempts+1 ELSE 1 END,prepare_day=$3 WHERE id=$1",[item.id,token,day]);return {pkg,item,p,token};
    });if(l)return l;
   }return null;
@@ -129,7 +131,7 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
   if(expected!==prepared.wire)throw new KnowledgeError('翻訳の公開文脈を取り直し、新しいパッケージ版で送信してください。',409,'TRANSLATION_CONTEXT_CHANGED');
   return {policy:GEMINI_TRANSLATION_POLICY,snapshot:snapshot!,wireDigest:createHash('sha256').update(prepared.wire).digest('hex')};
  }
- async function prepare(l:NonNullable<Awaited<ReturnType<typeof lease>>>):Promise<Prepared>{
+ async function prepare(l:NonNullable<Awaited<ReturnType<typeof lease>>>,operator=false):Promise<Prepared>{
   const pkg=knowledgeImportPackageSchema.parse(l.pkg.payload),content=knowledgeSubmissionContentSchema.parse(l.item.normalized),context=await resolveImportContext(knowledge,content);assertImportScope(l.p,content,context);
   const value=prepareImportPlan(pkg,content,context,l.pkg.id,l.item.id),item=content.items[0],proofs:SourceProof[]=[];
    if(value.plan.command.action==='accept-record'&&value.plan.command.themes?.length){
@@ -150,6 +152,7 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
    if(!source?.content.url)throw new SourceCheckError('公開URLで本文を確認できる資料が必要です。');proofs.push(await verify(source.content.url,e.excerpt));
   }}
   const duplicates=value.plan.command.action==='accept-record'?await captureDuplicates(knowledge,value.plan.command.record.content,value.plan.command.expectedRevision?value.plan.recordId:undefined):null;
+  if(operator)return {...value,proofs,duplicates,wire:''};
   const review=submissionReviewInput(value.value,item.key,true),request=duplicates?.review.candidates.length?geminiDuplicateReviewRequest(review,duplicates.review):geminiReviewRequest(review);
   return {...value,proofs,duplicates,wire:JSON.stringify(request)};
  }
@@ -165,11 +168,14 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
    if(await recoverApplied(c,locked.pkg,locked.item))return;
    const current=await stillCurrent(c,l);if(!current)return;
    const result=await foundation.execute({kind:'import',id:importActor(current.p)},d.plan.command,{
-    verify:async k=>{if(d.plan.command.action==='accept-translation'){
+    verify:async k=>{if(d.operatorTheme){const authority=await operatorThemeIntake(c,current.pkg.id,current.p);if(knowledgeDigest(authority)!==knowledgeDigest(d.operatorTheme))throw new KnowledgeError('運営テーマの登録権限を再確認してください。',403,'OPERATOR_REQUIRED');}
+     if(d.plan.command.action==='accept-translation'){
        const proof=d.translationReview,prepared=current.item.prepared as Prepared|null;
        const attempt=proof?.attemptId?(await c.query('SELECT wire,wire_digest FROM knowledge_import.attempts WHERE id=$1 AND item_id=$2',[proof.attemptId,current.item.id])).rows[0]:null;
-       if(proof?.policy!==GEMINI_TRANSLATION_POLICY||!prepared||!attempt||attempt.wire!==prepared.wire||attempt.wire_digest!==proof.wireDigest||createHash('sha256').update(attempt.wire).digest('hex')!==proof.wireDigest)throw new KnowledgeError('翻訳の公開文脈を取り直し、新しいパッケージ版で送信してください。',409,'TRANSLATION_CONTEXT_CHANGED');
-       await verifyTranslationReviewContext(k,d.plan.command.target,proof.snapshot,true);
+       if(d.operatorTheme){
+        const target=d.plan.command.target,snapshot=prepared?.value.context?.texts?.find(v=>knowledgeDigest(v.target)===knowledgeDigest(target));if(!snapshot)throw new KnowledgeError('訳文の原文を確認してください。',409,'TRANSLATION_CONTEXT_CHANGED');await verifyTranslationReviewContext(k,target,snapshot,true);
+       }else{if(proof?.policy!==GEMINI_TRANSLATION_POLICY||!prepared||!attempt||attempt.wire!==prepared.wire||attempt.wire_digest!==proof.wireDigest||createHash('sha256').update(attempt.wire).digest('hex')!==proof.wireDigest)throw new KnowledgeError('翻訳の公開文脈を取り直し、新しいパッケージ版で送信してください。',409,'TRANSLATION_CONTEXT_CHANGED');
+       await verifyTranslationReviewContext(k,d.plan.command.target,proof.snapshot,true);}
       }
       if(d.guard){const pins=(await commonDuplicatePins(k,d.guard.record as Parameters<typeof commonDuplicatePins>[1])).map(r=>({id:r.id,revision:r.revision,digest:knowledgeDigest(r.content)}));if(knowledgeDigest(pins)!==knowledgeDigest(d.guard.common))throw new KnowledgeError('既存の知識が変わりました。重複を再確認します',409,'DUPLICATE_REVIEW_REQUIRED');}
      await verifyAcceptanceReferences(k,d.plan.references);await verifyAcceptedSemantics(k,d.plan);},
@@ -213,6 +219,18 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
   }
   const l=await lease();if(!l)return false;let pendingAttempt:string|null=null,dispatched=false;
   try{
+   const authority=await tx(async c=>await stillCurrent(c,l)?operatorThemeIntake(c,l.pkg.id,l.p):null);
+   if(authority){
+    // Operator editorial input has no AI gate. Rebuild a mechanical decision,
+    // including for a retained request formerly routed through AI review.
+    const prepared=await prepare(l,true),dup=prepared.duplicates;
+    const exact=dup?duplicateMatch(dup,null):undefined;
+    const plan=dup?await reuseDuplicatePlan(knowledge,prepared.plan,dup,null,prepared.proofs,exact?await knownSourceDocuments(knowledge,exact):[]):prepared.plan;
+    const decision:Decision={operatorTheme:authority,plan,proofs:prepared.proofs,guard:dup&&prepared.plan.command.action==='accept-record'?{record:prepared.plan.command.record.content,common:dup.common}:null};
+    const saved=await tx(async c=>{if(!await stillCurrent(c,l)||knowledgeDigest(await operatorThemeIntake(c,l.pkg.id,l.p))!==knowledgeDigest(authority))return false;await c.query('UPDATE knowledge_import.items SET prepared=$2,decision=$3 WHERE id=$1',[l.item.id,JSON.stringify(prepared),JSON.stringify(decision)]);return true;});
+    if(saved){l.item.decision=decision;await apply(l);}return true;
+   }
+   if(l.item.decision?.operatorTheme)throw new KnowledgeError('運営テーマの登録権限を再確認してください。',403,'OPERATOR_REQUIRED');
    if(l.item.decision){await apply(l);return true;}
    if(l.item.current_attempt){const a=(await pool.query('SELECT * FROM knowledge_import.attempts WHERE id=$1',[l.item.current_attempt])).rows[0];if(a?.response?.state==='received'&&l.item.prepared){await consume(l,l.item.prepared,a.id,a.model,a.response);return true;}}
    const prepared=await prepare(l);

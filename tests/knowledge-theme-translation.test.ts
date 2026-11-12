@@ -25,8 +25,8 @@ it('binds immutable resumption to the authenticated owner, complete proposal and
  expect(themeTranslationCapture(owner,{...v,translation:{...v.translation,text:'Changed'}}).content).not.toEqual(cmd.content);
  expect(themeRegistrationCommandSchema.parse({action:'submit-translation',...v})).toMatchObject({action:'submit-translation',translation:v.translation});
 });
-it('publishes complete translation schemas and provider disclosure without requesting original-text changes',()=>{
- const guide=themeAuthoringGuide();expect(guide.schemas.submitTranslation).toBeDefined();expect(guide.translations.disclosure).toMatchObject({recipient:'Google',purpose:'publish'});expect(guide.translations.attribution).toContain('anonymous');
+it('publishes complete translation schemas and the no-AI registration contract without requesting original-text changes',()=>{
+ const guide=themeAuthoringGuide();expect(guide.schemas.submitTranslation).toBeDefined();expect(guide.translations.disclosure).toMatchObject({aiReview:false,externalAiTransmission:false});expect(guide.translations.attribution).toContain('anonymous');
  expect(guide.schemas.submitTranslation).toMatchObject({properties:{translation:{required:expect.arrayContaining(['expectedRevision'])}}});
 });
 it('exposes translation tools only through the existing compose handler and dispatches strict input',async()=>{

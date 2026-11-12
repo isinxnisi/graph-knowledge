@@ -106,6 +106,7 @@ export function createReviewQueue(pool:Pool,options:{duplicates?:(value:Knowledg
     const old=(await c.query("SELECT digest,response FROM member_knowledge.submission_requests WHERE owner_id=$1 AND request_id=$2",[ownerId,command.requestId])).rows[0];
     if(old){if(old.digest!==digest)throw new KnowledgeError("操作IDの内容が異なります",409,"REQUEST_CONFLICT");return old.response as KnowledgeSubmission;}
     const row=await current(c,command.id);if(!row||row.owner_id!==ownerId)throw new KnowledgeError("投稿がありません",404,"NOT_FOUND");
+    if(row.source_capsule?.kind==='operator-api')throw new KnowledgeError('運営APIの登録は投稿審査へ送信できません。運営用の登録経路で処理してください。',409,'OPERATOR_INTAKE_NOT_REVIEWABLE');
     if(row.state_version!==command.expectedVersion||row.state!=='queued')throw new KnowledgeError("受付内容が変わりました",409,"VERSION_CONFLICT");
     const n=Number((await c.query("SELECT count(*) AS n FROM member_knowledge.submission_requests WHERE owner_id=$1 AND created_at>clock_timestamp()-interval '10 minutes'",[ownerId])).rows[0].n);
     if(n>=120)throw new KnowledgeError("少し待ってから再試行してください",429,"RATE_LIMITED");
@@ -150,6 +151,7 @@ export function createReviewQueue(pool:Pool,options:{duplicates?:(value:Knowledg
    for(const candidate of candidates){const lease=await jobTransaction(candidate.id,async(c,j,active)=>{
     if(!['queued','retry','quota'].includes(j.state)||new Date(j.not_before).getTime()>Date.now())return null;
     const s=j.submission;
+    if(s.source_capsule?.kind==='operator-api'){await c.query("UPDATE member_knowledge.review_jobs SET state='cancelled',reason='operator-intake-separate-route' WHERE id=$1",[j.id]);return null;}
     if(!active||s.state!=='queued'||s.current_revision!==j.revision||s.digest!==j.submitted_digest||![REVIEW_CONSENT_VERSION,...(knowledgePublishingEnabled()?[PUBLICATION_CONSENT_VERSION]:[])].includes(j.consent_version)){await c.query("UPDATE member_knowledge.review_jobs SET state='cancelled',reason='submission-changed' WHERE id=$1",[j.id]);return null;}
     const disclosure=reviewDisclosureForConsent(j.consent_version);
     const authorization=(await c.query('SELECT consent_profile_id FROM member_knowledge.review_authorizations WHERE submission_id=$1 AND revision=$2',[j.submission_id,j.revision])).rows[0];
@@ -177,7 +179,7 @@ export function createReviewQueue(pool:Pool,options:{duplicates?:(value:Knowledg
    });if(lease)return lease;}
    return null;
   },
-  async canSend(lease:ReviewLease){await ensure();const profile=knowledgeDeployment();if(profile&&(!knowledgeCapability("review-worker")||!knowledgeCapability("review")))return false;const scope=profile?.reviewMembers.mode==="allowlist"?profile.reviewMembers.ids:null;return (await pool.query(`SELECT 1 FROM member_knowledge.review_jobs j JOIN member_knowledge.submissions s ON s.id=j.submission_id JOIN "user" u ON u.id=s.owner_id JOIN member_knowledge.review_authorizations a ON a.submission_id=j.submission_id AND a.revision=j.revision WHERE j.id=$1 AND j.lease_token=$2 AND j.consent_profile_id=$3 AND a.consent_profile_id=$3 AND j.state='running' AND j.lease_until>clock_timestamp() AND u.active AND ($4::uuid[] IS NULL OR s.owner_id=ANY($4::uuid[])) AND s.state='queued' AND s.current_revision=j.revision`,[lease.jobId,lease.token,lease.consentProfileId,scope])).rowCount===1;},
+  async canSend(lease:ReviewLease){await ensure();const profile=knowledgeDeployment();if(profile&&(!knowledgeCapability("review-worker")||!knowledgeCapability("review")))return false;const scope=profile?.reviewMembers.mode==="allowlist"?profile.reviewMembers.ids:null;return (await pool.query(`SELECT 1 FROM member_knowledge.review_jobs j JOIN member_knowledge.submissions s ON s.id=j.submission_id JOIN "user" u ON u.id=s.owner_id JOIN member_knowledge.submission_revisions v ON v.submission_id=s.id AND v.revision=j.revision JOIN member_knowledge.review_authorizations a ON a.submission_id=j.submission_id AND a.revision=j.revision WHERE j.id=$1 AND j.lease_token=$2 AND j.consent_profile_id=$3 AND a.consent_profile_id=$3 AND j.state='running' AND j.lease_until>clock_timestamp() AND u.active AND ($4::uuid[] IS NULL OR s.owner_id=ANY($4::uuid[])) AND s.state='queued' AND s.current_revision=j.revision AND COALESCE(v.source_capsule->>'kind','')<>'operator-api'`,[lease.jobId,lease.token,lease.consentProfileId,scope])).rowCount===1;},
   finish,
   async rejectBeforeSend(lease:ReviewLease,reason:string,retryable:boolean){
    await finish(lease,{state:'not-sent'});
