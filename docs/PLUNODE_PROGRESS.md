@@ -1,3 +1,5 @@
+2026-11-12 PC再起動後の復帰追補：②DBの公開port・β設定を引き継いだWeb／5 Worker・正式API向けPC 2 Workerを復帰、③HTTPS βのPLUTO構成版4が200・本文ありまで確認｜残りはWSLの外向きTCP timeout、今回の工程は③までで完全復帰は未完了。Docker13 containerを通常再起動後に保全復帰。Codex holdと定期収集taskを止めた状態でも外向き通信は未復旧。データ初期化・本番配置変更なし。[実測・残件](verification/PC_RESTART_RECOVERY_20261112.md#WinNat操作後の復帰と残件)。
+
 2026-11-12 PC再起動後の復帰：①Docker・DB・Kev・既存build／HTTPS β TOP確認、②正式API向けPC Worker 2本を復帰｜残りはWinNatの本人管理者操作とβ DB／5 Worker／テーマ確認｜今回の工程は③まで、復帰全体は未完了。Windows除外範囲に55476番が重なりβ知識DBへ接続不可。データ削除・再build・本番配置変更なし。[確認・再開](verification/PC_RESTART_RECOVERY_20261112.md)。
 
 2026-11-12 PLUTOテーマのβ登録：①既存原本・公式資料照合、②19/21件を構成版4へ反映、③37件／lint／型検査込みbuild／3200・HTTPS βのPC・375px確認まで完了｜今回の3工程は③まで、残りは未公開2件の通常再試行・同テーマへの追加と確認1バッチ目安。G05制作協力・N05原作の読み解き方は項目単位の日次再試行上限で17:00 JST以降待ち、依頼全体は未完了。7年表・4制作秘話・8関係、9 Entity・12資料断面。build `2NAbX7Dbm5DrL_ZkbEdNL`。商品は未確認の草稿を保持し未掲載。実ChatGPT MCP authoring／iPhone実機未確認、本番未変更。[登録結果・再開条件](verification/PLUTO_THEME_BETA_20261112.md)。以下は各時点の履歴。
