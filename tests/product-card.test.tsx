@@ -26,3 +26,12 @@ it('画像取得が失敗しても紹介と確認済み購入先を残す',()=>{
  expect(screen.getByText('宇宙の景色を日々の暮らしへ。')).toBeTruthy();
  expect(screen.getByRole('link',{name:'Amazonで購入する'}).getAttribute('href')).toBe('https://link.amazon/B0cLIilgt');
 });
+
+
+it('未確認の言語や画像を補わず、紹介と購入先を表示する',()=>{
+ const unknown={...item,product:{...item.product,language:'und',image:undefined}};
+ render(<RelatedProducts items={[unknown]} market="JP" onMarket={()=>{}} en={false}/>);
+ expect(screen.queryByText('UND')).toBeNull();expect(screen.queryByText('英語版')).toBeNull();expect(screen.queryByText('日本語版')).toBeNull();
+ expect(screen.queryByRole('img')).toBeNull();expect(screen.getByText('画像は準備中')).toBeTruthy();
+ expect(screen.getByRole('link',{name:'Amazonで購入する'}).getAttribute('href')).toBe(item.offer!.affiliateUrl);
+});

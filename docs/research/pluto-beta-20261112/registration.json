@@ -3,7 +3,7 @@
   "origin": "https://graph-beta.isinxnisi.com",
   "theme": {
     "id": "theme:df8040bd38f635390870263b9f50b557e9be444f53695e06",
-    "revision": 4
+    "revision": 5
   },
   "originalLanguage": "ja",
   "publishedRecordCount": 19,
@@ -131,12 +131,12 @@
     {
       "key": "G05",
       "meaning": "手塚プロダクション→PLUTO：制作に協力",
-      "retryAt": "2026-11-12T08:00:00Z"
+      "retryAt": "2026-11-13T08:00:00Z"
     },
     {
       "key": "N05",
       "meaning": "長崎尚志による原作の読み解き方",
-      "retryAt": "2026-11-12T08:00:00Z"
+      "retryAt": "2026-11-13T08:00:00Z"
     }
   ],
   "sources": [
@@ -200,7 +200,7 @@
     "name": "PLUTO 全8巻セット",
     "affiliateUrl": "https://link.amazon/B0iJNnc7U",
     "targetEntityKey": "e.pluto",
-    "status": "ユーザー提供リンクを保持。今回のリンク先・ASIN・版・画像の確認や商品登録はしていない。",
+    "status": "ユーザー指定内容を運営商品1版として登録し、テーマ5版と漫画Entityへ紐付け済み。商品画像は未設定。",
     "placement": "テーマ全体またはPLUTO漫画Entityの関連アイテム。原典・舞台・アニメの商品としては表示しない。"
   },
   "intake": "βの実運営権限を既存サーバーdispatcherで検査。theme-registrationとweb-importの通常照合・AI確認・公開を利用。HTTP/OAuth/ChatGPT Appからの配送試験ではない。",
@@ -284,5 +284,33 @@
     }
   ],
   "publicEntityCount": 9,
-  "publicSourceCount": 12
+  "publicSourceCount": 12,
+  "product": {
+    "id": "book:pluto-complete-8-b002de6u7i",
+    "revision": 1,
+    "asin": "B002DE6U7I",
+    "title": "PLUTO (プルートウ) 全8巻完結セット (ビッグコミックス)",
+    "displayName": {
+      "ja": "PLUTO 全8巻セット",
+      "en": "PLUTO Complete 8-Volume Set"
+    },
+    "edition": "ビッグコミックス・全8巻完結セット",
+    "metadataSource": "https://www.amazon.co.jp/dp/B002DE6U7I",
+    "affiliateUrl": "https://link.amazon/B0iJNnc7U",
+    "description": {
+      "ja": "『PLUTO』を第1巻から最終巻まで、まとめて読む。",
+      "en": "Read PLUTO from the first volume to the last in one complete set."
+    },
+    "appliesTo": [
+      {
+        "kind": "entity",
+        "id": "2b7c6289-d050-4dc0-93e3-9307681253cc"
+      }
+    ],
+    "imageId": null,
+    "language": "und",
+    "languageVerification": "Amazonの言語欄は英語と表示され、商品同定に使える説明と不整合。言語は未確認として保持し、表示しない。価格・在庫・初版や限定版の指定は補わない。",
+    "setContentsVerification": "Amazonの正式商品名に全8巻完結セット、商品説明に1~8巻セットを確認。小学館・ビッグコミックス。購入時の販売者／状態／最新内容は販売先で確認する。",
+    "checkedAt": "2026-11-12T10:48:27.228957Z"
+  }
 }
