@@ -3,7 +3,26 @@
   "origin": "https://graph-beta.isinxnisi.com",
   "theme": {
     "id": "theme:df8040bd38f635390870263b9f50b557e9be444f53695e06",
-    "revision": 5
+    "revision": 6,
+    "illustration": {
+      "id": "pluto-editorial-v1",
+      "src": "/theme-assets/pluto-editorial-v1.jpg",
+      "kind": "illustration",
+      "credit": "テーマ挿絵：利用者提供",
+      "readingBaseRevision": 4,
+      "original": {
+        "width": 1672,
+        "height": 941,
+        "bytes": 3224150,
+        "format": "png"
+      },
+      "processed": {
+        "width": 1600,
+        "height": 900,
+        "bytes": 566699,
+        "format": "jpeg"
+      }
+    }
   },
   "originalLanguage": "ja",
   "publishedRecordCount": 19,
@@ -200,7 +219,7 @@
     "name": "PLUTO 全8巻セット",
     "affiliateUrl": "https://link.amazon/B0iJNnc7U",
     "targetEntityKey": "e.pluto",
-    "status": "ユーザー指定内容を運営商品1版として登録し、テーマ5版と漫画Entityへ紐付け済み。商品画像は未設定。",
+    "status": "確認済み商品2版をテーマ6版へ掲載。表紙画像とテーマ挿絵は別素材。",
     "placement": "テーマ全体またはPLUTO漫画Entityの関連アイテム。原典・舞台・アニメの商品としては表示しない。"
   },
   "intake": "βの実運営権限を既存サーバーdispatcherで検査。theme-registrationとweb-importの通常照合・AI確認・公開を利用。HTTP/OAuth/ChatGPT Appからの配送試験ではない。",
@@ -287,7 +306,7 @@
   "publicSourceCount": 12,
   "product": {
     "id": "book:pluto-complete-8-b002de6u7i",
-    "revision": 1,
+    "revision": 2,
     "asin": "B002DE6U7I",
     "title": "PLUTO (プルートウ) 全8巻完結セット (ビッグコミックス)",
     "displayName": {
@@ -307,10 +326,32 @@
         "id": "2b7c6289-d050-4dc0-93e3-9307681253cc"
       }
     ],
-    "imageId": null,
+    "imageId": "71b03ee251c09b986c4400388c29bc23b5a2eca20c705fb142ec49c0cd0a20da",
     "language": "und",
     "languageVerification": "Amazonの言語欄は英語と表示され、商品同定に使える説明と不整合。言語は未確認として保持し、表示しない。価格・在庫・初版や限定版の指定は補わない。",
     "setContentsVerification": "Amazonの正式商品名に全8巻完結セット、商品説明に1~8巻セットを確認。小学館・ビッグコミックス。購入時の販売者／状態／最新内容は販売先で確認する。",
-    "checkedAt": "2026-11-12T10:48:27.228957Z"
+    "checkedAt": "2026-11-12T10:48:27.228957Z",
+    "image": {
+      "role": "product-photo",
+      "credit": "利用者提供の表紙画像",
+      "original": {
+        "width": 745,
+        "height": 1000,
+        "bytes": 225031,
+        "format": "jpeg"
+      },
+      "processed": {
+        "width": 745,
+        "height": 1000,
+        "bytes": 182976,
+        "format": "webp"
+      },
+      "small": {
+        "width": 477,
+        "height": 640,
+        "bytes": 84704
+      },
+      "note": "利用者指定の表紙画像。全8冊を並べた実物写真とは表現しない。"
+    }
   }
 }

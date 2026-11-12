@@ -116,3 +116,12 @@ it("related knowledge fetches later pages only while expanded, keeps loaded page
   expect(fetchMock.mock.calls.filter(([url])=>String(url).includes("page-2"))).toHaveLength(1);
  }finally{fetchMock.mockRestore();}
 });
+
+
+it("provided editorial art does not require invented external source links, while photos retain their provenance contract",()=>{
+ const image={id:"provided-art",src:"/theme-assets/provided.jpg",width:1600,height:900,kind:"illustration",alt:"An editorial illustration",caption:"Editorial art",credit:"Provided by the operator",checkedAt:"2026-11-12",focus:"50% 50%"};
+ const entry={version:1,theme:{id:"provided",revision:1},locale:"ja",state:"checked",hook:"Question",lead:"Introduction",image};
+ expect(themeReadingPresentationSchema.safeParse(entry).success).toBe(true);
+ expect(themeReadingPresentationSchema.safeParse({...entry,image:{...image,kind:"photo"}}).success).toBe(false);
+ expect(themeReadingPresentationSchema.safeParse({...entry,image:{...image,sourceUrl:"not a URL"}}).success).toBe(false);
+});

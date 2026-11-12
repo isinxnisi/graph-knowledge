@@ -17,3 +17,10 @@
 > Use case: illustration-story. Asset type: editorial website illustration for an astronomy theme introduction; a small refined spot illustration, no text. Create an original hand-drawn illustration of the James Webb Space Telescope, recognizable golden segmented hexagonal mirror with its black three support struts and a delicate silvery layered sunshield underneath, floating in space with just a few tiny star and faint galaxy marks. The telescope is a poetic editorial subject, not a technical diagram or a photographic cutout. Style: exceptionally fine blue-grey ink contours, soft muted champagne-gold watercolor on the mirror, subtle warm taupe washes, airy and restrained like the opening illustration of a beautiful science essay. Attractive silhouette, light details, no heavy outlines. Landscape 3:2 composition with generous open negative space and softly fading edges. Transparent background, no panel, no border, no drop shadow, no labels, no logo, no title, no watermark. Calm luminous palette to blend with an ivory Plunode reading page. Make the whole telescope visible and legible when displayed at 190 by 125 pixels. Do not draw a classic tube telescope, people, planets, a spacecraft scene, or a busy star field. This is an illustrative interpretation, not documentary scientific evidence.
 
 生成された元PNGは利用者の`.codex/generated_images`に保持。実装資材は既存sharpでサイズ・圧縮のみ変換した。
+
+## PLUTO editorial v1（利用者提供、2026-11-12）
+
+- `public/theme-assets/pluto-editorial-v1.jpg`、1600×900 JPEG、566,699 bytes。提供PNG1672×941／3,224,150 bytesを縦横比を保って軽量化。新規生成・切抜き・注釈焼込みは行わない。
+- 漫画原稿・アトムのモチーフと刑事ロボットを描いたテーマの挿絵。利用者がテーマ用と指定した素材で、商品写真へ流用しない。creditは「テーマ挿絵：利用者提供」。存在しない外部出典URLやAI生成という由来は補わない。
+- 同テーマのreadingBaseRevision4に紐づく共通導入・紹介・OGで利用。商品は別の利用者提供表紙をproduct-photoとして画像ID保存し、商品2版／テーマ6版へ接続する。旧商品1版は変更しない。
+- 共通schemaではillustrationのsourceUrl／termsUrlを任意にし、photoは両方必須のまま。不正URLは拒否。実測はPLUTOテーマβ登録の画像追補を参照。

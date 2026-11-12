@@ -3,7 +3,7 @@ import type {KnowledgeSnapshot, KnowledgeRecordVersion} from "./knowledge-founda
 
 const pin=z.object({id:z.string().min(1),revision:z.number().int().positive()});
 const language=z.enum(["ja","en"]);
-const image=z.object({id:z.string(),src:z.string().regex(/^\/theme-assets\/[a-zA-Z0-9._/-]+$/),width:z.number().positive(),height:z.number().positive(),kind:z.enum(["photo","illustration"]),alt:z.string(),caption:z.string(),credit:z.string(),sourceUrl:z.url(),termsUrl:z.url(),checkedAt:z.iso.date(),focus:z.string().regex(/^\d{1,3}% \d{1,3}%$/)});
+const image=z.object({id:z.string(),src:z.string().regex(/^\/theme-assets\/[a-zA-Z0-9._/-]+$/),width:z.number().positive(),height:z.number().positive(),kind:z.enum(["photo","illustration"]),alt:z.string(),caption:z.string(),credit:z.string(),sourceUrl:z.url().optional(),termsUrl:z.url().optional(),checkedAt:z.iso.date(),focus:z.string().regex(/^\d{1,3}% \d{1,3}%$/)}).refine(v=>v.kind==="illustration"||Boolean(v.sourceUrl&&v.termsUrl),"Photographs need source and usage terms URLs");
 export const themeReadingPresentationSchema=z.object({
  version:z.literal(1),theme:pin,locale:language,state:z.literal("checked"),
  hook:z.string().min(1).max(300),lead:z.string().max(1200),image:image.optional(),

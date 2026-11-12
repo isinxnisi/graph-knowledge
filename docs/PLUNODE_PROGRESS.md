@@ -1,3 +1,5 @@
+2026-11-12 PLUTOの画像追加：①挿絵／商品表紙の識別・②画像保存／商品2版／テーマ6版へ接続・③25件／lint／型検査込みbuild／3200・HTTPS βのPC・375px確認まで完了｜今回の画像対応は③まで完了、ZIP全体は19/21で残り2件。テーマ挿絵と表紙を分離し、旧商品1版／テーマ5版を保持。build `lNE9NWMjOVCeYB9Q43Mn8`。本番・既存Worker設定未変更、実ChatGPT MCPアップロード／iPhone実機未確認。[画像・表示の確認結果](verification/PLUTO_THEME_BETA_20261112.md#利用者提供の挿絵と商品表紙を追加2026-11-12)。
+
 2026-11-12 PLUTOの商品追加：①正式商品名／ASIN／小学館ビッグコミックス1〜8巻セットを確認、②漫画Entityとテーマ構成版5へ商品1版を接続、③5件／lint／型検査込みbuild／3200・HTTPS βのPC・375px確認まで完了｜商品追加の3工程は③まで完了、ZIP全体は19/21で残り2件。原典・舞台・アニメの商品取得は0件。商品画像なし、添付挿絵の流用なし。未確認言語・価格・在庫は表示せず、build `bh5OFa1t0enGDJHs8Vg_M`。G05／N05の次回は11月13日17時JST、WSL外向き通信の残障害と本番未変更を保持。[商品照合・確認結果](verification/PLUTO_THEME_BETA_20261112.md#商品の追加指定を反映2026-11-12)。
 
 2026-11-12 PC再起動後の復帰追補：②DBの公開port・β設定を引き継いだWeb／5 Worker・正式API向けPC 2 Workerを復帰、③HTTPS βのPLUTO構成版4が200・本文ありまで確認｜残りはWSLの外向きTCP timeout、今回の工程は③までで完全復帰は未完了。Docker13 containerを通常再起動後に保全復帰。Codex holdと定期収集taskを止めた状態でも外向き通信は未復旧。データ初期化・本番配置変更なし。[実測・残件](verification/PC_RESTART_RECOVERY_20261112.md#WinNat操作後の復帰と残件)。

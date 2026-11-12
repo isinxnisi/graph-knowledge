@@ -1185,6 +1185,18 @@
         "shortTitle": "アニメの原作となった",
         "explanations": []
       }
-    ]
+    ],
+    "image": {
+      "id": "pluto-editorial-v1",
+      "src": "/theme-assets/pluto-editorial-v1.jpg",
+      "width": 1600,
+      "height": 900,
+      "kind": "illustration",
+      "alt": "アトムのモチーフと刑事ロボット、漫画原稿や歯車を描いたテーマの挿絵。",
+      "caption": "原作のモチーフとPLUTOの再構築をイメージしたテーマ挿絵。",
+      "credit": "テーマ挿絵：利用者提供",
+      "checkedAt": "2026-11-12",
+      "focus": "50% 50%"
+    }
   }
 ]
