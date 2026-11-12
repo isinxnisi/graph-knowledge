@@ -808,5 +808,383 @@
         "chapterQuestion": "What did the unfolded telescope reveal?"
       }
     ]
+  },
+  {
+    "version": 1,
+    "theme": {
+      "id": "theme:df8040bd38f635390870263b9f50b557e9be444f53695e06",
+      "revision": 3
+    },
+    "locale": "ja",
+    "state": "checked",
+    "hook": "憧れの『アトム』を描き直す。なぜ、主人公に選ばれたのは刑事ロボットだったのか。",
+    "lead": "手塚治虫の一編と、浦沢直樹・長崎尚志・手塚眞。原作との出会いから『PLUTO』誕生、舞台・アニメへの広がりをたどる。",
+    "records": [
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:349adda18070c35868dd2562d9804be2",
+          "revision": 1
+        },
+        "shortTitle": "『アトム』「史上最大のロボット」連載",
+        "explanations": [
+          {
+            "record": {
+              "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:eda4477d0db099116e25d4369d8568cb",
+              "revision": 1
+            },
+            "role": "background"
+          }
+        ],
+        "timelineSummary": "『アトム』「史上最大のロボット」連載。",
+        "chapterQuestion": "なぜ、この一編が忘れられなかった？"
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:0c7ac5500ffe7c512f4cb68dc7de0649",
+          "revision": 1
+        },
+        "shortTitle": "単行本化で「地上最大のロボット」へ改題",
+        "explanations": [],
+        "timelineSummary": "単行本化で「地上最大のロボット」へ改題。"
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:d5957ee6484e4e9bb647a0ead68bb092",
+          "revision": 1
+        },
+        "shortTitle": "『PLUTO』連載開始",
+        "explanations": [
+          {
+            "record": {
+              "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:53d412af75f697813c53030c695cbfba",
+              "revision": 1
+            },
+            "role": "background"
+          },
+          {
+            "record": {
+              "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:bf66de41765b3359c62296fd16eca27d",
+              "revision": 1
+            },
+            "role": "background"
+          },
+          {
+            "record": {
+              "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:495394a535b897075b76fa04b365a00e",
+              "revision": 1
+            },
+            "role": "background"
+          }
+        ],
+        "timelineSummary": "『PLUTO』連載開始。",
+        "chapterQuestion": "どうして主人公は、アトムではなくゲジヒト？"
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:3a3769a88f2344923b4a2387e68096e3",
+          "revision": 1
+        },
+        "shortTitle": "『PLUTO』第1巻発売",
+        "explanations": [],
+        "timelineSummary": "『PLUTO』第1巻発売。"
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:71e06e8a88a2f173cc215512eece0e4d",
+          "revision": 1
+        },
+        "shortTitle": "『PLUTO』完結巻の第8巻発売",
+        "explanations": [],
+        "timelineSummary": "『PLUTO』完結巻の第8巻発売。"
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:72431ffa1408ad57227fcaa803c54462",
+          "revision": 1
+        },
+        "shortTitle": "舞台『プルートゥ PLUTO』東京公演",
+        "explanations": [],
+        "timelineSummary": "舞台『プルートゥ PLUTO』東京公演。"
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:623e71719f5ef66941d872dc3395c214",
+          "revision": 1
+        },
+        "shortTitle": "アニメ『PLUTO』、Netflixで配信開始",
+        "explanations": [],
+        "timelineSummary": "アニメ『PLUTO』、Netflixで配信開始。"
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:eda4477d0db099116e25d4369d8568cb",
+          "revision": 1
+        },
+        "shortTitle": "なぜ、この一編が忘れられなかった？",
+        "explanations": []
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:53d412af75f697813c53030c695cbfba",
+          "revision": 1
+        },
+        "shortTitle": "架空の誕生日が、現実の企画のきっかけに",
+        "explanations": []
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:bf66de41765b3359c62296fd16eca27d",
+          "revision": 1
+        },
+        "shortTitle": "どうして主人公は、アトムではなくゲジヒト？",
+        "explanations": []
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:495394a535b897075b76fa04b365a00e",
+          "revision": 1
+        },
+        "shortTitle": "描き直す構想が、実際の制作へ",
+        "explanations": []
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:746432d14c0f2efd2dff68263fdb7989",
+          "revision": 1
+        },
+        "shortTitle": "描いた",
+        "explanations": []
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:41cee67c905fc209f8cd0de8645a6441",
+          "revision": 1
+        },
+        "shortTitle": "一編として含む",
+        "explanations": []
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:9521c113ead1e7c745b72d56e7713c5c",
+          "revision": 1
+        },
+        "shortTitle": "原典とする",
+        "explanations": [],
+        "chapterQuestion": "原作から何を受け継いだ？"
+      },
+      {
+        "target": {
+          "id": "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+          "revision": 1
+        },
+        "shortTitle": "プロデュース",
+        "explanations": []
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:6f69107219f5b46a4c51e9d7d8029aed",
+          "revision": 1
+        },
+        "shortTitle": "舞台の原作となった",
+        "explanations": []
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:2bc513a69f1c613421325320182ef783",
+          "revision": 1
+        },
+        "shortTitle": "アニメの原作となった",
+        "explanations": []
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "theme": {
+      "id": "theme:df8040bd38f635390870263b9f50b557e9be444f53695e06",
+      "revision": 4
+    },
+    "locale": "ja",
+    "state": "checked",
+    "hook": "憧れの『アトム』を描き直す。なぜ、主人公に選ばれたのは刑事ロボットだったのか。",
+    "lead": "手塚治虫の一編と、浦沢直樹・長崎尚志・手塚眞。原作との出会いから『PLUTO』誕生、舞台・アニメへの広がりをたどる。",
+    "records": [
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:349adda18070c35868dd2562d9804be2",
+          "revision": 1
+        },
+        "shortTitle": "『アトム』「史上最大のロボット」連載",
+        "explanations": [
+          {
+            "record": {
+              "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:eda4477d0db099116e25d4369d8568cb",
+              "revision": 1
+            },
+            "role": "background"
+          }
+        ],
+        "timelineSummary": "『アトム』「史上最大のロボット」連載。",
+        "chapterQuestion": "なぜ、この一編が忘れられなかった？"
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:0c7ac5500ffe7c512f4cb68dc7de0649",
+          "revision": 1
+        },
+        "shortTitle": "単行本化で「地上最大のロボット」へ改題",
+        "explanations": [],
+        "timelineSummary": "単行本化で「地上最大のロボット」へ改題。"
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:d5957ee6484e4e9bb647a0ead68bb092",
+          "revision": 1
+        },
+        "shortTitle": "『PLUTO』連載開始",
+        "explanations": [
+          {
+            "record": {
+              "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:53d412af75f697813c53030c695cbfba",
+              "revision": 1
+            },
+            "role": "background"
+          },
+          {
+            "record": {
+              "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:bf66de41765b3359c62296fd16eca27d",
+              "revision": 1
+            },
+            "role": "background"
+          },
+          {
+            "record": {
+              "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:495394a535b897075b76fa04b365a00e",
+              "revision": 1
+            },
+            "role": "background"
+          }
+        ],
+        "timelineSummary": "『PLUTO』連載開始。",
+        "chapterQuestion": "どうして主人公は、アトムではなくゲジヒト？"
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:3a3769a88f2344923b4a2387e68096e3",
+          "revision": 1
+        },
+        "shortTitle": "『PLUTO』第1巻発売",
+        "explanations": [],
+        "timelineSummary": "『PLUTO』第1巻発売。"
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:71e06e8a88a2f173cc215512eece0e4d",
+          "revision": 1
+        },
+        "shortTitle": "『PLUTO』完結巻の第8巻発売",
+        "explanations": [],
+        "timelineSummary": "『PLUTO』完結巻の第8巻発売。"
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:72431ffa1408ad57227fcaa803c54462",
+          "revision": 1
+        },
+        "shortTitle": "舞台『プルートゥ PLUTO』東京公演",
+        "explanations": [],
+        "timelineSummary": "舞台『プルートゥ PLUTO』東京公演。"
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:623e71719f5ef66941d872dc3395c214",
+          "revision": 1
+        },
+        "shortTitle": "アニメ『PLUTO』、Netflixで配信開始",
+        "explanations": [],
+        "timelineSummary": "アニメ『PLUTO』、Netflixで配信開始。"
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:eda4477d0db099116e25d4369d8568cb",
+          "revision": 1
+        },
+        "shortTitle": "なぜ、この一編が忘れられなかった？",
+        "explanations": []
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:53d412af75f697813c53030c695cbfba",
+          "revision": 1
+        },
+        "shortTitle": "架空の誕生日が、現実の企画のきっかけに",
+        "explanations": []
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:bf66de41765b3359c62296fd16eca27d",
+          "revision": 1
+        },
+        "shortTitle": "どうして主人公は、アトムではなくゲジヒト？",
+        "explanations": []
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:495394a535b897075b76fa04b365a00e",
+          "revision": 1
+        },
+        "shortTitle": "描き直す構想が、実際の制作へ",
+        "explanations": []
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:746432d14c0f2efd2dff68263fdb7989",
+          "revision": 1
+        },
+        "shortTitle": "描いた",
+        "explanations": []
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:41cee67c905fc209f8cd0de8645a6441",
+          "revision": 1
+        },
+        "shortTitle": "一編として含む",
+        "explanations": []
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:9521c113ead1e7c745b72d56e7713c5c",
+          "revision": 1
+        },
+        "shortTitle": "原典とする",
+        "explanations": [],
+        "chapterQuestion": "原作から何を受け継いだ？"
+      },
+      {
+        "target": {
+          "id": "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+          "revision": 1
+        },
+        "shortTitle": "プロデュース",
+        "explanations": []
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:6f69107219f5b46a4c51e9d7d8029aed",
+          "revision": 1
+        },
+        "shortTitle": "舞台の原作となった",
+        "explanations": []
+      },
+      {
+        "target": {
+          "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:record:2bc513a69f1c613421325320182ef783",
+          "revision": 1
+        },
+        "shortTitle": "アニメの原作となった",
+        "explanations": []
+      }
+    ]
   }
 ]

@@ -34,5 +34,59 @@
     "revision": 1,
     "ja": "望遠鏡と太陽の間に広げる5層の薄い膜。太陽・地球・月からの熱を遮り、かすかな赤外線をとらえるために鏡や機器を低温に保つ。",
     "en": "Five thin layers stretched between the telescope and the Sun. They shield the mirrors and instruments from heat from the Sun, Earth and Moon so Webb can detect faint infrared light."
+  },
+  {
+    "id": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+    "revision": 1,
+    "ja": "『鉄腕アトム』の一編を原典に、刑事ロボットの視点で描き直した漫画。全8巻。",
+    "en": "A manga that retells an Astro Boy story from a detective robot’s perspective. Eight volumes."
+  },
+  {
+    "id": "bfe1cb3f-a174-4e4f-b4df-a06590f66c4e",
+    "revision": 1,
+    "ja": "ロボットの少年アトムを主人公とする、手塚治虫の漫画。",
+    "en": "Osamu Tezuka’s manga about the robot boy Atom."
+  },
+  {
+    "id": "d900543a-9c11-48c1-be76-1822b756fcc4",
+    "revision": 1,
+    "ja": "『PLUTO』を描いた漫画家。幼い頃から原典を繰り返し読んでいた。",
+    "en": "The manga artist behind PLUTO. He repeatedly read the original story as a young child."
+  },
+  {
+    "id": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+    "revision": 1,
+    "ja": "『PLUTO』のプロデュースを担当。浦沢と物語の構想を練った編集者・共同制作者。",
+    "en": "The producer of PLUTO, who developed the story concept with Urasawa."
+  },
+  {
+    "id": "bdb742c2-2973-4c1c-a523-c828374111fc",
+    "revision": 1,
+    "ja": "『PLUTO』の監修者。原作の作者・手塚治虫の息子。",
+    "en": "The supervisor of PLUTO and the son of Osamu Tezuka."
+  },
+  {
+    "id": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+    "revision": 1,
+    "ja": "『鉄腕アトム』と、その一編「地上最大のロボット」の作者。",
+    "en": "The creator of Astro Boy, including the story that inspired PLUTO."
+  },
+  {
+    "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:entity:baba7bc53912bfc74486b2f6e5d7c468",
+    "revision": 1,
+    "ja": "『鉄腕アトム』の一編で、『PLUTO』の原典。連載時の題名は「史上最大のロボット」。",
+    "en": "The Astro Boy story that inspired PLUTO. Its Japanese title changed when it was published in book form."
+  },
+  {
+    "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:entity:9ce04a359739aba74b522418eb28cce1",
+    "revision": 1,
+    "ja": "漫画『PLUTO』を原作とする舞台作品。2015年に初演された。",
+    "en": "The stage adaptation of the PLUTO manga, performed at Theatre Cocoon in Tokyo in 2015."
+  },
+  {
+    "id": "import:web.69061183f5a3f7ee5df257644a91097e21522e7663db4243:entity:4805b6b586c765ff66c08aa844c31c17",
+    "revision": 1,
+    "ja": "漫画『PLUTO』をアニメ化した、2023年配信のシリーズ。",
+    "en": "The animated adaptation of the PLUTO manga, released on Netflix on October 26, 2023."
   }
 ]

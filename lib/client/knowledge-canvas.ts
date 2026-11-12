@@ -5,10 +5,10 @@ import type {KnowledgeTranslationVersion} from "../domain/knowledge-translation"
 import {knowledgeDisplayText,knowledgeEntityDisplayName} from "../domain/knowledge-display";
 type EntityNotes = readonly {target:{id:string;revision:number};text:string}[];
 export function entityCaption(e:KnowledgeEntityVersion,records:readonly KnowledgePublishedRecord[],translations:readonly KnowledgeTranslationVersion[]|undefined,locale:string,notes?:EntityNotes){
- const original=e.content.description?.trim();
- if(original) return knowledgeDisplayText(translations,{kind:"entity",id:e.id,revision:e.revision,field:"description"},locale,e.content.description);
  const note=notes?.find(n=>n.target.id===e.id&&n.target.revision===e.revision);
  if(note)return note.text;
+ const original=e.content.description?.trim();
+ if(original) return knowledgeDisplayText(translations,{kind:"entity",id:e.id,revision:e.revision,field:"description"},locale,e.content.description);
  const r=records.find(({record:{content:c}})=>c.evidence.length>0&&(c.subjectId===e.id||c.objectId===e.id))?.record;
  return r?(locale==="en"?"In this record: ":"記録では：")+knowledgeDisplayText(translations,{kind:"record",id:r.id,revision:r.revision,field:"assertion"},locale,r.content.assertion):undefined;
 }

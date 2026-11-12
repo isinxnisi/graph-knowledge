@@ -52,7 +52,26 @@ export async function publicSourceDocument(raw:string,options:{allowedHosts?:str
 }
 type TreeNode=DefaultTreeAdapterMap['node'];
 export function sourceText(document:SourceDocument){
- const charset=/charset\s*=\s*["']?([^\s;"']+)/i.exec(document.type)?.[1]??'utf-8';
+ // Older public archives declare their encoding in HTML rather than HTTP.
+ // Inspect only the bounded ASCII-compatible preamble; never guess after a
+ // failed decode or replace malformed bytes in evidence text.
+ let charset=/charset\s*=\s*["']?([^\s;"']+)/i.exec(document.type)?.[1];
+ if(!charset&&document.body.subarray(0,3).equals(Buffer.from([0xef,0xbb,0xbf])))charset='utf-8';
+ if(!charset&&!document.type.startsWith('text/plain')){
+  const preamble=parse(document.body.subarray(0,1024).toString('latin1'));
+  function declared(node:TreeNode):string|undefined{
+   if('tagName' in node&&node.tagName==='meta'){
+    const attrs=new Map(node.attrs.map(a=>[a.name,a.value]));
+    const direct=attrs.get('charset');if(direct)return direct.trim();
+    if(attrs.get('http-equiv')?.toLowerCase()==='content-type'){
+     const value=/charset\s*=\s*["']?([^\s;"']+)/i.exec(attrs.get('content')??'')?.[1];if(value)return value;
+    }
+   }
+   if('childNodes' in node)for(const child of node.childNodes){const value=declared(child);if(value)return value;}
+  }
+  charset=declared(preamble);
+ }
+ charset??='utf-8';
  let decoded:string;try{decoded=new TextDecoder(charset,{fatal:true}).decode(document.body);}catch{throw new SourceCheckError("資料の文字コードを読めません。別の公開資料を指定してください。");}
  if(document.type.startsWith('text/plain'))return decoded;
  const root=parse(decoded);const blocks=new Set(['p','div','li','h1','h2','h3','h4','section','article','br','tr','td']);

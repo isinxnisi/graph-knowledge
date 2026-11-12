@@ -2,6 +2,21 @@ import {describe,it,expect} from 'vitest';
 import {sourceURL,publicSourceAddress,matchSourceExcerpt,sourceText,normalizeSourceText} from '../lib/server/knowledge-source-verification';
 const doc=(html:string)=>({url:'https://example.org/source',type:'text/html; charset=utf-8',body:Buffer.from(html)});
 describe('public source verification',()=>{
+ it('reads an archive declaring Shift_JIS in HTML without a HTTP charset',()=>{
+  const value={url:'https://example.org/archive',type:'text/html',body:Buffer.concat([Buffer.from('<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS"><p>'),Buffer.from([0x93,0xfa,0x96,0x7b]),Buffer.from('</p>')])};
+  expect(normalizeSourceText(sourceText(value))).toBe('日本');
+  expect(matchSourceExcerpt(value,'日本').bodySha256).toMatch(/^[a-f0-9]{64}$/);
+ });
+ it('honors HTTP and UTF-8 BOM ahead of a contradictory HTML declaration',()=>{
+  const html='<meta charset="Shift_JIS"><p>日本</p>';
+  expect(normalizeSourceText(sourceText(doc(html)))).toBe('日本');
+  expect(normalizeSourceText(sourceText({url:'https://example.org',type:'text/html',body:Buffer.concat([Buffer.from([0xef,0xbb,0xbf]),Buffer.from(html)])}))).toBe('日本');
+ });
+ it('does not guess encodings from scripts, late declarations or malformed bytes',()=>{
+  const body=Buffer.from([0x93,0xfa,0x96,0x7b]);
+  for(const prefix of ['<script>"<meta charset=Shift_JIS>"</script>', ' '.repeat(1024)+'<meta charset=Shift_JIS>'])expect(()=>sourceText({url:'https://example.org',type:'text/html',body:Buffer.concat([Buffer.from(prefix),body])})).toThrow('文字コード');
+  expect(()=>sourceText({url:'https://example.org',type:'text/plain',body})).toThrow('文字コード');
+ });
  it.each(['127.0.0.1','10.0.0.1','192.168.1.1','169.254.169.254','100.64.0.1','0.0.0.0','::1','fc00::1','fe80::1','::ffff:127.0.0.1','2001:db8::1'])('rejects internal and special destinations %s',address=>expect(publicSourceAddress(address)).toBe(false));
  it.each(['8.8.8.8','2606:4700:4700::1111'])('permits global addresses %s',address=>expect(publicSourceAddress(address)).toBe(true));
  it.each(['http://example.org','https://user:password@example.org','https://example.org:8443','file:///etc/passwd','https://example.org.'])('rejects unsafe URL %s',url=>expect(()=>sourceURL(url)).toThrow());
