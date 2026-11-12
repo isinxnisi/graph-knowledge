@@ -1,3 +1,5 @@
+2026-11-12 PC再起動後の復帰：①Docker・DB・Kev・既存build／HTTPS β TOP確認、②正式API向けPC Worker 2本を復帰｜残りはWinNatの本人管理者操作とβ DB／5 Worker／テーマ確認｜今回の工程は③まで、復帰全体は未完了。Windows除外範囲に55476番が重なりβ知識DBへ接続不可。データ削除・再build・本番配置変更なし。[確認・再開](verification/PC_RESTART_RECOVERY_20261112.md)。
+
 2026-11-12 PLUTOテーマのβ登録：①既存原本・公式資料照合、②19/21件を構成版4へ反映、③37件／lint／型検査込みbuild／3200・HTTPS βのPC・375px確認まで完了｜今回の3工程は③まで、残りは未公開2件の通常再試行・同テーマへの追加と確認1バッチ目安。G05制作協力・N05原作の読み解き方は項目単位の日次再試行上限で17:00 JST以降待ち、依頼全体は未完了。7年表・4制作秘話・8関係、9 Entity・12資料断面。build `2NAbX7Dbm5DrL_ZkbEdNL`。商品は未確認の草稿を保持し未掲載。実ChatGPT MCP authoring／iPhone実機未確認、本番未変更。[登録結果・再開条件](verification/PLUTO_THEME_BETA_20261112.md)。以下は各時点の履歴。
 
 2026-11-12 関係図切替のhover残留を是正：①375pxで開閉両方が同じhover色になる現象を再現・②実際のpressed状態に背景色を固定・③型検査込みbuild／3200・HTTPS βの開閉とキーボードfocus確認まで完了｜今回の3工程は③まで完了。build `gbL2f6WfuM6VNJUUgIj0E`。フォーカスを外さずに閉状態が透明へ変わることを確認。iPhone実機未確認、本番未変更。[追補](verification/TIMELINE_MOBILE_FLOW_20261112.md#追補関係図切替のhover残留)。以下は各時点の履歴。
