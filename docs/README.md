@@ -1,3 +1,5 @@
+2026-11-12 ChatGPTからのテーマ一式登録・更新：[現行契約](design/THEME_AUTHORING_COMPLETE_20261112.md)／[β実測と実ChatGPT接続の残件](verification/THEME_AUTHORING_COMPLETE_20261112.md)。任意テーマの導入・挿絵・商品・購入先をAPIへ接続。実ChatGPT添付の一巡は未了、本番未変更。
+
 2026-11-11 探索画面全体のデザイン調整：[共通ルール・変更前後・βの確認範囲](verification/EXPLORER_DESIGN_UNIFICATION_20261111.md)。TOP・通常Graph・テーマ・左右ペインを調整、3200／HTTPS βへ反映。本番未変更。
 
 2026-11-10 商品カード・運営画像APIをローカル3200／HTTPS βへ反映：[設計と登録経路](design/PRODUCT_CARDS_OPERATOR_IMAGES_20261110.md)／[画面・実測・接続状況](verification/PRODUCT_CARDS_OPERATOR_IMAGES_20261110.md)。本番は未変更。

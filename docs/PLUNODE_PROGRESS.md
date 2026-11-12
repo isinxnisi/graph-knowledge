@@ -1,3 +1,5 @@
+2026-11-12 テーマ一式の汎用API：①保存契約・②実装／14件unit・25件統合／lint／型検査込みbuild／3200・HTTPS βの登録表示まで完了｜残りは③実ChatGPTの添付・作成・更新、全体は③まで。build `MGxwzESwlt2PfPhUEXpBn`。画像HTTP→商品3版→同一Theme7版、旧版保持とSEOを確認。実ChatGPT再接続はclient metadataの5秒timeout、旧beta Appのcompose scope接続も未了。実会話成功とは扱わず、本番未変更。[契約](design/THEME_AUTHORING_COMPLETE_20261112.md)／[実測と再開](verification/THEME_AUTHORING_COMPLETE_20261112.md)。
+
 2026-11-12 PLUTOの画像追加：①挿絵／商品表紙の識別・②画像保存／商品2版／テーマ6版へ接続・③25件／lint／型検査込みbuild／3200・HTTPS βのPC・375px確認まで完了｜今回の画像対応は③まで完了、ZIP全体は19/21で残り2件。テーマ挿絵と表紙を分離し、旧商品1版／テーマ5版を保持。build `lNE9NWMjOVCeYB9Q43Mn8`。本番・既存Worker設定未変更、実ChatGPT MCPアップロード／iPhone実機未確認。[画像・表示の確認結果](verification/PLUTO_THEME_BETA_20261112.md#利用者提供の挿絵と商品表紙を追加2026-11-12)。
 
 2026-11-12 PLUTOの商品追加：①正式商品名／ASIN／小学館ビッグコミックス1〜8巻セットを確認、②漫画Entityとテーマ構成版5へ商品1版を接続、③5件／lint／型検査込みbuild／3200・HTTPS βのPC・375px確認まで完了｜商品追加の3工程は③まで完了、ZIP全体は19/21で残り2件。原典・舞台・アニメの商品取得は0件。商品画像なし、添付挿絵の流用なし。未確認言語・価格・在庫は表示せず、build `bh5OFa1t0enGDJHs8Vg_M`。G05／N05の次回は11月13日17時JST、WSL外向き通信の残障害と本番未変更を保持。[商品照合・確認結果](verification/PLUTO_THEME_BETA_20261112.md#商品の追加指定を反映2026-11-12)。

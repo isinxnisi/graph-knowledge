@@ -21,6 +21,10 @@ export async function validateProductPins(c:Pool|PoolClient,pins:{id:string;revi
 /** Every write uses the same operator authorization, immutable versions and replay contract on HTTP and MCP. */
 export async function dispatchProductAuthoring(pool:Pool,owner:string,raw:ProductAuthoringCommand){
  const command=productAuthoringCommandSchema.parse(raw);await authorizeProductOperator(pool,owner);
+ if(command.action==="find-products"){
+  const rows=(await pool.query(`WITH current AS(SELECT DISTINCT ON(id) id,revision,content FROM product_editorial_version ORDER BY id,revision DESC) SELECT id,revision,content FROM current WHERE position(lower($1) in lower(content::text))>0 ORDER BY id OFFSET $2 LIMIT 21`,[command.query,command.cursor])).rows;
+  return {products:rows.slice(0,20).map(v=>({id:v.id,revision:v.revision,...v.content})),nextCursor:rows.length>20?command.cursor+20:null};
+ }
  if(command.action==="read-product")return readEditorialProduct(pool,command.id,command.revision);
  const digest=createHash("sha256").update(JSON.stringify(command)).digest("hex");
  // Bound and validate binary before obtaining a database transaction; no temporary file is created.
@@ -68,13 +72,16 @@ export async function collectUnusedProductImages(pool:Pool){return memberTransac
  const due=await c.query("INSERT INTO product_asset_maintenance VALUES(true,clock_timestamp()) ON CONFLICT(singleton) DO UPDATE SET last_run=EXCLUDED.last_run WHERE product_asset_maintenance.last_run<clock_timestamp()-interval '1 day' RETURNING singleton");if(!due.rowCount)return 0;
  // Serialize GC with upload/product association so an asset cannot disappear mid-link.
  await c.query("SELECT pg_advisory_xact_lock(hashtextextended('product-editorial',0))");
- return (await c.query("DELETE FROM product_image_asset WHERE id IN(SELECT a.id FROM product_image_asset a WHERE a.created_at<clock_timestamp()-interval '7 days' AND NOT EXISTS(SELECT 1 FROM product_editorial_version p WHERE p.image_id=a.id) LIMIT 100)" )).rowCount??0;
+ const hasThemeRefs=Boolean((await c.query("SELECT to_regclass('theme_editorial_asset_reference') AS ready")).rows[0].ready);
+ const themeRetention=hasThemeRefs?" AND NOT EXISTS(SELECT 1 FROM theme_editorial_asset_reference t JOIN knowledge_missions.theme_registrations r ON r.request_id=t.request_id WHERE t.image_id=a.id AND (t.published OR r.state IN('saved','processing') OR t.created_at>clock_timestamp()-interval '7 days'))":'';
+ if(hasThemeRefs)await c.query("DELETE FROM theme_editorial_asset_reference t USING knowledge_missions.theme_registrations r WHERE r.request_id=t.request_id AND NOT t.published AND r.state NOT IN('saved','processing') AND t.created_at<clock_timestamp()-interval '7 days'");
+ return (await c.query("DELETE FROM product_image_asset WHERE id IN(SELECT a.id FROM product_image_asset a WHERE a.created_at<clock_timestamp()-interval '7 days' AND NOT EXISTS(SELECT 1 FROM product_editorial_version p WHERE p.image_id=a.id)"+themeRetention+" LIMIT 100)" )).rowCount??0;
 });}
 export async function editorialCatalogue(pool:Pool,pins:{id:string;revision:number}[],theme:{id:string;revision:number},base:ProductCatalogue){
  const catalog:ProductCatalogue={products:[...base.products],offers:[...base.offers],recommendations:[...base.recommendations]};
  for(const [order,pin] of pins.entries()){
   const v=await readEditorialProduct(pool,pin.id,pin.revision),p=productSchema.parse(v.product);
-  if(p.imageId){const a=(await pool.query('SELECT a.role,a.alt,a.width,a.height,p.content AS provenance FROM product_image_asset a JOIN product_image_provenance p ON p.id=a.provenance_id WHERE a.id=$1',[p.imageId])).rows[0];if(a)p.image={url:'/api/knowledge/product-images/'+p.imageId,width:a.width,height:a.height,role:a.role,alt:a.alt,...(a.provenance.kind==='licensed'&&a.provenance.credit?{credit:a.provenance.credit,creditUrl:a.provenance.sourceUrl}:{})};}
+  if(p.imageId){const a=(await pool.query('SELECT a.role,a.alt,a.width,a.height,p.content AS provenance FROM product_image_asset a JOIN product_image_provenance p ON p.id=a.provenance_id WHERE a.id=$1',[p.imageId])).rows[0];if(a)p.image={url:'/api/knowledge/product-images/'+p.imageId,width:a.width,height:a.height,role:a.role,alt:a.alt,...(a.provenance.credit&&(a.provenance.creditDisplay==='public'||a.provenance.kind==='licensed'&&a.provenance.creditDisplay!=='internal')?{credit:a.provenance.credit,creditUrl:a.provenance.sourceUrl}:{})};}
   catalog.products=catalog.products.filter(old=>old.id!==p.id);catalog.products.unshift(p);
   catalog.offers=catalog.offers.filter(o=>o.productId!==p.id);catalog.offers.push(...v.offers);
   catalog.recommendations=catalog.recommendations.filter(rec=>rec.productId!==p.id);

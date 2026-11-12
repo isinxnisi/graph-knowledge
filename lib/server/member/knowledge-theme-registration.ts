@@ -1,5 +1,7 @@
+import {themeReadingPresentation} from '../theme-reading-presentation';
+import {downloadEditorialFile} from '../editorial-file-download';
 import {Pool} from 'pg';
-import {dispatchProductAuthoring} from './product-editorial';
+import {dispatchProductAuthoring,readEditorialProduct} from './product-editorial';
 import {MemberError} from './http';
 import {createThemeTranslationAuthoring} from '../knowledge-theme-translation';
 import {z} from 'zod';
@@ -25,14 +27,22 @@ export async function dispatchThemeRegistration(owner:string,raw:ThemeRegistrati
  try{
   const command=themeRegistrationCommandSchema.parse(raw);
   await registration.authorize(owner);
-  if(command.action==="upload-product-image"||command.action==="save-product"||command.action==="read-product")return await dispatchProductAuthoring(memberRuntime().pool,owner,command);
+  if(command.action==='upload-editorial-image'){
+   const {file,purpose,action,...metadata}=command;void action;
+   const bytes=await downloadEditorialFile(file.download_url);
+   return await dispatchProductAuthoring(memberRuntime().pool,owner,{action:'upload-product-image',...metadata,role:purpose==='product-photo'?'product-photo':'illustration',base64:bytes.toString('base64')});
+  }
+  if(command.action==="upload-product-image"||command.action==="save-product"||command.action==="read-product"||command.action==="find-products")return await dispatchProductAuthoring(memberRuntime().pool,owner,command);
   if(command.action==='read-translation'){const {action,...input}=command;void action;return await translations!.read(owner,input);}
   if(command.action==='submit-translation'){const {action,...input}=command;void action;return await translations!.submit(owner,input);}
   if(command.action==='translation-status')return await translations!.status(owner,command.requestId);
   if(command.action==='cancel-translation')return await translations!.cancel(owner,command.requestId);
   if(command.action==='theme-guide')return themeAuthoringGuide();
   if(command.action==='find-themes')return await reader!.find('theme',command.query,command.cursor);
-  if(command.action==='read-theme')return await reader!.read(command.theme,command.revision);
+  if(command.action==='read-theme'){
+   const result=await reader!.read(command.theme,command.revision);
+   return {...result,presentation:result.theme.content.reading??['ja','en'].map(locale=>themeReadingPresentation(result.theme,locale,result.snapshot)).filter(Boolean),products:await Promise.all((result.theme.content.productPins??[]).map(pin=>readEditorialProduct(memberRuntime().pool,pin.id,pin.revision)))};
+  }
   if(command.action==='find-knowledge')return await reader!.find(command.kind,command.query,command.cursor);
   if(command.action==='read-knowledge')return await reader!.knowledge(command.kind,command.id,command.revision);
   if(command.action==='theme-status')return await registration.status(owner,command.requestId);

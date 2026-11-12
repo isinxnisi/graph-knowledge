@@ -1,3 +1,4 @@
+import {editorialReferenceError,retainedThemeEditorial} from './theme-editorial';
 import {knowledgeTextTargetSchema,knowledgeOriginalText,type KnowledgeTextTarget} from "../domain/knowledge-translation";
 import {assertTranslationSchema} from "./knowledge-translation-migrate";
 import {putTranslation,storedTranslation,translationId,translationHash} from "./knowledge-translation-storage";
@@ -426,7 +427,8 @@ export function createKnowledgeFoundationService(pool: Pool,options:{prepareSche
         result = await put(cmd.kind, cmd.id, content, cmd.expectedRevision + 1, cmd.reason);
       } else if (cmd.action === "create-theme") {
         const snapshot = await capture(c, cmd.recordPins, { entityPins: cmd.entityPins, sourcePins: cmd.sourcePins, timeline: cmd.timeline, initialView: cmd.initialView, publicOnly: true });
-        result = await put("theme", cmd.id, { title: cmd.title, description: cmd.description, ...(cmd.productPins ? {productPins:cmd.productPins}:{}), ...(cmd.textLanguages ? { textLanguages: cmd.textLanguages } : {}), ...snapshotPins(snapshot), ...(cmd.timeline ? { timeline: cmd.timeline } : {}), initialView: cmd.initialView }, 1, cmd.reason);
+        if(cmd.reading){const issue=editorialReferenceError(cmd.reading,snapshot);if(issue)throw new KnowledgeError(issue,400,'THEME_EDITORIAL_REFERENCE');}
+        result = await put("theme", cmd.id, { ...(cmd.reading?{reading:cmd.reading}:{}),title: cmd.title, description: cmd.description, ...(cmd.productPins ? {productPins:cmd.productPins}:{}), ...(cmd.textLanguages ? { textLanguages: cmd.textLanguages } : {}), ...snapshotPins(snapshot), ...(cmd.timeline ? { timeline: cmd.timeline } : {}), initialView: cmd.initialView }, 1, cmd.reason);
       } else if (cmd.action === "edit-theme") {
         const h = await head(c, "theme", cmd.id, "FOR UPDATE"); expected(h.current_revision, cmd.expectedRevision);
         if(h.visibility!=="public")throw new KnowledgeError("公開中のテーマを選び直してください",409,"REFERENCE_NOT_PUBLIC");
@@ -441,7 +443,9 @@ export function createKnowledgeFoundationService(pool: Pool,options:{prepareSche
           return p?[{id:p.id,revision:p.revision}]:[];
         });
         const snapshot=await capture(c,cmd.recordPins,{entityPins,mappingPins,timeline:cmd.timeline,initialView:cmd.initialView,publicOnly:true});
-        const content={title:cmd.title,description:cmd.description,...((cmd.productPins??old.content.productPins)?{productPins:cmd.productPins??old.content.productPins}:{}),...(cmd.textLanguages?{textLanguages:cmd.textLanguages}:{}),...snapshotPins(snapshot),...(cmd.timeline?{timeline:cmd.timeline}:{}),initialView:cmd.initialView};
+        const reading=cmd.reading??retainedThemeEditorial(old.content.reading,snapshot);
+        if(reading){const issue=editorialReferenceError(reading,snapshot);if(issue)throw new KnowledgeError(issue,400,'THEME_EDITORIAL_REFERENCE');}
+        const content={...(reading?{reading}:{}),title:cmd.title,description:cmd.description,...((cmd.productPins??old.content.productPins)?{productPins:cmd.productPins??old.content.productPins}:{}),...(cmd.textLanguages?{textLanguages:cmd.textLanguages}:{}),...snapshotPins(snapshot),...(cmd.timeline?{timeline:cmd.timeline}:{}),initialView:cmd.initialView};
         // Product selection is editorial metadata: preserve the checked reading/SEO
         // presentation only when every knowledge/text/time pin is unchanged.
         const readingBody=(value:Record<string,unknown>)=>{const {productPins,readingBaseRevision,...body}=value;void productPins;void readingBaseRevision;return knowledgeDigest(body);};
@@ -461,7 +465,7 @@ export function createKnowledgeFoundationService(pool: Pool,options:{prepareSche
           records.push(...cmd.recordPins);
         } else for (const p of old.content.recordPins) records.push(pin(await version(c, "record", p.id)));
         const snapshot = await capture(c, records, { entityPins: cmd.entityPins, sourcePins: cmd.sourcePins, timeline: old.content.timeline, initialView: old.content.initialView, publicOnly: h.visibility === "public" });
-        result = await put("theme", cmd.id, { ...old.content, readingBaseRevision:undefined, ...snapshotPins(snapshot) }, cmd.expectedRevision + 1, cmd.reason);
+        result = await put("theme", cmd.id, { ...old.content, reading:retainedThemeEditorial(old.content.reading,snapshot), readingBaseRevision:undefined, ...snapshotPins(snapshot) }, cmd.expectedRevision + 1, cmd.reason);
       } else if (cmd.action === "set-visibility" || cmd.action === "set-confirmation") {
         const h = await head(c, cmd.kind, cmd.id, "FOR UPDATE"); expected(h.status_revision, cmd.expectedStatusRevision);
         if (cmd.action === "set-confirmation") expected(h.current_revision, cmd.expectedContentRevision);

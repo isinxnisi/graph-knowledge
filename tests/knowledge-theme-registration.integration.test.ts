@@ -1,3 +1,6 @@
+import sharp from 'sharp';
+import {dispatchProductAuthoring,collectUnusedProductImages} from '../lib/server/member/product-editorial';
+import {themeReadingPresentation} from '../lib/server/theme-reading-presentation';
 import {beforeAll,beforeEach,afterAll,it,expect,vi} from 'vitest';
 import {Pool} from 'pg';
 import {randomUUID} from 'node:crypto';
@@ -143,4 +146,22 @@ it('accepts a new source URL and theme-only background without partially changin
  const result=await service.status(owner,v.requestId);expect(result,JSON.stringify(result)).toMatchObject({state:'published',theme:{id:t.id,revision:2}});
  const snapshot=await foundation().resolveTheme({kind:'reader',id:'fixture'},t.id);expect(snapshot.snapshot.records).toHaveLength(2);
  expect(snapshot.snapshot.sources.map(s=>s.content.url)).toContain('https://example.org/theme-background');
+});
+
+it('registers generic theme editorial data and image via normal intake, retains old editions and protects pending/published assets from GC',async()=>{
+ await migrateMemberDatabase(pool,...Array(31).fill(true));await migrateMemberDatabase(pool,...Array(31).fill(true));
+ const binary=await sharp({create:{width:240,height:120,channels:4,background:{r:10,g:90,b:120,alpha:.4}}}).png().toBuffer();
+ const image=await dispatchProductAuthoring(pool,owner,{action:'upload-product-image',requestId:randomUUID(),role:'illustration',provenance:{id:'editorial-fixture',kind:'original',credit:'',terms:'Fixture only',creditDisplay:'internal'},alt:{ja:'試験の挿絵',en:'Test illustration'},base64:binary.toString('base64')});
+ const id=String(image.imageId),v={...input(),presentation:[{locale:'ja',hook:'Aは、どんな組織？',lead:'資料からAを読む。',imageId:id,entityNotes:[{target:{id:'a',revision:1},text:'Aという組織。',supportingRecords:[{id:'baseline',revision:1}]}],records:[{target:{id:'baseline',revision:1},shortTitle:'Aの説明'}]}]};
+ await service.submit(owner,v);await pool.query("UPDATE product_image_asset SET created_at=clock_timestamp()-interval '8 days' WHERE id=$1",[id]);await collectUnusedProductImages(pool);expect((await pool.query('SELECT 1 FROM product_image_asset WHERE id=$1',[id])).rowCount).toBe(1);
+ await service.recoverOne();const status=await service.status(owner,v.requestId);expect(status).toMatchObject({state:'published',theme:{revision:1}});
+ const first=await foundation().resolveTheme({kind:'reader',id:'fixture'},status.theme!.id);expect(first.theme.content.reading?.[0].image).toMatchObject({id,width:240,height:120});
+ expect(themeReadingPresentation(first.theme,'ja',first.snapshot)).toMatchObject({hook:v.presentation[0].hook,entityNotes:[expect.objectContaining({text:'Aという組織。'})]});
+ expect((await pool.query('SELECT published FROM theme_editorial_asset_reference WHERE request_id=$1',[v.requestId])).rows[0].published).toBe(true);
+ const cleared=edit(status.theme!,{presentation:[]});await service.submit(owner,cleared);await service.recoverOne();const latest=await foundation().resolveTheme({kind:'reader',id:'fixture'},status.theme!.id);
+ expect(latest.theme.revision).toBe(2);expect(latest.theme.content.reading).toEqual([]);expect(themeReadingPresentation(latest.theme,'ja',latest.snapshot)).toBeNull();expect(first.theme.content.reading?.[0].image?.id).toBe(id);
+ await pool.query("UPDATE product_asset_maintenance SET last_run=clock_timestamp()-interval '2 days'");await collectUnusedProductImages(pool);expect((await pool.query('SELECT 1 FROM product_image_asset WHERE id=$1',[id])).rowCount).toBe(1);
+ const bad={...edit({id:latest.theme.id,revision:2},{}),changes:{presentation:[{locale:'ja',hook:'Invalid',lead:'',records:[{target:{id:'not-in-theme',revision:1},shortTitle:'Foreign record'}]}]}};
+ await service.submit(owner,bad);await service.recoverOne();expect(await service.status(owner,bad.requestId)).toMatchObject({state:'needs-changes',theme:null});
+ expect((await foundation().get({kind:'reader',id:'fixture'},'theme',latest.theme.id)).revision).toBe(2);
 });

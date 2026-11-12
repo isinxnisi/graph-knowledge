@@ -1,3 +1,4 @@
+import {reserveThemeImages,resolveThemeEditorial} from './theme-editorial';
 import {createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import path from 'node:path';
@@ -51,6 +52,8 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
    const rows=(await c.query('SELECT i.item_key,i.state FROM knowledge_import.items i JOIN knowledge_missions.web_deliveries d ON d.receipt_id=i.package_id WHERE d.request_id=$1',[r.request_id])).rows;
    issues=keys.filter(k=>!rows.some(i=>i.item_key===k&&['published','existing'].includes(i.state)));
   }
+  const presentation=r.input.target?r.input.changes?.presentation:r.input.presentation;
+  if(presentation?.some((v:{imageId?:string})=>v.imageId))await c.query('UPDATE theme_editorial_asset_reference SET published=true WHERE request_id=$1',[r.request_id]);
   await c.query("UPDATE knowledge_missions.theme_registrations SET state=$2,result=$3,reason=$4,updated_at=clock_timestamp() WHERE request_id=$1",[r.request_id,issues.length?'published-with-issues':'published',JSON.stringify({id:result.id,revision:result.revision,excludedKeys:issues}),issues.length?'確認を通った項目でテーマへ反映しました。未反映の項目は受付結果で確認できます。':'テーマへの反映が完了しました。']);
  }
  async function submit(owner:string,raw:unknown){
@@ -81,6 +84,7 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
    if(('target' in input?usage.edits>=200:usage.creations>=30)||usage.pending>=10)throw new KnowledgeError('テーマ受付の上限に達しました。処理中の結果か、次の日を待ってください。',429,'THEME_REGISTRATION_LIMIT');
    const id='target' in input?input.target.id:'theme:'+knowledgeDigest({owner,requestId:input.requestId}).slice(0,48);
    await c.query('INSERT INTO knowledge_missions.theme_registrations(request_id,owner_id,input_hash,input,theme_id) VALUES($1,$2,$3,$4,$5)',[input.requestId,owner,hash,JSON.stringify(input),id]);
+   await reserveThemeImages(c,input.requestId,'target' in input?input.changes.presentation:input.presentation);
    return {requestId:input.requestId,state:'saved',replayed:false};
   });
  }
@@ -89,7 +93,9 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
   let receipt=null,theme=null;
   if(r.receipt_id)receipt=await readReceipt(r);
   if(r.result?.id)try{const v=await foundation.get({kind:'reader',id:actorId(owner)},'theme',r.result.id,r.result.revision);theme={id:v.id,revision:v.revision,title:v.content.title,url:(process.env.MEMBER_ORIGIN??'')+'/?ktheme='+encodeURIComponent(v.id)+'&krev='+v.revision};}catch{/* No stopped/private dependency is disclosed through old receipt links. */}
-  return {requestId,state:r.state,reason:r.reason,operation:r.input.target?'update':'create',target:r.input.target??null,title:theme?.title??r.input.title??r.input.changes?.title??'',receipt,theme,excludedKeys:r.result?.excludedKeys??[],nextAttemptAt:['saved','processing'].includes(r.state)?r.next_attempt:null};
+  const requestedPresentation=r.input.target?r.input.changes?.presentation:r.input.presentation;
+  const components={presentation:{requestedLocales:requestedPresentation?.map((p:{locale:string})=>p.locale)??null,applied:theme!==null&&['published','published-with-issues'].includes(r.state)},imageIds:requestedPresentation?.flatMap((p:{imageId?:string})=>p.imageId?[p.imageId]:[])??[],productPins:r.input.target?r.input.changes?.productPins??null:r.input.productPins??null};
+  return {requestId,state:r.state,reason:r.reason,components,operation:r.input.target?'update':'create',target:r.input.target??null,title:theme?.title??r.input.title??r.input.changes?.title??'',receipt,theme,excludedKeys:r.result?.excludedKeys??[],nextAttemptAt:['saved','processing'].includes(r.state)?r.next_attempt:null};
  }
  async function cancel(owner:string,requestId:string){
   return tx(requestId,async c=>{
@@ -167,13 +173,15 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
      const id=resolve(v.parentRecordId);return id?[{...v,parentRecordId:id}]:[];
     })};
    }
+   const suppliedPresentation='target' in input?input.changes.presentation:input.presentation;
+   const reading=suppliedPresentation?await resolveThemeEditorial(c,suppliedPresentation,resolve,bindings):undefined;
    const requestedProducts='target' in input?input.changes.productPins:input.productPins;if(requestedProducts)await validateProductPins(c,requestedProducts);
     const command=knowledgeCommandSchema.parse('target' in input&&baseline?{
     action:'edit-theme',requestId:r.request_id,id:r.theme_id,expectedRevision:input.target.revision,
     title:input.changes.title??baseline.content.title,description:input.changes.description??baseline.content.description,
     textLanguages:input.changes.textLanguages?{...baseline.content.textLanguages,...input.changes.textLanguages}:baseline.content.textLanguages,
-    initialView:input.changes.initialView??baseline.content.initialView,productPins:input.changes.productPins??baseline.content.productPins,recordPins:pins,timeline,reason:input.reason,
-   }:{action:'create-theme',requestId:r.request_id,id:r.theme_id,...(!('target' in input)?{title:input.title,description:input.description,textLanguages:input.textLanguages,initialView:input.initialView,productPins:input.productPins}:{}),recordPins:pins,timeline,reason:'ChatGPTから受け付けた運営テーマ。原資料確認を通った公開記録の版を構成へ固定。'});
+    reading,initialView:input.changes.initialView??baseline.content.initialView,productPins:input.changes.productPins??baseline.content.productPins,recordPins:pins,timeline,reason:input.reason,
+   }:{action:'create-theme',requestId:r.request_id,id:r.theme_id,reading,...(!('target' in input)?{title:input.title,description:input.description,textLanguages:input.textLanguages,initialView:input.initialView,productPins:input.productPins}:{}),recordPins:pins,timeline,reason:'ChatGPTから受け付けた運営テーマ。原資料確認を通った公開記録の版を構成へ固定。'});
    const result=await foundation.execute({kind:'operator',id:actorId(r.owner_id)},command) as {id:string;revision:number};
    await options.afterThemeCommit?.();
    await savePublished(c,r,result,excluded);return true;

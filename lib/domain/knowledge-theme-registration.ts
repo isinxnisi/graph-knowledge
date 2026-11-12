@@ -1,5 +1,6 @@
+import {themeEditorialInputSchema} from './theme-editorial';
 import {z} from 'zod';
-import {productPinSchema,productAuthoringCommandSchema} from "./product-authoring";
+import {productPinSchema,productAuthoringCommandSchema,uploadEditorialImageSchema} from "./product-authoring";
 import {readThemeTranslationSchema,submitThemeTranslationSchema} from './knowledge-theme-translation';
 import {missionMcpPackageSchema} from './knowledge-mission-mcp';
 import {knowledgeThemeContentSchema,knowledgePinSchema,knowledgeTimelineSchema,knowledgeIdSchema} from './knowledge-foundation';
@@ -17,6 +18,7 @@ export const themeRegistrationInputSchema=z.strictObject({
  recordKeys:z.array(z.string().min(1).max(160)).max(20).default([]),
  recordPins:z.array(knowledgePinSchema).max(200).default([]),
  productPins:z.array(productPinSchema).max(24).optional().describe("Optional exact product revisions returned by save_product. Images and products may be added later."),
+ presentation:themeEditorialInputSchema.optional(),
  timeline:knowledgeTimelineSchema.optional(),
 }).superRefine((v,c)=>{
  const keys=v.package?.items.map(i=>i.key)??[];
@@ -39,6 +41,7 @@ export const themeUpdateInputSchema=z.strictObject({
   textLanguages:knowledgeThemeContentSchema.shape.textLanguages,
   initialView:z.enum(['graph','timeline','split']).optional(),
   productPins:z.array(productPinSchema).max(24).optional().describe("Complete product selection for the new theme edition. Omit to retain; [] removes only from the new edition."),
+  presentation:themeEditorialInputSchema.optional().describe("Complete locale-specific editorial presentation. Omit to retain; [] removes from the new edition only."),
   timeline:knowledgeTimelineSchema.nullable().optional(),
  }).default({}),
  package:missionMcpPackageSchema.nullable().default(null),
@@ -65,6 +68,7 @@ export const themeAuthoringRequestSchema=z.union([themeRegistrationInputSchema,t
 export type ThemeAuthoringRequest=z.infer<typeof themeAuthoringRequestSchema>;
 export const themeRegistrationCommandSchema=z.discriminatedUnion('action',[
  ...productAuthoringCommandSchema.options,
+ uploadEditorialImageSchema.safeExtend({action:z.literal('upload-editorial-image')}),
  readThemeTranslationSchema.extend({action:z.literal('read-translation')}),
  submitThemeTranslationSchema.safeExtend({action:z.literal('submit-translation')}),
  z.strictObject({action:z.literal('translation-status'),requestId:z.uuidv4()}),
