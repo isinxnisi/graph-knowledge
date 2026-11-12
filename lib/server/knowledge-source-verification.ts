@@ -1,4 +1,5 @@
 import {lookup} from "node:dns/promises";
+import {windowsBetaHttps,windowsBetaHttpsEnabled} from "./windows-beta-https";
 import {request} from "node:https";
 import {isIP} from "node:net";
 import {createHash} from "node:crypto";
@@ -28,13 +29,20 @@ export async function publicSourceDocument(raw:string,options:{allowedHosts?:str
   const addresses=await Promise.race([lookup(host,{all:true,verbatim:true,family:isIP(host)||4}).catch(()=>lookup(host,{all:true,verbatim:true,family:6})),new Promise<never>((_,reject)=>{const timer=setTimeout(()=>reject(new SourceCheckError("資料の接続先を確認できません。再試行します。",true)),5000);timer.unref();})]);
   if(!addresses.length||addresses.some(a=>!publicSourceAddress(a.address)))throw new SourceCheckError("内部ネットワークの資料は取得できません。公開資料を指定してください。");
   const address=addresses[0],remaining=deadline-Date.now();if(remaining<=0)throw new SourceCheckError("資料の取得に時間がかかっています。再試行します。",true);
-  const result=await new Promise<{status:number;location?:string;type:string;body:Buffer;retryAfter?:string}>((resolve,reject)=>{
+  const result=windowsBetaHttpsEnabled()?await (async()=>{
+   const response=await windowsBetaHttps(url,address.address,'source',AbortSignal.timeout(Math.min(10000,remaining)),'GET',{Accept:'text/html, text/plain;q=0.9','Accept-Encoding':'identity'}).catch(e=>{
+    if(e instanceof Error&&e.message==='BETA_HTTPS_TOO_LARGE')throw new SourceCheckError('資料が大きすぎます。該当箇所のある別ページを指定してください。');throw e;
+   });
+   const status=response.status,type=(response.headers.get('content-type')??'').toLowerCase();
+   if(status===200&&(!/^(text\/html|text\/plain|application\/xhtml\+xml)(;|$)/.test(type)||response.headers.get('content-encoding')&&response.headers.get('content-encoding')!=='identity'))throw new SourceCheckError('この資料形式はまだ自動照合できません。本文を読めるHTMLやテキストの別資料を指定してください。');
+   return {status,type,body:status===200?Buffer.from(await response.arrayBuffer()):Buffer.alloc(0),location:response.headers.get('location')??undefined,retryAfter:response.headers.get('retry-after')??undefined,challenge:response.headers.get('cf-mitigated')==='challenge'};
+  })():await new Promise<{status:number;location?:string;type:string;body:Buffer;retryAfter?:string;challenge?:boolean}>((resolve,reject)=>{
    const req=request(url,{method:"GET",family:address.family,agent:false,
     lookup:(_host,_options,callback)=>callback(null,address.address,address.family),
     headers:{"User-Agent":"Plunode-SourceCheck/1.0 (+https://plunode.net/privacy)",Accept:"text/html, text/plain;q=0.9","Accept-Encoding":"identity"},signal:AbortSignal.timeout(Math.min(10000,remaining))},res=>{
     const status=res.statusCode??0,type=String(res.headers['content-type']??'').toLowerCase();
     if(status>=300&&status<400){res.destroy();resolve({status,location:res.headers.location,type,body:Buffer.alloc(0)});return;}
-    if(status!==200){res.destroy();resolve({status,type,body:Buffer.alloc(0),retryAfter:String(res.headers['retry-after']??'')});return;}
+    if(status!==200){res.destroy();resolve({status,type,body:Buffer.alloc(0),retryAfter:String(res.headers['retry-after']??''),challenge:res.headers['cf-mitigated']==='challenge'});return;}
     if(!/^(text\/html|text\/plain|application\/xhtml\+xml)(;|$)/.test(type)||res.headers['content-encoding']&&res.headers['content-encoding']!=='identity'){
      res.destroy();reject(new SourceCheckError("この資料形式はまだ自動照合できません。本文を読めるHTMLやテキストの別資料を指定してください。"));return;
     }
@@ -44,6 +52,7 @@ export async function publicSourceDocument(raw:string,options:{allowedHosts?:str
    });req.once('error',reject);req.end();
   });
   if(result.status>=300&&result.status<400){if(!result.location||redirect===3)throw new SourceCheckError("資料の転送が続いています。最終ページのURLを指定してください。");url=sourceURL(new URL(result.location,url).href);continue;}
+  if(result.status===403&&result.challenge)throw new SourceCheckError('原資料サイトの自動取得制限により本文を確認できません。時間をおいて再試行します。',true);
   if(result.status===429||result.status>=500){const seconds=Number(result.retryAfter),date=Date.parse(result.retryAfter??'');throw new SourceCheckError("原資料のサイトが混雑しています。時間をおいて再試行します。",true,Math.min(86400000,Math.max(120000,Number.isFinite(seconds)&&seconds>0?seconds*1000:Number.isFinite(date)?date-Date.now():120000)));}
   if(result.status!==200)throw new SourceCheckError("原資料を匿名で読めません。公開URLや別資料を確認してください。");
   return {url:url.href,type:result.type,body:result.body};

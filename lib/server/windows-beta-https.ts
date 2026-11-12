@@ -10,8 +10,9 @@ export function windowsBetaHttpsEnabled(){
   && process.env.KNOWLEDGE_RUNTIME==='beta'
   && process.env.KNOWLEDGE_PUBLIC_ORIGIN==='https://graph-beta.isinxnisi.com';
 }
-export function validateWindowsBetaDestination(url:URL,address:string,kind:'metadata'|'attachment'){
- const allowed=kind==='metadata'?url.hostname==='chatgpt.com':editorialAttachmentHost(url.hostname);
+export function validateWindowsBetaDestination(url:URL,address:string,kind:'metadata'|'attachment'|'source'){
+ // Source URLs are independently DNS-checked and pinned by the source verifier.
+ const allowed=kind==='source'?isPublicRoutableHost(url.hostname):kind==='metadata'?url.hostname==='chatgpt.com':editorialAttachmentHost(url.hostname);
  if(!allowed||url.protocol!=='https:'||url.username||url.password||url.hash||url.port&&url.port!=='443'||isIP(address)!==4||!isPublicRoutableHost(address))throw Error('BETA_HTTPS_DESTINATION');
 }
 export function parseWindowsBetaResponse(bytes:Buffer,maxBytes:number,method:string){
@@ -28,12 +29,13 @@ export function parseWindowsBetaResponse(bytes:Buffer,maxBytes:number,method:str
   return new Response(method==='HEAD'||[204,205,304].includes(status)?null:Uint8Array.from(body),{status,headers});
  }
 }
-export async function windowsBetaHttps(url:URL,address:string,kind:'metadata'|'attachment',signal:AbortSignal,method='GET',headers:Record<string,string>={}){
+export async function windowsBetaHttps(url:URL,address:string,kind:'metadata'|'attachment'|'source',signal:AbortSignal,method='GET',headers:Record<string,string>={}){
  if(!windowsBetaHttpsEnabled())throw Error('BETA_HTTPS_DISABLED');
  validateWindowsBetaDestination(url,address,kind);signal.throwIfAborted();
  if(!['GET','HEAD'].includes(method))throw Error('BETA_HTTPS_METHOD');
- const max=kind==='metadata'?1048576:8388608;
+ const max=kind==='metadata'?1048576:kind==='source'?2_000_000:8388608;
  const args=['--silent','--show-error','--ipv4','--noproxy','*','--proto','=https','--max-redirs','0','--connect-timeout','3','--max-time',kind==='metadata'?'4':'20','--max-filesize',String(max),'--resolve',url.hostname+':443:'+address,'--request',method,'--include','--config','-'];
+ if(kind==='source')args.push('--user-agent','Plunode-SourceCheck/1.0 (+https://plunode.net/privacy)');
  for(const [key,value]of Object.entries(headers)){
   if(!['accept','accept-encoding','if-none-match','if-modified-since'].includes(key.toLowerCase())||/[\r\n]/.test(value))throw Error('BETA_HTTPS_HEADER');
   args.push('--header',key+': '+value);
@@ -43,7 +45,7 @@ export async function windowsBetaHttps(url:URL,address:string,kind:'metadata'|'a
   const chunks:Buffer[]=[];let size=0,oversize=false;
   child.stdout.on('data',(chunk:Buffer)=>{size+=chunk.length;if(size>max+65536){oversize=true;child.kill();return;}chunks.push(chunk);});
   child.once('error',()=>reject(Error('BETA_HTTPS_TRANSPORT')));
-  child.once('close',code=>{if(code!==0||oversize){reject(Error('BETA_HTTPS_TRANSPORT'));return;}try{resolve(parseWindowsBetaResponse(Buffer.concat(chunks),max,method));}catch{reject(Error('BETA_HTTPS_RESPONSE'));}});
+  child.once('close',code=>{if(code===63||oversize){reject(Error('BETA_HTTPS_TOO_LARGE'));return;}if(code!==0){reject(Error('BETA_HTTPS_TRANSPORT'));return;}try{resolve(parseWindowsBetaResponse(Buffer.concat(chunks),max,method));}catch{reject(Error('BETA_HTTPS_RESPONSE'));}});
   child.stdin.on('error',()=>reject(Error('BETA_HTTPS_TRANSPORT')));
   child.stdin.end('url = '+JSON.stringify(url.href)+'\n');
  });

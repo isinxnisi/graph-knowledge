@@ -1,3 +1,5 @@
+2026-11-13 黒澤テーマの原資料取得：①原因特定・②β限定通信修正・③同じ受付の通常Worker確認まで実施｜今回の工程は③まで、残りはCriterion取得制限・既存AI接続待機・別件の入力不足4項目。WSL HTTPS timeoutを既存Windows transportへ接続し、5/6項目は原資料照合通過、G07はCloudflare 403 challengeを再試行待ちへ区別。40件／lint／型検査込みbuild `DQjHhCsjCwWG7qI0Gmvdm`、3200／HTTPS βと既存App確認。受付・画像・商品・入力保持、本番未変更。[実測と残件](verification/KUROSAWA_SOURCE_FETCH_BETA_20261113.md)。以下は各時点の履歴。
+
 2026-11-13 会話から改訂するテーマ品質ガイド：[保存とAPI契約](design/THEME_QUALITY_GUIDE_20261112.md)／[実接続・検証](verification/THEME_QUALITY_GUIDE_20261112.md)。品質Markdownは運営DBの版付きコンテンツとして管理し、固定の技術schemaと分離。本文の稼働正本をGitへ複製しない。β限定、本番・定期実行は別。
 
 2026-11-12 ChatGPTからのテーマ一式登録・更新：[現行契約](design/THEME_AUTHORING_COMPLETE_20261112.md)／[β実測と実ChatGPT接続確認](verification/THEME_AUTHORING_COMPLETE_20261112.md)。任意テーマの導入・挿絵・商品・購入先をAPIへ接続。実ChatGPT添付→商品更新→同一テーマ更新を確認済み。新規作成は統合試験、本番未変更。

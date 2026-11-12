@@ -32,6 +32,7 @@ describe('source network boundary',()=>{
  it('keeps Retry-After as a temporary source failure',async()=>{
   mock.responses.push({status:429,headers:{'retry-after':'600'},body:''});await expect(publicSourceDocument('https://example.org')).rejects.toMatchObject({retryable:true,retryAfterMs:600000});
  });
+ it('does not permanently reject input when a source explicitly presents a bot challenge',async()=>{mock.responses.push({status:403,headers:{'cf-mitigated':'challenge'},body:'challenge'});await expect(publicSourceDocument('https://example.org')).rejects.toMatchObject({retryable:true,message:expect.stringContaining('自動取得制限')});});
  it('rejects unsupported and oversized documents',async()=>{
   mock.responses.push({status:200,headers:{'content-type':'application/pdf'},body:'pdf'});await expect(publicSourceDocument('https://example.org')).rejects.toMatchObject({retryable:false});
   mock.responses.push({status:200,headers:{'content-type':'text/plain'},body:'a'.repeat(2000001)});await expect(publicSourceDocument('https://example.org')).rejects.toThrow('大きすぎ');

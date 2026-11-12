@@ -20,3 +20,12 @@ it('retains binary response bytes, cache headers and redirect status without fol
  expect(()=>parseWindowsBetaResponse(raw,3,'GET')).toThrow();
  const redirect=parseWindowsBetaResponse(Buffer.from('HTTP/1.1 302 Found\r\nLocation: http://127.0.0.1/secret\r\n\r\n'),1024,'GET');expect(redirect.status).toBe(302);
 });
+
+it('allows anonymous source retrieval with pinned public IPv4 without widening attachment hosts',()=>{
+ validateWindowsBetaDestination(new URL('https://nfad.nfaj.go.jp/det.php?data_id=622'),'210.128.122.10','source');
+ for(const host of ['localhost','127.0.0.1','169.254.169.254','[::1]'])expect(()=>validateWindowsBetaDestination(new URL('https://'+host+'/'),'8.8.8.8','source')).toThrow();
+ expect(()=>validateWindowsBetaDestination(new URL('https://example.org/'),'192.168.1.1','source')).toThrow();
+ expect(()=>validateWindowsBetaDestination(new URL('https://user:password@example.org/'),'8.8.8.8','source')).toThrow();
+ expect(()=>validateWindowsBetaDestination(new URL('https://example.org:444/'),'8.8.8.8','source')).toThrow();
+ expect(()=>validateWindowsBetaDestination(new URL('https://example.org/'),'8.8.8.8','attachment')).toThrow();
+});
