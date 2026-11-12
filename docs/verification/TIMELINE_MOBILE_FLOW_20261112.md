@@ -20,3 +20,15 @@
 画像・実測の保存先：`C:/Users/nishr/.codex/tmp/plunode-timeline-flow`（before-mobile.png、after-mobile.png、after-pc.png、results.json）。
 
 元runtime：`/tmp/plunode-timeline-flow-runtime-before-1794444632`。対象テストログ：`/tmp/plunode-timeline-flow-tests.log`。buildログ：`/tmp/plunode-timeline-flow-build.log`。
+
+
+## 追補：関係図切替のhover残留
+
+ユーザーから「タップ後に切り替わったか分からず、フォーカスを外さないと背景が消えない」と指摘。前段の枠線除去だけでは不十分だった。
+
+- 375pxで再現。`aria-pressed=true`／`false`の両方とも、hoverしたままの背景は `rgb(241,246,251)`。年表ヘッダーの無条件hoverとExplorer共通hoverが、開閉の色を上書きしていた。
+- 年表ヘッダーの切替ボタンは、hover／focus／active中も実際のpressed状態に従う。開状態はaccent-soft、閉状態は透明。blurによる回避は行わず、Tabによるfocusのoutlineを保持した。
+- build `gbL2f6WfuM6VNJUUgIj0E`の配信CSSで、β375px・PC1500px／localhost375pxを確認。hover=true・focused=trueのまま開状態は `rgb(234,243,252)`、閉状態は `rgba(0,0,0,0)`。Tab移動後の閉状態は透明でoutlineは可視。
+- Nextの型検査込みbuild成功。CSS変更のみのため、前段29テストの繰り返しや実装を写すテスト追加はせず、問題のhover残留条件を実ブラウザで確認した。
+- 画像と実測：`C:/Users/nishr/.codex/tmp/plunode-toggle-feedback`。buildログ：`/tmp/plunode-toggle-build.log`。旧runtime：`/tmp/plunode-toggle-runtime-before-1794449888`。
+- iPhone実機は未確認。本番は変更しない。

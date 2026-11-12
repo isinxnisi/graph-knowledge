@@ -789,13 +789,24 @@
 }
 .embedded .headerAction { display: inline-flex; flex-shrink: 0; }
 .embedded .headerAction button { margin: 0; }
-.embedded .headerAction button[aria-pressed="true"] {
+/* Touch browsers can retain :hover after a tap. Paint the actual view state
+   even while hovered or focused, without blurring keyboard focus. */
+.embedded .headerAction button[aria-pressed="false"],
+.embedded .headerAction button[aria-pressed="false"]:is(:hover, :focus, :active) {
+  border: 0;
+  background: transparent;
+  color: var(--color-muted);
+  box-shadow: none;
+}
+.embedded .headerAction button[aria-pressed="true"],
+.embedded .headerAction button[aria-pressed="true"]:is(:hover, :focus, :active) {
   border: 0;
   background: var(--color-accent-soft);
   color: var(--color-accent);
+  box-shadow: none;
 }
 .embedded .headerAction :global(.ui-icon) { width: 15px; height: 15px; margin: 0; }
-.embedded .headerSettings:hover, .embedded .headerAction button:hover { background: var(--color-hover); }
+.embedded .headerSettings:hover { background: var(--color-hover); }
 @media (max-width: 800px) { .embedded .headerSettings, .embedded .headerAction button { min-width: 34px; min-height: 34px; } }
 
 
