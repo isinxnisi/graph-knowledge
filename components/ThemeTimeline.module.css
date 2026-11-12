@@ -764,8 +764,8 @@
 .embedded .groupHeader > div:first-child { flex: 1; min-width: 0; }
 .embedded .groupHeader { align-items: center; gap: 8px; }
 
-/* Capsule owns the only vertical scroller on a phone. Keep long timelines in
-   document flow, so a swipe can reach the graph after the final record. */
+/* The containing page or Capsule owns the vertical scroller on a phone.
+   A swipe can continue to the graph after the final timeline record. */
 @media (max-width: 800px) {
   .embedded.mobileDocumentFlow { height: auto; overflow: visible; }
   .embedded.mobileDocumentFlow .readingBody { flex: none; overflow: visible; }
@@ -789,6 +789,11 @@
 }
 .embedded .headerAction { display: inline-flex; flex-shrink: 0; }
 .embedded .headerAction button { margin: 0; }
+.embedded .headerAction button[aria-pressed="true"] {
+  border: 0;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
 .embedded .headerAction :global(.ui-icon) { width: 15px; height: 15px; margin: 0; }
 .embedded .headerSettings:hover, .embedded .headerAction button:hover { background: var(--color-hover); }
 @media (max-width: 800px) { .embedded .headerSettings, .embedded .headerAction button { min-width: 34px; min-height: 34px; } }
