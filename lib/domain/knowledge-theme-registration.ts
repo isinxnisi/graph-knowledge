@@ -1,3 +1,4 @@
+import {readThemeQualityGuideSchema,updateThemeQualityGuideSchema} from './theme-quality-guide';
 import {themeEditorialInputSchema} from './theme-editorial';
 import {z} from 'zod';
 import {productPinSchema,productAuthoringCommandSchema,uploadEditorialImageSchema} from "./product-authoring";
@@ -78,6 +79,8 @@ export const themeRegistrationCommandSchema=z.discriminatedUnion('action',[
  z.strictObject({action:z.literal('theme-status'),requestId:z.uuidv4()}),
  z.strictObject({action:z.literal('cancel-theme'),requestId:z.uuidv4()}),
  z.strictObject({action:z.literal('theme-guide')}),
+ readThemeQualityGuideSchema.extend({action:z.literal('read-quality-guide')}),
+ updateThemeQualityGuideSchema.safeExtend({action:z.literal('update-quality-guide')}),
  z.strictObject({action:z.literal('find-themes'),query:z.string().trim().max(200).default(''),cursor:z.number().int().min(0).max(1000000).default(0)}),
  z.strictObject({action:z.literal('read-theme'),theme:z.string().min(1).max(2000),revision:z.number().int().positive().optional()}),
  z.strictObject({action:z.literal('find-knowledge'),kind:z.enum(['entity','record','source']),query:z.string().trim().max(200).default(''),cursor:z.number().int().min(0).max(1000000).default(0)}),

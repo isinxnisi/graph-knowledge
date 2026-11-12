@@ -25,7 +25,7 @@ it('adds typed creation/status/cancellation only to the explicitly authorized ha
  const old=createMissionMcpHandler(collect),handler=createMissionMcpHandler(collect,{call:compose});
  const absent=await(await old.fetch(rpc('tools/call',{name:'submit_theme',arguments:request()}))).json();expect(absent.error||absent.result?.isError).toBeTruthy();expect(compose).not.toHaveBeenCalled();
  const tools=(await(await handler.fetch(rpc('tools/list',{}))).json()).result.tools;
- expect(tools).toHaveLength(23);expect(tools.find((v:{name:string})=>v.name==='submit_theme').inputSchema.properties.package).toBeDefined();
+ expect(tools).toHaveLength(25);expect(tools.find((v:{name:string})=>v.name==='submit_theme').inputSchema.properties.package).toBeDefined();
  const input=request();await handler.fetch(rpc('tools/call',{name:'submit_theme',arguments:input}));expect(compose).toHaveBeenCalledWith(expect.objectContaining({action:'submit-theme',requestId:input.requestId,title:input.title}));expect(collect).not.toHaveBeenCalled();
  compose.mockClear();await handler.fetch(rpc('tools/call',{name:'submit_theme',arguments:{...input,credential:'secret',origin:'https://other.example'}}));expect(compose).not.toHaveBeenCalled();
 });
@@ -53,7 +53,18 @@ it('lets an old operator connection discover new tools but challenges before exe
  const compose=vi.fn(),challenge='Bearer error="insufficient_scope", scope="missions:collect themes:compose"';
  const handler=createMissionMcpHandler(vi.fn(),{call:compose,authChallenge:challenge});
  const list=(await(await handler.fetch(rpc('tools/list',{}))).json()).result.tools;
- expect(list).toHaveLength(23);expect(list.find((v:{name:string})=>v.name==='update_theme')._meta.securitySchemes).toEqual([{type:'oauth2',scopes:['missions:collect','themes:compose']}]);
+ expect(list).toHaveLength(25);expect(list.find((v:{name:string})=>v.name==='update_theme')._meta.securitySchemes).toEqual([{type:'oauth2',scopes:['missions:collect','themes:compose']}]);
  const res=(await(await handler.fetch(rpc('tools/call',{name:'get_theme_authoring_guide',arguments:{}}))).json()).result;
  expect(res.isError).toBe(true);expect(res._meta['mcp/www_authenticate']).toEqual([challenge]);expect(compose).not.toHaveBeenCalled();
+});
+
+it('exposes guide read/history and guarded update without changing technical schemas',async()=>{
+ const dispatch=vi.fn(async(command)=>({id:'theme-authoring-quality',revision:2,command}));const handler=createMissionMcpHandler(vi.fn(),{call:dispatch});
+ const list=(await(await handler.fetch(rpc('tools/list',{}))).json()).result.tools;
+ expect(list.find((v:{name:string})=>v.name==='read_theme_quality_guide').annotations.readOnlyHint).toBe(true);
+ const result=(await(await handler.fetch(rpc('tools/call',{name:'read_theme_quality_guide',arguments:{revision:1}}))).json()).result;
+ expect(result.isError).not.toBe(true);expect(dispatch).toHaveBeenCalledWith({action:'read-quality-guide',revision:1});
+ const guarded=createMissionMcpHandler(vi.fn(),{call:dispatch,authChallenge:'Bearer error="insufficient_scope"'});dispatch.mockClear();
+ const rejected=(await(await guarded.fetch(rpc('tools/call',{name:'update_theme_quality_guide',arguments:{requestId:'11111111-1111-4111-8111-111111111111',expectedRevision:0,markdown:'# guide',reason:'初版'}}))).json()).result;
+ expect(rejected.isError).toBe(true);expect(dispatch).not.toHaveBeenCalled();
 });

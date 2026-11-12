@@ -1,3 +1,5 @@
+2026-11-13 共通品質ガイド：①保存契約・②版／競合／再送／履歴・復元とMCP接続・③実ChatGPTの初版投入→改訂→両入口から再取得まで完了｜今回の工程は③まで。既存運営DBへMarkdownを保存し、現在はDB版2／本文v1.2。20件・lint・型検査込みbuild hvbi54GEXks7W_H8ajb1r、明示041をβへ配置。通常改訂にbuild・App再更新は不要と実確認。別の新規チャット確認のみ未実施、別呼出し・別instance読戻しは確認。本番・テーマ／商品／画像・定期実行は未変更。[保存契約](design/THEME_QUALITY_GUIDE_20261112.md)／[実測](verification/THEME_QUALITY_GUIDE_20261112.md)。以下は各時点の履歴。
+
 2026-11-12 β Appの実会話確認：③添付2画像→商品4版→同一Theme8版のpublishedと実画面まで完了｜今回の経路確認は③まで。既存Appを5→23操作へ更新し、本人同意後の実呼出を確認。画像配信元の許可漏れを修正、旧7版と既存内容を照合保全。新規作成は統合試験済み・実ChatGPT未試験、iPhone実機未確認。最終build AhsakpwOg-tLShFzrpNFpを3200・HTTPS βへ配置、関連26件／lint／型検査込みbuild成功。本番／正式App／定期実行は未変更。PLUTO元ZIPは19/21のまま、残り2件は通常再試行待ち。[最終確認](verification/THEME_AUTHORING_COMPLETE_20261112.md#実chatgptからの添付登録同一テーマ更新最終確認)。以下は各時点の履歴。
 
 2026-11-12 β App接続の是正：③既存Appを5→23操作へ更新・追加scopeの本人同意画面へ到達｜残りは③実ChatGPTの添付・作成・同一テーマ更新、全体は③まで。WSL外向きTCP障害のβ限定transport／自サーバーのJWKS取得経路を是正、時刻同期後に認証成功。26件・lint・型検査込みbuild uKzgYwYaCEm9IFd_ZulQNを3200・HTTPS βへ配置。本番／正式App／定期実行設定未変更。[接続修正と確認状態](verification/THEME_AUTHORING_COMPLETE_20261112.md#接続修正と既存app更新同日追補)。
