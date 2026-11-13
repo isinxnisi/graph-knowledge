@@ -1,3 +1,5 @@
+- 運営テーマの再試行制御：[設計](design/THEME_ITEM_RETRIES_20261113.md)／[検証](verification/THEME_ITEM_RETRIES_20261113.md)。β限定、既存G07は照会のみ。
+
 2026-11-13 エピソード・豆知識の閲覧：①現状確認・②短いタイトルと本文の個別開閉・③3200／HTTPS β反映とPC／375px確認まで完了｜今回の全体は③まで完了。出典・詳細は本文末尾の小さい操作へ移し、戻る際の展開状態と初期3件／全件／閉じるを保持。26件・lint（既存warning1件）・型検査込みbuild成功、build `XV1OxH7Wf6eOlcHYLXj1U`。DB／Worker／テーマ原文／本番は未変更。[実測](verification/THEME_STORY_DISCLOSURES_20261113.md)。以下は各時点の履歴。
 
 2026-11-13 処理中の運営テーマ項目修正：①設計・②版付き修正／履歴／競合防止・③β反映／既存App更新まで完了｜今回の全体は③まで完了。G07出典・T01/T02/D02/T03対象の修正回帰、取込39件・登録30件・今回19件、lint／型検査込みbuild成功。build `9wE99pUu9HD13hj6dKquY`、明示042で会員ledger43、既存checksum保持。既存AppのWrite14→15／Read11とamend_theme_registrationを実画面確認。実受付は変更せず照会のみ、画像／商品／公開5項目・過去利用量不変、追加AI送信0。本番未変更。[契約](design/THEME_ITEM_AMENDMENTS_20261113.md)／[検証](verification/THEME_ITEM_AMENDMENTS_20261113.md)。以下は各時点の履歴。

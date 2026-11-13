@@ -1,3 +1,5 @@
+import {ensureThemeRetries,controlThemeRetries,readThemeRetries} from './knowledge-theme-retries';
+import {controlThemeRetrySchema} from '../domain/knowledge-theme-registration';
 import {amendThemeItems,readThemeItemAmendments,ensureThemeItemAmendments,themeItemAmendmentsAvailable} from './knowledge-theme-item-amendments';
 import {amendThemeRegistrationSchema} from '../domain/knowledge-theme-registration';
 import {reserveThemeImages,resolveThemeEditorial} from './theme-editorial';
@@ -97,7 +99,7 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
   if(r.result?.id)try{const v=await foundation.get({kind:'reader',id:actorId(owner)},'theme',r.result.id,r.result.revision);theme={id:v.id,revision:v.revision,title:v.content.title,url:(process.env.MEMBER_ORIGIN??'')+'/?ktheme='+encodeURIComponent(v.id)+'&krev='+v.revision};}catch{/* No stopped/private dependency is disclosed through old receipt links. */}
   const requestedPresentation=r.input.target?r.input.changes?.presentation:r.input.presentation;
   const components={presentation:{requestedLocales:requestedPresentation?.map((p:{locale:string})=>p.locale)??null,applied:theme!==null&&['published','published-with-issues'].includes(r.state)},imageIds:requestedPresentation?.flatMap((p:{imageId?:string})=>p.imageId?[p.imageId]:[])??[],productPins:r.input.target?r.input.changes?.productPins??null:r.input.productPins??null};
-  return {requestId,state:r.state,reason:r.reason,components,itemAmendments:await readThemeItemAmendments(pool,r,selection),operation:r.input.target?'update':'create',target:r.input.target??null,title:theme?.title??r.input.title??r.input.changes?.title??'',receipt,theme,excludedKeys:r.result?.excludedKeys??[],nextAttemptAt:['saved','processing'].includes(r.state)?r.next_attempt:null};
+  return {requestId,state:r.state,reason:r.reason,components,retryControl:await readThemeRetries(pool,r,selection?.itemKey,knowledge),itemAmendments:await readThemeItemAmendments(pool,r,selection),operation:r.input.target?'update':'create',target:r.input.target??null,title:theme?.title??r.input.title??r.input.changes?.title??'',receipt,theme,excludedKeys:r.result?.excludedKeys??[],nextAttemptAt:['saved','processing'].includes(r.state)?r.next_attempt:null};
  }
  async function amend(owner:string,raw:unknown){
   const input=amendThemeRegistrationSchema.parse(raw);
@@ -106,6 +108,11 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
    await current(c,owner);const r=await row(c,owner,input.registrationRequestId);
    return amendThemeItems(c,knowledge,r,owner,input);
   });
+ }
+ async function retryStatus(owner:string,requestId:string,itemKey?:string){await ensure();await current(pool,owner);return readThemeRetries(pool,await row(pool,owner,requestId),itemKey,knowledge);}
+ async function controlRetry(owner:string,raw:unknown){
+  const input=controlThemeRetrySchema.parse(raw);await current(pool,owner);await ensureThemeRetries(pool);
+  return tx(input.registrationRequestId,async c=>{await current(c,owner);return controlThemeRetries(c,knowledge,await row(c,owner,input.registrationRequestId),owner,input);});
  }
  async function cancel(owner:string,requestId:string){
   return tx(requestId,async c=>{
@@ -211,5 +218,5 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
    });return true;
   }
  }
- return {submit,status,amend,cancel,recoverOne,authorize:(owner:string)=>current(pool,owner)};
+ return {submit,status,amend,retryStatus,controlRetry,cancel,recoverOne,authorize:(owner:string)=>current(pool,owner)};
 }

@@ -10,7 +10,7 @@ export const SOURCE_EXTRACTOR = "public-text-v1";
 export type SourceDocument = {url:string;type:string;body:Buffer};
 export type SourceProof = {url:string;requestedUrl?:string;bodySha256:string;textSha256:string;excerptSha256:string;extractor:string;checkedAt:string};
 export class SourceCheckError extends Error {
- constructor(message:string,readonly retryable=false,readonly retryAfterMs=120000){super(message);}
+ constructor(message:string,readonly retryable=false,readonly retryAfterMs=120000,readonly siteRestricted?:{host:string;status:number}){super(message);}
 }
 export function publicSourceAddress(address:string){
  try{return ipaddr.process(address).range()==="unicast";}catch{return false;}
@@ -52,8 +52,8 @@ export async function publicSourceDocument(raw:string,options:{allowedHosts?:str
    });req.once('error',reject);req.end();
   });
   if(result.status>=300&&result.status<400){if(!result.location||redirect===3)throw new SourceCheckError("資料の転送が続いています。最終ページのURLを指定してください。");url=sourceURL(new URL(result.location,url).href);continue;}
-  if(result.status===403&&result.challenge)throw new SourceCheckError('原資料サイトの自動取得制限により本文を確認できません。時間をおいて再試行します。',true);
-  if(result.status===429||result.status>=500){const seconds=Number(result.retryAfter),date=Date.parse(result.retryAfter??'');throw new SourceCheckError("原資料のサイトが混雑しています。時間をおいて再試行します。",true,Math.min(86400000,Math.max(120000,Number.isFinite(seconds)&&seconds>0?seconds*1000:Number.isFinite(date)?date-Date.now():120000)));}
+  if(result.status===403&&result.challenge)throw new SourceCheckError('原資料サイトの自動取得制限により本文を確認できません。時間をおいて再試行します。',true,120000,{host:url.hostname,status:403});
+  if(result.status===429||result.status>=500){const seconds=Number(result.retryAfter),date=Date.parse(result.retryAfter??'');throw new SourceCheckError("原資料のサイトが混雑しています。時間をおいて再試行します。",true,Math.min(86400000,Math.max(120000,Number.isFinite(seconds)&&seconds>0?seconds*1000:Number.isFinite(date)?date-Date.now():120000)),{host:url.hostname,status:result.status});}
   if(result.status!==200)throw new SourceCheckError("原資料を匿名で読めません。公開URLや別資料を確認してください。");
   return {url:url.href,type:result.type,body:result.body};
  }

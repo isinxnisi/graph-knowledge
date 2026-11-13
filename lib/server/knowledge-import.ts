@@ -1,3 +1,4 @@
+import {themeRetriesAvailable,initializeThemeRetries,THEME_RETRY_LIMITS,themeInputUrls,sourceWait,beginThemeSource,finishThemeSource,ThemeRetryWait} from './knowledge-theme-retries';
 import {operatorThemeIntake} from './operator-theme-intake';
 import {verifyTranslationReviewContext,type TranslationReviewSnapshot} from "./knowledge-translation-context";
 import {GEMINI_TRANSLATION_POLICY} from "./gemini-knowledge-review";
@@ -95,15 +96,22 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
   await c.query('UPDATE knowledge_import.packages SET cancelled_at=COALESCE(cancelled_at,clock_timestamp()),cancel_reason=COALESCE(cancel_reason,$2) WHERE id=$1',[id,reason??null]);return {receiptId:id};
  });}
  async function lease(){
-  const candidates=(await pool.query("SELECT id FROM knowledge_import.items WHERE(state IN('queued','retry','quota','applying') AND next_attempt<=clock_timestamp()) OR(state='running' AND lease_until<=clock_timestamp()) ORDER BY next_attempt,created_at LIMIT 12")).rows;
+  const retryControls=await themeRetriesAvailable(pool);
+  const candidates=(await pool.query("SELECT id FROM knowledge_import.items WHERE "+(retryControls?"NOT retry_paused AND ":"")+"((state IN('queued','retry','quota','applying') AND next_attempt<=clock_timestamp()) OR(state='running' AND lease_until<=clock_timestamp())) ORDER BY next_attempt,created_at LIMIT 12")).rows;
   for(const candidate of candidates){
    const l=await tx(async c=>{
     const locked=await lock(c,candidate.id);if(!locked)return null;const {pkg,item}=locked;
-    if(terminal.includes(item.state)||item.state==='applied'||item.state==='running'&&new Date(item.lease_until)>new Date()||new Date(item.next_attempt)>new Date())return null;
+    if(item.retry_paused||terminal.includes(item.state)||item.state==='applied'||item.state==='running'&&new Date(item.lease_until)>new Date()||new Date(item.next_attempt)>new Date())return null;
     if(await recoverApplied(c,pkg,item))return null;
     const p=await active(pkg.principal_id,c);
     if(!p||p.namespace!==pkg.namespace||pkg.cancelled_at){await c.query("UPDATE knowledge_import.items SET state='cancelled',reason='受付または送信資格が停止されています。',lease_token=NULL,lease_until=NULL WHERE id=$1",[item.id]);return null;}
     const operator=await operatorThemeIntake(c,pkg.id,p);
+    if(operator&&retryControls){
+     await initializeThemeRetries(c,knowledge,pkg,item);
+     let wait:ThemeRetryWait|null=null;
+     try{wait=await sourceWait(c,item.id,await themeInputUrls(knowledge,pkg,item));}catch(error){if(!(error instanceof SourceCheckError||error instanceof KnowledgeError))throw error;/* Normal prepare reports invalid references. */}
+     if(wait){await c.query("UPDATE knowledge_import.items SET state='retry',reason=$2,next_attempt=$3,lease_token=NULL,lease_until=NULL WHERE id=$1",[item.id,wait.message,wait.until]);return null;}
+    }
     let retained=!!item.decision;
     if(!operator&&item.state==='running'&&item.current_attempt){
      const a=(await c.query('SELECT a.*,t.response FROM member_knowledge.review_attempts a JOIN knowledge_import.attempts t ON t.id=a.id WHERE a.id=$1 FOR UPDATE OF a',[item.current_attempt])).rows[0];
@@ -111,17 +119,17 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
      retained=retained||a.response.state==='received';
     }
     const day=quotaDate(new Date()),sent=(await c.query('SELECT COALESCE(sum(a.request_charge),0)::int n FROM knowledge_import.attempts t JOIN member_knowledge.review_attempts a ON a.id=t.id WHERE t.item_id=$1 AND a.quota_day=$2',[item.id,day])).rows[0].n;
-    if(!retained&&(!operator&&sent>=REVIEW_SENDS_PER_ITEM_DAY||item.prepare_day===day&&item.prepare_attempts>=8)){await c.query("UPDATE knowledge_import.items SET state='quota',reason='この項目の本日の再試行上限を待っています。',next_attempt=$2 WHERE id=$1",[item.id,nextQuotaDay(new Date())]);return null;}
-    const token=randomUUID();await c.query("UPDATE knowledge_import.items SET state='running',lease_token=$2,lease_until=clock_timestamp()+interval '180 seconds',prepare_attempts=CASE WHEN prepare_day=$3 THEN prepare_attempts+1 ELSE 1 END,prepare_day=$3 WHERE id=$1",[item.id,token,day]);return {pkg,item,p,token};
+    if((!retained||operator&&retryControls)&&(!operator&&sent>=REVIEW_SENDS_PER_ITEM_DAY||item.prepare_day===day&&item.prepare_attempts>=(operator&&retryControls?THEME_RETRY_LIMITS.preparationsPerItemDay:8))){await c.query("UPDATE knowledge_import.items SET state='quota',reason='この項目の本日の再試行上限を待っています。',next_attempt=$2 WHERE id=$1",[item.id,nextQuotaDay(new Date())]);return null;}
+    const token=randomUUID();await c.query("UPDATE knowledge_import.items SET "+(operator&&retryControls?"prepare_total=prepare_total+1,":"")+"state='running',lease_token=$2,lease_until=clock_timestamp()+interval '180 seconds',prepare_attempts=CASE WHEN prepare_day=$3 THEN prepare_attempts+1 ELSE 1 END,prepare_day=$3 WHERE id=$1",[item.id,token,day]);return {pkg,item,p,token,operatorTheme:!!operator,retryControls:!!operator&&retryControls};
    });if(l)return l;
   }return null;
  }
- async function stillCurrent(c:PoolClient,l:NonNullable<Awaited<ReturnType<typeof lease>>>){const locked=await lock(c,l.item.id);if(!locked||locked.pkg.cancelled_at||locked.item.state!=='running'||locked.item.lease_token!==l.token||new Date(locked.item.lease_until)<=new Date())return null;const p=await active(locked.pkg.principal_id,c);if(!p||p.namespace!==locked.pkg.namespace){await c.query("UPDATE knowledge_import.items SET state='cancelled',reason='送信資格が停止されました。',lease_token=NULL,lease_until=NULL WHERE id=$1",[l.item.id]);return null;}assertImportScope(p,knowledgeSubmissionContentSchema.parse(locked.item.normalized),(locked.item.prepared as Prepared|null)?.value.context);return {...locked,p};}
+ async function stillCurrent(c:PoolClient,l:NonNullable<Awaited<ReturnType<typeof lease>>>){const locked=await lock(c,l.item.id);if(!locked||locked.pkg.cancelled_at||locked.item.retry_paused||locked.item.state!=='running'||locked.item.lease_token!==l.token||new Date(locked.item.lease_until)<=new Date())return null;const p=await active(locked.pkg.principal_id,c);if(!p||p.namespace!==locked.pkg.namespace){await c.query("UPDATE knowledge_import.items SET state='cancelled',reason='送信資格が停止されました。',lease_token=NULL,lease_until=NULL WHERE id=$1",[l.item.id]);return null;}assertImportScope(p,knowledgeSubmissionContentSchema.parse(locked.item.normalized),(locked.item.prepared as Prepared|null)?.value.context);return {...locked,p};}
  async function failure(l:NonNullable<Awaited<ReturnType<typeof lease>>>,e:unknown){await tx(async c=>{
   const v=await lock(c,l.item.id);if(!v||v.item.lease_token!==l.token||v.item.state!=='running')return;
   if(await recoverApplied(c,v.pkg,v.item))return;
   const activeNow=await active(v.pkg.principal_id,c),bad=e instanceof SourceCheckError&&!e.retryable||e instanceof KnowledgeError&&e.status<500&&e.code!=='DUPLICATE_REVIEW_REQUIRED';
-  await c.query("UPDATE knowledge_import.items SET state=$2,reason=$3,next_attempt=$4,lease_token=NULL,lease_until=NULL,decision=CASE WHEN $5 THEN NULL ELSE decision END,current_attempt=CASE WHEN $5 THEN NULL ELSE current_attempt END,prepared=CASE WHEN $5 THEN NULL ELSE prepared END WHERE id=$1",[l.item.id,v.pkg.cancelled_at||!activeNow?'cancelled':bad?'needs-changes':'retry',errorReason(e),reviewRetryAt(l.item.attempts+1),e instanceof KnowledgeError&&e.code==='DUPLICATE_REVIEW_REQUIRED']);
+  await c.query("UPDATE knowledge_import.items SET state=$2,reason=$3,next_attempt=$4,lease_token=NULL,lease_until=NULL,decision=CASE WHEN $5 THEN NULL ELSE decision END,current_attempt=CASE WHEN $5 THEN NULL ELSE current_attempt END,prepared=CASE WHEN $5 THEN NULL ELSE prepared END WHERE id=$1",[l.item.id,v.pkg.cancelled_at||!activeNow?'cancelled':bad?'needs-changes':'retry',errorReason(e),l.retryControls&&e instanceof SourceCheckError?(e instanceof ThemeRetryWait?e.until:new Date(Math.max(reviewRetryAt(l.item.attempts+1).getTime(),Date.now()+e.retryAfterMs))):reviewRetryAt(l.item.attempts+1),e instanceof KnowledgeError&&e.code==='DUPLICATE_REVIEW_REQUIRED']);
  });}
  async function translationSnapshot(prepared:Prepared,c:PoolClient,lock=false){
   const item=prepared.value.content.items[0];if(item.operation!=='translate-text')return null;
@@ -149,7 +157,12 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
   if(item.operation!=='translate-text'){const started=Date.now();for(const e of submissionReviewEvidence(item,context)){
    if(Date.now()-started>45000)throw new SourceCheckError('原資料の取得に時間がかかっています。自動で再試行します。',true);
    const source=content.sources.find(s=>s.id===e.source.id&&e.source.revision===1)??context.sources.find(s=>s.id===e.source.id&&s.revision===e.source.revision);
-   if(!source?.content.url)throw new SourceCheckError('公開URLで本文を確認できる資料が必要です。');proofs.push(await verify(source.content.url,e.excerpt));
+   if(!source?.content.url)throw new SourceCheckError('公開URLで本文を確認できる資料が必要です。');
+   if(operator&&l.retryControls){
+    const attempt=await tx(async c=>{const current=await stillCurrent(c,l);if(!current)throw new KnowledgeError('入力または停止状態が更新されました。',409,'ITEM_LEASE_CHANGED');return beginThemeSource(c,current.item,source.content.url!,l.token);});
+    try{proofs.push(await verify(source.content.url,e.excerpt));await tx(c=>finishThemeSource(c,attempt));}
+    catch(error){await tx(c=>finishThemeSource(c,attempt,error));throw error;}
+   }else proofs.push(await verify(source.content.url,e.excerpt));
   }}
   const duplicates=value.plan.command.action==='accept-record'?await captureDuplicates(knowledge,value.plan.command.record.content,value.plan.command.expectedRevision?value.plan.recordId:undefined):null;
   if(operator)return {...value,proofs,duplicates,wire:''};
@@ -220,6 +233,7 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
   const l=await lease();if(!l)return false;let pendingAttempt:string|null=null,dispatched=false;
   try{
    const authority=await tx(async c=>await stillCurrent(c,l)?operatorThemeIntake(c,l.pkg.id,l.p):null);
+   if(l.operatorTheme&&!authority)return true;
    if(authority){
     // Operator editorial input has no AI gate. Rebuild a mechanical decision,
     // including for a retained request formerly routed through AI review.

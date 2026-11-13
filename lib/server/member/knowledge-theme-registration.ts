@@ -48,6 +48,8 @@ export async function dispatchThemeRegistration(owner:string,raw:ThemeRegistrati
   }
   if(command.action==='find-knowledge')return await reader!.find(command.kind,command.query,command.cursor);
   if(command.action==='read-knowledge')return await reader!.knowledge(command.kind,command.id,command.revision);
+  if(command.action==='theme-retry-status')return await registration.retryStatus(owner,command.registrationRequestId,command.itemKey);
+  if(command.action==='control-theme-retry'){const {action,...input}=command;void action;return await registration.controlRetry(owner,input);}
   if(command.action==='theme-status')return await registration.status(owner,command.requestId,command);
   if(command.action==='amend-theme-items'){const {action,...input}=command;void action;return await registration.amend(owner,input);}
   if(command.action==='cancel-theme')return await registration.cancel(owner,command.requestId);

@@ -87,8 +87,17 @@ export const amendThemeRegistrationSchema=z.strictObject({
 });
 export type AmendThemeRegistration=z.infer<typeof amendThemeRegistrationSchema>;
 export const themeRegistrationStatusSchema=z.strictObject({requestId:z.uuidv4(),itemKey:knowledgeIdSchema.optional(),inputRevision:z.number().int().positive().optional()}).superRefine((v,c)=>{if(v.inputRevision&&!v.itemKey)c.addIssue({code:'custom',path:['itemKey'],message:'入力履歴を読む項目keyを指定してください。'});});
+/** Read-only status has no retry side effects; write operation IDs are separate from receipts. */
+export const themeRetryStatusSchema=z.strictObject({registrationRequestId:z.uuidv4(),itemKey:knowledgeIdSchema.optional()});
+export const controlThemeRetrySchema=z.strictObject({
+ requestId:z.uuidv4(),registrationRequestId:z.uuidv4(),operation:z.enum(['retry','pause','resume']),reason:z.string().trim().min(1).max(2000),
+ items:z.array(z.strictObject({key:knowledgeIdSchema,expectedRevision:z.number().int().positive().max(20)})).min(1).max(10),
+}).superRefine((v,c)=>{if(new Set(v.items.map(i=>i.key)).size!==v.items.length)c.addIssue({code:'custom',path:['items'],message:'操作する項目keyが重複しています。'});});
+export type ControlThemeRetry=z.infer<typeof controlThemeRetrySchema>;
 export const themeRegistrationCommandSchema=z.discriminatedUnion('action',[
  ...productAuthoringCommandSchema.options,
+ themeRetryStatusSchema.extend({action:z.literal('theme-retry-status')}),
+ controlThemeRetrySchema.safeExtend({action:z.literal('control-theme-retry')}),
  uploadEditorialImageSchema.safeExtend({action:z.literal('upload-editorial-image')}),
  readThemeTranslationSchema.extend({action:z.literal('read-translation')}),
  submitThemeTranslationSchema.safeExtend({action:z.literal('submit-translation')}),
