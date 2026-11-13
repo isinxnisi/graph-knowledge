@@ -1,3 +1,5 @@
+2026-11-13 本線KGのスマホ表示：①確認・②別名／翻訳の末尾移動・スマホ見出し省略／ダブルタップ詳細切替／上部アイコン整列・③3200／HTTPS βのPC・375px確認まで完了｜今回の工程は③まで完了。型検査込みbuild `dYIDFmmzI-_njQEX2a-MD`、PCモーダルと商品表示保持。既存lint違反1件とiPhone実機未確認は[確認記録](verification/MAIN_KG_MOBILE_DETAILS_20261113.md)。本番・DB・Worker・URL経路未変更。
+
 2026-11-13 Entityの探索導線とGraph表示：①原因確認・②canonical `/explore/ID` 接続／通知・初期位置・見出し操作の整列・③3200／HTTPS βで実リンク・再読込・戻る・375pxと本線KG PLUTO確認まで完了｜今回の工程は③まで完了。関連97件・lint／型検査込みbuild `5ulPvIWTJx5_O6zW9hLxa`。本線KGを正規のKGとして保持、既存queryも有効。本番・DB・画像／商品・Worker未変更、iPhone実機は未確認。[検証と画面記録](verification/ENTITY_EXPLORATION_ROUTE_20261113.md)。
 
 2026-11-13 関連欄の順序統一：①配置確認・②テーマ／通常GraphのEntity詳細を「関連テーマ→関連アイテム→関連知識」へ統一・③19件／型検査込みbuild／3200とHTTPS βの両経路確認まで完了｜今回の工程は③まで完了。表示位置のみ変更、本番・DB・Worker未変更。[確認記録](verification/ENTITY_PRODUCTS_20261113.md#関連欄の順序統一追補)。
