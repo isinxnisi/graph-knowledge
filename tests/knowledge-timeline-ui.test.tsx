@@ -4,6 +4,7 @@ import { afterEach, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import KnowledgeTimeline from "../components/KnowledgeTimeline";
 import { knowledgeRecordContentSchema, type KnowledgeSnapshot } from "../lib/domain/knowledge-foundation";
+import type { ThemeReadingPresentation } from "../lib/domain/theme-reading-presentation";
 
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 const stamp = { revision: 4, createdAt: "2026-11-02T00:00:00Z", reason: "表示試験" };
@@ -13,6 +14,43 @@ const s: KnowledgeSnapshot = {
   sources: [{ id: "source", ...stamp, revision: 2, content: { title: "資料の第2版", bibliography: "資料集 第2版", url: null, language: "ja" } }],
   records: [{ id: "shared-record", ...stamp, content: knowledgeRecordContentSchema.parse({ kind: "relation", assertion: "装画と挿絵を手掛けた", subjectId: "a", objectId: "b", relation: "装画と挿絵", times: [{ id: "created", time: { kind: "calendar", from: "1991", label: "制作" } }, { id: "printed", time: { kind: "calendar", from: "1992", label: "刊行" } }], evidence: [{ id: "e", source: { id: "source", revision: 2 }, locator: "図版一覧", excerpt: "", stance: "support" }] }) }],
 };
+it("always shows the short title before the complete timeline summary and preserves selection", () => {
+  const summary = "同じ資料に書かれた経緯を省略せず表示する補足文です。見出しの代わりには使いません。".repeat(5);
+  const presentation: ThemeReadingPresentation = {
+    version: 1, theme: { id: "theme", revision: 1 }, state: "checked", locale: "ja", hook: "導入", lead: "",
+    records: [{ target: { id: "shared-record", revision: 4 }, shortTitle: "作品の制作と刊行", timelineSummary: summary, explanations: [] }],
+  };
+  const before = JSON.stringify({ s, presentation }), onFocus = vi.fn();
+  const { container } = render(<KnowledgeTimeline snapshot={s} presentation={presentation} reading focusedRecordId={null} onFocusRecord={onFocus} />);
+  const rows = [...container.querySelectorAll('[data-timeline-row-id]')];
+  expect(rows).toHaveLength(2);
+  for (const row of rows) {
+    const title = row.querySelector('[class*="assertion"]')!;
+    const supplement = row.querySelector('[class*="timelineSummary"]')!;
+    expect(title.textContent).toBe("作品の制作と刊行");
+    expect(supplement.textContent).toBe(summary);
+    expect(title.compareDocumentPosition(supplement) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(title.closest("button")).toBe(supplement.closest("button"));
+    expect(title.closest("button")?.hasAttribute("aria-expanded")).toBe(false);
+  }
+  fireEvent.click(rows[1].querySelector('[class*="assertion"]')!.closest("button")!);
+  expect(onFocus).toHaveBeenLastCalledWith("shared-record", "printed");
+  expect(JSON.stringify({ s, presentation })).toBe(before);
+});
+
+it("adds no empty summary element when absent and leaves the non-reading timeline unchanged", () => {
+  const presentation: ThemeReadingPresentation = {
+    version: 1, theme: { id: "theme", revision: 1 }, state: "checked", locale: "ja", hook: "導入", lead: "",
+    records: [{ target: { id: "shared-record", revision: 4 }, shortTitle: "短い見出し", explanations: [] }],
+  };
+  const { container, rerender } = render(<KnowledgeTimeline snapshot={s} presentation={presentation} reading focusedRecordId={null} onFocusRecord={vi.fn()} />);
+  expect(screen.getAllByText("短い見出し")).toHaveLength(2);
+  expect(container.querySelector('[class*="timelineSummary"]')).toBeNull();
+  rerender(<KnowledgeTimeline snapshot={s} presentation={presentation} focusedRecordId={null} onFocusRecord={vi.fn()} />);
+  expect(screen.queryByText("短い見出し")).toBeNull();
+  expect(screen.getAllByRole("button", { name: /^装画と挿絵を手掛けた/ })).toHaveLength(2);
+});
+
 it('marks the selected subject in both time rows without filtering away other subjects or expanding the records',()=>{
  const {container}=render(<KnowledgeTimeline snapshot={s} focusedRecordId={null} focusedEntityId="a" onFocusRecord={vi.fn()}/>);
  expect([...container.querySelectorAll('[data-subject-focus]')].map(e=>e.getAttribute('data-entity-id'))).toEqual(['a','a']);

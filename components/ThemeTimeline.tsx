@@ -400,7 +400,8 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                   {reading&&t?.kind==="calendar"&&<span className={css.readingDate}>{themeTimeLabel({...t,label:""},locale)}</span>}
                   <span className={css.rowHeading}>
 
-                    <span className={css.assertion}>{reading?record.readingSummary||record.readingTitle||record.assertion:record.assertion}</span>
+                    <span className={css.assertion}>{reading?record.readingTitle||record.assertion:record.assertion}</span>
+                    {reading&&record.readingSummary&&<span className={css.timelineSummary}>{record.readingSummary}</span>}
                   </span>
                   {!reading&&<span className={css.rowContext}><RecordContext record={record} entities={entities} focusedEntityId={focusedEntityId}/></span>}
                   {(!reading&&(nested.length > 0 ||

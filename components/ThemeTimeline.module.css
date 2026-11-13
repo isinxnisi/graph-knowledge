@@ -820,6 +820,7 @@
 .reading .rowText { gap:4px; }
 .reading .rowHeading { display:block; line-height:1.6; }
 .reading .assertion { font-size:14px; line-height:1.6; font-weight:600; }
+.reading .timelineSummary { display:block; margin-top:2px; font-size:11px; line-height:1.55; font-weight:400; color:var(--color-muted); white-space:normal; overflow-wrap:anywhere; }
 .rowContext { display:flex; flex-wrap:wrap; align-items:center; gap:3px 8px; }
 .reading .rowContext > :last-child { font-size:10px; }
 .reading .contextKind { display:none; }

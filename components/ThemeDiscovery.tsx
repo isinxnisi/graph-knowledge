@@ -30,8 +30,8 @@ export function ThemeLink({ theme, onOpen, appearance = "row", showDescription =
     if (openInNewTab || event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault(); onOpen({ id: theme.id, revision: theme.revision,...(focusEntityId?{focusEntityId}:{}) });
   }
-  if (appearance === "recent") return <a className={css.recentLink} href={href} target={openInNewTab ? "_blank" : undefined} rel={openInNewTab ? "noopener" : undefined} onClick={choose}>
-    <Icon name={icon}/>{title}<span>{type}</span>
+  if (appearance === "recent") return <a className={`${css.recentLink} ${home.recentThemeLink}`} href={href} target={openInNewTab ? "_blank" : undefined} rel={openInNewTab ? "noopener" : undefined} onClick={choose}>
+    <Icon name={icon}/><span className={home.recentThemeText}><span className={home.recentThemeTitle}>{title}</span><small>{type}</small></span>
   </a>;
   if (appearance === "featured") return <a className={`${home.themeFeature} ${css.featureLink}`} href={href} target={openInNewTab ? "_blank" : undefined} rel={openInNewTab ? "noopener" : undefined} onClick={choose}>
     <>{presentation?.image?<Image unoptimized className={css.themeImage} data-kind={presentation.image.kind} src={presentation.image.src} width={96} height={80} alt={presentation.image.alt} style={{objectPosition:presentation.image.focus}}/>:<Icon name={icon}/>}</><span><small>{type}</small><strong>{title}</strong>
