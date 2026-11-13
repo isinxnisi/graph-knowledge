@@ -1,0 +1,30 @@
+# Local shared beta tunnel. Install beside the existing private .env file.
+# Both connectors use the existing tunnel and remote ingress configuration.
+x-plunode-tunnel: &plunode-tunnel
+  image: cloudflare/cloudflared:2026.11.0@sha256:b94b96edf2c9c4360f8879c8580cfaa99077f19c849ec595ca2f711b27d4f344
+  command: [tunnel, --no-autoupdate, --protocol, http2, run]
+  environment:
+    TUNNEL_TOKEN: ${CF_TUNNEL_TOKEN_RESALE:?Existing shared tunnel token is required}
+  networks: [resale]
+  restart: unless-stopped
+  logging:
+    driver: json-file
+    options:
+      max-size: 5m
+      max-file: "2"
+
+services:
+  cloudflared:
+    <<: *plunode-tunnel
+    container_name: cloudflared-resale-research
+  cloudflared-replica:
+    <<: *plunode-tunnel
+    container_name: cloudflared-resale-research-replica
+
+networks:
+  resale:
+    external: true
+    name: resale-research_default
+  graph:
+    external: true
+    name: graph-knowledge-public_default

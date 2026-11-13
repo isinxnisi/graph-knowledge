@@ -1,3 +1,5 @@
+2026-11-13：ローカルβの共有公開トンネルは[構成と復帰](runbooks/BETA_TUNNEL.md)、[切替実測と未解決事項](verification/BETA_TUNNEL_RESILIENCE_20261113.md)を参照。公式版固定と2系統化は配置済みだが、安定復旧は未完了。
+
 - 曖昧な発生時期の表記：[開始側・終端の整理とβ確認](verification/TIMELINE_WINDOW_LABELS_20261113.md)。
 
 - 年表の見出し／補足とTOP一覧の整列：[βの比較画像・CSS実測・検証](verification/TIMELINE_HIERARCHY_HOME_LIST_20261113.md)。
