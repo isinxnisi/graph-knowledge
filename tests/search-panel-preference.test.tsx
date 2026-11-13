@@ -37,28 +37,24 @@ describe("検索ペインのブラウザ内表示設定", () => {
   it("初回描画前に保存領域へアクセスできなくても画面を表示する", () => {
     vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => { throw new DOMException("Blocked", "SecurityError"); });
     expect(() => window.eval(searchPanelPreferenceBootstrap)).not.toThrow();
-    expect(document.documentElement.dataset.searchPanelCollapsed).toBe("false");
+    expect(document.documentElement.dataset.searchPanelCollapsed).toBe("true");
   });
 
-  it("開閉を保存し、画面を離れて戻っても同じ表示へ復元する", () => {
-    const first = renderHook(() => useSearchPanelPreference());
-    restore();
-    expect(first.result.current[0]).toBe(false);
-    act(() => first.result.current[1]());
+  it("初回は閉じ、明示した開閉は再訪時にも復元する", () => {
+    window.eval(searchPanelPreferenceBootstrap);
+    expect(document.documentElement.dataset.searchPanelCollapsed).toBe("true");
+    const first = renderHook(() => useSearchPanelPreference());restore();
     expect(first.result.current[0]).toBe(true);
-    expect(localStorage.getItem(searchPanelPreferenceKey)).toBe("true");
-    first.unmount();
-
-    const second = renderHook(() => useSearchPanelPreference());
-    restore();
-    expect(second.result.current[0]).toBe(true);
+    act(() => first.result.current[1]());
+    expect(localStorage.getItem(searchPanelPreferenceKey)).toBe("false");first.unmount();
+    window.eval(searchPanelPreferenceBootstrap);
+    expect(document.documentElement.dataset.searchPanelCollapsed).toBe("false");
+    const second = renderHook(() => useSearchPanelPreference());restore();
+    expect(second.result.current[0]).toBe(false);
     act(() => second.result.current[1]());
-    expect(localStorage.getItem(searchPanelPreferenceKey)).toBe("false");
-    second.unmount();
-
-    const third = renderHook(() => useSearchPanelPreference());
-    restore();
-    expect(third.result.current[0]).toBe(false);
+    expect(localStorage.getItem(searchPanelPreferenceKey)).toBe("true");second.unmount();
+    const third = renderHook(() => useSearchPanelPreference());restore();
+    expect(third.result.current[0]).toBe(true);
   });
 
   it("保存領域の読み書きが拒否されても、その画面では開閉できる", () => {
@@ -67,9 +63,9 @@ describe("検索ペインのブラウザ内表示設定", () => {
     const { result } = renderHook(() => useSearchPanelPreference());
     expect(restore).not.toThrow();
     act(() => result.current[1]());
-    expect(result.current[0]).toBe(true);
-    act(() => result.current[1]());
     expect(result.current[0]).toBe(false);
+    act(() => result.current[1]());
+    expect(result.current[0]).toBe(true);
   });
 
   it("初期復元より先に操作した表示を、保存値で上書きしない", () => {
@@ -78,7 +74,7 @@ describe("検索ペインのブラウザ内表示設定", () => {
     const { result } = renderHook(() => useSearchPanelPreference());
     act(() => result.current[1]());
     restore();
-    expect(result.current[0]).toBe(true);
+    expect(result.current[0]).toBe(false);
     expect(get).not.toHaveBeenCalled();
   });
 
@@ -92,10 +88,10 @@ describe("検索ペインのブラウザ内表示設定", () => {
     expect(result.current[0]).toBe(false);
     sync("true");
     sync(null);
-    expect(result.current[0]).toBe(false);
+    expect(result.current[0]).toBe(true);
     sync("true");
     sync(null, null);
-    expect(result.current[0]).toBe(false);
+    expect(result.current[0]).toBe(true);
     expect(set).not.toHaveBeenCalled();
   });
 

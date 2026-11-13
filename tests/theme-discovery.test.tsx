@@ -3,7 +3,7 @@ import {UiLocaleProvider} from "../lib/client/ui-locale";
 import React,{useState} from "react";
 import {act,cleanup,fireEvent,render,screen} from "@testing-library/react";
 import {afterEach,beforeEach,expect,it,vi} from "vitest";
-import {HomeThemes,useHomeThemes,ThemeSearchPanel,initialThemeCriteria,ThemeLink} from "../components/ThemeDiscovery";
+import {HomeThemes,useHomeThemes,ThemeSearchPanel,initialThemeCriteria,ThemeLink,FeaturedThemeRail} from "../components/ThemeDiscovery";
 import {knowledgeThemeTypeLabel,type KnowledgeThemeSummary} from "../lib/domain/knowledge-theme-reader";
 const graph:KnowledgeThemeSummary={id:"graph",revision:2,title:"制作のつながり",description:"関係だけのテーマ",hasTimeline:false,hasRelations:true,entityIds:[],initialView:"graph",publishedAt:"2026-11-02T00:00:00.000Z"};
 const timeline:KnowledgeThemeSummary={...graph,id:"timeline",title:"展開の年表",hasTimeline:true,initialView:"timeline"};
@@ -72,4 +72,14 @@ it("紹介・新着・検索は同じ初期応答の公開訳を使い、原文�
  // Remount the provider when simulating a route language change.
  cleanup();render(<UiLocaleProvider initialLocale="ja"><ThemeLink theme={theme} onOpen={vi.fn()}/></UiLocaleProvider>);expect(screen.getByText(timeline.title)).toBeTruthy();
  cleanup();render(<UiLocaleProvider initialLocale="en"><ThemeLink theme={{...theme,revision:3}} onOpen={vi.fn()}/></UiLocaleProvider>);expect(screen.getByText(timeline.title)).toBeTruthy();expect(screen.queryByText('Webb’s journey')).toBeNull();
+});
+
+it("紹介テーマは同じ一覧を保ち、追加分の開閉からも版付きで開く",()=>{
+ const themes=[timeline,graph,{...graph,id:"third",title:"3件目"},{...graph,id:"fourth",title:"4件目"}],open=vi.fn();
+ render(<FeaturedThemeRail themes={themes} onOpen={open}/>);
+ const list=screen.getByRole("list",{name:"紹介テーマ"}),toggle=screen.getByRole("button",{name:"もっと見る"});
+ expect(list.children).toHaveLength(4);expect(toggle.getAttribute("aria-expanded")).toBe("false");
+ fireEvent.click(toggle);expect(screen.getByRole("button",{name:"閉じる"}).getAttribute("aria-expanded")).toBe("true");
+ fireEvent.click(screen.getByRole("link",{name:/4件目/}));expect(open).toHaveBeenCalledWith({id:"fourth",revision:2});
+ fireEvent.click(screen.getByRole("button",{name:"閉じる"}));expect(screen.getByRole("button",{name:"もっと見る"}).getAttribute("aria-expanded")).toBe("false");
 });

@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useId, useRef, useState, type MouseEvent } from "react";
 import { readKnowledge } from "../lib/client/use-knowledge-workspace";
 import { knowledgeThemeTypeLabel, type KnowledgeThemeSummary, type KnowledgeThemePage, type KnowledgeThemeHome } from "../lib/domain/knowledge-theme-reader";
 import { useUiLocale } from "../lib/client/ui-locale";
@@ -48,9 +48,14 @@ export function ThemeLink({ theme, onOpen, appearance = "row", showDescription =
 export function FeaturedThemeRail({ themes, onOpen, openInNewTab = false }: {
   themes: KnowledgeThemeSummary[]; onOpen: OpenTheme; openInNewTab?: boolean;
 }) {
-  const { locale } = useUiLocale();
-  return <div className={`${css.featured} ${css.home}`} role="list" aria-label={locale === "en" ? "Featured themes · scroll horizontally" : "紹介テーマ・横にスクロールできます"}>
-    {themes.map(theme => <div key={theme.id} role="listitem"><ThemeLink theme={theme} onOpen={onOpen} appearance="featured" showDescription openInNewTab={openInNewTab}/></div>)}
+  const { locale } = useUiLocale(), en = locale === "en";
+  const [expanded,setExpanded] = useState(false);
+  const listId = useId();
+  return <div className={css.featuredWrap} data-expanded={expanded || undefined}>
+    <div id={listId} className={`${css.featured} ${css.home}`} role="list" aria-label={en ? "Featured themes" : "紹介テーマ"}>
+      {themes.map(theme => <div key={theme.id} role="listitem"><ThemeLink theme={theme} onOpen={onOpen} appearance="featured" showDescription openInNewTab={openInNewTab}/></div>)}
+    </div>
+    {themes.length>3&&<button className={css.featuredMore} aria-controls={listId} aria-expanded={expanded} onClick={()=>setExpanded(value=>!value)}>{expanded?(en?"Show less":"閉じる"):(en?"Show more":"もっと見る")}<Icon name="chevron"/></button>}
   </div>;
 }
 export function useHomeThemes(initialData?: KnowledgeThemeHome | null, enabled = true) {
