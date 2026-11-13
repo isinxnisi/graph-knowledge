@@ -1,3 +1,5 @@
+2026-11-13 曖昧な時期の両端：①原因確認・②開始／終了の個別集約・③3200／HTTPS βのPC・375px確認まで完了｜今回の全体は③まで完了。PLUTOは1964だけ集約し1965-05を含む終了年の幅を保持、黒澤テーマの空の1960／1969行を解消。関連77件・ESLint／型検査込みbuild成功、build `tulpzvYDHNRIXxn5WUb9k`。固定snapshot・Worker保持、DB／AI／本番未変更。既存時刻fixture4件の不一致とiPhone実機未確認は別記。[判断と検証](verification/TIMELINE_ENDPOINT_POINTS_20261113.md)。以下は各時点の履歴。
+
 2026-11-13 運営テーマ再試行制御：①設計・②URL別失敗制限／停止再開／競合防止・③β反映／既存App更新／実ChatGPT状態API呼び出しまで完了｜今回の全体は③まで完了。25件・既存19/39/30件・lint／型検査込みbuild成功、明示043で会員ledger44、build `oFPYWrNF4WmNDkZNEq_CX`。G07はNEA・入力版2・canRetryNow trueを照会のみ。旧8回・17時予定・公開9項目／画像／商品を保全、追加AI送信0、本番未変更。実G07の明示再試行は運営者の次操作。[設計](design/THEME_ITEM_RETRIES_20261113.md)／[検証](verification/THEME_ITEM_RETRIES_20261113.md)。以下は各時点の履歴。
 
 2026-11-13 エピソード・豆知識の閲覧：①現状確認・②短いタイトルと本文の個別開閉・③3200／HTTPS β反映とPC／375px確認まで完了｜今回の全体は③まで完了。出典・詳細は本文末尾の小さい操作へ移し、戻る際の展開状態と初期3件／全件／閉じるを保持。26件・lint（既存warning1件）・型検査込みbuild成功、build `XV1OxH7Wf6eOlcHYLXj1U`。DB／Worker／テーマ原文／本番は未変更。[実測](verification/THEME_STORY_DISCLOSURES_20261113.md)。以下は各時点の履歴。

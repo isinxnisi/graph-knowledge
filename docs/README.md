@@ -1,3 +1,5 @@
+- 曖昧な開始・終了端の表示：[判断・回帰・β実画面](verification/TIMELINE_ENDPOINT_POINTS_20261113.md)。PLUTOの1965年は細かい記録を含むため幅を保持。
+
 - 運営テーマの再試行制御：[設計](design/THEME_ITEM_RETRIES_20261113.md)／[検証](verification/THEME_ITEM_RETRIES_20261113.md)。β限定、既存G07は照会のみ。
 
 2026-11-13 エピソード・豆知識の閲覧：①現状確認・②短いタイトルと本文の個別開閉・③3200／HTTPS β反映とPC／375px確認まで完了｜今回の全体は③まで完了。出典・詳細は本文末尾の小さい操作へ移し、戻る際の展開状態と初期3件／全件／閉じるを保持。26件・lint（既存warning1件）・型検査込みbuild成功、build `XV1OxH7Wf6eOlcHYLXj1U`。DB／Worker／テーマ原文／本番は未変更。[実測](verification/THEME_STORY_DISCLOSURES_20261113.md)。以下は各時点の履歴。
