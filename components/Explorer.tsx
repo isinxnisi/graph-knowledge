@@ -1,6 +1,8 @@
 "use client";
 import {useNavigationProgress} from "../lib/client/navigation-progress";
-import {useTransition,useSyncExternalStore} from "react";
+import {useTransition} from "react";
+import {useExplorerPageLayout} from "../lib/client/use-explorer-page-layout";
+import {explorerScrollTop,scrollExplorerPane,isPhoneExplorer} from "../lib/client/explorer-scroll";
 import { entityDisplayName } from "../lib/domain/entity-display";
 import { focusDestination } from "../lib/client/focus-destination";
 import { graphNoticePresentation } from "../lib/client/graph-notice";
@@ -72,11 +74,6 @@ import {useKnowledgeSubmissionsEnabled} from "./KnowledgeSubmissionAvailability"
 import KnowledgeRelatedInformation from "./KnowledgeRelatedInformation";
 import RelatedThemes from "./RelatedThemes";
 
-// A single footer follows the active phone pane; desktop keeps it in the center.
-const mobilePaneQuery="(max-width: 800px)";
-function subscribeMobilePane(change:()=>void){const media=window.matchMedia?.(mobilePaneQuery);media?.addEventListener?.("change",change);return ()=>media?.removeEventListener?.("change",change);}
-const mobilePaneSnapshot=()=>typeof window!=="undefined"&&Boolean(window.matchMedia?.(mobilePaneQuery).matches);
-const serverMobilePaneSnapshot=()=>false;
 type ExplorerProps = { dataset?: DatasetMode; initialRoot?: string; initialKnowledgeEntityId?: string; services?: PublicServicesPolicy; publicOverview?: import("react").ReactNode; discoveryHome?: DiscoveryHomeData; knowledgeEnabled?: boolean; knowledgeOperatorEnabled?: boolean; initialThemes?: KnowledgeThemeHome | null;initialKnowledgeTheme?:import("../lib/domain/knowledge-theme-reader").KnowledgeThemeRead };
 export default function Explorer(props: ExplorerProps) {
   return props.knowledgeEnabled ? <KnowledgeReading initialEntityId={props.initialKnowledgeEntityId} relatedCatalogue={props.initialThemes?.relatedCatalogue} initialTheme={props.initialKnowledgeTheme} operatorEnabled={props.knowledgeOperatorEnabled}><ExplorerBody {...props}/></KnowledgeReading> : <ExplorerBody {...props} />;
@@ -99,7 +96,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
   const entry = entryLabels(locale);
   const panes = explorerPaneLabels(locale);
   const [activePane, setActivePane] = useState<"search" | "graph" | "detail">(initialKnowledgeTheme || discoveryHome || initialRoot || initialKnowledgeEntityId ? "graph" : "search");
-  const mobilePane=useSyncExternalStore(subscribeMobilePane,mobilePaneSnapshot,serverMobilePaneSnapshot);
+  const explorerRoot=useExplorerPageLayout(activePane);
   const [searchCollapsed, toggleSearchPanel] = useSearchPanelPreference();
   const paneNavigation = useRef<HTMLElement>(null);
   const previousPane = useRef(activePane);
@@ -185,7 +182,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
     inspectEntity(id); moveToPane("detail");
     // The clicked button is removed with ClaimDetails; keep keyboard focus in the reader.
     focusDestination(document.getElementById("explorer-detail"));
-    document.getElementById("explorer-detail")?.scrollTo({ top: 0 });
+    scrollExplorerPane("detail",0);
   };
   const relations = displayRelations(graph.claims, locale);
   // A reader return belongs to this graph and this endpoint, not a later search or selection.
@@ -197,7 +194,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
     if (returnTarget.kind === "relation") selectRelation(returnTarget.id); else selectClaim(returnTarget.id);
     setDetailReturn(null); moveToPane("detail");
     focusDestination(document.getElementById("explorer-detail"));
-    document.getElementById("explorer-detail")?.scrollTo({ top: 0 });
+    scrollExplorerPane("detail",0);
   };
   const selectedRelation = selection?.kind === "relation" ? relations[selection.id] : null;
   const selectedEntity = selection?.kind === "entity" ? graph.nodes[selection.id] : null;
@@ -208,7 +205,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
   useEffect(() => {
     if (activePane !== "detail" || !paneNavigation.current?.getClientRects().length) return;
     // 同じ根拠への往復は読書位置を保ち、別の対象は先頭から読む。
-    if (lastDetail.current !== key) document.getElementById("explorer-detail")?.scrollTo({ top: 0 });
+    if (lastDetail.current !== key) scrollExplorerPane("detail",0);
     lastDetail.current = key;
   }, [activePane, key]);
   const patternExecution = graph.execution?.type === "pattern" ? graph.execution : null;
@@ -218,13 +215,13 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
   const notice = !dataChanged ? graphNoticePresentation(graph.notice, locale) : null;
   const atHome = !!discoveryHome && !graph.centerId && !initialRoot && !knowledge?.active;
   useEffect(()=>knowledge?.attachHost({
-    beforeOpen:()=>{if(knowledge.active)return true;if(graph.centerId&&!urlState.flush()){setNavigationError(true);return false;}readingReturn.current={central:document.getElementById("explorer-graph")?.scrollTop??0,detail:document.getElementById("explorer-detail")?.scrollTop??0,pane:activePane};return true;},
+    beforeOpen:()=>{if(knowledge.active)return true;if(graph.centerId&&!urlState.flush()){setNavigationError(true);return false;}readingReturn.current={central:explorerScrollTop("graph"),detail:explorerScrollTop("detail"),pane:activePane};return true;},
     onPane:moveToPane,
-    onReturn:()=>{setActivePane(readingReturn.current.pane);requestAnimationFrame(()=>{document.getElementById("explorer-graph")?.scrollTo({top:readingReturn.current.central});document.getElementById("explorer-detail")?.scrollTo({top:readingReturn.current.detail});});},
+    onReturn:()=>{setActivePane(readingReturn.current.pane);requestAnimationFrame(()=>{if(!isPhoneExplorer()||readingReturn.current.pane==="graph")scrollExplorerPane("graph",readingReturn.current.central);if(!isPhoneExplorer()||readingReturn.current.pane==="detail")scrollExplorerPane("detail",readingReturn.current.detail);});},
     onLegacyEntity:startFrom,
   }));
   const pageFooter=<SiteFooter languagePath={initialKnowledgeTheme&&knowledge?.active?"/t/"+encodeURIComponent(initialKnowledgeTheme.theme.id):graph.centerId || initialRoot || initialKnowledgeEntityId ? `/explore/${encodeURIComponent(graph.centerId ?? initialRoot ?? initialKnowledgeEntityId!)}` : "/"} beforeNavigation={beforeAccountNavigation} />;
-  return <><div className={styles.explorer}>
+  return <><div ref={explorerRoot} className={styles.explorer}>
     <SiteHeader dataset={dataset} memberTools={!knowledgeOperatorEnabled} onBeforeAccountNavigation={beforeAccountNavigation} onPrivacySettings={services && (services.ads || services.analytics) ? () => publicServices.current?.openSettings() : undefined} />
     {navigationError && <p role="alert">{locale === "en" ? "The exploration is not ready to restore. Wait for loading to finish, or save the workspace before leaving." : "探索を復元できる状態にできませんでした。取得の完了を待つか、探索途中を保存してから移動してください。"}</p>}
     <nav ref={paneNavigation} className={styles.paneNavigation} aria-label={panes.navigation}>
@@ -237,7 +234,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
         <button type="button" disabled={knowledge?.active} aria-label={savedViewLabels(locale).launch} title={knowledge?.active ? locale === "en" ? "Return to exploration to use saved views" : "探索に戻ると保存ビューを利用できます" : savedViewLabels(locale).launch} onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" /></button>
         <button type="button" disabled={knowledge?.active} aria-label={workspaceLabels(locale).launch} title={knowledge?.active ? locale === "en" ? "Return to exploration to save your progress" : "探索に戻ると途中保存を利用できます" : workspaceLabels(locale).launch} onClick={() => setWorkspaceOpen(true)}><Icon name="history" /></button>
         <button type="button" aria-label="My Capsules" title="My Capsules" onClick={() => setCapsuleOpen(true)}><Icon name="capsule" /></button>
-      </nav><div id="explorer-search-content" className={styles.searchPaneContent}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} onDiscover={openDiscovery} /><div lang={locale} className={styles.localActions}><h3>{designLabels(locale).tools}</h3><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />My Capsules</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>{mobilePane&&activePane==="search"&&<div className={styles.pageEnd}>{pageFooter}</div>}</div>
+      </nav><div id="explorer-search-content" className={styles.searchPaneContent}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} onDiscover={openDiscovery} /><div lang={locale} className={styles.localActions}><h3>{designLabels(locale).tools}</h3><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />My Capsules</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div></div>
       <div id="explorer-graph" role="group" tabIndex={-1} data-focus-destination data-discovery-home={atHome || undefined} aria-label={panes.graph} className={styles.centralScroll}>
       {atHome && <DiscoveryHome data={discoveryHome!} initialThemes={initialThemes} onTheme={knowledge?.openTheme} onThemeSearch={knowledge?()=>openDiscovery({q:"",kind:null,presentation:"themes"}):undefined} onDiscover={() => openDiscovery({ q: "", kind: null, presentation: "explore" })} onSearch={() => {
         if (searchCollapsed) toggleSearchPanel();
@@ -272,7 +269,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
           focusDestination(document.getElementById("explorer-relations"));
         }}>{panes.toRelations}<Icon name="chevron" /></button>} onViewChange={urlState.schedule} navigation={<GraphNavigator compact key={graph.generation} nodes={graph.nodes} selection={selection} onNavigate={(id) => {
           inspectEntity(id); canvas.current?.focusEntity(id);
-        }} />} ref={canvas} restoration={viewRestoration} interactionBlocked={relationLoading || !!discoveryCriteria || !!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (!graph.nodes[id]) return; if (matchMedia("(max-width: 800px)").matches) { selectEntity(id); moveToPane("detail"); focusDestination(document.getElementById("explorer-detail")); document.getElementById("explorer-detail")?.scrollTo({top:0}); } else setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onInspectEntity={inspectEntity} onEntity={selectEntity} onRelation={id => { selectRelation(id); if (matchMedia("(min-width: 801px)").matches) trackPublicEvent("relation_detail"); }} onRelationDoubleClick={(id) => { selectRelation(id); moveToPane("detail"); if (matchMedia("(max-width: 800px)").matches) trackPublicEvent("relation_detail"); }} onToggleEntity={id => { if (!graph.expansions[id]?.open) trackPublicEvent("graph_expand"); toggleEntity(id); }} feedback={<>
+        }} />} ref={canvas} restoration={viewRestoration} interactionBlocked={relationLoading || !!discoveryCriteria || !!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (!graph.nodes[id]) return; if (matchMedia("(max-width: 800px)").matches) { selectEntity(id); moveToPane("detail"); focusDestination(document.getElementById("explorer-detail")); scrollExplorerPane("detail",0); } else setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onInspectEntity={inspectEntity} onEntity={selectEntity} onRelation={id => { selectRelation(id); if (matchMedia("(min-width: 801px)").matches) trackPublicEvent("relation_detail"); }} onRelationDoubleClick={(id) => { selectRelation(id); moveToPane("detail"); if (matchMedia("(max-width: 800px)").matches) trackPublicEvent("relation_detail"); }} onToggleEntity={id => { if (!graph.expansions[id]?.open) trackPublicEvent("graph_expand"); toggleEntity(id); }} feedback={<>
           <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><div key={feedbackKey} className={styles.feedbackContent}><p data-testid="selection-status">{ui.selected}：{selectionText}</p><p>{selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? ui.expanded : graph.expansions[selectedEntity.id]?.pages.length ? ui.closed : ui.expandHelp : <><span className={styles.desktopRelationHelp}>{ui.grouped}</span><span className={styles.touchRelationHelp}>{entry.touchRelationHelp}</span></>}</p></div></div>
         </>} />
       </section>
@@ -284,7 +281,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
         {patternExecution && <PatternRoutes graph={graph} />}
 
       </section>
-      <div className={styles.pageEnd}>{!knowledge?.active && (!initialRoot || !graph.centerId || initialRoot === graph.centerId) && publicOverview}{(!mobilePane||activePane==="graph")&&pageFooter}</div>
+      <div className={styles.pageEnd}>{!knowledge?.active && (!initialRoot || !graph.centerId || initialRoot === graph.centerId) && publicOverview}</div>
       </div>
       <aside id="explorer-detail" tabIndex={-1} data-focus-destination className={styles.panel} aria-label={ui.detail}>
         {knowledge?.active && knowledge.detail}
@@ -299,15 +296,16 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
         {selectedEntity && graph.centerId && <GraphPath key={`path:${key}`} nodes={graph.nodes} relations={relations} rootId={graph.centerId} targetId={selectedEntity.id} onRelation={(id) => {
           selectRelation(id); moveToPane("detail");
           focusDestination(document.getElementById("explorer-detail"));
-          document.getElementById("explorer-detail")?.scrollTo({ top: 0 });
+          scrollExplorerPane("detail",0);
         }} />}
         </EntityDetails>}
         {selectedRelation && <ClaimDetails onDataChanged={invalidateData} revision={graph.revision} dataset={dataset} key={`${key}:${selectedRelation.claimIds[0]}`} id={selectedRelation.claimIds[0]} nodes={graph.nodes} onInspectEntity={inspectFromClaim} mode="relation" visibleClaimIds={selectedRelation.claimIds} visibleClaims={selectedRelation.claimIds.map(id => graph.claims[id])} eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
         {selection?.kind === "claim" && <ClaimDetails onDataChanged={invalidateData} revision={graph.revision} dataset={dataset} key={key} id={selection.id} nodes={graph.nodes} claimSummary={selectedClaim ?? undefined} onInspectEntity={inspectFromClaim} eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
         </div>
-        {mobilePane&&activePane==="detail"&&<div className={styles.pageEnd}>{pageFooter}</div>}
+
       </aside>
     </main>
+    <div className={styles.pageEnd}>{pageFooter}</div>
     {capsuleSession && <CapsuleWorkspace key={capsuleSession.id} initial={capsuleSession} isNew onClose={() => setCapsuleSession(null)} />}
     {discoveryCriteria && <DiscoverySearch onChooseTheme={knowledge?.openTheme} presetBrowser={dataset === "public-kg"} dataset={dataset} initial={discoveryCriteria} onClose={closeDiscovery} onChoose={(entity, predicates, roles) => {
       if (predicates === undefined) { startFrom(entity); return; }

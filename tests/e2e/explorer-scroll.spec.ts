@@ -17,7 +17,7 @@ async function swipe(page: Page, cdp: CDPSession, x: number, y: number, dy: numb
   await page.waitForTimeout(300);
 }
 
-for (const width of [1440, 390, 320]) test(`${width}px 本文とフッターの連続スクロールとGraphジェスチャー`, async ({ browser }, info) => {
+for (const width of [1440, 390, 320]) test(`${width}px ページの本文とフッター、追従サイドバーとGraphジェスチャー`, async ({ browser }, info) => {
   const mobile = width < 800, height = mobile ? 700 : 800;
   const context = await browser.newContext({ viewport: { width, height }, isMobile: mobile, hasTouch: mobile });
   await context.addInitScript(() => localStorage.setItem("plunode:privacy:v1", '{"analytics":false,"ads":false}'));
@@ -36,11 +36,11 @@ for (const width of [1440, 390, 320]) test(`${width}px 本文とフッターの�
   await page.goto(info.project.use.baseURL! + "/");
   await expect(page.getByTestId("discovery-home")).toBeVisible();
   await page.waitForTimeout(800);
-  // Home is ordinary content: actual input first scrolls its pane without moving the page.
+  // Home and footer share document flow; the central pane never scrolls locally.
   const homeBox = (await page.locator("#explorer-graph").boundingBox())!;
   await input(homeBox.x + homeBox.width / 2, height - 110);
-  expect(await page.locator("#explorer-graph").evaluate(el => el.scrollTop)).toBeGreaterThan(0);
-  expect(await page.evaluate(() => scrollY)).toBe(0);
+  expect(await page.locator("#explorer-graph").evaluate(el => el.scrollTop)).toBe(0);
+  expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
   await atFooter();
   await page.screenshot({ path: info.outputPath(`home-footer-${width}.png`) });
 
@@ -49,30 +49,20 @@ for (const width of [1440, 390, 320]) test(`${width}px 本文とフッターの�
   // Read a real relation using the adjacency action before exercising all three panes.
   await page.locator("#explorer-relations").getByRole("button", { name: "主張と出典を見る", exact: true }).first().click();
   const before = await view(page);
-  for (const pane of ["search", "graph", "detail"]) {
-    // The footer is in the active mobile pane, and always the central desktop pane.
-    await page.evaluate(() => window.scrollTo(0, 0));
-    if (mobile) await page.getByRole("navigation", { name: "探索画面の切り替え" }).getByRole("button", { name: pane === "search" ? "検索" : pane === "graph" ? "Graph" : "選択の詳細", exact: true }).tap();
-    const locator = page.locator(`#explorer-${pane}`);
-    await locator.evaluate(el => el.scrollTop = el.scrollHeight);
-    // Let the compositor settle after tab/focus/scroll changes before starting a new gesture.
-    await page.waitForTimeout(700);
-    const box = (await locator.boundingBox())!;
-    const other = await page.locator("#explorer-search, #explorer-graph, #explorer-detail").evaluateAll(els => els.map(el => el.scrollTop));
-    await input(box.x + box.width / 2, Math.min(box.y + box.height * .7, height - 110));
-    await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0);
-    expect(await page.locator("#explorer-search, #explorer-graph, #explorer-detail").evaluateAll(els => els.map(el => el.scrollTop))).toEqual(other);
-    if (mobile || pane === "graph") {
-      await atFooter();
-      expect(await page.getByTestId("site-footer").evaluate(el => el.closest("[id^=explorer-]")?.id)).toBe(`explorer-${mobile ? pane : "graph"}`);
-      await page.screenshot({ path: info.outputPath(`${pane}-footer-${width}.png`) });
-    }
+  for (const pane of (mobile ? ["search", "graph", "detail"] : ["graph"])) {
+    if (mobile) await page.getByRole("navigation", {name:"探索画面の切り替え"}).getByRole("button", {name:pane === "search" ? "検索" : pane === "graph" ? "Graph" : "選択の詳細",exact:true}).tap();
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await atFooter();
+    expect(await page.getByTestId("site-footer").evaluate(el => el.closest("main"))).toBeNull();
+    expect(await page.locator("#explorer-graph").evaluate(el => el.scrollTop)).toBe(0);
+    await page.screenshot({path:info.outputPath(`${pane}-footer-${width}.png`)});
     expect(await view(page)).toEqual(before);
   }
 
+
   await page.evaluate(() => window.scrollTo(0, 0));
   if (mobile) await page.getByRole("navigation", { name: "探索画面の切り替え" }).getByRole("button", { name: "Graph", exact: true }).tap();
-  await page.locator("#explorer-graph").evaluate(el => el.scrollTop = 0);
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.waitForTimeout(700);
   const canvas = (await page.getByTestId("graph-canvas").boundingBox())!;
   const start = { x: canvas.x + 35, y: canvas.y + 150 };

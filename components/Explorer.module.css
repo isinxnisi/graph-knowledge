@@ -1,4 +1,4 @@
-.explorer { background: var(--color-page); color: var(--color-text); min-height: 0; font: var(--font-body); height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+.explorer { background: var(--color-page); color: var(--color-text); min-height: 100dvh; font: var(--font-body); height: auto; display: flex; flex-direction: column; overflow: visible; --explorer-header-height: 64px; }
 .explorer * { box-sizing: border-box; }
 .explorer h1, .explorer h2, .explorer h3, .explorer h4, .explorer h5, .explorer p { margin: 0 0 12px; }
 .explorer h1 { font-size: 22px; }
@@ -12,10 +12,10 @@
 .explorer input { background: var(--color-panel); color: var(--color-text); width: 100%; }
 .explorer button:focus-visible, .explorer input:focus-visible, .explorer select:focus-visible, .explorer a:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
 .demo { padding: 4px 12px; background: var(--color-demo); color: var(--color-demo-text); border: 1px solid var(--color-demo-border); border-radius: 4px; font-weight: 600; }
-.columns { display: grid; grid-template-columns: var(--search-pane-width, clamp(190px, 17vw, 236px)) minmax(280px, 1fr) clamp(250px, 24vw, 330px); grid-template-rows: minmax(0, 1fr); align-items: start; gap: 12px; padding: 12px; flex: 1; min-height: 0; overflow-x: auto; overflow-y: hidden; }
+.columns { display: grid; grid-template-columns: var(--search-pane-width, clamp(190px, 17vw, 236px)) minmax(280px, 1fr) clamp(250px, 24vw, 330px); grid-template-rows: auto; align-items: start; gap: 12px; padding: 12px; flex: 1 0 auto; min-height: 0; overflow: visible; }
 .panel { background: var(--color-panel); border: 1px solid var(--color-border); border-radius: var(--radius-panel); padding: var(--space-panel); min-width: 0; overflow-wrap: anywhere; height: 100%; min-height: 0; box-shadow: var(--shadow-panel); }
-/* Sidebars scroll independently; the center contains its own page end. */
-.columns > .panel:first-child, .columns > aside { max-height: none; overflow-y: auto; position: static; top: 95px; overscroll-behavior: contain auto; }
+/* Sidebar height is viewport-bound, but its sticky travel is bounded by main. */
+.columns > .panel:first-child, .columns > aside { height: calc(100dvh - var(--explorer-header-height) - 24px); max-height: calc(100dvh - var(--explorer-header-height) - 24px); overflow-y: auto; position: sticky; top: calc(var(--explorer-header-height) + 12px); overscroll-behavior: contain auto; }
 .searchForm { display: grid; gap: 8px; margin-bottom: 16px; }
 .searchForm button { display: flex; align-items: center; justify-content: center; font-weight: 600; box-shadow: 0 3px 8px rgb(32 84 132 / .12); text-align: center; background: var(--color-accent); color: var(--color-on-accent); }
 .searchForm button:hover:not(:disabled) { background: var(--color-accent-strong); }
@@ -73,7 +73,7 @@
 .citation p { font-size: 12px; margin-bottom: 6px; }
 
 /* 左右を固定し、中央カード全体を外側の一つの領域でスクロールする。 */
-.centralScroll { height: 100%; min-height: 0; min-width: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain auto; scrollbar-gutter: stable; }
+.centralScroll { height: auto; min-height: 0; min-width: 0; overflow: visible; }
 .graphPanel { height: auto; overflow: visible; padding: 16px; }
 .adjacencyPanel { height: auto; margin-top: 10px; padding: 12px 14px; }
 .adjacencyPanel .relations { border-top: 0; padding-top: 0; }
@@ -280,22 +280,22 @@
 .paneNavigation { display: none; }
 @media (max-width: 800px) {
   /* Content continues behind the bottom fade; scroll clearance keeps its end reachable. */
-  .explorer { --pane-nav-clearance:calc(76px + env(safe-area-inset-bottom,0px)); }
+  .explorer { --explorer-header-height:52px; --pane-nav-clearance:calc(76px + env(safe-area-inset-bottom,0px)); }
   .explorer::after { content:""; position:fixed; z-index:24; pointer-events:none; left:0; right:0; bottom:0; height:calc(100px + env(safe-area-inset-bottom,0px)); background:linear-gradient(to bottom,transparent 0%,color-mix(in srgb,var(--color-page) 74%,transparent) 58%,var(--color-page) 100%); }
   .explorer .columns > .panel:first-child, .explorer .columns > aside { padding-bottom:var(--pane-nav-clearance); scroll-padding-bottom:var(--pane-nav-clearance); }
-  .explorer .centralScroll { padding-bottom:var(--pane-nav-clearance); scroll-padding-bottom:var(--pane-nav-clearance); box-sizing:border-box; }
-  .explorer .pageEnd footer { border-top:0; background:var(--color-page); }
+  .explorer .centralScroll { padding-bottom:0; }
+  .explorer > .pageEnd footer { border-top:0; background:var(--color-page); padding-bottom:var(--pane-nav-clearance); }
   .explorer .paneNavigation { display:flex; position:fixed; z-index:25; left:max(12px,env(safe-area-inset-left,0px)); right:max(12px,env(safe-area-inset-right,0px)); bottom:calc(10px + env(safe-area-inset-bottom,0px)); max-width:360px; min-height:52px; margin:0 auto; padding:3px; gap:0; border:1px solid color-mix(in srgb,var(--color-border) 65%,transparent); border-radius:999px; background:linear-gradient(145deg,color-mix(in srgb,var(--color-panel) 88%,transparent),color-mix(in srgb,var(--color-panel) 58%,transparent)); -webkit-backdrop-filter:blur(16px) saturate(120%); backdrop-filter:blur(16px) saturate(120%); box-shadow:0 4px 18px rgb(20 40 65 / .10); }
   .explorer .paneNavigation button { display:flex; align-items:center; justify-content:center; gap:6px; flex:1; min-width:0; min-height:44px; margin:0; padding:4px 8px; font-size:13px; line-height:1.4; text-align:center; border:0 !important; border-radius:999px; background:transparent; position:relative; color:var(--color-muted); }
   .explorer .paneNavigation button > :global(.ui-icon) { width:16px; height:16px; margin:0; flex:none; }
   .explorer .paneNavigation button[aria-pressed="true"] { color:var(--color-accent-strong); background:linear-gradient(145deg,color-mix(in srgb,var(--color-accent-soft) 92%,transparent),color-mix(in srgb,var(--color-accent-soft) 48%,transparent)); font-weight:600; }
   .paneNavigation button[aria-pressed="true"]::after { content:none; }
-  .columns, .wideDetails { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 6px; overflow: hidden; }
+  .columns, .wideDetails { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 6px; overflow: visible; }
   /* Keep the mounted Canvas measurable while hidden, including during pending requests. */
-  .columns > * { grid-area: 1 / 1; visibility: hidden; pointer-events: none; }
+  .columns > * { grid-area: 1 / 1; visibility: hidden; pointer-events: none; height:0; max-height:0; overflow:hidden; }
   .columns[data-active-pane="search"] > :first-child,
   .columns[data-active-pane="graph"] > .centralScroll,
-  .columns[data-active-pane="detail"] > aside { visibility: visible; pointer-events: auto; }
+  .columns[data-active-pane="detail"] > aside { visibility: visible; pointer-events: auto; height:auto; max-height:none; overflow:visible; position:static; }
   .columns > aside > .detailHeading > button:not(.detailBack) { display: none; }
   .canvas { height: clamp(360px, 56dvh, 560px); min-height: 360px; resize: none; }
   .rootSaveActions { display: none; }
@@ -765,7 +765,7 @@
 /* Search remains mounted when collapsed, preserving the current query and results. */
 .searchPaneToggle { display: none; }
 @media (min-width: 801px) {
-  .columns > .searchPane:first-child { position: relative; top: auto; }
+  .columns > .searchPane:first-child { position: sticky; top:calc(var(--explorer-header-height) + 12px); }
   .searchPaneContent > .panel > h2 { padding-inline-end: 27px; }
   .explorer .searchPaneToggle { display: grid; place-items: center; position: absolute; z-index: 1; top: 10px; right: 6px; width: 30px; height: 30px; min-height: 30px; margin: 0; padding: 0; border: 0; background: transparent; color: var(--color-muted); border-radius: 6px; box-shadow: none; }
   .searchPaneToggle > :global(.ui-icon) { width: 17px; height: 17px; margin: 0; transform: scaleX(-1); }
@@ -798,6 +798,13 @@
   .conditionActions > button > :global(.ui-icon) { width: 17px; height: 17px; margin: 0; }
 }
 
-/* The page end belongs to its content scroller, never a second document frame. */
+/* Header, main, footer form the document flow; sidebars stay inside main. */
 .pageEnd { min-width:0; margin-top:16px; }
 .pageEnd:empty { display:none; }
+
+.explorer > header { position:sticky; top:0; }
+@media (max-width:800px) {
+  .explorer .columns > .panel:first-child, .explorer .columns > aside { position:static; top:auto; padding-bottom:14px; height:0; max-height:0; overflow:hidden; }
+  .explorer .columns[data-active-pane="search"] > :first-child,
+  .explorer .columns[data-active-pane="detail"] > aside { height:auto; max-height:none; overflow:visible; }
+}
