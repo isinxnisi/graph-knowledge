@@ -2,7 +2,7 @@
 
 ## 現在地
 
-①失敗段階と通信の確認・②β限定修正／検証完了、③配置後の実Googleログイン確認中。今回の予定終点は③。本番は対象外。
+①失敗段階と通信の確認・②β限定修正／検証・③配置後の実Googleログイン確認まで完了。今回の予定終点は③。本番は対象外。
 
 ## 確認したこと
 
@@ -29,4 +29,8 @@ Better Authのform builderとtoken parserを利用し、state・PKCE・CSRF／or
 
 ## 配置後確認
 
-未了。実Googleログイン成功前に復旧完了とはしない。本番未変更。
+main実装commit `eff8339c`、build `11nggcPDCgz97xTEIlW9R` をローカル3200／HTTPS βへ配置。旧runtimeは `/tmp/beta-google-auth-runtime-before-1794560138` に退避した。既存WorkerのPIDは不変。両会員ページHTTP200。
+
+Chromeで通常のログアウト→「Googleで登録・ログイン」→既存Googleアカウント選択→β `/member` への復帰を実施。エラーを経由せず、既存アカウントの表示名・プロフィールと保存Capsule20件の一覧が表示された。既存セッションの再利用だけではなく、新しいコード交換とID token検証を通る経路で確認した。
+
+確認画面：`C:/Users/nishr/.codex/tmp/beta-google-login-20261113/login-success.png`。iPhone実機での修正後ログインは未確認。本番は未変更、DB migration・会員／テーマデータの手動修正・Worker更新なし。WSL全体の外向きTCP障害を解消した意味ではなく、Googleログインの必要経路をβ限定で復旧した。

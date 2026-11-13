@@ -1,4 +1,4 @@
-2026-11-13 β Googleログイン復旧：①invalid_codeのコード交換段階とWSL外向きTCP失敗を確認・②β限定のWindows通信経路／30件／lint／型検査込みbuildまで完了・③配置と実ログイン確認中｜今回の全体は③まで。Googleの署名・PKCE等を検証し、DB／Worker／本番は未変更。[原因の範囲と検証](verification/BETA_GOOGLE_LOGIN_20261113.md)。以下は各時点の履歴。
+2026-11-13 β Googleログイン復旧：①invalid_codeのコード交換段階／WSL外向きTCP失敗確認・②β限定Windows通信／30件／lint／型検査込みbuild・③3200／HTTPS β反映と実Google再ログインまで完了｜今回の全体は③まで完了。既存アカウントのCapsule20件へ復帰、build `11nggcPDCgz97xTEIlW9R`。署名・PKCE等を検証し、DB migration／Worker／本番未変更。iPhone実機とWSL全体のTCP障害解消は未確認。[原因の範囲と検証](verification/BETA_GOOGLE_LOGIN_20261113.md)。以下は各時点の履歴。
 
 2026-11-13 曖昧な発生時期の表記：①意図確認・②閲覧用日付と終端の重複整理・③3200／HTTPS βのPC・375px確認まで完了｜今回の全体は③まで完了。「1960〜1969年のどこか」へ整理し、後端は日付のみ。実期間の終了・原表記・元データ・選択操作を保持。34件・lint／型検査込みbuild成功、build `rYjPBH5oOrWZEfRu4kvYX`。本番・DB・API・Worker未変更、iPhone実機は未確認。[意図と検証](verification/TIMELINE_WINDOW_LABELS_20261113.md)。以下は各時点の履歴。
 
