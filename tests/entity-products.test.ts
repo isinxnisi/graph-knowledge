@@ -11,7 +11,7 @@ vi.mock("../lib/server/theme-product-provider",async original=>({...await origin
 import {GET} from "../app/api/knowledge/theme-products/route";
 import {readEntityProductContext} from "../lib/server/knowledge-entity-products";
 import {KnowledgeError} from "../lib/server/knowledge-foundation";
-import {entityProducts,type ProductCatalogue} from "../lib/domain/theme-products";
+import {entityProducts,linkedThemeProducts,type ProductCatalogue} from "../lib/domain/theme-products";
 afterEach(()=>vi.resetAllMocks());
 const product={id:"pluto-set",workId:"pluto",title:"PLUTO 全8巻セット",language:"ja",metadataSource:"https://www.amazon.co.jp/dp/B00TEST123",imageId:"a".repeat(64)};
 const offer={productId:product.id,marketplace:"JP",asin:"B00TEST123",affiliateUrl:"https://link.amazon/B0iJNnc7U",status:"ready",checkedAt:"2026-11-13T00:00:00Z"};
@@ -56,4 +56,23 @@ it("explicit identity associations deduplicate products and preserve regional al
 it("theme reads retain the requested version and reject entities outside that snapshot",async()=>{
  setup();const response=await GET(new Request("https://beta/api/knowledge/theme-products?themeId=pluto-theme&revision=3&kind=entity&id=legacy-pluto"));
  expect(response.status).toBe(404);expect(mocks.theme).toHaveBeenCalledWith({themeId:"pluto-theme",revision:3});
+});
+
+it("テーマ内のEntity・関係・出来事の各紐づきを保持し、テーマ外は混入しない",()=>{
+ const cat={products:[product],offers:[],recommendations:[
+  {id:"theme",productId:product.id,target:{kind:"theme",id:theme.id,revision:3},state:"public",order:0,reason:{ja:"テーマ",en:"Theme"}},
+  ...["entity","relation","event","outside"].map((id,index)=>({id,productId:product.id,target:{kind:id==="entity"?"entity":"record",id,revision:1},state:"public",order:index+1,reason:{ja:id,en:id}}))
+ ]} as ProductCatalogue;
+ const snapshot={entities:[{id:"entity",revision:1}],records:[{id:"relation",revision:1},{id:"event",revision:1}]} as Parameters<typeof linkedThemeProducts>[1];
+ const result=linkedThemeProducts(theme as Parameters<typeof linkedThemeProducts>[0],snapshot,"JP",Date.now(),cat);
+ expect(result.map(i=>i.target.id)).toEqual(["entity","relation","event"]);
+});
+
+it("紐づき一覧APIと関係・出来事の詳細APIの双方から同じ商品を読める",async()=>{
+ setup();mocks.theme.mockResolvedValue({theme,snapshot:{entities:[{id:"theme-pluto",revision:4}],records:[{id:"relation",revision:2},{id:"event",revision:3}]}});
+ const content={...value,appliesTo:[...value.appliesTo,{kind:"record",id:"relation"},{kind:"record",id:"event"}]};
+ const original=mocks.query.getMockImplementation()!;mocks.query.mockImplementation(async(sql:string,args:unknown[])=>String(sql).includes("product_editorial_version")?{rows:[{revision:2,content}]}:original(sql,args));
+ const linked=await GET(new Request("https://beta/api/knowledge/theme-products?themeId=pluto-theme&revision=3&associations=1"));expect(linked.status).toBe(200);
+ expect((await linked.json()).products.map((row:{target:{id:string}})=>row.target.id)).toEqual(["theme-pluto","relation","event"]);
+ for(const id of ["relation","event"]){const response=await GET(new Request("https://beta/api/knowledge/theme-products?themeId=pluto-theme&revision=3&kind=record&id="+id));expect((await response.json()).products[0].product.id).toBe(product.id);}
 });

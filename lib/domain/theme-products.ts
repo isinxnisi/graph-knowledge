@@ -12,6 +12,12 @@ export function contextualProducts(theme:KnowledgeThemeVersion,snapshot:Knowledg
  return recommendedProducts(recs,marketplace,now,catalog);
 }
 
+/** Keep every explicit destination; one product may lead to different subjects. */
+export function linkedThemeProducts(theme:KnowledgeThemeVersion,snapshot:KnowledgeSnapshot,marketplace:"JP"|"US"|"UK",now=Date.now(),catalog:ProductCatalogue=data){
+ const targets=new Map(catalog.recommendations.filter(r=>r.state==="public"&&r.target.kind!=="theme").map(r=>[r.target.kind+":"+r.target.id,r.target]));
+ return [...targets.values()].flatMap(t=>t.kind==="theme"?[]:contextualProducts(theme,snapshot,{kind:t.kind,id:t.id},marketplace,now,catalog));
+}
+
 /** Ordinary graph selection follows explicit Entity associations, never nearby nodes. */
 export function entityProducts(entityIds:string[],marketplace:"JP"|"US"|"UK",now=Date.now(),catalog=data){
  const recs=catalog.recommendations.filter(r=>r.state==="public"&&r.target.kind==="entity"&&entityIds.includes(r.target.id)).sort((a,b)=>a.order-b.order);

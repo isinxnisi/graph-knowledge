@@ -9,9 +9,9 @@ import css from "./ThemeProducts.module.css";
 export type ProductCardItem=ReturnType<typeof contextualProducts>[number];
 type ThemeRef={id:string;revision:number};
 type Selection={kind:"record"|"entity";id:string};
-export function useThemeItems(theme?:ThemeRef,selection?:Selection|null){
+export function useThemeItems(theme?:ThemeRef,selection?:Selection|null,associations=false){
  const [market,setMarket]=useState("JP"),[state,setState]=useState<{key:string;items:ProductCardItem[];error:boolean}>({key:"",items:[],error:false});
- const key=theme?JSON.stringify({themeId:theme.id,revision:String(theme.revision),marketplace:market,alternatives:"1",...(selection?{kind:selection.kind,id:selection.id}:{})}):selection?.kind==="entity"?JSON.stringify({kind:"entity",id:selection.id,marketplace:market,alternatives:"1"}):"";
+ const key=theme?JSON.stringify({themeId:theme.id,revision:String(theme.revision),marketplace:market,alternatives:"1",...(associations?{associations:"1"}:{}),...(selection?{kind:selection.kind,id:selection.id}:{})}):selection?.kind==="entity"?JSON.stringify({kind:"entity",id:selection.id,marketplace:market,alternatives:"1"}):"";
  useEffect(()=>{if(!key)return;const c=new AbortController();void fetch("/api/knowledge/theme-products?"+new URLSearchParams(JSON.parse(key)),{signal:c.signal}).then(async r=>{if(!r.ok)throw Error();const v=await r.json();if(!c.signal.aborted)setState({key,items:v.products,error:false});}).catch(()=>{if(!c.signal.aborted)setState({key,items:[],error:true});});return()=>c.abort();},[key]);
  return {market,onMarket:setMarket,items:state.key===key?state.items:[],error:state.key===key&&state.error};
 }
@@ -26,12 +26,15 @@ export function ThemeItemsResult({result,en}:{result:ReturnType<typeof useThemeI
  if(result.error)return <p className={css.notice}>{en?"Related items are temporarily unavailable.":"関連アイテムを一時的に読み込めません。"}</p>;
  return result.items.length?<RelatedProducts {...result} en={en}/>:null;
 }
-export function ItemTeaser({item,en,onOpen}:{item:ProductCardItem;en:boolean;onOpen:(button:HTMLButtonElement)=>void}){
- const {product}=item,image=product.image,[failed,setFailed]=useState(false);
- const title=product.displayName?.[en?"en":"ja"]||product.title;
- return <button type="button" className={css.teaser} onClick={e=>onOpen(e.currentTarget)}>
- {image&&!failed&&<Image unoptimized src={image.url+(image.url.startsWith("/api/knowledge/product-images/")?"?size=small":"")} alt="" width={44} height={44} onError={()=>setFailed(true)}/>}
- <span><small>{en?"Related item":"関連アイテム"}{image?.role==="illustration"&&!failed&&(en?" · Illustrative image":" ・ 紹介用イメージ")}</small><strong>{title}</strong></span><Icon name="arrow"/></button>;
+export function ThemeProductLinks({theme,targets,onOpen}:{theme:ThemeRef;targets:{kind:"entity"|"record";id:string;label:string}[];onOpen:(kind:"entity"|"record",id:string)=>void}){
+ const {locale}=useUiLocale(),en=locale==="en",result=useThemeItems(theme,null,true);
+ const rows=result.items.flatMap(item=>{const target=targets.find(t=>t.kind===item.target.kind&&t.id===item.target.id);return target?[{item,target}]:[];});
+ if(!rows.length)return null;
+ return <section className={css.linkedSection} aria-label={en?"Related items in this theme":"テーマに登場する関連アイテム"}><h3><Icon name="shopping"/>{en?"Related items":"関連アイテム"}</h3><ul className={css.linkedItems}>{rows.map(({item,target})=><li key={item.product.id+":"+target.kind+":"+target.id}><LinkedProduct item={item} label={target.label} en={en} onOpen={()=>onOpen(target.kind,target.id)}/></li>)}</ul></section>;
+}
+function LinkedProduct({item,label,en,onOpen}:{item:ProductCardItem;label:string;en:boolean;onOpen:()=>void}){
+ const image=item.product.image??item.offer?.image,title=item.product.displayName?.[en?"en":"ja"]||item.product.title;
+ return <button className={css.linkedCard} onClick={onOpen}><figure><ProductImage key={image?.url??"missing"} image={image} title="" en={en}/>{item.product.image?.role==="illustration"&&<figcaption>{en?"Illustrative image":"紹介用イメージ"}</figcaption>}{item.product.image?.credit&&<figcaption>{item.product.image.credit}</figcaption>}</figure><span><strong>{title}</strong><small>{label}</small></span><Icon name="chevron"/></button>;
 }
 export function RelatedProducts({items,market,onMarket,en}:{items:ProductCardItem[];market:string;onMarket:(value:string)=>void;en:boolean}){
  return <ReadingDetailSection className={css.section} title={en?"Related items":"関連アイテム"} icon="shopping" action={<div className={css.region}><span className={css.affiliation}>{en?"Amazon affiliate":"Amazonアフィリエイト"}</span><label>{en?"Store region":"購入地域"}<span className={css.regionControl}><select aria-label={en?"Store region":"購入地域"} value={market} onChange={e=>onMarket(e.target.value)}><option value="JP">{en?"Japan":"日本"}</option><option value="US">{en?"United States":"米国"}</option><option value="UK">{en?"United Kingdom":"英国"}</option></select><Icon name="chevron"/></span></label></div>}>

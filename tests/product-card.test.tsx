@@ -6,7 +6,7 @@ vi.mock('next/image',()=>({default:({unoptimized,...props}:React.ImgHTMLAttribut
  // eslint-disable-next-line @next/next/no-img-element
  return <img {...props} alt={props.alt??''}/>; }}));
 vi.mock('../lib/client/ui-locale',()=>({useUiLocale:()=>({locale:'ja'})}));
-import {RelatedProducts,EntityProducts,type ProductCardItem} from '../components/ThemeProducts';
+import {RelatedProducts,EntityProducts,ThemeProductLinks,type ProductCardItem} from '../components/ThemeProducts';
 afterEach(cleanup);
 const item:ProductCardItem={product:{id:'calendar:one',workId:'calendar:one',title:'Original long English title',displayName:{ja:'ジェームズ・ウェッブ宇宙望遠鏡 カレンダー',en:'Webb calendar'},author:'',edition:'',language:'en',category:'calendar',year:2027,metadataSource:'https://www.amazon.co.jp/dp/B0GMV4CK32',image:{url:'/api/knowledge/product-images/'+'a'.repeat(64),width:1254,height:1254,role:'illustration',alt:{ja:'紹介イラスト',en:'Illustration'}}},reason:{ja:'宇宙の景色を日々の暮らしへ。',en:'Space in everyday life.'},target:{kind:'theme',id:'t',revision:1},status:'ready',offer:{productId:'calendar:one',marketplace:'JP',asin:'B0GMV4CK32',status:'ready',affiliateUrl:'https://link.amazon/B0cLIilgt',checkedAt:'2026-11-10T00:00:00Z',image:undefined},alternatives:[]};
 it('完成画面に画像・紹介・購入ボタン・短い広告表記・参加者表示を一緒に出す',()=>{
@@ -49,4 +49,15 @@ it('通常グラフのEntityカードは切替時に前の商品の表示と通�
   await act(async()=>calls[1].resolve({ok:true,json:async()=>({products:[]})} as Response));
   await waitFor(()=>expect(screen.queryByText('関連アイテム')).toBeNull());
  }finally{fetchMock.mockRestore();}
+});
+
+it("小さい商品カードは紐づき先を添え、購入先ではなくその詳細へ開く",async()=>{
+ const open=vi.fn();vi.stubGlobal("fetch",vi.fn(async()=>({ok:true,json:async()=>({products:[{...item,target:{kind:"entity",id:"webb",revision:1}},{...item,target:{kind:"record",id:"launch",revision:1}}]})})));
+ try {
+ render(<ThemeProductLinks theme={{id:"t",revision:1}} targets={[{kind:"entity",id:"webb",label:"Webb宇宙望遠鏡"},{kind:"record",id:"launch",label:"打上げ"}]} onOpen={open}/>);
+ await waitFor(()=>expect(screen.getByText("Webb宇宙望遠鏡")).toBeTruthy());
+ fireEvent.click(screen.getByRole("button",{name:/Webb宇宙望遠鏡$/}));expect(open).toHaveBeenLastCalledWith("entity","webb");
+ fireEvent.click(screen.getByRole("button",{name:/打上げ$/}));expect(open).toHaveBeenLastCalledWith("record","launch");
+ expect(screen.queryByRole("link",{name:/Amazon/})).toBeNull();expect(fetch).toHaveBeenCalledWith(expect.stringContaining("associations=1"),expect.anything());
+ } finally {vi.unstubAllGlobals();}
 });

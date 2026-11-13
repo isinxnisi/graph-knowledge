@@ -1,7 +1,7 @@
 import {knowledgeReadGuard} from "../../../../lib/server/knowledge-read-runtime";
 import {knowledgePublicationPreview} from "../../../../lib/server/knowledge-publication-preview";
 import {creatorsOffers,mergeProductOffers} from "../../../../lib/server/theme-product-provider";
-import {contextualProducts,entityProducts,productCatalogue} from "../../../../lib/domain/theme-products";
+import {contextualProducts,linkedThemeProducts,entityProducts,productCatalogue} from "../../../../lib/domain/theme-products";
 import {editorialCatalogue} from "../../../../lib/server/member/product-editorial";
 import {memberRuntime} from "../../../../lib/server/member/runtime";
 export const dynamic="force-dynamic";
@@ -28,9 +28,10 @@ export async function GET(request:Request){try{
  const catalog=v.theme.content.productPins?await editorialCatalogue(memberRuntime().pool,v.theme.content.productPins,v.theme,{products:[],offers:[],recommendations:[]}):productCatalogue;
  // Product associations pin actual entity/record revisions from this theme snapshot.
  for(const rec of catalog.recommendations){if(rec.id.startsWith('product:')&&rec.target.kind!=='theme'){const pin=(rec.target.kind==='record'?v.snapshot.records:v.snapshot.entities).find(p=>p.id===rec.target.id);if(pin)rec.target.revision=pin.revision;}}
- const initial=contextualProducts(v.theme,v.snapshot,selection,market as Market,Date.now(),catalog);
- const offers=await productOffers(initial.map(i=>i.product.id),market as Market,q.get("alternatives")==="1");
- return Response.json({products:contextualProducts(v.theme,v.snapshot,selection,market as Market,Date.now(),{...catalog,offers:mergeProductOffers(catalog.offers,offers)})},{headers});
+ const rows=(catalogue:typeof catalog)=>q.get("associations")==="1"&&!selection?linkedThemeProducts(v.theme,v.snapshot,market as Market,Date.now(),catalogue):contextualProducts(v.theme,v.snapshot,selection,market as Market,Date.now(),catalogue);
+ const initial=rows(catalog);
+ const offers=await productOffers([...new Set(initial.map(i=>i.product.id))],market as Market,q.get("alternatives")==="1");
+ return Response.json({products:rows({...catalog,offers:mergeProductOffers(catalog.offers,offers)})},{headers});
  }catch(e){return Response.json({error:"Products unavailable"},{status:e&&typeof e==="object"&&"status" in e&&[403,404].includes(Number(e.status))?404:e instanceof Error&&e.name==="ZodError"?400:503,headers});}}
 
 async function productOffers(ids:string[],market:Market,alternatives:boolean){

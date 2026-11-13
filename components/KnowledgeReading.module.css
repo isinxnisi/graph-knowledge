@@ -78,10 +78,6 @@
 .sourceIndex ul { padding-left: 23px; }
 .sourceIndex li { margin: 8px 0; }
 .sourceIndex a { color: var(--color-accent); }
-.prototype { margin-top: 14px; font-size: 11px; color: var(--color-muted); }
-.prototype summary { cursor: pointer; padding: 5px 0; }
-.prototype label { display: flex; gap: 8px; align-items: center; margin: 10px 0; }
-.prototype select { min-width: 0; max-width: 100%; }
 
 @media (min-width:1200px) { .details .entityReturn { display: none; } }
 @media (max-width:800px) {
