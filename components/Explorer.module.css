@@ -792,8 +792,8 @@
   .graphHeading h2 { font-size: 18px; }
   .conditionBar { gap: 2px 8px; padding: 3px 0 6px; margin-bottom: 6px; }
   .conditionBar > p { flex: 1 1 100%; }
-  .conditionActions { margin-inline-start: auto; gap: 4px; }
-  .conditionActions > button, .conditionActions > .conditionEdit { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; min-height: 36px; padding: 0; }
+  .conditionActions { display:grid; grid-auto-flow:column; grid-auto-columns:36px; grid-template-rows:36px; flex:0 0 auto; width:max-content; margin-inline-start:auto; gap:4px; }
+  .explorer .conditionActions > button, .explorer .conditionActions > .conditionEdit { display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; flex:none; width:36px; min-width:36px; max-width:36px; height:36px; min-height:36px; max-height:36px; margin:0; padding:0; }
   .conditionActions > button > span { display: none; }
   .conditionActions > button > :global(.ui-icon) { width: 17px; height: 17px; margin: 0; }
 }
