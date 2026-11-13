@@ -456,7 +456,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
             {reading&&<div className={css.readingContext} data-shared-subject={sharedSubject||undefined}><RecordContext record={record} entities={entities} focusedEntityId={focusedEntityId}/><KnowledgeReadingBadge kind={record.kind} polarity={record.polarity} en={locale==="en"} showKind={false}/></div>}
             {group.kind === "calendar" ? (
               (!reading || (t?.kind === "calendar" && (t.to || t.startLatest || t.endEarliest))) &&
-              <p className={css.calendarMeta+" "+css.meta}>{themeTimeLabel(reading&&t?.kind==="calendar"?{...t,label:""}:record.displayTime??record.time,locale)}</p>
+              <p className={css.calendarMeta+" "+css.meta}>{reading&&t?.kind==="calendar"?readingCalendarLabel(t,locale):themeTimeLabel(record.displayTime??record.time,locale)}</p>
             ) : (
               <Period record={record} />
             )}

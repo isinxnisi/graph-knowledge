@@ -187,7 +187,8 @@ it.each(["ja", "en"] as const)("keeps an uncertain occurrence separate from a du
   const { container, rerender } = render(<UiLocaleProvider initialLocale={locale}><KnowledgeTimeline snapshot={data} reading focusedRecordId={null} onFocusRecord={onFocus} /></UiLocaleProvider>);
   const row = container.querySelector('[data-record-id="uncertain-event"]')!;
   expect(row.querySelector('[class*="readingDate"]')?.textContent).toBe(locale === "ja" ? "1960〜1969年のどこか" : "Sometime in 1960–1969");
-  expect(row.querySelector('[class*="readingDate"]')?.textContent).not.toContain("原表記");
+  expect(row.querySelector('[class*="calendarMeta"]')?.textContent).toBe(locale === "ja" ? "1960〜1969年のどこか" : "Sometime in 1960–1969");
+  expect(row.textContent).not.toContain("原表記");
   expect(row.querySelector('[class*="readingDate"]')?.textContent).not.toContain("Source notation");
   const ending = screen.getByRole("button", { name: locale === "ja" ? /^最も遅い時期：1969/ : /^Latest possible date: 1969/ });
   expect(ending.textContent).toBe("1969");
