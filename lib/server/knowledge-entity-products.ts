@@ -3,8 +3,9 @@ import {knowledgeIdSchema} from "../domain/knowledge-foundation";
 import {identityGroup} from "./knowledge-identity-resolution";
 import {KnowledgeError,resolvePublicKnowledgeTheme} from "./knowledge-foundation";
 
-/** Only products pinned by currently readable themes may enter public Entity cards.
- * Identity decisions are explicit and version-bound; names and graph neighbors do not match products.
+/** Resolve explicit identities and readable theme context for legacy catalogue fallback.
+ * Registered product discovery is independent of theme productPins.
+ * Names and graph neighbors do not establish product associations.
  */
 export async function readEntityProductContext(c:PoolClient,rawId:string){
  const entityIds=await identityGroup(c,[knowledgeIdSchema.parse(rawId)]);
