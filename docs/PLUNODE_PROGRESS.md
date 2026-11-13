@@ -1,4 +1,4 @@
-2026-11-14 テーマ読み物の明示編集：①設計・②掲載選択／順序／グループ・既存API・隔離試験まで完了、③β反映・④実ChatGPT確認へ｜今回は④まで。PLUTO版9／黒澤版10は読取のみ、本番未変更。[設計](design/THEME_STORIES_EDITORIAL_20261114.md)。
+2026-11-14 テーマ読み物の明示編集：①設計・②選択／順序／グループ・隔離試験・③3200／HTTPS β・④既存ChatGPT Appの読取→確認専用テーマ版3→4更新→published→読戻しまで完了｜今回は④まで完了。実装fe5d9486／build `8Tu7cZwjELp3xVV8kD1PZ`、57件＋隔離33件、運営AI送信0。実PLUTO版9／黒澤版10・本番未変更。[実測・互換・App接続](verification/THEME_STORIES_EDITORIAL_20261114.md)。
 
 2026-11-14 TOP紹介と初回表示：①確認・②左ペイン初回閉鎖／TOP紹介テーマ1〜3列グリッドと1列時3件＋追加開閉／テーマ出典の末尾配置・③3200／HTTPS βのPC・768px・375px／設定再訪確認まで完了｜今回の工程は③まで完了。関連32件・lint／型検査込みbuild `wQYMJtpyCfir5rqkZ1Z3P`、本番・DB・Worker未変更、iPhone実機未確認。[確認記録](verification/HOME_FEATURED_GRID_20261114.md)。
 

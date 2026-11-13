@@ -1,4 +1,4 @@
-テーマの読み物の明示編集（β）：[設計と既存App契約](design/THEME_STORIES_EDITORIAL_20261114.md)。
+テーマの読み物の明示編集（β）：[設計と既存App契約](design/THEME_STORIES_EDITORIAL_20261114.md)／[隔離試験・β・実ChatGPT確認](verification/THEME_STORIES_EDITORIAL_20261114.md)。
 
 2026-11-14：[TOP紹介テーマの折返し・左ペイン初回閉鎖・テーマ出典末尾](verification/HOME_FEATURED_GRID_20261114.md)を3200／HTTPS βへ反映。
 
