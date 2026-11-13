@@ -86,3 +86,9 @@ describe("exploration URL synchronization", () => {
     expect(apply).not.toHaveBeenCalled();
   });
 });
+
+it("共通知識が正規探索URLを担当するときは本線形式の復元を二重起動しない",async()=>{
+ history.replaceState({},"","/explore/import%3Aentity-one");
+ const apply=vi.fn();const {result}=renderHook(()=>useExplorationUrl({dataset:"public-kg",restoreEntry:false,suspended:true,graph:emptyGraph(),capture:()=>null,apply,locale:"ja"}));
+ await act(async()=>{});expect(rebuildExplorationUrl).not.toHaveBeenCalled();expect(apply).not.toHaveBeenCalled();expect(result.current.failure).toBeNull();expect(result.current.busy).toBe(false);
+});

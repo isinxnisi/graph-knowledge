@@ -173,7 +173,7 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
       const commonRoot=new URL(location.href).searchParams.get("kentity");
       if(commonRoot && stored.rootId!==commonRoot){stored.rootId=commonRoot;stored.recordIds=[];stored.generation=null;stored.selection={kind:"entity",id:commonRoot};}
     }
-    if (initialRootId && stored.rootId !== initialRootId) { stored.rootId = initialRootId; stored.recordIds = []; stored.selection = { kind: "entity", id: initialRootId }; stored.theme = null; }
+    if (initialRootId && !new URL(location.href).searchParams.has("krecord") && stored.rootId !== initialRootId) { stored.rootId = initialRootId; stored.recordIds = []; stored.generation=null; stored.normalView=undefined; stored.selection = { kind: "entity", id: initialRootId }; stored.theme = null; }
     queueMicrotask(() => { if(disposed)return;const wanted=knowledgeThemeLocation(new URL(location.href));
       if(initialTheme&&wanted?.id===initialTheme.theme.id&&(!wanted.revision||wanted.revision===initialTheme.theme.revision)){
         ready.current=true;setRestoring(false);update(s=>({...s,themeView:wanted.view??s.themeView,themeSelection:validSelection(wanted.focusEntityId?{kind:"entity",id:wanted.focusEntityId}:stored.themeSelection,initialTheme.records,initialTheme.snapshot.entities)}),"none");
@@ -285,7 +285,7 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
           entities: mergeEntities(start ? [] : s.normal.entities, recordEntities(records), [result.center]), selection: start ? { kind: "entity", id } : s.normal.selection, epoch: s.normal.epoch + (start ? 1 : 0) },
           neighborPages: { ...(start ? {} : s.neighborPages), [id]: { cursor: result.nextCursor, hasMore: result.hasMore } } };
       }, start ? "push" : "replace");
-      setMessage(result.records.length ? "周囲の関係を表示しました。" : "この対象に表示できる関係はありません。");
+      setMessage(result.records.length ? "" : "この対象に表示できる関係はありません。");
       return true;
     } catch (e) { if (live(token)) setError(messageOf(e)); return false; } finally { finish(token); }
   }
@@ -319,7 +319,7 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
       if (live(token)) { setError(messageOf(e)); if (unavailable(e)) update(s => s.retainedTheme?.theme.id === ref.id ? { ...s, activeTheme: null, retainedTheme: null, themeSelection: null, themeCanvasView: undefined, themeRestoration: null } : s); }
     } finally { finish(token); }
   }
-  function closeTheme(history: "push" | "replace" = "push") { stopProgress(); epoch.current++; setBusy(false); update(s => ({ ...s, activeTheme: null }), history); }
+  function closeTheme(history: "push" | "replace" = "push") { setMessage("");stopProgress(); epoch.current++; setBusy(false); update(s => ({ ...s, activeTheme: null }), history); }
   function setThemeView(themeView: KnowledgeView) { stopProgress();epoch.current++; setBusy(false); update(s => ({ ...s, themeView })); }
   function setThemeSelection(selection: KnowledgeSelection) {
     stopProgress();epoch.current++; setBusy(false);

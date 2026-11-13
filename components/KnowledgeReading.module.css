@@ -21,8 +21,9 @@
 .editRecord { font-size: 12px; line-height: 1.5; }
 .editRecord :global(.ui-icon) { width: 16px; height: 16px; }
 .stage { container-type: inline-size; }
-.stageHeader { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+.stageHeader { display: flex; flex-wrap: wrap; justify-content: flex-start; align-items: center; gap: 8px; margin-bottom: 8px; }
 .stageHeader h2 { margin-bottom: 0; }
+.stageHeader > span { margin-inline-end: auto; }
 .home { padding: 12px 0 18px; }
 .home p { color: var(--color-muted); font-size: 13px; line-height: 1.8; }
 .themeCards { display: grid; grid-template-columns: repeat(auto-fit,minmax(210px,1fr)); gap: 8px; }

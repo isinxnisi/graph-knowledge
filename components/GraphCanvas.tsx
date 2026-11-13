@@ -51,6 +51,13 @@ function fitElementsInViewport(cy: Core, selected: CollectionReturnValue) {
   cy.zoom(Math.min(1.15, cy.zoom()));
   cy.center(elements);
 }
+function layoutVisibleContent(cy:Core,surface:HTMLDivElement|null,content:CanvasContent|undefined){
+  if(!surface?.getClientRects().length||surface.clientWidth<=0||surface.clientHeight<=0)return false;
+  const positions=contentPositions(cy.nodes().map(node=>node.id()),content?.relations??{},cy.width()<cy.height());
+  Object.entries(positions).forEach(([id,point])=>cy.getElementById(id).position(point));
+  cy.fit(undefined,40);cy.zoom(Math.min(1.15,cy.zoom()));cy.center();keepFitAboveTouchToolbar(cy);
+  return true;
+}
 type Props = { onInspectEntity?: (id: string) => void; content?: CanvasContent; selectedKeys?: string[]; onSelectionChange?: (ids: string[]) => void; onMove?: (before: GraphView, after: GraphView) => void; onContextMenu?: (request: GraphContextMenuRequest) => void; compactGuide?: boolean; controls?: "full" | "view"; fillHeight?: boolean; footerAction?: ReactNode; onViewChange?: () => void; contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; notification?: ReactNode; feedback?: ReactNode; navigation?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onRelationDoubleClick?: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
 
 export default function GraphCanvas({ onInspectEntity, content, selectedKeys, onSelectionChange, onMove, onContextMenu, compactGuide = false, controls = "full", fillHeight = false, footerAction, onViewChange, contentOnly = false, ref, feedback, notification, navigation, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick }: Props) {
@@ -86,6 +93,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
   const previousCondition = useRef("all");
   const savedPositions = useRef<Record<string, { x: number; y: number }>>({});
   const initialLayoutDone = useRef(false);
+  const pendingInitialLayout = useRef(false);
   const viewportSize = useRef<{ width: number; height: number } | null>(null);
   const pendingFocus = useRef<string | null>(null);
   const textMeasurement = useRef<CanvasRenderingContext2D | null>(null);
@@ -100,6 +108,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       cy.pan(restorationPan({ pan, zoom, center: viewportCenter(pan, zoom, before) }, after));
     }
     viewportSize.current = after;
+    if(pendingInitialLayout.current&&cy.nodes().length&&layoutVisibleContent(cy,container.current,canvasOptions.current.content)){initialLayoutDone.current=true;pendingInitialLayout.current=false;}
     // The timeline can keep the mounted graph hidden. Wait for a real viewport
     // before fitting its focused record, then consume that request only once.
     if (pendingFocus.current !== null) {
@@ -109,6 +118,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     }
   }
   function captureView(): GraphView | null {
+    if(pendingInitialLayout.current)return null;
     const cy = core.current;
     if (!cy) return null;
     const viewport = { width: cy.width(), height: cy.height() }, pan = { ...cy.pan() }, zoom = cy.zoom();
@@ -391,6 +401,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     const reset = generation.current !== graph.generation;
     const restored = reset && restoration?.generation === graph.generation ? restoration.view : null;
     if (reset) {
+      pendingInitialLayout.current=false;
       if (!contentOnly) {
         movementHistory.current = { past: [], future: [] };
         canvasOptions.current.currentKeys = [];
@@ -452,11 +463,8 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       else { cy.fit(undefined, 40); keepFitAboveTouchToolbar(cy); }
       if (rootReady || contentOnly && renderedNodes.length > 0) initialLayoutDone.current = true;
     } else if (contentOnly && !initialLayoutDone.current && newNodes.length) {
-      const ids = cy.nodes().map(node => node.id());
-      const positions = contentPositions(ids, relations, cy.width() < cy.height());
-      Object.entries(positions).forEach(([id, point]) => cy.getElementById(id).position(point));
-      cy.fit(undefined, 40); cy.zoom(Math.min(1.15, cy.zoom())); cy.center(); keepFitAboveTouchToolbar(cy);
-      initialLayoutDone.current = true;
+      pendingInitialLayout.current=!layoutVisibleContent(cy,container.current,content);
+      initialLayoutDone.current=!pendingInitialLayout.current;
     } else if (!initialLayoutDone.current && graph.centerId && rootReady) {
       const compact = window.matchMedia("(max-width: 800px)").matches;
       const positions = initialPositions(graph.centerId, cy.nodes().filter((node) => node.id() !== graph.centerId).map((node) => node.id()), cy.height(), compact && cy.width() < cy.height());

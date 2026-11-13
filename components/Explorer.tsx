@@ -72,11 +72,11 @@ import {useKnowledgeSubmissionsEnabled} from "./KnowledgeSubmissionAvailability"
 import KnowledgeRelatedInformation from "./KnowledgeRelatedInformation";
 import RelatedThemes from "./RelatedThemes";
 
-type ExplorerProps = { dataset?: DatasetMode; initialRoot?: string; services?: PublicServicesPolicy; publicOverview?: import("react").ReactNode; discoveryHome?: DiscoveryHomeData; knowledgeEnabled?: boolean; knowledgeOperatorEnabled?: boolean; initialThemes?: KnowledgeThemeHome | null;initialKnowledgeTheme?:import("../lib/domain/knowledge-theme-reader").KnowledgeThemeRead };
+type ExplorerProps = { dataset?: DatasetMode; initialRoot?: string; initialKnowledgeEntityId?: string; services?: PublicServicesPolicy; publicOverview?: import("react").ReactNode; discoveryHome?: DiscoveryHomeData; knowledgeEnabled?: boolean; knowledgeOperatorEnabled?: boolean; initialThemes?: KnowledgeThemeHome | null;initialKnowledgeTheme?:import("../lib/domain/knowledge-theme-reader").KnowledgeThemeRead };
 export default function Explorer(props: ExplorerProps) {
-  return props.knowledgeEnabled ? <KnowledgeReading relatedCatalogue={props.initialThemes?.relatedCatalogue} initialTheme={props.initialKnowledgeTheme} operatorEnabled={props.knowledgeOperatorEnabled}><ExplorerBody {...props}/></KnowledgeReading> : <ExplorerBody {...props} />;
+  return props.knowledgeEnabled ? <KnowledgeReading initialEntityId={props.initialKnowledgeEntityId} relatedCatalogue={props.initialThemes?.relatedCatalogue} initialTheme={props.initialKnowledgeTheme} operatorEnabled={props.knowledgeOperatorEnabled}><ExplorerBody {...props}/></KnowledgeReading> : <ExplorerBody {...props} />;
 }
-function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview, discoveryHome, knowledgeOperatorEnabled, initialThemes,initialKnowledgeTheme }: ExplorerProps) {
+function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview, discoveryHome, knowledgeOperatorEnabled, initialThemes,initialKnowledgeTheme,initialKnowledgeEntityId }: ExplorerProps) {
   const knowledge=useKnowledgeReading(),submissionsEnabled=useKnowledgeSubmissionsEnabled();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -93,7 +93,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
   const labels = datasetLabels(dataset, locale);
   const entry = entryLabels(locale);
   const panes = explorerPaneLabels(locale);
-  const [activePane, setActivePane] = useState<"search" | "graph" | "detail">(initialKnowledgeTheme || discoveryHome || initialRoot ? "graph" : "search");
+  const [activePane, setActivePane] = useState<"search" | "graph" | "detail">(initialKnowledgeTheme || discoveryHome || initialRoot || initialKnowledgeEntityId ? "graph" : "search");
   const [searchCollapsed, toggleSearchPanel] = useSearchPanelPreference();
   const paneNavigation = useRef<HTMLElement>(null);
   const previousPane = useRef(activePane);
@@ -137,7 +137,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
   const [detailReturn, setDetailReturn] = useState<{ generation: number; entityId: string; source: { kind: "claim" | "relation"; id: string } } | null>(null);
   const { applyRelation, cancelRelation, relationLoading, invalidateData, dataChanged, reloadData, graph, selection, previous, viewRestoration, switchRoot, restorePrevious, openSavedView, openWorkspace, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity } = useGraphExplorer();
   const [discoveryRoute, setDiscoveryRoute] = useState<{path: PathWitness; conditionKey: string} | null>(null);
-  const urlState = useExplorationUrl({ suspended:knowledge?.active||knowledge?.restoring, dataset, initialRoot, graph, locale, capture: () => canvas.current?.capture() ?? null, apply: value => { setDiscoveryRoute(value.discoveryPath ? { path: value.discoveryPath, conditionKey: value.graph.conditionKey } : null); openWorkspace(value, canvas.current?.capture() ?? null); setActivePane("graph"); } });
+  const urlState = useExplorationUrl({ restoreEntry:!initialKnowledgeEntityId,suspended:knowledge?.active||knowledge?.restoring, dataset, initialRoot, graph, locale, capture: () => canvas.current?.capture() ?? null, apply: value => { setDiscoveryRoute(value.discoveryPath ? { path: value.discoveryPath, conditionKey: value.graph.conditionKey } : null); openWorkspace(value, canvas.current?.capture() ?? null); setActivePane("graph"); } });
   const [navigationError, setNavigationError] = useState(false);
   const [submissionBusy,setSubmissionBusy]=useState(false),[submissionError,setSubmissionError]=useState("");
   const [graphSelected,setGraphSelected]=useState<string[]>([]);
@@ -237,7 +237,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
         moveToPane("search");
         requestAnimationFrame(() => document.querySelector<HTMLInputElement>("#explorer-search input")?.focus({ preventScroll: true }));
       }} />}
-      {knowledge && <div hidden={!knowledge.active && !knowledge.error && !knowledge.message}>{knowledge.center}</div>}
+      {knowledge && <div hidden={!knowledge.active}>{knowledge.center}</div>}
       <section hidden={atHome || knowledge?.active} className={`${styles.panel} ${styles.graphPanel}`} aria-labelledby="graph-title">
         <div className={styles.graphHeader}>
           <div className={styles.graphHeading}><h2 id="graph-title">Graph</h2>
@@ -322,5 +322,5 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
         knowledge?.leave();
         openSavedView(entity, conditions, canvas.current?.capture() ?? null); moveToPane("graph");
       }} />}
-  </div>{!knowledge?.active && (!initialRoot || !graph.centerId || initialRoot === graph.centerId) && publicOverview}<SiteFooter languagePath={initialKnowledgeTheme&&knowledge?.active?"/t/"+encodeURIComponent(initialKnowledgeTheme.theme.id):graph.centerId || initialRoot ? `/explore/${graph.centerId ?? initialRoot}` : "/"} beforeNavigation={beforeAccountNavigation} /></>;
+  </div>{!knowledge?.active && (!initialRoot || !graph.centerId || initialRoot === graph.centerId) && publicOverview}<SiteFooter languagePath={initialKnowledgeTheme&&knowledge?.active?"/t/"+encodeURIComponent(initialKnowledgeTheme.theme.id):graph.centerId || initialRoot || initialKnowledgeEntityId ? `/explore/${encodeURIComponent(graph.centerId ?? initialRoot ?? initialKnowledgeEntityId!)}` : "/"} beforeNavigation={beforeAccountNavigation} /></>;
 }

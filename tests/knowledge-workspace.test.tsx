@@ -333,3 +333,15 @@ it("explicit navigation still reports failures and its progress stops on cancell
  const pending=api.hold('theme');act(()=>{void result.current.openTheme({id:'theme'});});await flush();expect(navigationProgressSnapshot()).not.toBeNull();
  act(()=>result.current.closeTheme());expect(navigationProgressSnapshot()).toBeNull();await pending.finish();expect(result.current.activeTheme).toBeNull();
 });
+
+it("正規の探索URLから共通知識の起点を開き、URLと選択を再読込でも保つ",async()=>{
+ server();history.replaceState({},"","/explore/b");
+ const first=renderHook(()=>useKnowledgeWorkspace({embedded:true,initialRootId:"b"}));await flush();
+ expect(first.result.current.normal.rootId).toBe("b");expect(first.result.current.normal.records).toHaveLength(1);expect(first.result.current.normal.selection).toEqual({kind:"entity",id:"b"});expect(location.pathname).toBe("/explore/b");expect(location.search).not.toContain("kentity");
+ expect(first.result.current.message).toBe("");first.unmount();
+ const second=renderHook(()=>useKnowledgeWorkspace({embedded:true,initialRootId:"b"}));await flush();expect(second.result.current.normal.rootId).toBe("b");expect(second.result.current.normal.selection).toEqual({kind:"entity",id:"b"});
+});
+it("起点の正規URLでも明示したRecordを起点で上書きせず、関係取得の成功通知を持ち越さない",async()=>{
+ server();history.replaceState({},"","/explore/a?krecord=r2");const {result}=renderHook(()=>useKnowledgeWorkspace({embedded:true,initialRootId:"a"}));await flush();
+ expect(result.current.normal.selection).toEqual({kind:"record",id:"r2"});await act(()=>result.current.startFrom(a));expect(result.current.message).toBe("");await act(()=>result.current.openTheme({id:"theme"}));expect(result.current.message).toBe("");
+});

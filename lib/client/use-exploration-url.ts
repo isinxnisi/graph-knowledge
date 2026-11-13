@@ -14,8 +14,8 @@ import { WorkspaceError, WorkspaceRootNotFound } from "./saved-workspace";
 import { fetchDatasetRevision } from "./api";
 import { parseDiscoveryHandoff, verifyDiscoveryHandoff } from "./discovery-relation-navigation";
 
-export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply, locale, suspended = false }: {
-  suspended?: boolean;
+export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply, locale, suspended = false,restoreEntry=true }: {
+  suspended?: boolean;restoreEntry?:boolean;
   dataset: DatasetMode; initialRoot?: string; graph: GraphState; capture: () => GraphView | null;
   apply: (value: RebuiltWorkspace) => void; locale: "ja" | "en";
 }) {
@@ -72,6 +72,7 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
     return () => window.removeEventListener(labEntryEvent,leaving);
   }, []);
   useEffect(() => {
+    if(!restoreEntry)return;
     const restartThisAttempt = restartRequested.current === attempt;
     const rootId = initialRoot ?? /^(?:\/en)?\/explore\/([^/]+)$/.exec(location.pathname)?.[1];
     const controller = new AbortController();
@@ -131,7 +132,7 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
     })();
     return () => { disposed = true; clearTimeout(timeout); controller.abort(); };
     // Restore only on entry/retry, never in response to our own replaceState.
-  }, [initialRoot, dataset, attempt, schedule]);
+  }, [initialRoot, dataset, attempt, schedule,restoreEntry]);
   return { busy, failure, notice, searchOrigin:searchOrigin?.root===graph.centerId?searchOrigin:null, ready, schedule, flush: update, canRestart, restart: () => { if (savedInput.current?.relation.type === "pattern") { setBusy(true); setFailure(null); restartRequested.current = attempt + 1; setAttempt(a => a + 1); } }, retry: () => { restartRequested.current = null; setBusy(true); setFailure(null); setAttempt(a => a + 1); },
     abandon: () => { failed.current = false; setFailure(null); history.replaceState(history.state, "", location.pathname.startsWith("/en") ? "/en" : "/"); },
     copy: async () => { if (!update()) return; try { await navigator.clipboard.writeText(location.href); setNotice(explorationUrlLabels(locale).copied); } catch { setNotice(explorationUrlLabels(locale).manualCopy); } } };

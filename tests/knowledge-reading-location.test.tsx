@@ -162,3 +162,16 @@ it("テーマ概要から図の名前を選ぶと、その名前の説明へ切�
  expect(detail.getByRole("heading",{name:"Ariane 5"})).toBeTruthy();
  expect(detail.getByText("Webbを打ち上げたロケット")).toBeTruthy();
 });
+
+it("テーマの『名前から探索する』は言語付きの正規URLへのリンクにする",async()=>{
+ const entity={id:"import:person-kurosawa",revision:1,createdAt:"2026-11-13T00:00:00Z",reason:"",content:knowledgeEntityContentSchema.parse({name:"黒澤明",kind:"person",description:"映画監督"})};
+ const focused={...theme,snapshot:{...theme.snapshot,entities:[entity]}};
+ mocks.workspace={...mocks.workspace,activeTheme:focused,retainedTheme:focused,themeSelection:{kind:"entity",id:entity.id}};
+ function Details(){return <>{useKnowledgeReading()!.detail}</>;}
+ render(<KnowledgeReading><Details/></KnowledgeReading>);await flush();
+ expect(screen.getByRole("link",{name:"黒澤明から探索する"}).getAttribute("href")).toBe("/explore/import%3Aperson-kurosawa");
+});
+it("正規の共通知識ページをホームと誤認して閉じず、ホームに戻るリンクを表示する",async()=>{
+ history.replaceState({},"","/explore/import%3Aperson-kurosawa");mocks.workspace={...mocks.workspace,activeTheme:null,retainedTheme:null};
+ render(<KnowledgeReading initialEntityId="import:person-kurosawa"><Reader/></KnowledgeReading>);await flush();expect(mocks.close).not.toHaveBeenCalled();expect(screen.getByRole("region",{name:"通常の関係探索"})).toBeTruthy();expect(screen.getByRole("link",{name:"探索に戻る"}).getAttribute("href")).toBe("/");
+});
