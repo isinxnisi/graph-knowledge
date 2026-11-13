@@ -22,3 +22,23 @@
 ### 実画面で見つけた入口の追加修正
 
 βの実リンクで初回404を確認。導入中のNextでは動的route paramsがURLエンコードされた状態で渡るため、テーマ入口と同様にページ／metadataの境界で公開IDへdecodeして検証する処理を追加した。不正エスケープ・encoded slashを拒否する。原資料や公開権限の不足ではない。回帰1件追加で現行関連97件（追加後の対象4件成功）、再build成功。
+
+## 反映と実画面の結果
+
+- 修正source `47ca00d1` と動的params補修 `693e8648` をmainへcommit後、3200を更新。最終build `5ulPvIWTJx5_O6zW9hLxa`。`/api/dataset` はlocal／HTTPS βとも200。正式VPSは未変更、既存Worker PID保持。
+- localのURLエンコードされた黒澤明 `/explore/` が200。βの同じテーマ構成版9・黒澤明詳細の実リンクからcanonical探索へ移動できた。Entity IDは同一で、4対象／3関係を表示。再読み込みでも同じURL／Entity／表示を保持。ブラウザの戻るで元のテーマとEntity選択へ戻った。
+- 既存 `/?kentity=` も4対象／3関係を画面内へ初期配置。成功通知なし。関連テーマへ移動後も通知の露出なし。
+- PCの見出し／件数を左、Capsule／投稿アイコンを右へ整列。375×812でも4ノードを表示し、documentの横はみ出しなし（innerWidth375、scrollWidth365）。iPhone実機は未確認。
+- local3200の既存本線KG PLUTO `/explore/2b7c6289-d050-4dc0-93e3-9307681253cc` を再確認。「関連するテーマ→関連アイテム→関連する知識」、全8巻セットの画像・購入操作を維持。購入は実行していない。
+- 閲覧UIコードに「旧KG」の表記はないことを確認。今回の説明で内部名をそのまま出した問題として訂正し、データの分類や既存KGの位置付けは変更していない。
+
+### 画面の証跡
+
+保存先：`C:/Users/nishr/.codex/visualizations/2026/10/29/01a18791-0fba-7ac0-9f89-54c48fdffcf6/entity-explore-20261113/`
+
+- `query-graph-desktop.png`：既存query形式の中央配置と整列。
+- `canonical-graph-desktop.png`：テーマから実リンクを押したcanonical探索。
+- `canonical-graph-mobile.png`：375px幅。
+- `main-kg-regression.png`：本線KG PLUTOの回帰確認。
+
+変更前は利用者提示の `aa67ce44`（通知残り）、`5b694153`（左上への欠け）、`72e2c58c`（分散したアイコン）の各画像と比較。
