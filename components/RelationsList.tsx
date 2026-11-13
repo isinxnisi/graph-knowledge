@@ -7,16 +7,15 @@ import { explorerLabels, explorerMessage } from "../lib/i18n/explorer";
 import type { DatasetMode } from "../lib/domain/dataset";
 import { datasetLabels } from "../lib/i18n/dataset";
 import { explorationLabels } from "../lib/i18n/exploration";
-import { explorerPaneLabels } from "../lib/i18n/explorer-panes";
 import type { GraphState, Selection } from "../lib/client/graph-state";
 import { displayRelations, entityLabel, relationId } from "../lib/client/graph-presentation";
 import { formatPeriod, polarityLabel, relationLabel, qualificationLabel } from "../lib/client/format";
 import Icon from "./Icon";
 import styles from "./Explorer.module.css";
 
-export default function RelationsList({ graph, selection, onEntity, onClaim, onExpand, onClose, dataset = "demo" }: {
+export default function RelationsList({ graph, selection, onEntity, onClaim, onExpand, dataset = "demo" }: {
   dataset?: DatasetMode;
-  graph: GraphState; selection: Selection; onEntity: (id: string) => void; onClaim: (id: string) => void; onExpand: (id: string, more?: boolean) => void; onClose: (id: string) => void;
+  graph: GraphState; selection: Selection; onEntity: (id: string) => void; onClaim: (id: string) => void; onExpand: (id: string, more?: boolean) => void;
 }) {
   const { locale } = useUiLocale();
   const ui = explorerLabels(locale);
@@ -34,14 +33,8 @@ export default function RelationsList({ graph, selection, onEntity, onClaim, onE
   const expansion = graph.expansions[entity.id];
   const text = explorationLabels(locale);
   return <section id="explorer-relations" tabIndex={-1} className={styles.relations} aria-label={ui.adjacentAria}>
-    <div className={styles.relationsHeading}>
-      <button className={styles.compactLink} onClick={() => {
-        document.getElementById("explorer-graph")?.scrollTo({ top: 0 });
-        document.getElementById("explorer-graph")?.focus({ preventScroll: true });
-      }}>{explorerPaneLabels(locale).backToGraph}</button>
-    </div>
     <AnimatedDetails key={entity.id} open className={styles.adjacencyDisclosure} bodyClassName={styles.adjacencyBody} summary={<><h3>{ui.adjacent(entityDisplayName(entity,locale))}<small className={styles.muted}>{ui.adjacentHelp}</small></h3><span className={styles.disclosureChevron} aria-hidden="true"><Icon name="chevron" /></span></>}>
-    <div className={styles.actions}>{expansion?.open ? <button onClick={() => onClose(entity.id)}>{ui.closeBranch}</button> : <button onClick={() => onExpand(entity.id)}>{expansion?.pages.length ? ui.reopenBranch : ui.expand}</button>}</div>
+    {!expansion?.open&&<div className={styles.actions}><button onClick={() => onExpand(entity.id)}>{expansion?.pages.length ? ui.reopenBranch : ui.expand}</button></div>}
     {expansion?.loading && <NeighborLoading key={`${entity.id}:${expansion.request}`} name={entityDisplayName(entity,locale)} more={expansion.expanded} />}
     {expansion?.error && <div role="alert" className={styles.error}>
       <p>{explorerMessage(expansion.error, locale)}</p>

@@ -17,7 +17,7 @@ async function swipe(page: Page, cdp: CDPSession, x: number, y: number, dy: numb
   await page.waitForTimeout(300);
 }
 
-for (const width of [1440, 390, 320]) test(`${width}px ペインの端→ページ→フッターとGraphジェスチャー`, async ({ browser }, info) => {
+for (const width of [1440, 390, 320]) test(`${width}px 本文とフッターの連続スクロールとGraphジェスチャー`, async ({ browser }, info) => {
   const mobile = width < 800, height = mobile ? 700 : 800;
   const context = await browser.newContext({ viewport: { width, height }, isMobile: mobile, hasTouch: mobile });
   await context.addInitScript(() => localStorage.setItem("plunode:privacy:v1", '{"analytics":false,"ads":false}'));
@@ -50,7 +50,7 @@ for (const width of [1440, 390, 320]) test(`${width}px ペインの端→ペー�
   await page.locator("#explorer-relations").getByRole("button", { name: "主張と出典を見る", exact: true }).first().click();
   const before = await view(page);
   for (const pane of ["search", "graph", "detail"]) {
-    // Set up the boundary only. The transition to the document must use wheel/touch input.
+    // The footer is in the active mobile pane, and always the central desktop pane.
     await page.evaluate(() => window.scrollTo(0, 0));
     if (mobile) await page.getByRole("navigation", { name: "探索画面の切り替え" }).getByRole("button", { name: pane === "search" ? "検索" : pane === "graph" ? "Graph" : "選択の詳細", exact: true }).tap();
     const locator = page.locator(`#explorer-${pane}`);
@@ -62,8 +62,11 @@ for (const width of [1440, 390, 320]) test(`${width}px ペインの端→ペー�
     await input(box.x + box.width / 2, Math.min(box.y + box.height * .7, height - 110));
     await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0);
     expect(await page.locator("#explorer-search, #explorer-graph, #explorer-detail").evaluateAll(els => els.map(el => el.scrollTop))).toEqual(other);
-    await atFooter();
-    await page.screenshot({ path: info.outputPath(`${pane}-footer-${width}.png`) });
+    if (mobile || pane === "graph") {
+      await atFooter();
+      expect(await page.getByTestId("site-footer").evaluate(el => el.closest("[id^=explorer-]")?.id)).toBe(`explorer-${mobile ? pane : "graph"}`);
+      await page.screenshot({ path: info.outputPath(`${pane}-footer-${width}.png`) });
+    }
     expect(await view(page)).toEqual(before);
   }
 

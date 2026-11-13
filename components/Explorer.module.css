@@ -280,11 +280,11 @@
 .paneNavigation { display: none; }
 @media (max-width: 800px) {
   /* Content continues behind the bottom fade; scroll clearance keeps its end reachable. */
-  .explorer, .explorer ~ footer { --pane-nav-clearance:calc(76px + env(safe-area-inset-bottom,0px)); }
+  .explorer { --pane-nav-clearance:calc(76px + env(safe-area-inset-bottom,0px)); }
   .explorer::after { content:""; position:fixed; z-index:24; pointer-events:none; left:0; right:0; bottom:0; height:calc(100px + env(safe-area-inset-bottom,0px)); background:linear-gradient(to bottom,transparent 0%,color-mix(in srgb,var(--color-page) 74%,transparent) 58%,var(--color-page) 100%); }
   .explorer .columns > .panel:first-child, .explorer .columns > aside { padding-bottom:var(--pane-nav-clearance); scroll-padding-bottom:var(--pane-nav-clearance); }
   .explorer .centralScroll { padding-bottom:var(--pane-nav-clearance); scroll-padding-bottom:var(--pane-nav-clearance); box-sizing:border-box; }
-  .explorer ~ footer { padding-bottom:var(--pane-nav-clearance); border-top:0; background:var(--color-page); }
+  .explorer .pageEnd footer { border-top:0; background:var(--color-page); }
   .explorer .paneNavigation { display:flex; position:fixed; z-index:25; left:max(12px,env(safe-area-inset-left,0px)); right:max(12px,env(safe-area-inset-right,0px)); bottom:calc(10px + env(safe-area-inset-bottom,0px)); max-width:360px; min-height:52px; margin:0 auto; padding:3px; gap:0; border:1px solid color-mix(in srgb,var(--color-border) 65%,transparent); border-radius:999px; background:linear-gradient(145deg,color-mix(in srgb,var(--color-panel) 88%,transparent),color-mix(in srgb,var(--color-panel) 58%,transparent)); -webkit-backdrop-filter:blur(16px) saturate(120%); backdrop-filter:blur(16px) saturate(120%); box-shadow:0 4px 18px rgb(20 40 65 / .10); }
   .explorer .paneNavigation button { display:flex; align-items:center; justify-content:center; gap:6px; flex:1; min-width:0; min-height:44px; margin:0; padding:4px 8px; font-size:13px; line-height:1.4; text-align:center; border:0 !important; border-radius:999px; background:transparent; position:relative; color:var(--color-muted); }
   .explorer .paneNavigation button > :global(.ui-icon) { width:16px; height:16px; margin:0; flex:none; }
@@ -797,3 +797,7 @@
   .conditionActions > button > span { display: none; }
   .conditionActions > button > :global(.ui-icon) { width: 17px; height: 17px; margin: 0; }
 }
+
+/* The page end belongs to its content scroller, never a second document frame. */
+.pageEnd { min-width:0; margin-top:16px; }
+.pageEnd:empty { display:none; }

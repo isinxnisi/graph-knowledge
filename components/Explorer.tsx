@@ -1,6 +1,6 @@
 "use client";
 import {useNavigationProgress} from "../lib/client/navigation-progress";
-import {useTransition} from "react";
+import {useTransition,useSyncExternalStore} from "react";
 import { entityDisplayName } from "../lib/domain/entity-display";
 import { focusDestination } from "../lib/client/focus-destination";
 import { graphNoticePresentation } from "../lib/client/graph-notice";
@@ -72,6 +72,11 @@ import {useKnowledgeSubmissionsEnabled} from "./KnowledgeSubmissionAvailability"
 import KnowledgeRelatedInformation from "./KnowledgeRelatedInformation";
 import RelatedThemes from "./RelatedThemes";
 
+// A single footer follows the active phone pane; desktop keeps it in the center.
+const mobilePaneQuery="(max-width: 800px)";
+function subscribeMobilePane(change:()=>void){const media=window.matchMedia?.(mobilePaneQuery);media?.addEventListener?.("change",change);return ()=>media?.removeEventListener?.("change",change);}
+const mobilePaneSnapshot=()=>typeof window!=="undefined"&&Boolean(window.matchMedia?.(mobilePaneQuery).matches);
+const serverMobilePaneSnapshot=()=>false;
 type ExplorerProps = { dataset?: DatasetMode; initialRoot?: string; initialKnowledgeEntityId?: string; services?: PublicServicesPolicy; publicOverview?: import("react").ReactNode; discoveryHome?: DiscoveryHomeData; knowledgeEnabled?: boolean; knowledgeOperatorEnabled?: boolean; initialThemes?: KnowledgeThemeHome | null;initialKnowledgeTheme?:import("../lib/domain/knowledge-theme-reader").KnowledgeThemeRead };
 export default function Explorer(props: ExplorerProps) {
   return props.knowledgeEnabled ? <KnowledgeReading initialEntityId={props.initialKnowledgeEntityId} relatedCatalogue={props.initialThemes?.relatedCatalogue} initialTheme={props.initialKnowledgeTheme} operatorEnabled={props.knowledgeOperatorEnabled}><ExplorerBody {...props}/></KnowledgeReading> : <ExplorerBody {...props} />;
@@ -94,6 +99,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
   const entry = entryLabels(locale);
   const panes = explorerPaneLabels(locale);
   const [activePane, setActivePane] = useState<"search" | "graph" | "detail">(initialKnowledgeTheme || discoveryHome || initialRoot || initialKnowledgeEntityId ? "graph" : "search");
+  const mobilePane=useSyncExternalStore(subscribeMobilePane,mobilePaneSnapshot,serverMobilePaneSnapshot);
   const [searchCollapsed, toggleSearchPanel] = useSearchPanelPreference();
   const paneNavigation = useRef<HTMLElement>(null);
   const previousPane = useRef(activePane);
@@ -217,6 +223,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
     onReturn:()=>{setActivePane(readingReturn.current.pane);requestAnimationFrame(()=>{document.getElementById("explorer-graph")?.scrollTo({top:readingReturn.current.central});document.getElementById("explorer-detail")?.scrollTo({top:readingReturn.current.detail});});},
     onLegacyEntity:startFrom,
   }));
+  const pageFooter=<SiteFooter languagePath={initialKnowledgeTheme&&knowledge?.active?"/t/"+encodeURIComponent(initialKnowledgeTheme.theme.id):graph.centerId || initialRoot || initialKnowledgeEntityId ? `/explore/${encodeURIComponent(graph.centerId ?? initialRoot ?? initialKnowledgeEntityId!)}` : "/"} beforeNavigation={beforeAccountNavigation} />;
   return <><div className={styles.explorer}>
     <SiteHeader dataset={dataset} memberTools={!knowledgeOperatorEnabled} onBeforeAccountNavigation={beforeAccountNavigation} onPrivacySettings={services && (services.ads || services.analytics) ? () => publicServices.current?.openSettings() : undefined} />
     {navigationError && <p role="alert">{locale === "en" ? "The exploration is not ready to restore. Wait for loading to finish, or save the workspace before leaving." : "探索を復元できる状態にできませんでした。取得の完了を待つか、探索途中を保存してから移動してください。"}</p>}
@@ -230,7 +237,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
         <button type="button" disabled={knowledge?.active} aria-label={savedViewLabels(locale).launch} title={knowledge?.active ? locale === "en" ? "Return to exploration to use saved views" : "探索に戻ると保存ビューを利用できます" : savedViewLabels(locale).launch} onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" /></button>
         <button type="button" disabled={knowledge?.active} aria-label={workspaceLabels(locale).launch} title={knowledge?.active ? locale === "en" ? "Return to exploration to save your progress" : "探索に戻ると途中保存を利用できます" : workspaceLabels(locale).launch} onClick={() => setWorkspaceOpen(true)}><Icon name="history" /></button>
         <button type="button" aria-label="My Capsules" title="My Capsules" onClick={() => setCapsuleOpen(true)}><Icon name="capsule" /></button>
-      </nav><div id="explorer-search-content" className={styles.searchPaneContent}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} onDiscover={openDiscovery} /><div lang={locale} className={styles.localActions}><h3>{designLabels(locale).tools}</h3><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />My Capsules</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div></div>
+      </nav><div id="explorer-search-content" className={styles.searchPaneContent}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} onDiscover={openDiscovery} /><div lang={locale} className={styles.localActions}><h3>{designLabels(locale).tools}</h3><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button disabled={knowledge?.active} title={knowledge?.active ? locale === "en" ? "Return to exploration to use this tool" : "探索に戻ると利用できます" : undefined} onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />My Capsules</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>{mobilePane&&activePane==="search"&&<div className={styles.pageEnd}>{pageFooter}</div>}</div>
       <div id="explorer-graph" role="group" tabIndex={-1} data-focus-destination data-discovery-home={atHome || undefined} aria-label={panes.graph} className={styles.centralScroll}>
       {atHome && <DiscoveryHome data={discoveryHome!} initialThemes={initialThemes} onTheme={knowledge?.openTheme} onThemeSearch={knowledge?()=>openDiscovery({q:"",kind:null,presentation:"themes"}):undefined} onDiscover={() => openDiscovery({ q: "", kind: null, presentation: "explore" })} onSearch={() => {
         if (searchCollapsed) toggleSearchPanel();
@@ -271,12 +278,13 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
       </section>
       {services && (services.ads || services.analytics) && <PublicServices ref={publicServices} inline active={activePane === "graph" && !atHome} policy={services} beforeNavigation={beforeAccountNavigation} />}
       <section hidden={atHome || knowledge?.active} className={`${styles.panel} ${styles.adjacencyPanel}`} data-testid="adjacency-card">
-        <RelationsList dataset={dataset} graph={graph} selection={selection} onEntity={selectEntity} onClaim={id => { selectClaim(id); moveToPane("detail"); }} onExpand={(id, more) => void expand(id, more)} onClose={close} />
+        <RelationsList dataset={dataset} graph={graph} selection={selection} onEntity={selectEntity} onClaim={id => { selectClaim(id); moveToPane("detail"); }} onExpand={(id, more) => void expand(id, more)} />
         {submissionError&&<p role="alert" className={styles.error}>{submissionError}</p>}
         {submissionBusy&&<p role="status">{locale==="en"?"Creating a private draft…":"非公開の投稿草稿を作成しています…"}</p>}
         {patternExecution && <PatternRoutes graph={graph} />}
 
       </section>
+      <div className={styles.pageEnd}>{!knowledge?.active && (!initialRoot || !graph.centerId || initialRoot === graph.centerId) && publicOverview}{(!mobilePane||activePane==="graph")&&pageFooter}</div>
       </div>
       <aside id="explorer-detail" tabIndex={-1} data-focus-destination className={styles.panel} aria-label={ui.detail}>
         {knowledge?.active && knowledge.detail}
@@ -297,6 +305,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
         {selectedRelation && <ClaimDetails onDataChanged={invalidateData} revision={graph.revision} dataset={dataset} key={`${key}:${selectedRelation.claimIds[0]}`} id={selectedRelation.claimIds[0]} nodes={graph.nodes} onInspectEntity={inspectFromClaim} mode="relation" visibleClaimIds={selectedRelation.claimIds} visibleClaims={selectedRelation.claimIds.map(id => graph.claims[id])} eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
         {selection?.kind === "claim" && <ClaimDetails onDataChanged={invalidateData} revision={graph.revision} dataset={dataset} key={key} id={selection.id} nodes={graph.nodes} claimSummary={selectedClaim ?? undefined} onInspectEntity={inspectFromClaim} eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
         </div>
+        {mobilePane&&activePane==="detail"&&<div className={styles.pageEnd}>{pageFooter}</div>}
       </aside>
     </main>
     {capsuleSession && <CapsuleWorkspace key={capsuleSession.id} initial={capsuleSession} isNew onClose={() => setCapsuleSession(null)} />}
@@ -323,5 +332,5 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
         knowledge?.leave();
         openSavedView(entity, conditions, canvas.current?.capture() ?? null); moveToPane("graph");
       }} />}
-  </div>{!knowledge?.active && (!initialRoot || !graph.centerId || initialRoot === graph.centerId) && publicOverview}<SiteFooter languagePath={initialKnowledgeTheme&&knowledge?.active?"/t/"+encodeURIComponent(initialKnowledgeTheme.theme.id):graph.centerId || initialRoot || initialKnowledgeEntityId ? `/explore/${encodeURIComponent(graph.centerId ?? initialRoot ?? initialKnowledgeEntityId!)}` : "/"} beforeNavigation={beforeAccountNavigation} /></>;
+  </div></>;
 }

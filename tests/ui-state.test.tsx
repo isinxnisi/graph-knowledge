@@ -59,7 +59,7 @@ describe("関係詳細から対象の確認", () => {
   });
 });
 describe("隣接一覧からの取得", () => {
-  const props = () => ({ onEntity: vi.fn(), onClaim: vi.fn(), onExpand: vi.fn(), onClose: vi.fn() });
+  const props = () => ({ onEntity: vi.fn(), onClaim: vi.fn(), onExpand: vi.fn() });
   it("Claim選択中も主体の続きへ進み、上限・通信中は追加取得を無効にする", () => {
     const graph = mergePage(emptyGraph(), { ...page, page: { hasMore: true, nextCursor: "next" } });
     const handlers = props();
@@ -67,6 +67,8 @@ describe("隣接一覧からの取得", () => {
     const { rerender } = render(<RelationsList {...handlers} graph={graph} selection={selection} />);
     fireEvent.click(screen.getByRole("button", { name: "隣接関係の続きを表示" }));
     expect(handlers.onExpand).toHaveBeenCalledWith(root.id, true);
+    expect(screen.queryByRole("button", {name:"Graphへ戻る"})).toBeNull();
+    expect(screen.queryByRole("button", {name:"展開を閉じる"})).toBeNull();
     const expansion = graph.expansions[root.id];
     for (const state of [{ blocked: true }, { loading: true }]) {
       rerender(<RelationsList {...handlers} graph={{ ...graph, expansions: { [root.id]: { ...expansion, ...state } } }} selection={selection} />);
