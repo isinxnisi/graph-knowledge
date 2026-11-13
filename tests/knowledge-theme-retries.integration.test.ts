@@ -124,3 +124,7 @@ it('enforces actual-source and service rate budgets under concurrent retry opera
  }
  expect((await service.controlRetry(owner,control(v.requestId,'retry','G07',2))).items[0].waitCode).toBe('SOURCE_SERVICE_RATE');expect(dispatch).not.toHaveBeenCalled();
 });
+
+it('accepts the supported 20 evidence excerpts from one URL without treating successful quotes as failed retries',async()=>{
+ const v=create(),item=record('G07');item.record.evidence=Array.from({length:20},(_,i)=>({id:'quote-'+i,source:{id:'shared',revision:1},locator:'Paragraph '+i,excerpt:'Fact G07'}));v.package.items=[item];await service.submit(owner,v);await service.recoverOne();await imports.processNext(config,dispatch);await projected();expect((await inputs(v.requestId))[0].state).toBe('published');const history=await service.retryStatus(owner,v.requestId,'G07');expect(history.items?.[0].attempts).toHaveLength(20);expect(history.items?.[0].attempts.every(a=>a.outcome==='verified')).toBe(true);expect(dispatch).not.toHaveBeenCalled();
+});

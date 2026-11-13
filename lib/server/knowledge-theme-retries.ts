@@ -13,7 +13,7 @@ import {SourceCheckError,sourceURL} from './knowledge-source-verification';
 import {webImportPrincipal} from './knowledge-web-import';
 import {operatorThemeIntake} from './operator-theme-intake';
 
-export const THEME_RETRY_LIMITS={sourceAttemptsPerItemUrlDay:8,preparationsPerItemDay:32,sourceChecksPerMinute:60,sourceChecksPerDay:10000,hostChecksPerMinute:12,operationsPerOperator24h:200};
+export const THEME_RETRY_LIMITS={sourceFailuresPerItemUrlDay:8,preparationsPerItemDay:32,sourceChecksPerMinute:60,sourceChecksPerDay:10000,hostChecksPerMinute:60,operationsPerOperator24h:200};
 export async function themeRetriesAvailable(c:Pool|PoolClient){return !!(await c.query("SELECT to_regclass('knowledge_missions.theme_retry_operations') name")).rows[0]?.name;}
 export async function ensureThemeRetries(c:Pool|PoolClient){
  const name='043-theme-item-retries.sql',hash=createHash('sha256').update(await readFile(path.join(process.cwd(),'db/member',name))).digest('hex');
@@ -67,8 +67,8 @@ export async function sourceWait(c:Pool|PoolClient,itemId:string,urls:string[]):
   const host=new URL(url).hostname;
   const hostWait=(await c.query('SELECT wait_until,reason FROM knowledge_missions.theme_source_host_waits WHERE host=$1 AND wait_until>clock_timestamp()',[host])).rows[0];
   if(hostWait)return new ThemeRetryWait(hostWait.wait_until,'SOURCE_HOST_WAIT',hostWait.reason);
-  const count=(await c.query(`SELECT (SELECT COALESCE(sum(attempts),0) FROM knowledge_missions.theme_retry_legacy WHERE item_id=$1 AND url=$2 AND quota_day=$3)+(SELECT count(*) FROM knowledge_missions.theme_source_attempts WHERE item_id=$1 AND url=$2 AND quota_day=$3) n`,[itemId,url,day])).rows[0].n;
-  if(Number(count)>=THEME_RETRY_LIMITS.sourceAttemptsPerItemUrlDay)return new ThemeRetryWait(nextQuotaDay(now),'SOURCE_DAILY_LIMIT','この資料URLの本日の取得上限を待っています。');
+  const count=(await c.query(`SELECT (SELECT COALESCE(sum(attempts),0) FROM knowledge_missions.theme_retry_legacy WHERE item_id=$1 AND url=$2 AND quota_day=$3)+(SELECT count(*) FROM knowledge_missions.theme_source_attempts a LEFT JOIN knowledge_missions.theme_source_results r ON r.attempt_id=a.id WHERE a.item_id=$1 AND a.url=$2 AND a.quota_day=$3 AND (r.outcome IS NULL OR r.outcome='failed')) n`,[itemId,url,day])).rows[0].n;
+  if(Number(count)>=THEME_RETRY_LIMITS.sourceFailuresPerItemUrlDay)return new ThemeRetryWait(nextQuotaDay(now),'SOURCE_DAILY_LIMIT','この資料URLの本日の取得失敗上限を待っています。');
   const failure=(await c.query(`SELECT r.wait_until FROM knowledge_missions.theme_source_results r JOIN knowledge_missions.theme_source_attempts a ON a.id=r.attempt_id WHERE a.item_id=$1 AND a.url=$2 AND r.wait_until>clock_timestamp() ORDER BY r.wait_until DESC LIMIT 1`,[itemId,url])).rows[0];
   if(failure)return new ThemeRetryWait(failure.wait_until,'SOURCE_BACKOFF','この資料URLの再取得間隔を待っています。');
   const hostRate=(await c.query("SELECT count(*)::int n,min(started_at)+interval '1 minute' until FROM knowledge_missions.theme_source_attempts WHERE host=$1 AND started_at>clock_timestamp()-interval '1 minute'",[host])).rows[0];
