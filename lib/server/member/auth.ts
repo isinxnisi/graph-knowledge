@@ -3,6 +3,7 @@ import { genericOAuth } from "better-auth/plugins/generic-oauth";
 import { Pool } from "pg";
 import { MemberUnavailable, type MemberConfig } from "./config";
 import {missionMcpEnabled,missionOAuthPlugins} from './mission-oauth';
+import {googleBetaTransportPlugins} from './google-beta-transport';
 
 export function memberPool(config: MemberConfig) {
   const pool = new Pool({ connectionString: config.databaseUrl, max: 5, connectionTimeoutMillis: 3000,
@@ -28,7 +29,7 @@ export function createMemberAuth(config: MemberConfig, pool: Pool) {
       providerId: "fixture", clientId: "graph-member-fixture", discoveryUrl: `${provider.issuer}/.well-known/openid-configuration`,
       requireIdTokenVerification: true, scopes: ["openid", "profile", "email"], pkce: true,
       tokenEndpointAuth: { method: "none" },
-    }] })] : missionMcpEnabled() ? missionOAuthPlugins(config.origin) : [],
+    }] })] : [...(missionMcpEnabled() ? missionOAuthPlugins(config.origin) : []),...googleBetaTransportPlugins(config)],
     advanced: { disableOriginCheck: false, disableCSRFCheck: false, database: { generateId: "uuid" }, cookiePrefix: config.cookiePrefix,
       useSecureCookies: config.origin.startsWith("https:"), defaultCookieAttributes: { httpOnly: true, sameSite: "lax" } },
     session: { expiresIn: 60 * 60 * 24 * 7, updateAge: 60 * 60 * 24, cookieCache: { enabled: false } },

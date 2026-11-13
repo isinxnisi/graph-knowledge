@@ -1,3 +1,5 @@
+2026-11-13 β Googleログイン復旧：①invalid_codeのコード交換段階とWSL外向きTCP失敗を確認・②β限定のWindows通信経路／30件／lint／型検査込みbuildまで完了・③配置と実ログイン確認中｜今回の全体は③まで。Googleの署名・PKCE等を検証し、DB／Worker／本番は未変更。[原因の範囲と検証](verification/BETA_GOOGLE_LOGIN_20261113.md)。以下は各時点の履歴。
+
 2026-11-13 曖昧な発生時期の表記：①意図確認・②閲覧用日付と終端の重複整理・③3200／HTTPS βのPC・375px確認まで完了｜今回の全体は③まで完了。「1960〜1969年のどこか」へ整理し、後端は日付のみ。実期間の終了・原表記・元データ・選択操作を保持。34件・lint／型検査込みbuild成功、build `rYjPBH5oOrWZEfRu4kvYX`。本番・DB・API・Worker未変更、iPhone実機は未確認。[意図と検証](verification/TIMELINE_WINDOW_LABELS_20261113.md)。以下は各時点の履歴。
 
 2026-11-13 年表の見出しとTOP一覧：①原因確認・②見出し／補足の主従と長い題名／種別の整列・③3200／HTTPS βのPC・375px確認まで完了｜今回の全体は③まで完了。38件・lint／型検査込みbuild成功、build `GcXmdVX6VAkl-Y5aLvgLD`。補足全文と元データ・操作を保持し、補足なし項目の高さ不変。本番・DB・API・Worker未変更、iPhone実機は未確認。[比較と実測](verification/TIMELINE_HIERARCHY_HOME_LIST_20261113.md)。以下は各時点の履歴。
