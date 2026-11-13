@@ -285,9 +285,9 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
         {!selection && <p className={styles.muted}>{entry.detailHelp}</p>}
         {discoveryRoute && discoveryRoute.conditionKey === graph.conditionKey && <DiscoveryGraphRoute path={discoveryRoute.path} graph={graph} onClear={() => setDiscoveryRoute(null)} onClaim={id => { selectClaim(id); moveToPane("detail"); }} />}
         {selectedEntity && <EntityDetails dataset={dataset} key={key} entity={selectedEntity} expansion={graph.expansions[selectedEntity.id]} onExpand={(more) => void expand(selectedEntity.id, more)} onClose={() => close(selectedEntity.id)} restricted={restricted} onOverview={() => setOverview(selectedEntity)} onSwitch={(mode) => switchFrom(selectedEntity, mode)} />}
+        {selectedEntity && knowledge && <RelatedThemes catalogue={initialThemes?.relatedCatalogue} entityId={selectedEntity.id} onOpen={knowledge.openTheme} />}
         {selectedEntity && knowledge && <EntityProducts entityId={selectedEntity.id}/>}
         {selectedEntity && knowledge && <KnowledgeRelatedInformation key={selectedEntity.id} entityId={selectedEntity.id} onOpen={knowledge.openRecord}/> }
-        {selectedEntity && knowledge && <RelatedThemes catalogue={initialThemes?.relatedCatalogue} entityId={selectedEntity.id} onOpen={knowledge.openTheme} />}
         {selectedEntity && graph.centerId && <GraphPath key={`path:${key}`} nodes={graph.nodes} relations={relations} rootId={graph.centerId} targetId={selectedEntity.id} onRelation={(id) => {
           selectRelation(id); moveToPane("detail");
           focusDestination(document.getElementById("explorer-detail"));
