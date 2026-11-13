@@ -125,3 +125,15 @@ it("provided editorial art does not require invented external source links, whil
  expect(themeReadingPresentationSchema.safeParse({...entry,image:{...image,kind:"photo"}}).success).toBe(false);
  expect(themeReadingPresentationSchema.safeParse({...entry,image:{...image,sourceUrl:"not a URL"}}).success).toBe(false);
 });
+
+it("story titles open full text in place, remain independently reversible and reserve navigation for the small source action",()=>{
+ const records=Array.from({length:4},(_,i)=>buildKnowledgePublishedRecord({...snapshot.records[0],id:"story"+i,content:{...snapshot.records[0].content,assertion:"Full body "+i}},snapshot));
+ const presentation=themeReadingPresentationSchema.parse({version:1,theme:{id:"t",revision:1},locale:"ja",state:"checked",hook:"Hook",lead:"Lead",records:records.map((dto,i)=>({target:{id:dto.record.id,revision:1},shortTitle:"Title "+i}))});
+ const read=vi.fn();render(<KnowledgeThemeContext records={records} presentation={presentation} selectedRecordId={null} onRead={read} variant="stories"/>);
+ expect(screen.getAllByText(/^Title /,{selector:"summary > span"})).toHaveLength(3);
+ const first=screen.getByText("Title 0"),second=screen.getByText("Title 1");expect(first.closest("details")!.open).toBe(false);
+ fireEvent.click(first);fireEvent.click(second);expect(first.closest("details")!.open).toBe(true);expect(second.closest("details")!.open).toBe(true);expect(read).not.toHaveBeenCalled();
+ expect(screen.getByText("Full body 0")).toBeTruthy();fireEvent.click(screen.getByRole("button",{name:"出典・詳細：Title 0"}));expect(read).toHaveBeenLastCalledWith("story0");
+ fireEvent.click(first);expect(first.closest("details")!.open).toBe(false);expect(second.closest("details")!.open).toBe(true);
+ fireEvent.click(screen.getByRole("button",{name:"エピソード・豆知識：すべて見る"}));expect(screen.getByText("Title 3")).toBeTruthy();fireEvent.click(screen.getByRole("button",{name:"エピソード・豆知識：閉じる"}));expect(screen.queryByText("Title 3")).toBeNull();
+});

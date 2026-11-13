@@ -100,7 +100,7 @@ it("解説の出典を読んだあと固定版の元記録と引用へ戻れ、�
 });
 
 
-it.each([false,true])("テーマ情報は選んだ本文とその根拠を直接開き、一覧へ戻る（旧問いの装飾: %s）",async withOldQuestion=>{
+it.each([false,true])("テーマ情報は本文をその場で開閉し、必要なときだけ出典詳細へ進み一覧へ戻る（旧問いの装飾: %s）",async withOldQuestion=>{
  HTMLElement.prototype.scrollIntoView=vi.fn();HTMLElement.prototype.scrollTo=vi.fn();
  const stamp={revision:1,createdAt:"2026-11-10T00:00:00Z",reason:""};
  const original={id:"launch",...stamp,content:knowledgeRecordContentSchema.parse({kind:"episode",assertion:"打上げの記録",times:[{id:"day",time:{kind:"calendar",from:"2021-12-25"}}],evidence:[{id:"launch-e",source:{id:"launch-source",revision:1},locator:"p.1",excerpt:"打上げの根拠"}]})};
@@ -113,15 +113,16 @@ it.each([false,true])("テーマ情報は選んだ本文とその根拠を直接
  fireEvent.click(screen.getByRole("button",{name:"テーマについて"}));
  const detail=within(document.getElementById("explorer-detail")!);
  expect(detail.getByRole("heading",{name:"エピソード・豆知識"})).toBeTruthy();
- expect(detail.getByRole("button",{name:"内容と根拠を読む："+original.content.assertion})).toBeTruthy();
+ expect(detail.getByText(withOldQuestion?"打上げ":original.content.assertion,{selector:"summary > span"})).toBeTruthy();
  expect(detail.queryByRole("button",{name:"どんな姿でロケットに乗った？"})).toBeNull();
- fireEvent.click(detail.getByRole("button",{name:"内容と根拠を読む："+note.content.assertion}));await flush();
+ const title=detail.getByText(note.content.assertion,{selector:"summary > span"});fireEvent.click(title);expect(title.closest("details")!.open).toBe(true);expect(select).not.toHaveBeenCalled();
+ fireEvent.click(detail.getByRole("button",{name:"出典・詳細："+note.content.assertion}));await flush();
  const article=within(document.getElementById("explorer-detail")!.querySelector("article")!);
  expect(article.getByText(note.content.assertion)).toBeTruthy();expect(article.queryByText(original.content.assertion)).toBeNull();expect(article.queryByText("背景・解説",{exact:true})).toBeNull();
  expect(article.getByText("豆知識の資料")).toBeTruthy();expect(article.queryByText("打上げの資料")).toBeNull();
  fireEvent.click(article.getByRole("button",{name:"引用と掲載箇所を読む：豆知識の資料"}));expect(article.getByText("豆知識の根拠")).toBeTruthy();
  fireEvent.click(article.getByRole("button",{name:"一覧に戻る"}));await flush();
- expect(detail.getByRole("heading",{name:"エピソード・豆知識"})).toBeTruthy();expect(detail.getByRole("button",{name:"内容と根拠を読む："+note.content.assertion})).toBeTruthy();expect(select).not.toHaveBeenCalled();
+ expect(detail.getByRole("heading",{name:"エピソード・豆知識"})).toBeTruthy();expect(detail.getByRole("button",{name:"出典・詳細："+note.content.assertion})).toBeTruthy();expect(select).not.toHaveBeenCalled();
 });
 
 
