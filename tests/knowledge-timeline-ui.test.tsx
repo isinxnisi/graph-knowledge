@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { afterEach, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import KnowledgeTimeline from "../components/KnowledgeTimeline";
+import { UiLocaleProvider } from "../lib/client/ui-locale";
 import { knowledgeRecordContentSchema, type KnowledgeSnapshot } from "../lib/domain/knowledge-foundation";
 import type { ThemeReadingPresentation } from "../lib/domain/theme-reading-presentation";
 
@@ -174,4 +175,30 @@ it("draws a short same-date window beside a point, and a day window around clock
   expect(line().hasAttribute("data-point")).toBe(false);
   expect(line().hasAttribute("data-compact-range")).toBe(false);
   expect(screen.getByRole("button", { name: /^時期の線を選ぶ：同日の別の記録/ }).hasAttribute("data-point")).toBe(false);
+});
+
+
+it.each(["ja", "en"] as const)("keeps an uncertain occurrence separate from a duration without repeating its title at the end (%s)", locale => {
+  const data: KnowledgeSnapshot = { ...s, records: [
+    { ...s.records[0], id: "uncertain-event", content: { ...s.records[0].content, assertion: "映画学校で作品に出会う", times: [{ id: "when", time: { kind: "calendar", meaning: "occurrence-window", from: "1960", to: "1969", expression: "1960年代", label: "作品に出会った時期" } }] } },
+    { ...s.records[0], id: "activity", content: { ...s.records[0].content, assertion: "作品の連載", times: [{ id: "when", time: { kind: "calendar", meaning: "duration", from: "1964", to: "1965", label: "連載期間" } }] } },
+  ] };
+  const before = JSON.stringify(data), onFocus = vi.fn();
+  const { container, rerender } = render(<UiLocaleProvider initialLocale={locale}><KnowledgeTimeline snapshot={data} reading focusedRecordId={null} onFocusRecord={onFocus} /></UiLocaleProvider>);
+  const row = container.querySelector('[data-record-id="uncertain-event"]')!;
+  expect(row.querySelector('[class*="readingDate"]')?.textContent).toBe(locale === "ja" ? "1960〜1969年のどこか" : "Sometime in 1960–1969");
+  expect(row.querySelector('[class*="readingDate"]')?.textContent).not.toContain("原表記");
+  expect(row.querySelector('[class*="readingDate"]')?.textContent).not.toContain("Source notation");
+  const ending = screen.getByRole("button", { name: locale === "ja" ? /^最も遅い時期：1969/ : /^Latest possible date: 1969/ });
+  expect(ending.textContent).toBe("1969");
+  expect(ending.getAttribute("title")).toContain("1960年代");
+  fireEvent.click(ending);
+  expect(onFocus).toHaveBeenLastCalledWith("uncertain-event", "when");
+  const durationEnd = screen.getByRole("button", { name: locale === "ja" ? /1965\s*連載期間\s*終了/ : /1965\s*連載期間\s*End/ });
+  expect(durationEnd.textContent).toContain("連載期間");
+  expect(container.querySelector('[data-range-id][data-meaning="duration"]')).not.toBeNull();
+  rerender(<UiLocaleProvider initialLocale={locale}><KnowledgeTimeline snapshot={data} focusedRecordId={null} onFocusRecord={onFocus} /></UiLocaleProvider>);
+  const sourceNotation = screen.getByRole("button", { name: /^時期の線を選ぶ：映画学校で作品に出会う|^Select time marker: 映画学校で作品に出会う/ }).getAttribute("title");
+  expect(sourceNotation).toContain("1960年代");
+  expect(JSON.stringify(data)).toBe(before);
 });

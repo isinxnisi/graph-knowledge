@@ -12,7 +12,7 @@ import {
   calendarGraph,
   type CalendarResolution,
 } from "../lib/domain/calendar-graph";
-import { themeTimeLabel } from "../lib/domain/theme-time";
+import { calendarMeaning, themeTimeLabel } from "../lib/domain/theme-time";
 import { timelineRecordId, type TimelineDisplayRecord } from "../lib/domain/timeline-display";
 import css from "./CalendarTimelineGraph.module.css";
 
@@ -65,6 +65,10 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
     [records, resolution],
   );
   const shortName = (r: R) => (r.displayTime ?? r.time)?.label || r.assertion;
+  const compactWindowEnd = (record: R) => {
+    const time = record.displayTime ?? record.time;
+    return compactDates && time?.kind === "calendar" && calendarMeaning(time) === "occurrence-window";
+  };
   const lineStyle = (record: R) => {
     const range = graph.ranges.find((r) => r.record.id === record.id)!;
     return {
@@ -141,6 +145,7 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
                   <button
                     type="button"
                     className={css.ending}
+                    aria-label={compactWindowEnd(row.ending) ? `${en ? "Latest possible date: " : "最も遅い時期："}${row.label} · ${shortName(row.ending)}` : undefined}
                     data-focused={
                       focusedRecordId === timelineRecordId(row.ending) || undefined
                     }
@@ -148,13 +153,13 @@ export default function CalendarTimelineGraph<R extends TimelineDisplayRecord>({
                     title={themeTimeLabel(row.ending.displayTime ?? row.ending.time,locale)}
                   >
                     {compactDates&&<span className={css.mobileEndingDate}><CalendarDateLabel label={row.label}/></span>}
-                    <span>{shortName(row.ending)}</span>
+                    {!compactWindowEnd(row.ending) && <><span>{shortName(row.ending)}</span>
                     <small>
                       {row.ending.time?.kind === "calendar" &&
                       row.ending.time.meaning === "duration"
                         ? en?"End":"終了"
                         : row.ending.time?.kind==="calendar" && row.ending.time.meaning==="occurrence-window" ? (en?"Latest possible date":"この日までのどこか") : (en?"Last date shown":"ここまで")}
-                    </small>
+                    </small></>}
                   </button>
                 )}
               </div>

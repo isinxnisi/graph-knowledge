@@ -44,6 +44,19 @@ type CalendarTime = Extract<
   { kind: "calendar" }
 >;
 const colors = ["#376f9a", "#aa6b32", "#5b7e59", "#8b668f", "#537e84"];
+
+/** Keep source notation in the details, not in the reading date line. */
+function readingCalendarLabel(time: CalendarTime, locale: string) {
+  if (calendarMeaning(time) === "occurrence-window") {
+    const range = time.to && time.to !== time.from
+      ? `${time.from}${locale === "en" ? "–" : "〜"}${time.to}`
+      : time.from;
+    return locale === "en" ? `Sometime in ${range}`
+      : `${range}${/^\d{4}$/.test(time.from) && (!time.to || /^\d{4}$/.test(time.to)) ? "年" : ""}のどこか`;
+  }
+  return themeTimeLabel({ ...time, label: "", expression: undefined }, locale);
+}
+
 const meaningLabels = {
   point: "時点",
   duration: "期間",
@@ -397,7 +410,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                 onClick={() => toggle(record.id, open)}
               >
                 <span className={css.rowText}>
-                  {reading&&t?.kind==="calendar"&&<span className={css.readingDate}>{themeTimeLabel({...t,label:""},locale)}</span>}
+                  {reading&&t?.kind==="calendar"&&<span className={css.readingDate}>{readingCalendarLabel(t,locale)}</span>}
                   <span className={css.rowHeading}>
 
                     <span className={css.assertion}>{reading?record.readingTitle||record.assertion:record.assertion}</span>
