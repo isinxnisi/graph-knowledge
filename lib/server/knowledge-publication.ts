@@ -1,3 +1,4 @@
+import {readEntityProductContext} from "./knowledge-entity-products";
 import {resolveIdentityGroups} from "./knowledge-identity-resolution";
 import {themeReadingPresentation} from "./theme-reading-presentation";
 import {knowledgeDisplayText} from "../domain/knowledge-display";
@@ -255,6 +256,7 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
       const theme=q.theme?(await resolvePublicKnowledgeTheme(c,q.theme.id,q.theme.revision)).theme:undefined;
       return {generation:actual.id,translationsChecked:!!q.translations.length,snapshot:await translated({schemaVersion:1,initialView:'graph',records:records.map(r=>r.record),entities,sources,mappings,...(theme?{theme}:{})}),unavailable} satisfies CapsuleUpdateResponse;
     }),
+    entityProductContext:(id:string)=>read(c=>readEntityProductContext(c,id)),
     themes:(raw:unknown={},withAliases=false)=>read(async c=>{
       const q=knowledgeThemeListQuerySchema.parse(raw);
       const values:unknown[]=[];const conditions=["o.kind='theme'","o.visibility='public'","p.id IS NOT NULL"];

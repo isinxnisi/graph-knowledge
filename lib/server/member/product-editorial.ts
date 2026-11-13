@@ -77,7 +77,7 @@ export async function collectUnusedProductImages(pool:Pool){return memberTransac
  if(hasThemeRefs)await c.query("DELETE FROM theme_editorial_asset_reference t USING knowledge_missions.theme_registrations r WHERE r.request_id=t.request_id AND NOT t.published AND r.state NOT IN('saved','processing') AND t.created_at<clock_timestamp()-interval '7 days'");
  return (await c.query("DELETE FROM product_image_asset WHERE id IN(SELECT a.id FROM product_image_asset a WHERE a.created_at<clock_timestamp()-interval '7 days' AND NOT EXISTS(SELECT 1 FROM product_editorial_version p WHERE p.image_id=a.id)"+themeRetention+" LIMIT 100)" )).rowCount??0;
 });}
-export async function editorialCatalogue(pool:Pool,pins:{id:string;revision:number}[],theme:{id:string;revision:number},base:ProductCatalogue){
+export async function editorialCatalogue(pool:Pool,pins:{id:string;revision:number}[],theme:{id:string;revision:number}|null,base:ProductCatalogue){
  const catalog:ProductCatalogue={products:[...base.products],offers:[...base.offers],recommendations:[...base.recommendations]};
  for(const [order,pin] of pins.entries()){
   const v=await readEditorialProduct(pool,pin.id,pin.revision),p=productSchema.parse(v.product);
@@ -85,7 +85,7 @@ export async function editorialCatalogue(pool:Pool,pins:{id:string;revision:numb
   catalog.products=catalog.products.filter(old=>old.id!==p.id);catalog.products.unshift(p);
   catalog.offers=catalog.offers.filter(o=>o.productId!==p.id);catalog.offers.push(...v.offers);
   catalog.recommendations=catalog.recommendations.filter(rec=>rec.productId!==p.id);
-  catalog.recommendations.push({id:'product:'+p.id,target:{kind:'theme',id:theme.id,revision:theme.revision},productId:p.id,reason:v.reason,order,state:'public'});
+  if(theme)catalog.recommendations.push({id:'product:'+p.id,target:{kind:'theme',id:theme.id,revision:theme.revision},productId:p.id,reason:v.reason,order,state:'public'});
   for(const t of v.appliesTo)catalog.recommendations.push({id:'product:'+p.id+':'+t.id,target:{...t,revision:1},productId:p.id,reason:v.reason,order,state:'public'});
  }
  return catalog;

@@ -1,12 +1,12 @@
 // @vitest-environment jsdom
 import {it,expect,vi,afterEach} from "vitest";
-import {render,screen,cleanup,fireEvent} from "@testing-library/react";
+import {render,screen,cleanup,fireEvent,waitFor,act} from "@testing-library/react";
 vi.mock('next/image',()=>({default:({unoptimized,...props}:React.ImgHTMLAttributes<HTMLImageElement>&{unoptimized?:boolean})=>{ void unoptimized;
  // Native image events are used to exercise the component's failure state.
  // eslint-disable-next-line @next/next/no-img-element
  return <img {...props} alt={props.alt??''}/>; }}));
 vi.mock('../lib/client/ui-locale',()=>({useUiLocale:()=>({locale:'ja'})}));
-import {RelatedProducts,type ProductCardItem} from '../components/ThemeProducts';
+import {RelatedProducts,EntityProducts,type ProductCardItem} from '../components/ThemeProducts';
 afterEach(cleanup);
 const item:ProductCardItem={product:{id:'calendar:one',workId:'calendar:one',title:'Original long English title',displayName:{ja:'ジェームズ・ウェッブ宇宙望遠鏡 カレンダー',en:'Webb calendar'},author:'',edition:'',language:'en',category:'calendar',year:2027,metadataSource:'https://www.amazon.co.jp/dp/B0GMV4CK32',image:{url:'/api/knowledge/product-images/'+'a'.repeat(64),width:1254,height:1254,role:'illustration',alt:{ja:'紹介イラスト',en:'Illustration'}}},reason:{ja:'宇宙の景色を日々の暮らしへ。',en:'Space in everyday life.'},target:{kind:'theme',id:'t',revision:1},status:'ready',offer:{productId:'calendar:one',marketplace:'JP',asin:'B0GMV4CK32',status:'ready',affiliateUrl:'https://link.amazon/B0cLIilgt',checkedAt:'2026-11-10T00:00:00Z',image:undefined},alternatives:[]};
 it('完成画面に画像・紹介・購入ボタン・短い広告表記・参加者表示を一緒に出す',()=>{
@@ -34,4 +34,19 @@ it('未確認の言語や画像を補わず、紹介と購入先を表示する'
  expect(screen.queryByText('UND')).toBeNull();expect(screen.queryByText('英語版')).toBeNull();expect(screen.queryByText('日本語版')).toBeNull();
  expect(screen.queryByRole('img')).toBeNull();expect(screen.getByText('画像は準備中')).toBeTruthy();
  expect(screen.getByRole('link',{name:'Amazonで購入する'}).getAttribute('href')).toBe(item.offer!.affiliateUrl);
+});
+
+it('通常グラフのEntityカードは切替時に前の商品の表示と通信を残さない',async()=>{
+ const calls:{signal?:AbortSignal|null;resolve:(r:Response)=>void}[]=[];
+ const fetchMock=vi.spyOn(globalThis,'fetch').mockImplementation((_url,init)=>new Promise<Response>(resolve=>calls.push({signal:init?.signal,resolve})));
+ try{
+  const v=render(<EntityProducts entityId="pluto"/>);
+  await act(async()=>calls[0].resolve({ok:true,json:async()=>({products:[item]})} as Response));
+  expect(screen.getByRole('link',{name:'Amazonで購入する'})).toBeTruthy();
+  expect(String(fetchMock.mock.calls[0][0])).toContain('kind=entity&id=pluto');
+  v.rerender(<EntityProducts entityId="other"/>);
+  expect(screen.queryByRole('link',{name:'Amazonで購入する'})).toBeNull();expect(calls[0].signal?.aborted).toBe(true);
+  await act(async()=>calls[1].resolve({ok:true,json:async()=>({products:[]})} as Response));
+  await waitFor(()=>expect(screen.queryByText('関連アイテム')).toBeNull());
+ }finally{fetchMock.mockRestore();}
 });
