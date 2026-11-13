@@ -1,3 +1,5 @@
+2026-11-14 スマホGraph上部の追加修正：①配置確認・②36px／44px競合の除去と操作3個の折返し防止・③3200／HTTPS βの320px・375px／設定開閉・PCラベル保持まで完了｜今回の工程は③まで完了。型検査込みbuild `bEfWGVPYifjmVbofm1SZC`、本番・DB・Worker未変更。iPhone実機は未確認。[追補](verification/THEME_PRODUCT_SCOPE_20261114.md#追加スマホgraphの上部操作)。
+
 2026-11-14 商品表示範囲と縦揃い：①確認・②productPinsはテーマ紹介限定／全要素の関連商品取得／小カードの本文揃い・スマホ幅と末尾余白・③3200／HTTPS βのPC・375px確認まで完了｜今回の工程は③まで完了。黒澤テーマは紹介2件／関連3件、紹介外の隠し砦も詳細・購入先へ接続。対象49件・lint／型検査込みbuild `CREKObPHYlaxfVprqZQj3`、本番・登録データ・DB・Worker未変更。スマホ広告は設定タグがHTTP200・0 bytesで別残件、iPhone実機未確認。[確認記録](verification/THEME_PRODUCT_SCOPE_20261114.md)。
 
 2026-11-13 テーマ商品導線と点表示：①確認・②試作切替撤去／Entity・関係・出来事に紐づく小カード／本文を動かさない点追加・③3200／HTTPS βのPC・375px確認まで完了｜今回の工程は③まで完了。関連42件・lint／型検査込みbuild `Axi1F1L6SkJ4KeqCYrgFr`、PLUTOカード→同じEntity詳細の商品を確認。本番・DB・Worker未変更。関係／出来事の商品はAPI／部品テスト、iPhone実機は未確認。[確認記録](verification/THEME_ITEM_LINKS_20261113.md)。

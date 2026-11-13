@@ -30,3 +30,11 @@
 PC枠は配信・表示を確認。スマホ枠はiframe生成済みだが広告内容なし／data-filled=falseで高さ0。フッターの重なりではない。
 
 設定中のAdMaxタグへ読取り確認：PCタグ `ef4ef4eaf302d0f6b49e5114ad6d5213` はHTTP200・426 bytesのスクリプト、スマホタグ `93ba1c5c8d797794cf1c721bce01ff42` はHTTP200・0 bytes。スマホ枠の有効状態・配信条件が未確認。外部アカウント設定や広告タグは変更していない。広告の拒否設定・配信なしを上書きして表示扱いにはしない。
+
+## 追加：スマホGraphの上部操作
+
+同日、利用者提示のiPhone画面でCapsule／投稿／関係設定が2段に割れる崩れを追加修正。幅36px指定・設定ボタンの旧flex-basis44px・共通min-height44pxが混在していた。スマホの操作群を列幅36pxのgridにし、各操作のwidth/min/maxとheight/min/maxを36pxへ局所統一した。折り返し可能なflexと内容幅の計算に頼らない。PCのCSSは変更しない。
+
+`edbfb9e9`、build `bEfWGVPYifjmVbofm1SZC` をmain／3200／HTTPS βへ反映。型検査込みbuild・diff check成功。βの320px／375pxで3操作が各36×36px・同じy141.14px、操作群高さ36pxを確認。見る関係の編集→キャンセルを確認。PC868pxはflex・ラベルblock・Capsule操作幅106.66pxのまま。Worker PID記録不変、本番・DB・登録内容未変更。iPhone実機は未確認。
+
+同じ画面記録ディレクトリにtoolbar-before.png／toolbar-after.pngを保存。
