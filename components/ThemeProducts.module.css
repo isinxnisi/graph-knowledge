@@ -61,8 +61,6 @@
 .figure figcaption a { color:inherit; }
 
 .linkedSection { margin-top:16px; padding-top:14px; border-top:1px solid var(--color-border); }
-.linkedSection h3 { display:flex; align-items:center; gap:7px; margin:0 0 10px; font:600 13px/1.5 var(--font-body-family,system-ui,sans-serif); }
-.linkedSection h3 :global(.ui-icon) { width:16px; height:16px; margin:0; }
 .linkedItems { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),280px)); gap:8px; list-style:none; margin:0; padding:0; }
 .linkedItems li { min-width:0; }
 button.linkedCard { display:grid; grid-template-columns:60px minmax(0,1fr) 12px; align-items:center; gap:10px; width:100%; height:100%; padding:9px; text-align:start; border:1px solid var(--color-border); border-radius:8px; background:var(--color-panel); color:var(--color-text); }
@@ -73,3 +71,5 @@ button.linkedCard { display:grid; grid-template-columns:60px minmax(0,1fr) 12px;
 .linkedCard small { display:block; margin-top:4px; color:var(--color-muted); font-size:11px; line-height:1.5; overflow-wrap:anywhere; }
 .linkedCard > :global(.ui-icon) { width:12px; height:12px; margin:0; }
 .linkedCard:hover { background:var(--color-hover); }
+
+@media(max-width:800px) { .linkedItems { grid-template-columns:minmax(0,1fr); } }

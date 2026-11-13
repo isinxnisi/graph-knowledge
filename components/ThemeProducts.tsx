@@ -30,7 +30,7 @@ export function ThemeProductLinks({theme,targets,onOpen}:{theme:ThemeRef;targets
  const {locale}=useUiLocale(),en=locale==="en",result=useThemeItems(theme,null,true);
  const rows=result.items.flatMap(item=>{const target=targets.find(t=>t.kind===item.target.kind&&t.id===item.target.id);return target?[{item,target}]:[];});
  if(!rows.length)return null;
- return <section className={css.linkedSection} aria-label={en?"Related items in this theme":"テーマに登場する関連アイテム"}><h3><Icon name="shopping"/>{en?"Related items":"関連アイテム"}</h3><ul className={css.linkedItems}>{rows.map(({item,target})=><li key={item.product.id+":"+target.kind+":"+target.id}><LinkedProduct item={item} label={target.label} en={en} onOpen={()=>onOpen(target.kind,target.id)}/></li>)}</ul></section>;
+ return <ReadingDetailSection className={css.linkedSection} title={en?"Related items":"関連アイテム"} icon="shopping" ariaLabel={en?"Related items in this theme":"テーマに登場する関連アイテム"}><ul className={css.linkedItems}>{rows.map(({item,target})=><li key={item.product.id+":"+target.kind+":"+target.id}><LinkedProduct item={item} label={target.label} en={en} onOpen={()=>onOpen(target.kind,target.id)}/></li>)}</ul></ReadingDetailSection>;
 }
 function LinkedProduct({item,label,en,onOpen}:{item:ProductCardItem;label:string;en:boolean;onOpen:()=>void}){
  const image=item.product.image??item.offer?.image,title=item.product.displayName?.[en?"en":"ja"]||item.product.title;

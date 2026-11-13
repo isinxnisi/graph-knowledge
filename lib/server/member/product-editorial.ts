@@ -90,3 +90,17 @@ export async function editorialCatalogue(pool:Pool,pins:{id:string;revision:numb
  }
  return catalog;
 }
+
+/** Saved operator products are editorial content. Discover by explicit associations,
+ * independently of theme curation; choose the latest registered product edition. */
+export async function associatedEditorialCatalogue(pool:Pool,targets:{kind:"entity"|"record";id:string}[],base:ProductCatalogue){
+ if(!targets.length)return base;
+ const rows=(await pool.query(`WITH current AS (
+  SELECT DISTINCT ON(id) id,revision,content FROM product_editorial_version ORDER BY id,revision DESC
+ ) SELECT id,revision FROM current WHERE EXISTS (
+  SELECT 1 FROM jsonb_array_elements(content->'appliesTo') association
+  JOIN jsonb_to_recordset($1::jsonb) AS target(kind text,id text)
+   ON association->>'kind'=target.kind AND association->>'id'=target.id
+ ) ORDER BY id`,[JSON.stringify(targets)])).rows;
+ return editorialCatalogue(pool,rows.map(row=>({id:row.id,revision:Number(row.revision)})),null,base);
+}

@@ -21,7 +21,7 @@ function setup(){
  mocks.provider.mockResolvedValue({offers:[]});
  mocks.context.mockResolvedValue({entityIds:["legacy-pluto","theme-pluto"],productPins:theme.content.productPins,themes:[{id:theme.id,revision:3,editorial:true}]});
  mocks.theme.mockResolvedValue({theme,snapshot:{entities:[{id:"theme-pluto",revision:4}],records:[]}});
- mocks.query.mockImplementation(async(sql:string,args:unknown[])=>sql.includes("product_image_asset")?{rows:[{role:"product-photo",alt:{ja:"PLUTOの表紙",en:"PLUTO cover"},width:745,height:1000,provenance:{kind:"provided",creditDisplay:"internal",credit:"Internal account"}}]}: {rows:args[0]===product.id&&args[1]===2?[{revision:2,content:value}]:[]});
+ mocks.query.mockImplementation(async(sql:string,args:unknown[])=>sql.includes("WITH current AS")?{rows:[{id:product.id,revision:2}]}:sql.includes("product_image_asset")?{rows:[{role:"product-photo",alt:{ja:"PLUTOの表紙",en:"PLUTO cover"},width:745,height:1000,provenance:{kind:"provided",creditDisplay:"internal",credit:"Internal account"}}]}: {rows:args[0]===product.id&&args[1]===2?[{revision:2,content:value}]:[]});
 }
 it("normal graph and a pinned theme return the same registered edition, image and purchase destination",async()=>{
  setup();
@@ -31,15 +31,15 @@ it("normal graph and a pinned theme return the same registered edition, image an
  const a=(await ordinary.json()).products,b=(await themed.json()).products;
  expect(a).toHaveLength(1);expect(a[0].product).toEqual(b[0].product);expect(a[0].offer).toEqual(b[0].offer);
  expect(a[0].product.image).toMatchObject({url:"/api/knowledge/product-images/"+product.imageId,role:"product-photo"});expect(a[0].product.image.credit).toBeUndefined();
- expect(a[0].offer.affiliateUrl).toBe(offer.affiliateUrl);expect(mocks.query.mock.calls.filter(([sql])=>String(sql).includes("product_editorial_version")).every(([,args])=>args[1]===2)).toBe(true);
+ expect(a[0].offer.affiliateUrl).toBe(offer.affiliateUrl);expect(mocks.query.mock.calls.filter(([sql])=>String(sql).startsWith("SELECT revision,content FROM product_editorial_version")).every(([,args])=>args[1]===2)).toBe(true);
 });
 it("does not infer products from a shared theme or the original story, anime or neighboring people",async()=>{
  setup();mocks.context.mockResolvedValue({entityIds:["anime-pluto"],productPins:theme.content.productPins,themes:[{id:theme.id,revision:3,editorial:true}]});
  const response=await GET(new Request("https://beta/api/knowledge/theme-products?kind=entity&id=anime-pluto"));expect((await response.json()).products).toEqual([]);expect(mocks.provider).not.toHaveBeenCalled();
 });
-it("no public product pin means no draft products or fabricated card",async()=>{
- setup();mocks.context.mockResolvedValue({entityIds:["legacy-pluto"],productPins:[],themes:[]});
- const response=await GET(new Request("https://beta/api/knowledge/theme-products?kind=entity&id=legacy-pluto"));expect((await response.json()).products).toEqual([]);expect(mocks.query).not.toHaveBeenCalled();
+it("no associated registered product means no fabricated card",async()=>{
+ setup();mocks.context.mockResolvedValue({entityIds:["legacy-pluto"],productPins:[],themes:[]});mocks.query.mockResolvedValue({rows:[]});
+ const response=await GET(new Request("https://beta/api/knowledge/theme-products?kind=entity&id=legacy-pluto"));expect((await response.json()).products).toEqual([]);expect(mocks.provider).not.toHaveBeenCalled();
 });
 it("only readable theme editions supply pins; duplicate pins choose the newest public edition",async()=>{
  mocks.identity.mockResolvedValue(["legacy-pluto","theme-pluto"]);
@@ -75,4 +75,26 @@ it("紐づき一覧APIと関係・出来事の詳細APIの双方から同じ商�
  const linked=await GET(new Request("https://beta/api/knowledge/theme-products?themeId=pluto-theme&revision=3&associations=1"));expect(linked.status).toBe(200);
  expect((await linked.json()).products.map((row:{target:{id:string}})=>row.target.id)).toEqual(["theme-pluto","relation","event"]);
  for(const id of ["relation","event"]){const response=await GET(new Request("https://beta/api/knowledge/theme-products?themeId=pluto-theme&revision=3&kind=record&id="+id));expect((await response.json()).products[0].product.id).toBe(product.id);}
+});
+
+it("テーマの紹介商品と全要素の関連商品を分離し、空のproductPinsでも関連商品を読める",async()=>{
+ setup();
+ mocks.theme.mockResolvedValue({theme:{...theme,content:{productPins:[]}},snapshot:{entities:[{id:"theme-pluto",revision:4}],records:[{id:"event",revision:3}]}});
+ const content={...value,appliesTo:[...value.appliesTo,{kind:"record",id:"event"}]};
+ const original=mocks.query.getMockImplementation()!;
+ mocks.query.mockImplementation(async(sql:string,args:unknown[])=>sql.startsWith("SELECT revision,content FROM product_editorial_version")?{rows:[{revision:2,content}]}:original(sql,args));
+ const fetchProducts=async(suffix:string)=>(await (await GET(new Request("https://beta/api/knowledge/theme-products?themeId=pluto-theme&revision=3"+suffix))).json()).products;
+ expect(await fetchProducts("")).toEqual([]);
+ expect((await fetchProducts("&associations=1")).map((p:{target:{id:string}})=>p.target.id)).toEqual(["theme-pluto","event"]);
+ expect((await fetchProducts("&kind=entity&id=theme-pluto"))[0].product.id).toBe(product.id);
+ expect((await fetchProducts("&kind=record&id=event"))[0].product.id).toBe(product.id);
+});
+
+it("関連商品の検索は商品最新版で明示された紐づきに限定し、kindも照合する",async()=>{
+ setup();
+ await GET(new Request("https://beta/api/knowledge/theme-products?themeId=pluto-theme&revision=3&associations=1"));
+ const [sql,args]=mocks.query.mock.calls.find(([q])=>q.includes("WITH current AS"))!;
+ expect(sql).toContain("SELECT DISTINCT ON(id)");expect(sql).toContain("ORDER BY id,revision DESC");
+ expect(sql).toContain("association->>'kind'=target.kind");expect(sql).toContain("association->>'id'=target.id");
+ expect(JSON.parse(args[0])).toEqual([{kind:"entity",id:"theme-pluto"}]);
 });

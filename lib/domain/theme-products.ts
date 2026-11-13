@@ -7,7 +7,7 @@ export const productCatalogue=productCatalogueSchema.parse(catalogue);
 const data=productCatalogue;
 export function contextualProducts(theme:KnowledgeThemeVersion,snapshot:KnowledgeSnapshot,selection:{kind:"record"|"entity";id:string}|null,marketplace:"JP"|"US"|"UK",now=Date.now(),catalog:ProductCatalogue=data){
  const pins=selection?selection.kind==="record"?snapshot.records.filter(r=>r.id===selection.id):snapshot.entities.filter(e=>e.id===selection.id):[theme,...snapshot.records,...snapshot.entities];
- const match=(t:z.infer<typeof target>)=>selection?t.kind===selection.kind&&pins.some(p=>p.id===t.id&&p.revision===t.revision):t.kind==="theme"?t.id===theme.id&&t.revision===theme.revision:(t.kind==="record"?snapshot.records:snapshot.entities).some(p=>p.id===t.id&&p.revision===t.revision);
+ const match=(t:z.infer<typeof target>)=>selection?t.kind===selection.kind&&pins.some(p=>p.id===t.id&&p.revision===t.revision):t.kind==="theme"?t.id===theme.id&&t.revision===theme.revision:false;
  const recs=catalog.recommendations.filter(r=>r.state==="public"&&match(r.target)).sort((a,b)=>a.order-b.order);
  return recommendedProducts(recs,marketplace,now,catalog);
 }
