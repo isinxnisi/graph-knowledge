@@ -128,3 +128,9 @@ it('enforces actual-source and service rate budgets under concurrent retry opera
 it('accepts the supported 20 evidence excerpts from one URL without treating successful quotes as failed retries',async()=>{
  const v=create(),item=record('G07');item.record.evidence=Array.from({length:20},(_,i)=>({id:'quote-'+i,source:{id:'shared',revision:1},locator:'Paragraph '+i,excerpt:'Fact G07'}));v.package.items=[item];await service.submit(owner,v);await service.recoverOne();await imports.processNext(config,dispatch);await projected();expect((await inputs(v.requestId))[0].state).toBe('published');const history=await service.retryStatus(owner,v.requestId,'G07');expect(history.items?.[0].attempts).toHaveLength(20);expect(history.items?.[0].attempts.every(a=>a.outcome==='verified')).toBe(true);expect(dispatch).not.toHaveBeenCalled();
 });
+
+it('keeps ordinary web submissions on AI review after migration 043 instead of inheriting operator authority',async()=>{
+ const pkg=create().package;pkg.items=[record('G01')];
+ const {createReviewQueue}=await import('../lib/server/knowledge-review-queue');await createReviewQueue(pool).heartbeat(config);await pool.query('UPDATE member_knowledge.review_projects SET paused_until=NULL WHERE project_id=$1',[config.projectId]);await web.deliver(owner,randomUUID(),pkg);
+ const ordinary=vi.fn(async()=>({state:'not-sent' as const}));await imports.processNext(config,ordinary);expect(ordinary).toHaveBeenCalledTimes(1);expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.objects WHERE kind='record'")).rows[0].n).toBe(1);expect((await pool.query('SELECT count(*)::int n FROM knowledge_missions.theme_source_attempts')).rows[0].n).toBe(0);expect(dispatch).not.toHaveBeenCalled();
+});
