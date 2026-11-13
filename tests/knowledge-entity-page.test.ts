@@ -5,7 +5,7 @@ vi.mock("../lib/server/knowledge-deployment",()=>({knowledgeCapability:mocks.cap
 vi.mock("../lib/server/knowledge-read-runtime",()=>({knowledgeReadGuard:mocks.guard}));
 vi.mock("../lib/server/knowledge-publication-preview",()=>({knowledgePublicationPreview:async()=>({entities:mocks.entities})}));
 import {publicKnowledgeEntity} from "../lib/server/knowledge-entity-page";
-import {publicLocalePath} from "../lib/domain/public-routes";
+import {publicLocalePath,decodePublicEntityId} from "../lib/domain/public-routes";
 afterEach(()=>{vi.unstubAllEnvs();vi.resetAllMocks();mocks.capability.mockReturnValue(true);});
 it("正規探索は公開投影の同じIDだけを読み、未公開・停止は推測しない",async()=>{
  vi.stubEnv("KNOWLEDGE_WORKSPACE_ENABLED","1");mocks.entities.mockResolvedValue({entities:[{id:"import:kurosawa",content:{name:"黒澤明"}}]});
@@ -19,4 +19,10 @@ it("未提供の配置や不正なIDは読み出さず、通信障害を不存�
 });
 it("共通知識の正規URLも日本語と英語を往復でき、不正なパスは作らない",()=>{
  expect(publicLocalePath("/explore/import%3Aperson-1","en")).toBe("/en/explore/import%3Aperson-1");expect(publicLocalePath("/en/explore/import%3Aperson-1","ja")).toBe("/explore/import%3Aperson-1");expect(publicLocalePath("/explore/a%2Fb","en")).toBeNull();expect(publicLocalePath("/explore/%xx","en")).toBeNull();
+});
+
+it("URLエンコードされたNextの動的パラメータを公開IDへ戻す",()=>{
+ const id="import:web.e8ce8d05768278da91a20d62ca4114bac8241c61fc47a5ed:entity:b6d8a4b9825667852cd8e2a8777ee842";
+ expect(decodePublicEntityId(encodeURIComponent(id))).toBe(id);expect(decodePublicEntityId(id)).toBe(id);
+ expect(decodePublicEntityId("a%2Fb")).toBeNull();expect(decodePublicEntityId("%xx")).toBeNull();
 });

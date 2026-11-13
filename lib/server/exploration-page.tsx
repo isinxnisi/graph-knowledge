@@ -3,7 +3,7 @@ import "server-only";
 import Explorer from "../../components/Explorer";
 import PublicDiscovery from "../../components/PublicDiscovery";
 import { datasetMode } from "../domain/dataset";
-import { localizedPublicHref, type PublicLocale } from "../domain/public-routes";
+import { decodePublicEntityId, localizedPublicHref, type PublicLocale } from "../domain/public-routes";
 import { discoveryLabels } from "../i18n/public-discovery";
 import { explorationMetadata, publicationPolicy } from "./publication";
 import { publicSubject } from "./public-discovery";
@@ -12,6 +12,7 @@ import { notFound } from "next/navigation";
 import { discoveryHomeData } from "./discovery-home";
 import { initialKnowledgeThemeHome } from "./knowledge-theme-home";
 export async function discoveryMetadata(locale: PublicLocale, stateful: boolean, id?: string) {
+  if(id){const decoded=decodePublicEntityId(id);if(!decoded)notFound();id=decoded;}
   const text = discoveryLabels(locale), subject = id ? await publicSubject(id) : null;
   const common=id&&!subject?await publicKnowledgeEntity(id):null;
   const path = localizedPublicHref(id ? `/explore/${encodeURIComponent(id)}` : "/", locale);
@@ -21,6 +22,7 @@ export async function discoveryMetadata(locale: PublicLocale, stateful: boolean,
     { locale, paired: true, ...(subject ? { image: `${path}/opengraph-image` } : {}) });
 }
 export async function ExplorationPage({ locale, id,initialKnowledgeTheme }: { locale: PublicLocale; id?: string;initialKnowledgeTheme?:import("../domain/knowledge-theme-reader").KnowledgeThemeRead }) {
+  if(id){const decoded=decodePublicEntityId(id);if(!decoded)notFound();id=decoded;}
   const knowledgeOperatorEnabled=process.env.THEME_WORKBENCH_ENABLED === "1";
   const knowledgeEnabled=(()=>{try{return (knowledgeOperatorEnabled||knowledgeCapability("public-read")) && process.env.KNOWLEDGE_WORKSPACE_ENABLED === "1";}catch{return false;}})();
   const dataset = datasetMode(process.env.GRAPH_DATASET), subject = dataset === "public-kg" && id ? await publicSubject(id) : undefined;

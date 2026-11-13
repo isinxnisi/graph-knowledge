@@ -18,3 +18,7 @@
 - ESLintエラー0、型検査込みpublic build成功。
 - 候補build `A6EdytJUwcLdT-N2YYA8H`。3200／HTTPS βへの反映・実画面確認はこの時点では未実施。後段に結果を追記する。
 - DB・API入力契約・公開Record・画像・商品・Worker・正式VPSは変更しない。
+
+### 実画面で見つけた入口の追加修正
+
+βの実リンクで初回404を確認。導入中のNextでは動的route paramsがURLエンコードされた状態で渡るため、テーマ入口と同様にページ／metadataの境界で公開IDへdecodeして検証する処理を追加した。不正エスケープ・encoded slashを拒否する。原資料や公開権限の不足ではない。回帰1件追加で現行関連97件（追加後の対象4件成功）、再build成功。
