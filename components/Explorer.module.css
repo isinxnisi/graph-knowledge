@@ -784,3 +784,16 @@
 .explorer .searchRail button:disabled{color:var(--color-muted);opacity:.45}
 .searchRail button>:global(.ui-icon){width:18px;height:18px;margin:0}
 }
+
+/* The phone detail tab already has its own navigation label. Keep desktop unchanged. */
+@media (max-width: 800px) {
+  .primaryDetailHeading, .detailWidthToggle { display: none; }
+  .graphHeader { gap: 2px 6px; padding-bottom: 2px; }
+  .graphHeading h2 { font-size: 18px; }
+  .conditionBar { gap: 2px 8px; padding: 3px 0 6px; margin-bottom: 6px; }
+  .conditionBar > p { flex: 1 1 100%; }
+  .conditionActions { margin-inline-start: auto; gap: 4px; }
+  .conditionActions > button, .conditionActions > .conditionEdit { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; min-height: 36px; padding: 0; }
+  .conditionActions > button > span { display: none; }
+  .conditionActions > button > :global(.ui-icon) { width: 17px; height: 17px; margin: 0; }
+}

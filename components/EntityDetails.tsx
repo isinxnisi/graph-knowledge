@@ -10,15 +10,15 @@ import type { DatasetMode } from "../lib/domain/dataset";
 import ReadingLink from "./ReadingLink";
 import detailCss from "./ExplorationDetails.module.css";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import type { EntityDetail, EntitySummary } from "../lib/domain/api";
 import type { Expansion } from "../lib/client/graph-state";
 import { ClientApiError, fetchEntity, errorMessage } from "../lib/client/api";
 import { formatPeriod } from "../lib/client/format";
 import styles from "./Explorer.module.css";
 
-export default function EntityDetails({ entity, expansion, onExpand, onClose, onOverview, onSwitch, restricted, dataset }: {
-  dataset?: DatasetMode;
+export default function EntityDetails({ entity, expansion, onExpand, onClose, onOverview, onSwitch, restricted, dataset, children }: {
+  dataset?: DatasetMode; children?: ReactNode;
   onOverview: () => void; onSwitch: (mode: "broad" | "same") => void; restricted: boolean;
   entity: EntitySummary; expansion?: Expansion; onExpand: (more: boolean) => void; onClose: () => void;
 }) {
@@ -58,6 +58,7 @@ export default function EntityDetails({ entity, expansion, onExpand, onClose, on
       {expansion?.error && <div role="alert" className={styles.error}><p>{explorerMessage(expansion.error, locale)}</p><button onClick={() => onExpand(expansion.open && expansion.expanded)}>{ui.graphRetry}</button></div>}
       {expansion?.open && expansion.hasMore && <button onClick={() => onExpand(true)} disabled={expansion.loading || expansion.blocked}><Icon name="plus" /><span>{expansion.loading ? ui.moreLoading : ui.more}</span></button>}
     </div>
+    {children}
     <div className={detailCss.tools}>
       <details className={detailCss.metadata}><summary>{locale === "en" ? "Names & link" : "別名・閲覧リンク"}</summary><div>
         {!!detail?.aliases.length && <p><span>{ui.aliases}</span>{detail.aliases.join(locale === "en" ? ", " : "、")}</p>}
