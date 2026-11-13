@@ -1,3 +1,5 @@
+- 年表の見出し／補足とTOP一覧の整列：[βの比較画像・CSS実測・検証](verification/TIMELINE_HIERARCHY_HOME_LIST_20261113.md)。
+
 - 曖昧な開始・終了端の表示：[判断・回帰・β実画面](verification/TIMELINE_ENDPOINT_POINTS_20261113.md)。PLUTOの1965年は細かい記録を含むため幅を保持。
 
 - 運営テーマの再試行制御：[設計](design/THEME_ITEM_RETRIES_20261113.md)／[検証](verification/THEME_ITEM_RETRIES_20261113.md)。β限定、既存G07は照会のみ。
