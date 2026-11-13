@@ -1,3 +1,5 @@
+2026-11-14：[本文とフッターの連続スクロール](verification/FOOTER_CONTENT_FLOW_20261114.md)を3200／HTTPS βへ反映。中央本文からフッターへ続け、左右サイドバーを保持。
+
 2026-11-13：ローカルβの共有公開トンネルは[構成と復帰](runbooks/BETA_TUNNEL.md)、[切替・Wi-Fi再接続後の比較](verification/BETA_TUNNEL_RESILIENCE_20261113.md)を参照。公式版固定と2系統化を配置し、再接続後はβ／外部／localhost各18/18が200。長期安定性とWSL単体のTCP不通は別記。
 
 - 曖昧な発生時期の表記：[開始側・終端の整理とβ確認](verification/TIMELINE_WINDOW_LABELS_20261113.md)。
