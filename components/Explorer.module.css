@@ -12,10 +12,10 @@
 .explorer input { background: var(--color-panel); color: var(--color-text); width: 100%; }
 .explorer button:focus-visible, .explorer input:focus-visible, .explorer select:focus-visible, .explorer a:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
 .demo { padding: 4px 12px; background: var(--color-demo); color: var(--color-demo-text); border: 1px solid var(--color-demo-border); border-radius: 4px; font-weight: 600; }
-.columns { display: grid; grid-template-columns: var(--search-pane-width, clamp(190px, 17vw, 236px)) minmax(280px, 1fr) clamp(250px, 24vw, 330px); grid-template-rows: auto; align-items: start; gap: 12px; padding: 12px; flex: 1 0 auto; min-height: 0; overflow: visible; }
+.columns { --explorer-pane-inset:12px; display: grid; grid-template-columns: var(--search-pane-width, clamp(190px, 17vw, 236px)) minmax(280px, 1fr) clamp(250px, 24vw, 330px); grid-template-rows: auto; align-items: start; gap: 12px; padding: 12px; flex: 1 0 auto; min-height: 0; overflow: visible; }
 .panel { background: var(--color-panel); border: 1px solid var(--color-border); border-radius: var(--radius-panel); padding: var(--space-panel); min-width: 0; overflow-wrap: anywhere; height: 100%; min-height: 0; box-shadow: var(--shadow-panel); }
 /* Sidebar height is viewport-bound, but its sticky travel is bounded by main. */
-.columns > .panel:first-child, .columns > aside { height: calc(100dvh - var(--explorer-header-height) - 24px); max-height: calc(100dvh - var(--explorer-header-height) - 24px); overflow-y: auto; position: sticky; top: calc(var(--explorer-header-height) + 12px); overscroll-behavior: contain auto; }
+.columns > .panel:first-child, .columns > aside { height: calc(100dvh - var(--explorer-header-height) - 2 * var(--explorer-pane-inset)); max-height: calc(100dvh - var(--explorer-header-height) - 2 * var(--explorer-pane-inset)); overflow-y: auto; position: sticky; top: calc(var(--explorer-header-height) + var(--explorer-pane-inset)); overscroll-behavior: contain auto; }
 .searchForm { display: grid; gap: 8px; margin-bottom: 16px; }
 .searchForm button { display: flex; align-items: center; justify-content: center; font-weight: 600; box-shadow: 0 3px 8px rgb(32 84 132 / .12); text-align: center; background: var(--color-accent); color: var(--color-on-accent); }
 .searchForm button:hover:not(:disabled) { background: var(--color-accent-strong); }
@@ -665,7 +665,7 @@
 /* Shared explorer rhythm: the graph keeps the space; controls and reading panes
    use the same text edge and a small, deliberate set of spacings. */
 @media (min-width: 1200px) {
-  .columns { grid-template-columns: var(--search-pane-width, clamp(196px, 14.3vw, 220px)) minmax(280px, 1fr) clamp(304px, 24vw, 360px); gap: 10px; padding: 10px; }
+  .columns { --explorer-pane-inset:10px; grid-template-columns: var(--search-pane-width, clamp(196px, 14.3vw, 220px)) minmax(280px, 1fr) clamp(304px, 24vw, 360px); gap: 10px; padding: 10px; }
   .columns.themeColumns { grid-template-columns: var(--search-pane-width, clamp(196px, 14.3vw, 220px)) minmax(440px, 1fr) clamp(320px, 24vw, 360px); }
   .columns.wideDetails { grid-template-columns: var(--search-pane-width, 190px) minmax(280px, 1fr) clamp(380px, 34vw, 500px); }
   .columns.homeColumns { grid-template-columns: var(--search-pane-width, clamp(196px, 14.3vw, 220px)) minmax(0, 1fr); }
@@ -765,7 +765,7 @@
 /* Search remains mounted when collapsed, preserving the current query and results. */
 .searchPaneToggle { display: none; }
 @media (min-width: 801px) {
-  .columns > .searchPane:first-child { position: sticky; top:calc(var(--explorer-header-height) + 12px); }
+  .columns > .searchPane:first-child { position: sticky; top:calc(var(--explorer-header-height) + var(--explorer-pane-inset)); }
   .searchPaneContent > .panel > h2 { padding-inline-end: 27px; }
   .explorer .searchPaneToggle { display: grid; place-items: center; position: absolute; z-index: 1; top: 10px; right: 6px; width: 30px; height: 30px; min-height: 30px; margin: 0; padding: 0; border: 0; background: transparent; color: var(--color-muted); border-radius: 6px; box-shadow: none; }
   .searchPaneToggle > :global(.ui-icon) { width: 17px; height: 17px; margin: 0; transform: scaleX(-1); }
