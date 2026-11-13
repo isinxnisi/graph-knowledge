@@ -20,4 +20,4 @@
 
 ## 2026-11-13の残件
 
-[切替実測](../verification/BETA_TUNNEL_RESILIENCE_20261113.md)を参照。新しい版でもedge切断は残る。Windowsの外向きDNS／TCP失敗、WSL単体のTCP不通は解決しておらず、ネットワークを再接続した後の再確認が必要。Windows全体のDNS、WSL・Dockerの設定は今回変更していない。
+[切替と再接続後の実測](../verification/BETA_TUNNEL_RESILIENCE_20261113.md)を参照。本人のWi-Fi再接続後、β／外部／localhost各18/18が200、約9分の観測でedge再切断0件。現在βは利用可能だが、長期安定性と切断起点は未確定。WSL単体のTCP不通は別残件。Windows全体のDNS、WSL・Dockerの設定は変更していない。

@@ -1,4 +1,4 @@
-2026-11-13 βの頻発断：①Web稼働と公開トンネル4本同時切断を分離・②公式版固定／2系統化・③構成照合と公開経路確認まで実施｜今回の予定は③まで、安定復旧はPC外向き通信の再接続後確認が残る。新版でもedge切断は残り、WindowsのDNS／TCP timeoutとWSLのTCP不通も未解決。本番・アプリ・DB・Worker未変更。[実測](verification/BETA_TUNNEL_RESILIENCE_20261113.md)／[構成と復帰](runbooks/BETA_TUNNEL.md)。以下は各時点の履歴。
+2026-11-13 βの頻発断：①公開トンネル切断の分離・②公式版固定／2系統化・③本人Wi-Fi再接続後の比較とβ代表経路まで完了｜今回の工程は③まで完了。β／外部／localhost各18/18が200、約9分の観測でトンネル再切断0。現在βは利用可能、長期安定性と切断起点は未確定。WSL単体の外向きTCP不通は別残件。本番・アプリ・DB・Worker未変更。[実測](verification/BETA_TUNNEL_RESILIENCE_20261113.md)／[構成と復帰](runbooks/BETA_TUNNEL.md)。以下は各時点の履歴。
 
 2026-11-13 βの表示と遷移待ち：①原因確認・②修正と44件／lint／型検査込みbuild・③3200／HTTPS βのPC・375px確認まで完了｜今回の表示修正は③まで完了、残件は502の安定復旧。1.5秒以上の遷移だけヘッダー下線へ表示し、行先表示後のGraph待ちは除外。公開トンネルは既存設定で再起動後も切断再発があり、根本原因・安定復旧は未解決。build `-AuDBbULB0cVxlkJ44aOw`、本番・DB・Worker未変更。[変更・確認範囲](verification/BETA_NAVIGATION_FEEDBACK_20261113.md)。以下は各時点の履歴。
 

@@ -2,7 +2,7 @@
 
 ## 現在地
 
-①Web／公開経路の分離・②公式版固定と2系統化・③構成照合と到達確認まで実施。安定復旧全体は未完了。残りはPC外向き通信の再接続後の確認と、edge切断の起点の特定。
+①Web／公開経路の分離・②公式版固定と2系統化・③本人Wi-Fi再接続後の比較とβ代表経路確認まで完了。現在はβへ到達でき、約9分の確認では再発なし。長期安定性と切断の起点は未確定、WSL単体の外向きTCP不通は別残件。
 
 ## 実測と判断
 
@@ -43,3 +43,22 @@ Windowsは非管理者。次の低侵襲な切り分けは、Wi-Fiアダプタ�
 - [公式版2026.11.0](https://github.com/cloudflare/cloudflared/releases/tag/2026.11.0)
 - [更新時の既存接続への影響](https://developers.cloudflare.com/tunnel/guides/update-cloudflared/)
 - [運用と復帰](../runbooks/BETA_TUNNEL.md)
+
+
+## Wi-Fi再接続後の比較（本人操作後）
+
+利用者が管理者PowerShellで `Restart-NetAdapter -Name 'Wi-Fi' -Confirm:$false` を実行した。DNS設定・Docker／WSL設定は変更していない。操作に対応して20:38:14〜15に両connectorの接続が切れ、20:38:26には各4接続が再登録された。Next PID 2228805と両containerのrestartCount 0を確認し、Web／containerの再起動とは分ける。
+
+- 20:39〜20:41の比較では、β／Cloudflare一般サイト／localhostが各8/8回HTTP200。再接続前は同じ比較で8/12・10/12・12/12だった。
+- 同じルーターDNSへのnslookupは5.31秒から0.107秒へ改善。TOPは200／3.07秒、同じPLUTOテーマは200／3.17秒、認証metadataは200／0.14秒。
+- WSL単体から1.1.1.1:443／Cloudflare edge:7844へのTCP接続は依然3秒timeout。この問題をWi-Fi再接続で復旧したと扱わない。
+- この比較は短時間の改善を示す。切断の起点や長期安定性、2系統化とWi-Fi再接続の各寄与を確定したものではない。
+
+再接続後の原本は `C:/Users/nishr/.codex/tmp/beta-tunnel-20261113/after-wifi-reconnect.jsonl`。以前の再発間隔を越える追加観測は `after-wifi-extended.jsonl` に保存する。
+
+
+### 追加観測の結果
+
+20:39:12〜20:46:41 JSTのHTTP観測は、β18/18・Cloudflare一般サイト18/18・localhost18/18がすべて200。20:38:26の再登録以降、最終確認まで両connectorの再切断／TLS接続エラーは0件。20:47頃まで、以前の数分周期の再発間隔を一度越えて確認した。既存のWeb PID／container稼働と構成を保持した。
+
+現在のβは利用可能と判断する。短時間の改善を長期の安定保証や切断起点の特定とはしない。今回は追加のアプリ・DNS・OS設定変更や不要なbuild／全件テストを行わず、比較記録を更新した。
