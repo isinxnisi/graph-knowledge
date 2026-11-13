@@ -2,7 +2,7 @@
 
 ## 範囲と現在地
 
-①原因確認・②実装と44件／型検査込みbuild完了、③3200・HTTPS βの画面確認中。予定終点は③。本番は変更しない。公開トンネルの再発問題はUIの完了と分けて扱う。
+①原因確認・②実装と44件／型検査込みbuild・③3200／HTTPS βのPC・375px確認まで完了。今回の表示修正は③まで完了。502の安定復旧は未完了であり、本番は変更していない。
 
 ## 裏側の確認
 
@@ -33,4 +33,17 @@ Windows Cloudflared serviceは別tunnelであり、βのコンテナと混同し
 - 44件成功：遷移フィードバック4件・workspace28件・探索安定性7件・public services5件。
 - 1500ms閾値・速い遷移の非表示・遷移後Graph待ちの非対象・古い完了と取消、背景通信失敗の保持とbackoff、明示取得失敗の案内、既知公開停止の適用を確認。
 - 対象ESLint成功（既存 `KnowledgeReading` unused import warning 1件）、型検査込みpublic build成功（既存tracing warning 3件）。
-- build `-AuDBbULB0cVxlkJ44aOw`。画面確認・β再接続後の状態は追記する。
+- build `-AuDBbULB0cVxlkJ44aOw` を3200へ配置し、HTTPS βでも同じPLUTOテーマ（構成版9）を確認。Worker・DB・本番は変更していない。
+- PCの導入本文は実測518.58pxから1088pxへ広がり、空いている横幅を使って表示。375×631 CSS pxでは横はみ出しなし、既存の本文全文への入口を保持。
+- 公開βの実際の遅いNext遷移でprogressbarを確認。header下端56.09375pxに対しtop54.09375px／高さ2px。行先の表示後はprogressbarが0件となり、後続Graph描画中も表示しない。
+- 画面確認時のβは利用できたが、19:51:21にもedge切断を記録。WSLからの最終curlはDNS解決失敗であり、HTTP応答とは混同しない。直後のWindows経由のHTTPS確認はHTTP200（2.97秒）。トンネル切断の根本原因・安定復旧は残件。
+
+## 画面記録
+
+Windowsの `C:/Users/nishr/.codex/tmp/beta-navigation-20261113/` に保存した。
+
+- `before.png`：変更前PC。
+- `after-desktop.png`：3200の変更後PC。
+- `after-desktop-beta.png`：公開βの変更後PC。
+- `after-mobile-beta.png`：公開βの375×631px。
+- `progress-beta.png`：公開βで実際に遷移待ちが長いときのヘッダー下線。

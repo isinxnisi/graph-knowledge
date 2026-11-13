@@ -1,4 +1,4 @@
-2026-11-13 βの表示と遷移待ち：①背景poll由来エラーバー／導入の固定幅／502ログ確認・②修正と44件／lint／型検査込みbuild完了・③3200／HTTPS β確認中｜今回の予定は③まで。1.5秒以上の遷移だけヘッダー下線へ表示、遷移後のGraph待ちは除外。公開トンネルは既存設定で再起動したが切断再発を残し、安定復旧とは未判定。本番未変更。[変更・確認範囲](verification/BETA_NAVIGATION_FEEDBACK_20261113.md)。以下は各時点の履歴。
+2026-11-13 βの表示と遷移待ち：①原因確認・②修正と44件／lint／型検査込みbuild・③3200／HTTPS βのPC・375px確認まで完了｜今回の表示修正は③まで完了、残件は502の安定復旧。1.5秒以上の遷移だけヘッダー下線へ表示し、行先表示後のGraph待ちは除外。公開トンネルは既存設定で再起動後も切断再発があり、根本原因・安定復旧は未解決。build `-AuDBbULB0cVxlkJ44aOw`、本番・DB・Worker未変更。[変更・確認範囲](verification/BETA_NAVIGATION_FEEDBACK_20261113.md)。以下は各時点の履歴。
 
 2026-11-13 β Googleログイン復旧：①invalid_codeのコード交換段階／WSL外向きTCP失敗確認・②β限定Windows通信／30件／lint／型検査込みbuild・③3200／HTTPS β反映と実Google再ログインまで完了｜今回の全体は③まで完了。既存アカウントのCapsule20件へ復帰、build `11nggcPDCgz97xTEIlW9R`。署名・PKCE等を検証し、DB migration／Worker／本番未変更。iPhone実機とWSL全体のTCP障害解消は未確認。[原因の範囲と検証](verification/BETA_GOOGLE_LOGIN_20261113.md)。以下は各時点の履歴。
 
