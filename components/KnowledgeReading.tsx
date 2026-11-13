@@ -7,7 +7,7 @@ import {buildKnowledgePublishedRecord} from "../lib/domain/knowledge-publication
 import type {KnowledgeTranslationVersion} from "../lib/domain/knowledge-translation";
 import KnowledgeTranslationPanel from "./KnowledgeTranslationPanel";
 import { createContext, useContext, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import Link from "next/link";
+import Link from "./NavigationLink";
 import {CapsuleWorkspace} from "./MyCapsules";
 import {captureKnowledgeCapsule} from "../lib/client/capsule-knowledge";
 import type {LocalCapsule} from "../lib/client/local-capsules";

@@ -1,4 +1,5 @@
 "use client";
+import {startNavigationProgress} from "./navigation-progress";
 import {useUiLocale} from "./ui-locale";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { KnowledgeEntityVersion } from "../domain/knowledge-foundation";
@@ -88,6 +89,7 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
   const [state, setState] = useState<State>(() => ({ query: "", kind: "", normal: blankNormal(), entityPage: null, themes: [], activeTheme: initialTheme??null, retainedTheme: initialTheme??null, themeView: initialTheme?.theme.content.initialView??"graph", themeSelection: null, neighborPages: {}, normalRestoration: null, themeRestoration: null }));
   const current = useRef(state), alive = useRef(false), ready = useRef(false);
   const navigation = useRef<string | null>(null);
+  const operationProgress=useRef<(()=>void)|null>(null);
   const epoch = useRef(0), entitySearch = useRef(0), themeSearch = useRef(0), access = useRef<string | null>(null);
   const themeCriteria = useRef<{ q?: string; entityId?: string }>({});
   const [busy, setBusy] = useState(false), [restoring, setRestoring] = useState(!initialTheme);
@@ -100,9 +102,10 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
       writeReference(next, history === "push"); navigation.current = workspaceNavigation();
     }
   }, []);
-  const begin = () => { const token = ++epoch.current; ready.current = true; setRestoring(false); setBusy(true); setError(""); setMessage(""); return token; };
+  const stopProgress=()=>{operationProgress.current?.();operationProgress.current=null;};
+  const begin = (navigation=false) => { stopProgress();if(navigation)operationProgress.current=startNavigationProgress(); const token = ++epoch.current; ready.current = true; setRestoring(false); setBusy(true); setError(""); setMessage(""); return token; };
   const live = (token: number) => alive.current && token === epoch.current;
-  const finish = (token: number) => { if (live(token)) setBusy(false); };
+  const finish = (token: number) => { if (live(token)) { setBusy(false);stopProgress(); } };
 
   async function restore(saved: KnowledgeWorkspaceReference, override?: ReturnType<typeof knowledgeThemeLocation>) {
     const token = ++epoch.current; ready.current = false; setBusy(true); setError(""); setRestoring(true);
@@ -183,19 +186,20 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
       void restore(parseKnowledgeReference(window.history.state?.[workspaceHistoryKey]) ?? emptyKnowledgeReference(), knowledgeThemeLocation(new URL(location.href)));
     };
     window.addEventListener("popstate", pop);
-    return () => { disposed = true; alive.current = false; ready.current = false; pendingEpoch.current++; pendingEntitySearch.current++; pendingThemeSearch.current++; window.removeEventListener("popstate", pop); };
+    return () => { operationProgress.current?.();operationProgress.current=null;disposed = true; alive.current = false; ready.current = false; pendingEpoch.current++; pendingEntitySearch.current++; pendingThemeSearch.current++; window.removeEventListener("popstate", pop); };
     // Initial URL is consumed once. User navigation is handled by popstate.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    let polling = false;
+    let polling = false, failures = 0;
+    let nextPollAt = 0;
     async function poll() {
-      if (polling || !ready.current) return;
+      if (polling || !ready.current || document.visibilityState === "hidden" || Date.now() < nextPollAt) return;
       polling = true; const token = epoch.current, before = current.current;
       try {
         const s = await readKnowledge<KnowledgeWorkspaceStatus>("status"); if (!live(token)) return; setStatus(s);
-        if (s.changeToken === access.current && (before.normal.generation || !s.active)) return;
+        if (s.changeToken === access.current && (before.normal.generation || !s.active)) { failures=0; nextPollAt=0; return; }
         const generation = before.normal.generation ?? s.active?.id ?? null, ids = before.normal.records.map(r => r.record.id);
         const heldTheme = before.retainedTheme;
         const candidateToken = themeSearch.current;
@@ -224,7 +228,9 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
         const page = results[2].status === "fulfilled" ? results[2].value : null;
         const candidates = results[3].status === "fulfilled" ? results[3].value : null;
         const failure = results.find(r => r.status === "rejected");
-        if (failure?.status === "rejected") setError(messageOf(failure.reason));
+        // A failed background refresh must not turn successful reading into a
+        // foreground error. Known publication stops are still applied above.
+        if (failure) { failures++; nextPollAt=Date.now()+Math.min(30000,4000*2**Math.min(failures,3)); }
         let root = graph?.entities.find(e => e.id === before.normal.rootId);
         if (generation && before.normal.rootId && !root) root = (await readKnowledge<KnowledgeEntityPage>("entities", { generation, entityId: before.normal.rootId })).entities[0];
         if (!live(token) || current.current !== before || candidateToken !== themeSearch.current) return;
@@ -239,8 +245,8 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
           ...(themeResult?.stopped ? { themeCanvasView: undefined, themeRestoration: null } : {}),
           themeSelection: themeResult?.value ? validSelection(old.themeSelection, themeResult.value.records, themeResult.value.snapshot.entities) : themeResult?.stopped ? null : old.themeSelection }));
         if (themeResult?.stopped && before.activeTheme) setMessage("このテーマは現在閲覧できません。元の探索に戻りました。");
-        if (!failure) access.current = s.changeToken;
-      } catch (e) { if (live(token)) setError(messageOf(e)); }
+        if (!failure) { access.current = s.changeToken; failures=0; nextPollAt=0; }
+      } catch { failures++; nextPollAt=Date.now()+Math.min(30000,4000*2**Math.min(failures,3)); }
       finally { polling = false; }
     }
     const timer = setInterval(() => { void poll(); }, 4000);
@@ -248,8 +254,8 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
     // Poll works from synchronized refs; it never starts a second request while pending.
   }, [update]);
 
-  function setQuery(query: string) { if (ready.current) { epoch.current++; setBusy(false); } update(s => ({ ...s, query })); }
-  function setKind(kind: string) { if (ready.current) { epoch.current++; setBusy(false); } update(s => ({ ...s, kind })); }
+  function setQuery(query: string) { if (ready.current) { stopProgress();epoch.current++; setBusy(false); } update(s => ({ ...s, query })); }
+  function setKind(kind: string) { if (ready.current) { stopProgress();epoch.current++; setBusy(false); } update(s => ({ ...s, kind })); }
   async function searchEntities(cursor?: string | null) {
     if (!ready.current) { epoch.current++; ready.current = true; setRestoring(false); setBusy(false); }
     const token = ++entitySearch.current, before = current.current;
@@ -268,7 +274,7 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
     finally { if (alive.current && token === themeSearch.current) setSearchingThemes(false); }
   }
   async function loadNeighbors(id: string, cursor?: string | null, start = false, latest = false) {
-    const token = begin(), before = current.current.normal;
+    const token = begin(start), before = current.current.normal;
     try {
       const result = await readKnowledge<Neighbors>("neighbors", { generation: !latest ? before.generation ?? undefined : undefined, entityId: id, cursor: cursor ?? undefined });
       if (!live(token)) return false;
@@ -286,11 +292,11 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
   async function startFrom(entity: KnowledgeEntityVersion,options:{latest?:boolean}={}) { return loadNeighbors(entity.id, undefined, true, options.latest??Boolean(current.current.activeTheme)); }
   async function expandEntity(id: string, cursor?: string | null) { await loadNeighbors(id, cursor); }
   function selectEntity(id: string) {
-    epoch.current++; setBusy(false);
+    stopProgress();epoch.current++; setBusy(false);
     update(s => s.normal.entities.some(e => e.id === id) ? { ...s, normal: { ...s.normal, selection: { kind: "entity", id } } } : s);
   }
   async function selectRecord(id: string,options:{latest?:boolean}={}) {
-    const token = begin(), generation = options.latest?null:current.current.normal.generation;
+    const token = begin(true), generation = options.latest?null:current.current.normal.generation;
     try {
       const result = await readKnowledge<{ generation: string; record: KnowledgePublishedRecord }>("record", { generation: generation ?? undefined, recordId: id });
       if (!live(token)) return;
@@ -304,7 +310,7 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
     } catch (e) { if (live(token)) setError(messageOf(e)); return false; } finally { finish(token); }
   }
   async function openTheme(ref: { id: string; revision?: number; focusEntityId?: string }) {
-    const token = begin();
+    const token = begin(true);
     try {
       const theme = await readKnowledge<KnowledgeThemeRead>("theme", { themeId: ref.id, revision: ref.revision, language:localeRef.current });
       if (!live(token)) return;
@@ -313,10 +319,10 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
       if (live(token)) { setError(messageOf(e)); if (unavailable(e)) update(s => s.retainedTheme?.theme.id === ref.id ? { ...s, activeTheme: null, retainedTheme: null, themeSelection: null, themeCanvasView: undefined, themeRestoration: null } : s); }
     } finally { finish(token); }
   }
-  function closeTheme(history: "push" | "replace" = "push") { epoch.current++; setBusy(false); update(s => ({ ...s, activeTheme: null }), history); }
-  function setThemeView(themeView: KnowledgeView) { epoch.current++; setBusy(false); update(s => ({ ...s, themeView })); }
+  function closeTheme(history: "push" | "replace" = "push") { stopProgress(); epoch.current++; setBusy(false); update(s => ({ ...s, activeTheme: null }), history); }
+  function setThemeView(themeView: KnowledgeView) { stopProgress();epoch.current++; setBusy(false); update(s => ({ ...s, themeView })); }
   function setThemeSelection(selection: KnowledgeSelection) {
-    epoch.current++; setBusy(false);
+    stopProgress();epoch.current++; setBusy(false);
     update(s => ({ ...s, themeSelection: s.activeTheme ? validSelection(selection, s.activeTheme.records, s.activeTheme.snapshot.entities) : null }));
   }
   function captureNormalView(view: GraphView | null) {

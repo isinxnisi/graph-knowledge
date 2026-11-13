@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { act, cleanup, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import {navigationProgressSnapshot} from "../lib/client/navigation-progress";
 import { readKnowledge, useKnowledgeWorkspace } from "../lib/client/use-knowledge-workspace";
 import { knowledgeGraphViewSchema, parseKnowledgeReference, workspaceHistoryKey } from "../lib/client/knowledge-workspace-state";
 import type { KnowledgeEntityVersion } from "../lib/domain/knowledge-foundation";
@@ -309,4 +310,26 @@ it("explains an unavailable explicitly linked record instead of leaving an unexp
 });
 it("explains removal of the selected record when current visibility changes",async()=>{
  const {api,result}=await setup();await act(()=>result.current.selectRecord('r1'));api.hide('r1');api.change('record-hidden');await tick();expect(result.current.normal.records.some(r=>r.record.id==='r1')).toBe(false);expect(result.current.message).toContain('選択していた知識は現在閲覧できません');
+});
+
+
+it("background connection failures retain the reading without a foreground alert and back off retries",async()=>{
+ const {result}=await setup();await act(()=>result.current.startFrom(a));await act(()=>result.current.openTheme({id:'theme'}));
+ const retained=result.current.activeTheme;
+ vi.mocked(fetch).mockRejectedValueOnce(Error('temporary network failure'));
+ await tick();expect(result.current.error).toBe('');expect(result.current.activeTheme).toBe(retained);expect(navigationProgressSnapshot()).toBeNull();
+ const count=vi.mocked(fetch).mock.calls.length;await tick();expect(vi.mocked(fetch).mock.calls.length).toBe(count);
+ await tick();expect(vi.mocked(fetch).mock.calls.length).toBeGreaterThan(count);expect(result.current.error).toBe('');
+});
+it("background partial failure still applies a known theme stop without a foreground connection alert",async()=>{
+ const {api,result}=await setup();await act(()=>result.current.startFrom(a));await act(()=>result.current.openTheme({id:'theme'}));
+ const base=vi.mocked(fetch).getMockImplementation()!;
+ vi.mocked(fetch).mockImplementation((...args)=>new URL(String(args[0]),location.href).searchParams.get('mode')==='graph'?Promise.reject(Error('timeout')):base(...args));
+ api.stopTheme();api.change('stopped');await tick();expect(result.current.activeTheme).toBeNull();expect(result.current.error).toBe('');expect(result.current.message).toContain('現在閲覧できません');
+});
+it("explicit navigation still reports failures and its progress stops on cancellation",async()=>{
+ const {api,result}=await setup();vi.mocked(fetch).mockRejectedValueOnce(Error('offline'));
+ await act(()=>result.current.openTheme({id:'theme'}));expect(result.current.error).toContain('再試行');expect(navigationProgressSnapshot()).toBeNull();
+ const pending=api.hold('theme');act(()=>{void result.current.openTheme({id:'theme'});});await flush();expect(navigationProgressSnapshot()).not.toBeNull();
+ act(()=>result.current.closeTheme());expect(navigationProgressSnapshot()).toBeNull();await pending.finish();expect(result.current.activeTheme).toBeNull();
 });

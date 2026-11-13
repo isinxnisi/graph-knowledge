@@ -1,0 +1,4 @@
+.progress{position:absolute;inset:auto 0 -1px;height:2px;overflow:hidden;pointer-events:none;z-index:1;background:transparent}
+.progress>span{display:block;width:24%;height:100%;background:var(--color-accent);opacity:.65;animation:header-navigation 1.9s ease-in-out infinite;will-change:transform}
+@keyframes header-navigation{from{transform:translateX(-105%)}to{transform:translateX(425%)}}
+@media(prefers-reduced-motion:reduce){.progress>span{animation:none;width:100%;opacity:.4}}

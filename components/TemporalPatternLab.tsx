@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "./NavigationLink";
 import { useRouter } from "next/navigation";
 import ThemeTimeline from "./ThemeTimeline";
 import { subsetThemeTimeline } from "../lib/domain/theme-timeline";

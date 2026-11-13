@@ -1,4 +1,6 @@
 "use client";
+import {useNavigationProgress} from "../lib/client/navigation-progress";
+import {useTransition} from "react";
 import { entityDisplayName } from "../lib/domain/entity-display";
 import { focusDestination } from "../lib/client/focus-destination";
 import { graphNoticePresentation } from "../lib/client/graph-notice";
@@ -77,6 +79,9 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
   const knowledge=useKnowledgeReading(),submissionsEnabled=useKnowledgeSubmissionsEnabled();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [routePending,startRouteTransition]=useTransition();
+  useNavigationProgress(routePending);
+  const navigate=(href:string)=>startRouteTransition(()=>router.push(href));
   const { locale } = useUiLocale();
   const ui = explorerLabels(locale);
   const reading = parseReadingLocation(searchParams, dataset);
@@ -137,7 +142,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
   const [graphSelected,setGraphSelected]=useState<string[]>([]);
   async function submitGraphSelection(){
     setSubmissionBusy(true);setSubmissionError("");
-    try { const requested=graphSubmissionSelection(graph,canvas.current?.selectedKeys?.()??graphSelected);if(!beforeAccountNavigation())return;const href=await createSelectionSubmission({context:requested});router.push(href); }
+    try { const requested=graphSubmissionSelection(graph,canvas.current?.selectedKeys?.()??graphSelected);if(!beforeAccountNavigation())return;const href=await createSelectionSubmission({context:requested});navigate(href); }
     catch(error){setSubmissionError(submissionHandoffError(error,locale==="en"));}
     finally{setSubmissionBusy(false);}
   }
@@ -163,7 +168,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
     trackPublicEvent("explore_start");
     // A real route entry keeps Home and Graph distinct for browser Back/Forward.
     if (discoveryHome && !graph.centerId && !initialRoot) {
-      router.push(`${locale === "en" ? "/en" : ""}/explore/${entity.id}`);
+      navigate(`${locale === "en" ? "/en" : ""}/explore/${entity.id}`);
       return;
     }
     chooseRoot(entity, broad); moveToPane("graph");
@@ -296,7 +301,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
       if (predicates === undefined) { startFrom(entity); return; }
       knowledge?.leave();
       trackPublicEvent("explore_start");
-      if (discoveryHome && !graph.centerId && !initialRoot) router.push(`${locale === "en" ? "/en" : ""}${discoveryExplorationHref(dataset, entity.id, predicates, roles ?? null)}`);
+      if (discoveryHome && !graph.centerId && !initialRoot) navigate(`${locale === "en" ? "/en" : ""}${discoveryExplorationHref(dataset, entity.id, predicates, roles ?? null)}`);
       else { openSavedView(entity, { predicates, contributionRoles: roles ?? null, organizationPositions: null, eventRoles: null }, canvas.current?.capture() ?? null); moveToPane("graph"); }
     }} />}
     {reading && <ReferenceReader key={searchParams.toString()} location={reading} dataset={dataset} onClose={closeReading} onExplore={entity => {

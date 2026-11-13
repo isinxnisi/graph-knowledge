@@ -3,7 +3,7 @@ import {useKnowledgeSubmissionsEnabled} from "./KnowledgeSubmissionAvailability"
 import {navigatePersonalHash,navigatePersonalList} from '../lib/client/personal-location';
 import {personalNavigation,type PersonalSection} from '../lib/client/personal-navigation';
 export type {PersonalSection} from '../lib/client/personal-navigation';
-import Link from 'next/link';
+import Link from './NavigationLink';
 import Icon from './Icon';
 import {usePublicProfilesEnabled} from './PublicProfileAvailability';
 import InvitationBadge from './InvitationBadge';

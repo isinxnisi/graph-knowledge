@@ -1,7 +1,7 @@
 "use client";
 import ExternalSourceLink from "./ExternalSourceLink";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
-import Link from "next/link";
+import Link from "./NavigationLink";
 import GraphCanvas, { type CanvasContent } from "./GraphCanvas";
 import { emptyGraph, type Selection } from "../lib/client/graph-state";
 import { themeTimeLabel } from "../lib/domain/theme-time";

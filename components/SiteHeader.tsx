@@ -3,7 +3,7 @@ import {AiLabEntry, AiLabRecordReturn} from "./AiLabLinks";
 import {usePersonalHash,navigatePersonalHash,navigatePersonalList} from "../lib/client/personal-location";
 import { localizedPublicHref } from "../lib/domain/public-routes";
 import {useCommunitiesEnabled} from "./CommunityAvailability";
-import Link from "next/link";
+import Link from "./NavigationLink";
 import {personalNavigation,personalSection} from "../lib/client/personal-navigation";
 import InvitationBadge from "./InvitationBadge";
 import SubmissionFeedbackBadge,{AccountUpdatesBadge} from "./SubmissionFeedbackBadge";
@@ -24,6 +24,7 @@ import { supportLabels } from "../lib/i18n/support";
 import { appearanceKey, defaultAppearance, readAppearance, type Appearance } from "../lib/client/appearance";
 
 import MyCapsules from "./MyCapsules";
+import HeaderNavigationProgress from "./HeaderNavigationProgress";
 import ProfileAvatar from './ProfileAvatar';
 import {usePublicProfilesEnabled} from './PublicProfileAvailability';
 export default function SiteHeader({ dataset, datasetNotice, memberTools = true, page = "explore", onBeforeAccountNavigation, onPrivacySettings, onLogout, accountBusy = false }: { memberTools?: boolean; datasetNotice?: { badge: string; description: string }; onBeforeAccountNavigation?: () => boolean; onPrivacySettings?: () => void; onLogout?: () => void; accountBusy?: boolean; user?: MemberUser | null; dataset: DatasetMode; page?: "explore" | "member" | "community" | "shared" | "support" | "ai-lab" }) {
@@ -157,5 +158,6 @@ export default function SiteHeader({ dataset, datasetNotice, memberTools = true,
         </div>
       </details>
     </div>
+    <HeaderNavigationProgress label={locale==="en"?"Loading page":"ページを読み込み中"}/>
   </header>;
 }

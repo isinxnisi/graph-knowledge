@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ChangeEvent } from "react";
-import Link from "next/link";
+import Link from "./NavigationLink";
 import { themeTimeLabel } from "../lib/domain/theme-time";
 import type {
   KnowledgeEntityVersion as EntityVersion,

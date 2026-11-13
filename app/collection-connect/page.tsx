@@ -1,5 +1,5 @@
 import {headers} from 'next/headers';
-import Link from 'next/link';
+import Link from '../../components/NavigationLink';
 import {verifyOAuthQueryParams} from '@better-auth/oauth-provider';
 import {memberRuntime} from '../../lib/server/member/runtime';
 import {missionMcpEnabled,chatGptClientUrl,signedMissionOAuthQuery,MISSION_SCOPE,THEME_COMPOSE_SCOPE,themeComposeScopeEnabled} from '../../lib/server/member/mission-oauth';

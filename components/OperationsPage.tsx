@@ -6,7 +6,7 @@ import {KnowledgeCollection} from "./KnowledgeCollection";
 import {KnowledgeOperations} from "./KnowledgeOperations";
 import {useCallback,useEffect,useRef,useState,type ReactNode} from 'react';
 import {z} from 'zod';
-import Link from 'next/link';
+import Link from './NavigationLink';
 import SiteHeader from './SiteHeader';
 import {OperationIdentifiers} from './OperationIdentifiers';
 import type {DatasetMode} from '../lib/domain/dataset';

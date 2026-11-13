@@ -1,7 +1,7 @@
 "use client";
 import ExternalSourceLink from "./ExternalSourceLink";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
-import Link from "next/link";
+import Link from "./NavigationLink";
 import { useRouter } from "next/navigation";
 import Icon from "./Icon";
 import CapsuleStudio from "./CapsuleStudio";
