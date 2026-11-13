@@ -461,6 +461,25 @@ it("shows an entirely uncertain duration as one continuous uncertain stroke with
   expect(segments[0].getAttribute("data-kind")).toBe("uncertain");
 });
 
+it("removes unused endpoint date rows but retains the end-year window around a finer event", () => {
+  const serial = record("serial", "原典の連載", { kind: "calendar", meaning: "duration", from: "1964", to: "1965", label: "原典の連載" });
+  const may = record("may", "単行本化で改題", { kind: "calendar", meaning: "point", from: "1965-05", label: "単行本化" });
+  const focus = vi.fn();
+  const { container, rerender } = render(<ThemeTimeline {...common} records={[serial, may]} onFocusRecord={focus} embedded compactControls reading />);
+  const boundaries = () => [...container.querySelectorAll('[data-anchor-kind="boundary"]')].map(row => row.textContent);
+  expect(boundaries()).toEqual(["1965"]);
+  expect(container.querySelector('[data-segment-record="serial"][data-kind="uncertain-start"]')).toBeNull();
+  expect(container.querySelector('[data-segment-record="serial"][data-kind="uncertain-end"]')).not.toBeNull();
+  const end = screen.getByRole("button", { name: /原典の連載.*終了/ });
+  fireEvent.click(end);
+  expect(focus).toHaveBeenCalledWith(serial.id, undefined);
+  const window = record("window", "映画学校で作品に出会う", { kind: "calendar", meaning: "occurrence-window", from: "1960", to: "1969", label: "1960年代" });
+  rerender(<ThemeTimeline {...common} records={[window]} embedded compactControls reading />);
+  expect(boundaries()).toEqual([]);
+  expect(container.querySelector('[data-range-id="window"]')?.hasAttribute("data-point")).toBe(false);
+  expect(container.querySelectorAll('[data-anchor-record="window"]')).toHaveLength(2);
+});
+
 it("shows the concrete directed relation between the same entity IDs without opening the row", () => {
   const relation = {
     ...record("relation", "旅人が詩集を執筆した", {

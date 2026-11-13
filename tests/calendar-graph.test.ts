@@ -347,3 +347,64 @@ it("distinguishes all four same-bound examples without changing their source", (
   expect(clock.ranges[0].end).toBeGreaterThan(clock.ranges[1].end);
   expect(clock.rows.map(row => row.label)).not.toContain("1989-09-04T00");
 });
+
+it("collapses coarse start and end extents independently while preserving the interval", () => {
+  for (const meaning of ["duration", "occurrence-window", undefined] as const) {
+    const interval = record("interval", { kind: "calendar", meaning, from: "1960", to: "1969", label: "1960年代" });
+    const before = JSON.stringify(interval);
+    for (const unit of ["auto", "year", "month", "day", "hour"] as const) {
+      const graph = calendarGraph([interval], unit), range = graph.ranges[0];
+      expect(range.start).toBeLessThan(range.end);
+      expect(range.startBoundaryRow).toBe(range.anchorRow);
+      expect(range.endBoundaryRow).toBe(range.endAnchorRow);
+      expect(graph.rows.map(row => row.label)).toEqual(["1960", "1969"]);
+      expect(graph.rows.every(row => row.record || row.ending)).toBe(true);
+      expect(range.meaning).toBe(meaning ?? "unclassified-range");
+    }
+    expect(JSON.stringify(interval)).toBe(before);
+  }
+});
+
+it("keeps the PLUTO end-year width for the May event but collapses its empty start-year extent", () => {
+  const records = [
+    record("serial", { kind: "calendar", meaning: "duration", from: "1964", to: "1965", label: "原典の連載" }),
+    record("renamed", { kind: "calendar", meaning: "point", from: "1965-05", label: "単行本化" }),
+  ];
+  const before = JSON.stringify(records);
+  for (const unit of ["auto", "month", "day", "hour"] as const) {
+    const graph = calendarGraph(records, unit), [serial, renamed] = graph.ranges;
+    expect(serial.startBoundaryRow).toBe(serial.anchorRow);
+    expect(serial.endBoundaryRow).toBeLessThan(renamed.anchorRow);
+    expect(serial.endAnchorRow).toBeGreaterThan(renamed.endAnchorRow);
+    expect(graph.rows.map(row => row.label)).toEqual(["1964", "1965", "1965-05", "1965"]);
+    expect(graph.rows.filter(row => !row.record && !row.ending).map(row => row.label)).toEqual(["1965"]);
+  }
+  expect(JSON.stringify(records)).toBe(before);
+});
+
+it("retains only the endpoint containing a finer event, symmetrically for year and month precision", () => {
+  for (const [from, to, inStart, inEnd, outside] of [
+    ["1964", "1965", "1964-05", "1965-05", "1966-05"],
+    ["1989-09", "1989-10", "1989-09-04", "1989-10-04", "1989-11-04"],
+  ]) {
+    const interval = record("interval", { kind: "calendar", meaning: "duration", from, to, label: "" });
+    for (const [date, startWidth, endWidth] of [[inStart, true, false], [inEnd, false, true], [outside, false, false]] as const) {
+      const graph = calendarGraph([interval, record("fine", { kind: "calendar", from: date, label: "" })], "day");
+      const range = graph.ranges[0];
+      expect(range.startBoundaryRow > range.anchorRow).toBe(startWidth);
+      expect(range.endBoundaryRow < range.endAnchorRow).toBe(endWidth);
+      expect(graph.rows.every((row, i) => i === 0 || row.coordinate >= graph.rows[i - 1].coordinate)).toBe(true);
+    }
+  }
+});
+
+it("preserves explicitly different earliest/latest dates and mixed-precision bounds", () => {
+  const explicit = record("explicit", { kind: "calendar", meaning: "duration", from: "1960", startLatest: "1962", endEarliest: "1967", to: "1969", label: "" });
+  const graph = calendarGraph([explicit], "day"), range = graph.ranges[0];
+  expect(range.startBoundaryRow).toBeGreaterThan(range.anchorRow);
+  expect(range.endBoundaryRow).toBeLessThan(range.endAnchorRow);
+  const mixed = record("mixed", { kind: "calendar", meaning: "duration", from: "1964-05", to: "1964", label: "" });
+  const mixedGraph = calendarGraph([mixed], "day");
+  expect(mixedGraph.ranges[0].end).toBeGreaterThan(mixedGraph.ranges[0].start);
+  expect(mixedGraph.rows.every((row, i) => i === 0 || row.coordinate >= mixedGraph.rows[i - 1].coordinate)).toBe(true);
+});

@@ -15,20 +15,23 @@ function coincidentPoint(time: CalendarTime, others: CalendarTime[]) {
 }
 
 const valuePrecision = ["year", "month", "day", "hour", "minute", "second"];
-function singleAnchor(time: CalendarTime, others: CalendarTime[]) {
-  const meaning = calendarMeaning(time);
-  if (meaning !== "point" && !(meaning !== "duration" && time.to === time.from)) return false;
-  if (coincidentPoint(time, others)) return false;
-  const value = calendarValue(time.from)!;
-  const [start, end] = calendarLayoutBounds(time.from);
-  return !others.some(other =>
+function hasFinerDate(value: string, others: CalendarTime[]) {
+  const parsed = calendarValue(value)!;
+  const [start, end] = calendarLayoutBounds(value);
+  return others.some(other =>
     [other.from, other.startLatest, other.endEarliest, other.to].some(raw => {
       if (!raw) return false;
       const finer = calendarValue(raw)!;
-      return valuePrecision.indexOf(finer.precision) > valuePrecision.indexOf(value.precision) &&
+      return valuePrecision.indexOf(finer.precision) > valuePrecision.indexOf(parsed.precision) &&
         finer.bounds.some(bound => bound >= start && bound <= end);
     }),
   );
+}
+
+function singleAnchor(time: CalendarTime, others: CalendarTime[]) {
+  const meaning = calendarMeaning(time);
+  if (meaning !== "point" && !(meaning !== "duration" && time.to === time.from)) return false;
+  return !coincidentPoint(time, others) && !hasFinerDate(time.from, others);
 }
 
 const bucket = (date: number, unit: CalendarUnit) =>
@@ -72,40 +75,42 @@ export function calendarGraph<R extends TimelineTimedRow>(
       : resolution;
   const bounds = (value: string) =>
     calendarLayoutBounds(value).map((v) => bucket(v, unit)) as [number, number];
-  const collapsed = new Map(dated.map(record => [record.id, singleAnchor(record.time,
-    dated.filter(other => other.id !== record.id).map(other => other.time))]));
   const labels = new Map<number, string[]>();
-  for (const { id, time } of dated) {
-    for (const value of [
-      time.from,
-      time.startLatest,
-      time.endEarliest,
-      time.to,
-    ]) {
-      if (!value) continue;
-      const displayedBounds = collapsed.get(id) ? bounds(value).slice(0, 1) : bounds(value);
-      for (const bound of displayedBounds) {
-        labels.set(bound, [
-          ...new Set([
-            ...(labels.get(bound) ?? []),
-            calendarValue(value)?.zone ? value : value.slice(0, precision[unit]),
-          ]),
-        ]);
-      }
-    }
-  }
-  const coordinates = [...labels.keys()].sort((a, b) => a - b);
+  const label = (coordinate: number, value: string) => {
+    labels.set(coordinate, [...new Set([
+      ...(labels.get(coordinate) ?? []),
+      calendarValue(value)?.zone ? value : value.slice(0, precision[unit]),
+    ])]);
+  };
   const ranges = dated.map((record) => {
-    const time = record.time,
-      [start] = bounds(time.from),
-      isPoint = collapsed.get(record.id)!;
-    const end = isPoint ? start : bounds(time.to ?? time.from)[1];
+    const time = record.time;
+    const others = dated.filter(other => other.id !== record.id).map(other => other.time);
+    const isPoint = singleAnchor(time, others);
+    const [start] = bounds(time.from);
+    // Judge each end of a genuine interval independently. A coarse endpoint
+    // needs width only to place finer dates inside it. Explicitly different
+    // earliest/latest values retain their stated uncertainty window.
+    const distinctEnds = !!time.to && time.to !== time.from;
+    const collapseStart = distinctEnds && (!time.startLatest || time.startLatest === time.from) &&
+      !hasFinerDate(time.from, [time, ...others]);
+    const endValue = time.to ?? time.from;
+    const collapseEnd = distinctEnds && (!time.endEarliest || time.endEarliest === endValue) &&
+      bounds(endValue)[0] >= start && !hasFinerDate(endValue, [time, ...others]);
+    const end = isPoint ? start : bounds(endValue)[collapseEnd ? 0 : 1];
     // A coarse start cannot be later than the latest possible end and vice versa.
-    const startEnd = isPoint ? start : Math.min(end, bounds(time.startLatest ?? time.from)[1]);
-    const endStart = isPoint ? start : Math.max(
+    const startEnd = isPoint || collapseStart ? start : Math.min(end, bounds(time.startLatest ?? time.from)[1]);
+    const endStart = isPoint ? start : collapseEnd ? end : Math.max(
       start,
-      bounds(time.endEarliest ?? time.to ?? time.from)[0],
+      bounds(time.endEarliest ?? endValue)[0],
     );
+    // Only effective boundaries create rows; discarded precision extents must
+    // not leave empty date rows behind. Source dates themselves are untouched.
+    label(start, time.from);
+    if (!isPoint) {
+      label(startEnd, time.startLatest ?? time.from);
+      label(endStart, time.endEarliest ?? endValue);
+      label(end, endValue);
+    }
     return {
       record,
       start,
@@ -113,16 +118,16 @@ export function calendarGraph<R extends TimelineTimedRow>(
       startEnd,
       endStart,
       meaning: calendarMeaning(time),
-      compactRange: start === end && coincidentPoint(time,
-        dated.filter(other => other.id !== record.id).map(other => other.time)),
+      compactRange: start === end && coincidentPoint(time, others),
       uncertainBoundary: !isPoint && (
-        calendarLayoutBounds(time.startLatest ?? time.from)[1] >
-          calendarLayoutBounds(time.from)[0] ||
-        calendarLayoutBounds(time.to ?? time.from)[1] >
-          calendarLayoutBounds(time.endEarliest ?? time.to ?? time.from)[0]),
+        (!collapseStart && calendarLayoutBounds(time.startLatest ?? time.from)[1] >
+          calendarLayoutBounds(time.from)[0]) ||
+        (!collapseEnd && calendarLayoutBounds(endValue)[1] >
+          calendarLayoutBounds(time.endEarliest ?? endValue)[0])),
       lane: 0,
     };
   });
+  const coordinates = [...labels.keys()].sort((a, b) => a - b);
   const laneEnds: number[] = [];
   for (const range of [...ranges].sort(
     (a, b) => a.start - b.start || b.end - a.end,
