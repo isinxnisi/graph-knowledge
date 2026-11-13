@@ -1,3 +1,5 @@
+2026-11-14：[TOP紹介テーマの折返し・左ペイン初回閉鎖・テーマ出典末尾](verification/HOME_FEATURED_GRID_20261114.md)を3200／HTTPS βへ反映。
+
 2026-11-14：[ページ全体のスクロールと追従サイドバー](verification/PAGE_SCROLL_SIDEBARS_20261114.md)を3200／HTTPS βへ反映。ヘッダ／main／footerの文書フローとmain内stickyサイドバーへ是正。
 
 2026-11-13：ローカルβの共有公開トンネルは[構成と復帰](runbooks/BETA_TUNNEL.md)、[切替・Wi-Fi再接続後の比較](verification/BETA_TUNNEL_RESILIENCE_20261113.md)を参照。公式版固定と2系統化を配置し、再接続後はβ／外部／localhost各18/18が200。長期安定性とWSL単体のTCP不通は別記。

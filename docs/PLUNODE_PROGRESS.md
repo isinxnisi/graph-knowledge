@@ -1,3 +1,5 @@
+2026-11-14 TOP紹介と初回表示：①確認・②左ペイン初回閉鎖／TOP紹介テーマ1〜3列グリッドと1列時3件＋追加開閉／テーマ出典の末尾配置・③3200／HTTPS βのPC・768px・375px／設定再訪確認まで完了｜今回の工程は③まで完了。関連32件・lint／型検査込みbuild `wQYMJtpyCfir5rqkZ1Z3P`、本番・DB・Worker未変更、iPhone実機未確認。[確認記録](verification/HOME_FEATURED_GRID_20261114.md)。
+
 2026-11-14 ページ構造の是正：①確認・②documentスクロール／main内stickyサイドバー／main後続フッター／スマホタブ別位置復元・③3200／HTTPS βのPC・375px確認まで完了｜今回の工程は③まで完了。前回の中央固定枠への移動を置換。関連120件・lint／型検査込みbuild `yZvZPcr1OI72gkQgkGTHL`、本番・DB・Worker未変更、iPhone実機未確認。[確認記録](verification/PAGE_SCROLL_SIDEBARS_20261114.md)。
 
 2026-11-14 本文とフッター：①構造確認・②中央本文／公開概要／フッターの同一スクロールと隣接一覧の冗長2ボタン削除・③3200／HTTPS βのPC・375px各タブ確認まで完了｜今回の工程は③まで完了。build `CLAOZ_9anGpPpkkqDnshz`、左右サイドバーとヘッダ保持、本番・DB・Worker未変更。iPhone実機は未確認。[確認記録](verification/FOOTER_CONTENT_FLOW_20261114.md)。
