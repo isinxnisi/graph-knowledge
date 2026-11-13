@@ -1,3 +1,5 @@
+2026-11-13 関連欄の順序統一：①配置確認・②テーマ／通常GraphのEntity詳細を「関連テーマ→関連アイテム→関連知識」へ統一・③19件／型検査込みbuild／3200とHTTPS βの両経路確認まで完了｜今回の工程は③まで完了。表示位置のみ変更、本番・DB・Worker未変更。[確認記録](verification/ENTITY_PRODUCTS_20261113.md#関連欄の順序統一追補)。
+
 2026-11-13 Entityの関連アイテム：①通常Graphの取得・表示経路漏れ確認・②共通カード接続と26件／lint／型検査込みbuild・③3200／HTTPS βのPC・375px表示確認まで完了｜今回の工程は③まで完了。PLUTOは同一Entity、テーマと同じ商品・表紙・購入URLを表示し、無関係なEntityへの混入なし。本番・登録データ・Worker未変更。iPhone実機は未確認。[実装と画面確認](verification/ENTITY_PRODUCTS_20261113.md)。
 
 2026-11-13 βの頻発断：①公開トンネル切断の分離・②公式版固定／2系統化・③本人Wi-Fi再接続後の比較とβ代表経路まで完了｜今回の工程は③まで完了。β／外部／localhost各18/18が200、約9分の観測でトンネル再切断0。現在βは利用可能、長期安定性と切断起点は未確定。WSL単体の外向きTCP不通は別残件。本番・アプリ・DB・Worker未変更。[実測](verification/BETA_TUNNEL_RESILIENCE_20261113.md)／[構成と復帰](runbooks/BETA_TUNNEL.md)。以下は各時点の履歴。

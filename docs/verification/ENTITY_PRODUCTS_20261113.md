@@ -27,3 +27,12 @@
 - `before.png`：変更前の同じ通常Graph。
 - `after-desktop.png`：HTTPS β、通常Graphの右ペインに商品表示。
 - `after-mobile.png`：375px幅の詳細、商品画像・紹介・購入ボタン・参加者表示。
+
+## 関連欄の順序統一（追補）
+
+利用者指定に従い、Entityを選択したときの関連欄を「関連するテーマ → 関連アイテム → 関連する知識」へ統一。通常KGのExplorerとテーマ／共通知識GraphのKnowledgeReadingの表示位置だけを変更した。データ取得・固定版・カード・クリック処理は維持。
+
+- 実装 `fa2ad893`。既存19件成功、eslintエラー0（既存未使用import警告1）、型検査込みbuild成功。
+- localhost3200へbuild `10qhxxfwDUmA4lXEyj22C` を配置。Webのみ更新、Worker PID不変。本番未変更。
+- HTTPS βのPLUTO通常Graphと、そこから関連テーマの同一Entityを開いた詳細の両方で、見出しのDOM順と実画面を確認した。両経路で同じ商品画像と購入ボタンを維持。
+- 上記画面記録フォルダの `order-graph.png`／`order-theme.png` に保存。今回はCSS変更なし。追加のiPhone実機確認はしていない。
