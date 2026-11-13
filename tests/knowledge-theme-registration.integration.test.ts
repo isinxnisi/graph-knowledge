@@ -1,3 +1,7 @@
+import {knowledgeRecordContentSchema,knowledgeSourceContentSchema,knowledgeEntityContentSchema} from "../lib/domain/knowledge-foundation";
+import type {KnowledgeSnapshot,KnowledgeThemeVersion,KnowledgeRecordVersion} from "../lib/domain/knowledge-foundation";
+import {readFileSync} from "node:fs";
+import {themeStoryEntries} from "../lib/domain/theme-stories";
 import sharp from 'sharp';
 import {dispatchProductAuthoring,collectUnusedProductImages} from '../lib/server/member/product-editorial';
 import {themeReadingPresentation} from '../lib/server/theme-reading-presentation';
@@ -195,4 +199,33 @@ it('reuses an exact existing record on operator update without AI or a duplicate
  expect(await service.status(owner,v.requestId)).toMatchObject({state:'published',theme:{id:t.id,revision:2}});
  expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.objects WHERE kind='record'")).rows[0].n).toBe(1);
  expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id,1)).content.description).toBe('資料からたどるテーマ');
+});
+
+// Optional read-only exports from the two beta themes are loaded ONLY into this disposable DB.
+it.each(process.env.THEME_STORIES_FIXTURE_DIR?['synthetic','pluto','kurosawa']:['synthetic'])('edits %s reading selection through the normal operator receipt without altering facts, old editions or AI usage',async name=>{
+ const stamp={revision:1,createdAt:'2026-11-14T00:00:00Z',reason:'test'};
+ const sample=name==='synthetic'?{theme:{content:{title:'合成テーマ',initialView:'timeline',timeline:undefined,reading:undefined}},snapshot:{schemaVersion:1,initialView:'timeline',entities:[{id:'sample-a',...stamp,content:knowledgeEntityContentSchema.parse({name:'Sample',kind:'work'})}],sources:[{id:'sample-source',...stamp,content:knowledgeSourceContentSchema.parse({title:'Sample source',bibliography:'Test source'})}],records:(['episode','note','relation'] as const).map(kind=>({id:'sample-'+kind,...stamp,content:knowledgeRecordContentSchema.parse({kind,subjectId:'sample-a',...(kind==='relation'?{objectId:'sample-a',relation:'influenced'}:{}),assertion:'Sample '+kind,...(kind==='episode'?{times:[{id:'release',time:{kind:'calendar',from:'1980'}}]}:{}),evidence:[{id:'sample-e',source:{id:'sample-source',revision:1},locator:'p1',excerpt:'Test source'}]})})),mappings:[]}} as unknown as {snapshot:KnowledgeSnapshot;theme:KnowledgeThemeVersion}:JSON.parse(readFileSync(process.env.THEME_STORIES_FIXTURE_DIR+'/'+name+'-before.json','utf8')) as {snapshot:KnowledgeSnapshot;theme:KnowledgeThemeVersion};
+ const snap=sample.snapshot,actor={kind:'operator' as const,id:'fixture'};
+ const pending=[...snap.records],ordered:KnowledgeRecordVersion[]=[];
+ while(pending.length){const i=pending.findIndex(r=>!r.content.aboutRecord||ordered.some(v=>v.id===r.content.aboutRecord?.id));expect(i).toBeGreaterThanOrEqual(0);ordered.push(...pending.splice(i,1));}
+ await foundation().execute(actor,{action:'create-bundle',requestId:randomUUID(),entities:snap.entities.map(({id,content})=>({id,content})),sources:snap.sources.map(({id,content})=>({id,content})),records:ordered.map(({id,content})=>({id,content})),reason:'Isolated public beta snapshot'});
+ const pins=snap.records.map(({id,revision})=>({id,revision}));
+ const created=await service.submit(owner,{...input(),title:sample.theme.content.title,recordPins:pins,timeline:sample.theme.content.timeline,initialView:sample.theme.content.initialView,presentation:sample.theme.content.reading?.map(({image,...p})=>({...p,...(image?{}:{})}))});
+ await service.recoverOne();const receipt=await service.status(owner,created.requestId);expect(receipt.state).toBe('published');
+ const id=receipt.theme!.id,reader=createThemeAuthoringReader(knowledge,'https://beta.example.org'),old=await reader.read(id);
+ const release=old.snapshot.records.find(r=>r.content.kind==='episode'&&r.content.times.length)!;
+ const background=old.snapshot.records.find(r=>r.content.kind==='note')!,relation=old.snapshot.records.find(r=>r.content.kind==='relation')!;
+ const pin=(r:{id:string;revision:number})=>({id:r.id,revision:r.revision});
+ const stories={version:1,items:[{key:'surprise',records:[pin(relation)]},{key:'background',records:[pin(background)],title:{ja:'着想と制作の背景'}},{key:'group',records:[pin(background),pin(relation)],title:{ja:'つながりを読む'}}]};
+ const update={requestId:randomUUID(),target:old.target,changes:{stories},reason:'隔離試験で読み物を編集'};
+ const aiBefore=(await pool.query("SELECT (SELECT count(*) FROM member_knowledge.review_attempts)::int attempts,(SELECT count(*) FROM member_knowledge.review_jobs)::int jobs")).rows;
+ await service.submit(owner,update);await service.recoverOne();const status=await service.status(owner,update.requestId);expect(status.state).toBe('published');expect(status.theme!.id).toBe(id);
+ const latest=await reader.read(id);expect(latest.theme.revision).toBe(2);expect(latest.storyEditing.mode).toBe('explicit');expect(latest.storyEditing.selection).toEqual(stories);
+ expect(latest.storyEditing.candidates.map(r=>r.target.id)).toEqual(old.snapshot.records.map(r=>r.id));
+ expect(latest.storyEditing.effectiveItems.map(i=>i.key)).toEqual(['surprise','background','group']);expect(latest.storyEditing.effectiveItems.flatMap(i=>i.records).some(p=>p.id===release.id)).toBe(false);
+ expect(latest.snapshot).toEqual(old.snapshot);expect((await reader.read(id,1)).theme).toEqual(old.theme);expect(latest.snapshot.records.find(r=>r.id===release.id)?.content.times.length).toBeGreaterThan(0);
+ expect(latest.storyEditing.candidates.find(c=>c.target.id===background.id)?.evidence).toEqual(background.content.evidence);
+ expect((await service.submit(owner,update)).replayed).toBe(true);await expect(service.submit(other,update)).rejects.toMatchObject({code:'REQUEST_CHANGED'});
+ const empty={requestId:randomUUID(),target:latest.target,changes:{stories:{version:1,items:[]}},reason:'隔離試験の明示0件'};await service.submit(owner,empty);await service.recoverOne();expect((await reader.read(id)).storyEditing.effectiveItems).toEqual([]);
+ expect(themeStoryEntries(old.snapshot.records,undefined).length).toBeGreaterThan(0);expect((await pool.query("SELECT (SELECT count(*) FROM member_knowledge.review_attempts)::int attempts,(SELECT count(*) FROM member_knowledge.review_jobs)::int jobs")).rows).toEqual(aiBefore);
 });

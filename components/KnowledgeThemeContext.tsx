@@ -4,26 +4,33 @@ import type { KnowledgePublishedRecord } from "../lib/domain/knowledge-publicati
 import { useUiLocale } from "../lib/client/ui-locale";
 import Icon from "./Icon";
 import AnimatedDetails from "./AnimatedDetails";
-import {readingRecordTitle,type ThemeReadingPresentation} from "../lib/domain/theme-reading-presentation";
+import {type ThemeReadingPresentation} from "../lib/domain/theme-reading-presentation";
 import {ExpandableReadingSection} from "./ReadingDetailSection";
+import {themeStoryEntries,type ThemeStories} from "../lib/domain/theme-stories";
 import css from "./KnowledgeThemeContext.module.css";
 
 /** Undated knowledge belongs to the theme, independently of the chosen graph. */
-export default function KnowledgeThemeContext({ records, selectedRecordId, onRead, className,presentation,variant="compact" }: {
-  presentation?:ThemeReadingPresentation|null; records: KnowledgePublishedRecord[]; selectedRecordId: string | null; onRead: (id: string) => void; className?: string;variant?:"compact"|"list"|"collapsed"|"stories";
+export default function KnowledgeThemeContext({ records, selectedRecordId, onRead, className,presentation,stories,variant="compact" }: {
+  stories?:ThemeStories; presentation?:ThemeReadingPresentation|null; records: KnowledgePublishedRecord[]; selectedRecordId: string | null; onRead: (id: string) => void; className?: string;variant?:"compact"|"list"|"collapsed"|"stories";
 }) {
   const { locale } = useUiLocale(), en = locale === "en";
   const [expanded, setExpanded] = useState(variant==="list");
   const context = records.filter((r) => variant==="stories" ? r.record.content.kind!=="relation" : r.record.content.times.length===0);
+  const readings=themeStoryEntries(records.map(dto=>dto.record),stories,presentation,locale,variant==="list"?"list":"stories");
+  if(variant==="stories"){
+    if(!readings.length)return null;
+    return <ExpandableReadingSection className={`${css.readingList} ${className ?? ""}`} title={en?"Stories & background":"エピソード・豆知識"} icon="book" items={readings.map(item=>{
+      const record=item.records[0];
+      return <AnimatedDetails key={item.key} className={css.story} bodyClassName={css.storyBody} summary={<><span>{record.content.polarity!=="affirmed"&&<small>{record.content.polarity==="denied"?(en?"Denied · ":"否定 · "):(en?"Uncertain · ":"不確実 · ")}</small>}{item.title}</span><Icon name="chevron"/></>}>
+        {item.records.map(part=><div key={part.id}><p lang={part.content.textLanguages?.assertion?.tag}>{part.content.assertion}</p><button type="button" className={css.storyLink} data-detail-record={part.id} aria-label={`${en?"Sources & details":"出典・詳細"}：${item.title}${item.records.length>1?` · ${part.content.assertion}`:""}`} onClick={()=>onRead(part.id)}>{en?"Sources & details":"出典・詳細"}<Icon name="arrow"/></button></div>)}
+      </AnimatedDetails>;
+    })}/>;
+  }
+  if(variant==="list"){
+    if(!readings.length)return null;
+    return <ExpandableReadingSection className={`${css.readingList} ${className ?? ""}`} title={en?"Read more about this theme":"このテーマを深く読む"} icon="book" items={readings.map(item=><button key={item.key} data-detail-record={item.records[0].id} className={css.listRow} title={item.title} aria-label={`${en?"Read content and evidence":"内容と根拠を読む"}：${item.title}`} aria-pressed={selectedRecordId===item.records[0].id} onClick={()=>onRead(item.records[0].id)}><span>{item.records[0].content.polarity!=="affirmed"&&<small>{item.records[0].content.polarity==="denied"?(en?"Denied · ":"否定 · "):(en?"Uncertain · ":"不確実 · ")}</small>}{item.title}</span><Icon name="arrow"/></button>)}/>;
+  }
   if (!context.length) return null;
-  if(variant==="stories")return <ExpandableReadingSection className={`${css.readingList} ${className ?? ""}`} title={en?"Stories & background":"エピソード・豆知識"} icon="book" items={context.map(dto=>{
-    const record=dto.record,title=readingRecordTitle(record,presentation);
-    return <AnimatedDetails key={record.id} className={css.story} bodyClassName={css.storyBody} summary={<><span>{record.content.polarity!=="affirmed"&&<small>{record.content.polarity==="denied"?(en?"Denied · ":"否定 · "):(en?"Uncertain · ":"不確実 · ")}</small>}{title}</span><Icon name="chevron"/></>}>
-      <p lang={record.content.textLanguages?.assertion?.tag}>{record.content.assertion}</p>
-      <button type="button" className={css.storyLink} data-detail-record={record.id} aria-label={`${en?"Sources & details":"出典・詳細"}：${title}`} onClick={()=>onRead(record.id)}>{en?"Sources & details":"出典・詳細"}<Icon name="arrow"/></button>
-    </AnimatedDetails>;
-  })}/>;
-  if(variant==="list")return <ExpandableReadingSection className={`${css.readingList} ${className ?? ""}`} title={en?"Read more about this theme":"このテーマを深く読む"} icon="book" items={context.map(dto=><button key={dto.record.id} data-detail-record={dto.record.id} className={css.listRow} title={dto.record.content.assertion} aria-label={`${en?"Read content and evidence":"内容と根拠を読む"}：${dto.record.content.assertion}`} aria-pressed={selectedRecordId===dto.record.id} onClick={()=>onRead(dto.record.id)}><span>{dto.record.content.polarity!=="affirmed"&&<small>{dto.record.content.polarity==="denied"?(en?"Denied · ":"否定 · "):(en?"Uncertain · ":"不確実 · ")}</small>}{dto.record.content.assertion}</span><Icon name="arrow"/></button>)}/>;
 
   return <section className={[css.context,variant!=="compact"?css.reading:"",className].filter(Boolean).join(" ")} aria-label={en ? "Theme information" : "テーマの情報"}>
     <header><h3><Icon name="book" />{en ? "Theme information" : "テーマの情報"}<small>{context.length}{en ? " records" : "件"}</small></h3>

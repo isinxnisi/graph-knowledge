@@ -197,13 +197,18 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
    }
    const suppliedPresentation='target' in input?input.changes.presentation:input.presentation;
    const reading=suppliedPresentation?await resolveThemeEditorial(c,suppliedPresentation,resolve,bindings):undefined;
+   const requestedStories='target' in input?input.changes.stories:input.stories;
+   const stories=requestedStories?{...requestedStories,items:requestedStories.items.map(item=>({...item,records:item.records.map(ref=>{
+    const id=resolve(ref.id);if(!id)throw new KnowledgeError('読み物に指定した項目が公開されていません。受付結果と掲載する記録を確認してください。',400,'THEME_STORIES_REFERENCE');
+    return ref.id.startsWith('item:')?bindings.get(ref.id.slice(5))!:{...ref,id};
+   })}))}:undefined;
    const requestedProducts='target' in input?input.changes.productPins:input.productPins;if(requestedProducts)await validateProductPins(c,requestedProducts);
     const command=knowledgeCommandSchema.parse('target' in input&&baseline?{
     action:'edit-theme',requestId:r.request_id,id:r.theme_id,expectedRevision:input.target.revision,
     title:input.changes.title??baseline.content.title,description:input.changes.description??baseline.content.description,
     textLanguages:input.changes.textLanguages?{...baseline.content.textLanguages,...input.changes.textLanguages}:baseline.content.textLanguages,
-    reading,initialView:input.changes.initialView??baseline.content.initialView,productPins:input.changes.productPins??baseline.content.productPins,recordPins:pins,timeline,reason:input.reason,
-   }:{action:'create-theme',requestId:r.request_id,id:r.theme_id,reading,...(!('target' in input)?{title:input.title,description:input.description,textLanguages:input.textLanguages,initialView:input.initialView,productPins:input.productPins}:{}),recordPins:pins,timeline,reason:'ChatGPTから受け付けた運営テーマ。原資料確認を通った公開記録の版を構成へ固定。'});
+    reading,stories,initialView:input.changes.initialView??baseline.content.initialView,productPins:input.changes.productPins??baseline.content.productPins,recordPins:pins,timeline,reason:input.reason,
+   }:{action:'create-theme',requestId:r.request_id,id:r.theme_id,reading,...(!('target' in input)?{title:input.title,description:input.description,stories,textLanguages:input.textLanguages,initialView:input.initialView,productPins:input.productPins}:{}),recordPins:pins,timeline,reason:'ChatGPTから受け付けた運営テーマ。原資料確認を通った公開記録の版を構成へ固定。'});
    const result=await foundation.execute({kind:'operator',id:actorId(r.owner_id)},command) as {id:string;revision:number};
    await options.afterThemeCommit?.();
    await savePublished(c,r,result,excluded);return true;

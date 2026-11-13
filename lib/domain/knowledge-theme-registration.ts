@@ -1,3 +1,4 @@
+import {themeStoriesSchema} from "./theme-stories";
 import {readThemeQualityGuideSchema,updateThemeQualityGuideSchema} from './theme-quality-guide';
 import {themeEditorialInputSchema} from './theme-editorial';
 import {z} from 'zod';
@@ -19,6 +20,7 @@ export const themeRegistrationInputSchema=z.strictObject({
  recordKeys:z.array(z.string().min(1).max(160)).max(20).default([]),
  recordPins:z.array(knowledgePinSchema).max(200).default([]),
  productPins:z.array(productPinSchema).max(24).optional().describe("Optional exact product revisions returned by save_product. Images and products may be added later."),
+ stories:themeStoriesSchema.optional().describe("Explicit Stories & background composition: version 1, ordered items with stable key, exact member Record pins and optional ja/en title. Omit for legacy compatibility; items:[] explicitly publishes no stories. Independent of timeline membership and presentation.records."),
  presentation:themeEditorialInputSchema.optional(),
  timeline:knowledgeTimelineSchema.optional(),
 }).superRefine((v,c)=>{
@@ -42,6 +44,7 @@ export const themeUpdateInputSchema=z.strictObject({
   textLanguages:knowledgeThemeContentSchema.shape.textLanguages,
   initialView:z.enum(['graph','timeline','split']).optional(),
   productPins:z.array(productPinSchema).max(24).optional().describe("Complete product selection for the new theme edition. Omit to retain; [] removes only from the new edition."),
+  stories:themeStoriesSchema.optional().describe("Replace only the reading selection/order. {version:1,items:[]} deliberately clears stories; omission retains. Every records[] pin must be an exact public theme member, regardless of kind. A group renders its records in order. Optional title:{ja,en}; otherwise reuse presentation shortTitle. Never removeRecordIds just to hide a story."),
   presentation:themeEditorialInputSchema.optional().describe("Complete locale-specific editorial presentation. Omit to retain; [] removes from the new edition only."),
   timeline:knowledgeTimelineSchema.nullable().optional(),
  }).default({}),

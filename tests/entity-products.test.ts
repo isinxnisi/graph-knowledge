@@ -13,7 +13,7 @@ import {readEntityProductContext} from "../lib/server/knowledge-entity-products"
 import {KnowledgeError} from "../lib/server/knowledge-foundation";
 import {entityProducts,linkedThemeProducts,type ProductCatalogue} from "../lib/domain/theme-products";
 afterEach(()=>vi.resetAllMocks());
-const product={id:"pluto-set",workId:"pluto",title:"PLUTO 全8巻セット",language:"ja",metadataSource:"https://www.amazon.co.jp/dp/B00TEST123",imageId:"a".repeat(64)};
+const product={id:"pluto-set",workId:"pluto",title:"PLUTO 全8巻セット",author:"",edition:"",language:"ja",metadataSource:"https://www.amazon.co.jp/dp/B00TEST123",imageId:"a".repeat(64)};
 const offer={productId:product.id,marketplace:"JP",asin:"B00TEST123",affiliateUrl:"https://link.amazon/B0iJNnc7U",status:"ready",checkedAt:"2026-11-13T00:00:00Z"};
 const theme={id:"pluto-theme",revision:3,content:{productPins:[{id:product.id,revision:2}]}};
 const value={product,offers:[offer],reason:{ja:"第1巻から最終巻まで読む。",en:"Read the whole series."},appliesTo:[{kind:"entity",id:"theme-pluto"}]};

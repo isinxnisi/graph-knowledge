@@ -1,3 +1,5 @@
+テーマの読み物の明示編集（β）：[設計と既存App契約](design/THEME_STORIES_EDITORIAL_20261114.md)。
+
 2026-11-14：[TOP紹介テーマの折返し・左ペイン初回閉鎖・テーマ出典末尾](verification/HOME_FEATURED_GRID_20261114.md)を3200／HTTPS βへ反映。
 
 2026-11-14：[ページ全体のスクロールと追従サイドバー](verification/PAGE_SCROLL_SIDEBARS_20261114.md)を3200／HTTPS βへ反映。ヘッダ／main／footerの文書フローとmain内stickyサイドバーへ是正。

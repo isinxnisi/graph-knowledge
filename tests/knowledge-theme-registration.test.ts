@@ -68,3 +68,12 @@ it('exposes guide read/history and guarded update without changing technical sch
  const rejected=(await(await guarded.fetch(rpc('tools/call',{name:'update_theme_quality_guide',arguments:{requestId:'11111111-1111-4111-8111-111111111111',expectedRevision:0,markdown:'# guide',reason:'初版'}}))).json()).result;
  expect(rejected.isError).toBe(true);expect(dispatch).not.toHaveBeenCalled();
 });
+
+it('exposes and forwards reading composition through the EXISTING App update tool',async()=>{
+ const call=vi.fn().mockResolvedValue({state:'saved'}),handler=createMissionMcpHandler(vi.fn(),{call});
+ const listed=(await(await handler.fetch(rpc('tools/list',{}))).json()).result.tools;
+ const update=listed.find((t:{name:string})=>t.name==='update_theme');expect(update.inputSchema.properties.changes.properties.stories.properties.items.type).toBe('array');
+ const stories={version:1,items:[{key:'editorial',records:[{id:'r',revision:2}],title:{ja:'制作の背景'}}]};
+ const input={requestId:randomUUID(),target:{id:'theme',revision:3},changes:{stories},reason:'読み物の掲載を編集'};
+ await handler.fetch(rpc('tools/call',{name:'update_theme',arguments:input}));expect(call).toHaveBeenCalledWith(expect.objectContaining({action:'update-theme',changes:{stories}}));
+});
