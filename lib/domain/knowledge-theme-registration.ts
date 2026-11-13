@@ -67,6 +67,26 @@ export const themeUpdateInputSchema=z.strictObject({
 export type ThemeUpdateInput=z.infer<typeof themeUpdateInputSchema>;
 export const themeAuthoringRequestSchema=z.union([themeRegistrationInputSchema,themeUpdateInputSchema]);
 export type ThemeAuthoringRequest=z.infer<typeof themeAuthoringRequestSchema>;
+/** Replace one pending item, never the immutable registration envelope. */
+export const amendThemeRegistrationSchema=z.strictObject({
+ requestId:z.uuidv4().describe('A new amendment operation ID; retry identical content with this same ID.'),
+ registrationRequestId:z.uuidv4().describe('The original theme registration requestId; this does not change.'),
+ reason:z.string().trim().min(1).max(2000),
+ items:z.array(z.strictObject({
+  key:knowledgeIdSchema,
+  expectedRevision:z.number().int().positive().max(20).describe('inputRevision returned by get_theme_registration, not a Record revision.'),
+  item:missionMcpPackageSchema.shape.items.element,
+  entities:missionMcpPackageSchema.shape.entities.removeDefault().optional(),
+  sources:missionMcpPackageSchema.shape.sources.removeDefault().optional(),
+  entityPins:missionMcpPackageSchema.shape.entityPins.removeDefault().optional(),
+  sourcePins:missionMcpPackageSchema.shape.sourcePins.removeDefault().optional(),
+ })).min(1).max(10),
+}).superRefine((v,c)=>{
+ if(new Set(v.items.map(i=>i.key)).size!==v.items.length)c.addIssue({code:'custom',path:['items'],message:'修正する項目keyが重複しています。'});
+ for(const [i,vv] of v.items.entries())if(vv.item.key!==vv.key)c.addIssue({code:'custom',path:['items',i,'item','key'],message:'修正対象の項目keyは変更できません。'});
+});
+export type AmendThemeRegistration=z.infer<typeof amendThemeRegistrationSchema>;
+export const themeRegistrationStatusSchema=z.strictObject({requestId:z.uuidv4(),itemKey:knowledgeIdSchema.optional(),inputRevision:z.number().int().positive().optional()}).superRefine((v,c)=>{if(v.inputRevision&&!v.itemKey)c.addIssue({code:'custom',path:['itemKey'],message:'入力履歴を読む項目keyを指定してください。'});});
 export const themeRegistrationCommandSchema=z.discriminatedUnion('action',[
  ...productAuthoringCommandSchema.options,
  uploadEditorialImageSchema.safeExtend({action:z.literal('upload-editorial-image')}),
@@ -76,7 +96,8 @@ export const themeRegistrationCommandSchema=z.discriminatedUnion('action',[
  z.strictObject({action:z.literal('cancel-translation'),requestId:z.uuidv4()}),
  themeRegistrationInputSchema.safeExtend({action:z.literal('submit-theme')}),
  themeUpdateInputSchema.safeExtend({action:z.literal('update-theme')}),
- z.strictObject({action:z.literal('theme-status'),requestId:z.uuidv4()}),
+ themeRegistrationStatusSchema.safeExtend({action:z.literal('theme-status')}),
+ amendThemeRegistrationSchema.safeExtend({action:z.literal('amend-theme-items')}),
  z.strictObject({action:z.literal('cancel-theme'),requestId:z.uuidv4()}),
  z.strictObject({action:z.literal('theme-guide')}),
  readThemeQualityGuideSchema.extend({action:z.literal('read-quality-guide')}),

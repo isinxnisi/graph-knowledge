@@ -11,6 +11,11 @@ import {acceptancePlan} from './knowledge-acceptance';
 const newEntity=z.strictObject({id:z.string().min(1).max(200),content:knowledgeEntityContentSchema});
 const newSource=z.strictObject({id:z.string().min(1).max(200),content:knowledgeSourceContentSchema});
 export const importActor=(p:Pick<ImportPrincipal,'id'>)=>'knowledge-import:'+p.id;
+/** Existing items keep their operation ID; amended inputs have disjoint commits. */
+export function importItemOperationId(item:{id:string;input_revision?:number}){
+ if((item.input_revision??1)===1)return item.id;
+ const h=knowledgeDigest(['import-item-input',item.id,item.input_revision]).slice(0,32).split('');h[12]='4';h[16]='8';const v=h.join('');return `${v.slice(0,8)}-${v.slice(8,12)}-${v.slice(12,16)}-${v.slice(16,20)}-${v.slice(20)}`;
+}
 const same=(a:KnowledgePin,b:KnowledgePin)=>a.id===b.id&&a.revision===b.revision;
 const error=(text:string)=>{throw new KnowledgeError(text,400,'INVALID_ITEM');};
 function entries<T>(raw:unknown[],schema:z.ZodType<T>,label:string){

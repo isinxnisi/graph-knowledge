@@ -8,7 +8,7 @@ import {z} from 'zod';
 import type {Pool,PoolClient,QueryResultRow} from 'pg';
 import {knowledgeImportPackageSchema,type ImportPrincipal} from '../domain/knowledge-import';
 import {knowledgeSubmissionContentSchema} from '../domain/knowledge-submission';
-import {normalizeImportItem,importResources,assertImportScope,resolveImportContext,prepareImportPlan,importActor} from './knowledge-import-plan';
+import {normalizeImportItem,importItemOperationId,importResources,assertImportScope,resolveImportContext,prepareImportPlan,importActor} from './knowledge-import-plan';
 import {createKnowledgeFoundationService,knowledgeDigest,KnowledgeError,readKnowledgeTranslationById} from './knowledge-foundation';
 import {verifySourceExcerpt,SourceCheckError,type SourceProof} from './knowledge-source-verification';
 import {submissionReviewEvidence} from '../domain/knowledge-submission-intent';
@@ -45,7 +45,7 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
  }
  async function recoverApplied(c:PoolClient,pkg:QueryResultRow,item:QueryResultRow){
   if(!item.decision)return false;
-  const old=(await knowledge.query('SELECT result FROM knowledge75.operations WHERE actor_id=$1 AND request_id=$2',[importActor({id:pkg.principal_id}),item.id])).rows[0];
+  const old=(await knowledge.query('SELECT result FROM knowledge75.operations WHERE actor_id=$1 AND request_id=$2',[importActor({id:pkg.principal_id}),item.decision.plan.command.requestId])).rows[0];
   if(!old)return false;await finishApplied(c,pkg,item,old.result);return true;
  }
  async function intake(p:ImportPrincipal,raw:unknown){
@@ -132,8 +132,8 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
   return {policy:GEMINI_TRANSLATION_POLICY,snapshot:snapshot!,wireDigest:createHash('sha256').update(prepared.wire).digest('hex')};
  }
  async function prepare(l:NonNullable<Awaited<ReturnType<typeof lease>>>,operator=false):Promise<Prepared>{
-  const pkg=knowledgeImportPackageSchema.parse(l.pkg.payload),content=knowledgeSubmissionContentSchema.parse(l.item.normalized),context=await resolveImportContext(knowledge,content);assertImportScope(l.p,content,context);
-  const value=prepareImportPlan(pkg,content,context,l.pkg.id,l.item.id),item=content.items[0],proofs:SourceProof[]=[];
+  const pkg=knowledgeImportPackageSchema.parse(l.item.input_package??l.pkg.payload),content=knowledgeSubmissionContentSchema.parse(l.item.normalized),context=await resolveImportContext(knowledge,content);assertImportScope(l.p,content,context);
+  const value=prepareImportPlan(pkg,content,context,l.pkg.id,importItemOperationId(l.item as {id:string;input_revision?:number})),item=content.items[0],proofs:SourceProof[]=[];
    if(value.plan.command.action==='accept-record'&&value.plan.command.themes?.length){
     const registry=(await pool.query("SELECT to_regclass('knowledge_missions.theme_registrations') AS name")).rows[0]?.name;
     if(registry){
@@ -179,7 +179,7 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
       }
       if(d.guard){const pins=(await commonDuplicatePins(k,d.guard.record as Parameters<typeof commonDuplicatePins>[1])).map(r=>({id:r.id,revision:r.revision,digest:knowledgeDigest(r.content)}));if(knowledgeDigest(pins)!==knowledgeDigest(d.guard.common))throw new KnowledgeError('既存の知識が変わりました。重複を再確認します',409,'DUPLICATE_REVIEW_REQUIRED');}
      await verifyAcceptanceReferences(k,d.plan.references);await verifyAcceptedSemantics(k,d.plan);},
-    retain:async(k,value)=>{await retainSourceAcquisitions(k,{actorId:importActor(current.p),requestId:l.item.id,result:value,proofs:d.proofs});},
+    retain:async(k,value)=>{await retainSourceAcquisitions(k,{actorId:importActor(current.p),requestId:d.plan.command.requestId,result:value,proofs:d.proofs});},
     prepare:async()=>{const p=await active(current.pkg.principal_id,c);if(!p||p.namespace!==current.pkg.namespace)throw new KnowledgeError('送信資格が停止されました',409,'CANCELLED');assertImportScope(p,knowledgeSubmissionContentSchema.parse(current.item.normalized),(current.item.prepared as Prepared).value.context);
      for(const ref of d.plan.references){const kind=ref.kind==='entity'?'entities':ref.kind==='record'?'records':ref.kind==='theme'?'themes':null;if(kind&&p.targets[kind]!=='*'&&!p.targets[kind].includes(ref.id))throw new KnowledgeError('再利用先が送信資格の許可範囲外です。',403,'TARGET_FORBIDDEN');}},
    });await options.afterKnowledgeCommit?.();await finishApplied(c,current.pkg,current.item,result);

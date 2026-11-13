@@ -25,7 +25,7 @@ it('adds typed creation/status/cancellation only to the explicitly authorized ha
  const old=createMissionMcpHandler(collect),handler=createMissionMcpHandler(collect,{call:compose});
  const absent=await(await old.fetch(rpc('tools/call',{name:'submit_theme',arguments:request()}))).json();expect(absent.error||absent.result?.isError).toBeTruthy();expect(compose).not.toHaveBeenCalled();
  const tools=(await(await handler.fetch(rpc('tools/list',{}))).json()).result.tools;
- expect(tools).toHaveLength(25);expect(tools.find((v:{name:string})=>v.name==='submit_theme').inputSchema.properties.package).toBeDefined();
+ expect(tools).toHaveLength(26);expect(tools.find((v:{name:string})=>v.name==='submit_theme').inputSchema.properties.package).toBeDefined();
  const input=request();await handler.fetch(rpc('tools/call',{name:'submit_theme',arguments:input}));expect(compose).toHaveBeenCalledWith(expect.objectContaining({action:'submit-theme',requestId:input.requestId,title:input.title}));expect(collect).not.toHaveBeenCalled();
  compose.mockClear();await handler.fetch(rpc('tools/call',{name:'submit_theme',arguments:{...input,credential:'secret',origin:'https://other.example'}}));expect(compose).not.toHaveBeenCalled();
 });
@@ -53,7 +53,7 @@ it('lets an old operator connection discover new tools but challenges before exe
  const compose=vi.fn(),challenge='Bearer error="insufficient_scope", scope="missions:collect themes:compose"';
  const handler=createMissionMcpHandler(vi.fn(),{call:compose,authChallenge:challenge});
  const list=(await(await handler.fetch(rpc('tools/list',{}))).json()).result.tools;
- expect(list).toHaveLength(25);expect(list.find((v:{name:string})=>v.name==='update_theme')._meta.securitySchemes).toEqual([{type:'oauth2',scopes:['missions:collect','themes:compose']}]);
+ expect(list).toHaveLength(26);expect(list.find((v:{name:string})=>v.name==='update_theme')._meta.securitySchemes).toEqual([{type:'oauth2',scopes:['missions:collect','themes:compose']}]);
  const res=(await(await handler.fetch(rpc('tools/call',{name:'get_theme_authoring_guide',arguments:{}}))).json()).result;
  expect(res.isError).toBe(true);expect(res._meta['mcp/www_authenticate']).toEqual([challenge]);expect(compose).not.toHaveBeenCalled();
 });

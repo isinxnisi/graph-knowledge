@@ -14,7 +14,7 @@ export const webImportCommandSchema=z.discriminatedUnion('action',[
  z.strictObject({action:z.literal('cancel'),receiptId:z.uuidv4()}),
 ]);
 /** A browser session creates an internal identity; no import bearer is exposed. */
-export async function webImportPrincipal(pool:Pool,id:string,client?:PoolClient):Promise<ImportPrincipal|null>{
+export async function webImportPrincipal(pool:Pool|PoolClient,id:string,client?:PoolClient):Promise<ImportPrincipal|null>{
  if(!/^web:[a-f0-9-]{36}$/.test(id)||!knowledgeCapability('missions')||!knowledgeCapability('operator')||process.env.KNOWLEDGE_MISSIONS_ENABLED!=='1')return null;
  const c=client??pool;
  const row=(await c.query('SELECT w.*,u.active FROM knowledge_missions.web_importers w JOIN "user" u ON u.id=w.owner_id WHERE w.id=$1'+(client?' FOR SHARE OF u,w':''),[id.slice(4)])).rows[0];

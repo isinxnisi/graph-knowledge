@@ -1,3 +1,5 @@
+import {amendThemeItems,readThemeItemAmendments,ensureThemeItemAmendments,themeItemAmendmentsAvailable} from './knowledge-theme-item-amendments';
+import {amendThemeRegistrationSchema} from '../domain/knowledge-theme-registration';
 import {reserveThemeImages,resolveThemeEditorial} from './theme-editorial';
 import {createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
@@ -25,7 +27,7 @@ export async function ensureThemeUpdateSchema(pool:Pool){
 const finalStates=['published','published-with-issues','needs-changes','cancelled'];
 const actorId=(owner:string)=>'theme-registration:'+owner;
 
-/** Durable operator request -> common evidence review -> public record pins ->
+/** Durable operator request -> source/reference checks without AI review -> public record pins ->
  * Theme. No browser, bearer token or manual DB seeding is needed for each Theme.
  * The member-side lock and common operation receipt recover a lost cross-DB ACK. */
 export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType<typeof createWebKnowledgeImports>,imports:ReturnType<typeof createKnowledgeImports>,options:{afterThemeCommit?:()=>Promise<void>}={}){
@@ -88,14 +90,22 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
    return {requestId:input.requestId,state:'saved',replayed:false};
   });
  }
- async function status(owner:string,requestId:string){
+ async function status(owner:string,requestId:string,selection?:{itemKey?:string;inputRevision?:number}){
   await ensure();await current(pool,owner);const r=await row(pool,owner,requestId);
   let receipt=null,theme=null;
   if(r.receipt_id)receipt=await readReceipt(r);
   if(r.result?.id)try{const v=await foundation.get({kind:'reader',id:actorId(owner)},'theme',r.result.id,r.result.revision);theme={id:v.id,revision:v.revision,title:v.content.title,url:(process.env.MEMBER_ORIGIN??'')+'/?ktheme='+encodeURIComponent(v.id)+'&krev='+v.revision};}catch{/* No stopped/private dependency is disclosed through old receipt links. */}
   const requestedPresentation=r.input.target?r.input.changes?.presentation:r.input.presentation;
   const components={presentation:{requestedLocales:requestedPresentation?.map((p:{locale:string})=>p.locale)??null,applied:theme!==null&&['published','published-with-issues'].includes(r.state)},imageIds:requestedPresentation?.flatMap((p:{imageId?:string})=>p.imageId?[p.imageId]:[])??[],productPins:r.input.target?r.input.changes?.productPins??null:r.input.productPins??null};
-  return {requestId,state:r.state,reason:r.reason,components,operation:r.input.target?'update':'create',target:r.input.target??null,title:theme?.title??r.input.title??r.input.changes?.title??'',receipt,theme,excludedKeys:r.result?.excludedKeys??[],nextAttemptAt:['saved','processing'].includes(r.state)?r.next_attempt:null};
+  return {requestId,state:r.state,reason:r.reason,components,itemAmendments:await readThemeItemAmendments(pool,r,selection),operation:r.input.target?'update':'create',target:r.input.target??null,title:theme?.title??r.input.title??r.input.changes?.title??'',receipt,theme,excludedKeys:r.result?.excludedKeys??[],nextAttemptAt:['saved','processing'].includes(r.state)?r.next_attempt:null};
+ }
+ async function amend(owner:string,raw:unknown){
+  const input=amendThemeRegistrationSchema.parse(raw);
+  await current(pool,owner);await ensureThemeItemAmendments(pool);
+  return tx(input.registrationRequestId,async c=>{
+   await current(c,owner);const r=await row(c,owner,input.registrationRequestId);
+   return amendThemeItems(c,knowledge,r,owner,input);
+  });
  }
  async function cancel(owner:string,requestId:string){
   return tx(requestId,async c=>{
@@ -138,6 +148,11 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
    const received=r.receipt_id?await readReceipt(r):null;
    if(received?.state==='processing'){
     await c.query("UPDATE knowledge_missions.theme_registrations SET next_attempt=clock_timestamp()+interval '10 seconds' WHERE request_id=$1",[r.request_id]);return true;
+   }
+   // Pending item corrections must remain possible after a different item
+   // finishes. Never finalize a partly repaired theme behind the operator.
+   if(received&&received.state!=='cancelled'&&await themeItemAmendmentsAvailable(c)&&received.items.some(i=>!['published','existing','cancelled'].includes(i.state))){
+    await c.query("UPDATE knowledge_missions.theme_registrations SET state='processing',reason='未完了の項目があります。受付結果から対象項目を修正できます。',next_attempt=clock_timestamp()+interval '10 seconds' WHERE request_id=$1",[r.request_id]);return true;
    }
    if(received?.state==='cancelled'){
     await c.query("UPDATE knowledge_missions.theme_registrations SET state='cancelled',reason='項目の受付が取り消されました。公開済みの記録は保持します。',updated_at=clock_timestamp() WHERE request_id=$1",[r.request_id]);return true;
@@ -196,5 +211,5 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
    });return true;
   }
  }
- return {submit,status,cancel,recoverOne,authorize:(owner:string)=>current(pool,owner)};
+ return {submit,status,amend,cancel,recoverOne,authorize:(owner:string)=>current(pool,owner)};
 }
