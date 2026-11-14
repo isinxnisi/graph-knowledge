@@ -817,7 +817,7 @@
 /* Overlay details stay attached to Graph whenever theme columns no longer fit. */
 .detailBackdrop, .mobileDetailBar { display:none; }
 @media (max-width:1199px) {
-  .explorer .columns[data-overlay-details][data-active-pane="detail"] > .centralScroll { visibility:visible; pointer-events:none; display:block; height:auto; max-height:none; overflow:visible; position:static; }
+  .explorer .columns[data-overlay-details][data-active-pane="detail"] > :global(#explorer-graph) { visibility:visible; pointer-events:none; display:block; height:auto; max-height:none; overflow:visible; position:static; }
   .explorer .columns[data-overlay-details] > aside.detailDrawer {
     display:block; position:fixed; z-index:60; top:calc(var(--explorer-header-height) + 6px); right:6px; bottom:var(--pane-nav-clearance,12px);
     width:min(440px,calc(100% - 30px)); height:auto; max-height:none; margin:0; padding:14px; overflow:auto; overscroll-behavior:contain;
