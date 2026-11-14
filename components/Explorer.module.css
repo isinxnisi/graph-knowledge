@@ -826,7 +826,7 @@
     transition:transform 240ms cubic-bezier(.22,.8,.25,1), visibility 0s linear 240ms; animation:none;
   }
   .explorer .columns[data-overlay-details][data-active-pane="detail"] > aside.detailDrawer { visibility:visible; pointer-events:auto; transform:translateX(0); transition-delay:0s; }
-  .explorer .detailBackdrop { display:block; position:fixed; z-index:59; inset:var(--explorer-header-height) 0 0; margin:0; padding:0; border:0; border-radius:0; background:rgb(20 35 50 / .15); touch-action:none; opacity:0; visibility:hidden; pointer-events:none; transition:opacity 240ms ease,visibility 0s linear 240ms; }
+  .explorer .detailBackdrop { display:block; position:fixed; z-index:59; inset:var(--explorer-header-height) 0 0; height:auto; min-height:0; max-height:none; margin:0; padding:0; border:0; border-radius:0; background:rgb(20 35 50 / .15); touch-action:none; opacity:0; visibility:hidden; pointer-events:none; transition:opacity 240ms ease,visibility 0s linear 240ms; }
   .explorer .detailBackdrop:hover:not(:disabled) { background:rgb(20 35 50 / .15); }
   .explorer .detailBackdrop[data-open] { opacity:1; visibility:visible; pointer-events:auto; transition-delay:0s; }
   .explorer .paneNavigation { z-index:61; }
