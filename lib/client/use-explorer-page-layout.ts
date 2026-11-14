@@ -13,14 +13,18 @@ export function useExplorerPageLayout(pane: ExplorerPane) {
     const observer = typeof ResizeObserver !== "undefined" ? new ResizeObserver(measure) : null;
     observer?.observe(header);
     window.addEventListener("resize", measure);
-    const capture = () => { positions.current[currentPane.current] = window.scrollY; };
+    const capture = () => { if(currentPane.current !== "detail") positions.current[currentPane.current] = window.scrollY; };
     window.addEventListener("scroll", capture, {passive:true});
     return () => {observer?.disconnect();window.removeEventListener("resize", measure);window.removeEventListener("scroll", capture);};
   }, []);
   useLayoutEffect(() => {
     if (currentPane.current === pane) return;
+    const previous = currentPane.current;
     currentPane.current = pane;
-    if (isPhoneExplorer()) window.scrollTo({top:positions.current[pane], behavior:"instant"});
+    // The phone detail is an overlay: it never owns or resets the page position.
+    if (isPhoneExplorer() && pane !== "detail" && !(previous === "detail" && pane === "graph")) {
+      window.scrollTo({top:positions.current[pane], behavior:"instant"});
+    }
   }, [pane]);
   return root;
 }

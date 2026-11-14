@@ -1,6 +1,7 @@
 "use client";
 import {useNavigationProgress} from "../lib/client/navigation-progress";
 import {useTransition} from "react";
+import {useExplorerDetailDrawer} from "../lib/client/use-explorer-detail-drawer";
 import {useExplorerPageLayout} from "../lib/client/use-explorer-page-layout";
 import {explorerScrollTop,scrollExplorerPane,isPhoneExplorer} from "../lib/client/explorer-scroll";
 import { entityDisplayName } from "../lib/domain/entity-display";
@@ -105,9 +106,15 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
     paneFocusRequested.current = pane !== activePane;
     setActivePane(pane);
   };
+  const detailDrawer=useExplorerDetailDrawer(explorerRoot, activePane, () => moveToPane("graph"));
   useEffect(() => {
     if (previousPane.current === activePane) return;
+    const returningFromDetail=previousPane.current === "detail";
     previousPane.current = activePane;
+    if (isPhoneExplorer() && returningFromDetail && activePane === "graph") {
+      paneFocusRequested.current=false;
+      return;
+    }
     // CSS alone controls the breakpoint; desktop keeps its existing focus behavior.
     if (paneNavigation.current?.getClientRects().length && (paneFocusRequested.current || document.activeElement !== document.body)) {
       focusDestination(document.getElementById(`explorer-${activePane}`));
@@ -225,9 +232,10 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
     <SiteHeader dataset={dataset} memberTools={!knowledgeOperatorEnabled} onBeforeAccountNavigation={beforeAccountNavigation} onPrivacySettings={services && (services.ads || services.analytics) ? () => publicServices.current?.openSettings() : undefined} />
     {navigationError && <p role="alert">{locale === "en" ? "The exploration is not ready to restore. Wait for loading to finish, or save the workspace before leaving." : "探索を復元できる状態にできませんでした。取得の完了を待つか、探索途中を保存してから移動してください。"}</p>}
     <nav ref={paneNavigation} className={styles.paneNavigation} aria-label={panes.navigation}>
-      {(["search", "graph", "detail"] as const).map(pane => <button key={pane} aria-label={pane === "graph" && atHome ? discoveryHomeLabels(locale).home : panes[pane]} aria-pressed={activePane === pane} aria-controls={`explorer-${pane}`} onClick={() => moveToPane(pane)}><Icon name={pane === "search" ? "search" : pane === "graph" ? "graph" : "book"} /><span>{pane === "detail" ? ui.detail : pane === "graph" && atHome ? discoveryHomeLabels(locale).home : panes[pane]}</span></button>)}
+      {(["search", "graph", "detail"] as const).map(pane => <button key={pane} aria-label={pane === "graph" && atHome ? discoveryHomeLabels(locale).home : panes[pane]} aria-pressed={activePane === pane} aria-controls={`explorer-${pane}`} onClick={() => moveToPane(pane === "detail" && detailDrawer.open ? "graph" : pane)}><Icon name={pane === "search" ? "search" : pane === "graph" ? "graph" : "book"} /><span>{pane === "detail" ? ui.detail : pane === "graph" && atHome ? discoveryHomeLabels(locale).home : panes[pane]}</span></button>)}
     </nav>
     <div lang={locale} aria-live="polite" className={styles.urlRestoreFeedback} hidden={knowledge?.active}>{urlState.busy && <p role="status" className={styles.urlRestoreMessage}>{explorationUrlLabels(locale).restoring}</p>}{urlState.failure && <div role="alert" className={`${styles.urlRestoreMessage} ${styles.error}`}><p>{urlState.failure}</p><div className={styles.actions}><button onClick={urlState.retry}>{explorationUrlLabels(locale).retry}</button>{urlState.canRestart && <button onClick={urlState.restart}>{relationText(locale).restart}</button>}<button onClick={urlState.abandon}>{explorationUrlLabels(locale).abandon}</button></div></div>}</div>
+    <button type="button" tabIndex={-1} aria-hidden="true" className={styles.detailBackdrop} data-open={detailDrawer.open || undefined} onClick={() => moveToPane("graph")} />
     <main inert={!knowledge?.active && (urlState.busy || !!urlState.failure) || !!capsuleSession} data-active-pane={activePane} className={`${styles.columns} ${detailWide ? styles.wideDetails : ""} ${knowledge?.active?styles.themeColumns:""} ${atHome?styles.homeColumns:""} ${searchCollapsed?styles.searchCollapsed:""}`}>
       <div id="explorer-search" role="group" tabIndex={-1} data-focus-destination aria-label={panes.search} className={`${styles.panel} ${styles.searchPane}`}><button type="button" className={styles.searchPaneToggle} aria-expanded={!searchCollapsed} aria-controls="explorer-search-content" aria-label={locale === "en" ? searchCollapsed ? "Open search panel" : "Collapse search panel" : searchCollapsed ? "検索パネルを開く" : "検索パネルを閉じる"} title={locale === "en" ? searchCollapsed ? "Open search panel" : "Collapse search panel" : searchCollapsed ? "検索パネルを開く" : "検索パネルを閉じる"} onClick={toggleSearchPanel}><Icon name="panel" /></button><nav className={styles.searchRail} aria-label={designLabels(locale).tools}>
         <button type="button" aria-label={locale === "en" ? "Search" : "検索"} title={locale === "en" ? "Search" : "検索"} onClick={() => openDiscovery({ q: "", kind: null, presentation: "explore" })}><Icon name="search" /></button>
@@ -283,7 +291,8 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
       </section>
       <div className={styles.pageEnd}>{!knowledge?.active && (!initialRoot || !graph.centerId || initialRoot === graph.centerId) && publicOverview}</div>
       </div>
-      <aside id="explorer-detail" tabIndex={-1} data-focus-destination className={styles.panel} aria-label={ui.detail}>
+      <aside id="explorer-detail" tabIndex={-1} data-focus-destination inert={detailDrawer.phone && !detailDrawer.open} role={detailDrawer.phone ? "dialog" : undefined} className={`${styles.panel} ${styles.detailDrawer}`} aria-label={ui.detail}>
+        <div className={styles.mobileDetailBar}><span><Icon name="book" />{ui.detail}</span><button type="button" aria-label={locale === "en" ? "Close details" : "詳細を閉じる"} onClick={() => moveToPane("graph")}><Icon name="close" /></button></div>
         {knowledge?.active && knowledge.detail}
         <div hidden={knowledge?.active}>
         <div className={`${styles.detailHeading} ${!returnTarget ? styles.primaryDetailHeading : ""}`}><h2 id="detail-title" className={returnTarget ? styles.srOnly : undefined}><Icon name="book" />{ui.detail}</h2>{returnTarget && <button className={styles.detailBack} onClick={returnToDetail}><Icon name="back" />{returnTarget.kind === "relation" ? panes.backToRelation : panes.backToClaim}</button>}{selection && <button className={styles.detailWidthToggle} aria-pressed={detailWide} onClick={() => setDetailWide(!detailWide)}>{detailWide ? entry.detailNormal : entry.detailWide}</button>}</div>
@@ -305,7 +314,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
 
       </aside>
     </main>
-    <div className={styles.pageEnd}>{pageFooter}</div>
+    <div data-explorer-footer className={styles.pageEnd}>{pageFooter}</div>
     {capsuleSession && <CapsuleWorkspace key={capsuleSession.id} initial={capsuleSession} isNew onClose={() => setCapsuleSession(null)} />}
     {discoveryCriteria && <DiscoverySearch onChooseTheme={knowledge?.openTheme} presetBrowser={dataset === "public-kg"} dataset={dataset} initial={discoveryCriteria} onClose={closeDiscovery} onChoose={(entity, predicates, roles) => {
       if (predicates === undefined) { startFrom(entity); return; }
