@@ -1,9 +1,11 @@
 // Server projection shared with non-Next publication workers. Do not import from client components.
-import entityNotes from "../../data/theme-reading-entity-notes.json";
+import entityNoteCatalogue from "../../data/theme-reading-entity-notes.json";
 import catalogue from "../../data/theme-reading-presentation.json";
 import {themeReadingPresentationSchema} from "../domain/theme-reading-presentation";
 import type {KnowledgeThemeVersion,KnowledgeSnapshot} from "../domain/knowledge-foundation";
 const presentations=catalogue.map(v=>themeReadingPresentationSchema.parse(v));
+// Production starts with an empty legacy catalogue; do not infer never[] from it.
+const entityNotes:{id:string;revision:number;ja:string;en:string}[]=entityNoteCatalogue;
 /** Project only AFTER authorizing the whole immutable snapshot; never ship the catalogue to a browser. */
 export function themeReadingPresentation(theme:KnowledgeThemeVersion,locale:string,snapshot?:KnowledgeSnapshot){
  const embedded=theme.content.reading?.find(row=>row.locale===locale);
