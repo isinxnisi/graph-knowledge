@@ -826,7 +826,7 @@
     transition:transform 240ms cubic-bezier(.22,.8,.25,1), visibility 0s linear 240ms; animation:none;
   }
   .explorer .columns[data-overlay-details][data-active-pane="detail"] > aside.detailDrawer { visibility:visible; pointer-events:auto; transform:translateX(0); transition-delay:0s; }
-  .explorer .detailBackdrop { display:block; position:fixed; z-index:59; inset:var(--explorer-header-height) 0 0; margin:0; padding:0; border:0; border-radius:0; background:rgb(20 35 50 / .15); touch-action:none; opacity:0; visibility:hidden; pointer-events:none; transition:opacity 240ms ease,visibility 0s linear 240ms; }
+  .explorer .detailBackdrop, .explorer .detailBackdrop:hover:not(:disabled) { display:block; position:fixed; z-index:59; inset:var(--explorer-header-height) 0 0; margin:0; padding:0; border:0; border-radius:0; background:rgb(20 35 50 / .15); touch-action:none; opacity:0; visibility:hidden; pointer-events:none; transition:opacity 240ms ease,visibility 0s linear 240ms; }
   .explorer .detailBackdrop[data-open] { opacity:1; visibility:visible; pointer-events:auto; transition-delay:0s; }
   .explorer .paneNavigation { z-index:61; }
   .explorer .columns[data-overlay-details] .mobileDetailBar { display:flex; align-items:center; justify-content:space-between; position:sticky; z-index:2; top:-14px; margin:-14px -14px 12px; padding:4px 6px 4px 14px; border-bottom:1px solid var(--color-border); background:color-mix(in srgb,var(--color-panel) 94%,transparent); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); font-size:12px; color:var(--color-muted); }
