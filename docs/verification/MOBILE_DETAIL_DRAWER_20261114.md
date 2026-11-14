@@ -41,3 +41,15 @@
 - page scrollY308／567／654でもヘッダtop0を維持。詳細内部のスクロール時もpage567pxを保持。本文と閉じるヘッダを実画面で確認。
 - localhostの通常Graph（1050px幅）は従来のsticky詳細とheader top0を維持。viewportを解除し、利用者の元URLへ復帰。iPhone実機は未確認。
 - 画面保存：`C:/Users/nishr/.codex/visualizations/2026/10/29/01a18791-0fba-7ac0-9f89-54c48fdffcf6/detail-scroll-fix-20261114/after-header-and-new-record.png`。page scrollY654時の表示領域を記録（clipのyは文書座標）。
+
+
+## 続報：中間幅の重ね表示と作品ラベルの整列
+
+- テーマでは801〜1199pxでGraphを非表示にし、詳細を全幅へ切り替える旧条件が残っていた。テーマの重ね表示を1199pxまで広げ、通常Graphは従来どおり800pxまで。1200px以上の追従サイドバーは維持。
+- 重ねる詳細は最大440px（スマホは画面幅−30px）、header直下から表示。Graphを残し、閉じるボタン・既存の戻る操作・Escapeで閉じる。同一ページの位置とheaderを維持する。旧ID指定のdisplay:noneにも対応。
+- Entity詳細の戻るリンクと種別バッジをflexの同一行へまとめ、リンクの下marginを除去。1050pxで戻るリンクy120.094/h26、作品y122.844/h20.5となり、中心y133.094で一致。
+- 関連140件・lint・型検査込みbuild成功。実装f83a9fbb／背景指定補修18ca763c。build `BAmgWp9_3ds32d_St3ESD`を検証済みmainから3200／HTTPS βへ反映。DB・Worker・本番は未変更。
+- β1050×700で隠し砦のEntityを開き、固定の詳細幅440px・Graph display:block（幅974px／高さ1687.5px）・header top0を確認。閉じるとGraphへ戻り、page1129pxを保持。年表の公開日Recordから同じEntityへも移動できた。
+- 375×631では詳細幅345px、右端369px、横はみ出しなし・header top0。閉じると非表示。1280pxではoverlay属性なし、詳細sticky／Graphとも表示。通常Graphの1050pxも従来stickyを維持。localhost3200の同テーマ表示も確認。
+- ブラウザのマウス入力dispatchがタイムアウトしたため、開閉は同じボタンへのEnter操作で実測。iPhone実機とポインタ操作の今回の再実測は未確認。既存のクリックhandlerは変更していない。
+- 画面：`C:/Users/nishr/.codex/visualizations/2026/10/29/01a18791-0fba-7ac0-9f89-54c48fdffcf6/tablet-detail-drawer-20261114/tablet.png`。利用者の元テーマURLへ復帰しviewportを解除。
