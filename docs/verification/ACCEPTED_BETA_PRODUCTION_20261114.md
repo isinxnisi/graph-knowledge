@@ -2,7 +2,7 @@
 
 ## 範囲と現在地
 
-監査完了、固定資材を構築中。まだ本番のWeb／DB／Workerを変更していない。
+監査・固定資材・ローカル復元検証・VPS転送照合まで完了。③本番backup／復元検証は既存sudoの本人入力待ち。④本番切替・⑤正式URL／既存App更新は未実施。本番Web／DB／Workerは従来版のまま。
 ユーザーの今回の公開指示に基づく機能更新であり、βのテーマ・Record・会員・商品・画像・品質ガイド本文を移行しない。未受入自動成果は0件、追跡対象の開始時HEADはa7174d50。既存の非追跡.local／memo.txtは変更・削除しない。
 
 ## 実機の監査
@@ -40,3 +40,7 @@ WSLからのTCP22はtimeout、Windows経由では成功。鍵とknown_hostsの�
 Web／ops source `4ccb98f5e6e074d9c604024bc84d1d20f3a22323`、正式候補build `fqo_VSttPZ8pGBpd4b-Ih`。Dockerの型検査込みbuild成功。archive 592,676,682 bytes、SHA256 `6f6568f33f106839338276f607c65def46b7e5202f2084a5f87a86a8ce878970`。同一のarchive検査器でconfig・manifest・全layer・source labelを検証済み。AI artifactのhashも現本番と一致する。
 
 追加039〜043以外の会員39／知識9のchecksumはすべて一致。正式用ops imageを使ったローカルの別PGで、旧86表／39件からsnapshot backup→別DB復元→100表／44件→再実行まで成功。旧列の内容・所有者保持、品質ガイド本文0件。最初に隔離DBの接続文字列が正式用条件に合わず停止したが、試験専用文字列を補修して再検証した。本番実データの復元検証はこれからであり、切替成功を意味しない。
+
+## 本人操作待ちの再開点
+
+`backups/accepted-beta-production-20261114/run-preparation.py` を本人へ提示済み。まだ実行記録はない。これは読込・backupと隔離復元検証で、正式DBのmigrationや切替はしない。結果受領後、exportされた暗号化backupをPCで復号確認し、同じ資材の `run-release.py` を提示する。準備段階のroot stageを変更したり、初回R6を再実行しない。手動holdが解放済みなら本人helperは共通guardを取得する。
