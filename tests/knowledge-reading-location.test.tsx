@@ -9,7 +9,7 @@ import {buildKnowledgePublishedRecord} from "../lib/domain/knowledge-publication
 const mocks=vi.hoisted(()=>({workspace:{} as Record<string,unknown>,close:vi.fn(),capture:vi.fn()}));
 vi.mock("next/navigation",()=>({useSearchParams:()=>new URLSearchParams(location.search)}));
 vi.mock("../lib/client/use-knowledge-workspace",()=>({useKnowledgeWorkspace:()=>mocks.workspace,readKnowledge:vi.fn(async()=>({items:[],hasMore:false,cursor:null}))}));
-vi.mock("../components/GraphCanvas",()=>({default:({onEntity}:{onEntity?:(id:string)=>void})=> <div>保持中の図<button onClick={()=>onEntity?.("entity-1")}>図の名前を選ぶ</button></div>}));
+vi.mock("../components/GraphCanvas",()=>({default:({onEntity,onEntityDoubleClick}:{onEntity?:(id:string)=>void;onEntityDoubleClick?:(id:string)=>void})=> <div>保持中の図<button onClick={()=>onEntity?.("entity-1")}>図の名前を選ぶ</button><button onClick={()=>onEntityDoubleClick?.("entity-1")}>図の名前をダブルタップ</button></div>}));
 vi.mock("../components/KnowledgeSubmissionAvailability",()=>({useKnowledgeSubmissionsEnabled:()=>true}));
 vi.mock("../lib/client/use-knowledge-display-translations",()=>({useKnowledgeDisplayTranslations:()=>[]}));
 vi.mock("../lib/client/knowledge-submission-handoff",async()=>({...await vi.importActual("../lib/client/knowledge-submission-handoff"),createSelectionSubmission:mocks.capture}));
@@ -192,4 +192,18 @@ it("テーマの別項目は先頭へ戻し、同じ項目の再表示では読�
  detail.scrollTop=320;rerender(<KnowledgeReading><Both hidden/></KnowledgeReading>);await flush();rerender(<KnowledgeReading><Both/></KnowledgeReading>);await flush();expect(detail.scrollTop).toBe(320);
  mocks.workspace={...mocks.workspace,themeSelection:{kind:"entity",id:"entity-1"}};
  rerender(<KnowledgeReading><Both/></KnowledgeReading>);await flush();expect(detail.scrollTop).toBe(0);expect(screen.getByRole("heading",{name:"作品名"})).toBeTruthy();
+});
+
+
+it.each([true,false])("共通知識Graphのダブル操作はスマホだけ詳細を開き、PCは展開を保つ（スマホ: %s）",async phone=>{
+ const selectEntity=vi.fn(),expandEntity=vi.fn(),onPane=vi.fn();
+ mocks.workspace={...mocks.workspace,activeTheme:null,retainedTheme:null,selectEntity,expandEntity,captureNormalView:vi.fn()};
+ vi.stubGlobal("matchMedia",vi.fn(()=>({matches:phone})));
+ function CommonGraph(){const {attachHost,center}=useKnowledgeReading()!;React.useEffect(()=>attachHost({beforeOpen:()=>true,onPane,onReturn:vi.fn(),onLegacyEntity:vi.fn()}),[attachHost]);return <>{center}</>;}
+ try{
+  render(<KnowledgeReading initialEntityId="entity-1"><CommonGraph/></KnowledgeReading>);await flush();
+  fireEvent.click(screen.getByRole("button",{name:"図の名前をダブルタップ"}));
+  if(phone){expect(selectEntity).toHaveBeenCalledWith("entity-1");expect(onPane).toHaveBeenCalledWith("detail");expect(expandEntity).not.toHaveBeenCalled();}
+  else{expect(expandEntity).toHaveBeenCalledWith("entity-1");expect(onPane).not.toHaveBeenCalled();expect(selectEntity).not.toHaveBeenCalled();}
+ }finally{vi.unstubAllGlobals();}
 });
