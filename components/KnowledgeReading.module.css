@@ -55,6 +55,8 @@
 .details h3 { font-size: 14px; line-height: 1.55; color: var(--color-text); }
 .details article p { white-space: pre-wrap; }
 .details .return { margin-bottom: 8px; }
+.details .entityHeading { display:flex; align-items:center; flex-wrap:wrap; gap:4px 8px; }
+.details .entityHeading .return { margin:0; }
 .details p[data-entity-caption] { margin: 6px 0 10px; font-size: 14px; line-height: 1.65; overflow-wrap: anywhere; }
 .related { border-top: 1px solid var(--color-border); padding-top: 10px; margin-top: 14px; }
 .related > summary { padding: 4px 0; cursor: pointer; font-size: 12px; line-height: 1.6; color: var(--color-muted); }

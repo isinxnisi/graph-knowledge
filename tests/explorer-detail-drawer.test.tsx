@@ -4,11 +4,11 @@ import {act,cleanup,fireEvent,render,screen} from "@testing-library/react";
 import {afterEach,expect,it,vi} from "vitest";
 import {useExplorerDetailDrawer} from "../lib/client/use-explorer-detail-drawer";
 import type {ExplorerPane} from "../lib/client/explorer-scroll";
-function setup(phone=true){
+function setup(phone=true,theme=false){
  let listener:(()=>void)|undefined;
  const media={matches:phone,addEventListener:vi.fn((_type,fn)=>{listener=fn;}),removeEventListener:vi.fn()};
  vi.stubGlobal("matchMedia",vi.fn(()=>media));
- function Host(){const root=useRef<HTMLDivElement>(null),[pane,setPane]=useState<ExplorerPane>("graph");const drawer=useExplorerDetailDrawer(root,pane,()=>setPane("graph"));return <div ref={root}><header><button onClick={()=>setPane("detail")}>開く</button></header><main><div id="explorer-graph"><button>Graphの選択</button></div><div id="explorer-search"/><aside id="explorer-detail" tabIndex={-1} role={drawer.phone?"dialog":undefined} inert={drawer.phone&&!drawer.open} data-open={drawer.open}><button onClick={()=>setPane("graph")}>閉じる</button><button>資料</button></aside></main><div data-explorer-footer>footer</div></div>;}
+ function Host(){const root=useRef<HTMLDivElement>(null),[pane,setPane]=useState<ExplorerPane>("graph");const drawer=useExplorerDetailDrawer(root,pane,()=>setPane("graph"),theme);return <div ref={root}><header><button onClick={()=>setPane("detail")}>開く</button></header><main><div id="explorer-graph"><button>Graphの選択</button></div><div id="explorer-search"/><aside id="explorer-detail" tabIndex={-1} role={drawer.overlay?"dialog":undefined} inert={drawer.overlay&&!drawer.open} data-open={drawer.open}><button onClick={()=>setPane("graph")}>閉じる</button><button>資料</button></aside></main><div data-explorer-footer>footer</div></div>;}
  const result=render(<Host/>);return {...result,media,resize:(phone:boolean)=>act(()=>{media.matches=phone;listener?.();})};
 }
 afterEach(()=>{cleanup();vi.unstubAllGlobals();document.documentElement.style.overflow="";document.body.style.overflow="";});
@@ -32,4 +32,9 @@ it("PCのsidebarは遮蔽・スクロール制限せず、幅変更でも制限�
 });
 it("unmountで元のoverflowとinertを戻す",()=>{
  document.body.style.overflow="clip";const {unmount}=setup();fireEvent.click(screen.getByText("開く"));unmount();expect(document.body.style.overflow).toBe("clip");
+});
+
+it("テーマの中間幅は1199pxまで重ね、通常Graphは800pxまでに限定する",()=>{
+ const first=setup(true,true);expect(window.matchMedia).toHaveBeenCalledWith("(max-width: 1199px)");fireEvent.click(screen.getByText("開く"));expect(document.documentElement.style.overflow).toBe("hidden");first.unmount();
+ vi.mocked(window.matchMedia).mockClear();const second=setup(false,false);expect(window.matchMedia).toHaveBeenCalledWith("(max-width: 800px)");fireEvent.click(screen.getByText("開く"));expect(document.documentElement.style.overflow).toBe("");second.unmount();
 });

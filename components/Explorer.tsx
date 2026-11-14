@@ -106,7 +106,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
     paneFocusRequested.current = pane !== activePane;
     setActivePane(pane);
   };
-  const detailDrawer=useExplorerDetailDrawer(explorerRoot, activePane, () => moveToPane("graph"));
+  const detailDrawer=useExplorerDetailDrawer(explorerRoot, activePane, () => moveToPane("graph"), !!knowledge?.active);
   useEffect(() => {
     if (previousPane.current === activePane) return;
     const returningFromDetail=previousPane.current === "detail";
@@ -235,7 +235,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
       {(["search", "graph", "detail"] as const).map(pane => <button key={pane} aria-label={pane === "graph" && atHome ? discoveryHomeLabels(locale).home : panes[pane]} aria-pressed={activePane === pane} aria-controls={`explorer-${pane}`} onClick={() => moveToPane(pane === "detail" && detailDrawer.open ? "graph" : pane)}><Icon name={pane === "search" ? "search" : pane === "graph" ? "graph" : "book"} /><span>{pane === "detail" ? ui.detail : pane === "graph" && atHome ? discoveryHomeLabels(locale).home : panes[pane]}</span></button>)}
     </nav>
     <div lang={locale} aria-live="polite" className={styles.urlRestoreFeedback} hidden={knowledge?.active}>{urlState.busy && <p role="status" className={styles.urlRestoreMessage}>{explorationUrlLabels(locale).restoring}</p>}{urlState.failure && <div role="alert" className={`${styles.urlRestoreMessage} ${styles.error}`}><p>{urlState.failure}</p><div className={styles.actions}><button onClick={urlState.retry}>{explorationUrlLabels(locale).retry}</button>{urlState.canRestart && <button onClick={urlState.restart}>{relationText(locale).restart}</button>}<button onClick={urlState.abandon}>{explorationUrlLabels(locale).abandon}</button></div></div>}</div>
-    <main inert={!knowledge?.active && (urlState.busy || !!urlState.failure) || !!capsuleSession} data-active-pane={activePane} className={`${styles.columns} ${detailWide ? styles.wideDetails : ""} ${knowledge?.active?styles.themeColumns:""} ${atHome?styles.homeColumns:""} ${searchCollapsed?styles.searchCollapsed:""}`}>
+    <main inert={!knowledge?.active && (urlState.busy || !!urlState.failure) || !!capsuleSession} data-active-pane={activePane} data-overlay-details={detailDrawer.overlay || undefined} className={`${styles.columns} ${detailWide ? styles.wideDetails : ""} ${knowledge?.active?styles.themeColumns:""} ${atHome?styles.homeColumns:""} ${searchCollapsed?styles.searchCollapsed:""}`}>
       <div id="explorer-search" role="group" tabIndex={-1} data-focus-destination aria-label={panes.search} className={`${styles.panel} ${styles.searchPane}`}><button type="button" className={styles.searchPaneToggle} aria-expanded={!searchCollapsed} aria-controls="explorer-search-content" aria-label={locale === "en" ? searchCollapsed ? "Open search panel" : "Collapse search panel" : searchCollapsed ? "検索パネルを開く" : "検索パネルを閉じる"} title={locale === "en" ? searchCollapsed ? "Open search panel" : "Collapse search panel" : searchCollapsed ? "検索パネルを開く" : "検索パネルを閉じる"} onClick={toggleSearchPanel}><Icon name="panel" /></button><nav className={styles.searchRail} aria-label={designLabels(locale).tools}>
         <button type="button" aria-label={locale === "en" ? "Search" : "検索"} title={locale === "en" ? "Search" : "検索"} onClick={() => openDiscovery({ q: "", kind: null, presentation: "explore" })}><Icon name="search" /></button>
         <button type="button" disabled={knowledge?.active} aria-label={savedViewLabels(locale).launch} title={knowledge?.active ? locale === "en" ? "Return to exploration to use saved views" : "探索に戻ると保存ビューを利用できます" : savedViewLabels(locale).launch} onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" /></button>
@@ -290,7 +290,7 @@ function ExplorerBody({ dataset = "demo", initialRoot, services, publicOverview,
       </section>
       <div className={styles.pageEnd}>{!knowledge?.active && (!initialRoot || !graph.centerId || initialRoot === graph.centerId) && publicOverview}</div>
       </div>
-      <aside id="explorer-detail" tabIndex={-1} data-focus-destination inert={detailDrawer.phone && !detailDrawer.open} role={detailDrawer.phone ? "dialog" : undefined} className={`${styles.panel} ${styles.detailDrawer}`} aria-label={ui.detail}>
+      <aside id="explorer-detail" tabIndex={-1} data-focus-destination inert={detailDrawer.overlay && !detailDrawer.open} role={detailDrawer.overlay ? "dialog" : undefined} className={`${styles.panel} ${styles.detailDrawer}`} aria-label={ui.detail}>
         <div className={styles.mobileDetailBar}><span><Icon name="book" />{ui.detail}</span><button type="button" aria-label={locale === "en" ? "Close details" : "詳細を閉じる"} onClick={() => moveToPane("graph")}><Icon name="close" /></button></div>
         {knowledge?.active && knowledge.detail}
         <div hidden={knowledge?.active}>

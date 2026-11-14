@@ -1,20 +1,21 @@
-import {useEffect, useLayoutEffect, useRef, useSyncExternalStore, type RefObject} from "react";
+import {useCallback, useEffect, useLayoutEffect, useRef, useSyncExternalStore, type RefObject} from "react";
 import type {ExplorerPane} from "./explorer-scroll";
 
-const phoneQuery = "(max-width: 800px)";
-function subscribe(listener: () => void) {
-  const media = window.matchMedia(phoneQuery);
-  media.addEventListener?.("change", listener);
-  return () => media.removeEventListener?.("change", listener);
-}
-const phoneSnapshot = () => Boolean(window.matchMedia?.(phoneQuery).matches);
 const serverSnapshot = () => false;
 
 // This is a non-modal sidebar: the header and pane navigation remain usable.
 // Only the obscured reading page is inert; native dialogs can still open above it.
-export function useExplorerDetailDrawer(root: RefObject<HTMLDivElement | null>, pane: ExplorerPane, onDismiss: () => void) {
-  const phone = useSyncExternalStore(subscribe, phoneSnapshot, serverSnapshot);
-  const open = phone && pane === "detail";
+export function useExplorerDetailDrawer(root: RefObject<HTMLDivElement | null>, pane: ExplorerPane, onDismiss: () => void, theme = false) {
+  // Themes lose their side-by-side detail below 1200px; normal Graph keeps it on tablets.
+  const query = theme ? "(max-width: 1199px)" : "(max-width: 800px)";
+  const subscribe = useCallback((listener: () => void) => {
+    const media = window.matchMedia(query);
+    media.addEventListener?.("change", listener);
+    return () => media.removeEventListener?.("change", listener);
+  }, [query]);
+  const snapshot = useCallback(() => Boolean(window.matchMedia?.(query).matches), [query]);
+  const overlay = useSyncExternalStore(subscribe, snapshot, serverSnapshot);
+  const open = overlay && pane === "detail";
   const dismiss = useRef(onDismiss);
   const returnFocus = useRef<HTMLElement | null>(null);
   useLayoutEffect(() => { dismiss.current = onDismiss; });
@@ -52,5 +53,5 @@ export function useExplorerDetailDrawer(root: RefObject<HTMLDivElement | null>, 
       if (detail?.contains(document.activeElement) && trigger?.isConnected && !trigger.closest("[inert]")) trigger.focus({preventScroll:true});
     };
   }, [open, root]);
-  return {phone, open};
+  return {overlay, open};
 }
