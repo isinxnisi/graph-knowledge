@@ -51,3 +51,16 @@ Graph上を通るページのスクロールを初期状態では図へ渡さな
 - 図から解除→鍵で再ロックも確認。PC幅1071pxへ戻し、表示可能なGraph幅953pxを確認。
 - 画面記録は`graph-scroll-flicker-20261114/before-mobile.png`／`after-mobile.png`（同じ可視化保存先）。初回のcaptureはCDP timeout、再取得では保存できた。
 - iPhone実機のアドレスバー伸縮中の描画・報告されたちらつきの消失は未確認。幅指定ブラウザでの寸法維持を、実機での完全解消と同一視しない。
+
+## 続報：鍵アイコンの位置を操作列へ揃える（2026-11-14）
+
+利用者のPC画面では、鍵だけが既存操作列より左に離れていた。前回の重なり回避用right64pxが原因。右端の既存列と同じright12pxへ置き、通常は44pxのクリック領域で中心を揃えた。青い選択枠は付けず、鍵は既存の表示操作groupに含めない。
+
+Graphをサイズコンテナとし、マウス操作できる高さ440px以下の枠では既存の縦操作列と鍵を36px／gap2pxにする。共通のスマホ向けmin-height44pxに戻らないよう、この局所指定を優先。実タッチ向けの横操作パネルは従来のサイズと並びを維持する。入力処理・スクロールロック・ズーム計算・DBは変更しない。
+
+- 実装38abc2e8／953034c2、型検査込みbuild `iRQvd9tnLyUJ-K0fNAJOa`。main／3200／HTTPS β反映済み、Worker PID不変、本番未変更。
+- PC幅1470×900：鍵と拡大ボタンの中心Xはどちらも1037.203125px。Graph高さ533px、鍵のborder0／outline none。
+- 幅375×631・fine pointerの低いGraph：高さ368.140625px、操作ボタン36×36px、鍵と操作列の縦方向の間隔8pxで非重複。中心Xは321px／320.59375px（outputの小数幅による0.41px差）。
+- 図を押して解除→鍵で再ロックできる。画面幅を戻してもGraphを表示できる。実機iPhoneの確認とは区別する。
+- Before／After画面：可視化保存先`graph-lock-position-20261114/before-pc.png`、`after-pc.png`、`after-short.png`、`after-graph.png`。
+- CSSのみの変更のため、描画されないheadless試験の追加・再実行はせず、型検査込みbuildと実画面での寸法・重なり・操作を確認した。
