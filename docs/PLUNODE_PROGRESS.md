@@ -1,4 +1,4 @@
-2026-11-14 受入済みβ機能の正式反映：①本番実機監査・②固定image／隔離試験・③本番backup／隔離復元・PC回収復号まで完了｜④本番切替は既存sudoの本人入力待ち、⑤正式URL／既存App更新が残る｜全体⑤まで。本番実backupの86→100表／会員ledger44／旧データ・所有者保持／再実行不変を確認。候補source4ccb98f5／build `fqo_VSttPZ8pGBpd4b-Ih`。本番は39a84f4e／会員39・知識9のまま。βコンテンツ・品質ガイド本文は移さない。[実測と再開](verification/ACCEPTED_BETA_PRODUCTION_20261114.md)。
+2026-11-14 受入済みβ機能の正式反映：①本番監査・②固定資材／隔離試験・③backup／復元・④migration／Web・Worker切替・⑤正式URL／既存Appの受入まで完了｜今回の全体⑤まで完了。source4ccb98f5／build `fqo_VSttPZ8pGBpd4b-Ih`、会員44（039〜043追加）／知識9。既存本文・版・所有者とKG・設定を保持、βコンテンツ／品質ガイド本文は未移行。本番AppはRead12／Write16、実read_theme／新ガイド読取、Googleログイン・既存Capsule／共有版3・PC／375px・SEO確認。iPhone実機／本番編集の実書込みは未確認、ガイド本文は0版で別登録。[実測・復旧](verification/ACCEPTED_BETA_PRODUCTION_20261114.md)。
 
 2026-11-14 Graphの鍵アイコン整列：①位置ずれ確認・②右の操作列へ整列／低い枠での非重複・③3200／HTTPS βのPC・低いGraph確認まで完了｜今回は③まで完了。青枠なし・解除／再ロック維持。実装38abc2e8／953034c2、build `iRQvd9tnLyUJ-K0fNAJOa`。本番・DB・Worker未変更。[確認記録](verification/GRAPH_SCROLL_LOCK_20261114.md#続報鍵アイコンの位置を操作列へ揃える2026-11-14)。
 
