@@ -1,3 +1,5 @@
+2026-11-14 スマホ詳細の背景範囲／共通知識のダブル操作：①背景44pxへの縮小と展開のみの接続を確認・②全高背景／スマホだけ詳細表示・③3200／HTTPS β・320／375px背景下端とクリック閉鎖／ノードダブル操作まで完了｜今回の工程は③まで完了。142件・lint／型検査込みbuild `rwrwCczesYnR2e7iG7h25`、実装0d1c6a7e／910fc6e7。本番・DB・Worker未変更、iPhone実機未確認。[是正記録](verification/MOBILE_DETAIL_DRAWER_20261114.md#是正スマホの背景範囲と共通知識graphのダブル操作)。
+
 2026-11-14 詳細背景の再是正：①前回hover修正の開閉指定干渉を特定・②背景色だけのルールへ分離・③3200／HTTPS βで実hover中の表示／クリック判定維持と背景クリック閉鎖まで完了｜今回の工程は③まで完了。型検査込みbuild `Q9qxCmPvLypVSsTb92iHy`、実装64474404。本番・DB・Worker未変更。[是正記録](verification/MOBILE_DETAIL_DRAWER_20261114.md#是正ホバー指定による背景の明滅と閉じる操作)。
 
 2026-11-14 詳細の背景ホバー：①共通button:hoverの不透明色適用を特定・②背景のみ半透明維持・③3200／HTTPS β・1050pxで実hover確認まで完了｜今回の工程は③まで完了。型検査込みbuild `1DbxMWsfw88rOFMtAT3Ea`、実装23fd9fa4。本番・DB・Worker未変更。[追補](verification/MOBILE_DETAIL_DRAWER_20261114.md#続報背景ホバーの不透明化)。

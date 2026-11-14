@@ -70,3 +70,14 @@
 - βの1071px通常ウィンドウで実マウスを背景へ移動し、hover=true、opacity=1、visibility=visible、pointer-events=auto、background=rgba(20,35,50,0.15)を同時確認。背景上への実クリックでpane=graph／data-openなしへ戻ることを2回確認（1050px指定と通常ウィンドウ）。
 - localhost TOPも正常表示、利用者の元テーマへ復帰。CSSだけの補修、DB・Worker・本番は未変更。iPhone実機は未確認。
 - 画面：`C:/Users/nishr/.codex/visualizations/2026/10/29/01a18791-0fba-7ac0-9f89-54c48fdffcf6/tablet-detail-drawer-20261114/pointer-fixed.png`。
+
+
+## 是正：スマホの背景範囲と共通知識Graphのダブル操作
+
+- スマホのcolumns直下に一律適用するheight:0／max-height:0が閉じる背景にも残っていた。375×631で背景はy53／高さ44px、max-height:0／min-height:44pxだった。背景にheight:auto／min-height:0／max-height:noneを明示し、ヘッダ下からviewport下端まで覆う。修正0d1c6a7e。
+- β375×631の背景はx0／y53／幅375／高さ578／下端631。左端x5のy80・300・600・630全点が背景のヒット領域。Chromeウィンドウ上の背景下側を実クリックするとpane=graph／data-openなしへ戻る。320×600も背景下端600、最下部のヒットを確認。ヘッダと下部ナビの操作は維持。
+- 追加指摘の共通知識Graph（KnowledgeReadingの通常表示）では、Entityのダブル操作が周辺展開だけに接続されていた。800px以下は既存chooseEntity→詳細ペイン、PCは既存expandEntityを維持。GraphCanvasのタッチ判定や本線KG・テーマGraphは変更しない。修正910fc6e7。
+- 関連142件成功、今回追加のスマホ詳細／PC展開2ケースを含む。変更TSXのlint成功、型検査込みbuild `rwrwCczesYnR2e7iG7h25`成功。mainを3200／HTTPS βへ反映。
+- β375pxの公開済み共通知識Graph（隠し砦Entityを起点に3 Entity／2関係）で、黒澤明ノードを実マウスでダブルクリックし、dialog詳細／黒澤明／選択の詳細pressedを確認。Graphの3 Entity／2関係は不変。実iPhoneのタッチ操作は未確認。
+- localhost3200の同じ共通知識Graph経路を表示確認し、利用者の元テーマURLと通常viewportへ復帰。DB・公開Record・テーマ・画像・商品・Worker・本番は未変更。
+- 画面保存：同じtablet-detail-drawer-20261114フォルダの `mobile-area-fixed.png`（375px背景の全高）と `common-double-detail.png`（375pxのノードダブル操作で詳細）。
