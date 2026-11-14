@@ -61,3 +61,12 @@
 - CSS1箇所のみ変更。型検査込みbuild `1DbxMWsfw88rOFMtAT3Ea`成功、実装23fd9fa4。mainから3200／HTTPS βへ反映。localhost TOPの表示も確認。DB・Worker・本番未変更。
 - β1050pxのPLUTOで背景へ実ポインタを移動し、matches(':hover')=true、background=rgba(20,35,50,0.15)、Graph display:blockを確認。年表が透ける実画面を記録。閉じる操作でpane=graphへ戻る。
 - 画面：`C:/Users/nishr/.codex/visualizations/2026/10/29/01a18791-0fba-7ac0-9f89-54c48fdffcf6/tablet-detail-drawer-20261114/hover-fixed.png`。iPhone実機は未確認。
+
+
+## 是正：ホバー指定による背景の明滅と閉じる操作
+
+- 前回23fd9fa4はhover selectorを背景の全スタイルへ追加してしまい、hover時の高い詳細度でopacity:0／visibility:hidden／pointer-events:noneまで再適用していた。hoverに入る→自分を隠す→hoverから外れるという循環を生み、クリックも不安定だった。前回の背景色だけの測定とキーボード閉鎖では検出できていなかった。
+- hover selectorを背景色1プロパティだけの別ルールへ分離。開閉状態の指定には参加させない。修正64474404、型検査込みbuild `Q9qxCmPvLypVSsTb92iHy`成功。3200／HTTPS βへ検証済みmainを反映。
+- βの1071px通常ウィンドウで実マウスを背景へ移動し、hover=true、opacity=1、visibility=visible、pointer-events=auto、background=rgba(20,35,50,0.15)を同時確認。背景上への実クリックでpane=graph／data-openなしへ戻ることを2回確認（1050px指定と通常ウィンドウ）。
+- localhost TOPも正常表示、利用者の元テーマへ復帰。CSSだけの補修、DB・Worker・本番は未変更。iPhone実機は未確認。
+- 画面：`C:/Users/nishr/.codex/visualizations/2026/10/29/01a18791-0fba-7ac0-9f89-54c48fdffcf6/tablet-detail-drawer-20261114/pointer-fixed.png`。
