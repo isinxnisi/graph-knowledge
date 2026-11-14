@@ -820,7 +820,7 @@
   .explorer .columns[data-active-pane="detail"] > .centralScroll { visibility:visible; pointer-events:none; height:auto; max-height:none; overflow:visible; position:static; }
   .explorer .columns > aside.detailDrawer {
     display:block; position:fixed; z-index:60; top:calc(var(--explorer-header-height) + 6px); right:6px; bottom:var(--pane-nav-clearance);
-    width:calc(100% - 30px); height:auto; max-height:none; padding:14px; overflow:auto; overscroll-behavior:contain;
+    width:calc(100% - 30px); height:auto; max-height:none; margin:0; padding:14px; overflow:auto; overscroll-behavior:contain;
     border-radius:14px; box-shadow:-8px 8px 28px rgb(20 40 65 / .16);
     visibility:hidden; pointer-events:none; transform:translateX(calc(100% + 16px));
     transition:transform 240ms cubic-bezier(.22,.8,.25,1), visibility 0s linear 240ms; animation:none;

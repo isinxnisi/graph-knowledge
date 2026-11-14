@@ -35,7 +35,6 @@ export function useExplorerDetailDrawer(root: RefObject<HTMLDivElement | null>, 
       background.forEach((element, index) => { element.inert = previousInert[index]; });
       document.documentElement.style.overflow = htmlOverflow;
       document.body.style.overflow = bodyOverflow;
-
     };
   }, [open, root]);
   useEffect(() => {
