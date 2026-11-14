@@ -36,4 +36,8 @@
 
 - テーマの選択が、通常KG用の選択keyに含まれておらず、新しい項目へ古いscrollTopが残っていた。KnowledgeReadingのテーマID・構成版・選択kind／IDの変化で、commit時に詳細だけを先頭へ戻す。同一項目の再開や、既存の出典／一覧の位置復帰は保つ。
 - ページ308pxの位置で詳細を開くと、header topが0→-308pxになることをβで再現。bodyのoverflow:hiddenがsticky headerのスクロール祖先を変えていた。html側だけをロックし、bodyには触らない。
-- 関連139件・lint／型検査込みbuild成功。βへの反映と実画面確認を続ける。本番・DB・Worker未変更。
+- 関連139件・lint／型検査込みbuild成功。実装 `a1d0cb4d`、最終build `1SarVIGwc-ZmarbUF4G9c`を3200／HTTPS βへ反映。本番・DB・Worker未変更。
+- β375×631で詳細末尾322pxから別の第1巻Recordを選ぶと0px、Entityへ替えても0px。Entity詳細291pxを閉じて再開すると291pxを保持し、別の第8巻Recordでは0pxを確認。
+- page scrollY308／567／654でもヘッダtop0を維持。詳細内部のスクロール時もpage567pxを保持。本文と閉じるヘッダを実画面で確認。
+- localhostの通常Graph（1050px幅）は従来のsticky詳細とheader top0を維持。viewportを解除し、利用者の元URLへ復帰。iPhone実機は未確認。
+- 画面保存：`C:/Users/nishr/.codex/visualizations/2026/10/29/01a18791-0fba-7ac0-9f89-54c48fdffcf6/detail-scroll-fix-20261114/after-header-and-new-record.png`。page scrollY654時の表示領域を記録（clipのyは文書座標）。

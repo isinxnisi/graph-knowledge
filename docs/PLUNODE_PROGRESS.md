@@ -1,4 +1,4 @@
-2026-11-14 詳細の読書位置とヘッダ：①原因再現・②テーマ選択変更の先頭復帰／bodyスクロール祖先の補修・③3200／HTTPS β確認中｜今回の工程は③まで。139件・lint／型検査込みbuild成功、本番・DB・Worker未変更。
+2026-11-14 詳細の読書位置とヘッダ：①原因再現・②テーマ選択変更の先頭復帰／bodyスクロール祖先の補修・③3200／HTTPS βで別項目0px・同一項目291px保持／ヘッダ上端保持まで完了｜今回の工程は③まで完了。139件・lint／型検査込みbuild `1SarVIGwc-ZmarbUF4G9c`、実装a1d0cb4d。本番・DB・Worker未変更、iPhone実機未確認。[追補](verification/MOBILE_DETAIL_DRAWER_20261114.md#続報別項目の読書位置とヘッダの消失を是正)。
 
 2026-11-14 スマホ詳細サイドバー：①確認・②右重ね／スライド開閉／読書位置保持・③3200／HTTPS βのテーマ・通常Graph／320・375px／PC確認まで完了｜今回の工程は③まで完了。138件・lint／型検査込みbuild `l00r6zEWjtysdM7HKXFFq`、実装a6d793b1／重なり補修741793df。本番・DB・Worker未変更、iPhone実機未確認。[確認記録](verification/MOBILE_DETAIL_DRAWER_20261114.md)。
 
