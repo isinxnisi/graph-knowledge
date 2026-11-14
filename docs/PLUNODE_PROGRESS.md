@@ -1,3 +1,5 @@
+2026-11-14 Graphの初期スクロールロック：①確認・②共通Canvasのタップ／クリック解除と再ロック・③3200／HTTPS βの本線・テーマ・共通知識確認まで完了｜今回は③まで完了。ドラッグ・長押しでは解除せず、ロック中も表示パネルは操作可。鍵の青枠なし。関連61件成功、型検査込みbuild `3xvTZ9o_BysmiAYEZelKT`、本番・DB・Worker未変更。既存テスト1件の事前不一致とiPhone実機未確認は[確認記録](verification/GRAPH_SCROLL_LOCK_20261114.md)。
+
 2026-11-14 スマホ詳細の背景範囲／共通知識のダブル操作：①背景44pxへの縮小と展開のみの接続を確認・②全高背景／スマホだけ詳細表示・③3200／HTTPS β・320／375px背景下端とクリック閉鎖／ノードダブル操作まで完了｜今回の工程は③まで完了。142件・lint／型検査込みbuild `rwrwCczesYnR2e7iG7h25`、実装0d1c6a7e／910fc6e7。本番・DB・Worker未変更、iPhone実機未確認。[是正記録](verification/MOBILE_DETAIL_DRAWER_20261114.md#是正スマホの背景範囲と共通知識graphのダブル操作)。
 
 2026-11-14 詳細背景の再是正：①前回hover修正の開閉指定干渉を特定・②背景色だけのルールへ分離・③3200／HTTPS βで実hover中の表示／クリック判定維持と背景クリック閉鎖まで完了｜今回の工程は③まで完了。型検査込みbuild `Q9qxCmPvLypVSsTb92iHy`、実装64474404。本番・DB・Worker未変更。[是正記録](verification/MOBILE_DETAIL_DRAWER_20261114.md#是正ホバー指定による背景の明滅と閉じる操作)。
