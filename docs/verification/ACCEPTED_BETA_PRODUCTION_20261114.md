@@ -34,3 +34,9 @@ WSLからのTCP22はtimeout、Windows経由では成功。鍵とknown_hostsの�
 本番のApp更新、実読取、正式画面・認証・SEO、暗号化backupのPC復号は切替後まで未完了。更新系の正式実書込みは今回行わず、隔離試験と明確に区別する。iPhone実機、特にスクロール時ちらつきの消失は未確認。PCのviewport検証を実機成功としない。
 
 旧Web／opsのimage archiveは正式VPSのroot-private backupへ保存してhashを記録する。PCへ回収する暗号化archiveはDB・設定・checkpoint・image識別情報を含み、巨大な公開image本体は重複転送しない。復号鍵はPCの0600ファイルとして保持し、公開鍵だけをVPSへ渡す。
+
+## 固定資材の検証（切替前）
+
+Web／ops source `4ccb98f5e6e074d9c604024bc84d1d20f3a22323`、正式候補build `fqo_VSttPZ8pGBpd4b-Ih`。Dockerの型検査込みbuild成功。archive 592,676,682 bytes、SHA256 `6f6568f33f106839338276f607c65def46b7e5202f2084a5f87a86a8ce878970`。同一のarchive検査器でconfig・manifest・全layer・source labelを検証済み。AI artifactのhashも現本番と一致する。
+
+追加039〜043以外の会員39／知識9のchecksumはすべて一致。正式用ops imageを使ったローカルの別PGで、旧86表／39件からsnapshot backup→別DB復元→100表／44件→再実行まで成功。旧列の内容・所有者保持、品質ガイド本文0件。最初に隔離DBの接続文字列が正式用条件に合わず停止したが、試験専用文字列を補修して再検証した。本番実データの復元検証はこれからであり、切替成功を意味しない。
