@@ -1,4 +1,5 @@
 /* Keep graph controls independent of surrounding Explorer and theme forms. */
+.canvas { container-type: size; }
 .canvas .toolbar {
   position: absolute;
   right: 12px;
@@ -103,15 +104,15 @@
 .canvas .scrollLock {
   position: absolute;
   top: 12px;
-  right: 64px;
+  right: 12px;
   z-index: 45;
   display: grid;
   place-items: center;
   box-sizing: border-box;
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
-  min-height: 36px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   margin: 0;
   padding: 0;
   border: 1px solid var(--color-border);
@@ -128,6 +129,17 @@
 }
 .canvas button.scrollLock:hover:not(:disabled) { background: var(--color-hover); }
 
-@media (max-width: 800px) and (hover: none) and (pointer: coarse) {
-  .canvas .scrollLock { right: 12px; }
+/* Leave a separate top corner for the lock, on the same axis as view tools.
+   Short mouse-operated canvases compact their existing column instead of
+   pushing the lock sideways or letting controls cover each other. */
+@media (hover: hover) and (pointer: fine) {
+  @container (max-height: 440px) {
+    .canvas .toolbar { gap: 2px; }
+    .canvas .toolbar button, .canvas .scrollLock {
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      min-height: 36px;
+    }
+  }
 }
