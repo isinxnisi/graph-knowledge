@@ -31,3 +31,9 @@
 - pc-unchanged.png：PCの従来の追従サイドバー。
 
 モバイル画面はviewport部分375×812を記録。実機のiOS Chrome／Safariの最終操作は未確認。背景タップのdismiss経路は接続済みだが、今回のブラウザ画面操作ではclose／タブ／Escapeを実測した。
+
+## 続報：別項目の読書位置とヘッダの消失を是正
+
+- テーマの選択が、通常KG用の選択keyに含まれておらず、新しい項目へ古いscrollTopが残っていた。KnowledgeReadingのテーマID・構成版・選択kind／IDの変化で、commit時に詳細だけを先頭へ戻す。同一項目の再開や、既存の出典／一覧の位置復帰は保つ。
+- ページ308pxの位置で詳細を開くと、header topが0→-308pxになることをβで再現。bodyのoverflow:hiddenがsticky headerのスクロール祖先を変えていた。html側だけをロックし、bodyには触らない。
+- 関連139件・lint／型検査込みbuild成功。βへの反映と実画面確認を続ける。本番・DB・Worker未変更。

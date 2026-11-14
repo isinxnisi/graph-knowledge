@@ -15,8 +15,8 @@ afterEach(()=>{cleanup();vi.unstubAllGlobals();document.documentElement.style.ov
 it("スマホはGraphを保ったまま詳細へフォーカスし、閉じたら操作元へ戻す",()=>{
  const {container}=setup();const graph=container.querySelector<HTMLElement>("#explorer-graph")!,detail=container.querySelector<HTMLElement>("aside")!;
  const trigger=screen.getByText("開く");trigger.focus();fireEvent.click(trigger);
- expect(detail.dataset.open).toBe("true");expect(document.activeElement).toBe(detail);expect(graph.inert).toBe(true);expect(document.body.style.overflow).toBe("hidden");
- detail.scrollTop=240;fireEvent.click(screen.getByText("閉じる"));expect(graph.inert).toBe(false);expect(document.body.style.overflow).toBe("");expect(document.activeElement).toBe(trigger);
+ expect(detail.dataset.open).toBe("true");expect(document.activeElement).toBe(detail);expect(graph.inert).toBe(true);expect(document.documentElement.style.overflow).toBe("hidden");expect(document.body.style.overflow).toBe("");
+ detail.scrollTop=240;fireEvent.click(screen.getByText("閉じる"));expect(graph.inert).toBe(false);expect(document.documentElement.style.overflow).toBe("");expect(document.body.style.overflow).toBe("");expect(document.activeElement).toBe(trigger);
  fireEvent.click(trigger);expect(detail.scrollTop).toBe(240);
 });
 it("Escapeで閉じ、上に開いたdialogのEscapeは横取りしない",()=>{
@@ -27,8 +27,8 @@ it("Escapeで閉じ、上に開いたdialogのEscapeは横取りしない",()=>{
 it("PCのsidebarは遮蔽・スクロール制限せず、幅変更でも制限を残さない",()=>{
  const {container,resize}=setup(false);const graph=container.querySelector<HTMLElement>("#explorer-graph")!;
  fireEvent.click(screen.getByText("開く"));expect(graph.inert).not.toBe(true);expect(document.body.style.overflow).toBe("");
- resize(true);expect(graph.inert).toBe(true);expect(document.body.style.overflow).toBe("hidden");
- resize(false);expect(graph.inert).toBe(false);expect(document.body.style.overflow).toBe("");
+ resize(true);expect(graph.inert).toBe(true);expect(document.documentElement.style.overflow).toBe("hidden");expect(document.body.style.overflow).toBe("");
+ resize(false);expect(graph.inert).toBe(false);expect(document.documentElement.style.overflow).toBe("");expect(document.body.style.overflow).toBe("");
 });
 it("unmountで元のoverflowとinertを戻す",()=>{
  document.body.style.overflow="clip";const {unmount}=setup();fireEvent.click(screen.getByText("開く"));unmount();expect(document.body.style.overflow).toBe("clip");

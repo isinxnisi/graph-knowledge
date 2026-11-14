@@ -27,14 +27,13 @@ export function useExplorerDetailDrawer(root: RefObject<HTMLDivElement | null>, 
     const previousInert = background.map(element => Boolean(element.inert));
     background.forEach(element => { element.inert = true; });
     const htmlOverflow = document.documentElement.style.overflow;
-    const bodyOverflow = document.body.style.overflow;
     document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
+    // Lock the document only: body overflow would become the sticky header
+    // scroll ancestor and move it offscreen when the page is already scrolled.
     detail?.focus({preventScroll:true});
     return () => {
       background.forEach((element, index) => { element.inert = previousInert[index]; });
       document.documentElement.style.overflow = htmlOverflow;
-      document.body.style.overflow = bodyOverflow;
     };
   }, [open, root]);
   useEffect(() => {

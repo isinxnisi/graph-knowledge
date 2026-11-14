@@ -16,7 +16,7 @@ vi.mock("../lib/client/knowledge-submission-handoff",async()=>({...await vi.impo
 const theme={theme:{id:"theme",revision:1,content:{title:"テーマ",recordPins:[],description:""}},records:[],snapshot:{entities:[],records:[],sources:[]}};
 function Reader(){const r=useKnowledgeReading()!;return <><span>既存Explorer</span><button onClick={()=>r.openRecord("record-1")}>記録を開く</button><div>{r.center}</div></>;}
 async function flush(){await act(async()=>{for(let n=0;n<10;n++)await Promise.resolve();});}
-beforeEach(()=>{mocks.close.mockClear();history.replaceState({},"","/?ktheme=theme");mocks.workspace={normal:{records:[],entities:[],epoch:0,selection:null},activeTheme:theme,retainedTheme:theme,themeSelection:null,themeView:"graph",busy:false,restoring:false,error:"",message:"",status:null,closeTheme:mocks.close};});
+beforeEach(()=>{HTMLElement.prototype.scrollTo=vi.fn(function(this:HTMLElement,options?:ScrollToOptions|number,y?:number){this.scrollTop=typeof options==="number"?y??0:options?.top??0;});mocks.close.mockClear();history.replaceState({},"","/?ktheme=theme");mocks.workspace={normal:{records:[],entities:[],epoch:0,selection:null},activeTheme:theme,retainedTheme:theme,themeSelection:null,themeView:"graph",busy:false,restoring:false,error:"",message:"",status:null,closeTheme:mocks.close};});
 afterEach(()=>cleanup());
 it("Nextの同一路線ホーム移動はpopstateを待たずThemeを閉じる",async()=>{
  const {rerender}=render(<KnowledgeReading><Reader/></KnowledgeReading>);await flush();
@@ -174,4 +174,22 @@ it("テーマの『名前から探索する』は言語付きの正規URLへの�
 it("正規の共通知識ページをホームと誤認して閉じず、ホームに戻るリンクを表示する",async()=>{
  history.replaceState({},"","/explore/import%3Aperson-kurosawa");mocks.workspace={...mocks.workspace,activeTheme:null,retainedTheme:null};
  render(<KnowledgeReading initialEntityId="import:person-kurosawa"><Reader/></KnowledgeReading>);await flush();expect(mocks.close).not.toHaveBeenCalled();expect(screen.getByRole("region",{name:"通常の関係探索"})).toBeTruthy();expect(screen.getByRole("link",{name:"探索に戻る"}).getAttribute("href")).toBe("/");
+});
+
+
+it("テーマの別項目は先頭へ戻し、同じ項目の再表示では読書位置を保持する",async()=>{
+ const stamp={revision:1,createdAt:"2026-11-14T00:00:00Z",reason:""};
+ const evidence=[{id:"e",source:{id:"source",revision:1},locator:"本文"}];
+ const rows=["first","second"].map(id=>({id,...stamp,content:knowledgeRecordContentSchema.parse({kind:"note",assertion:id+"の本文",aboutTheme:"theme",evidence})}));
+ const entity={id:"entity-1",...stamp,content:knowledgeEntityContentSchema.parse({kind:"work",name:"作品名",aliases:[],description:"作品の説明"})};
+ const snapshot={schemaVersion:1 as const,initialView:"graph" as const,records:rows,entities:[entity],sources:[{id:"source",...stamp,content:knowledgeSourceContentSchema.parse({title:"資料",bibliography:"第1版"})}],mappings:[]};
+ const fixed={...theme,snapshot,records:rows.map(r=>buildKnowledgePublishedRecord(r,snapshot))};
+ mocks.workspace={...mocks.workspace,activeTheme:fixed,retainedTheme:fixed,themeSelection:{kind:"record",id:"first"}};
+ function Both({hidden=false}:{hidden?:boolean}){const r=useKnowledgeReading()!;return <aside hidden={hidden} id="explorer-detail">{r.detail}</aside>;}
+ const {rerender}=render(<KnowledgeReading><Both/></KnowledgeReading>);await flush();const detail=document.getElementById("explorer-detail")!;
+ detail.scrollTop=600;mocks.workspace={...mocks.workspace,themeSelection:{kind:"record",id:"second"}};
+ rerender(<KnowledgeReading><Both/></KnowledgeReading>);await flush();expect(detail.scrollTop).toBe(0);expect(screen.getByText("secondの本文")).toBeTruthy();
+ detail.scrollTop=320;rerender(<KnowledgeReading><Both hidden/></KnowledgeReading>);await flush();rerender(<KnowledgeReading><Both/></KnowledgeReading>);await flush();expect(detail.scrollTop).toBe(320);
+ mocks.workspace={...mocks.workspace,themeSelection:{kind:"entity",id:"entity-1"}};
+ rerender(<KnowledgeReading><Both/></KnowledgeReading>);await flush();expect(detail.scrollTop).toBe(0);expect(screen.getByRole("heading",{name:"作品名"})).toBeTruthy();
 });

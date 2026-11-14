@@ -7,7 +7,7 @@ import {knowledgeDisplaySnapshot,knowledgeDisplayText,knowledgeEntityDisplayName
 import {buildKnowledgePublishedRecord} from "../lib/domain/knowledge-publication";
 import type {KnowledgeTranslationVersion} from "../lib/domain/knowledge-translation";
 import KnowledgeTranslationPanel from "./KnowledgeTranslationPanel";
-import { createContext, useContext, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "./NavigationLink";
 import {CapsuleWorkspace} from "./MyCapsules";
 import {captureKnowledgeCapsule} from "../lib/client/capsule-knowledge";
@@ -96,6 +96,8 @@ export default function KnowledgeReading({children,operatorEnabled=true,initialT
  const records=active?active.records:w.normal.records;
  const entities=active?active.snapshot.entities:w.normal.entities;
  const detailContext=`${active?.theme.id??"normal"}@${active?.theme.revision??0}:${selection?.kind??"none"}:${selection?.id??""}`;
+ // A different selection starts a new read; nested source/back navigation restores its own position.
+ useLayoutEffect(()=>{scrollExplorerPane("detail",0);},[detailContext]);
  const detailTrail=savedDetailTrail[0]?.context===detailContext?savedDetailTrail:[];
  const linkedRecordId=detailTrail.at(-1)?.id;
  const selectedRecord=linkedRecordId?records.find(r=>r.record.id===linkedRecordId):selection?.kind==="record"?records.find(r=>r.record.id===selection.id):null;
