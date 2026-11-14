@@ -103,7 +103,7 @@
 .canvas .scrollLock {
   position: absolute;
   top: 12px;
-  right: 12px;
+  right: 64px;
   z-index: 45;
   display: grid;
   place-items: center;
@@ -120,4 +120,14 @@
   background: color-mix(in srgb, var(--color-panel) 80%, transparent);
 }
 .canvas .scrollLock :global(.ui-icon) { width: 18px; height: 18px; margin: 0; }
-.canvas .scrollLock[aria-pressed="false"] { color: var(--color-accent); }
+.canvas button.scrollLock[aria-pressed] {
+  border: 0;
+  box-shadow: none;
+  color: var(--color-muted);
+  font-weight: 400;
+}
+.canvas button.scrollLock:hover:not(:disabled) { background: var(--color-hover); }
+
+@media (max-width: 800px) and (hover: none) and (pointer: coarse) {
+  .canvas .scrollLock { right: 12px; }
+}
