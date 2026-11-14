@@ -254,7 +254,7 @@ class Release:
         encrypted, wrapped = folder/'recovery.tar.enc', folder/'recovery-key.enc'
         with tarfile.open(payload, 'w') as archive:
             for path in list(folder.iterdir()):
-                if path not in [payload, key, verify, encrypted, wrapped]:
+                if path not in [payload, key, verify, encrypted, wrapped] and path.name != 'previous-images.tar':
                     archive.add(path, arcname=path.name)
         self.h.private(key, secrets.token_hex(48))
         try:
@@ -293,10 +293,11 @@ class Release:
         old = sorted({self.audit['containers'][name]['configuredImage'] for name in ['web', 'knowledge-review']})
         with (folder/'previous-images.tar').open('wb') as stream:
             self.run(['docker', 'save', *old], output=stream, timeout=600)
-        self.h.private(folder/'previous-images.json', json.dumps({key: val for key, val in self.audit['images'].items() if key in [self.audit['containers'][name]['image'] for name in ['web', 'knowledge-review']]}))
+        image_backup = {'file': 'previous-images.tar', 'sha256': self.h.digest(folder/'previous-images.tar'), 'images': {key: val for key, val in self.audit['images'].items() if key in [self.audit['containers'][name]['image'] for name in ['web', 'knowledge-review']]}}
+        self.h.private(folder/'previous-images.json', json.dumps(image_backup))
         self.dump(folder, 'plunode_knowledge75_production', 'knowledge.dump')
         encrypted = self.encrypt(folder)
-        result = {**result, **encrypted, 'source': self.m['sourceCommit'], 'build': self.m['build'], 'backup': str(folder), 'liveDbMigrated': False, 'webStopped': False, 'activated': False}
+        result = {**result, **encrypted, 'source': self.m['sourceCommit'], 'build': self.m['build'], 'backup': str(folder), 'previousImagesSha256': image_backup['sha256'], 'liveDbMigrated': False, 'webStopped': False, 'activated': False}
         self.export(folder, 'prepared', result)
         self.h.private(self.stage/'prepared.json', json.dumps(result))
         self.h.emit('preparation-complete', **result)

@@ -29,6 +29,8 @@ WSLからのTCP22はtimeout、Windows経由では成功。鍵とknown_hostsの�
 
 ## 検証と残件
 
-関連unit50件成功。隔離DB試験は初回、共有DBの版数干渉と5秒timeoutがあったため、ファイルごとにDBを作り直し、30秒上限で再実行する。実PLUTO／黒澤の読取exportは隔離DBだけで使用し、正式へコピーしない。releaseのchecksum逸脱・未計画migration・owner／旧列保全・移行結果不明時の旧Web再開禁止をPython4件で確認した。
+関連unit50件成功。隔離DB試験は初回、共有DBの版数干渉と5秒timeoutがあったため、ファイルごとにDBを作り直し、30秒上限で再実行して36件成功（項目改訂8・再試行10・登録／読み物18）。実PLUTO／黒澤の読取exportは隔離DBだけで使用し、正式へコピーしない。releaseのchecksum逸脱・未計画migration・owner／旧列保全・移行結果不明時の旧Web再開禁止をPython4件で確認した。
 
 本番のApp更新、実読取、正式画面・認証・SEO、暗号化backupのPC復号は切替後まで未完了。更新系の正式実書込みは今回行わず、隔離試験と明確に区別する。iPhone実機、特にスクロール時ちらつきの消失は未確認。PCのviewport検証を実機成功としない。
+
+旧Web／opsのimage archiveは正式VPSのroot-private backupへ保存してhashを記録する。PCへ回収する暗号化archiveはDB・設定・checkpoint・image識別情報を含み、巨大な公開image本体は重複転送しない。復号鍵はPCの0600ファイルとして保持し、公開鍵だけをVPSへ渡す。
