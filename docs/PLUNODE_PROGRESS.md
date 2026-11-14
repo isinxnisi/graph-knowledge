@@ -1,4 +1,4 @@
-2026-11-14 受入済みβ機能の正式反映：①本番実機監査・②固定image構築／隔離36件とunit50件／旧86表からの復元・追加5 migrationのローカル実証／VPS転送照合まで完了｜③本番backupと復元検証は既存sudoの本人入力待ち、④切替・⑤正式URL／既存App更新が残る｜全体⑤まで。候補source4ccb98f5／build `fqo_VSttPZ8pGBpd4b-Ih`。本番は39a84f4e／会員39・知識9のまま。βコンテンツ・品質ガイド本文は移さない。[実測と再開](verification/ACCEPTED_BETA_PRODUCTION_20261114.md)。
+2026-11-14 受入済みβ機能の正式反映：①本番実機監査・②固定image／隔離試験・③本番backup／隔離復元・PC回収復号まで完了｜④本番切替は既存sudoの本人入力待ち、⑤正式URL／既存App更新が残る｜全体⑤まで。本番実backupの86→100表／会員ledger44／旧データ・所有者保持／再実行不変を確認。候補source4ccb98f5／build `fqo_VSttPZ8pGBpd4b-Ih`。本番は39a84f4e／会員39・知識9のまま。βコンテンツ・品質ガイド本文は移さない。[実測と再開](verification/ACCEPTED_BETA_PRODUCTION_20261114.md)。
 
 2026-11-14 Graphの鍵アイコン整列：①位置ずれ確認・②右の操作列へ整列／低い枠での非重複・③3200／HTTPS βのPC・低いGraph確認まで完了｜今回は③まで完了。青枠なし・解除／再ロック維持。実装38abc2e8／953034c2、build `iRQvd9tnLyUJ-K0fNAJOa`。本番・DB・Worker未変更。[確認記録](verification/GRAPH_SCROLL_LOCK_20261114.md#続報鍵アイコンの位置を操作列へ揃える2026-11-14)。
 
