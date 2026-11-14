@@ -135,7 +135,7 @@
 @media (hover: hover) and (pointer: fine) {
   @container (max-height: 440px) {
     .canvas .toolbar { gap: 2px; }
-    .canvas .toolbar button, .canvas .scrollLock {
+    .canvas .toolbar button[data-graph-control], .canvas button.scrollLock[aria-pressed] {
       width: 36px;
       height: 36px;
       min-width: 36px;
