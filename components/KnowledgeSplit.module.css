@@ -11,12 +11,14 @@
  .frame[data-view="split"] > .divider { display: none; }
  .frame[data-view="split"] > :nth-child(3) { border-top: 1px solid var(--color-border); }
 }
-@media (max-width: 800px) { .frame { height: max(380px,65dvh); } }
+/* Browser chrome expands/collapses while a phone page scrolls. Keep the
+   diagram's drawing size stable instead of resizing/recentring it every frame. */
+@media (max-width: 800px) { .frame { height: max(380px,65svh); } }
 
 /* On phones, read the entire timeline in the page flow before its diagram. */
 @media (max-width: 800px) {
  .frame:not([data-fill])[data-view="timeline"] { height: auto; grid-template-rows: auto; }
- .frame:not([data-fill])[data-view="split"] { grid-template-rows: auto minmax(360px,65dvh); }
+ .frame:not([data-fill])[data-view="split"] { grid-template-rows: auto minmax(360px,65svh); }
 }
 
 .frame[data-fill] { height:100%; border:0; border-radius:0; }
