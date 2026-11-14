@@ -230,7 +230,7 @@ class Release:
             assert result.returncode == 0, 'Isolated restore failed'
             assert self.f.columns(sql) == tables and fingerprints(sql, tables) == before
             envfile = folder/'isolated.env'
-            self.h.private(envfile, '\n'.join(['GRAPH_DEPLOYMENT=production', 'MEMBER_STORAGE_ENABLED=1', 'MEMBER_ORIGIN=https://plunode.net', 'MEMBER_DATABASE_URL=postgresql://gk_member@graph-member-postgres:5432/graph_member', 'MEMBER_AUTH_SECRET='+secrets.token_hex(32), 'MEMBER_AUTH_PROVIDER=google', 'MEMBER_COOKIE_PREFIX=gk-member-production', 'MEMBER_GOOGLE_CLIENT_ID=isolated-rehearsal', 'MEMBER_GOOGLE_CLIENT_SECRET=isolated-rehearsal', 'NODE_OPTIONS=--max-old-space-size=256'])+'\n')
+            self.h.private(envfile, '\n'.join(['GRAPH_DEPLOYMENT=production', 'MEMBER_STORAGE_ENABLED=1', 'MEMBER_ORIGIN=https://plunode.net', 'MEMBER_DATABASE_URL=postgresql://gk_member:isolated-rehearsal-only@graph-member-postgres:5432/graph_member', 'MEMBER_AUTH_SECRET='+secrets.token_hex(32), 'MEMBER_AUTH_PROVIDER=google', 'MEMBER_COOKIE_PREFIX=gk-member-production', 'MEMBER_GOOGLE_CLIENT_ID=isolated-rehearsal', 'MEMBER_GOOGLE_CLIENT_SECRET=isolated-rehearsal', 'NODE_OPTIONS=--max-old-space-size=256'])+'\n')
             try:
                 self.migrate(network, envfile)
                 assert json.loads(sql('SELECT json_object_agg(name,checksum) FROM member_migration')) == self.m['memberMigrations']
