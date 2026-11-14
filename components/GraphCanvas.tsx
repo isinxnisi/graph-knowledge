@@ -20,7 +20,7 @@ import type { GraphState, Selection } from "../lib/client/graph-state";
 import { graphRootReady } from "../lib/client/graph-state";
 import { entityLabel, edgeRoutes, displayRelations, relationId, type CanvasRelation, type ProposalState } from "../lib/client/graph-presentation";
 import { initialPositions, additionalPositions, contentPositions } from "../lib/client/graph-layout";
-import { attachGraphTouchInput, createNodeClickHandler, createRelationClickHandler, GRAPH_INTERACTION_DEFAULTS, isGraphTouchEvent } from "../lib/client/graph-interaction";
+import { attachGraphTouchInput, attachGraphUnlockInput, createNodeClickHandler, createRelationClickHandler, GRAPH_INTERACTION_DEFAULTS, isGraphTouchEvent } from "../lib/client/graph-interaction";
 import { attachGraphBadges } from "../lib/client/graph-badges";
 import { createGraphMotion } from "../lib/client/graph-motion";
 import styles from "./Explorer.module.css";
@@ -66,6 +66,13 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
   const viewportLabels = graphViewportLabels(locale);
   const [zoom, setZoom] = useState(1);
   const [mobileToolsOpen, setMobileToolsOpen] = useState(false);
+  const [scrollInteraction, setScrollInteraction] = useState({ generation: graph.generation, locked: true });
+  const scrollLocked = scrollInteraction.generation !== graph.generation || scrollInteraction.locked;
+  const unlockSurface = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!scrollLocked || interactionBlocked || !unlockSurface.current) return;
+    return attachGraphUnlockInput(unlockSurface.current, () => setScrollInteraction({ generation: graph.generation, locked: false }));
+  }, [scrollLocked, interactionBlocked, graph.generation]);
   // null follows the surrounding detail selection; [] explicitly clears it.
   const [multiple, setMultiple] = useState<string[] | null>(null), [selectionMode, setSelectionMode] = useState(false);
   const [movementCounts, setMovementCounts] = useState({ past: 0, future: 0 });
@@ -520,6 +527,14 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
 
   return <>
     <div className={`${styles.canvas} ${canvasStyles.canvas} ${fillHeight ? styles.workspaceCanvas : ""} ${navigation ? styles.withNavigation : ""}`}>
+      {scrollLocked && <div ref={unlockSurface} className={canvasStyles.scrollGuard} data-testid="graph-scroll-guard" role="button" tabIndex={interactionBlocked ? -1 : 0} aria-disabled={interactionBlocked || undefined} aria-label={viewportLabels.unlockHint} onKeyDown={event => {
+        if (!interactionBlocked && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault(); setScrollInteraction({ generation: graph.generation, locked: false });
+        }
+      }} />}
+      <button type="button" className={canvasStyles.scrollLock} data-graph-scroll-lock aria-pressed={scrollLocked} aria-label={scrollLocked ? viewportLabels.unlock : viewportLabels.lock} title={scrollLocked ? viewportLabels.unlockHint : viewportLabels.lock} disabled={interactionBlocked} onClick={() => {
+        cancelGestures(); setScrollInteraction({ generation: graph.generation, locked: !scrollLocked });
+      }}><Icon name={scrollLocked ? "lock" : "unlock"} /></button>
       {navigation && <div className={styles.canvasNavigation} onPointerDown={event => event.stopPropagation()} onDoubleClick={event => event.stopPropagation()} onWheel={event => event.stopPropagation()}>{navigation}</div>}
       <div className={canvasStyles.toolbar} data-controls={controls} role="group" aria-label={viewportLabels.title} onPointerDown={event => event.stopPropagation()} onWheel={event => event.stopPropagation()} onKeyDown={event => { if(event.key === "Escape" && mobileToolsOpen){ event.stopPropagation(); setMobileToolsOpen(false); event.currentTarget.querySelector<HTMLButtonElement>("[data-graph-control=more]")?.focus(); } }} onBlur={event => { if(!event.currentTarget.contains(event.relatedTarget as Node | null)) setMobileToolsOpen(false); }}>
         <div className={canvasStyles.secondaryControls} data-open={mobileToolsOpen || undefined}>

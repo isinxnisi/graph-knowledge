@@ -1,5 +1,8 @@
 const ja = {
   title: "Graphの表示操作",
+  lock: "グラフ操作をロック",
+  unlock: "グラフ操作のロックを解除",
+  unlockHint: "グラフをタップ・クリックして操作",
   zoomIn: "Graphを拡大",
   zoomOut: "Graphを縮小",
   zoom: "Graphの表示倍率",
@@ -10,6 +13,9 @@ const ja = {
 
 const en: typeof ja = {
   title: "Graph view controls",
+  lock: "Lock graph interaction",
+  unlock: "Unlock graph interaction",
+  unlockHint: "Tap or click the graph to interact",
   zoomIn: "Zoom in",
   zoomOut: "Zoom out",
   zoom: "Graph zoom",

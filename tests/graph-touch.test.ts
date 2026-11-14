@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { attachGraphTouchInput, createNodeClickHandler, createRelationClickHandler } from "../lib/client/graph-interaction";
+import { attachGraphTouchInput, attachGraphUnlockInput, createNodeClickHandler, createRelationClickHandler } from "../lib/client/graph-interaction";
 
 const finger = (identifier = 1, clientX = 100, clientY = 100) => ({ identifier, clientX, clientY }) as Touch;
 function dispatch(surface: HTMLElement, type: string, timeStamp: number, touches: Touch[], changedTouches = touches) {
@@ -64,5 +64,33 @@ describe("completed native touch gestures", () => {
     handler.click("a", 450, "touch"); expect(open).toHaveBeenCalledExactlyOnceWith("a"); expect(toggle).not.toHaveBeenCalled();
     handler.click("a", 900, "touch"); vi.advanceTimersByTime(399); expect(toggle).not.toHaveBeenCalled();
     vi.advanceTimersByTime(1); expect(toggle).toHaveBeenCalledExactlyOnceWith("a"); handler.cancel();
+  });
+});
+
+function pointer(surface: HTMLElement | Window, type: string, time: number, values: Partial<PointerEvent> = {}) {
+  const event = new Event(type, {bubbles:true,cancelable:true});
+  Object.entries({pointerId:1,clientX:100,clientY:100,isPrimary:true,button:0,timeStamp:time,...values}).forEach(([key,value])=>Object.defineProperty(event,key,{value}));
+  surface.dispatchEvent(event); return event;
+}
+describe("scroll lock unlock gesture", () => {
+  it.each(["touch","mouse"])("unlocks with a short stationary %s gesture without preventing browser input", pointerType => {
+    const surface=document.body.appendChild(document.createElement("div")), unlock=vi.fn();
+    const dispose=attachGraphUnlockInput(surface,unlock);
+    expect(pointer(surface,"pointerdown",100,{pointerType}).defaultPrevented).toBe(false);
+    pointer(surface,"pointermove",120,{pointerType,clientX:103});
+    expect(pointer(surface,"pointerup",140,{pointerType,clientX:103}).defaultPrevented).toBe(false);
+    expect(unlock).toHaveBeenCalledTimes(1);dispose();
+  });
+  it.each(["drag-return","cancel","longpress","multitouch","outside","blur","right-click"])("keeps scrolling locked after %s", interruption => {
+    const surface=document.body.appendChild(document.createElement("div")),unlock=vi.fn();
+    const dispose=attachGraphUnlockInput(surface,unlock);
+    pointer(surface,"pointerdown",100,interruption==="right-click"?{button:2}:{});
+    if(interruption==="drag-return") {pointer(surface,"pointermove",120,{clientY:115});pointer(surface,"pointermove",130);}
+    if(interruption==="cancel")pointer(surface,"pointercancel",120);
+    if(interruption==="multitouch")pointer(surface,"pointerdown",120,{pointerId:2,isPrimary:false});
+    if(interruption==="blur")window.dispatchEvent(new Event("blur"));
+    pointer(interruption==="outside"?window:surface,"pointerup",interruption==="longpress"?650:150);
+    expect(unlock).not.toHaveBeenCalled();dispose();
+    pointer(surface,"pointerdown",800);pointer(surface,"pointerup",830);expect(unlock).not.toHaveBeenCalled();
   });
 });

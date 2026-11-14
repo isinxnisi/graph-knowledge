@@ -427,3 +427,24 @@ it("投稿の同じ辺IDでも、両端を選び直したら実Cytoscapeの接�
  expect(current.style("line-color")).toBe("rgb(40,116,184)");expect(current.style("target-arrow-color")).toBe("rgb(40,116,184)");expect(current.numericStyle("width")).toBe(2.2);
  cy.emit("render");const badge=document.querySelector('[data-relation-id="proposal:one"]');expect(badge?.getAttribute("data-proposal-state")).toBe("evidence");expect(badge?.textContent).toBe("1 · 根拠を追加");
 });
+
+it("初期ロック中も表示操作でき、解除・再ロックと探索起点の切替を分離する", async () => {
+  const graph=mergePatternPage(emptyPatternGraph(root,relation),page([route(100,2)]),null);
+  const props={graph,selection:null,onEntity:vi.fn(),onRelation:vi.fn(),onToggleEntity:vi.fn()};
+  const view=render(<GraphCanvas {...props}/>);
+  const cy=created.cores[0];
+  expect(screen.getByTestId("graph-scroll-guard")).toBeTruthy();
+  const zoomBefore=cy.zoom();
+  fireEvent.click(screen.getByRole("button",{name:"Graphを拡大"}));
+  expect(cy.zoom()).toBeGreaterThan(zoomBefore);
+  expect(screen.getByTestId("graph-scroll-guard")).toBeTruthy();
+  fireEvent.keyDown(screen.getByTestId("graph-scroll-guard"),{key:"Enter"});
+  expect(screen.queryByTestId("graph-scroll-guard")).toBeNull();
+  fireEvent.click(screen.getByRole("button",{name:"グラフ操作をロック"}));
+  expect(screen.getByTestId("graph-scroll-guard")).toBeTruthy();
+  fireEvent.click(screen.getByRole("button",{name:"グラフ操作のロックを解除"}));
+  view.rerender(<GraphCanvas {...props} selection={{kind:"entity",id:root.id}}/>);
+  expect(screen.queryByTestId("graph-scroll-guard")).toBeNull();
+  view.rerender(<GraphCanvas {...props} graph={{...graph,generation:graph.generation+1}}/>);
+  expect(screen.getByTestId("graph-scroll-guard")).toBeTruthy();
+});

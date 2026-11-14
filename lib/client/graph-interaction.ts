@@ -94,3 +94,40 @@ export function createNodeClickHandler(actions: Actions, doubleClickMs = GRAPH_I
   };
   return { click, cancel, cancelPending, selectionChanged };
 }
+
+/** The locked surface never cancels browser scrolling. Only a short stationary
+ * primary-pointer gesture may enable the canvas; a drag cannot turn into a tap
+ * by returning to its starting point. */
+export function attachGraphUnlockInput(surface: HTMLElement, unlock: () => void) {
+  let active: { id: number; x: number; y: number; time: number } | null = null;
+  const cancel = () => { active = null; };
+  const start = (event: PointerEvent) => {
+    if (active || event.isPrimary === false || event.button !== 0) { cancel(); return; }
+    active = { id: event.pointerId, x: event.clientX, y: event.clientY, time: event.timeStamp };
+  };
+  const move = (event: PointerEvent) => {
+    if (active && event.pointerId === active.id && Math.hypot(event.clientX-active.x,event.clientY-active.y) >= GRAPH_INTERACTION_DEFAULTS.touchTapTravel) cancel();
+  };
+  const end = (event: PointerEvent) => {
+    if (!active || event.pointerId !== active.id) return;
+    const tap = event.timeStamp-active.time < GRAPH_INTERACTION_DEFAULTS.touchTapHoldMs
+      && Math.hypot(event.clientX-active.x,event.clientY-active.y) < GRAPH_INTERACTION_DEFAULTS.touchTapTravel
+      && event.target instanceof Node && surface.contains(event.target);
+    cancel();
+    if (tap) unlock();
+  };
+  const view = surface.ownerDocument.defaultView!;
+  surface.addEventListener("pointerdown", start, {passive:true});
+  view.addEventListener("pointermove", move, {passive:true});
+  view.addEventListener("pointerup", end, {passive:true});
+  view.addEventListener("pointercancel", cancel, {passive:true});
+  view.addEventListener("blur", cancel);
+  return () => {
+    cancel();
+    surface.removeEventListener("pointerdown", start);
+    view.removeEventListener("pointermove", move);
+    view.removeEventListener("pointerup", end);
+    view.removeEventListener("pointercancel", cancel);
+    view.removeEventListener("blur", cancel);
+  };
+}
