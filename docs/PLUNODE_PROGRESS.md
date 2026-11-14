@@ -1,3 +1,5 @@
+2026-11-14 詳細の背景ホバー：①共通button:hoverの不透明色適用を特定・②背景のみ半透明維持・③3200／HTTPS β・1050pxで実hover確認まで完了｜今回の工程は③まで完了。型検査込みbuild `1DbxMWsfw88rOFMtAT3Ea`、実装23fd9fa4。本番・DB・Worker未変更。[追補](verification/MOBILE_DETAIL_DRAWER_20261114.md#続報背景ホバーの不透明化)。
+
 2026-11-14 テーマ詳細の中間幅：①原因確認・②作品ラベル整列／1199pxまで重ね表示・③3200／HTTPS βの1050px開閉・375px／1280px・通常Graph確認まで完了｜今回の工程は③まで完了。140件・lint／型検査込みbuild `BAmgWp9_3ds32d_St3ESD`、実装f83a9fbb／18ca763c。本番・DB・Worker未変更。iPhone実機と今回のポインタ操作再実測は未確認。[追補](verification/MOBILE_DETAIL_DRAWER_20261114.md#続報中間幅の重ね表示と作品ラベルの整列)。
 
 2026-11-14 詳細の読書位置とヘッダ：①原因再現・②テーマ選択変更の先頭復帰／bodyスクロール祖先の補修・③3200／HTTPS βで別項目0px・同一項目291px保持／ヘッダ上端保持まで完了｜今回の工程は③まで完了。139件・lint／型検査込みbuild `1SarVIGwc-ZmarbUF4G9c`、実装a1d0cb4d。本番・DB・Worker未変更、iPhone実機未確認。[追補](verification/MOBILE_DETAIL_DRAWER_20261114.md#続報別項目の読書位置とヘッダの消失を是正)。

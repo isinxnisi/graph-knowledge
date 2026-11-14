@@ -53,3 +53,11 @@
 - 375×631では詳細幅345px、右端369px、横はみ出しなし・header top0。閉じると非表示。1280pxではoverlay属性なし、詳細sticky／Graphとも表示。通常Graphの1050pxも従来stickyを維持。localhost3200の同テーマ表示も確認。
 - ブラウザのマウス入力dispatchがタイムアウトしたため、開閉は同じボタンへのEnter操作で実測。iPhone実機とポインタ操作の今回の再実測は未確認。既存のクリックhandlerは変更していない。
 - 画面：`C:/Users/nishr/.codex/visualizations/2026/10/29/01a18791-0fba-7ac0-9f89-54c48fdffcf6/tablet-detail-drawer-20261114/tablet.png`。利用者の元テーマURLへ復帰しviewportを解除。
+
+
+## 続報：背景ホバーの不透明化
+
+- 閉じる背景はbuttonのため、共通button:hover:not(:disabled)が半透明背景より優先され、不透明なhover色へ変わっていた。同じ背景のhover selectorも半透明指定へ含め、通常の操作ボタンは変更していない。
+- CSS1箇所のみ変更。型検査込みbuild `1DbxMWsfw88rOFMtAT3Ea`成功、実装23fd9fa4。mainから3200／HTTPS βへ反映。localhost TOPの表示も確認。DB・Worker・本番未変更。
+- β1050pxのPLUTOで背景へ実ポインタを移動し、matches(':hover')=true、background=rgba(20,35,50,0.15)、Graph display:blockを確認。年表が透ける実画面を記録。閉じる操作でpane=graphへ戻る。
+- 画面：`C:/Users/nishr/.codex/visualizations/2026/10/29/01a18791-0fba-7ac0-9f89-54c48fdffcf6/tablet-detail-drawer-20261114/hover-fixed.png`。iPhone実機は未確認。
