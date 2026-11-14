@@ -20,6 +20,9 @@ data/*
 !data/advertising/
 !data/advertising/japan-ranges.json
 !data/theme-discovery.production.json
+!data/theme-products.production.json
+!data/theme-reading-presentation.production.json
+!data/theme-reading-entity-notes.production.json
 !data/ai-lab/
 data/ai-lab/*
 !data/ai-lab/initial.json

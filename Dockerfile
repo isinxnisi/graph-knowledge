@@ -19,6 +19,11 @@ COPY data/ai-lab/initial.json ./data/ai-lab/initial.json
 # Formal discovery starts without beta/test theme pins. The public recent list
 # still comes from the formal knowledge catalogue.
 COPY data/theme-discovery.production.json ./data/theme-discovery.json
+# Legacy editorial fallbacks are development content, not production seed data.
+# Live operator products, images and theme presentations come from the formal DB.
+COPY data/theme-products.production.json ./data/theme-products.json
+COPY data/theme-reading-presentation.production.json ./data/theme-reading-presentation.json
+COPY data/theme-reading-entity-notes.production.json ./data/theme-reading-entity-notes.json
 COPY docs/research/phase-13-relation-model/v2/ledger.json ./docs/research/phase-13-relation-model/v2/ledger.json
 COPY scripts/public-kg.ts scripts/production-readiness.mjs scripts/generate-contribution-roles.ts scripts/build-publication-probe.mjs scripts/publication-compatibility.ts scripts/knowledge-mission-client.ts ./scripts/
 ENV GRAPH_DATASET=public-kg GRAPH_DEPLOYMENT=production
