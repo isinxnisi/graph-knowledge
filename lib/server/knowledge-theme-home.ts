@@ -28,7 +28,7 @@ export async function knowledgeThemeHome(service?: ThemeReader): Promise<Knowled
   const [page, ids] = await Promise.all([reader.themes({},true), featuredIds()]);
   const byId = new Map(page.themes.map(theme => [theme.id, theme]));
   return {
-    relatedCatalogue: page.themes.map(({id,revision,title,entityIds,focusAliases,initialView,hasTimeline,hasRelations,translations})=>({id,revision,title,description:"",entityIds,focusAliases,initialView,hasTimeline,hasRelations,translations:translations?.filter(v=>(v.displayTarget??v.target).field==="title")})),
+    relatedCatalogue: page.themes.map(({id,revision,title,entityIds,recordIds,focusAliases,initialView,hasTimeline,hasRelations,translations})=>({id,revision,title,description:"",entityIds,recordIds,focusAliases,initialView,hasTimeline,hasRelations,translations:translations?.filter(v=>(v.displayTarget??v.target).field==="title")})),
     featured: ids.flatMap(id => byId.has(id) ? [byId.get(id)!] : []),
     recent: page.themes.slice(0, 8), total: page.themes.length,
   };

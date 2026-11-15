@@ -7,7 +7,7 @@ import { roleIdSchema } from "./contribution";
 
 export type KnowledgeThemePage = { focusIds?: string[]; themes: {
   id: string; revision: number; title: string; description: string; translations?: KnowledgeDisplayTranslation[]; presentationIntros?:Partial<Record<"ja"|"en",{hook:string;lead:string}>>; presentationImages?:Partial<Record<"ja"|"en",NonNullable<import("./theme-reading-presentation").ThemeReadingPresentation["image"]>>>;
-  initialView: "graph" | "timeline" | "split"; hasTimeline: boolean; hasRelations?: boolean; publishedAt?: string; entityIds: string[]; focusAliases?: Record<string,string>;
+  initialView: "graph" | "timeline" | "split"; hasTimeline: boolean; hasRelations?: boolean; publishedAt?: string; entityIds: string[]; recordIds?: string[]; focusAliases?: Record<string,string>;
 }[] };
 /** A Theme fixes its own versions. It is not re-resolved against an active generation. */
 export type KnowledgeThemeRead = {
