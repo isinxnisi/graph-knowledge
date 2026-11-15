@@ -41,4 +41,14 @@
 - 本番用build `_m89624VY6pZia_8LYV6p`、Web config ID `sha256:40b2d33ccc73c5ea3a40197cd9da8c9c310a6f1b66becba71421719b669468db`。本番用の空seedを持つDockerfileの同一固定sourceから構築。archiveのconfig・全layerとsource labelを照合し、VPSへ転送したSHA-256照合も成功。
 - `scripts/release-operator-translation-limits-production.py` はWebのみ更新。DB移行・データ補修・Worker／OS／設定変更はしない。直前0267d4efのbackup Composeを固定hashで照合し、そのWeb tagだけを置換した内容と現行Compose全文が一致することを要求する。既存env hash・稼働image／build・会員44／知識9 migration checksumを改めて照合。不一致では切替に進まない。
 - 設定backup後にWebだけを切替。readiness・他container ID・env・migration・既存訳文版の全保持を照合する。既存訳文のchecksumは非公開のメモリ内で扱い、新版追加は許容するが旧版の改変・欠落は拒否する。隔離PGでこの保持照合SQLを確認。失敗時は互換性のある直前WebとComposeだけを戻し、DB dumpは戻さない。
-- 実行用：`backups/operator-translation-limits-20261115/run-release.py`（ignored/private資材）。本番 `sudo -n true` はパスワード要求で実行できないため、本人入力待ち。本番は現時点で旧20件／時のまま。切替後の正式Appからのガイド読取が残る。
+- 実行用：`backups/operator-translation-limits-20261115/run-release.py`（ignored/private資材）。本番 `sudo -n true` はパスワード要求のため本人が実行し、下記の切替・正式確認まで完了した。
+
+## 本番反映・正式Appの確認完了（2026-11-15）
+
+- 本人sudo実行により、固定source `17d1dbb7427771892f657e15d25804b3024cffec`／build `_m89624VY6pZia_8LYV6p` へWebのみ切替。稼働containerd manifest ID `sha256:f9178ff416a701ee39c93bf41a148a97f07e8a49b1225e450681fd851069d0c9` は、照合済みarchiveとconfig／全layerが一致する。同一imageのconfig IDは上記40b2d33c。
+- VPSの正式receiptをSSHで回収・照合。既存訳文62版の全checksum、会員44／知識9のmigration、Worker／PG／KGのcontainer、private設定、AI artifactを保持。DB migration・訳文／テーマの書換え・AI送信・Worker更新なし。
+- 正式HTTPS `/api/publication/compatibility` のbuild一致、`/api/dataset` のpublic-kg revision `f5dbf83f-c89e-4e40-95ee-57957016089f` を確認。既存5テーマの固定版とsnapshotを正式Webから読み、直前リリースのhashと全件一致した。
+- **既存の本番ChatGPT App**から `get_theme_authoring_guide` を実呼出しし、`translations.limits.submissionsPerMemberHour:null`、120新規受付操作／10分、一般投稿は変更しない旨、運営訳文のAI審査／AI quotaなしの説明を取得。App再作成・再同意・scope変更は不要。
+- 本番への21件以上の試験訳文登録は行っていない（22件の公開と上限時の同一requestId再開は隔離DBで検証）。既存テーマ・訳文・Capsuleの内容を変更せず、ChatGPTから通常登録を再開できる。
+- backup：`/opt/graph-knowledge/backups/translation-limits-web-20261115T143159Z`。直前Web／Composeによる互換復旧が可能。DB dumpの機械的巻戻しは行わない。
+- 修正 `17d1dbb7`、β確認・本番手順 `cf4bc429` をmainへ通常push済み。今回の最終変更はこの完了記録だけで、再buildは不要。β／正式とも同じ修正sourceを配置済み。機能上の残件なし。本番の実翻訳書込みは利用再開時の確認として区別する。
