@@ -1,6 +1,6 @@
 2026-11-14 受入済みβ機能の正式反映：①本番監査・②固定資材／隔離試験・③backup／復元・④migration／Web・Worker切替・⑤正式URL／既存Appの受入まで完了｜今回の全体⑤まで完了。source4ccb98f5／build `fqo_VSttPZ8pGBpd4b-Ih`、会員44（039〜043追加）／知識9。既存本文・版・所有者とKG・設定を保持、βコンテンツ／品質ガイド本文は未移行。本番AppはRead12／Write16、実read_theme／新ガイド読取、Googleログイン・既存Capsule／共有版3・PC／375px・SEO確認。iPhone実機／本番編集の実書込みは未確認、ガイド本文は0版で別登録。[実測・復旧](verification/ACCEPTED_BETA_PRODUCTION_20261114.md)。
 
-2026-11-15 テーマ全要素の関連テーマ：①既存一覧・公開読取の確認、②自テーマ除外／重複整理と中央下部・テーマ詳細への追加まで完了・③3200／HTTPS β反映と画面確認中｜今回の全体は③まで。Entity・全kindのRecord・既存同一性対応を使い、stories／productPinsの掲載選択には依存しない。既存の見た目・3件からの開閉・版付き遷移を再利用。関連25件・変更箇所ESLint成功。本番・DB・登録内容・Worker未変更。
+2026-11-15 テーマ全要素の関連テーマ：①既存仕様確認・②集約と既存一覧への追加・③3200／HTTPS βのPC・375px画面確認まで完了｜今回の全体は③まで完了。全Entity・全kindのRecord・同一性対応から自テーマと重複を除き、中央下部／テーマ詳細の関連アイテム直上へ表示。見た目・3件からの開閉を再利用。関連25件・ESLint・型検査込みbuild成功。アプリ `e1646615`／build `2N-66lxS1DhXzfVk9aKYP`。PLUTO→関連テーマ構成版2の遷移成功。本番・DB・登録内容・Worker未変更、iPhone実機未確認。[検証](verification/THEME_RELATED_THEMES_20261115.md)。
 
 2026-11-14 Graphの鍵アイコン整列：①位置ずれ確認・②右の操作列へ整列／低い枠での非重複・③3200／HTTPS βのPC・低いGraph確認まで完了｜今回は③まで完了。青枠なし・解除／再ロック維持。実装38abc2e8／953034c2、build `iRQvd9tnLyUJ-K0fNAJOa`。本番・DB・Worker未変更。[確認記録](verification/GRAPH_SCROLL_LOCK_20261114.md#続報鍵アイコンの位置を操作列へ揃える2026-11-14)。
 
