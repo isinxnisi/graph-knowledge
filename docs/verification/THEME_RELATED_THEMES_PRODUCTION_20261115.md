@@ -30,4 +30,22 @@
 
 ## 現在地
 
-構築・転送照合まで完了。本番切替と正式画面確認は本人sudo入力後に続ける。PCスマホ幅とiPhone実機は区別して記録する。
+本番切替・正式URLのPC／375px確認まで完了。iPhone実機は未確認。
+
+
+## 本番反映・正式画面確認の結果
+
+- 本人sudo実行による切替完了receiptを取得。2026-11-15 20:45 JST、source `0267d4ef544f5dba3c28b80d1637a32dbde57f36`／build `2FcaArM19tKbeklfDHexd`へ切替済み。正式外側HTTPSの`/api/publication/compatibility`も同じbuild。
+- 配置imageのconfig ID `sha256:d4571420b7dfc601af3375735b6c361f0ef7983252c3c40eba5fabe2d201a375`と、VPSのcontainerd manifest ID `sha256:f794b4e2219fbb2384ae97bfa8c850c8e3bdeffa6ec8b50beaaa1dcef364fe21`をarchiveからそれぞれ照合した。
+- readiness成功。会員44／知識9のmigration名・checksum、private設定、PG／KG／3 Workerのcontainer ID、AI教育artifactが不変。Compose差分はWeb imageのみ。本番KGのrevision `f5dbf83f-c89e-4e40-95ee-57957016089f`を維持。
+- 切替前に記録した既存5テーマのtheme＋固定snapshotは、切替後も全件hash一致。テーマ版、本文、Entity／Record／根拠／画像・商品参照を変更せず保持。βコンテンツの投入なし。
+- 新しい公開カタログ5件すべてにRecord索引あり。ゴジラと黒澤テーマが互いに関連し、その他3テーマは関連0件。自テーマを除外。
+- 正式URLのChromeで、ゴジラの中央下部とテーマ詳細の両方に「関連するテーマ」→「関連アイテム」の順で既存の一覧が表示された。右欄のリンクから黒澤テーマ構成版11へ遷移成功し、逆方向の関連先も表示。戻る操作を保持。
+- 375×812pxで中央下部と右から重なる詳細サイドバーの両方を確認。横はみ出しなし、既存の商品画像・購入先・資料・詳細の閉じる操作を保持。iPhone実機での試験ではない。
+- 新規登録・編集・購入・一般投稿・AI送信の操作は行っていない。ChatGPT Appの操作定義は変更不要であり、今回更新していない。
+- 設定backupは `/opt/graph-knowledge/backups/related-themes-web-20261115T114525Z`。旧Web imageと旧Composeを保持し、DBは戻さず旧Webのみへ復旧できる。今回復旧処理は実行していない。
+- 最新mainへの変更はリリース手順と記録だけで、ローカル3200／HTTPS βのアプリbuild `2N-66lxS1DhXzfVk9aKYP`は保持。βの`/api/dataset`は`public-kg`、revision `34befbcd-8f5f-4cd9-a059-242a3f0b5ffb`を確認。不要な再build・Worker再起動なし。
+
+画面記録：`C:/Users/nishr/.codex/visualizations/2026/10/29/01a18791-0fba-7ac0-9f89-54c48fdffcf6/related-themes-production-20261115/` の `before-pc.png`、`after-pc.png`、`after-mobile-center.png`、`after-mobile-detail.png`。
+
+手順・準備記録は`0c2c6e17`でcommit・push済み。最終確認の記録も日本語メッセージでcommitし、同じupstreamへ通常pushする。署名・認証・権限・Git設定を緩めない。
