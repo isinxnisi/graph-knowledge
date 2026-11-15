@@ -13,7 +13,7 @@
 
 - 関連25件成功（`related-themes`4件、`related-theme-catalogue`1件、`theme-discovery`7件、`knowledge-read-service`2件、`knowledge-publication-domain`11件）。自テーマ・重複・非関連の除外、全Record種別、Entity同一性、旧カタログ、SSR索引保持、3件からの開閉、版付き遷移、既存Entity用一覧を確認。
 - 変更箇所ESLint、`git diff --check`、型検査込み`public:build`成功。既存のmission-client動的パスに関するTurbopack警告あり。
-- アプリsource `e1646615`、build `2N-66lxS1DhXzfVk9aKYP`をローカル3200へ配置。既存Webの環境を非公開で引き継いで再起動。旧buildは`.next-public-related-previous`へ保全。
+- アプリsource `e1646615`、build `2N-66lxS1DhXzfVk9aKYP`をローカル3200へ配置。既存Webの環境を非公開で引き継いで再起動。旧buildは`backups/related-themes-20261115/previous-build`へ保全。
 - ローカル`/api/dataset`は`public-kg`／revision `34befbcd-8f5f-4cd9-a059-242a3f0b5ffb`。公開カタログ7件の全件で`recordIds`を確認。
 - 既存PLUTOテーマ構成版10では「漫画をつくる人々」が1件表示。黒澤テーマ構成版11はβの公開データでは関連0件。新規テーマや関連データは作成していない。
 - HTTPS βのChrome実画面でPC／375×812pxを確認。中央下部・詳細側の両方で関連アイテム直上に表示、既存の見た目と縦揃えを維持。横はみ出しなし。中央一覧から「漫画をつくる人々」構成版2への遷移成功、戻る操作も確認。スマホ幅の詳細開閉を確認。iPhone実機は未確認。
