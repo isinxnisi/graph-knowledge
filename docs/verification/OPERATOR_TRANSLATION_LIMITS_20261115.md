@@ -31,4 +31,14 @@
 - 運営のreview_jobs／review_attemptsは0。一般会員の従来の審査、原文・文脈・版チェックと旧受付の回復・取消を既存回帰で確認。
 - 共通知識の原文・Theme版・固定snapshot・保存Capsuleと初期の訳文版が保持されることを確認。
 
-変更箇所ESLint成功。ビルド／β反映／本番反映は後続の結果を追記する。既存の本番翻訳に試験登録は行わない。
+変更箇所ESLint・`git diff --check`・本番image／βのwebpack build成功。既存の本番翻訳に試験登録は行わない。
+
+## β反映と本番資材
+
+- アプリ固定source `17d1dbb7427771892f657e15d25804b3024cffec`（mainへ通常push済み）。差分の他のcommitは直前の受入済み関連テーマ公開の手順・結果文書のみ。
+- ローカル3200／HTTPS β build `GgNdmpefHACEPXTmTyvWv`。public-kg revision `34befbcd-8f5f-4cd9-a059-242a3f0b5ffb` を確認。
+- 既存β ChatGPT Appの `get_theme_authoring_guide` を実際に呼び、`translations.limits.submissionsPerMemberHour:null` と120新規操作／10分の説明を読取。App ID・scope・endpoint・操作引数は変更していない。既存の翻訳・テーマへ試験書込みはしていない。
+- 本番用build `_m89624VY6pZia_8LYV6p`、Web config ID `sha256:40b2d33ccc73c5ea3a40197cd9da8c9c310a6f1b66becba71421719b669468db`。本番用の空seedを持つDockerfileの同一固定sourceから構築。archiveのconfig・全layerとsource labelを照合し、VPSへ転送したSHA-256照合も成功。
+- `scripts/release-operator-translation-limits-production.py` はWebのみ更新。DB移行・データ補修・Worker／OS／設定変更はしない。直前0267d4efのbackup Composeを固定hashで照合し、そのWeb tagだけを置換した内容と現行Compose全文が一致することを要求する。既存env hash・稼働image／build・会員44／知識9 migration checksumを改めて照合。不一致では切替に進まない。
+- 設定backup後にWebだけを切替。readiness・他container ID・env・migration・既存訳文版の全保持を照合する。既存訳文のchecksumは非公開のメモリ内で扱い、新版追加は許容するが旧版の改変・欠落は拒否する。隔離PGでこの保持照合SQLを確認。失敗時は互換性のある直前WebとComposeだけを戻し、DB dumpは戻さない。
+- 実行用：`backups/operator-translation-limits-20261115/run-release.py`（ignored/private資材）。本番 `sudo -n true` はパスワード要求で実行できないため、本人入力待ち。本番は現時点で旧20件／時のまま。切替後の正式Appからのガイド読取が残る。

@@ -1,6 +1,6 @@
 2026-11-14 受入済みβ機能の正式反映：①本番監査・②固定資材／隔離試験・③backup／復元・④migration／Web・Worker切替・⑤正式URL／既存Appの受入まで完了｜今回の全体⑤まで完了。source4ccb98f5／build `fqo_VSttPZ8pGBpd4b-Ih`、会員44（039〜043追加）／知識9。既存本文・版・所有者とKG・設定を保持、βコンテンツ／品質ガイド本文は未移行。本番AppはRead12／Write16、実read_theme／新ガイド読取、Googleログイン・既存Capsule／共有版3・PC／375px・SEO確認。iPhone実機／本番編集の実書込みは未確認、ガイド本文は0版で別登録。[実測・復旧](verification/ACCEPTED_BETA_PRODUCTION_20261114.md)。
 
-2026-11-15 運営訳文の受付上限：①共通受付の20件／時と導入履歴の確認・②運営経路だけの撤廃／guide更新／隔離30件まで完了・③ビルドとβ反映・本番反映手順の確認中｜今回の全体は③まで。運営22件・一般20件＋21件目拒否・120操作／10分・認可／固定版／再送／AI0を検証。既存翻訳・テーマ・Capsule／一般制限を変更しない。[原因と検証](verification/OPERATOR_TRANSLATION_LIMITS_20261115.md)。
+2026-11-15 運営訳文の受付上限：①共通受付の20件／時と導入履歴の確認・②運営経路だけの撤廃／guide更新／隔離30件まで完了・③ビルド／βと既存App読取完了・本番切替の本人sudo待ち｜今回の全体は③まで。運営22件・一般20件＋21件目拒否・120操作／10分・認可／固定版／再送／AI0を検証。β build `GgNdmpefHACEPXTmTyvWv`／正式候補 `_m89624VY6pZia_8LYV6p`、実β App guideはnull（時間件数上限なし）。本番はまだ旧版。既存翻訳・テーマ・Capsule／一般制限を変更しない。[原因と検証](verification/OPERATOR_TRANSLATION_LIMITS_20261115.md)。
 
 2026-11-15 関連テーマの本番反映：①現行監査・②正式image構築／転送照合・③本人sudoによるWeb切替と正式PC／375px確認まで完了｜今回の全体は③まで完了。source `0267d4ef`／正式build `2FcaArM19tKbeklfDHexd`。中央下部・テーマ詳細の関連アイテム直上に既存一覧を追加し、ゴジラ↔黒澤の関連と版付き遷移を確認。会員44／知識9・設定／Worker／KG・既存5テーマの固定snapshotを保持、βコンテンツ投入なし。iPhone実機未確認。3200／HTTPS βは既存buildを保持。[反映・保全・復旧](verification/THEME_RELATED_THEMES_PRODUCTION_20261115.md)。
 
