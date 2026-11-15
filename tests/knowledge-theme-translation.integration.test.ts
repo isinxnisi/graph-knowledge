@@ -7,7 +7,7 @@ import {createKnowledgeFoundationService,KnowledgeError,knowledgeDigest} from '.
 import {migrateKnowledgeTranslations} from '../lib/server/knowledge-translation-migrate';
 import {migrateKnowledgeIdentities} from '../lib/server/knowledge-identity-migrate';
 import {createKnowledgePublicationService,ensureKnowledgePublicationSchema} from '../lib/server/knowledge-publication';
-import {createThemeTranslationAuthoring,themeTranslationOperationId} from '../lib/server/knowledge-theme-translation';
+import {createThemeTranslationAuthoring,themeTranslationOperationId,themeTranslationCapture} from '../lib/server/knowledge-theme-translation';
 import {createKnowledgeSubmissionService} from '../lib/server/knowledge-submissions';
 import {createReviewQueue,reviewConfigSchema} from '../lib/server/knowledge-review-queue';
 import {runKnowledgeReviewOnce} from '../scripts/knowledge-review-worker';
@@ -177,4 +177,52 @@ it('keeps an interrupted translation cancellable before any publication',async()
  await expect(s.submit(owner,v)).rejects.toThrow('capture-only');expect(await service().cancel(owner,v.requestId)).toMatchObject({state:'cancelled'});
  expect(await service().submit(owner,v)).toMatchObject({state:'cancelled'});
  expect((await service().read(owner,{theme:v.theme,target,language:'en'})).translation).toBeNull();
+});
+
+
+it('accepts more than twenty operator translations without consuming or bypassing the ordinary member hourly allowance',async()=>{
+ const s=service(),before=await foundation.resolveTheme({kind:'reader',id:'fixture'},'theme');
+ const capsule=captureKnowledgeCapsule({title:'Pinned before translation',snapshot:before.snapshot}),capsuleDigest=knowledgeDigest(capsule);
+ for(let revision=0;revision<20;revision++){
+  expect(await s.submit(owner,{...input(),translation:{target,language:'en',text:'History of A '+revision,expectedRevision:revision}})).toMatchObject({state:'published',publication:{revision:revision+1}});
+ }
+ // The former 21st submission could already have a durable capture when submit hit the hourly cap.
+ const interrupted={...input(),translation:{target,language:'en',text:'History of A 20',expectedRevision:20}};
+ const legacyWait=createThemeTranslationAuthoring(pool,knowledge,'https://plunode.net',authorize,{afterCapture:async()=>{throw new KnowledgeError('受付上限です。時間をおいて再試行してください',429,'RATE_LIMITED');}});
+ await expect(legacyWait.submit(owner,interrupted)).rejects.toMatchObject({code:'RATE_LIMITED'});
+ const saved=await s.status(owner,interrupted.requestId);expect(saved.state).toBe('saved');
+ expect(await s.submit(owner,interrupted)).toMatchObject({state:'published',submissionId:saved.submissionId,publication:{revision:21}});
+ expect((await s.read(owner,{theme:{id:'theme',revision:1},target,language:'en'})).translation).toMatchObject({revision:21,text:'History of A 20'});
+ expect((await s.read(owner,{theme:{id:'theme',revision:1},target,language:'en',revision:1})).translation?.text).toBe('History of A 0');
+ const store=createKnowledgeSubmissionService(pool,{memberStore:true,dataset:'public-kg'});
+ const content={...themeTranslationCapture(owner,input()).content,title:'一般フォームからの訳文'};
+ for(let n=0;n<20;n++){
+  const id=randomUUID(),saved=await store.execute(owner,{action:'save',requestId:randomUUID(),id,expectedVersion:0,content});
+  expect(await store.execute(owner,{action:'submit',requestId:randomUUID(),id,expectedVersion:saved.version})).toMatchObject({state:'queued'});
+ }
+ const blocked=await store.execute(owner,{action:'save',requestId:randomUUID(),id:randomUUID(),expectedVersion:0,content});
+ await expect(store.execute(owner,{action:'submit',requestId:randomUUID(),id:blocked.id,expectedVersion:blocked.version})).rejects.toMatchObject({code:'RATE_LIMITED',status:429,message:'受付上限です。時間をおいて再試行してください'});
+ // Having exhausted the ordinary form allowance does not stop the authorized operator route.
+ expect(await s.submit(owner,{...input(),translation:{target,language:'en',text:'History of A 21',expectedRevision:21}})).toMatchObject({state:'published',publication:{revision:22}});
+ expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.review_attempts')).rows[0].n).toBe(0);
+ expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.review_jobs')).rows[0].n).toBe(0);
+ expect(await foundation.resolveTheme({kind:'reader',id:'fixture'},'theme')).toEqual(before);expect(knowledgeDigest(capsule)).toBe(capsuleDigest);
+},60000);
+
+it('retains short-burst protection while exact retries of a published operator translation remain idempotent',async()=>{
+ const s=service(),v=input(),accepted=await s.submit(owner,v);
+ await pool.query("INSERT INTO member_knowledge.submission_requests(owner_id,request_id,submission_id,digest,response) SELECT $1,gen_random_uuid(),$2,'burst-fixture','{}'::jsonb FROM generate_series(1,120)",[owner,accepted.submissionId]);
+ await expect(s.submit(owner,{...input(),translation:{...v.translation,text:'Another title',expectedRevision:1}})).rejects.toMatchObject({code:'RATE_LIMITED',status:429,message:'少し待ってから操作してください'});
+ expect(await s.submit(owner,v)).toMatchObject({state:'published',submissionId:accepted.submissionId});
+ expect((await s.read(owner,{theme:v.theme,target,language:'en'})).translation?.revision).toBe(1);
+});
+
+it('still rejects unauthorized operators, mismatched pinned revisions and publication after operator authorization is revoked',async()=>{
+ await expect(service().submit(randomUUID(),input())).rejects.toMatchObject({code:'OPERATOR_REQUIRED'});
+ await expect(service().submit(owner,{...input(),translation:{...input().translation,target:{...target,revision:2}}})).rejects.toMatchObject({code:'THEME_MEMBER_REQUIRED'});
+ let allowed=true;
+ const s=createThemeTranslationAuthoring(pool,knowledge,'https://plunode.net',async id=>{await authorize(id);if(!allowed)throw new KnowledgeError('運営者ではありません',403,'OPERATOR_REQUIRED');},{afterCapture:async()=>{allowed=false;}});
+ await expect(s.submit(owner,input())).rejects.toMatchObject({code:'OPERATOR_REQUIRED'});
+ expect((await service().read(owner,{theme:{id:'theme',revision:1},target,language:'en'})).translation).toBeNull();
+ expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.review_attempts')).rows[0].n).toBe(0);
 });

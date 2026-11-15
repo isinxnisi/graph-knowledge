@@ -26,7 +26,7 @@ it('binds immutable resumption to the authenticated owner, complete proposal and
  expect(themeRegistrationCommandSchema.parse({action:'submit-translation',...v})).toMatchObject({action:'submit-translation',translation:v.translation});
 });
 it('publishes complete translation schemas and the no-AI registration contract without requesting original-text changes',()=>{
- const guide=themeAuthoringGuide();expect(guide.schemas.submitTranslation).toBeDefined();expect(guide.translations.disclosure).toMatchObject({aiReview:false,externalAiTransmission:false});expect(guide.translations.attribution).toContain('anonymous');
+ const guide=themeAuthoringGuide();expect(guide.schemas.submitTranslation).toBeDefined();expect(guide.translations.limits).toMatchObject({itemsPerCall:1,submissionsPerMemberHour:null});expect(guide.translations.limits.scope).toContain("120 new intake operations");expect(guide.translations.disclosure).toMatchObject({aiReview:false,externalAiTransmission:false});expect(guide.translations.attribution).toContain('anonymous');
  expect(guide.schemas.submitTranslation).toMatchObject({properties:{translation:{required:expect.arrayContaining(['expectedRevision'])}}});
 });
 it('exposes translation tools only through the existing compose handler and dispatches strict input',async()=>{
@@ -38,6 +38,7 @@ it('exposes translation tools only through the existing compose handler and disp
  expect(names.every(name=>tools.some((t:{name:string})=>t.name===name))).toBe(true);
  const v=input();await handler.fetch(rpc('tools/call',{name:'submit_theme_translation',arguments:v}));expect(call).toHaveBeenLastCalledWith(expect.objectContaining({action:'submit-translation',...v}));
  call.mockClear();await handler.fetch(rpc('tools/call',{name:'submit_theme_translation',arguments:{...v,origin:'https://untrusted.example'}}));expect(call).not.toHaveBeenCalled();
+ await handler.fetch(rpc('tools/call',{name:'submit_theme_translation',arguments:{...v,trustedOrigin:'operator-api'}}));expect(call).not.toHaveBeenCalled();
  call.mockResolvedValueOnce({ok:false,code:'TRANSLATION_CONFLICT',message:'Read the latest translation'});
  expect((await(await handler.fetch(rpc('tools/call',{name:'submit_theme_translation',arguments:v}))).json()).result.isError).toBe(true);
 });
