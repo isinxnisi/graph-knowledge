@@ -448,3 +448,32 @@ it("初期ロック中も表示操作でき、解除・再ロックと探索起�
   view.rerender(<GraphCanvas {...props} graph={{...graph,generation:graph.generation+1}}/>);
   expect(screen.getByTestId("graph-scroll-guard")).toBeTruthy();
 });
+
+
+it("ノード説明は同じ図の再計測・背景更新と別要素の削除では消えず、離脱・自身の削除で閉じる", async () => {
+  vi.stubGlobal("matchMedia", () => ({ matches:true, addEventListener() {}, removeEventListener() {} }));
+  const graph=emptyGraph(),nodes=[{id:"a",label:"Pete Rock",kind:"person",description:"The World Is Yoursを制作したプロデューサー。"},{id:"b",label:"別ノード",kind:"person"}];
+  const props={graph,contentOnly:true,content:{nodes,relations:{}},selection:null,onEntity:vi.fn(),onRelation:vi.fn(),onToggleEntity:vi.fn()};
+  const view=render(<GraphCanvas {...props}/>);await act(async()=>{});
+  const cy=created.cores[0],node=cy.getElementById("a"),tip=view.container.querySelector<HTMLDivElement>('[class*="nodeCaption"]')!;
+  act(()=>node.emit("mouseover"));expect(tip.hidden).toBe(false);expect(tip.textContent).toContain(nodes[0].description);
+  act(()=>cy.emit("resize"));expect(tip.hidden).toBe(false);
+  await act(async()=>view.rerender(<GraphCanvas {...props} graph={{...graph}} content={{nodes:[...nodes],relations:{}}}/>));
+  expect(tip.hidden).toBe(false);
+  act(()=>cy.getElementById("b").remove());expect(tip.hidden).toBe(false);
+  fireEvent.mouseLeave(screen.getByTestId("graph-scroll-guard"));expect(tip.hidden).toBe(true);
+  act(()=>node.emit("mousemove"));expect(tip.hidden).toBe(false);
+  act(()=>node.remove());expect(tip.hidden).toBe(true);
+});
+
+it("ロック面はボタンなしのホバーだけを通常の描画面へ通し、クリック・wheel・ドラッグを通さない", () => {
+  vi.stubGlobal("matchMedia", () => ({ matches:true, addEventListener() {}, removeEventListener() {} }));
+  const props={graph:emptyGraph(),selection:null,onEntity:vi.fn(),onRelation:vi.fn(),onToggleEntity:vi.fn()};
+  render(<GraphCanvas {...props}/>);
+  const canvas=document.createElement("canvas"),surface=screen.getByTestId("graph-canvas");surface.append(canvas);
+  const moved=vi.fn(),pressed=vi.fn(),wheel=vi.fn();canvas.addEventListener("mousemove",moved);canvas.addEventListener("mousedown",pressed);canvas.addEventListener("wheel",wheel);
+  const guard=screen.getByTestId("graph-scroll-guard");
+  fireEvent.mouseMove(guard,{clientX:123,clientY:67,buttons:0});expect(moved).toHaveBeenCalledTimes(1);expect(moved.mock.calls[0][0].clientX).toBe(123);
+  fireEvent.mouseMove(guard,{buttons:1});fireEvent.mouseDown(guard);fireEvent.wheel(guard,{deltaY:100});
+  expect(moved).toHaveBeenCalledTimes(1);expect(pressed).not.toHaveBeenCalled();expect(wheel).not.toHaveBeenCalled();expect(screen.getByTestId("graph-scroll-guard")).toBe(guard);
+});

@@ -83,6 +83,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
   const viewChange = useRef(onViewChange);
   useEffect(() => { viewChange.current = onViewChange; }, [onViewChange]);
   const caption = useRef<HTMLDivElement>(null);
+  const leaveCaption = useRef<(() => void) | null>(null);
   const container = useRef<HTMLDivElement>(null);
   const badgeLayer = useRef<HTMLDivElement>(null);
   const core = useRef<Core | null>(null);
@@ -291,18 +292,29 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       tip.children[0].textContent=node.data("fullLabel");
       tip.children[1].textContent=description;
       tip.hidden=false;
+      positionCaption();
+    }
+    function positionCaption(){
+      if(!captionId)return;
+      const node=cy.getElementById(captionId);
+      if(!node.length){hideCaption();return;}
       const bounds=node.renderedBoundingBox({includeLabels:false}),gap=8;
       const left=(bounds.x1+bounds.x2-tip.offsetWidth)/2,below=bounds.y2+gap;
       tip.style.left=Math.max(gap,Math.min(host.clientWidth-tip.offsetWidth-gap,left))+"px";
       tip.style.top=Math.max(gap,Math.min(host.clientHeight-tip.offsetHeight-gap,below+tip.offsetHeight+gap<=host.clientHeight?below:bounds.y1-tip.offsetHeight-gap))+"px";
     }
-    cy.on("mouseover", "node", event=>{
+    cy.on("mouseover mousemove", "node", event=>{
       const node=event.target;node.addClass("hovered");
-      if(node.data("description")){if(window.matchMedia("(any-hover: hover)").matches)showCaption(node);}
+      if(node.data("description")){if(captionId!==node.id()&&window.matchMedia("(any-hover: hover)").matches)showCaption(node);}
       else if(node.data("kind")!=="text")host.title=[node.data("fullLabel"),node.data("badge")].filter(Boolean).join(" · ");
     });
     cy.on("mouseout", "node", event=>{event.target.removeClass("hovered");hideCaption();});
-    cy.on("pan zoom grab tapstart remove resize",hideCaption);
+    // Background refreshes remeasure the same canvas. Keep the reading caption
+    // and reposition it; only a real interaction or removal of its node ends it.
+    cy.on("resize",positionCaption);
+    cy.on("remove", "node", event=>{if(event.target.id()===captionId)hideCaption();});
+    cy.on("pan zoom grab tapstart",hideCaption);
+    leaveCaption.current=()=>{cy.nodes(".hovered").removeClass("hovered");hideCaption();};
     host.addEventListener("pointerleave",hideCaption);
     host.addEventListener("blur",hideCaption);
     function choose(id: string, event: Pick<cytoscape.EventObject, "originalEvent">, isNode: boolean) {
@@ -396,7 +408,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     cy.on("drag pan zoom cxttapstart", () => input.cancel());
     const resize = new ResizeObserver(resizeCanvas);
     resize.observe(container.current);
-    return () => { motion.current?.dispose(); motion.current = null; removeBadges(); input.dispose(); cancelClicks(); hideCaption();surface.removeEventListener("blur",hideCaption);surface.removeEventListener("pointerleave",hideCaption);surface.removeEventListener("keydown", keyboardContext); relationGestures.current = null; gestures.current = null; contentGestures.current = null; touchInput.current = null; themeObserver.disconnect(); resize.disconnect(); cy.destroy(); core.current = null; viewportSize.current = null; pendingFocus.current = null; generation.current = -1; initialLayoutDone.current = false; };
+    return () => { motion.current?.dispose(); motion.current = null; removeBadges(); input.dispose(); cancelClicks(); hideCaption();leaveCaption.current=null;surface.removeEventListener("blur",hideCaption);surface.removeEventListener("pointerleave",hideCaption);surface.removeEventListener("keydown", keyboardContext); relationGestures.current = null; gestures.current = null; contentGestures.current = null; touchInput.current = null; themeObserver.disconnect(); resize.disconnect(); cy.destroy(); core.current = null; viewportSize.current = null; pendingFocus.current = null; generation.current = -1; initialLayoutDone.current = false; };
   }, []);
 
   useEffect(() => {
@@ -527,7 +539,12 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
 
   return <>
     <div className={`${styles.canvas} ${canvasStyles.canvas} ${fillHeight ? styles.workspaceCanvas : ""} ${navigation ? styles.withNavigation : ""}`}>
-      {scrollLocked && <div ref={unlockSurface} className={canvasStyles.scrollGuard} data-testid="graph-scroll-guard" role="button" tabIndex={interactionBlocked ? -1 : 0} aria-disabled={interactionBlocked || undefined} aria-label={viewportLabels.unlockHint} onKeyDown={event => {
+      {scrollLocked && <div ref={unlockSurface} className={canvasStyles.scrollGuard} onMouseMove={event=>{
+        // Forward only button-free hover to Cytoscape's normal shape hit testing.
+        // Presses, wheels and touch gestures stay on the scroll guard.
+        if(event.buttons || !window.matchMedia("(any-hover: hover)").matches)return;
+        container.current?.querySelector("canvas")?.dispatchEvent(new MouseEvent("mousemove",{bubbles:true,clientX:event.clientX,clientY:event.clientY}));
+      }} onMouseLeave={()=>leaveCaption.current?.()} data-testid="graph-scroll-guard" role="button" tabIndex={interactionBlocked ? -1 : 0} aria-disabled={interactionBlocked || undefined} aria-label={viewportLabels.unlockHint} onKeyDown={event => {
         if (!interactionBlocked && (event.key === "Enter" || event.key === " ")) {
           event.preventDefault(); setScrollInteraction({ generation: graph.generation, locked: false });
         }
