@@ -1,4 +1,4 @@
-2026-11-16 Graphのノード説明：①原因確認・②再計測後の表示維持／ロック中ホバーと51件・③3200／HTTPS βの35秒ホバー実確認まで完了・正式切替の本人sudo待ち｜今回の全体③まで。source29e2d1aa／β `Gn4lyRRRQwC5eOXjFir4R`／正式候補 `kmAn75_BlcSljfRq5IqaC`。ロック中のページスクロール保護と通常操作を維持。既知のまとめ移動1件は別記。DB・Worker・本番未変更。[検証](verification/GRAPH_CAPTION_20261116.md)。
+2026-11-16 Graphのノード説明：①原因確認・②修正と51件・③β／正式Web反映と実マウスでの35秒表示確認まで完了｜今回の全体③まで完了。source29e2d1aa／正式 `kmAn75_BlcSljfRq5IqaC`。ロック中・解除後・再ロック後の説明表示、resize後の継続、ロック中のwheel保護／離脱時の終了を確認。既存訳文115版・DB／Worker／設定を保持。既知のまとめ移動1件とiPhone実機未確認は別記。[検証・復旧](verification/GRAPH_CAPTION_20261116.md)。
 
 2026-11-14 受入済みβ機能の正式反映：①本番監査・②固定資材／隔離試験・③backup／復元・④migration／Web・Worker切替・⑤正式URL／既存Appの受入まで完了｜今回の全体⑤まで完了。source4ccb98f5／build `fqo_VSttPZ8pGBpd4b-Ih`、会員44（039〜043追加）／知識9。既存本文・版・所有者とKG・設定を保持、βコンテンツ／品質ガイド本文は未移行。本番AppはRead12／Write16、実read_theme／新ガイド読取、Googleログイン・既存Capsule／共有版3・PC／375px・SEO確認。iPhone実機／本番編集の実書込みは未確認、ガイド本文は0版で別登録。[実測・復旧](verification/ACCEPTED_BETA_PRODUCTION_20261114.md)。
 
