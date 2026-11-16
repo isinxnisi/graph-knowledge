@@ -46,7 +46,9 @@
 
 2026-11-17 再開後、Chrome上の既存本番・β App管理で「ツールを更新」をそれぞれ実行した。更新後のApp操作一覧を開き直し、create／get／claim／update／prepare／dispatchの追加6操作すべてを両Appで照合。本番Writeは16→21、βの実MCP tools/listはHTTP200／34操作。既存App ID（本番6aeffba90628819181cfb1d6eb54a8d0、β6aef2b97439081919c3828f9080c4c6f）／endpoint／OAuth scope／権限／接続アカウントを維持し、再作成・再同意・予定変更なし。ツール更新の本人操作は残っていない。
 
-本Codex会話に公開される呼出ツール一覧は更新前のままで、追加操作を直接呼べない。通常ChatGPT Webの既存会話から本番get_theme_production({})を1回だけ読み取り、outcomeを確認する操作を本人へ依頼中。案件作成・claim・登録・更新は実行しない。API単体成功やApp一覧表示を、実ChatGPT Web予定実行の成功とは扱わない。
+本Codex会話に公開される呼出ツール一覧は更新前のままで、追加操作を直接呼べないため、本人が通常ChatGPT Webの既存会話で本番 `get_theme_production({})` を1回だけ実行した。返却された生の結果を共有してもらい、textおよびstructuredContentの両方が `{"outcome":"none","case":null}`、`isError:false` と一致することを確認した。案件未作成の正常結果であり、案件作成・claim・登録・更新・予定変更は実行していない。
+
+これにより、実装→隔離試験→β／正式反映→既存両App定義更新→通常ChatGPT Webからの新読取操作まで確認完了。更新系は隔離試験で検証済みだが、本番の制作案件作成・全工程の実運用・通常Web予定での実発火は実施していない。今回のAPI確認を予定実行まで検証済みとは扱わない。
 
 復旧：新しい案件保存後にfenceのない旧Webへ自動降格しない。migration開始後の失敗は公開Webを停止して記録を保全し、互換性のある前進修復を行う。旧dumpを自動で戻さない。運営者入力が必要なsudoは、照合済みの実行資材を用意して本人terminalだけで入力する。
 
