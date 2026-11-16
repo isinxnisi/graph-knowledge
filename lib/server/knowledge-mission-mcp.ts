@@ -4,10 +4,10 @@ import {createMissionToolBridge,type MissionToolCommand} from './knowledge-missi
 import {missionMcpPackageSchema} from '../domain/knowledge-mission-mcp';
 export {missionMcpPackageSchema} from '../domain/knowledge-mission-mcp';
 import {registerThemeMcpTools} from './knowledge-theme-registration-mcp';
-import type {ThemeRegistrationCommand} from '../domain/knowledge-theme-registration';
+import type {ThemeOperatorCommand} from '../domain/theme-production';
 
 
-export function createMissionMcpHandler(call:(value:MissionToolCommand)=>Promise<unknown>,authoring?:{call:(value:ThemeRegistrationCommand)=>Promise<unknown>;authChallenge?:string}){
+export function createMissionMcpHandler(call:(value:MissionToolCommand)=>Promise<unknown>,authoring?:{call:(value:ThemeOperatorCommand)=>Promise<unknown>;authChallenge?:string}){
  return createMcpHandler(()=>{
   const server=new McpServer({name:'plunode-collection',version:'1.0.0'});
   const annotations={readOnlyHint:false,destructiveHint:false,openWorldHint:false};

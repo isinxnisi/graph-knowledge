@@ -1,3 +1,4 @@
+import {assertThemeProductionLease,withThemeProductionPublication,guardThemeProductionRequest} from './theme-production-fence';
 import type {Pool} from 'pg';
 import {readThemeTranslationSchema,submitThemeTranslationSchema,type SubmitThemeTranslation,type ReadThemeTranslation} from '../domain/knowledge-theme-translation';
 import {knowledgeSubmissionContentSchema,type KnowledgeSubmissionContext} from '../domain/knowledge-submission';
@@ -29,6 +30,7 @@ export function createThemeTranslationAuthoring(pool:Pool,knowledge:Pool,origin:
  const reader=createThemeAuthoringReader(knowledge,origin),store=createKnowledgeSubmissionService(pool,{memberStore:true,dataset:'public-kg',trustedOrigin:'operator-api'}),foundation=createKnowledgeFoundationService(knowledge);
  let ready:Promise<void>|undefined;
  async function allowed(owner:string){
+  await assertThemeProductionLease();
   await authorize(owner);
   if(!knowledgeCapability('translation')||!knowledgeCapability('submissions')||!knowledgePublishingEnabled())throw new KnowledgeError('この接続では訳文を投稿できません。',404,'NOT_FOUND');
   await (ready??=ensureAcceptanceSchema(pool).catch(e=>{ready=undefined;throw e;}));
@@ -58,6 +60,7 @@ export function createThemeTranslationAuthoring(pool:Pool,knowledge:Pool,origin:
  }
  async function submit(owner:string,raw:SubmitThemeTranslation){
   await allowed(owner);const input=submitThemeTranslationSchema.parse(raw),command=themeTranslationCapture(owner,input);
+  await guardThemeProductionRequest(pool,owner,{action:'submit-translation',...input});
   const theme=await member(input.theme,input.translation.target);
   let captured=await store.replay(owner,command.requestId,knowledgeDigest(command));
   if(!captured){
@@ -72,6 +75,7 @@ export function createThemeTranslationAuthoring(pool:Pool,knowledge:Pool,origin:
    captured=await store.execute(owner,command,{content:command.content,captured:context,operatorApiRequestId:input.requestId});
   }
   await options.afterCapture?.();
+  await assertThemeProductionLease();
   const retained=await store.get(owner,captured.id);
   if(retained.state==='cancelled'||retained.review?.items.some(i=>i.publication)||await publication(owner,input.requestId))return response(owner,input.requestId);
   // Immutable step responses cannot submit a later user edit or revive a cancel.
@@ -92,7 +96,7 @@ export function createThemeTranslationAuthoring(pool:Pool,knowledge:Pool,origin:
     const plan=acceptancePlan(queued,'translation',themeTranslationOperationId(owner,input.requestId,'publish'));
     if(plan.command.action!=='accept-translation')throw new Error('Operator translation command required');
     const snapshot=queued.context?.texts?.[0];if(!snapshot)throw new KnowledgeError('原文の保存版がありません。',409,'TRANSLATION_CONTEXT_CHANGED');
-    const published=await foundation.execute(actor(owner),{...plan.command,reason:'認証済み運営APIからの訳文登録'},{verify:async k=>{await verifyAcceptanceReferences(k,plan.references);await verifyTranslationReviewContext(k,input.translation.target,snapshot,true);},prepare:async()=>{}});
+    const published=await withThemeProductionPublication(pool,()=>foundation.execute(actor(owner),{...plan.command,reason:'認証済み運営APIからの訳文登録'},{verify:async k=>{await assertThemeProductionLease();await verifyAcceptanceReferences(k,plan.references);await verifyTranslationReviewContext(k,input.translation.target,snapshot,true);await assertThemeProductionLease();},prepare:async()=>{}}));
     await c.query("UPDATE member_knowledge.submission_revisions SET source_capsule=source_capsule||jsonb_build_object('operatorPublication',$3::jsonb) WHERE submission_id=$1 AND revision=$2",[queued.id,queued.revision,JSON.stringify(published)]);
    }
    await c.query('COMMIT');
@@ -100,7 +104,7 @@ export function createThemeTranslationAuthoring(pool:Pool,knowledge:Pool,origin:
   return response(owner,input.requestId);
  }
  async function cancel(owner:string,requestId:string){
-  await allowed(owner);await response(owner,requestId);const id=themeTranslationOperationId(owner,requestId,'submission'),current=await store.get(owner,id);
+  await allowed(owner);await guardThemeProductionRequest(pool,owner,{action:'cancel-translation',requestId});await response(owner,requestId);const id=themeTranslationOperationId(owner,requestId,'submission'),current=await store.get(owner,id);
   if(await publication(owner,requestId)||current.review?.items.some(i=>i.publication))return {...await response(owner,requestId),reason:'受理済みの訳文の公開決定は取り消していません。既に公開した版も保持します。訂正は最新の訳文版を確認して別のrequestIdで送れます。'};
   if(current.state!=='cancelled')await store.execute(owner,{action:'cancel',requestId:themeTranslationOperationId(owner,requestId,'cancel'),id,expectedVersion:current.version});
   return response(owner,requestId);

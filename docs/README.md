@@ -1,3 +1,5 @@
+2026-11-17 ChatGPT Web制作・見直しの引継ぎAPI：[設計・実行権・送信境界](design/THEME_PRODUCTION_HANDOFF.md)。通常の予定実行のための非公開案件。収集計画・LLM実行基盤・新規Worker・cronは追加しない。隔離試験済み、環境反映は進行中。
+
 - 2026-11-14 スマホの詳細サイドバー：[表示・操作と確認記録](verification/MOBILE_DETAIL_DRAWER_20261114.md)。β限定、PC配置を保持。
 
 テーマの読み物の明示編集（β）：[設計と既存App契約](design/THEME_STORIES_EDITORIAL_20261114.md)／[隔離試験・β・実ChatGPT確認](verification/THEME_STORIES_EDITORIAL_20261114.md)。

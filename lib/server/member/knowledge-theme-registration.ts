@@ -1,3 +1,7 @@
+import {themeProductionCommandSchema,type ThemeOperatorCommand} from '../../domain/theme-production';
+import {createThemeProductions} from '../theme-production';
+import {themeProductionRuntime} from '../theme-production-runtime';
+import {guardThemeProductionRequest} from '../theme-production-fence';
 import {createThemeQualityGuides} from './theme-quality-guide';
 import {themeReadingPresentation} from '../theme-reading-presentation';
 import {downloadEditorialFile} from '../editorial-file-download';
@@ -8,7 +12,7 @@ import {createThemeTranslationAuthoring} from '../knowledge-theme-translation';
 import {z} from 'zod';
 import {themeAuthoringGuide} from '../knowledge-theme-authoring-guide';
 import {createThemeAuthoringReader} from '../knowledge-theme-authoring-reader';
-import {themeRegistrationCommandSchema,type ThemeRegistrationCommand} from '../../domain/knowledge-theme-registration';
+import {themeRegistrationCommandSchema} from '../../domain/knowledge-theme-registration';
 import {createKnowledgeImports} from '../knowledge-import';
 import {resolveImportPrincipal} from '../knowledge-import-runtime';
 import {knowledgeReadConfiguration} from '../knowledge-read-runtime';
@@ -18,16 +22,23 @@ import {knowledgeCapability} from '../knowledge-deployment';
 import {KnowledgeError} from '../knowledge-foundation';
 import {memberRuntime} from './runtime';
 
+let knowledgePool:Pool|undefined;
 let registration:ReturnType<typeof createThemeRegistrations>|undefined;
 let reader:ReturnType<typeof createThemeAuthoringReader>|undefined;
 let translations:ReturnType<typeof createThemeTranslationAuthoring>|undefined;
 export function themeRegistrationEnabled(){return process.env.KNOWLEDGE_THEME_REGISTRATION_ENABLED==='1';}
-export async function dispatchThemeRegistration(owner:string,raw:ThemeRegistrationCommand){
+export async function dispatchThemeRegistration(owner:string,raw:ThemeOperatorCommand):Promise<unknown>{
  if(!themeRegistrationEnabled()||!knowledgeCapability('operator')||!knowledgeCapability('missions'))throw new KnowledgeError('この接続ではテーマを作成・更新できません。',404,'NOT_FOUND');
- if(!registration){const {pool,config}=memberRuntime(),knowledge=new Pool({connectionString:knowledgeReadConfiguration().databaseUrl,max:2});const imports=createKnowledgeImports(pool,knowledge,(id,c)=>resolveImportPrincipal(pool,id,c));registration=createThemeRegistrations(pool,knowledge,createWebKnowledgeImports(pool,()=>imports),imports);reader=createThemeAuthoringReader(knowledge,config.origin);translations=createThemeTranslationAuthoring(pool,knowledge,config.origin,owner=>registration!.authorize(owner));}
+ if(!registration){const {pool,config}=memberRuntime(),knowledge=new Pool({connectionString:knowledgeReadConfiguration().databaseUrl,max:2});knowledgePool=knowledge;const imports=createKnowledgeImports(pool,knowledge,(id,c)=>resolveImportPrincipal(pool,id,c));registration=createThemeRegistrations(pool,knowledge,createWebKnowledgeImports(pool,()=>imports),imports);reader=createThemeAuthoringReader(knowledge,config.origin);translations=createThemeTranslationAuthoring(pool,knowledge,config.origin,owner=>registration!.authorize(owner));}
  try{
-  const command=themeRegistrationCommandSchema.parse(raw);
   await registration.authorize(owner);
+  const production=themeProductionCommandSchema.safeParse(raw);
+  if(production.success){
+   const {pool,config}=memberRuntime(),runtime=themeProductionRuntime(pool,knowledgePool!,config.origin,registration,translations!);
+   return await createThemeProductions(pool,{environment:config.origin==='https://plunode.net'?'production':'beta',origin:config.origin,authorize:id=>registration!.authorize(id),...runtime,send:(id,value)=>dispatchThemeRegistration(id,value)}).execute(owner,production.data);
+  }
+  const command=themeRegistrationCommandSchema.parse(raw);
+  if(['submit-theme','update-theme','submit-translation','amend-theme-items','control-theme-retry','save-product','upload-product-image','upload-editorial-image','cancel-theme','cancel-translation'].includes(command.action))await guardThemeProductionRequest(memberRuntime().pool,owner,command);
   if(command.action==='upload-editorial-image'){
    const {file,purpose,action,...metadata}=command;void action;
    const bytes=await downloadEditorialFile(file.download_url);

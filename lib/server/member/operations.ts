@@ -1,3 +1,4 @@
+import {assertThemeProductionLease} from '../theme-production-fence';
 import { revokeCommunityMember } from "./community";
 import type { Pool, PoolClient } from "pg";
 import { z } from "zod";
@@ -13,7 +14,7 @@ export type MemberOperation = z.infer<typeof memberOperationSchema>;
 
 export async function memberTransaction<T>(pool: Pool, action: (client: PoolClient) => Promise<T>) {
   const client = await pool.connect();
-  try { await client.query("BEGIN"); const result = await action(client); await client.query("COMMIT"); return result; }
+  try { await client.query("BEGIN"); await assertThemeProductionLease(client); const result = await action(client); await assertThemeProductionLease(client); await client.query("COMMIT"); return result; }
   catch (error) { await client.query("ROLLBACK"); throw error; }
   finally { client.release(); }
 }

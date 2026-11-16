@@ -1,3 +1,4 @@
+import {assertThemeProductionLease,guardThemeProductionRequest} from './theme-production-fence';
 import {ensureThemeRetries,controlThemeRetries,readThemeRetries} from './knowledge-theme-retries';
 import {controlThemeRetrySchema} from '../domain/knowledge-theme-registration';
 import {amendThemeItems,readThemeItemAmendments,ensureThemeItemAmendments,themeItemAmendmentsAvailable} from './knowledge-theme-item-amendments';
@@ -37,11 +38,12 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
  let ready:Promise<void>|undefined;
  const ensure=()=>ready??=ensureThemeRegistrationSchema(pool).catch(e=>{ready=undefined;throw e;});
  async function current(c:PoolClient|Pool,owner:string){
+  await assertThemeProductionLease(c);
   if(!knowledgeCapability('operator')||!knowledgeCapability('missions')||!isSiteOperator(owner)||(await c.query('SELECT 1 FROM "user" WHERE id=$1 AND active FOR SHARE',[owner])).rowCount!==1)throw new KnowledgeError('現在の運営権限を確認してください。',403,'OPERATOR_REQUIRED');
  }
  async function tx<T>(requestId:string,f:(c:PoolClient)=>Promise<T>){
   await ensure();const c=await pool.connect();
-  try{await c.query('BEGIN');await c.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['theme-registration:'+requestId]);const result=await f(c);await c.query('COMMIT');return result;}
+  try{await c.query('BEGIN');await c.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['theme-registration:'+requestId]);const result=await f(c);await assertThemeProductionLease(c);await c.query('COMMIT');return result;}
   catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}
  }
  async function row(c:Pool|PoolClient,owner:string,requestId:string){
@@ -63,6 +65,7 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
  async function submit(owner:string,raw:unknown){
   await current(pool,owner);
   const input=themeAuthoringRequestSchema.parse(raw),hash=knowledgeDigest(input);
+  await guardThemeProductionRequest(pool,owner,{action:'target' in input?'update-theme':'submit-theme',...input});
   const productPins='target' in input?input.changes.productPins:input.productPins;if(productPins)await validateProductPins(pool,productPins);
   await ensure();
   const saved=(await pool.query('SELECT owner_id,input_hash,state FROM knowledge_missions.theme_registrations WHERE request_id=$1',[input.requestId])).rows[0];
@@ -103,6 +106,7 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
  }
  async function amend(owner:string,raw:unknown){
   const input=amendThemeRegistrationSchema.parse(raw);
+  await guardThemeProductionRequest(pool,owner,{action:'amend-theme-items',...input});
   await current(pool,owner);await ensureThemeItemAmendments(pool);
   return tx(input.registrationRequestId,async c=>{
    await current(c,owner);const r=await row(c,owner,input.registrationRequestId);
@@ -111,10 +115,11 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
  }
  async function retryStatus(owner:string,requestId:string,itemKey?:string){await ensure();await current(pool,owner);return readThemeRetries(pool,await row(pool,owner,requestId),itemKey,knowledge);}
  async function controlRetry(owner:string,raw:unknown){
-  const input=controlThemeRetrySchema.parse(raw);await current(pool,owner);await ensureThemeRetries(pool);
+  const input=controlThemeRetrySchema.parse(raw);await guardThemeProductionRequest(pool,owner,{action:'control-theme-retry',...input});await current(pool,owner);await ensureThemeRetries(pool);
   return tx(input.registrationRequestId,async c=>{await current(c,owner);return controlThemeRetries(c,knowledge,await row(c,owner,input.registrationRequestId),owner,input);});
  }
  async function cancel(owner:string,requestId:string){
+  await current(pool,owner);await guardThemeProductionRequest(pool,owner,{action:'cancel-theme',requestId});
   return tx(requestId,async c=>{
    await current(c,owner);const r=await row(c,owner,requestId),done=await committed(r);
    if(done){await savePublished(c,r,done);return {requestId,state:'published',reason:'テーマへの反映は完了済みです。反映の巻き戻しや、公開済み知識の削除はしていません。'};}

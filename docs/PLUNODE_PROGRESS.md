@@ -1,3 +1,5 @@
+2026-11-17 テーマ制作案件の引継ぎ：①既存API／本番品質ガイド3版の確認・②案件／実行権／保存済み送信と6 MCP操作の実装・③隔離17件／既存登録32件／訳文30件の確認完了｜残り④build・migration・β／正式・既存App確認｜全体④まで。収集計画・予定・品質本文・実テーマの更新は行わず、運営AI0／一般投稿の審査を維持。[設計](design/THEME_PRODUCTION_HANDOFF.md)。
+
 2026-11-16 テーマ画像拡大の正式反映：①本番差分確認・②固定image構築／転送照合・③本人sudoによるWeb切替と正式PC／390px確認まで完了｜今回の全体③まで完了。source `4675179e`／正式build `rkyr-DN02OjLWuFjxoU9Y`。Nas構成版18／ツタンカーメン版6の画像全体・公開credit・開閉と閲覧位置保持を確認。既存訳文620版・会員44／知識9・Worker／設定／原本を保持、DB移行・登録操作なし。βは従来build継続、iPhone実機未確認。[検証・復旧](verification/THEME_IMAGE_DIALOG_20261116.md#正式web反映と画面確認完了)。
 
 2026-11-16 テーマ画像の拡大：①既存表示確認・②実装／17件・③3200／HTTPS βのPC・スマホ・タブレット・横向き確認まで完了｜今回の全体③まで完了。実装e767574c／ef193bd1、β build `nO3lQgJ3iwNSAQ9Ft6FzE`。画像全体をモーダルで読み、×／背景／Escで元へ戻る。背景wheel／touch移動を止め、URL・閲覧位置と画像配置を保持。Web起動時の既存β設定を復帰、DB／登録内容・Worker／本番未変更、iPhone実機未確認。[検証・復帰](verification/THEME_IMAGE_DIALOG_20261116.md)。

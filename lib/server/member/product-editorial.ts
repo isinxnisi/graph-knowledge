@@ -1,3 +1,4 @@
+import {assertThemeProductionLease,guardThemeProductionRequest} from '../theme-production-fence';
 import type {Pool,PoolClient} from "pg";
 import {createHash} from "node:crypto";
 import {productAuthoringCommandSchema,type ProductAuthoringCommand} from "../../domain/product-authoring";
@@ -8,6 +9,7 @@ import {isSiteOperator} from "./site-operations";
 import {memberTransaction} from "./operations";
 const fail=(message:string,code="PRODUCT_CONFLICT")=>new KnowledgeError(message,409,code);
 export async function authorizeProductOperator(c:Pool|PoolClient,owner:string){
+ await assertThemeProductionLease(c);
  if(!isSiteOperator(owner)||!(await c.query('SELECT 1 FROM "user" WHERE id=$1 AND active FOR SHARE',[owner])).rowCount)throw new KnowledgeError("運営アカウントで接続してください。",403,"OPERATOR_REQUIRED");
 }
 export async function readEditorialProduct(c:Pool|PoolClient,id:string,revision?:number){
@@ -21,6 +23,7 @@ export async function validateProductPins(c:Pool|PoolClient,pins:{id:string;revi
 /** Every write uses the same operator authorization, immutable versions and replay contract on HTTP and MCP. */
 export async function dispatchProductAuthoring(pool:Pool,owner:string,raw:ProductAuthoringCommand){
  const command=productAuthoringCommandSchema.parse(raw);await authorizeProductOperator(pool,owner);
+ if(command.action==="save-product"||command.action==="upload-product-image")await guardThemeProductionRequest(pool,owner,command);
  if(command.action==="find-products"){
   const rows=(await pool.query(`WITH current AS(SELECT DISTINCT ON(id) id,revision,content FROM product_editorial_version ORDER BY id,revision DESC) SELECT id,revision,content FROM current WHERE position(lower($1) in lower(content::text))>0 ORDER BY id OFFSET $2 LIMIT 21`,[command.query,command.cursor])).rows;
   return {products:rows.slice(0,20).map(v=>({id:v.id,revision:v.revision,...v.content})),nextCursor:rows.length>20?command.cursor+20:null};
@@ -63,7 +66,7 @@ export async function dispatchProductAuthoring(pool:Pool,owner:string,raw:Produc
    await c.query('INSERT INTO product_editorial_version(id,revision,content,image_id,created_by) VALUES($1,$2,$3,$4,$5)',[command.product.id,revision,JSON.stringify(content),command.product.imageId??null,owner]);
    result={id:command.product.id,revision};
   }else throw fail("操作を確認してください。");
-  await c.query('INSERT INTO product_editorial_request(request_id,owner_id,digest,result) VALUES($1,$2,$3,$4) ON CONFLICT(request_id) DO NOTHING',[command.requestId,owner,digest,JSON.stringify(result)]);return result;
+  await c.query('INSERT INTO product_editorial_request(request_id,owner_id,digest,result) VALUES($1,$2,$3,$4) ON CONFLICT(request_id) DO NOTHING',[command.requestId,owner,digest,JSON.stringify(result)]);await assertThemeProductionLease(c);return result;
  });
 }
 /** Retain all historical product-version references. Only never-linked uploads expire after 7 days. */
