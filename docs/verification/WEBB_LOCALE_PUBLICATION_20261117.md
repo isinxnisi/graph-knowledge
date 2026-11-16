@@ -29,4 +29,8 @@
 
 実装commit・build、3200／HTTPS β、正式配置、App更新、実GET／ブラウザの結果は反映後に追記する。現時点ではコード試験だけを本番反映完了と扱わない。
 
+中間確認：source6c3b2456／β build c53YHMqff31vFUo8BIHm6で、βに元からあるWebb構成9の日英正規GET検査は合格。本文・題名・提供版・OGP版・canonical・βnoindexを照合した。PC／390pxの描画も確認。最初の接続試行はUND_ERR_CONNECT_TIMEOUTでHTTP応答なし、後の再試行は200。接続timeoutの分類を5e9794eaで補正し、最終資材を再構築する。本番へ6c3b2456を配置していない。
+
+既存Appの画面更新は、Computer UseがChromeの現在URLを確定できず安全停止したため未実施。βの既存get_theme_authoring_guideから新しいcanonicalPublication操作／schema／手順は実読取済みだが、新しいcheck_theme_publicationの実ChatGPT呼出しとは区別する。
+
 制約：既存本文や構成の明示的訂正をまたいで過去版へ戻さない保守的な方式。訂正後の英訳が不足すれば、正当な訂正／撤回の優先によりその言語は準備中となる。Google検索エンジンの実Index登録、iPhone実機は別途未検証。実際のテーマ・訳文・品質本文を書き換える試験は行わない。
