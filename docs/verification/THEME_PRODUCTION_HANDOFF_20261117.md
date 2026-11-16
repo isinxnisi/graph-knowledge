@@ -40,6 +40,10 @@
 
 正式用：build `Aln1PQnmc40z6M7TxIyGK`。Webと一時migration用ops imageを同じ固定sourceから構築。`scripts/release-theme-production-production.py` は直前の正式image／設定／ledgerを厳密照合し、最新dumpを隔離DBへ復元して044と再実行を確認した後にのみliveへ進む。Webと既存3 Workerをbackup中だけ停止し、Workerは同じcontainer／imageで再開する。Composeの恒久変更はWeb imageのみ。DB原本・ガイド本文・テーマ・収集計画・予定は変更しない。
 
-正式反映・実Appの追加6操作の定義更新は未完。既存App ID／endpoint／OAuth scopeを維持する。API単体成功を実ChatGPT Web予定実行の成功とは扱わない。
+正式反映完了：source `fa35377b`／build `Aln1PQnmc40z6M7TxIyGK`、member45／knowledge9。最新本番backupを隔離復元し、旧100テーブルの行・所有者を保持して103テーブルへ移行、再実行で不変を確認。本番切替時にも既存member行・knowledge原本の保持を照合。Webのみ新image、既存Workerは同じcontainer／imageで再開。正式TOP／dataset200、新build一致、未認証MCP401。既存正式Appから新技術ガイド（追加6操作とschema／手順を含む）の実読取成功。
+
+正式backup：`/opt/graph-knowledge/backups/theme-production-20261116T153247Z`。暗号化backup／鍵のラップを作成し、サーバー側で復号一致を確認。登録データ・品質本文・収集計画・予定は変更していない。
+
+実Appの追加6操作のツール定義更新と新操作の実呼出しは未完。Chrome前面化後の画面操作はphysical Escapeにより停止されたため、それ以上のComputer Useは実行していない。既存Appの「ツールを更新」が必要。App ID／endpoint／OAuth scopeは維持し、再作成不要。API単体成功を実ChatGPT Web予定実行の成功とは扱わない。
 
 復旧：新しい案件保存後にfenceのない旧Webへ自動降格しない。migration開始後の失敗は公開Webを停止して記録を保全し、互換性のある前進修復を行う。旧dumpを自動で戻さない。運営者入力が必要なsudoは、照合済みの実行資材を用意して本人terminalだけで入力する。
