@@ -34,3 +34,19 @@
 既存Appの画面更新は、Computer UseがChromeの現在URLを確定できず安全停止したため未実施。βの既存get_theme_authoring_guideから新しいcanonicalPublication操作／schema／手順は実読取済みだが、新しいcheck_theme_publicationの実ChatGPT呼出しとは区別する。
 
 制約：既存本文や構成の明示的訂正をまたいで過去版へ戻さない保守的な方式。訂正後の英訳が不足すれば、正当な訂正／撤回の優先によりその言語は準備中となる。Google検索エンジンの実Index登録、iPhone実機は別途未検証。実際のテーマ・訳文・品質本文を書き換える試験は行わない。
+
+
+### 最終β版の確認
+
+source `5e9794ea`／build `rbgG2la6EPIXEYbI2FyWw` へ差替え、日英の実GET検査がともに200・issues空。既存Webb構成9を保持し、正式Webb構成27のデータをβへ投入していない。最終390pxも本文・Graphを描画し、横はみ出しとpageerrorなし。
+
+[β GET結果](assets/webb-locale-20261117/beta-get.json)／[正式の変更前390px](assets/webb-locale-20261117/formal-before-en-390.png)／[最終βの390px](assets/webb-locale-20261117/beta-en-390.png)。βと正式は既存データが違うため、本文の差を実装修正の差としない。
+
+最終本番候補build `dJLwwh5ypWeIP7go4Rz-Y`／Web config ID `sha256:8088ee2294656dc5033f7dc9ddae64f609530c5b35f1c2b3c2bc94a6f3cd0040`。imageのsource label・config／manifest／全レイヤー・archive SHAを照合した。正式切替と適用後GET／描画、既存Appの追加操作の更新・実呼出しは別途残る。
+
+
+### 正式切替待ちの固定資材
+
+2026-11-17、最終archive `a780b521304eeae6b35604d42565dc9f48911e287a76ded9f56db02df141523e`（124,303,334 bytes）を `/home/develop/plunode-webb-locale-20261117/release-5e9794ea` へ転送し、image／manifest／配置script／helperの現地checksum一致を確認。前の未完了転送は使用しない。
+
+正式のsudo非対話実行はパスワード要求で停止するため、本人terminalで `backups/webb-locale-20261117/run-release.py` を実行する必要がある。wrapperは既存SSH経路を使い、共通ロックを取得し、固定checksumを照合してから既存root権限の入力を要求する。現在fa35377bのWeb・build・image・Compose導出・private設定hash・会員45／知識9のledger・稼働サービスを検査し、Composeと設定をbackupしてWebだけ更新する。DB／訳文／Worker／品質ガイド本文を変更せず、互換旧Webへの復旧だけを用意する。まだ正式切替後のGET・描画を確認した意味ではない。

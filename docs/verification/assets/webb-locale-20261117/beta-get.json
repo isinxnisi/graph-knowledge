@@ -1,0 +1,98 @@
+{
+  "checkedAt": "2026-11-16T18:56:26.100Z",
+  "origin": "https://graph-beta.isinxnisi.com",
+  "ok": true,
+  "results": [
+    {
+      "language": "ja",
+      "url": "https://graph-beta.isinxnisi.com/t/reading-20261110%3Awebb%3Atheme",
+      "httpStatus": 200,
+      "ok": true,
+      "issues": [],
+      "latestRevision": 9,
+      "servedRevision": 9,
+      "translationPending": false,
+      "evidence": {
+        "lang": "ja",
+        "canonical": [
+          "https://plunode.net/t/reading-20261110%3Awebb%3Atheme"
+        ],
+        "robotMeta": [
+          "noindex, nofollow, noarchive"
+        ],
+        "headerRobots": null,
+        "noindex": true,
+        "documentTitle": [
+          "Webbが宇宙でひらくまで — Plunode"
+        ],
+        "ogImages": [
+          "https://plunode.net/t/reading-20261110%3Awebb%3Atheme/opengraph-image?revision=9"
+        ],
+        "servedRevision": 9,
+        "headingPresent": true,
+        "bodyPresent": true,
+        "alternates": [
+          {
+            "language": "ja",
+            "url": "https://plunode.net/t/reading-20261110%3Awebb%3Atheme"
+          },
+          {
+            "language": "en",
+            "url": "https://plunode.net/en/t/reading-20261110%3Awebb%3Atheme"
+          },
+          {
+            "language": "x-default",
+            "url": "https://plunode.net/t/reading-20261110%3Awebb%3Atheme"
+          }
+        ],
+        "sitemapPresent": false
+      }
+    },
+    {
+      "language": "en",
+      "url": "https://graph-beta.isinxnisi.com/en/t/reading-20261110%3Awebb%3Atheme",
+      "httpStatus": 200,
+      "ok": true,
+      "issues": [],
+      "latestRevision": 9,
+      "servedRevision": 9,
+      "translationPending": false,
+      "evidence": {
+        "lang": "en",
+        "canonical": [
+          "https://plunode.net/en/t/reading-20261110%3Awebb%3Atheme"
+        ],
+        "robotMeta": [
+          "noindex, nofollow, noarchive"
+        ],
+        "headerRobots": null,
+        "noindex": true,
+        "documentTitle": [
+          "Webb’s Journey to Unfolding the Universe — Plunode"
+        ],
+        "ogImages": [
+          "https://plunode.net/en/t/reading-20261110%3Awebb%3Atheme/opengraph-image?revision=9"
+        ],
+        "servedRevision": 9,
+        "headingPresent": true,
+        "bodyPresent": true,
+        "alternates": [
+          {
+            "language": "ja",
+            "url": "https://plunode.net/t/reading-20261110%3Awebb%3Atheme"
+          },
+          {
+            "language": "en",
+            "url": "https://plunode.net/en/t/reading-20261110%3Awebb%3Atheme"
+          },
+          {
+            "language": "x-default",
+            "url": "https://plunode.net/t/reading-20261110%3Awebb%3Atheme"
+          }
+        ],
+        "sitemapPresent": false
+      }
+    }
+  ],
+  "googleIndexVerified": false
+}
