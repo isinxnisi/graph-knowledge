@@ -44,6 +44,13 @@
 
 正式backup：`/opt/graph-knowledge/backups/theme-production-20261116T153247Z`。暗号化backup／鍵のラップを作成し、サーバー側で復号一致を確認。登録データ・品質本文・収集計画・予定は変更していない。
 
-実Appの追加6操作のツール定義更新と新操作の実呼出しは未完。Chrome前面化後の画面操作はphysical Escapeにより停止されたため、それ以上のComputer Useは実行していない。既存Appの「ツールを更新」が必要。App ID／endpoint／OAuth scopeは維持し、再作成不要。API単体成功を実ChatGPT Web予定実行の成功とは扱わない。
+2026-11-17 再開後、Chrome上の既存本番・β App管理で「ツールを更新」をそれぞれ実行した。更新後のApp操作一覧を開き直し、create／get／claim／update／prepare／dispatchの追加6操作すべてを両Appで照合。本番Writeは16→21、βの実MCP tools/listはHTTP200／34操作。既存App ID（本番6aeffba90628819181cfb1d6eb54a8d0、β6aef2b97439081919c3828f9080c4c6f）／endpoint／OAuth scope／権限／接続アカウントを維持し、再作成・再同意・予定変更なし。ツール更新の本人操作は残っていない。
+
+本Codex会話に公開される呼出ツール一覧は更新前のままで、追加操作を直接呼べない。通常ChatGPT Webの既存会話から本番get_theme_production({})を1回だけ読み取り、outcomeを確認する操作を本人へ依頼中。案件作成・claim・登録・更新は実行しない。API単体成功やApp一覧表示を、実ChatGPT Web予定実行の成功とは扱わない。
 
 復旧：新しい案件保存後にfenceのない旧Webへ自動降格しない。migration開始後の失敗は公開Webを停止して記録を保全し、互換性のある前進修復を行う。旧dumpを自動で戻さない。運営者入力が必要なsudoは、照合済みの実行資材を用意して本人terminalだけで入力する。
+
+
+## 暗号化backupのPC回収
+
+前回timeoutで途切れた728,422,432 bytesの暗号化archiveを、受領済みprefixのSHA256を正式側と照合してから再開し、全体SHA256 `6dd16c04a703a6533771e89ecdc9d899ddf2c34d040ef30991e3cdd9247b09c0` の一致を確認した。384 bytesのwrapped keyもSHA256 `2ee6cce0938b6de639095c3ccab8f748791df82848d05dab7ded0d54ed7ab264` 一致。保存先はGit外のprivate `backups/theme-production-handoff-20261117/`。サーバー側の暗号化直後の復号一致は実施済み。PC上の復号は再実施していない。
