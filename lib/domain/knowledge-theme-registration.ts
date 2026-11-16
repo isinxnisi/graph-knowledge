@@ -1,3 +1,4 @@
+import {themePublicationCheckSchema} from './theme-publication-check';
 import {themeStoriesSchema} from "./theme-stories";
 import {readThemeQualityGuideSchema,updateThemeQualityGuideSchema} from './theme-quality-guide';
 import {themeEditorialInputSchema} from './theme-editorial';
@@ -99,6 +100,7 @@ export const controlThemeRetrySchema=z.strictObject({
 export type ControlThemeRetry=z.infer<typeof controlThemeRetrySchema>;
 export const themeRegistrationCommandSchema=z.discriminatedUnion('action',[
  ...productAuthoringCommandSchema.options,
+ themePublicationCheckSchema.extend({action:z.literal('check-theme-publication')}),
  themeRetryStatusSchema.extend({action:z.literal('theme-retry-status')}),
  controlThemeRetrySchema.safeExtend({action:z.literal('control-theme-retry')}),
  uploadEditorialImageSchema.safeExtend({action:z.literal('upload-editorial-image')}),

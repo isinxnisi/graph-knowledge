@@ -65,6 +65,7 @@ export default function KnowledgeReading({children,operatorEnabled=true,initialT
  const normalCanvas=useRef<GraphCanvasHandle>(null),themeCanvas=useRef<GraphCanvasHandle>(null),themeGraphPane=useRef<HTMLDivElement>(null);
  const checkpointTimer=useRef<ReturnType<typeof setTimeout>|null>(null);
  const active=w.activeTheme,retained=w.retainedTheme;
+ const localeEdition=retained?.localeEdition??(initialTheme?.theme.id===retained?.theme.id&&initialTheme?.theme.revision===retained?.theme.revision?initialTheme?.localeEdition:undefined);
  const closeTheme=w.closeTheme;
  const [about,setAbout]=useState<boolean|null>(null);
  const themeItems=useThemeItems(active?.theme);
@@ -169,6 +170,7 @@ export default function KnowledgeReading({children,operatorEnabled=true,initialT
         </section>
         {retained && <section hidden={!active} className={`${base.panel} ${base.graphPanel} ${css.stage}`} aria-label={en ? "Theme reading" : "テーマを読む"}>
           <header className={css.themeHeader}><button onClick={() => { resetDetailTrail(); checkpoint(); setRequested(false); w.closeTheme(); if(!commonVisible)host.current?.onReturn(); }} className={css.return}><Icon name="back" />{en ? "Back to exploration" : "探索に戻る"}</button><span>{en ? "Saved composition" : "構成版"} {retained.theme.revision}</span><h2 title={retained.theme.content.title}>{knowledgeDisplayText(themeDisplayTranslations,{kind:"theme",id:retained.theme.id,revision:retained.theme.revision,field:"title"},locale,retained.theme.content.title)}</h2><button className={css.themeInfo} aria-label={en?"Create Capsule":"Capsuleを作成"} title={en?"Create Capsule":"Capsuleを作成"} disabled={busy} onClick={()=>{checkpoint();setCreatedCapsule(captureKnowledgeCapsule({snapshot:withTranslations(retained.snapshot,retained.theme),theme:retained.theme,title:retained.theme.content.title,view:w.themeView,graphView:themeCanvas.current?.capture()}));}}><Icon name="capsule"/></button>{submissionButton}<button className={css.themeInfo} aria-label={en ? "About this theme" : "テーマについて"} title={en ? "About this theme" : "テーマについて"} onClick={showAbout}><Icon name="book" /></button></header>
+          {localeEdition&&<p className={css.help}>{en?`English edition ${localeEdition.servedRevision}. New material in Japanese edition ${localeEdition.latestRevision} is awaiting translation.`:`表示版 ${localeEdition.servedRevision}。最新版 ${localeEdition.latestRevision} の追加分は翻訳準備中です。`}</p>}
           <ThemeReadingHero presentation={presentation} theme={retained.theme} snapshot={{...themeSnapshot!,translations:themeDisplayTranslations}} locale={locale} onAbout={showAbout}/>
 
           {(themeHasTime||themeHasGraph)&&<KnowledgeSplit mode={themeMode}>

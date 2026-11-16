@@ -9,6 +9,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const paths = ["/", "/privacy", "/support", ...(await sitemapEntities()).map(id => `/explore/${id}`)];
   const themes=await (await knowledgePublicationPreview()).themes();
   const themeEntries:MetadataRoute.Sitemap=[];
-  for(const t of themes.themes){const ja=await publicThemeRead(t.id,"ja"),en=await publicThemeRead(t.id,"en");for(const locale of ["ja","en"] as const)if(hasThemeLocale(locale==="ja"?ja:en,locale))themeEntries.push({url:PUBLIC_ORIGIN+themePath(t.id,locale),lastModified:ja.theme.createdAt});}
+  for(const t of themes.themes){const ja=await publicThemeRead(t.id,"ja"),en=await publicThemeRead(t.id,"en");for(const locale of ["ja","en"] as const)if(hasThemeLocale(locale==="ja"?ja:en,locale))themeEntries.push({url:PUBLIC_ORIGIN+themePath(t.id,locale),lastModified:(locale==="ja"?ja:en).theme.createdAt});}
   return [...themeEntries,...paths.flatMap(path => [{ url: PUBLIC_ORIGIN + path }, { url: PUBLIC_ORIGIN + "/en" + (path === "/" ? "" : path) }])];
 }

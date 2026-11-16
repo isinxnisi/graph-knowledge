@@ -1,3 +1,4 @@
+import {resolveThemeLocalePublication} from './theme-locale-publication';
 import {readEntityProductContext} from "./knowledge-entity-products";
 import {resolveIdentityGroups} from "./knowledge-identity-resolution";
 import {themeReadingPresentation} from "./theme-reading-presentation";
@@ -283,11 +284,13 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
       }
       return {...result,...(q.entityId?{focusIds}:{})};
     }),
-    theme:(raw:unknown)=>read(async c=>{
+    theme:(raw:unknown,options:{localeEdition?:boolean}={})=>read(async c=>{
       const q=knowledgeThemeReadQuerySchema.parse(raw);
       let resolved;
       try{resolved=await resolvePublicKnowledgeTheme(c,q.themeId,q.revision);}
       catch(error){if(error instanceof KnowledgeError && (error.status===403||error.status===404))throw new KnowledgeError("このテーマは閲覧できません",404,"NOT_FOUND");throw error;}
+      const locale=options.localeEdition&&q.language&&!q.revision?await resolveThemeLocalePublication(c,resolved,q.language):undefined;
+      if(locale)resolved=locale.resolved;
       const {snapshot}=resolved;
       const links=(await c.query("SELECT * FROM knowledge75.legacy_links WHERE record_id=ANY($1::text[]) ORDER BY dataset,legacy_claim_id",[snapshot.records.map(r=>r.id)])).rows;
       const records=snapshot.records.map(record=>{
@@ -295,7 +298,7 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
         if(link&&knowledgeDigest(link.payload)!==link.sha256)throw new KnowledgeError("旧原本のhashが一致しません",503,"LEGACY_HASH_MISMATCH");
         return buildKnowledgePublishedRecord(record,{entities:snapshot.entities,sources:snapshot.sources,mappings:snapshot.mappings,...(link?{legacyLink:{dataset:link.dataset,legacyClaimId:link.legacy_claim_id,recordId:link.record_id,importedRevision:Number(link.imported_revision),payload:link.payload,sha256:link.sha256}}:{})});
       });
-      return {...resolved,records,presentation:themeReadingPresentation(resolved.theme,q.language??"ja",snapshot),...(q.language?{displayTranslations:await publicThemeSnapshotTranslations(c,resolved,q.language)}:{})} satisfies KnowledgeThemeRead;
+      return {...resolved,records,presentation:themeReadingPresentation(resolved.theme,q.language??"ja",snapshot),...(q.language?{displayTranslations:locale?.displayTranslations??await publicThemeSnapshotTranslations(c,resolved,q.language)}:{}),...(locale?.localeEdition?{localeEdition:locale.localeEdition}:{})} satisfies KnowledgeThemeRead;
     }),
     entities:(raw:unknown={})=>read(async c=>{
       const q=knowledgeEntityQuerySchema.parse(raw);const cursor=decodeCursor(q.cursor);const actual=await generation(c,q.generation??cursor?.generation);
