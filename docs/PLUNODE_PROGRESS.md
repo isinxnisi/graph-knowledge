@@ -1,3 +1,5 @@
+2026-11-16 テーマ画像拡大の正式反映：①本番差分確認・②固定image構築／転送照合・③本人sudoによるWeb切替と正式PC／390px確認まで完了｜今回の全体③まで完了。source `4675179e`／正式build `rkyr-DN02OjLWuFjxoU9Y`。Nas構成版18／ツタンカーメン版6の画像全体・公開credit・開閉と閲覧位置保持を確認。既存訳文620版・会員44／知識9・Worker／設定／原本を保持、DB移行・登録操作なし。βは従来build継続、iPhone実機未確認。[検証・復旧](verification/THEME_IMAGE_DIALOG_20261116.md#正式web反映と画面確認完了)。
+
 2026-11-16 テーマ画像の拡大：①既存表示確認・②実装／17件・③3200／HTTPS βのPC・スマホ・タブレット・横向き確認まで完了｜今回の全体③まで完了。実装e767574c／ef193bd1、β build `nO3lQgJ3iwNSAQ9Ft6FzE`。画像全体をモーダルで読み、×／背景／Escで元へ戻る。背景wheel／touch移動を止め、URL・閲覧位置と画像配置を保持。Web起動時の既存β設定を復帰、DB／登録内容・Worker／本番未変更、iPhone実機未確認。[検証・復帰](verification/THEME_IMAGE_DIALOG_20261116.md)。
 
 2026-11-16 Graphのノード説明：①原因確認・②修正と51件・③β／正式Web反映と実マウスでの35秒表示確認まで完了｜今回の全体③まで完了。source29e2d1aa／正式 `kmAn75_BlcSljfRq5IqaC`。ロック中・解除後・再ロック後の説明表示、resize後の継続、ロック中のwheel保護／離脱時の終了を確認。既存訳文115版・DB／Worker／設定を保持。既知のまとめ移動1件とiPhone実機未確認は別記。[検証・復旧](verification/GRAPH_CAPTION_20261116.md)。

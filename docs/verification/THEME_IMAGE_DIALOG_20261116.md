@@ -32,7 +32,7 @@
 - 最終画面／JSONは上記保存先の`final/`、ローカル結果は`backups/theme-image-dialog-20261116/local-final/`。修正前と補修前の結果も保持し、失敗を成功扱いにしていない。
 - Webは既存β設定を読み、端末の終了に依存しない独立プロセスとして起動。既存`beta.pid`／`beta.log`へ記録し、3200の継続稼働を確認。新しい自動起動設定やWorker変更は行っていない。
 - 互換復帰用の旧buildは`backups/theme-image-dialog-20261116/previous-beta-build/`に保持。戻す場合はWebだけ停止・build交換・同じβ設定で再起動する。DBの巻戻しは不要。
-- 本番は未反映。テーマ・画像・商品・訳文の登録内容、API、DB migration、Worker・private設定ファイルは今回変更していない。
+- 初回β反映時点では本番は未反映。テーマ・画像・商品・訳文の登録内容、API、DB migration、Worker・private設定ファイルは変更していない。後続の正式反映でも同じ境界を維持する。
 
 ## 本番反映の準備（本人による反映承認後）
 
@@ -44,6 +44,16 @@
 - source label／image config・manifest／全layer・buildを検証して配置する。ComposeはWebのimageだけ変更し、private設定と旧Composeをbackupする。既存の訳文全版を開始時に照合し、切替後に保持を確認。Worker・DB migration・登録操作は行わない。
 - 互換復旧は直前Web／Composeのみ。DB dumpの復元や旧形式への巻戻しは行わない。image照合の既存5試験成功、切替プログラムの構文検査成功。
 
-本番資材・切替結果・実画面確認は後続の完了記録へ追記する。準備段階は反映完了に含めない。
+本番資材・切替結果・実画面確認は下記の完了記録へ追記した。準備段階と実反映を区別する。
 
 - 正式候補build `rkyr-DN02OjLWuFjxoU9Y`、image config `sha256:3062c17be2c50d1048ec398362ba58bba7364a534891ea5fbec8ac46ada46ce7`。archive SHA-256 `562038f19e23e7c0f041b0dec5349e8d7120e794bac73ac6957b765ed2531e6f`。archive全layer・source label・起動JS構文・既存AI artifact同一を確認済み。
+
+## 正式Web反映と画面確認完了
+
+- 本人による既存sudo入力でWebのみ切替。source `4675179e34de79b9ea5c24b68962ea869a7913bb`／正式build `rkyr-DN02OjLWuFjxoU9Y`。SSHから切替receiptを回収し、正式HTTPSのbuildId一致を独立確認した。
+- 本番containerd manifest `sha256:6fc64f16376a3b52f14551941ae3604d7486e2d203da290aee3ca52a174c4e4f`は、照合済みarchiveのconfig／全layerに一致。会員44／知識9 migration、既存訳文620版、Worker・PG／KG・private設定・AI artifactを保持。DB移行・登録操作なし。
+- 正式HTTPSのNasテーマ構成版18とツタンカーメン構成版6を、Windows側の独立Chromeから実読取。両テーマのPC1440×900／スマホ390×844で、画像全体の収まり・×／背景／Esc・画像からのドラッグで閉じないこと・フォーカス復帰・URL保持・背景wheel／touchスワイプ時の位置保持を確認。公開クレジットの折返しも確認。
+- 切替前後の正式APIでNas構成版18のTheme全体と固定snapshotの26 Entity／42 Record／6 Sourceが一致。本文・版・画像参照を変更していない。
+- 保存画面は上記visualizations内の`production/`／`production-credit/`、実測JSONも同所。最終受入を`backups/theme-image-production-20261116/formal-acceptance.json`へ保存。切替直後receiptの`formalBrowserAcceptancePending:true`と、後続ブラウザ検証完了を区別して記録した。iPhone実機／Safariは未確認。
+- backup `/opt/graph-knowledge/backups/theme-image-web-20261116T140807Z`。互換復旧は直前29e2d1aaのWeb／Composeのみとし、DB dumpへ戻さない。
+- βは既存build `nO3lQgJ3iwNSAQ9Ft6FzE`の継続応答を確認。今回の追加変更は切替手順・完了文書だけのためβの再buildは不要。全体①現行確認・②資材／照合・③正式切替と画面確認まで完了。
