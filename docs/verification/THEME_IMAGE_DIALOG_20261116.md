@@ -21,7 +21,7 @@
 
 保存画面・検証結果：`C:/Users/nishr/.codex/visualizations/2026/10/29/01a18791-0fba-7ac0-9f89-54c48fdffcf6/theme-image-dialog-20261116/` と `backups/theme-image-dialog-20261116/local/`。変更前のPC画像126×96px、スマホ64×68pxを維持する。
 
-新しい表示機能のβ確認が今回の区切り。本番は既存source29e2d1aa／build kmAn75_BlcSljfRq5IqaCを維持し、今回の画像拡大は未反映。
+初回のβ確認では本番source29e2d1aa／build kmAn75_BlcSljfRq5IqaCを維持し、画像拡大は未反映とした。その後、ユーザーが本番反映を明示承認。以下の本番工程を追加する。
 
 ## 最終反映と確認結果
 
@@ -33,3 +33,17 @@
 - Webは既存β設定を読み、端末の終了に依存しない独立プロセスとして起動。既存`beta.pid`／`beta.log`へ記録し、3200の継続稼働を確認。新しい自動起動設定やWorker変更は行っていない。
 - 互換復帰用の旧buildは`backups/theme-image-dialog-20261116/previous-beta-build/`に保持。戻す場合はWebだけ停止・build交換・同じβ設定で再起動する。DBの巻戻しは不要。
 - 本番は未反映。テーマ・画像・商品・訳文の登録内容、API、DB migration、Worker・private設定ファイルは今回変更していない。
+
+## 本番反映の準備（本人による反映承認後）
+
+工程は①現行と差分確認・②固定image／転送照合と復旧準備・③本番切替と正式画面確認。
+
+- mainの固定source `4675179e34de79b9ea5c24b68962ea869a7913bb`を採用。現在本番source29e2d1aaとの差分のうち実行時の変更はThemeReadingHeroの画像ボタン／dialogと局所CSSのみ。登録内容を含むβデータは移行しない。
+- 本番HTTPSのbuildが既存`kmAn75_BlcSljfRq5IqaC`であることと、SSH側の直前切替receiptを確認。本番`sudo -n`は本人パスワードが必要なため、実環境のprivate設定・migration ledger等の厳密な再監査は本人実行の切替プログラムの先頭で行う。
+- `scripts/release-theme-image-production.py`は既存のWeb限定手順を再利用。直前29e2d1aaのimage／build、直前backupから導いたCompose全文、設定hash、会員44／知識9 migration checksumを照合する。不一致なら変更前に停止する。
+- source label／image config・manifest／全layer・buildを検証して配置する。ComposeはWebのimageだけ変更し、private設定と旧Composeをbackupする。既存の訳文全版を開始時に照合し、切替後に保持を確認。Worker・DB migration・登録操作は行わない。
+- 互換復旧は直前Web／Composeのみ。DB dumpの復元や旧形式への巻戻しは行わない。image照合の既存5試験成功、切替プログラムの構文検査成功。
+
+本番資材・切替結果・実画面確認は後続の完了記録へ追記する。準備段階は反映完了に含めない。
+
+- 正式候補build `rkyr-DN02OjLWuFjxoU9Y`、image config `sha256:3062c17be2c50d1048ec398362ba58bba7364a534891ea5fbec8ac46ada46ce7`。archive SHA-256 `562038f19e23e7c0f041b0dec5349e8d7120e794bac73ac6957b765ed2531e6f`。archive全layer・source label・起動JS構文・既存AI artifact同一を確認済み。
