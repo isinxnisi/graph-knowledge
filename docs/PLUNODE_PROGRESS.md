@@ -1,3 +1,5 @@
+2026-11-17 Webb正規英語ページの是正：①調査・②実装・③隔離／既存回帰・④正式／β配置とGET／描画、既存両App35操作への更新まで完了｜今回の実装・配置工程は④まで完了。runtime5e9794ea／正式 dJLwwh5ypWeIP7go4Rz-Y／β rbgG2la6EPIXEYbI2FyWw。正式Webb日英27・対照英語12は200／本文・SEO照合合格。既存訳文667版・DB／Worker／設定・品質本文を保持。新検査操作の実ChatGPT呼出し、iPhone実機、Google Index登録は未確認として区別。[結果・操作例・復旧](verification/WEBB_LOCALE_PUBLICATION_20261117.md)。
+
 2026-11-17 Webb正規ページの再発防止：①現状確認・②言語別提供版と対象GET検査・③隔離／既存回帰・④最終βの日英GET／390pxまで完了｜残り④本番切替・正式GET／描画・App操作更新｜全体④まで。runtime5e9794ea／β rbgG2la6EPIXEYbI2FyWw、正式候補 dJLwwh5ypWeIP7go4Rz-Y。既存11訳文・品質本文を未変更。接続timeoutとHTTPエラーを区別。[検証と残件](verification/WEBB_LOCALE_PUBLICATION_20261117.md)。
 
 2026-11-17 Webb言語公開：①正式日英／対照GET・品質4版確認、②言語別提供版／対象GET検査の実装、③隔離・既存回帰完了｜残り④build・β／正式・App／実URL描画確認｜全体④まで。先行11訳文は再登録せず、実Theme構成27・品質本文を保持。追加翻訳待ちだけ安全な英語版を維持し、訂正／撤回／固定版を保護。[設計](design/THEME_LOCALE_PUBLICATION_20261117.md)・[検証](verification/WEBB_LOCALE_PUBLICATION_20261117.md)。

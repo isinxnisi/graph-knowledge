@@ -1,0 +1,143 @@
+{
+  "checkedAt": "2026-11-16T23:33:39.631Z",
+  "origin": "https://plunode.net",
+  "ok": true,
+  "results": [
+    {
+      "language": "ja",
+      "url": "https://plunode.net/t/theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1",
+      "httpStatus": 200,
+      "ok": true,
+      "issues": [],
+      "latestRevision": 27,
+      "servedRevision": 27,
+      "translationPending": false,
+      "evidence": {
+        "lang": "ja",
+        "canonical": [
+          "https://plunode.net/t/theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1"
+        ],
+        "robotMeta": [
+          "index, follow"
+        ],
+        "headerRobots": null,
+        "noindex": false,
+        "documentTitle": [
+          "Webbが宇宙でひらくまで — Plunode"
+        ],
+        "ogImages": [
+          "https://plunode.net/t/theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1/opengraph-image?revision=27"
+        ],
+        "servedRevision": 27,
+        "headingPresent": true,
+        "bodyPresent": true,
+        "alternates": [
+          {
+            "language": "ja",
+            "url": "https://plunode.net/t/theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1"
+          },
+          {
+            "language": "en",
+            "url": "https://plunode.net/en/t/theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1"
+          },
+          {
+            "language": "x-default",
+            "url": "https://plunode.net/t/theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1"
+          }
+        ],
+        "sitemapPresent": true
+      }
+    },
+    {
+      "language": "en",
+      "url": "https://plunode.net/en/t/theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1",
+      "httpStatus": 200,
+      "ok": true,
+      "issues": [],
+      "latestRevision": 27,
+      "servedRevision": 27,
+      "translationPending": false,
+      "evidence": {
+        "lang": "en",
+        "canonical": [
+          "https://plunode.net/en/t/theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1"
+        ],
+        "robotMeta": [
+          "index, follow"
+        ],
+        "headerRobots": null,
+        "noindex": false,
+        "documentTitle": [
+          "Webb's Journey to Unfolding in Space — Plunode"
+        ],
+        "ogImages": [
+          "https://plunode.net/en/t/theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1/opengraph-image?revision=27"
+        ],
+        "servedRevision": 27,
+        "headingPresent": true,
+        "bodyPresent": true,
+        "alternates": [
+          {
+            "language": "ja",
+            "url": "https://plunode.net/t/theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1"
+          },
+          {
+            "language": "en",
+            "url": "https://plunode.net/en/t/theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1"
+          },
+          {
+            "language": "x-default",
+            "url": "https://plunode.net/t/theme%3A915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1"
+          }
+        ],
+        "sitemapPresent": true
+      }
+    },
+    {
+      "language": "en",
+      "url": "https://plunode.net/en/t/theme%3Aac9e1281f14d3aadb6b986cdfb089194a11bcc73e2347161",
+      "httpStatus": 200,
+      "ok": true,
+      "issues": [],
+      "latestRevision": 12,
+      "servedRevision": 12,
+      "translationPending": false,
+      "evidence": {
+        "lang": "en",
+        "canonical": [
+          "https://plunode.net/en/t/theme%3Aac9e1281f14d3aadb6b986cdfb089194a11bcc73e2347161"
+        ],
+        "robotMeta": [
+          "index, follow"
+        ],
+        "headerRobots": null,
+        "noindex": false,
+        "documentTitle": [
+          "Kurosawa's Films and Star Wars — Plunode"
+        ],
+        "ogImages": [
+          "https://plunode.net/en/t/theme%3Aac9e1281f14d3aadb6b986cdfb089194a11bcc73e2347161/opengraph-image?revision=12"
+        ],
+        "servedRevision": 12,
+        "headingPresent": true,
+        "bodyPresent": true,
+        "alternates": [
+          {
+            "language": "ja",
+            "url": "https://plunode.net/t/theme%3Aac9e1281f14d3aadb6b986cdfb089194a11bcc73e2347161"
+          },
+          {
+            "language": "en",
+            "url": "https://plunode.net/en/t/theme%3Aac9e1281f14d3aadb6b986cdfb089194a11bcc73e2347161"
+          },
+          {
+            "language": "x-default",
+            "url": "https://plunode.net/t/theme%3Aac9e1281f14d3aadb6b986cdfb089194a11bcc73e2347161"
+          }
+        ],
+        "sitemapPresent": true
+      }
+    }
+  ],
+  "googleIndexVerified": false
+}
