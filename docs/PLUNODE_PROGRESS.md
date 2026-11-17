@@ -1,3 +1,5 @@
+2026-11-18 制作中テーマの非公開化：①設計・②実装・③隔離／固定image回帰とbuild・④β3200／HTTPS匿名15経路・既存Appから非公開作業版の読取まで完了｜残り④本番045／010適用、正式公開境界・Appツール更新、運営者のPC／スマホ実画面確認｜全体④まで。アプリ52aeced6／β2jvdBAkNF0hibHgPo9jqz、正式候補mX5Ty2YU9Jw7NlYdW8llV。正式資材は転送・現地hash照合済みだが未適用、DQ実非公開化は未反映。共通知識の公開維持。β品質ガイド6版だけ契約追記、本番本文4版は未変更。Chrome操作はURLを確定できず安全停止。[実装・検証・残件](verification/THEME_PRIVATE_PUBLICATION_20261118.md)。
+
 2026-11-18 制作中テーマの非公開化：①公開境界設計・②承認公開版／訳文固定・運営者プレビュー／制作完了との連携を実装、③隔離の制作・公開制御25件／取込32件／訳文と一般制限30件／画像・権限・MCP16件／言語・SEO37件まで成功｜残り③画面・buildと追加回帰、④β／正式migration・配置・App接続｜全体④まで。現時点で稼働β・本番は未変更、ドラゴンクエストの実非公開化も未適用。テーマ固有情報だけを保護し、共通知識の公開を維持する。[設計](design/THEME_PRIVATE_PUBLICATION_20261117.md)。
 
 2026-11-17 Webb正規英語ページの是正：①調査・②実装・③隔離／既存回帰・④正式／β配置とGET／描画、既存両App35操作への更新まで完了｜今回の実装・配置工程は④まで完了。runtime5e9794ea／正式 dJLwwh5ypWeIP7go4Rz-Y／β rbgG2la6EPIXEYbI2FyWw。正式Webb日英27・対照英語12は200／本文・SEO照合合格。既存訳文667版・DB／Worker／設定・品質本文を保持。新検査操作の実ChatGPT呼出し、iPhone実機、Google Index登録は未確認として区別。[結果・操作例・復旧](verification/WEBB_LOCALE_PUBLICATION_20261117.md)。
