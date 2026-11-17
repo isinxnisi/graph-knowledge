@@ -1,3 +1,4 @@
+import {approveThemeFixture} from './helpers/approved-theme-fixture';
 import {beforeAll,beforeEach,afterAll,it,expect} from 'vitest';
 import {Pool} from 'pg';import neo4j from 'neo4j-driver';import {randomUUID} from 'node:crypto';
 import {createKnowledgeFoundationService} from '../lib/server/knowledge-foundation';
@@ -8,7 +9,7 @@ import {translationHash} from '../lib/server/knowledge-translation-storage';
 const pool=new Pool({connectionString:process.env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL});const driver=neo4j.driver('bolt://127.0.0.1:1');
 let foundation:ReturnType<typeof createKnowledgeFoundationService>,publication:ReturnType<typeof createKnowledgePublicationService>;
 const actor={kind:'operator' as const,id:'isolated-language-editions'};
-const run=(action:string,fields:Record<string,unknown>)=>foundation.execute(actor,{action,requestId:randomUUID(),reason:'隔離言語版試験',...fields});
+const run=async(action:string,fields:Record<string,unknown>)=>{const result=await foundation.execute(actor,{action,requestId:randomUUID(),reason:'隔離言語版試験',...fields});if(['create-theme','edit-theme','accept-translation'].includes(action))await approveThemeFixture(pool,'theme:fixture');return result;};
 const en=()=>publication.theme({themeId:'theme:fixture',language:'en'},{localeEdition:true});
 const ja=()=>publication.theme({themeId:'theme:fixture',language:'ja'},{localeEdition:true});
 async function translate(kind:string,id:string,revision:number,field:string,text:string){
@@ -67,3 +68,8 @@ it('reuses a corrected public translation of the same original without a new The
  await ready();await edit();const original=await publication.textOriginal({kind:'record',id:'r1',revision:1,field:'assertion'});await run('accept-translation',{target:{kind:'record',id:'r1',revision:1,field:'assertion'},language:'en',text:'The observatory launched into space.',originalHash:translationHash(original.text),expectedRevision:1});const value=await en();expect(value.theme.revision).toBe(1);expect(value.displayTranslations?.some(t=>t.text==='The observatory launched into space.')).toBe(true);
 });
 it('addition comparison protects existing order, original text, removals and revision references',()=>{expect(additiveThemeContent({pins:[{id:'a',revision:1}]},{pins:[{id:'b',revision:1},{id:'a',revision:1}]})).toBe(true);expect(additiveThemeContent({pins:[{id:'a',revision:1}]},{pins:[{id:'a',revision:2}]})).toBe(false);expect(additiveThemeContent({title:'old'},{title:'new'})).toBe(false);});
+
+it('never exposes a private intermediate edition when retaining an older approved English page',async()=>{
+ await ready();const t=await foundation.get(actor,'theme','theme:fixture');await foundation.execute(actor,{action:'edit-theme',requestId:randomUUID(),id:t.id,expectedRevision:t.revision,title:t.content.title,description:t.content.description,initialView:t.content.initialView,recordPins:[{id:'r1',revision:1},{id:'r2',revision:1}],reason:'Private working intermediate'});
+ await expect(publication.theme({themeId:t.id,revision:2})).rejects.toMatchObject({status:404});await edit({productPins:[]});const value=await en();expect(value.theme.revision).toBe(1);expect(value.localeEdition?.latestRevision).toBe(3);expect((await ja()).theme.revision).toBe(3);
+});

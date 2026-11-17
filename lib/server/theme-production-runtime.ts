@@ -1,3 +1,6 @@
+import {activateReviewedTheme} from './theme-production-publication';
+import {withOperatorThemeRead} from './knowledge-theme-access';
+import {themePublicationState} from './knowledge-theme-publication';
 import {publicThemeSnapshotTranslations} from './knowledge-display-translations';
 import type {Pool} from 'pg';
 import type {ProductionSubmissionCommand} from '../domain/theme-production';
@@ -11,7 +14,7 @@ import type {createThemeTranslationAuthoring} from './knowledge-theme-translatio
 
 export function themeProductionRuntime(pool:Pool,knowledge:Pool,origin:string,registrations:ReturnType<typeof createThemeRegistrations>,translations:ReturnType<typeof createThemeTranslationAuthoring>){
  const reader=createThemeAuthoringReader(knowledge,origin);
- async function target(id:string,owner:string){
+ async function targetValue(id:string,owner:string){
   const read=await reader.read(id),guide=await createThemeQualityGuides(pool).read(owner),t=read.theme;
   const products=await Promise.all((t.content.productPins??[]).map(p=>readEditorialProduct(pool,p.id,p.revision)));
   const associated=await associatedEditorialCatalogue(pool,[...read.snapshot.entities.map(v=>({kind:'entity' as const,id:v.id})),...read.snapshot.records.map(v=>({kind:'record' as const,id:v.id}))],{products:[],offers:[],recommendations:[]});
@@ -21,6 +24,7 @@ export function themeProductionRuntime(pool:Pool,knowledge:Pool,origin:string,re
   const references={theme:{id:t.id,revision:t.revision},translations:read.snapshot.translations?.map(v=>({id:v.id,revision:v.revision})),pinnedProducts:products.map(p=>({id:p.id,revision:p.revision})),associatedProducts:associatedPins};
   return {theme:{id:t.id,revision:t.revision},digest:knowledgeDigest({theme:t,snapshot:read.snapshot,displayTranslations,presentation,products,associated,associatedPins}),guide:{id:guide.id,revision:guide.currentRevision},references};
  }
+ const target=(id:string,owner:string)=>withOperatorThemeRead(()=>targetValue(id,owner));
  async function observe(owner:string,command:ProductionSubmissionCommand){
   if(command.action==='submit-theme'||command.action==='update-theme'||command.action==='cancel-theme'){
    let value:Awaited<ReturnType<typeof registrations.status>>;
@@ -38,5 +42,5 @@ export function themeProductionRuntime(pool:Pool,knowledge:Pool,origin:string,re
   const table=command.action==='amend-theme-items'?'theme_item_amendments':'theme_retry_operations';
   const r=(await pool.query('SELECT response FROM knowledge_missions.'+table+' WHERE request_id=$1 AND owner_id=$2',[command.requestId,owner])).rows[0];return r?{state:'applied' as const,result:r.response}:null;
  }
- return {target,observe};
+ return {target,observe,publish:(owner:string,id:string)=>activateReviewedTheme(pool,knowledge,owner,id,{origin,target,authorize:owner=>registrations.authorize(owner)}),publication:async(id:string,intentId?:string)=>({...await themePublicationState(knowledge,id),approvalPresent:!!intentId&&!!(await knowledge.query('SELECT 1 FROM knowledge75.theme_release_approvals WHERE release_id=$1 AND theme_id=$2',[intentId,id])).rowCount})};
 }

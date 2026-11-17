@@ -1,3 +1,5 @@
+import {withOperatorThemeRead} from './knowledge-theme-access';
+import {themePublicationState} from './knowledge-theme-publication';
 import {themeReadingPresentation} from "./theme-reading-presentation";
 import {themeStoryEntries} from "../domain/theme-stories";
 import {recordTimeTextTargets,themeTimelineTextTargets} from "../domain/knowledge-timeline-text";
@@ -6,8 +8,8 @@ import type {Pool} from 'pg';
 import {createKnowledgeFoundationService,KnowledgeError} from './knowledge-foundation';
 import {verifyKnowledgeReadSchema} from './knowledge-publication-preview';
 
-/** The compose permission is checked by the caller; reads still use public
- * visibility/dependency gates, not the operator's private-data access. */
+/** The caller verifies the active operator/compose permission. Theme editorial
+ * drafts are readable; common-knowledge moderation/dependency gates still apply. */
 export function createThemeAuthoringReader(pool:Pool,origin:string){
  const foundation=createKnowledgeFoundationService(pool,{prepareSchema:()=>verifyKnowledgeReadSchema(pool)});
  const reader={kind:'reader' as const,id:'chatgpt-theme-authoring'};
@@ -15,8 +17,9 @@ export function createThemeAuthoringReader(pool:Pool,origin:string){
  function themeId(value:string){
   if(!/^https?:/i.test(value))return value;
   let parsed:URL;try{parsed=new URL(value);}catch{throw new KnowledgeError('テーマのURLを確認してください。');}
-  if(parsed.origin!==origin||!parsed.searchParams.get('ktheme'))throw new KnowledgeError('この接続先のテーマURLを指定してください。');
-  return parsed.searchParams.get('ktheme')!;
+  const path=parsed.pathname.match(/^\/(?:(?:en\/)?t|operations\/themes)\/([^/]+)\/?$/);
+  if(parsed.origin!==origin||!parsed.searchParams.get('ktheme')&&!path)throw new KnowledgeError('この接続先のテーマURLを指定してください。');
+  return parsed.searchParams.get('ktheme')??decodeURIComponent(path![1]);
  }
  async function read(theme:string,revision?:number){
   const result=await foundation.resolveTheme(reader,themeId(theme),revision);
@@ -28,7 +31,7 @@ export function createThemeAuthoringReader(pool:Pool,origin:string){
    candidates:result.snapshot.records.map(record=>({target:{id:record.id,revision:record.revision},kind:record.content.kind,
     assertion:record.content.assertion,headings:presentations.flatMap(p=>p.records.filter(r=>r.target.id===record.id&&r.target.revision===record.revision).map(r=>({locale:p.locale,shortTitle:r.shortTitle,chapterQuestion:r.chapterQuestion,explanations:r.explanations}))),evidence:record.content.evidence})),
    updateField:'update_theme.changes.stories',rules:'Selection is independent of timeline/Graph membership. All kinds are candidates. Ordered items may group multiple exact Record versions. Omit to retain; {version:1,items:[]} explicitly empties the list. Missing/private records are never exposed. Source URLs and exact source versions are in snapshot.sources. Read the current quality guide to edit prose; no automatic AI selection or review.'};
-  return {...result,storyEditing,translationTargets,target:{id:result.theme.id,revision:result.theme.revision},url:url(result.theme.id,result.theme.revision)};
+  return {...result,publication:await themePublicationState(pool,result.theme.id),previewUrl:origin+'/operations/themes/'+encodeURIComponent(result.theme.id),storyEditing,translationTargets,target:{id:result.theme.id,revision:result.theme.revision},url:url(result.theme.id,result.theme.revision)};
  }
  async function find(kind:'theme'|'entity'|'record'|'source',query:string,cursor:number){
   // Candidates are bounded and independently checked for public dependencies.
@@ -52,5 +55,5 @@ export function createThemeAuthoringReader(pool:Pool,origin:string){
   const sources=await Promise.all([...pins.values()].map(p=>foundation.get(reader,'source',p.id,p.revision)));
   return {record,entities,sources};
  }
- return {read,find,knowledge};
+ return {read:(...args:Parameters<typeof read>)=>withOperatorThemeRead(()=>read(...args)),find:(...args:Parameters<typeof find>)=>withOperatorThemeRead(()=>find(...args)),knowledge};
 }

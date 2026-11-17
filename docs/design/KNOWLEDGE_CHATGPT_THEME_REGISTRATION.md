@@ -1,3 +1,13 @@
+## テーマ固有情報の非公開制作と承認公開版（2026-11-18）
+
+[公開境界の現行設計](THEME_PRIVATE_PUBLICATION_20261117.md) を優先する。新規Themeと編集中の新版は運営者専用。共通Record／Entity／Sourceの公開は維持する。受付の `published` は通常検証を経てThemeへ**保存・反映済み**という既存互換の状態であり、一般公開の承認ではない。`read_theme.publication`、`previewUrl` と制作案件の `publication` を区別して読む。
+
+運営者は従来のcompose権限で非公開Themeの読み書き・訳文登録を続行できる。公開APIは運営者のCookieがあっても承認公開版しか返さない。`/operations/themes` と `/operations/themes/:id`、専用プレビューAPIのみ有効な運営者sessionで作業版を返す。`no-store`／`noindex` を付け、公開APIへ認証用クエリを追加しない。
+
+独立見直しの現在の全体 `pass` と正常な `complete` が承認公開切替の条件。制作案件の完了記録を先に永続化し、その証拠と対象digestを再検証して知識DBの公開headを切り替える。失敗・中断時は非公開／旧公開版を維持し、`case.publication.retryCommand` の完全に同じ完了入力で復旧する。GETは切替を行わない。原資料確認や一般投稿のAI審査を変更せず、運営登録のAI送信0を維持する。
+
+公開前は `read_theme` と認証付きプレビューで確認する。公開切替後に `check_theme_publication` で正規日英GET等を確認する。編集中に一般公開URLが404であることは保護の期待結果であり、登録失敗ではない。公開済みの旧版への退避と、未承認の中間版への直接アクセス拒否を両立する。
+
 # ChatGPT運営テーマ登録：AI審査を接続しない（2026-11-13是正）
 
 認証済みChatGPT運営APIの `submit_theme`／`update_theme` と `submit_theme_translation` は、システム投入経路でありAI審査を行わない。以前の本書にある共通AI審査の記載は実装側の誤りで、利用者の合意事項ではなかった。下記の現行契約を優先する。

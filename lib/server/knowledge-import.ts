@@ -1,3 +1,4 @@
+import {withOperatorThemeRead} from './knowledge-theme-access';
 import {themeRetriesAvailable,initializeThemeRetries,THEME_RETRY_LIMITS,themeInputUrls,sourceWait,beginThemeSource,finishThemeSource,ThemeRetryWait} from './knowledge-theme-retries';
 import {operatorThemeIntake} from './operator-theme-intake';
 import {verifyTranslationReviewContext,type TranslationReviewSnapshot} from "./knowledge-translation-context";
@@ -181,6 +182,7 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
    if(await recoverApplied(c,locked.pkg,locked.item))return;
    const current=await stillCurrent(c,l);if(!current)return;
    const result=await foundation.execute({kind:'import',id:importActor(current.p)},d.plan.command,{
+    operatorTheme:!!d.operatorTheme,
     verify:async k=>{if(d.operatorTheme){const authority=await operatorThemeIntake(c,current.pkg.id,current.p);if(knowledgeDigest(authority)!==knowledgeDigest(d.operatorTheme))throw new KnowledgeError('運営テーマの登録権限を再確認してください。',403,'OPERATOR_REQUIRED');}
      if(d.plan.command.action==='accept-translation'){
        const proof=d.translationReview,prepared=current.item.prepared as Prepared|null;
@@ -237,7 +239,7 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
    if(authority){
     // Operator editorial input has no AI gate. Rebuild a mechanical decision,
     // including for a retained request formerly routed through AI review.
-    const prepared=await prepare(l,true),dup=prepared.duplicates;
+    const prepared=await withOperatorThemeRead(()=>prepare(l,true)),dup=prepared.duplicates;
     const exact=dup?duplicateMatch(dup,null):undefined;
     const plan=dup?await reuseDuplicatePlan(knowledge,prepared.plan,dup,null,prepared.proofs,exact?await knownSourceDocuments(knowledge,exact):[]):prepared.plan;
     const decision:Decision={operatorTheme:authority,plan,proofs:prepared.proofs,guard:dup&&prepared.plan.command.action==='accept-record'?{record:prepared.plan.command.record.content,common:dup.common}:null};

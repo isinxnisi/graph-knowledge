@@ -1,3 +1,5 @@
+import {themePublicationState} from './knowledge-theme-publication';
+import {withOperatorThemeRead} from './knowledge-theme-access';
 import {assertThemeProductionLease,guardThemeProductionRequest} from './theme-production-fence';
 import {ensureThemeRetries,controlThemeRetries,readThemeRetries} from './knowledge-theme-retries';
 import {controlThemeRetrySchema} from '../domain/knowledge-theme-registration';
@@ -72,7 +74,7 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
   if(saved){if(saved.owner_id!==owner||saved.input_hash!==hash)throw new KnowledgeError('同じ受付IDに異なる内容は送れません。',409,'REQUEST_CHANGED');return {requestId:input.requestId,state:saved.state,replayed:true};}
   if('target' in input){
    await ensureThemeUpdateSchema(pool);
-   const theme=await foundation.get({kind:'reader',id:actorId(owner)},'theme',input.target.id);
+   const theme=await withOperatorThemeRead(()=>foundation.get({kind:'reader',id:actorId(owner)},'theme',input.target.id));
    if(theme.revision!==input.target.revision)throw new KnowledgeError('テーマが更新されています。Chatから読み直し、変更内容を照合してください。',409,'REVISION_CONFLICT');
    if(input.removeRecordIds.some(id=>!theme.content.recordPins.some(p=>p.id===id)))throw new KnowledgeError('掲載解除する記録が対象テーマにありません。',400,'THEME_MEMBER_REQUIRED');
    for(const item of input.package?.items??[])
@@ -99,10 +101,10 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
   await ensure();await current(pool,owner);const r=await row(pool,owner,requestId);
   let receipt=null,theme=null;
   if(r.receipt_id)receipt=await readReceipt(r);
-  if(r.result?.id)try{const v=await foundation.get({kind:'reader',id:actorId(owner)},'theme',r.result.id,r.result.revision);theme={id:v.id,revision:v.revision,title:v.content.title,url:(process.env.MEMBER_ORIGIN??'')+'/?ktheme='+encodeURIComponent(v.id)+'&krev='+v.revision};}catch{/* No stopped/private dependency is disclosed through old receipt links. */}
+  if(r.result?.id)try{const v=await withOperatorThemeRead(()=>foundation.get({kind:'reader',id:actorId(owner)},'theme',r.result.id,r.result.revision));theme={id:v.id,revision:v.revision,title:v.content.title,url:(process.env.MEMBER_ORIGIN??'')+'/?ktheme='+encodeURIComponent(v.id)+'&krev='+v.revision};}catch{/* No stopped/private dependency is disclosed through old receipt links. */}
   const requestedPresentation=r.input.target?r.input.changes?.presentation:r.input.presentation;
   const components={presentation:{requestedLocales:requestedPresentation?.map((p:{locale:string})=>p.locale)??null,applied:theme!==null&&['published','published-with-issues'].includes(r.state)},imageIds:requestedPresentation?.flatMap((p:{imageId?:string})=>p.imageId?[p.imageId]:[])??[],productPins:r.input.target?r.input.changes?.productPins??null:r.input.productPins??null};
-  return {requestId,state:r.state,reason:r.reason,components,retryControl:await readThemeRetries(pool,r,selection?.itemKey,knowledge),itemAmendments:await readThemeItemAmendments(pool,r,selection),operation:r.input.target?'update':'create',target:r.input.target??null,title:theme?.title??r.input.title??r.input.changes?.title??'',receipt,theme,excludedKeys:r.result?.excludedKeys??[],nextAttemptAt:['saved','processing'].includes(r.state)?r.next_attempt:null};
+  return {requestId,state:r.state,publication:theme?await themePublicationState(knowledge,theme.id):null,previewUrl:theme?(process.env.MEMBER_ORIGIN??'')+'/operations/themes/'+encodeURIComponent(theme.id):null,reason:r.reason,components,retryControl:await readThemeRetries(pool,r,selection?.itemKey,knowledge),itemAmendments:await readThemeItemAmendments(pool,r,selection),operation:r.input.target?'update':'create',target:r.input.target??null,title:theme?.title??r.input.title??r.input.changes?.title??'',receipt,theme,excludedKeys:r.result?.excludedKeys??[],nextAttemptAt:['saved','processing'].includes(r.state)?r.next_attempt:null};
  }
  async function amend(owner:string,raw:unknown){
   const input=amendThemeRegistrationSchema.parse(raw);
@@ -149,7 +151,7 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
    let baseline:Awaited<ReturnType<typeof foundation.get<'theme'>>>|undefined;
    if('target' in input){
     await ensureThemeUpdateSchema(pool);
-    baseline=await foundation.get({kind:'reader',id:actorId(r.owner_id)},'theme',input.target.id);
+    baseline=await withOperatorThemeRead(()=>foundation.get({kind:'reader',id:actorId(r.owner_id)},'theme',input.target.id));
     if(baseline.revision!==input.target.revision)throw new KnowledgeError('テーマが更新されています。Chatから読み直し、変更内容を照合してください。未反映の構成を自動で上書きしません。',409,'REVISION_CONFLICT');
    }
    if(input.package&&!r.receipt_id){

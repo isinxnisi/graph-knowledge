@@ -11,6 +11,7 @@ export type KnowledgeThemePage = { focusIds?: string[]; themes: {
 }[] };
 /** A Theme fixes its own versions. It is not re-resolved against an active generation. */
 export type KnowledgeThemeRead = {
+  operatorPreview?:boolean;
   localeEdition?:{language:string;servedRevision:number;latestRevision:number;state:"translation-pending"};
   theme: KnowledgeThemeVersion; snapshot: KnowledgeSnapshot; records: KnowledgePublishedRecord[];displayTranslations?:KnowledgeDisplayTranslation[];presentation?:import("./theme-reading-presentation").ThemeReadingPresentation|null;
 };

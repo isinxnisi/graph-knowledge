@@ -8,14 +8,14 @@ import {withThemeProductionSubmission,assertThemeProductionLease} from './theme-
 
 type Target={theme:{id:string;revision:number};digest:string;guide:{id:string;revision:number};references:unknown};
 type Observed={state:'accepted'|'pending'|'applied'|'failed';result:unknown;theme?:{id:string;revision:number}};
-type Dependencies={environment:'beta'|'production';origin:string;authorize:(owner:string)=>Promise<void>;target:(id:string,owner:string)=>Promise<Target>;send:(owner:string,command:ProductionSubmissionCommand)=>Promise<unknown>;observe:(owner:string,command:ProductionSubmissionCommand)=>Promise<Observed|null>;afterDispatch?:()=>Promise<void>};
+type Dependencies={environment:'beta'|'production';origin:string;authorize:(owner:string)=>Promise<void>;target:(id:string,owner:string)=>Promise<Target>;send:(owner:string,command:ProductionSubmissionCommand)=>Promise<unknown>;observe:(owner:string,command:ProductionSubmissionCommand)=>Promise<Observed|null>;publish:(owner:string,intentId:string)=>Promise<void>;publication:(id:string,intentId?:string)=>Promise<{state:string;publishedRevision:number|null;workingRevision:number;releaseId:string|null;workingChanges:boolean;approvalPresent:boolean}>;afterDispatch?:()=>Promise<void>};
 const failure=(text:string,code='PRODUCTION_CONFLICT',status=409)=>new KnowledgeError(text,status,code);
 const lockKey=(id:string)=>'theme-production:'+id;
 const terminal=(state:string)=>['applied','failed','withdrawn'].includes(state);
 function json(value:unknown){return JSON.parse(JSON.stringify(value));}
 export async function ensureThemeProduction(pool:Pool){
- const name='044-theme-production.sql',checksum=createHash('sha256').update(await readFile(path.join(process.cwd(),'db/member',name))).digest('hex');
- if((await pool.query('SELECT checksum FROM member_migration WHERE name=$1',[name])).rows[0]?.checksum!==checksum)throw failure('制作案件の明示migrationが必要です。','MIGRATION_REQUIRED',503);
+ for(const name of ['044-theme-production.sql','045-theme-publication.sql']){const checksum=createHash('sha256').update(await readFile(path.join(process.cwd(),'db/member',name))).digest('hex');
+ if((await pool.query('SELECT checksum FROM member_migration WHERE name=$1',[name])).rows[0]?.checksum!==checksum)throw failure('制作案件の明示migrationが必要です。','MIGRATION_REQUIRED',503);}
 }
 /** A private current checkpoint, not a scheduler, collection plan or model runner. */
 export function createThemeProductions(pool:Pool,deps:Dependencies){
@@ -50,12 +50,15 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
   const r=await row(pool,owner,id),list=await submissions(pool,r),ev=await evaluation(r,list),cursor=selection?.submissionCursor??0;
   const selected=selection?.submissionId?list.find(s=>s.id===selection.submissionId):null;
   if(selection?.submissionId&&!selected)throw failure('保存済み送信がありません。','NOT_FOUND',404);
-  const complete=r.status==='completed'&&ev.assessment?.current===true&&ev.assessment.result==='pass';
+  const intent=(await pool.query('SELECT id,completion_command FROM theme_production.publication_intents WHERE case_id=$1 ORDER BY created_at DESC LIMIT 1',[id])).rows[0];
+   const publication=ev.target?await deps.publication(ev.target.theme.id,intent?.id):null;
+   const publicationPending=!!intent&&publication?.approvalPresent!==true;
+   const complete=r.status==='completed'&&ev.assessment?.current===true&&ev.assessment.result==='pass'&&!publicationPending&&publication?.state==='published'&&!publication.workingChanges&&publication.publishedRevision===ev.target?.theme.revision;
   const summary=(s:QueryResultRow)=>({id:s.id,requestId:s.command_request_id,action:s.command_action,digest:s.digest,state:s.state,reason:s.reason,dispatches:s.dispatches});
   const currentWork=list.filter(s=>!terminal(s.state)||s.state==='failed');
-  return json({id:r.id,ownerId:owner,environment:r.environment,origin:r.origin,version:r.version,phase:r.phase,status:r.status==='completed'&&!complete?'needs-review':r.status,
+  return json({id:r.id,ownerId:owner,environment:r.environment,origin:r.origin,version:r.version,phase:r.phase,status:r.status==='completed'&&!complete?(ev.assessment?.current&&publicationPending?'waiting-publication':'needs-review'):r.status,
    progress:r.progress,theme:ev.target?.theme??(r.theme_id?{id:r.theme_id,revision:r.theme_revision}:null),lease:r.execution_id?{executionId:r.execution_id,until:r.lease_until,valid:r.lease_live===true}:null,
-   evaluationTarget:ev.target,lastWholeThemeAssessment:ev.assessment,evaluationUnavailable:ev.unavailable,completed:complete,
+   publication:publication?{...publication,pending:publicationPending,...(publicationPending?{retryCommand:intent.completion_command}:{})}:null,evaluationTarget:ev.target,lastWholeThemeAssessment:ev.assessment,evaluationUnavailable:ev.unavailable,completed:complete,
    submissions:currentWork.slice(cursor,cursor+20).map(summary),nextSubmissionCursor:currentWork.length>cursor+20?cursor+20:null,completedSubmissionCount:list.length-currentWork.length,pendingSubmissionCount:list.filter(s=>!terminal(s.state)).length,
    ...(selected?{savedSubmission:{...summary(selected),result:selected.result,encoding:'json',wire:selected.command_wire,command:JSON.parse(selected.command_wire)}}:{}),updatedAt:r.updated_at});
  }
@@ -101,7 +104,7 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
   return response(owner,await tx(owner,undefined,async c=>{
    const old=await previous(c,owner,command);if(old)return old;
    const active=await current(c,owner);
-   if(active){const r=await row(c,owner,active);if(r.status!=='completed')throw failure('進行中の案件を先に見直し完了まで進めてください。','PRODUCTION_ACTIVE_CASE');const ev=await evaluation(r,await submissions(c,r));if(!ev.assessment?.current)throw failure('前の案件の対象が変更されています。見直しへ戻してください。','PRODUCTION_REVIEW_REQUIRED');}
+   if(active){const r=await row(c,owner,active);if(r.status!=='completed')throw failure('進行中の案件を先に見直し完了まで進めてください。','PRODUCTION_ACTIVE_CASE');const ev=await evaluation(r,await submissions(c,r));if((await view(owner,active)).publication?.pending)throw failure('前の案件の公開切替が未完了です。同一の完了要求を再送してください。','PRODUCTION_PUBLICATION_PENDING');if(!ev.assessment?.current||!(await view(owner,active)).completed)throw failure('前の案件の対象が未承認または変更されています。見直しへ戻してください。','PRODUCTION_REVIEW_REQUIRED');}
    if(command.phase==='review'&&!command.theme)throw failure('既存テーマの見直し開始には正確なテーマ版が必要です。','PRODUCTION_TARGET_REQUIRED',400);
    if(command.theme){const target=await deps.target(command.theme.id,owner);if(target.theme.revision!==command.theme.revision)throw failure('対象テーマ版を読み直してください。','REVISION_CONFLICT');}
    const id=randomUUID();await c.query("INSERT INTO theme_production.cases(id,owner_id,environment,origin,phase,status,progress,theme_id,theme_revision) VALUES($1,$2,$3,$4,$5,'ready',$6,$7,$8)",[id,owner,deps.environment,deps.origin,command.phase,JSON.stringify(command.progress),command.theme?.id??null,command.theme?.revision??null]);
@@ -113,7 +116,7 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
   try{return response(owner,await tx(owner,id,async c=>{
    const old=await previous(c,owner,command);if(old)return old;const r=await row(c,owner,id);
    if(r.status==='completed'){
-    const ev=await evaluation(r,await submissions(c,r));if(ev.assessment?.current)return {outcome:'none',caseId:id};
+    const ev=await evaluation(r,await submissions(c,r));const v=await view(owner,id);if(ev.assessment?.current&&(v.completed||v.publication?.pending))return {outcome:'found',caseId:id};
     if(command.phase!=='review')return {outcome:'phase-mismatch',caseId:id};
     r.phase='review';await c.query("UPDATE theme_production.cases SET phase='review',status='ready' WHERE id=$1",[id]);
    }
@@ -149,12 +152,15 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
    }else if(command.operation==='complete'){
     if(r.phase!=='review'||!ev.assessment?.current||ev.assessment.result!=='pass'||!ev.target)throw failure('現在の対象版とガイドに基づく独立した全体評価が必要です。','PRODUCTION_ASSESSMENT_STALE');
     if(pending.length||r.progress.unfinished.length||r.progress.blockers.length)throw failure('未反映・未完作業・阻害要因が残っています。対応不能点は全体評価の例外へ内容と理由を明示してください。','PRODUCTION_INCOMPLETE');
-    await c.query("UPDATE theme_production.cases SET status='completed',execution_id=NULL,lease_token=NULL,lease_until=NULL WHERE id=$1",[r.id]);
+    await c.query('INSERT INTO theme_production.publication_intents(id,case_id,owner_id,theme_id,theme_revision,target_digest,guide_revision,assessment,completion_command) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)',[command.requestId,r.id,owner,ev.target.theme.id,ev.target.theme.revision,ev.target.digest,ev.target.guide.revision,JSON.stringify(r.assessment),JSON.stringify(command)]);
+     await c.query("UPDATE theme_production.cases SET status='completed',execution_id=NULL,lease_token=NULL,lease_until=NULL WHERE id=$1",[r.id]);
    }
    // A long read/verification cannot commit a stale checkpoint after lease expiry.
    r=await row(c,owner,r.id);if(!['handoff','release','complete'].includes(command.operation)&&r.lease_live!==true)throw failure('実行権が失効しています。','PRODUCTION_LEASE_EXPIRED');
    await increment(c,r.id);return record(c,owner,command,{outcome:'updated',caseId:r.id});
-  });return response(owner,result);
+  });
+  if(command.operation==='complete'){try{await deps.publish(owner,command.requestId);}catch(e){return {...await response(owner,result),publicationError:{code:e instanceof KnowledgeError?e.code:'PUBLICATION_UNAVAILABLE',message:e instanceof KnowledgeError?e.message:'公開切替を完了できませんでした。未承認版は非公開のままです。同一完了要求を再送してください。'}};}}
+  return response(owner,result);
  }
  async function prepare(owner:string,command:Extract<ThemeProductionCommand,{action:'prepare-theme-production-submission'}>){
   const result=await tx(owner,command.caseId,async c=>{

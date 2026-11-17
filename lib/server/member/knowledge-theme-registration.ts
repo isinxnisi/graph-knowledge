@@ -1,3 +1,5 @@
+import {withOperatorThemeRead} from '../knowledge-theme-access';
+import {themePublicationState} from '../knowledge-theme-publication';
 import {checkThemePublication} from '../theme-publication-check';
 import {themeLocaleTitle} from '../theme-locale-publication';
 import {hasThemeLocale} from '../../domain/theme-locale';
@@ -37,9 +39,10 @@ export async function dispatchThemeRegistration(owner:string,raw:ThemeOperatorCo
  if(!registration){const {pool,config}=memberRuntime(),knowledge=new Pool({connectionString:knowledgeReadConfiguration().databaseUrl,max:2});knowledgePool=knowledge;const imports=createKnowledgeImports(pool,knowledge,(id,c)=>resolveImportPrincipal(pool,id,c));registration=createThemeRegistrations(pool,knowledge,createWebKnowledgeImports(pool,()=>imports),imports);reader=createThemeAuthoringReader(knowledge,config.origin);translations=createThemeTranslationAuthoring(pool,knowledge,config.origin,owner=>registration!.authorize(owner));}
  try{
   await registration.authorize(owner);
+  return await withOperatorThemeRead(async()=>{
   const production=themeProductionCommandSchema.safeParse(raw);
   if(production.success){
-   const {pool,config}=memberRuntime(),runtime=themeProductionRuntime(pool,knowledgePool!,config.origin,registration,translations!);
+   const {pool,config}=memberRuntime(),runtime=themeProductionRuntime(pool,knowledgePool!,config.origin,registration!,translations!);
    return await createThemeProductions(pool,{environment:config.origin==='https://plunode.net'?'production':'beta',origin:config.origin,authorize:id=>registration!.authorize(id),...runtime,send:(id,value)=>dispatchThemeRegistration(id,value)}).execute(owner,production.data);
   }
   const command=themeRegistrationCommandSchema.parse(raw);
@@ -62,6 +65,8 @@ export async function dispatchThemeRegistration(owner:string,raw:ThemeOperatorCo
    const original=await reader!.read(command.theme),service=await knowledgePublicationPreview(),origin=memberRuntime().config.origin;
    if(!['https://plunode.net','https://graph-beta.isinxnisi.com'].includes(origin))throw new KnowledgeError('正規公開originの接続で確認してください。',400,'INVALID_ORIGIN');
    if(command.expectedRevision&&original.theme.revision!==command.expectedRevision)throw new KnowledgeError('対象テーマが更新されました。現在版を読み直してください。',409,'REVISION_CONFLICT');
+   const publication=await themePublicationState(knowledgePool!,original.theme.id);
+   if(publication.state==='private'||publication.workingChanges||publication.publishedRevision!==original.theme.revision)return {state:publication.state==='private'?'private':'working-private',publication,previewUrl:origin+'/operations/themes/'+encodeURIComponent(original.theme.id),message:'運営者プレビューで独立した全体見直しを完了してください。登録済みは一般公開済みを意味しません。'};
    const expectations=await Promise.all([...new Set(command.languages)].map(async language=>{
     const value=await service.theme({themeId:original.theme.id,language},{localeEdition:true});
     if(!hasThemeLocale(value,language))throw new KnowledgeError('指定言語の本文はまだ公開準備中です。',409,'LOCALE_NOT_READY');
@@ -76,13 +81,14 @@ export async function dispatchThemeRegistration(owner:string,raw:ThemeOperatorCo
   }
   if(command.action==='find-knowledge')return await reader!.find(command.kind,command.query,command.cursor);
   if(command.action==='read-knowledge')return await reader!.knowledge(command.kind,command.id,command.revision);
-  if(command.action==='theme-retry-status')return await registration.retryStatus(owner,command.registrationRequestId,command.itemKey);
-  if(command.action==='control-theme-retry'){const {action,...input}=command;void action;return await registration.controlRetry(owner,input);}
-  if(command.action==='theme-status')return await registration.status(owner,command.requestId,command);
-  if(command.action==='amend-theme-items'){const {action,...input}=command;void action;return await registration.amend(owner,input);}
-  if(command.action==='cancel-theme')return await registration.cancel(owner,command.requestId);
+  if(command.action==='theme-retry-status')return await registration!.retryStatus(owner,command.registrationRequestId,command.itemKey);
+  if(command.action==='control-theme-retry'){const {action,...input}=command;void action;return await registration!.controlRetry(owner,input);}
+  if(command.action==='theme-status')return await registration!.status(owner,command.requestId,command);
+  if(command.action==='amend-theme-items'){const {action,...input}=command;void action;return await registration!.amend(owner,input);}
+  if(command.action==='cancel-theme')return await registration!.cancel(owner,command.requestId);
   const {action,...input}=command;void action;
-  return await registration.submit(owner,input);
+  return await registration!.submit(owner,input);
+  });
  }catch(e){
   if(e instanceof MemberError)return {ok:false,code:e.code,message:'このアカウントでは操作できません。接続とログインを確認してください。',retryable:false};
   if(e instanceof KnowledgeError)return {ok:false,code:e.code,message:e.message,retryable:e.status>=500||e.status===429};

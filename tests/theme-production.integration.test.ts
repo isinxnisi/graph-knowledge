@@ -1,3 +1,8 @@
+import neo4j from 'neo4j-driver';
+import {createKnowledgePublicationService} from '../lib/server/knowledge-publication';
+import {createThemeAuthoringReader} from '../lib/server/knowledge-theme-authoring-reader';
+import {readKnowledgeTranslationById,readKnowledgeTranslation,ensureKnowledgeFoundationSchema} from '../lib/server/knowledge-foundation';
+import {withOperatorThemeRead} from '../lib/server/knowledge-theme-access';
 import {beforeAll,beforeEach,afterAll,it,expect,vi} from 'vitest';
 import {Pool} from 'pg';
 import sharp from 'sharp';
@@ -24,6 +29,7 @@ type Response={outcome:string;case:Case|null;leaseToken?:string;submissionId?:st
 const pool=new Pool({connectionString:process.env.MEMBER_DATABASE_URL,max:10}),knowledge=new Pool({connectionString:process.env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL,max:5});
 const owner=randomUUID(),other=randomUUID(),actor={kind:'operator' as const,id:'production-fixture'};
 let registrations:ReturnType<typeof createThemeRegistrations>,translations:ReturnType<typeof createThemeTranslationAuthoring>,cases:ReturnType<typeof createThemeProductions>,foundation:ReturnType<typeof createKnowledgeFoundationService>;
+let failActivation=false;
 let lostAck=false,delay:Promise<void>|null=null;
 const progress={brief:'読者の問いから制作する隔離案件',scope:'公開資料に基づく背景と着想',artifacts:{draft:'再開に必要な原稿全文',themeImage:{state:'not-needed'}},unfinished:[],blockers:[]};
 const createCommand=()=>({action:'submit-theme' as const,requestId:randomUUID(),title:'New production fixture',description:'Not live',recordPins:[{id:'baseline',revision:1}]});
@@ -59,10 +65,10 @@ beforeAll(async()=>{
  expect(process.env.MEMBER_TEST_CONTAINER).toMatch(/^gk-member-test-/);expect((await pool.query('SELECT current_database() n')).rows[0].n).toBe('graph_member_test');expect((await knowledge.query('SELECT current_database() n')).rows[0].n).toBe('plunode_knowledge75_test_capsule_share');
  vi.stubEnv('COMMUNITY_ENABLED','1');vi.stubEnv('SITE_OPERATIONS_ENABLED','1');vi.stubEnv('KNOWLEDGE_MISSIONS_ENABLED','1');vi.stubEnv('KNOWLEDGE_SUBMISSIONS_ENABLED','1');vi.stubEnv('KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED','1');vi.stubEnv('SITE_OPERATOR_USER_IDS',owner+','+other);
  await migrateMemberDatabase(pool,...Array(34).fill(true));const old=(await pool.query('SELECT name,checksum FROM member_migration ORDER BY name')).rows;
- await migrateMemberDatabase(pool,...Array(35).fill(true));await migrateMemberDatabase(pool,...Array(35).fill(true));expect((await pool.query("SELECT name,checksum FROM member_migration WHERE name<>'044-theme-production.sql' ORDER BY name")).rows).toEqual(old);
+ await migrateMemberDatabase(pool,...Array(35).fill(true));await migrateMemberDatabase(pool,...Array(35).fill(true));expect((await pool.query("SELECT name,checksum FROM member_migration WHERE name NOT IN('044-theme-production.sql','045-theme-publication.sql') ORDER BY name")).rows).toEqual(old);
 },30000);
 beforeEach(async()=>{
- lostAck=false;delay=null;await pool.query('TRUNCATE theme_production.cases,knowledge_missions.theme_registrations,knowledge_missions.web_deliveries,knowledge_missions.web_importers CASCADE');await pool.query('TRUNCATE knowledge_import.packages,member_knowledge.submissions,product_editorial_request,product_editorial_version CASCADE');
+ failActivation=false;lostAck=false;delay=null;await pool.query('TRUNCATE theme_production.cases,knowledge_missions.theme_registrations,knowledge_missions.web_deliveries,knowledge_missions.web_importers CASCADE');await pool.query('TRUNCATE knowledge_import.packages,member_knowledge.submissions,product_editorial_request,product_editorial_version CASCADE');
  await pool.query('INSERT INTO "user"(id,name,email,"emailVerified","createdAt","updatedAt",active,locale) VALUES($1,$2,$3,true,now(),now(),true,$7),($4,$5,$6,true,now(),now(),true,$7) ON CONFLICT(id) DO UPDATE SET active=true',[owner,'Operator','production-owner@example.invalid',other,'Other','production-other@example.invalid','ja']);
  const guides=createThemeQualityGuides(pool),g=await guides.read(owner);if(!g.revision)await guides.update(owner,{requestId:randomUUID(),expectedRevision:0,markdown:`# 隔離品質ガイド
 
@@ -72,7 +78,7 @@ beforeEach(async()=>{
  await migrateKnowledgeTranslations(knowledge);await migrateKnowledgeIdentities(knowledge);await ensureKnowledgePublicationSchema(knowledge);
  await foundation.execute(actor,{action:'create-theme',requestId:randomUUID(),id:'theme',title:'Aの背景',recordPins:[{id:'baseline',revision:1}],reason:'Isolated existing theme'});
  const imports=createKnowledgeImports(pool,knowledge,(id,c)=>webImportPrincipal(pool,id,c)),web=createWebKnowledgeImports(pool,()=>imports);registrations=createThemeRegistrations(pool,knowledge,web,imports);translations=createThemeTranslationAuthoring(pool,knowledge,'https://plunode.net',id=>registrations.authorize(id));
- cases=createThemeProductions(pool,{environment:'production',origin:'https://plunode.net',authorize:id=>registrations.authorize(id),...themeProductionRuntime(pool,knowledge,'https://plunode.net',registrations,translations),send:ordinarySend,afterDispatch:async()=>{if(lostAck){lostAck=false;throw Error('Response lost after normal intake commit');}}});
+ cases=createThemeProductions(pool,{environment:'production',origin:'https://plunode.net',authorize:id=>registrations.authorize(id),...(()=>{const runtime=themeProductionRuntime(pool,knowledge,'https://plunode.net',registrations,translations);return {...runtime,publish:async(owner:string,id:string)=>{if(failActivation){failActivation=false;throw Error('Isolated activation interruption');}await runtime.publish(owner,id);}};})(),send:ordinarySend,afterDispatch:async()=>{if(lostAck){lostAck=false;throw Error('Response lost after normal intake commit');}}});
 },30000);
 afterAll(async()=>{await pool.end();await knowledge.end();vi.unstubAllEnvs();});
 
@@ -166,4 +172,87 @@ it('serializes simultaneous checkpoints with the same version and retains only t
  const changes=await Promise.allSettled(['A','B'].map(text=>execute({...run,action:'update-theme-production',requestId:randomUUID(),expectedVersion:c.version,operation:'save',progress:{...progress,artifacts:{draft:text}}})));
  expect(changes.filter(v=>v.status==='fulfilled')).toHaveLength(1);const failed=changes.find(v=>v.status==='rejected') as PromiseRejectedResult;expect(failed.reason).toMatchObject({code:'PRODUCTION_VERSION_CONFLICT'});
  const winner=(changes.find(v=>v.status==='fulfilled') as PromiseFulfilledResult<Response>).value;expect((await read(run.caseId)).progress).toEqual(winner.case!.progress);
+});
+
+const publicReader={kind:'reader' as const,id:'anonymous'};
+const driver=neo4j.driver('bolt://127.0.0.1:1');
+const publicService=()=>createKnowledgePublicationService(knowledge,driver);
+afterAll(async()=>{await driver.close();});
+it('keeps new themes and every direct revision private while common knowledge remains publicly readable',async()=>{
+ await expect(foundation.get(publicReader,'theme','theme')).rejects.toMatchObject({status:404});
+ await expect(foundation.resolveTheme(publicReader,'theme',1)).rejects.toMatchObject({status:404});
+ expect((await publicService().themes()).themes).toEqual([]);
+ expect((await foundation.get(publicReader,'record','baseline')).content.assertion).toBe('A is a fixture.');
+ expect((await createThemeAuthoringReader(knowledge,'https://plunode.net').read('theme')).publication.state).toBe('private');
+ await expect(withOperatorThemeRead(()=>publicService().theme({themeId:'theme',revision:1,language:'en'}))).rejects.toMatchObject({status:404});
+ const run=await begin('production',true);await expect(complete(run)).rejects.toMatchObject({code:'PRODUCTION_ASSESSMENT_REQUIRED'});
+ await fenced(run,{action:'update-theme-production',operation:'handoff'});const reviewer=await resume(run,'review');
+ await assess(reviewer,'needs-changes');await expect(fenced(reviewer,{action:'update-theme-production',operation:'complete'})).rejects.toMatchObject({code:'PRODUCTION_ASSESSMENT_STALE'});
+ await complete(reviewer);expect((await publicService().theme({themeId:'theme',language:'ja'})).theme.revision).toBe(1);
+ expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.review_attempts')).rows[0].n).toBe(0);
+});
+it('serves the last approved edition while private updates and their direct old/new URLs are independently gated',async()=>{
+ const run=await begin('review',true);await complete(run);await ordinaryUpdate();
+ expect((await publicService().theme({themeId:'theme',language:'ja'})).theme.content.title).toBe('Aの背景');
+ expect((await publicService().themes()).themes[0]).toMatchObject({id:'theme',revision:1,title:'Aの背景'});
+ expect((await foundation.get(publicReader,'theme','theme')).revision).toBe(1);
+ await expect(publicService().theme({themeId:'theme',revision:2})).rejects.toMatchObject({status:404});
+ expect(await publicService().capsulesReadable([[{kind:'theme',id:'theme',revision:1}],[{kind:'theme',id:'theme',revision:2}]])).toEqual([true,false]);
+ expect((await createThemeAuthoringReader(knowledge,'https://plunode.net').read('theme')).theme.revision).toBe(2);
+ expect((await publicService().theme({themeId:'theme',revision:1})).theme.revision).toBe(1);
+ const review=await resume(run,'review');await complete(review);
+ expect((await publicService().theme({themeId:'theme'})).theme.revision).toBe(2);
+ expect((await publicService().theme({themeId:'theme',revision:1})).theme.revision).toBe(1);
+});
+it('freezes theme translations independently of working edits and retains previously approved translation pins',async()=>{
+ const sendTranslation=(text:string,expectedRevision:number)=>translations.submit(owner,{requestId:randomUUID(),theme:{id:'theme',revision:1},translation:{target:{kind:'theme',id:'theme',revision:1,field:'title'},language:'en',text,expectedRevision},attribution:'anonymous'});
+ const first=await sendTranslation('Approved English',0),run=await begin('review',true);await complete(run);
+ const second=await sendTranslation('PRIVATE DRAFT ENGLISH',1);
+ expect((await read(run.caseId)).completed).toBe(false);
+ const published=await publicService().theme({themeId:'theme',language:'en'});expect(published.displayTranslations?.find(t=>t.target.kind==='theme')?.text).toBe('Approved English');
+ const c=await knowledge.connect();try{
+  await expect(readKnowledgeTranslationById(c,second.publication!.id,2)).rejects.toMatchObject({status:404});
+  expect((await readKnowledgeTranslation(c,{kind:'theme',id:'theme',revision:1,field:'title'},'en')).translation?.revision).toBe(1);
+ }finally{c.release();}
+ const reviewer=await resume(run,'review');await complete(reviewer);
+ expect((await publicService().theme({themeId:'theme',language:'en'})).displayTranslations?.find(t=>t.target.kind==='theme')?.text).toBe('PRIVATE DRAFT ENGLISH');
+ const historical=await knowledge.connect();try{expect((await readKnowledgeTranslationById(historical,first.publication!.id,1)).text).toBe('Approved English');}finally{historical.release();}
+});
+it('keeps committed review completion private on activation failure and resumes the exact durable intent without a second approval',async()=>{
+ const run=await begin('review',true);await assess(run);failActivation=true;
+ const current=await read(run.caseId),command={...run,action:'update-theme-production',operation:'complete',requestId:randomUUID(),expectedVersion:current.version};
+ const failed=await execute(command);expect(failed.case?.completed).toBe(false);expect(failed.case?.status).toBe('waiting-publication');
+ await expect(publicService().theme({themeId:'theme'})).rejects.toMatchObject({status:404});
+ const saved=await cases.execute(owner,themeProductionCommandSchema.parse({action:'get-theme-production',caseId:run.caseId})) as {case:{publication:{pending:boolean;retryCommand:unknown}}};
+ expect(saved.case.publication.pending).toBe(true);
+ await expect(execute({action:'create-theme-production',requestId:randomUUID(),progress})).rejects.toMatchObject({code:'PRODUCTION_PUBLICATION_PENDING'});
+ expect((await execute(saved.case.publication.retryCommand)).case?.completed).toBe(true);await execute(command);
+ expect((await knowledge.query('SELECT count(*)::int n FROM knowledge75.theme_release_approvals')).rows[0].n).toBe(1);
+});
+it('rejects stale activation after a post-completion edit and requires a new independent whole-target evaluation',async()=>{
+ const run=await begin('review',true);await assess(run);failActivation=true;
+ const c=await read(run.caseId),command={...run,action:'update-theme-production',operation:'complete',requestId:randomUUID(),expectedVersion:c.version};await execute(command);await ordinaryUpdate();
+ expect((await execute(command)).case?.completed).toBe(false);await expect(publicService().theme({themeId:'theme'})).rejects.toMatchObject({status:404});
+ const reviewer=await resume(run,'review');await complete(reviewer);const published=await publicService().theme({themeId:'theme'});expect(published.theme.revision).toBe(2);
+ await execute(command);expect((await publicService().theme({themeId:'theme'})).theme.revision).toBe(2);
+});
+it('migrates existing approved editions without changing content, except withholding the specified unfinished Dragon Quest theme',async()=>{
+ const dq='theme:1ab040a3a68b1e5666de0ba354fa484891d56e95d5e6bda3';await foundation.execute(actor,{action:'create-theme',requestId:randomUUID(),id:dq,title:'制作途中',recordPins:[{id:'baseline',revision:1}],reason:'Isolated migration target'});
+ const before=(await knowledge.query('SELECT kind,id,revision,content FROM knowledge75.revisions ORDER BY kind,id,revision')).rows;
+ await knowledge.query("DROP TRIGGER knowledge_new_theme_draft ON knowledge75.objects;DROP FUNCTION knowledge75.new_theme_draft();DROP TABLE knowledge75.theme_release_approvals,knowledge75.theme_releases,knowledge75.theme_publications;DROP FUNCTION knowledge75.immutable_theme_approval();DELETE FROM knowledge75.migrations WHERE name='010-theme-publication.sql'");
+ await ensureKnowledgeFoundationSchema(knowledge);await ensureKnowledgeFoundationSchema(knowledge);
+ expect((await knowledge.query('SELECT kind,id,revision,content FROM knowledge75.revisions ORDER BY kind,id,revision')).rows).toEqual(before);
+ expect((await publicService().themes()).themes.map(t=>t.id)).toEqual(['theme']);await expect(publicService().theme({themeId:dq,revision:1})).rejects.toMatchObject({status:404});
+ expect((await createThemeAuthoringReader(knowledge,'https://plunode.net').read(dq)).theme.content.title).toBe('制作途中');
+});
+
+it('reopens an old completed but unapproved case for review instead of treating stored completion as a public release',async()=>{
+ const run=await begin('review',true);await assess(run);await pool.query("UPDATE theme_production.cases SET status='completed',execution_id=NULL,lease_token=NULL,lease_until=NULL WHERE id=$1",[run.caseId]);
+ expect((await read(run.caseId)).completed).toBe(false);const reviewer=await resume(run,'review');expect(reviewer.leaseToken).toBeTruthy();await complete(reviewer);expect((await publicService().theme({themeId:'theme'})).theme.revision).toBe(1);
+});
+
+it('keeps a completed review current when a new translation request only reuses identical stored text',async()=>{
+ const v={theme:{id:'theme',revision:1},translation:{target:{kind:'theme' as const,id:'theme',revision:1,field:'title' as const},language:'en',text:'Unchanged title',expectedRevision:0},attribution:'anonymous' as const};
+ await translations.submit(owner,{...v,requestId:randomUUID()});const run=await begin('review',true);await complete(run);
+ await translations.submit(owner,{...v,requestId:randomUUID(),translation:{...v.translation,expectedRevision:1}});expect((await read(run.caseId)).completed).toBe(true);
 });

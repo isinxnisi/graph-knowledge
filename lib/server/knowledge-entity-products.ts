@@ -10,7 +10,8 @@ import {KnowledgeError,resolvePublicKnowledgeTheme} from "./knowledge-foundation
 export async function readEntityProductContext(c:PoolClient,rawId:string){
  const entityIds=await identityGroup(c,[knowledgeIdSchema.parse(rawId)]);
  const candidates=(await c.query(`SELECT r.id,r.revision FROM knowledge75.objects o
-  JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=o.current_revision
+  JOIN knowledge75.theme_publications h ON h.theme_id=o.id AND h.published_revision IS NOT NULL
+   JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=h.published_revision
   JOIN knowledge75.published_revisions p ON p.kind=r.kind AND p.id=r.id AND p.revision=r.revision
   WHERE o.kind='theme' AND o.visibility='public' AND EXISTS (
    SELECT 1 FROM jsonb_array_elements(r.content->'entityPins') pin WHERE pin->>'id'=ANY($1::text[]))

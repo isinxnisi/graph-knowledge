@@ -1,0 +1,11 @@
+import {beforeEach,it,expect,vi} from 'vitest';
+const f=vi.hoisted(()=>({publicProduct:false,publicTheme:false,operator:false,bytes:Buffer.from('private-theme-image')}));
+vi.mock('../lib/server/member/runtime',()=>({memberRuntime:()=>({pool:{query:async()=>({rows:[{bytes:f.bytes,thumbnail:f.bytes,product:f.publicProduct}]})}})}));
+vi.mock('../lib/server/knowledge-read-runtime',()=>({knowledgeReadGuard:()=>{}}));
+vi.mock('../lib/server/theme-operator-preview',()=>({PRIVATE_THEME_HEADERS:{'Cache-Control':'private, no-store','X-Robots-Tag':'noindex, nofollow, noarchive','Vary':'Cookie'},operatorThemePool:async()=>({query:async()=>({rowCount:f.publicTheme?1:0})}),themeOperator:async()=>{if(!f.operator)throw Error('Denied');return 'operator';}}));
+import {GET} from '../app/api/knowledge/product-images/[id]/route';
+const read=()=>GET(new Request('https://plunode.net/api/knowledge/product-images/'+'a'.repeat(64)),{params:Promise.resolve({id:'a'.repeat(64)})});
+beforeEach(()=>{f.publicProduct=false;f.publicTheme=false;f.operator=false;});
+it('never serves unapproved theme bytes to anonymous/general members and does not cache denials',async()=>{const r=await read();expect(r.status).toBe(404);expect(await r.text()).not.toContain('private-theme-image');expect(r.headers.get('cache-control')).toContain('no-store');});
+it('allows authenticated operator preview with no-store, noindex and Cookie variance',async()=>{f.operator=true;const r=await read();expect(r.status).toBe(200);expect(await r.text()).toBe('private-theme-image');expect(r.headers.get('cache-control')).toContain('no-store');expect(r.headers.get('x-robots-tag')).toContain('noindex');expect(r.headers.get('vary')).toBe('Cookie');});
+it('serves approved theme media with revalidation and preserves existing public product media',async()=>{f.publicTheme=true;let r=await read();expect(r.status).toBe(200);expect(r.headers.get('cache-control')).toContain('must-revalidate');f.publicTheme=false;f.publicProduct=true;r=await read();expect(r.status).toBe(200);expect(r.headers.get('cache-control')).toContain('immutable');});

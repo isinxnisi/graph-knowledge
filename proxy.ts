@@ -25,8 +25,9 @@ export async function proxy(request: NextRequest) {
   // Always overwrite this internal header; clients cannot choose the SSR language.
   requestHeaders.delete("x-plunode-public-locale");
   if (publicLocalePath(request.nextUrl.pathname, "ja") !== null) requestHeaders.set("x-plunode-public-locale", request.nextUrl.pathname.startsWith("/en") ? "en" : "ja");
-  requestHeaders.set("x-plunode-locale", /^\/en(?:\/|$)/.test(request.nextUrl.pathname) ? "en" : "ja");
+  requestHeaders.set("x-plunode-locale", /^\/en(?:\/|$)/.test(request.nextUrl.pathname) || /^\/operations\/themes\//.test(request.nextUrl.pathname)&&request.nextUrl.searchParams.get("locale")==="en" ? "en" : "ja");
   const response = NextResponse.next({ request: { headers: requestHeaders } });
+  if (/^\/operations\/themes(?:\/|$)/.test(request.nextUrl.pathname)) {response.headers.set("Cache-Control","private, no-store");response.headers.set("X-Robots-Tag","noindex, nofollow, noarchive");response.headers.set("Vary","Cookie");}
   if (lab) {
     response.headers.set("Content-Security-Policy","default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://lh3.googleusercontent.com https://lh4.googleusercontent.com https://lh5.googleusercontent.com https://lh6.googleusercontent.com; font-src 'self'; connect-src 'self'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
     response.headers.set("X-Robots-Tag","noindex, nofollow, noarchive");

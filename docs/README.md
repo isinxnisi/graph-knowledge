@@ -1,3 +1,5 @@
+テーマ制作中の非公開化・承認公開版・運営者プレビューの現行実装設計は [THEME_PRIVATE_PUBLICATION_20261117.md](design/THEME_PRIVATE_PUBLICATION_20261117.md)。検証・配置の完了状態は [PLUNODE_PROGRESS.md](PLUNODE_PROGRESS.md) を参照。
+
 2026-11-17 ChatGPT Web制作・見直しの引継ぎAPI：[設計・実行権・送信境界](design/THEME_PRODUCTION_HANDOFF.md)。通常の予定実行のための非公開案件。収集計画・LLM実行基盤・新規Worker・cronは追加しない。隔離試験済み、環境反映は進行中。
 
 - 2026-11-14 スマホの詳細サイドバー：[表示・操作と確認記録](verification/MOBILE_DETAIL_DRAWER_20261114.md)。β限定、PC配置を保持。

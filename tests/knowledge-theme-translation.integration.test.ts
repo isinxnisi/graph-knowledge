@@ -1,3 +1,4 @@
+import {approveThemeFixture} from './helpers/approved-theme-fixture';
 import {beforeAll,beforeEach,afterAll,it,expect,vi} from 'vitest';
 import {Pool} from 'pg';
 import type {SubmitThemeTranslation} from '../lib/domain/knowledge-theme-translation';
@@ -40,6 +41,7 @@ beforeEach(async()=>{
  await migrateKnowledgeTranslations(knowledge);await migrateKnowledgeIdentities(knowledge);await ensureKnowledgePublicationSchema(knowledge);
  await foundation.execute(operator,{action:'create-theme',requestId:randomUUID(),id:'theme',title:'Aの歴史',timeline:{version:1,axes:[{id:'history',kind:'calendar',label:'設立までの歩み'}],placements:[{recordId:'record',timeId:'founding',axisId:'history'}],insets:[]},textLanguages:{title:{tag:'ja',basis:'declared'}},recordPins:[{id:'record',revision:1}],reason:'Public theme'});
  await knowledge.query("INSERT INTO knowledge75.published_revisions(kind,id,revision) SELECT kind,id,current_revision FROM knowledge75.objects ON CONFLICT DO NOTHING");
+ await approveThemeFixture(knowledge,'theme');
  await queue.heartbeat(cfg);
 },30000);
 afterAll(async()=>{await pool.end();await knowledge.end();vi.unstubAllEnvs();});
@@ -62,7 +64,7 @@ it('resumes a lost acknowledgement without silently queueing a read, and refuses
  expect(await s.submit(owner,v)).toMatchObject({state:'published'});expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.submissions')).rows[0].n).toBe(1);
 });
 async function publish(s:ReturnType<typeof service>,v:SubmitThemeTranslation){
- const result=await s.submit(owner,v);expect(result).toMatchObject({state:'published'});
+ const result=await s.submit(owner,v);await approveThemeFixture(knowledge,'theme');expect(result).toMatchObject({state:'published'});
  expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.review_jobs')).rows[0].n).toBe(0);
  expect((await pool.query('SELECT count(*)::int n FROM member_knowledge.review_attempts')).rows[0].n).toBe(0);
  return result;

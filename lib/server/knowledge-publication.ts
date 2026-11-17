@@ -1,3 +1,4 @@
+import {withPublicThemeRead} from './knowledge-theme-access';
 import {resolveThemeLocalePublication} from './theme-locale-publication';
 import {readEntityProductContext} from "./knowledge-entity-products";
 import {resolveIdentityGroups} from "./knowledge-identity-resolution";
@@ -122,7 +123,7 @@ async function capsuleReferenceRows(c:PoolClient,groups:KnowledgeReference[][],c
  const rows=(await c.query(`SELECT ${content?'r.*':'r.kind,r.id,r.revision'} FROM jsonb_to_recordset($1::jsonb) AS requested(kind text,id text,revision bigint)
   JOIN knowledge75.revisions r ON r.kind=requested.kind AND r.id=requested.id AND r.revision=requested.revision
   JOIN knowledge75.objects o ON o.kind=r.kind AND o.id=r.id AND o.visibility='public'
-  JOIN knowledge75.published_revisions p ON p.kind=r.kind AND p.id=r.id AND p.revision=r.revision`,[JSON.stringify(pins)])).rows;
+  JOIN knowledge75.published_revisions p ON p.kind=r.kind AND p.id=r.id AND p.revision=r.revision WHERE r.kind<>'theme' OR EXISTS(SELECT 1 FROM knowledge75.theme_publications h JOIN knowledge75.theme_releases a ON a.theme_id=h.theme_id WHERE h.published_revision IS NOT NULL AND a.theme_id=r.id AND a.revision=r.revision)`,[JSON.stringify(pins)])).rows;
  const result=new Map(rows.map(r=>[pinKey(r.kind,r.id,Number(r.revision)),r]));
  for(const p of pins.filter(p=>p.kind==='translation')){try{const value=await readKnowledgeTranslationById(c,p.id,p.revision);result.set(pinKey(p.kind,p.id,p.revision),{kind:'translation',id:p.id,revision:p.revision,content:value});}catch(e){if(!(e instanceof KnowledgeError&&e.status<500))throw e;}}
  return result;
@@ -131,7 +132,7 @@ async function capsuleReferenceRows(c:PoolClient,groups:KnowledgeReference[][],c
 export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:PublicationHooks={},options:{prepareSchema?:()=>Promise<unknown>}={}) {
   let initialized:Promise<unknown>|undefined;
   const ready=()=>initialized??=(options.prepareSchema?.()??ensureKnowledgePublicationSchema(pool)).catch(e=>{initialized=undefined;throw e;});
-  async function read<T>(fn:(c:PoolClient)=>Promise<T>):Promise<T>{await ready();const c=await pool.connect();try{await c.query("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY");const value=await fn(c);await c.query("COMMIT");return value;}catch(e){await c.query("ROLLBACK");throw e;}finally{c.release();}}
+  async function read<T>(fn:(c:PoolClient)=>Promise<T>):Promise<T>{await ready();const c=await pool.connect();try{await c.query("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY");const value=await withPublicThemeRead(()=>fn(c));await c.query("COMMIT");return value;}catch(e){await c.query("ROLLBACK");throw e;}finally{c.release();}}
   async function generation(c:PoolClient,requested?:string){
     if(requested)generationSchema.parse(requested);
     const r=(await c.query("SELECT g.* FROM knowledge75.publication_generations g WHERE g.id=coalesce($1,(SELECT active_generation FROM knowledge75.publication_control WHERE singleton)) AND g.state='ready'",[requested??null])).rows[0];
@@ -264,7 +265,7 @@ export function createKnowledgePublicationService(pool:Pool,driver:Driver,hooks:
       const focusIds=q.entityId?await identityGroup(c,[q.entityId]):[];
       if(q.entityId){values.push(focusIds);conditions.push(`EXISTS (SELECT 1 FROM jsonb_array_elements(r.content->'entityPins') pin WHERE pin->>'id'=ANY($${values.length}::text[]))`);}
 
-      const candidates=(await c.query(`SELECT r.id,r.revision,(SELECT min(first.created_at) FROM knowledge75.revisions first WHERE first.kind='theme' AND first.id=r.id) AS first_created_at FROM knowledge75.objects o JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=o.current_revision LEFT JOIN knowledge75.published_revisions p ON p.kind=r.kind AND p.id=r.id AND p.revision=r.revision WHERE ${conditions.join(" AND ")} ORDER BY r.id`,values)).rows;
+      const candidates=(await c.query(`SELECT r.id,r.revision,(SELECT min(first.created_at) FROM knowledge75.revisions first WHERE first.kind='theme' AND first.id=r.id) AS first_created_at FROM knowledge75.objects o JOIN knowledge75.theme_publications h ON h.theme_id=o.id AND h.published_revision IS NOT NULL JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=h.published_revision LEFT JOIN knowledge75.published_revisions p ON p.kind=r.kind AND p.id=r.id AND p.revision=r.revision WHERE ${conditions.join(" AND ")} ORDER BY r.id`,values)).rows;
       const result:KnowledgeThemePage={themes:[]};
       for(const candidate of candidates){
         try{const resolved=await resolvePublicKnowledgeTheme(c,candidate.id,Number(candidate.revision));const {theme,snapshot}=resolved;result.themes.push({id:theme.id,revision:theme.revision,title:theme.content.title,description:theme.content.description,initialView:theme.content.initialView,hasTimeline:snapshot.records.some(r=>r.content.times.length>0),hasRelations:snapshot.records.some(r=>r.content.kind==='relation'),publishedAt:new Date(candidate.first_created_at).toISOString(),entityIds:snapshot.entities.map(e=>e.id),recordIds:snapshot.records.map(r=>r.id),presentationIntros:Object.fromEntries((["ja","en"] as const).flatMap(locale=>{const p=themeReadingPresentation(theme,locale,snapshot);return p?[[locale,{hook:p.hook,lead:p.lead}]]:[]})),presentationImages:Object.fromEntries((["ja","en"] as const).flatMap(locale=>{const image=themeReadingPresentation(theme,locale,snapshot)?.image;return image?[[locale,image]]:[]}))});}

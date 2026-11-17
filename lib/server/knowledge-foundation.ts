@@ -1,3 +1,5 @@
+import {operatorThemeRead,withOperatorThemeRead,withPublicThemeRead} from './knowledge-theme-access';
+import {themePublicationRevision,themeRevisionPublic,freezeThemeReleases,approvedThemeTranslations} from './knowledge-theme-publication';
 import {themeStoriesReferenceError} from "../domain/theme-stories";
 import {editorialReferenceError,retainedThemeEditorial} from './theme-editorial';
 import {knowledgeTextTargetSchema,knowledgeOriginalText,type KnowledgeTextTarget} from "../domain/knowledge-translation";
@@ -68,7 +70,7 @@ export async function ensureKnowledgeFoundationSchema(pool: Pool) {
       await c.query(sql);
       await c.query("INSERT INTO knowledge75.migrations(name,checksum) VALUES($1,$2)", ["001-records.sql", checksum]);
     }
-    for(const referenceName of ["004-submission-references.sql","007-acquisition-inventory.sql"]){
+    for(const referenceName of ["004-submission-references.sql","007-acquisition-inventory.sql","010-theme-publication.sql"]){
       const referenceSql=await readFile(path.join(process.cwd(),"migrations/knowledge-foundation",referenceName),"utf8");
       const referenceChecksum=createHash("sha256").update(referenceSql).digest("hex");
       const referenceOld=(await c.query("SELECT checksum FROM knowledge75.migrations WHERE name=$1",[referenceName])).rows[0];
@@ -102,6 +104,7 @@ async function assertPublic(c: PoolClient, kind: KnowledgeKind, id: string) {
   if (!await visible(c, kind, id)) throw new KnowledgeError("公開できない参照が含まれています", 403, "REFERENCE_NOT_PUBLIC");
 }
 async function revisionPublic(c: PoolClient, kind: KnowledgeKind, id: string, revision: number) {
+  if(kind==="theme"&&!operatorThemeRead()&&!await themeRevisionPublic(c,id,revision))return false;
   if (!await visible(c, kind, id)) return false;
   return Boolean((await c.query("SELECT 1 FROM knowledge75.published_revisions WHERE kind=$1 AND id=$2 AND revision=$3", [kind, id, revision])).rowCount);
 }
@@ -203,7 +206,7 @@ async function refreshObservation(c: PoolClient, theme: KnowledgeThemeVersion, l
 }
 function snapshotPins(s: KnowledgeSnapshot) { return { recordPins: s.records.map(pin), entityPins: s.entities.map(pin), sourcePins: s.sources.map(pin), mappingPins: s.mappings.map(pin) }; }
 async function resolve(c: PoolClient, id: string, revision: number | undefined, publicOnly: boolean): Promise<KnowledgeThemeResolved> {
-  const theme = await version(c, "theme", id, revision);
+  const theme = await version(c, "theme", id, publicOnly&&!operatorThemeRead()?await themePublicationRevision(c,id,revision):revision);
   if (publicOnly) await assertRevisionPublic(c, "theme", id, theme.revision);
   return { theme, snapshot: await capture(c, theme.content.recordPins, { ...theme.content, publicOnly }) };
 }
@@ -230,17 +233,18 @@ export function createKnowledgeFoundationService(pool: Pool,options:{prepareSche
       if (actor.kind !== "operator") {
         if (row.visibility !== "public") continue;
         if (kind === "record" && !await recordReadable(c, asVersion(row, "record"))) continue;
-        if (kind === "theme") { try { await resolve(c, row.id, Number(row.revision), true); } catch (e) { if (e instanceof KnowledgeError && e.status === 403) continue; throw e; } }
+        if (kind === "theme") { try { const approved=await resolve(c,row.id,undefined,true);result.themes.push(approved.theme); } catch(e){if(e instanceof KnowledgeError&&[403,404].includes(e.status))continue;throw e;} }
       }
       if (kind === "entity") result.entities.push(asVersion(row, kind));
       if (kind === "source") result.sources.push(asVersion(row, kind));
       if (kind === "record") result.records.push(asVersion(row, kind));
-      if (kind === "theme") result.themes.push(asVersion(row, kind));
+      if (kind === "theme" && actor.kind === "operator") result.themes.push(asVersion(row, kind));
       result.statuses.push({ kind, id: row.id, revision: Number(row.status_revision), visibility: row.visibility, confirmation: row.confirmation });
     }
     return result;
   }
-  async function execute(actor: KnowledgeActor, raw: unknown, internal?:{verify:(c:PoolClient)=>Promise<void>;prepare:(result:unknown)=>Promise<void>;retain?:(c:PoolClient,result:unknown)=>Promise<void>}): Promise<unknown> {
+  async function execute(actor: KnowledgeActor, raw: unknown, internal?:{operatorTheme?:boolean;verify:(c:PoolClient)=>Promise<void>;prepare:(result:unknown)=>Promise<void>;retain?:(c:PoolClient,result:unknown)=>Promise<void>}): Promise<unknown> {
+    return ((actor.kind==="operator"||actor.kind==="import"&&internal?.operatorTheme===true)?withOperatorThemeRead:withPublicThemeRead)(async()=>{
     const cmd = knowledgeCommandSchema.parse(raw);
     actorAllowed(actor, cmd.action);
     if (actor.kind === "collector" && cmd.action === "create-bundle" && (cmd.legacyLinks.length || cmd.visibility !== "public")) throw new KnowledgeError("収集実行者にはこの操作を許可していません", 403, "FORBIDDEN");
@@ -264,6 +268,7 @@ export function createKnowledgeFoundationService(pool: Pool,options:{prepareSche
         await c.query("INSERT INTO knowledge75.changes(kind,id,content_revision,status_revision,operation,actor_id,request_id) VALUES($1,$2,$3,$4,$5,$6,$7)", [kind, id, h.current_revision, h.status_revision, cmd.action, actor.id, cmd.requestId]);
       }
       async function put<K extends KnowledgeKind>(kind: K, id: string, content: KnowledgeContentByKind[K], revision: number, reason: string, visibility: KnowledgeStatus["visibility"] = "public"): Promise<KnowledgeVersion<KnowledgeContentByKind[K]>> {
+        if(kind==="theme"){if(revision>1)await freezeThemeReleases(c,id);await c.query('UPDATE knowledge75.theme_publications SET draft_updated_at=clock_timestamp() WHERE theme_id=$1',[id]);}
         if (revision === 1) await c.query("INSERT INTO knowledge75.objects(kind,id,current_revision,visibility) VALUES($1,$2,1,$3)", [kind, id, visibility]);
         else await c.query("UPDATE knowledge75.objects SET current_revision=$3,confirmation='unreviewed',status_revision=status_revision+1,updated_at=clock_timestamp() WHERE kind=$1 AND id=$2", [kind, id, revision]);
         await c.query("INSERT INTO knowledge75.revisions(kind,id,revision,content,reason,actor_id,actor_kind) VALUES($1,$2,$3,$4,$5,$6,$7)", [kind, id, revision, JSON.stringify(content), reason, actor.id, actor.kind]);
@@ -307,8 +312,10 @@ export function createKnowledgeFoundationService(pool: Pool,options:{prepareSche
         result={entities:pins,records:cmd.records.map(r=>({id:r.id,revision:1}))};
       }else if(cmd.action === "accept-translation") {
         await assertTranslationSchema(c);if(actor.kind==='submission'&&!internal)throw new KnowledgeError('翻訳投稿の確認が必要です',403,'SUBMISSION_REQUIRED');
+        if(cmd.target.kind==="theme")await freezeThemeReleases(c,cmd.target.id);
         const original=await readKnowledgeTextOriginal(c,cmd.target,true,true);
         try{result=await putTranslation(c,cmd,actor,original.content);}catch(e){throw new KnowledgeError((e as Error).message,409,'TRANSLATION_CONFLICT');}
+        if(cmd.target.kind==='theme'&&(result as {disposition:string}).disposition!=='existing')await c.query('UPDATE knowledge75.theme_publications SET draft_updated_at=clock_timestamp() WHERE theme_id=$1',[cmd.target.id]);
       } else if(cmd.action === "set-translation-visibility") {
         await assertTranslationSchema(c);const h=(await c.query('SELECT * FROM knowledge75.text_translation_heads WHERE id=$1 FOR UPDATE',[cmd.id])).rows[0];
         if(!h)throw new KnowledgeError('訳文がありません',404,'NOT_FOUND');expected(h.status_revision,cmd.expectedStatusRevision);
@@ -514,13 +521,14 @@ export function createKnowledgeFoundationService(pool: Pool,options:{prepareSche
       if (e && typeof e === "object" && "code" in e && ["23505", "40001", "40P01"].includes(String(e.code))) throw new KnowledgeError("同じIDの登録、または同時更新と競合しました。内容を確認してください", 409, "CONFLICT");
       throw e;
     } finally { c.release(); }
+    });
   }
   return {
     execute,
     list: (actor: KnowledgeActor) => read(c => listIn(c, actor)),
     get: <K extends KnowledgeKind>(actor: KnowledgeActor, kind: K, id: string, revision?: number) => read(async c => {
       if (!kinds.includes(kind)) throw new KnowledgeError("対象の種類が不正です");
-      const value = await version(c, kind, id, revision);
+      const value = await version(c, kind, id, kind === "theme" && actor.kind !== "operator" && !operatorThemeRead() ? await themePublicationRevision(c,id,revision) : revision);
       if (actor.kind !== "operator") {
         await assertRevisionPublic(c, kind, id, value.revision);
         if (kind === "record" && !await recordReadable(c, value as KnowledgeRecordVersion)) throw new KnowledgeError("閲覧できません", 404, "NOT_FOUND");
@@ -581,12 +589,22 @@ export async function readKnowledgeTextOriginal(c:PoolClient,raw:KnowledgeTextTa
  try{const text=knowledgeOriginalText(target,original.content);return {...text,content:original.content,target,hash:translationHash(text.text)};}catch(e){throw new KnowledgeError((e as Error).message,400,'TRANSLATION_TARGET');}
 }
 export async function readKnowledgeTranslation(c:PoolClient,target:KnowledgeTextTarget,language:string,revision?:number){
- await assertTranslationSchema(c);const original=await readKnowledgeTextOriginal(c,target),translation=await storedTranslation(c,translationId(target,language),revision);
+ await assertTranslationSchema(c);const original=await readKnowledgeTextOriginal(c,target);
+ const pins=target.kind==='theme'&&!operatorThemeRead()?await approvedThemeTranslations(c,target,language):null;
+ const approved=pins?.find(v=>translationId(v.target,language)===translationId(target,language));
+ let translation=pins!==null?(approved??null):await storedTranslation(c,translationId(target,language),revision);
+ if(pins!==null&&revision!==undefined){try{translation=await readKnowledgeTranslationById(c,translationId(target,language),revision);}catch(e){if(e instanceof KnowledgeError&&e.status===404)translation=null;else throw e;}}
  if(translation&&translation.originalHash!==original.hash)throw new KnowledgeError('訳文の原本が一致しません',409,'TRANSLATION_CONFLICT');return {original:{text:original.text,hash:original.hash,language:original.language},translation};
 }
 export type KnowledgeFoundationService = ReturnType<typeof createKnowledgeFoundationService>;
 
 export async function readKnowledgeTranslationById(c:PoolClient,id:string,revision?:number){
  await assertTranslationSchema(c);const v=await storedTranslation(c,id,revision);if(!v)throw new KnowledgeError('訳文がありません',404,'NOT_FOUND');
- const original=await readKnowledgeTextOriginal(c,v.target);if(original.hash!==v.originalHash)throw new KnowledgeError('原文が一致しません',409,'CONFLICT');return v;
+ if(v.target.kind==='theme'&&!operatorThemeRead()){
+   const released=(await c.query("SELECT 1 FROM knowledge75.theme_releases r JOIN knowledge75.theme_publications h ON h.theme_id=r.theme_id JOIN knowledge75.objects o ON o.kind='theme' AND o.id=h.theme_id WHERE o.visibility='public' AND h.published_revision IS NOT NULL AND (r.theme_translations @> $1::jsonb OR EXISTS(SELECT 1 FROM knowledge75.theme_release_approvals a WHERE a.theme_id=r.theme_id AND a.revision=r.revision AND a.theme_translations @> $1::jsonb)) LIMIT 1",[JSON.stringify([{id:v.id,revision:v.revision}])])).rowCount;
+   if(released){const original=await withOperatorThemeRead(()=>readKnowledgeTextOriginal(c,v.target));if(original.hash!==v.originalHash)throw new KnowledgeError('原文が一致しません',409,'CONFLICT');return v;}
+   const legacy=(await c.query('SELECT 1 FROM knowledge75.theme_releases r JOIN knowledge75.theme_publications h ON h.theme_id=r.theme_id WHERE r.theme_id=$1 AND r.revision=$2 AND h.published_revision IS NOT NULL AND r.theme_translations IS NULL',[v.target.id,v.target.revision])).rowCount;
+   if(!legacy)throw new KnowledgeError('この訳文版は一般公開されていません',404,'NOT_FOUND');
+  }
+  const original=await readKnowledgeTextOriginal(c,v.target);if(original.hash!==v.originalHash)throw new KnowledgeError('原文が一致しません',409,'CONFLICT');return v;
 }

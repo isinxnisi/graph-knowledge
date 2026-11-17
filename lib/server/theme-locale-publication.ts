@@ -1,3 +1,4 @@
+import {themeRevisionPublic} from './knowledge-theme-publication';
 import type {PoolClient} from 'pg';
 import type {KnowledgeThemeResolved,KnowledgeThemeVersion} from '../domain/knowledge-foundation';
 import type {KnowledgeDisplayTranslation} from '../domain/knowledge-translation';
@@ -20,6 +21,9 @@ export async function resolveThemeLocalePublication(c:PoolClient,current:Knowled
   if(Number(row.revision)!==next.revision-1||!additiveThemeContent(row.content,next.content))break;
   const transitionRevision=next.revision;
   next={id:current.theme.id,revision:Number(row.revision),content:row.content,createdAt:new Date(row.created_at).toISOString(),reason:''} as KnowledgeThemeVersion;
+  // Private intermediate editions participate in continuity checks, but can
+  // never be returned as a fallback or block reaching an older approved edition.
+  if(!await themeRevisionPublic(c,next.id,next.revision))continue;
   let candidate:KnowledgeThemeResolved;
   try{candidate=await resolvePublicKnowledgeTheme(c,next.id,next.revision);}catch(error){if(error instanceof KnowledgeError&&[403,404,410].includes(error.status))break;throw error;}
   // An explicit correction of an original must not be hidden by a stale edition.

@@ -1,3 +1,4 @@
+import {withOperatorThemeRead} from '../lib/server/knowledge-theme-access';
 import {knowledgeRecordContentSchema,knowledgeSourceContentSchema,knowledgeEntityContentSchema} from "../lib/domain/knowledge-foundation";
 import type {KnowledgeSnapshot,KnowledgeThemeVersion,KnowledgeRecordVersion} from "../lib/domain/knowledge-foundation";
 import {readFileSync} from "node:fs";
@@ -26,6 +27,8 @@ const owner=randomUUID(),other=randomUUID();
 let service:ReturnType<typeof createThemeRegistrations>,inbox:ReturnType<typeof createKnowledgeImports>,web:ReturnType<typeof createWebKnowledgeImports>;
 const input=()=>({requestId:randomUUID(),title:'Aをたどる',description:'資料からたどるテーマ',initialView:'timeline',recordPins:[{id:'baseline',revision:1}]});
 const foundation=()=>createKnowledgeFoundationService(knowledge);
+const themeRead=(id:string,revision?:number)=>withOperatorThemeRead(()=>foundation().get({kind:'reader',id:'authorized-operator'},'theme',id,revision));
+const themeResolve=(id:string,revision?:number)=>withOperatorThemeRead(()=>foundation().resolveTheme({kind:'reader',id:'authorized-operator'},id,revision));
 const cfg=reviewConfigSchema.parse({projectId:'theme-registration-fixture',billingTier:'free',verifiedAt:new Date().toISOString(),model:'gemini-3.1-flash-lite',rpm:15,tokensPerMinute:500000,requestsPerDay:80,requestsPerMonth:2400,inputTokensPerDay:250000,outputTokensPerDay:160000,inputTokensPerMonth:7500000,outputTokensPerMonth:4800000,apiKeyFile:'/unused',allowedUsers:[owner]});
 async function wake(){await pool.query("UPDATE knowledge_missions.theme_registrations SET next_attempt=clock_timestamp() WHERE state IN('saved','processing')");}
 beforeAll(async()=>{
@@ -60,7 +63,8 @@ it('creates a pinned theme, replays without a new version and isolates owners',a
  await expect(service.submit(owner,{...v,title:'different'})).rejects.toMatchObject({code:'REQUEST_CHANGED'});
  await expect(service.status(other,v.requestId)).rejects.toMatchObject({code:'NOT_FOUND'});
  expect(await service.recoverOne()).toBe(true);const result=await service.status(owner,v.requestId);expect(result).toMatchObject({state:'published',theme:{revision:1,title:v.title}});
- expect((await foundation().get({kind:'reader',id:'fixture'},'theme',result.theme!.id)).content.recordPins).toEqual(v.recordPins);
+ expect((await themeRead(result.theme!.id)).content.recordPins).toEqual(v.recordPins);
+ expect(result.publication?.state).toBe('private');await expect(foundation().get({kind:'reader',id:'anonymous'},'theme',result.theme!.id)).rejects.toMatchObject({status:404});
  await wake();expect(await service.recoverOne()).toBe(false);expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.objects WHERE kind='theme'")).rows[0].n).toBe(1);
 });
 it('recovers a common commit whose member acknowledgement was lost',async()=>{
@@ -92,9 +96,9 @@ it('publishes operator information with verified sources and zero AI calls even 
  // in this isolated Member/PG integration test.
  await pool.query("UPDATE knowledge_import.items SET state='published' WHERE state='applied'");await wake();await service.recoverOne();
  const result=await service.status(owner,v.requestId);expect(result.state,JSON.stringify(result.receipt)).toBe('published');expect(result.theme).not.toBeNull();
- const record=result.receipt!.items[0].result!;expect((await foundation().get({kind:'reader',id:'fixture'},'theme',result.theme!.id)).content.recordPins).toEqual([{id:record.id,revision:record.revision}]);
+ const record=result.receipt!.items[0].result!;expect((await themeRead(result.theme!.id)).content.recordPins).toEqual([{id:record.id,revision:record.revision}]);
  expect((await foundation().get({kind:'reader',id:'fixture'},'record',record.id,record.revision)).content.relation).toBe('operates');
- expect((await foundation().get({kind:'reader',id:'fixture'},'theme',result.theme!.id)).content.timeline?.placements).toEqual([{recordId:record.id,timeId:'event',axisId:'calendar'}]);
+ expect((await themeRead(result.theme!.id)).content.timeline?.placements).toEqual([{recordId:record.id,timeId:'event',axisId:'calendar'}]);
 });
 
 it('retains an invalid timeline request for correction instead of silently dropping its reference',async()=>{
@@ -108,8 +112,8 @@ const edit=(t:{id:string;revision:number},changes:Record<string,unknown>={title:
 it('updates the same theme, keeps the original snapshot, recovers a replay after the target advanced and reads source URLs',async()=>{
  const t=await theme(),v=edit(t);await service.submit(owner,v);await service.recoverOne();
  const result=await service.status(owner,v.requestId);expect(result).toMatchObject({state:'published',operation:'update',theme:{id:t.id,revision:2,title:v.changes.title}});
- expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id,1)).content.title).toBe('Aをたどる');
- expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id,2)).content.recordPins).toEqual([{id:'baseline',revision:1}]);
+ expect((await themeRead(t.id,1)).content.title).toBe('Aをたどる');
+ expect((await themeRead(t.id,2)).content.recordPins).toEqual([{id:'baseline',revision:1}]);
  expect(await service.submit(owner,v)).toMatchObject({replayed:true});
  const reader=createThemeAuthoringReader(knowledge,'https://plunode.net');
  expect((await reader.read('https://plunode.net/?ktheme='+encodeURIComponent(t.id))).snapshot.sources[0].content.url).toBe('https://example.org/base');
@@ -120,19 +124,19 @@ it('appends existing records, reorders and removes only membership, retaining co
  const t=await theme();
  await foundation().execute({kind:'operator',id:'fixture'},{action:'create-bundle',requestId:randomUUID(),entityPins:[{id:'a',revision:1}],sources:[{id:'extra-source',content:{title:'Second source',url:'https://example.org/extra'}}],records:[{id:'extra',content:{kind:'note',subjectId:'a',assertion:'A works internationally.',evidence:[{id:'proof',source:{id:'extra-source',revision:1},locator:'Work',excerpt:'A works internationally.'}]}}],reason:'Second published fact'});
  const v={...edit(t,{}),recordPins:[{id:'extra',revision:1}],recordOrder:['extra','baseline']};await service.submit(owner,v);await service.recoverOne();
- expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id)).content.recordPins.map(p=>p.id)).toEqual(['extra','baseline']);
+ expect((await themeRead(t.id)).content.recordPins.map(p=>p.id)).toEqual(['extra','baseline']);
  const remove={...edit({...t,revision:2},{}),removeRecordIds:['baseline']};await service.submit(owner,remove);await service.recoverOne();
- expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id)).content.recordPins).toEqual([{id:'extra',revision:1}]);
- expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id,1)).content.recordPins).toEqual([{id:'baseline',revision:1}]);
+ expect((await themeRead(t.id)).content.recordPins).toEqual([{id:'extra',revision:1}]);
+ expect((await themeRead(t.id,1)).content.recordPins).toEqual([{id:'baseline',revision:1}]);
  expect((await foundation().get({kind:'reader',id:'fixture'},'record','baseline')).revision).toBe(1);
 });
 it('reports concurrent edits and revocation instead of overwriting the current theme',async()=>{
  const t=await theme(),a=edit(t),b=edit(t,{description:'Concurrent intent'});await service.submit(owner,a);await service.submit(owner,b);
  await service.recoverOne();await service.recoverOne();expect(await service.status(owner,b.requestId)).toMatchObject({state:'needs-changes',theme:null});
- expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id)).revision).toBe(2);
+ expect((await themeRead(t.id)).revision).toBe(2);
  await expect(service.submit(owner,edit(t))).rejects.toMatchObject({code:'REVISION_CONFLICT'});
  const v=edit({...t,revision:2});await service.submit(owner,v);await service.cancel(owner,v.requestId);expect(await service.status(owner,v.requestId)).toMatchObject({state:'cancelled'});
- expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id)).revision).toBe(2);
+ expect((await themeRead(t.id)).revision).toBe(2);
 });
 it('recovers a committed edit after a lost acknowledgement without a second revision',async()=>{
  const t=await theme(),v=edit(t);await service.submit(owner,v);
@@ -147,10 +151,10 @@ it('accepts a new source URL and theme-only background without partially changin
  const dispatch=vi.fn(async()=>({state:'received' as const,status:200,raw:{responseId:'fixture',modelVersion:cfg.model,usageMetadata:{promptTokenCount:100,candidatesTokenCount:20,thoughtsTokenCount:0,totalTokenCount:120},candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify({suitability:'legitimate',support:'supported',reason:'The cited source supports this background.'})}]}}]}}));
  await inbox.processNext(cfg,dispatch);expect(dispatch).not.toHaveBeenCalled();
  expect((await pool.query('SELECT count(*)::int n FROM knowledge_import.attempts')).rows[0].n).toBe(0);
- expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id)).revision).toBe(1);
+ expect((await themeRead(t.id)).revision).toBe(1);
  await pool.query("UPDATE knowledge_import.items SET state='published' WHERE state='applied'");await wake();await service.recoverOne();
  const result=await service.status(owner,v.requestId);expect(result,JSON.stringify(result)).toMatchObject({state:'published',theme:{id:t.id,revision:2}});
- const snapshot=await foundation().resolveTheme({kind:'reader',id:'fixture'},t.id);expect(snapshot.snapshot.records).toHaveLength(2);
+ const snapshot=await themeResolve(t.id);expect(snapshot.snapshot.records).toHaveLength(2);
  expect(snapshot.snapshot.sources.map(s=>s.content.url)).toContain('https://example.org/theme-background');
 });
 
@@ -161,15 +165,15 @@ it('registers generic theme editorial data and image via normal intake, retains 
  const id=String(image.imageId),v={...input(),presentation:[{locale:'ja',hook:'Aは、どんな組織？',lead:'資料からAを読む。',imageId:id,entityNotes:[{target:{id:'a',revision:1},text:'Aという組織。',supportingRecords:[{id:'baseline',revision:1}]}],records:[{target:{id:'baseline',revision:1},shortTitle:'Aの説明'}]}]};
  await service.submit(owner,v);await pool.query("UPDATE product_image_asset SET created_at=clock_timestamp()-interval '8 days' WHERE id=$1",[id]);await collectUnusedProductImages(pool);expect((await pool.query('SELECT 1 FROM product_image_asset WHERE id=$1',[id])).rowCount).toBe(1);
  await service.recoverOne();const status=await service.status(owner,v.requestId);expect(status).toMatchObject({state:'published',theme:{revision:1}});
- const first=await foundation().resolveTheme({kind:'reader',id:'fixture'},status.theme!.id);expect(first.theme.content.reading?.[0].image).toMatchObject({id,width:240,height:120});
+ const first=await themeResolve(status.theme!.id);expect(first.theme.content.reading?.[0].image).toMatchObject({id,width:240,height:120});
  expect(themeReadingPresentation(first.theme,'ja',first.snapshot)).toMatchObject({hook:v.presentation[0].hook,entityNotes:[expect.objectContaining({text:'Aという組織。'})]});
  expect((await pool.query('SELECT published FROM theme_editorial_asset_reference WHERE request_id=$1',[v.requestId])).rows[0].published).toBe(true);
- const cleared=edit(status.theme!,{presentation:[]});await service.submit(owner,cleared);await service.recoverOne();const latest=await foundation().resolveTheme({kind:'reader',id:'fixture'},status.theme!.id);
+ const cleared=edit(status.theme!,{presentation:[]});await service.submit(owner,cleared);await service.recoverOne();const latest=await themeResolve(status.theme!.id);
  expect(latest.theme.revision).toBe(2);expect(latest.theme.content.reading).toEqual([]);expect(themeReadingPresentation(latest.theme,'ja',latest.snapshot)).toBeNull();expect(first.theme.content.reading?.[0].image?.id).toBe(id);
  await pool.query("UPDATE product_asset_maintenance SET last_run=clock_timestamp()-interval '2 days'");await collectUnusedProductImages(pool);expect((await pool.query('SELECT 1 FROM product_image_asset WHERE id=$1',[id])).rowCount).toBe(1);
  const bad={...edit({id:latest.theme.id,revision:2},{}),changes:{presentation:[{locale:'ja',hook:'Invalid',lead:'',records:[{target:{id:'not-in-theme',revision:1},shortTitle:'Foreign record'}]}]}};
  await service.submit(owner,bad);await service.recoverOne();expect(await service.status(owner,bad.requestId)).toMatchObject({state:'needs-changes',theme:null});
- expect((await foundation().get({kind:'reader',id:'fixture'},'theme',latest.theme.id)).revision).toBe(2);
+ expect((await themeRead(latest.theme.id)).revision).toBe(2);
 });
 
 it('does not treat a generic web delivery or namespace as operator theme authority',async()=>{
@@ -198,7 +202,7 @@ it('reuses an exact existing record on operator update without AI or a duplicate
  await pool.query("UPDATE knowledge_import.items SET state='published' WHERE state='applied'");await wake();await service.recoverOne();
  expect(await service.status(owner,v.requestId)).toMatchObject({state:'published',theme:{id:t.id,revision:2}});
  expect((await knowledge.query("SELECT count(*)::int n FROM knowledge75.objects WHERE kind='record'")).rows[0].n).toBe(1);
- expect((await foundation().get({kind:'reader',id:'fixture'},'theme',t.id,1)).content.description).toBe('資料からたどるテーマ');
+ expect((await themeRead(t.id,1)).content.description).toBe('資料からたどるテーマ');
 });
 
 // Optional read-only exports from the two beta themes are loaded ONLY into this disposable DB.

@@ -34,10 +34,10 @@ export function parseKnowledgeReference(value: unknown): KnowledgeWorkspaceRefer
   return result.success ? result.data : null;
 }
 export function knowledgeThemeLocation(url: URL): { id: string; revision?: number; view?: KnowledgeView; focusEntityId?: string } | null {
-  const canonical=url.pathname.match(/^\/(?:en\/)?t\/([^/]+)\/?$/);
+  const canonical=url.pathname.match(/^\/(?:(?:en\/)?t|operations\/themes)\/([^/]+)\/?$/);
   const id = knowledgeIdSchema.safeParse(url.searchParams.get("ktheme")??(canonical?decodeURIComponent(canonical[1]):null));
   if (!id.success) return null;
-  const rawRevision = url.searchParams.get("krev"), revision = rawRevision === null ? undefined : Number(rawRevision);
+  const rawRevision = url.searchParams.get("krev")??(/^\/operations\/themes\//.test(url.pathname)?url.searchParams.get("revision"):null), revision = rawRevision === null ? undefined : Number(rawRevision);
   if (revision !== undefined && (!Number.isSafeInteger(revision) || revision < 1)) return null;
   const view = url.searchParams.get("kview");
   const focus=knowledgeIdSchema.safeParse(url.searchParams.get('kfocus'));

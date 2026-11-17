@@ -1,3 +1,4 @@
+import {approvedThemeTranslations} from './knowledge-theme-publication';
 import type { PoolClient } from "pg";
 import { knowledgeOriginalText, translationTargetKey, type KnowledgeTextTarget, type KnowledgeDisplayTranslation } from "../domain/knowledge-translation";
 import { readKnowledgeTextOriginal, readKnowledgeTranslationById, KnowledgeError } from "./knowledge-foundation";
@@ -14,6 +15,7 @@ export async function publicDisplayTranslations(c: PoolClient, targets: Knowledg
     WHERE language=$1 AND (id=ANY($2::text[]) OR (target->>'kind'='theme' AND target->>'id'=ANY($3::text[])))`, [language, exactIds, themeIds])).rows;
   const result: KnowledgeDisplayTranslation[] = [];
   for (const target of unique) {
+    if(target.kind === "theme"){const approved=await approvedThemeTranslations(c,target,language);if(approved!==null){result.push(...approved);continue;}}
     const exact = heads.find(h => h.id === translationId(target, language));
     if (exact) {
       if (exact.visibility === "public") {

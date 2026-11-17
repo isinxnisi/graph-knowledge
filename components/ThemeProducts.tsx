@@ -12,7 +12,7 @@ type Selection={kind:"record"|"entity";id:string};
 export function useThemeItems(theme?:ThemeRef,selection?:Selection|null,associations=false){
  const [market,setMarket]=useState("JP"),[state,setState]=useState<{key:string;items:ProductCardItem[];error:boolean}>({key:"",items:[],error:false});
  const key=theme?JSON.stringify({themeId:theme.id,revision:String(theme.revision),marketplace:market,alternatives:"1",...(associations?{associations:"1"}:{}),...(selection?{kind:selection.kind,id:selection.id}:{})}):selection?.kind==="entity"?JSON.stringify({kind:"entity",id:selection.id,marketplace:market,alternatives:"1"}):"";
- useEffect(()=>{if(!key)return;const c=new AbortController();void fetch("/api/knowledge/theme-products?"+new URLSearchParams(JSON.parse(key)),{signal:c.signal}).then(async r=>{if(!r.ok)throw Error();const v=await r.json();if(!c.signal.aborted)setState({key,items:v.products,error:false});}).catch(()=>{if(!c.signal.aborted)setState({key,items:[],error:true});});return()=>c.abort();},[key]);
+ useEffect(()=>{if(!key)return;const c=new AbortController();void fetch((/^\/operations\/themes\//.test(location.pathname)?"/api/site-operations/theme-products?":"/api/knowledge/theme-products?")+new URLSearchParams(JSON.parse(key)),{signal:c.signal}).then(async r=>{if(!r.ok)throw Error();const v=await r.json();if(!c.signal.aborted)setState({key,items:v.products,error:false});}).catch(()=>{if(!c.signal.aborted)setState({key,items:[],error:true});});return()=>c.abort();},[key]);
  return {market,onMarket:setMarket,items:state.key===key?state.items:[],error:state.key===key&&state.error};
 }
 export default function ThemeProducts({theme,selection=null}:{theme:ThemeRef;selection?:Selection|null}){
