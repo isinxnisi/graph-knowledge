@@ -69,3 +69,14 @@ publication.pendingなら返された正確なretryCommandで再送し、案件G
 ```
 
 既存の本番・βAppで「ツールを更新」が必要。ID・endpoint・OAuth権限を変更／再作成する必要はない。実ChatGPTで追加schemaの認識・画像付き作業版読取を確認するまでは、App接続完了や予定実行確認済みと報告しない。
+
+
+## 本番初回適用と受入中に判明した修正（2026-11-18）
+
+52aeced6／mX5Ty2YU9Jw7NlYdW8llVを正式へ適用。両DBの隔離復元・owner／旧行・再適用保持、member46／knowledge10、Webと既存3 Workerの切替を実施。設定・共通知識・既存データ・ガイド・予定は保持。暗号化backupとkey envelopeをPCへ回収し、activation記録のSHAと照合。
+
+受入中、ユーザー報告のDQプレビュー404を同じログイン済みChromeで再現した。制作一覧と認証付きpreview APIは読めるため、一般公開拒否とは別の不具合。固定された本番imageを隔離展開し、専用の使い捨て会員DBと、そのDBだけの認証済み運営者sessionでHTTP検証したところ、Nextの動的paramsが`theme%3A...`を保ったまま渡り、ページのID正規表現で拒否されていた。公開Themeページは既にdecode処理を持つが、新規previewページに適用していなかった。
+
+previewだけを既存の`decodePublicEntityId`で正規化・検査する修正とし、authの弱体化や匿名公開への切替はしない。同じ隔離Webで修正前404、修正後の認証済み日英・旧版指定が200、匿名3経路は404を確認。QA内の計測用compiledファイルを配布せず、同じ修正をソースへ適用して固定sourceから再buildする。
+
+ヘッダ外へ出ていた制作一覧への入口は、既存運営メニュー内へ移す。previewの版・制作一覧・言語リンクも既存SiteHeaderの下へ置き、サイトヘッダの前へ独立行を追加しない。通常公開画面の操作は維持。ID正規化・不正入力・無権限拒否・言語／版指定の7回帰、既存SEO6が成功。TSCも成功。修正はβ／正式Web再反映と実画面確認が残る。

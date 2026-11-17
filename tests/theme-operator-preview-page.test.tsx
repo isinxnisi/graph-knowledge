@@ -1,0 +1,14 @@
+import React from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {beforeEach,expect,it,vi} from 'vitest';
+const mock=vi.hoisted(()=>({authorize:vi.fn(),preview:vi.fn(),notFound:vi.fn(()=>{throw new Error('NOT_FOUND');})}));
+vi.mock('next/headers',()=>({headers:async()=>new Headers({host:'plunode.net'})}));
+vi.mock('next/navigation',()=>({notFound:mock.notFound}));
+vi.mock('../lib/server/theme-operator-preview',()=>({themeOperator:mock.authorize,operatorThemePreview:mock.preview}));
+vi.mock('../lib/server/exploration-page',()=>({ExplorationPage:({initialKnowledgeTheme}:{initialKnowledgeTheme:{theme:{revision:number}}})=><div>preview edition {initialKnowledgeTheme.theme.revision}</div>}));
+import Page from '../app/operations/themes/[id]/page';
+beforeEach(()=>{vi.clearAllMocks();mock.authorize.mockResolvedValue('operator');mock.preview.mockResolvedValue({theme:{revision:13},operatorPreview:true});});
+it.each(['theme:unfinished','theme%3Aunfinished'])('normalizes the exact route ID after operator authorization: %s',async id=>{const page=await Page({params:Promise.resolve({id}),searchParams:Promise.resolve({})});expect(mock.preview).toHaveBeenCalledWith('theme:unfinished','ja',undefined);expect(renderToStaticMarkup(page)).toContain('preview edition 13');});
+it('keeps explicit language and exact working edition',async()=>{await Page({params:Promise.resolve({id:'theme%3Aunfinished'}),searchParams:Promise.resolve({locale:'en',revision:'7'})});expect(mock.preview).toHaveBeenCalledWith('theme:unfinished','en',7);});
+it('rejects absent or ordinary member authorization before reading content',async()=>{mock.authorize.mockRejectedValueOnce(new Error('denied'));await expect(Page({params:Promise.resolve({id:'theme:x'}),searchParams:Promise.resolve({})})).rejects.toThrow('NOT_FOUND');expect(mock.preview).not.toHaveBeenCalled();});
+it.each(['%broken','theme%253Aunfinished','theme%2Fx'])('rejects invalid path input without resolving another target: %s',async id=>{await expect(Page({params:Promise.resolve({id}),searchParams:Promise.resolve({})})).rejects.toThrow('NOT_FOUND');expect(mock.preview).not.toHaveBeenCalled();});
