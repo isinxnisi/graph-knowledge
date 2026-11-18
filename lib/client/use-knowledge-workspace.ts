@@ -105,10 +105,10 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
   }, []);
   const stopProgress=()=>{operationProgress.current?.();operationProgress.current=null;};
   const begin = (navigation=false) => { stopProgress();if(navigation)operationProgress.current=startNavigationProgress(); const token = ++epoch.current; ready.current = true; setRestoring(false); setBusy(true); setError(""); setMessage(""); return token; };
-  const live = (token: number) => alive.current && token === epoch.current;
+  const live = useCallback((token: number) => alive.current && token === epoch.current, []);
   const finish = (token: number) => { if (live(token)) { setBusy(false);stopProgress(); } };
 
-  async function restore(saved: KnowledgeWorkspaceReference, override?: ReturnType<typeof knowledgeThemeLocation>) {
+  const restore = useCallback(async(saved: KnowledgeWorkspaceReference, override?: ReturnType<typeof knowledgeThemeLocation>) => {
     const token = ++epoch.current; ready.current = false; setBusy(true); setError(""); setRestoring(true);
     entitySearch.current++; themeSearch.current++; themeCriteria.current = {};
     setSearchingEntities(false); setSearchingThemes(false);
@@ -167,7 +167,7 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
         themeSelection: theme ? validSelection(wanted?.focusEntityId?{kind:'entity',id:wanted.focusEntityId}:saved.themeSelection, theme.records, theme.snapshot.entities) : null }));
     } catch (e) { if (live(token)) { ready.current = true; setError(messageOf(e)); } }
     finally { if (live(token)) { setRestoring(false); setBusy(false); } }
-  }
+  }, [live,update]);
 
   useEffect(() => {
     alive.current = true;
@@ -266,7 +266,7 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
     const timer = setInterval(() => { void poll(); }, 4000);
     return () => clearInterval(timer);
     // Poll works from synchronized refs; it never starts a second request while pending.
-  }, [update]);
+  }, [restore,update]);
 
   function setQuery(query: string) { if (ready.current) { stopProgress();epoch.current++; setBusy(false); } update(s => ({ ...s, query })); }
   function setKind(kind: string) { if (ready.current) { stopProgress();epoch.current++; setBusy(false); } update(s => ({ ...s, kind })); }

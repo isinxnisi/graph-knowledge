@@ -64,13 +64,17 @@ export async function ensureKnowledgePublicationSchema(pool: Pool) {
   }catch(e){await c.query("ROLLBACK");throw e;}finally{c.release();}
 }
 
-// Every returned record is checked against current publication gates, including its
-// exact historical dependencies. The immutable index is not an authorization cache.
+// Check each exact dependency by primary key. A join on the entire live
+// objects table could be rebuilt for every candidate in an unfiltered page.
 const readableSql = (alias="r") => `NOT EXISTS (
  SELECT 1 FROM jsonb_array_elements(${alias}.dependencies) d
- LEFT JOIN knowledge75.objects o ON o.kind=d->>'kind' AND o.id=d->>'id'
- LEFT JOIN knowledge75.published_revisions p ON p.kind=o.kind AND p.id=o.id AND p.revision=(d->>'revision')::integer
- WHERE o.visibility IS DISTINCT FROM 'public' OR p.id IS NULL
+ WHERE NOT coalesce((
+  SELECT o.visibility='public' AND EXISTS(
+   SELECT 1 FROM knowledge75.published_revisions p
+   WHERE p.kind=o.kind AND p.id=o.id AND p.revision=(d->>'revision')::integer
+  )
+  FROM knowledge75.objects o WHERE o.kind=d->>'kind' AND o.id=d->>'id'
+ ),false)
 )`;
 type GraphGeneration = {id:string;digest:string};
 type Generation = {id:string;sourceSequence:string;digest:string;recordCount:number;createdAt:string;publishedAt:string|null};

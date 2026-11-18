@@ -3,7 +3,7 @@
 ## 承認後に行う本番切替
 
 1. PG／Neo4j・Web／Workerの現行版、012の前提migration、稼働中の公開世代IDとGraphの稼働、直近の復元確認済みバックアップを照合する。対象は正式originと専用知識DB。別環境に復元して012の適用・再実行、旧公開世代と固定版、失敗後の公開切替、代表検索・Graph・共有を確認する。
-2. 同じ固定SHAからWebとknowledge-opsを構築する。通常の配置手順で旧Publisher／巡回Workerの停止を確認し、既存の `scripts/knowledge-migrate.ts --confirm-origin https://plunode.net --confirm-database plunode_knowledge75_production` を正式のoperatorプロファイルで実行する。012は既存投影の行を移送せず、参照用ビューと空の投影テーブルを追加する。重複インデックスの取り外しとメタデータ更新だけが既存台帳に触れる。ロック待ちで中断したときはledgerを照合して再実行する。
+2. 同じ固定SHAからWebとknowledge-opsを構築する。通常の配置手順で旧Publisher／巡回Workerの停止を確認し、既存の `scripts/knowledge-migrate.ts --publication-storage-only --confirm-origin https://plunode.net --confirm-database plunode_knowledge75_production` を正式のoperatorプロファイルで実行する。012は既存投影の行を移送せず、参照用ビューと空の投影テーブルを追加する。重複インデックスの取り外しとメタデータ更新だけが既存台帳に触れる。ロック待ちで中断したときはledgerを照合して再実行する。
 3. 新Web／Workerで旧現役世代の読取を確認する。次の公開更新で新形式の投影を生成する。即時検証が必要なら新Publisherで `--once --force` を実行する。単一Publisherの排他を守る。検索・隣接ページング・固定Record版・固定共有を確認し、公開内容・根拠・認可を切替前と照合する。
 4. 旧形式の現役世代が参照可能な間に切替の受入を完了する。整理を有効にする場合は、既存Workerの設定へ `KNOWLEDGE_PUBLICATION_RETENTION_HOURS=72` と `KNOWLEDGE_INVENTORY_RETENTION_DAYS=7` を独立して追加する。設定がないWorkerは期限による整理を開始しない。
 
