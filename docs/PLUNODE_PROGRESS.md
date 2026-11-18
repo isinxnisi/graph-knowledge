@@ -1,3 +1,5 @@
+2026-11-19 知識DBの公開投影と巡回台帳：①参照調査・②共用投影と期限整理・③隔離比較・④3200／HTTPS βと本番移行手順まで完了｜今回④まで。source 977903e7／β C8IsB-9clWQwv0Yjue0tS、知識012。合成の同一負荷でDB155.44→37.71MB・18→10世代、βの旧カーソル／固定版と原本7,822版を保全。βの条件なし検索の遅延を主キー照合で修正し最終HTTPS306ms。本番未適用、期限整理は隔離で検証済みでβでは未有効化。[設計](design/KNOWLEDGE_PUBLICATION_STORAGE.md)・[実測](verification/KNOWLEDGE_PUBLICATION_STORAGE_20261119.md)・[移行・復帰](runbooks/KNOWLEDGE_PUBLICATION_STORAGE.md)。
+
 2026-11-19 資料収集の公開分離：④修正版7bd4e557の固定build／β・App確認と正式転送照合まで完了｜残り④本人sudoで正式適用・Webb29復旧／最終確認｜全体④まで。正式候補8JAqMFTgOxwZF46rOMvp7／β5bJDIF63j81B1oYEcI6Lx。全DB再backup・復元は省略し検証済み同一011と対象メタデータ保全を使用。案件／原稿／予定は維持。[記録](verification/COLLECTION_THEME_PUBLICATION_20261119.md)。
 
 2026-11-19 資料収集の公開分離：④停止原因を未完了案件の存在による過剰拒否と特定し、進行中見直し／後続私的原稿を保持する限定復旧へ修正、主要56件・型／Lint・配置6件が合格｜残り④固定build・β再確認・正式適用／Webb復旧｜全体④まで。本番は稼働・公開28／head29維持、予定／原稿／案件は未変更。[記録](verification/COLLECTION_THEME_PUBLICATION_20261119.md)。
