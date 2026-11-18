@@ -1,45 +1,43 @@
-# Graph上部・隣接関係・テーマ制作一覧の表示修正
+# Graph・隣接一覧・テーマ制作画面の表示修正
 
-## 対象と変更
+2026-11-19、βと正式への反映・確認完了。iPhone実機は未確認。PC Chromeのスマホ幅試験とは区別する。
 
-2026-11-18の本番iPhone画像3点への対応。登録内容、制作案件、予定、AI経路、DB schemaは変更しない。
+## 最終反映版
 
-- 共通GraphCanvas内の通知の右端に、鍵44px＋右余白12px＋間隔8pxを予約する。本線・テーマ・その他のGraphに共通。鍵は控えめな既存表示を維持し、スクロールロック／解除・ズームを変更しない。
-- 隣接関係は大きいカードとアクション下部の区切りをコンパクトな行へ変更。関係名、両対象、限定・期間・出典数と既存2操作を保持し、順位説明は小さい開閉にする。短い操作ラベルにも完全なアクセシブル名を残す。
-- 素のHTMLだった `/operations/themes` を認証後 `/operations#themes` へ案内し、既存OperationsPageのヘッダ・運営メニューへ統合する。状態・作業版／公開版、検索、状態フィルタ、読取再取得を提供する。長い残作業と阻害理由は初期状態で閉じ、全文を保持する。
-- `GET /api/site-operations/themes` は既存運営者認証と一覧取得を再利用する読取専用API。activeな運営者限定、X-Member-Userの不一致を拒否し、private/no-store/noindexを付す。画面に必要な状態・版・残作業だけを返す。別運営者の案件、保存済み送信、原稿・素材は返さない。
-- MCPの新ツール・定義更新は不要。制作・公開制御の実処理は変更しない。
+- アプリsource：`a1ca2e7b765a2bc946b00ec16b17be5c1902925d`。
+- 正式build：`b-6Zi81Rn4b42IMUe8Mew`。image manifest：`sha256:235b1f22dfbd9bea5ac15694f265848ae1da4dc5862bb12a4016af923acccb3c`。
+- β build：`YsdByjjz6tjlDvSmTAKce`。
+- 正式確認URL：`https://plunode.net/operations#themes` とPLUTO本線Graph。
+- 戻り導線の追補backup：`/opt/graph-knowledge/backups/mobile-ui-return-web-20261118T150840Z`。初回表示更新backup：`/opt/graph-knowledge/backups/mobile-ui-web-20261118T144515Z`。
+
+## 変更
+
+1. 共通GraphCanvasの通知右端に、鍵44px・右余白12px・間隔8pxを予約した。本線・テーマ・その他のGraphで共有する。鍵は既存の控えめな表示を維持し、ロック／解除・ズーム・スクロール操作は変更しない。
+2. 隣接関係の大きいカードと余白を、区切り線のあるコンパクトな行へ変更した。関係名、両対象、限定・期間・出典数と既存2操作を保持。表示順の説明は小さい開閉とし、操作ラベルを短くして完全なアクセシブル名も保持する。
+3. 素のHTMLだった制作一覧を既存OperationsPageへ統合した。サイトヘッダ、運営メニュー、制作／見直し／公開状態、作業・公開版、検索、状態フィルタ、再取得を提供する。長い残作業・阻害理由は初期閉状態で、開くと全文を読める。通常のプレビューへ移動できる。
+
+`GET /api/site-operations/themes` は既存運営者認証と一覧取得を再利用する読取専用API。activeな運営者限定、X-Member-User不一致を拒否し、private/no-store/noindexを付す。画面に必要な状態・版・残作業だけを返し、別運営者の案件・保存済み送信・原稿・素材は返さない。MCP操作・Appツール定義の変更はない。
+
+旧一覧URL `/operations/themes` は認証後に既存運営画面へ案内する。初回正式確認中に、プレビューのNext Linkが旧入口を経由するとfragmentが重複して `/operations#themes#themes` となり、受信箱へfallbackする不具合を発見した。この戻りリンクを直接 `/operations#themes` へ指定する1行の追補を行い、β・正式で実クリックによる戻りを確認した。
 
 ## 検証
 
-- 既存UI・preview・新API／一覧試験：初回122件中121件成功。既存Capsule一覧の初回描画待ち1件だけtimeout、同じコードの対象再実行8件成功。新しい運営メニュー統合を含む最終12件も成功。
-- ESLintとTypeScript成功。
-- 独立した一時ソースの検証専用画面＋専用headless Chromeで390／320／1280pxを確認。実コンテンツへの書込みなし。通知右端と鍵左端の間隔8px、横はみ出しなし。隣接関係は例示データで各112px、制作一覧は残作業を閉じて各110px未満、ヘッダあり。
-- 画面検証はPC Chromeのスマホ幅／タッチ設定。iPhone実機の結果とは区別する。
+- ESLint、TypeScript、β／正式用webpack buildは成功。
+- 初回の既存UI・preview・新API試験122件中121件成功。既存Capsule一覧の初回描画待ち1件がtimeoutしたため、同一コードの対象再実行8件で成功。運営一覧の権限・切替・古い応答拒否を含む最終12件と、戻り導線追補時の関連経路10件も成功。
+- 運営登録やAI処理を変更するAPIではなく、書込操作は行っていない。
+- 長い閉枝メッセージは独立した一時ソースの検証専用画面＋専用headless Chromeで320／390／1280pxを確認。横はみ出しなし、鍵と通知の間隔8px。検証用ページはignoredな一時ソースのみに置き、受入source・imageには含めない。
+- 正式の最新反映版を独立Chromeの390pxタッチ／1280pxで確認。表示中のoverlay・鍵のbboxは非0、間隔8px、隣接6行は各112.17px、横はみ出し・pageerrorなし。
+- β／正式HTTPSでdataset・公開catalogue・operationsは200。匿名の制作一覧と新APIは404、private/no-store/noindexを確認。
+- 実Chromeで正式の制作一覧9件（確認時：制作1・見直し1・公開7）を取得。PCと375px表示、状態フィルタ、残作業の開閉・全文保持、運営者プレビューを確認した。
+- βは直接プレビューから戻る操作と「一覧→プレビュー→一覧」の再往復で成功。正式の追補反映後も、プレビューの戻りリンクが正しいURLであることと、実クリックでテーマ制作一覧へ戻ることを確認した。
+- iPhone実機・Safari実機は未確認。実Chromeのエミュレーションを実機試験とは報告しない。
 
-## 反映・復旧
+## 配置と保全
 
-固定source `af9d4fb89a022a9d4a67370599fd084aafcaccb6`、β build `T3HIaHnqjkEkRXH4phch5`、本番候補 build `lIpkQZTjUgXMU7eEDBDk1`。βは反映済み。本番はまだ未反映。Webのみ更新し、DB migrationとWorker更新は不要。現行2f2dbfafは同じschema47/10と非公開境界を扱える直前版であり、失敗時はそのWebに限って戻せる。DB dumpの復元や古い非互換Webへのdowngradeはしない。
+固定sourceからβ buildと正式imageを構築。OCI全blob・sourceラベル・build・再load後identityと、VPS転送後の全4ファイルのsha256を照合した。Webのみ更新し、DB migration、Worker更新、正式設定の変更はない。
 
+本番preflightは直前Web image/build、検証済みCompose backupのhash、private設定、migration ledgerと、明示Hostを使う既存HTTP到達を照合する。候補ComposeはWeb image以外が同一であることを比較する。Node fetchがHostを無視する既知問題を避け、実HTTP試験3件で検証したNode HTTPの同一probeを使用した。
 
-β実確認：HTTPSのdataset／公開catalogue／operationsは200、匿名の制作一覧・新APIは404とprivate/no-store/noindexを確認。ログイン済み実Chromeで `/operations/themes` → `/operations#themes`、実一覧8件（制作中1・公開済み7）、ヘッダ・運営メニュー・作業／公開版を確認した。
+正式反映の記録でmember ledger47／knowledge ledger10、Worker・設定・KG・AI artifactと既存訳文850版の保持を確認。DB dumpの復元はしていない。テーマ・制作案件・共通知識・品質ガイド・予定の変更操作も行っていない。共通Kev、一般投稿のAI審査や運営AI経路は変更していない。
 
-本番資材：Web imageをOCI archiveにして全blob・sourceラベル・buildを検証し、ローカルで再loadしてidentity照合。VPSへ転送して全4ファイルのsha256を現地検証済み。本番preflightは互換直前2fのimage/build、既知backupから導出したCompose、private設定、ledger47/10、既存HTTP Host到達を照合する。変更候補のComposeはWeb image以外が同一であることを比較する。
-
-`sudo -n true` は既存パスワード要求で終了1。本人入力用 `backups/mobile-ui-20261118/run-release.py` は準備済み（ignored/private、Gitには配置ロジックだけ）。公開許可の再確認ではなく既存認証の本人入力が残る。切替後の正式URL・実Chromeは未確認。
-
-β反映版の実公開データ：独立Chromeの390pxタッチ／1280pxでPLUTO本線Graphを確認。表示中のoverlayと鍵（非表示の同名要素は除外）のbboxがともに非0で、間隔は8px。隣接関係6行は各112.17px、横はみ出し・pageerrorなし。長文の閉枝メッセージは隔離画面で320／390pxを確認済み。検証用ページはignoredな一時ソースにだけ置き、受入source・imageには含めない。
-
-## 正式反映後の確認と戻り導線の追補
-
-最初のWeb更新af9d4fb8／build lIpkQZTjUgXMU7eEDBDk1は本番へ反映済み。backup `/opt/graph-knowledge/backups/mobile-ui-web-20261118T144515Z`。ledger47/10、Worker・設定・KG・AI artifactと既存訳文850版を保持。正式HTTP5経路と390／1280pxのGraph・隣接6行は合格。
-
-実Chromeの正式一覧は9件（制作中1、見直し中1、公開7）。375pxでもヘッダ・一覧・状態フィルタを確認できた。ただしプレビューの旧一覧リンクをNext Linkで辿ると、リダイレクト先のfragmentが重複して `/operations#themes#themes` になり、受信箱へfallbackする不具合を発見。Explorerの戻りリンクを `/operations#themes` へ直接指定し、この導線を再検証して追加Web反映する。DB・内容・旧URLの認証契約は変更しない。
-
-実Chromeの正式375px（iPhone SEのChromeエミュレーション）で、一覧と状態フィルタを確認。実データのViking残作業8／阻害理由3は初期閉状態で、PCで開閉・全文保持を確認。運営者プレビューのテーマ本文・年表も表示される。これらは読取と画面内状態だけの確認であり、制作案件・予定の保存操作は行っていない。iPhone実機は未確認。
-
-### 戻り導線の追補資材
-
-source `a1ca2e7b765a2bc946b00ec16b17be5c1902925d`、β build `YsdByjjz6tjlDvSmTAKce`、正式候補 `b-6Zi81Rn4b42IMUe8Mew`。関連経路10件・lint・両buildの型検査成功。βの実Chromeで認証済み非公開プレビューの戻りリンクが `/operations#themes` であることを確認し、直接表示から戻る操作と「一覧→プレビュー→一覧」の再往復でfragment重複も受信箱へのfallbackもないことを確認。βのHTTPS5経路も成功。
-
-Web-only imageのOCI全blob、source・build、ローカル再load後のidentityを照合し、VPS転送後の4ファイルもsha256照合済み。本番の既存sudoは再度本人入力が必要なため、`backups/mobile-ui-return-20261118/run-release.py` を準備。直前afのWeb・buildと初回更新時の検証済みCompose backupのhashを固定して照合し、Web以外の変更を拒否する。DB migration・Worker・実内容は変更せず、失敗時も互換直前af Webだけ復旧する。本番の追補・正式往復確認は未完了。
+直前af9d4fb8は同じschemaと非公開境界を扱える互換Webで、必要時は検証済みbackupのComposeとそのimageを使うWebだけの復旧が可能。DB dumpへの巻戻し、非互換な旧Webへのdowngradeは行わない。既存sudoの本人入力を使い、権限設定を緩めていない。
