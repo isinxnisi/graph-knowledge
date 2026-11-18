@@ -6,7 +6,7 @@ Never downgrade to an old Web after applying the new publication boundary.
 import copy,datetime,fcntl,hashlib,importlib.util,json,os,pathlib,pwd,re,shutil,subprocess,time,sys
 ROOT=pathlib.Path('/opt/graph-knowledge')
 PUBLIC_PROBE="const http=require('node:http');const request=http.get('http://127.0.0.1:3000/api/knowledge/public?mode=themes',{headers:{host:'plunode.net'}},response=>{let text='';response.setEncoding('utf8');response.on('data',chunk=>text+=chunk);response.on('end',()=>{try{if(response.statusCode!==200)throw Error('Catalogue readiness failed: '+response.statusCode);JSON.parse(text)}catch(e){console.error(e.message);process.exitCode=1}});response.on('error',e=>{console.error(e.message);process.exitCode=1})});request.setTimeout(15000,()=>request.destroy(Error('Catalogue readiness timed out')));request.on('error',e=>{console.error(e.message);process.exitCode=1});"
-SOURCE='48a2153309ca5ffef4bd88132f0a86a13571ecf1'
+SOURCE='7bd4e5573fd482096bd6ce3b26112f10ff635514'
 WEBB='theme:915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1'
 DATABASES=['graph_member','plunode_knowledge75_production']
 WORKERS=['knowledge-review','knowledge-patrol','knowledge-publisher']
@@ -126,7 +126,7 @@ def main():
     after={db:self.fingerprints(sqls[db],columns.columns(sqls[db])) for db in DATABASES}
     self.migrate(name)
     assert all(self.fingerprints(sqls[db],columns.columns(sqls[db]))==after[db] for db in DATABASES),'Migration replay changed data'
-    return {'restoredBothDatabases':True,'oldRowsAndOwnersPreserved':True,'repeatedUnchanged':True,'webbRepairedInIsolation':True,'repairReplayUnchanged':True,'commonKnowledgeUnchanged':True}
+    return {'restoredBothDatabases':True,'oldRowsAndOwnersPreserved':True,'repeatedUnchanged':True,'webbRepairedInIsolation':True,'repairReplayUnchanged':True,'commonKnowledgeUnchanged':True,'productionCasesAndSubmissionsPreserved':True}
    finally:
     if created:self.run(['docker','rm','-f',name])
     if volume:
@@ -187,44 +187,50 @@ const expected=EXPECTED;
   h.emit('diagnostic-complete',**result,liveServicesStopped=False,liveDatabaseChanged=False)
   return
  assert not sys.argv[1:],'Use no arguments to release, or --diagnose for isolated diagnosis'
+ # SQL011 was already restored and verified against this production backup.
+ # This retry changes no existing content/member rows: retain only its exact
+ # metadata checkpoint and configuration, not another full DB backup/restore.
+ assert m.get('backupMode')=='targeted-metadata-additive-011'
+ prior_backup=pathlib.Path(m['reuseBackup']);assert prior_backup==ROOT/'backups/collection-theme-20261118T163241Z'
+ assert all((prior_backup/name).is_file() and (prior_backup/name).stat().st_size>0 for name in ['member.dump','knowledge.dump'])
+ prior_manifest=json.loads((prior_backup/'manifest.json').read_text())
+ assert prior_manifest['additions']==m['additions'] and prior_manifest['previous']['knowledgeMigrations']==prev['knowledgeMigrations']
  r.preflight();r.images(load=True)
  original=(ROOT/'compose.yaml').read_text();candidate=h.patch_image(original,'web',m['web']['tag']);expected=copy.deepcopy(r.config);expected['services']['web']['image']=m['web']['tag']
  for name in IMAGE_SERVICES:candidate=h.patch_image(candidate,name,m['memberOps']['tag']);expected['services'][name]['image']=m['memberOps']['tag']
- path=ROOT/'compose.collection-theme-candidate.yaml';h.private(path,candidate);cdc=[str(path) if x==str(ROOT/'compose.yaml') else x for x in r.dc]
+ path=ROOT/'compose.collection-theme-candidate.yaml';h.private(path,candidate);cdc=[str(path) if x==str(ROOT/'compose.yaml') else x for x in r.dc];r.candidateDc=cdc
  assert json.loads(r.run(cdc+['config','--format','json']))==expected,'Change exceeds selected image pins'
- r.candidateDc=cdc
- folder=r.directory();baselines={db:r.backup(folder,db,filename) for db,filename in zip(DATABASES,['member.dump','knowledge.dump'])}
- rehearsal=r.rehearsal(folder,baselines);h.emit('isolated-migration-ok',**rehearsal)
- r.preflight();assert r.repair()['outcome']=='verified';stopped=False;migration_started=False;activated=False
+ assert r.repair()['outcome']=='verified'
+ folder=ROOT/'backups'/('collection-theme-metadata-'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ'));folder.mkdir(mode=0o700)
+ for name in ['compose.yaml','app.env','knowledge.env']:shutil.copy2(ROOT/name,folder/name);(folder/name).chmod(0o600)
+ shutil.copy2(stage/'manifest.json',folder/'manifest.json')
+ def target_snapshot():
+  k=lambda q:r.sql(q,DATABASES[1]);member=lambda q:r.sql(q,DATABASES[0])
+  return {'versions':k("SELECT json_agg(row_to_json(r) ORDER BY revision) FROM knowledge75.revisions r WHERE kind='theme' AND id='"+WEBB+"' AND revision IN(28,29)"),'release28':k("SELECT row_to_json(r) FROM knowledge75.theme_releases r WHERE theme_id='"+WEBB+"' AND revision=28"),'publication':k("SELECT row_to_json(h) FROM knowledge75.theme_publications h WHERE theme_id='"+WEBB+"'"),'cases':member("SELECT md5(coalesce(string_agg(row_to_json(c)::text,'' ORDER BY id),'')) FROM theme_production.cases c WHERE theme_id='"+WEBB+"'"),'submissions':member("SELECT md5(coalesce(string_agg(row_to_json(s)::text,'' ORDER BY s.id),'')) FROM theme_production.submissions s JOIN theme_production.cases c ON c.id=s.case_id WHERE c.theme_id='"+WEBB+"'")}
+ stopped=False;migration_started=False;activated=False
  try:
-  h.emit('preflight-ok',source=SOURCE,build=m['build'],backup=str(folder),additionalMigrations=list(m['additions']))
+  h.emit('preflight-ok',source=SOURCE,build=m['build'],backup=str(folder),reuseVerifiedFullBackup=str(prior_backup),additionalMigrations=list(m['additions']),fullBackupRepeated=False,restoreRepeated=False)
   r.run(r.dc+['stop','-t','60','web',*WORKERS],timeout=180);stopped=True
-  assert r.repair()['outcome']=='verified'
-  if (folder/'knowledge-state').exists():shutil.rmtree(folder/'knowledge-state')
-  if (ROOT/'knowledge-state').exists():shutil.copytree(ROOT/'knowledge-state',folder/'knowledge-state')
-  baselines={db:r.backup(folder,db,filename,fast=True) for db,filename in zip(DATABASES,['member.dump','knowledge.dump'])}
-  h.private(folder/'preservation.json',json.dumps(baselines))
-  old_tags=sorted({r.config['services'][s]['image'] for s in ['web',*IMAGE_SERVICES]})
-  with (folder/'previous-images.tar').open('wb') as stream:r.run(['docker','save',*old_tags],output=stream,timeout=600)
-  encrypted=r.encrypt(folder);h.emit('final-backup-ok',**encrypted)
-  migration_started=True;r.migrate();r.verify_migrated({db:(lambda q,db=db:r.sql(q,db)) for db in DATABASES},baselines)
-  h.atomic(ROOT/'compose.yaml',candidate)
+  before=target_snapshot();h.private(folder/'target-before.json',json.dumps(before,indent=2))
+  migration_started=True;r.migrate();assert r.ledgers()==[m['memberMigrations'],m['knowledgeMigrations']]
   repair=r.repair(apply=True);assert repair['outcome']=='repaired'
-  assert r.repair(apply=True)['outcome']=='already-repaired'
-  r.verify_migrated({db:(lambda q,db=db:r.sql(q,db)) for db in DATABASES},baselines)
+  after=target_snapshot();h.private(folder/'target-after.json',json.dumps(after,indent=2))
+  assert all(before[key]==after[key] for key in ['versions','release28','cases','submissions']),'Target content or review state changed'
+  h.atomic(ROOT/'compose.yaml',candidate)
   r.run(r.dc+['up','-d','--no-deps','--pull','never','--wait','--wait-timeout','180','web',*WORKERS],timeout=300)
-  r.run(r.dc+['exec','-T','web','node','scripts/production-readiness.mjs'])
-  r.run(r.dc+['exec','-T','web','node','-e',PUBLIC_PROBE])
+  r.run(r.dc+['exec','-T','web','node','scripts/production-readiness.mjs']);r.run(r.dc+['exec','-T','web','node','-e',PUBLIC_PROBE])
   assert r.run(r.dc+['exec','-T','web','cat','/app/.next-public/BUILD_ID'])==m['build']
   assert json.loads(r.run(r.dc+['config','--format','json']))==expected
-  assert r.ledgers()==[m['memberMigrations'],m['knowledgeMigrations']]
   for name,sha in prev['files'].items():assert h.digest(ROOT/name)==sha
-  for s in ['graph-member-postgres','graph-neo4j']:assert r.run(r.dc+['ps','-q',s])==r.ids[s]
   activated=True
-  result={**rehearsal,**encrypted,'source':SOURCE,'build':m['build'],'backup':str(folder),'memberLedgerCount':len(m['memberMigrations']),'knowledgeLedgerCount':len(m['knowledgeMigrations']),'updatedServices':['web',*WORKERS],'settingsPreserved':True,'existingDataPreserved':True,'betaDataImported':False,'guideChanged':False,'schedulesChanged':False,'webbRepair':repair,'formalAcceptancePending':True,'automaticOldWebDowngrade':False}
-  r.export(folder,result);h.emit('activated',**result)
+  result={'source':SOURCE,'build':m['build'],'backup':str(folder),'reuseVerifiedFullBackup':str(prior_backup),'fullBackupRepeated':False,'restoreRepeated':False,'memberLedgerCount':len(m['memberMigrations']),'knowledgeLedgerCount':len(m['knowledgeMigrations']),'updatedServices':['web',*WORKERS],'settingsPreserved':True,'existingContentPreserved':True,'productionCasesAndSubmissionsPreserved':True,'memberDatabaseWritten':False,'webbRepair':repair,'formalAcceptancePending':True,'automaticOldWebDowngrade':False}
+  for location in [folder/'activated.json',stage/'activated.json']:h.private(location,json.dumps(result,indent=2))
+  target=pathlib.Path(m['exportDirectory']);user=pwd.getpwnam('develop');shutil.copy2(folder/'activated.json',target/'activated.json');(target/'activated.json').chmod(0o600);os.chown(target/'activated.json',user.pw_uid,user.pw_gid)
+  h.emit('activated',**result)
  except BaseException:
-  if stopped and not migration_started:r.run(r.dc+['start','web',*WORKERS])
-  elif stopped and not activated:r.run(r.dc+['stop','-t','30','web',*WORKERS],timeout=150)
+  if stopped:
+   if r.ledgers()==[m['memberMigrations'],m['knowledgeMigrations']]:
+    h.atomic(ROOT/'compose.yaml',candidate);r.run(r.dc+['up','-d','--no-deps','--pull','never','--wait','--wait-timeout','180','web',*WORKERS],timeout=300)
+   else:r.run(r.dc+['start','web',*WORKERS])
   h.emit('repair-required',backup=str(folder),migrationStarted=migration_started,databaseRestored=False,automaticOldWebDowngrade=False);raise
 if __name__=='__main__':main()

@@ -90,6 +90,13 @@ class CollectionReleaseGuards(unittest.TestCase):
             self.assertIn(text, commands[-1][0])
             self.assertTrue(commands[-1][0].endswith('COMMIT'))
 
+    def test_targeted_retry_does_not_repeat_database_backup_or_restore(self):
+        main = next(n for n in ast.parse(SCRIPT.read_text()).body if isinstance(n, ast.FunctionDef) and n.name == 'main')
+        start = next(i for i, n in enumerate(main.body) if isinstance(n, ast.Assert) and 'backupMode' in ast.unparse(n))
+        suffix = ast.Module(body=main.body[start:], type_ignores=[])
+        forbidden = {'backup', 'dump', 'rehearsal', 'encrypt'}
+        self.assertFalse(any(isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and n.func.attr in forbidden for n in ast.walk(suffix)))
+
     def test_checksum_mismatch_stops_before_any_mutation(self):
         with tempfile.TemporaryDirectory() as folder:
             stage = pathlib.Path(folder)
