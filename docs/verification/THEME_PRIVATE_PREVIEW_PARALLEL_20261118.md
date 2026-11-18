@@ -16,7 +16,7 @@
 - 最終MCP／preview page／locale 16件成功、変更箇所lintと型検査成功。
 - 最終Web image mX9TdhOPP4-HTYKQJpGhDを抽出した使い捨てWeb・会員PGで、未認証／一般会員はJA・EN・旧版404、運営者は200、noindex/no-store。別のtemporary headless Chrome profileで1280px／390pxの日英を描画。header底53pxと案内先頭53pxが一致、横overflowなし、pageerror0。実利用Chrome profileのcookie／内部情報は抽出していない。
 - β HTTPS匿名15経路：dataset／catalogue／sitemap200、private Theme API・旧版・日英canonical・OGP・Theme画像・operator経路・関連商品404。非公開title漏洩なし。
-- 実Chromeでβのログイン済みプレビューが表示でき、ヘッダ直下の案内を確認。既存β Appからget_theme_authoring_guideのversion3とmanual入力schemaを読み取れた。
+- 実Chromeでβのログイン済みプレビューが表示でき、ヘッダ直下の案内を確認。既存β Appからget_theme_authoring_guideのversion3とmanual入力schemaを読み取れた。ChatGPTの既存β App管理で「ツールを更新」を実行し、ボタンの復帰とエラー表示がないことを確認。host側create/claimによる実manual案件操作は行っていない。
 - QA用Web／使い捨て会員PGだけ終了・削除。実Theme・案件・登録・予定は検証操作で変更していない。iPhone実機とChatGPT Web予定実行は未検証。
 
 ## 配置状態
