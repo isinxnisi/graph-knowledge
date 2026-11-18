@@ -8,6 +8,7 @@ SOURCE='2f2dbfaf28abb80d5cf0d1808d539fcc99dd9c29'
 WORKERS=['knowledge-review','knowledge-patrol','knowledge-publisher']
 DATABASES=['graph_member','plunode_knowledge75_production']
 MIGRATION='046-theme-production-workflows.sql'
+PUBLIC_PROBE="const http=require('node:http');const request=http.get('http://127.0.0.1:3000/api/knowledge/public?mode=themes',{headers:{host:'plunode.net'}},response=>{let text='';response.setEncoding('utf8');response.on('data',chunk=>text+=chunk);response.on('end',()=>{try{if(response.statusCode!==200)throw Error('Catalogue readiness failed: '+response.statusCode);JSON.parse(text)}catch(e){console.error(e.message);process.exitCode=1}});response.on('error',e=>{console.error(e.message);process.exitCode=1})});request.setTimeout(15000,()=>request.destroy(Error('Catalogue readiness timed out')));request.on('error',e=>{console.error(e.message);process.exitCode=1});"
 def module(name,path):
  s=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
 def main():
@@ -141,7 +142,7 @@ def main():
   h.atomic(ROOT/'compose.yaml',candidate)
   r.run(r.dc+['up','-d','--no-deps','--pull','never','--wait','--wait-timeout','180','web',*WORKERS],timeout=300)
   r.run(r.dc+['exec','-T','web','node','scripts/production-readiness.mjs'])
-  r.run(r.dc+['exec','-T','web','node','-e',"fetch('http://127.0.0.1:3000/api/knowledge/public?mode=themes').then(async r=>{if(!r.ok)throw Error('Catalogue readiness failed: '+r.status);await r.json()}).catch(()=>process.exit(1))"])
+  r.run(r.dc+['exec','-T','web','node','-e',PUBLIC_PROBE])
   assert r.run(r.dc+['exec','-T','web','cat','/app/.next-public/BUILD_ID'])==m['build']
   assert json.loads(r.run(r.dc+['config','--format','json']))==expected
   for name,sha in prev['files'].items():assert h.digest(ROOT/name)==sha
