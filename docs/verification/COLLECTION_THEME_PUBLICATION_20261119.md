@@ -2,7 +2,7 @@
 
 ## 現在地
 
-①経路監査・②実装・③隔離回帰まで完了。④固定build・β／本番反映・Webb復旧は未完了。
+①経路監査・②実装・③隔離回帰・④固定buildとβ反映／HTTPS／既存App読取まで完了。本番資材の転送・現地hash照合も完了。残り④本人sudoによる本番適用、正式URL／App／Webb公開状態の確認。
 
 ## 監査
 
@@ -21,4 +21,16 @@
 
 ## 反映と残件
 
-Webとknowledge-opsの同source固定build、β migration／代表導線、本番の最新両DBbackup・全体復元／011反復・限定復旧のリハーサル、正式切替・App／公開GET確認が残る。通常ChatGPT Webの予定実行そのもの、iPhone実機の再試験は未確認。MCP操作名・入力／出力schemaは変更せず、get_theme_authoring_guideの説明を整合させたため、接続Appのツール更新は不要。
+本番の最新両DBbackup・全体復元／011反復・限定復旧のリハーサル、正式切替・App／公開GET確認が残る。通常ChatGPT Webの予定実行そのもの、iPhone実機の再試験は未確認。MCP操作名・入力／出力schemaは変更せず、get_theme_authoring_guideの説明を整合させたため、接続Appのツール更新は不要。
+
+
+## 固定資材・β確認
+
+- application source `48a2153309ca5ffef4bd88132f0a86a13571ecf1`。正式Web build `9sn6e2_Y8JF_dIJOqij9h`、β build `T90bycRtIRqke2ShzqRsE`。Web／knowledge-opsのbuildに成功。Dockerの許可リストに限定復旧CLIを追加した。
+- βへ011のみ適用。既存9件のchecksumを維持してknowledge ledger10、既存revision全体の内容hashを保持。管理ロールを誤って指定した最初のbackupは失敗したため、実際の既存ロールでbackupを取得し直して適用・再開した。本番には未適用。β Webと既存5 Workerが起動している。
+- HTTPS βのdataset／公開テーマ一覧／運営入口は200、未認証の制作一覧・運営APIは404を維持。既存β Appから新しい `acceptedKnowledgeUpdates` 契約と黒澤テーマ11版／20 Recordsを読み取り確認。実テーマへの試験書込みは行っていない。
+- 別の空ブラウザで390／1280pxのGraph・隣接一覧を確認。横overflowなし、表示通知と鍵の重なりなし、pageerrorなし。iPhone／Safari実機は未確認。
+- 固定knowledge-ops image自体で、011前の歴史backupへの読取checkが成功し、移行・復旧済みの隔離DBへの再実行もalready-repairedとなった。immutable内容は未変更。
+- 本番配置ガードのPython5件も合格。正しいcandidate opsの利用、隔離復旧で本番設定をmountしないこと、Webb以外／旧版の保全、011だけを既存ledger ownerで適用、checksum差異の事前拒否を確認。合計79件合格。
+- 2 imageのOCI archiveは590,193,816 bytes、SHA256 `822b6fa91adc8357e4b26c7fa2d6e2bcac93a76e1871a84dcaeed5a0d35d0d70`。source label／config／manifest／layer diff IDを照合し、本番転送後も全資材hashを確認した。
+- 本番適用は `scripts/release-collection-theme-publication-production.py`。現在の正式構成／Webbを切替前とwriter停止後に再照合する。migrationはknowledge011のみ、会員migrationは追加しない。原稿・既存受付・ガイド本文・予定設定を変更しない。旧Web／旧dumpへの機械的な巻戻しは行わない。
