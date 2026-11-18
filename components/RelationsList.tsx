@@ -47,7 +47,7 @@ export default function RelationsList({ graph, selection, onEntity, onClaim, onE
       </button>
     </div>}
     {expansion?.expanded && !expansion.loading && !expansion.error && <p className={styles.muted}>{text.neighborsShown(claims.length)} {expansion.hasMore ? "" : text.neighborsComplete}</p>}
-    {expansion?.ranking && <p className={styles.muted}>{text.neighborsRanked}</p>}
+    {expansion?.ranking && <details className={styles.adjacencyExplanation}><summary>{locale === "ja" ? "表示順について" : "About this order"}</summary><p>{text.neighborsRanked}</p></details>}
     {!claims.length && !expansion?.loading && !expansion?.error && <p role="status">{expansion?.expanded && expansion.pages.every((page) => !page.claimIds.length) && !expansion.hasMore ? graph.predicates === null && graph.contributionRoles === null && graph.organizationPositions === null && graph.eventRoles === null ? datasetLabels(dataset, locale).empty : text.empty : !expansion?.open ? ui.closedHelp : ui.noAdjacent}</p>}
     <ul className={styles.relationList}>
       {claims.map((claim) => {
@@ -58,8 +58,8 @@ export default function RelationsList({ graph, selection, onEntity, onClaim, onE
           <p className={styles.adjacencyPair}><span>{entityLabel(graph.nodes[claim.subjectId], graph.nodes, locale).replace("\n", " / ")}</span><Icon name="arrow" /><span>{entityLabel(graph.nodes[claim.objectId], graph.nodes, locale).replace("\n", " / ")}</span></p>
           <p className={styles.muted}>{polarityLabel(claim, locale)} · {qualificationLabel(claim, locale) && `${qualificationLabel(claim, locale)} · `}{formatPeriod(claim.period, locale)} · {claim.sourceCount ? ui.sourceCount(claim.sourceCount) : ui.unverified}</p>
           <div className={styles.actions}>
-            <button aria-pressed={selection?.kind === "entity" && selection.id === neighbor.id} onClick={() => onEntity(neighbor.id)}>{ui.selectExpand(neighbor.name)}</button>
-            <button aria-pressed={selected} onClick={() => onClaim(claim.id)}><Icon name="book" />{ui.claimOpen}</button>
+            <button aria-label={ui.selectExpand(neighbor.name)} aria-pressed={selection?.kind === "entity" && selection.id === neighbor.id} onClick={() => onEntity(neighbor.id)}>{locale === "ja" ? "選択・展開" : "Select & expand"}</button>
+            <button aria-label={ui.claimOpen} aria-pressed={selected} onClick={() => onClaim(claim.id)}><Icon name="book" />{locale === "ja" ? "詳細・出典" : "Details & sources"}</button>
           </div>
         </li>;
       })}

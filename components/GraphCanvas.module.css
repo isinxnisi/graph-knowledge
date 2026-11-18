@@ -1,5 +1,5 @@
 /* Keep graph controls independent of surrounding Explorer and theme forms. */
-.canvas { container-type: size; }
+.canvas { container-type: size; --graph-overlay-end: 64px; }
 .canvas .toolbar {
   position: absolute;
   right: 12px;

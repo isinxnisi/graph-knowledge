@@ -1,4 +1,5 @@
 "use client";
+import {ThemeProductionOperations} from "./ThemeProductionOperations";
 import {FeaturedThemesOperations} from "./FeaturedThemesOperations";
 import {KnowledgeIdentity} from "./KnowledgeIdentity";
 import {KnowledgeOrganization} from "./KnowledgeOrganization";
@@ -17,7 +18,7 @@ import {navigatePersonalHash} from '../lib/client/personal-location';
 import {useUiLocale} from '../lib/client/ui-locale';
 import css from './OperationsPage.module.css';
 
-const sections=['reports','featured','knowledge','collection','semantics','identity','accounts','recoveries','history'] as const;
+const sections=['themes','reports','featured','knowledge','collection','semantics','identity','accounts','recoveries','history'] as const;
 type Section=typeof sections[number];
 const scalar=z.union([z.string(),z.number(),z.boolean(),z.null()]);
 const rowSchema=z.record(z.string(),scalar);type Row=z.infer<typeof rowSchema>;
@@ -45,7 +46,7 @@ export function OperationsPage({dataset}:{dataset:DatasetMode}){
  // Request epoch, not a DOM ref: cleanup must invalidate the latest operation.
  // eslint-disable-next-line react-hooks/exhaustive-deps
  useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;privacyEpoch.current++;controller.current?.abort();write.current?.abort();};},[]);
- const labels:Record<Section,string>={featured:t('TOPの紹介テーマ','Featured themes'),identity:t('同じ対象の整理','Subject identities'),semantics:t('知識の意味整理','Organize meanings'),collection:t('資料の収集','Source collection'),knowledge:t('知識投稿の相談','Knowledge submissions'),reports:t('運営受信箱','Inbox'),accounts:t('アカウント対応','Accounts'),recoveries:t('運営復帰申請','Recovery requests'),history:t('操作履歴','Audit history')};
+ const labels:Record<Section,string>={themes:t('テーマ制作','Theme production'),featured:t('TOPの紹介テーマ','Featured themes'),identity:t('同じ対象の整理','Subject identities'),semantics:t('知識の意味整理','Organize meanings'),collection:t('資料の収集','Source collection'),knowledge:t('知識投稿の相談','Knowledge submissions'),reports:t('運営受信箱','Inbox'),accounts:t('アカウント対応','Accounts'),recoveries:t('運営復帰申請','Recovery requests'),history:t('操作履歴','Audit history')};
  const actionLabel=(a:string)=>({'set-featured-themes':t('TOPの紹介テーマを更新','Update featured themes'),'inspect':t('対象を確認','Review target'),'hide-post':t('投稿を非表示','Hide post'),'block-capsule':t('この内容版の公開を停止','Block this Capsule version'),'unhide-post':t('サイト非表示を解除','Remove site hide'),'suspend-community':t('コミュニティを停止','Suspend community'),'resume-community':t('アーカイブ状態へ復帰','Restore as archived'),'resolve':t('対応終了','Resolve'),'dismiss':t('対応不要','Dismiss'),'suspend-user':t('アカウントを停止','Suspend account'),'resume-user':t('アカウントを再開','Resume account'),'approve':t('復帰申請を承認','Approve recovery'),'reject':t('復帰申請を却下','Reject recovery')}[a]??a);
  const term=(s:string)=>({homepage:t('TOPの紹介テーマ','Featured themes'),'capsule-post':t('Capsuleのコメント','Capsule comment'),capsule:'Capsule',post:t('投稿','Post'),thread:t('スレッド','Thread'),community:t('コミュニティ','Community'),spam:t('スパム','Spam'),harassment:t('嫌がらせ','Harassment'),privacy:t('プライバシー','Privacy'),other:t('その他','Other'),security:t('安全保護','Security'),abuse:t('濫用','Abuse'),request:t('本人依頼','Request'),correction:t('訂正','Correction')}[s]??s);
  const statusLabel=(s:string)=>({open:t('未対応','Open'),resolved:t('対応終了','Resolved'),dismissed:t('対応不要','Dismissed'),pending:t('申請中','Pending'),approved:t('承認済み・本人承諾待ち','Approved · awaiting consent'),rejected:t('却下','Rejected'),cancelled:t('取消','Cancelled'),consumed:t('承諾済み','Accepted'),active:t('活動中','Active'),archived:t('アーカイブ','Archived'),suspended:t('サイト停止中','Site suspended'),all:t('すべて','All')}[s]??s);
@@ -66,7 +67,7 @@ export function OperationsPage({dataset}:{dataset:DatasetMode}){
  useEffect(()=>{
   if(!locationReady||!user||identity.status!=='authenticated'||identity.error)return;
   const seq=++generation.current;controller.current?.abort();const ac=new AbortController();controller.current=ac;queueMicrotask(()=>{if(seq===generation.current){setBusy(true);setError('');}});
-  const endpoint=(section==='knowledge'||section==='collection'||section==='semantics'||section==='identity'||section==='featured')?'/session':section==='accounts'?lookup?'/account?id='+encodeURIComponent(lookup):'/session':'/'+(section==='reports'?'reports':section==='recoveries'?'recoveries':'history')+'?status='+status+(cursor?'&cursor='+encodeURIComponent(cursor):'')+(section==='history'&&historyTarget?'&target='+encodeURIComponent(historyTarget):'');
+  const endpoint=(section==='knowledge'||section==='collection'||section==='semantics'||section==='identity'||section==='featured'||section==='themes')?'/session':section==='accounts'?lookup?'/account?id='+encodeURIComponent(lookup):'/session':'/'+(section==='reports'?'reports':section==='recoveries'?'recoveries':'history')+'?status='+status+(cursor?'&cursor='+encodeURIComponent(cursor):'')+(section==='history'&&historyTarget?'&target='+encodeURIComponent(historyTarget):'');
   memberRequest('/api/site-operations'+endpoint,z.union([accountSchema,z.object({operator:z.boolean()}),listSchema]),{user:user.id,signal:ac.signal}).then(data=>{
    if(ac.signal.aborted||seq!==generation.current||currentUser.current!==user.id)return;setOwner(user.id);setDataKey(queryKey);setDenied(false);setPaused(false);
    if('items'in data){setItems(data.items);setNext(data.nextCursor);setSelected(prev=>prev?data.items.find(r=>r.id===prev.id)??null:null);}else if('account'in data)setAccount(data.account);
@@ -94,7 +95,7 @@ export function OperationsPage({dataset}:{dataset:DatasetMode}){
  }
  const guard=()=>(!['knowledge','collection','semantics','identity','featured'].includes(section)||knowledgeGuard.current())&&(!intent||window.confirm(unknown?t('結果不明の操作があります。履歴と状態を確認してから再操作してください。移動しますか？','Outcome unknown. Review history before acting again. Leave?'):t('未確定の入力を閉じて移動しますか？','Discard this unfinished input and leave?')));
  useEffect(()=>{if(!intent)return;const prevent=(e:BeforeUnloadEvent)=>{e.preventDefault();};window.addEventListener('beforeunload',prevent);return()=>window.removeEventListener('beforeunload',prevent);},[intent]);
- const nav=<nav aria-label={t('運営メニュー','Operations navigation')}><Link href="/operations/themes" onClick={e=>{if(!guard())e.preventDefault();}}>{t('テーマ制作','Theme production')}</Link>{sections.map(s=><button key={s} aria-current={section===s?'page':undefined} onClick={()=>move(s)}>{labels[s]}</button>)}<Link href="/member" onClick={e=>{if(!guard())e.preventDefault();}}>{t('アカウントへ','Account')}</Link><Link href="/communities" onClick={e=>{if(!guard())e.preventDefault();}}>{t('コミュニティを見つける','Discover communities')}</Link></nav>;
+ const nav=<nav aria-label={t('運営メニュー','Operations navigation')}>{sections.map(s=><button key={s} aria-current={section===s?'page':undefined} onClick={()=>move(s)}>{labels[s]}</button>)}<Link href="/member" onClick={e=>{if(!guard())e.preventDefault();}}>{t('アカウントへ','Account')}</Link><Link href="/communities" onClick={e=>{if(!guard())e.preventDefault();}}>{t('コミュニティを見つける','Discover communities')}</Link></nav>;
  const showHistory=(id:string)=>{move('history');setHistoryTarget(id);setTarget(id);setCursor(null);setStack([]);setSelected(null);};
  const paged=(to:string|null)=>{setSelected(null);setOutcome(null);setCursor(to);window.scrollTo({top:0});};
  const visible=locationReady&&dataKey===queryKey&&owner===user?.id&&!identity.error&&!paused&&!denied;
@@ -103,17 +104,18 @@ export function OperationsPage({dataset}:{dataset:DatasetMode}){
  const pending=notification.data;
 
  return <><SiteHeader page="shared" dataset={dataset} onBeforeAccountNavigation={guard}/><div className={css.shell}><header className={css.heading}><div><div className={css.eyebrow}>PLUNODE / OPERATIONS</div><h1>{locationReady?labels[section]:t('サイト運営','Site operations')}</h1></div><button className={css.hamburger} aria-label={t('運営メニューを開く','Open operations menu')} aria-expanded={drawer} onClick={()=>setDrawer(true)}>☰</button></header><div className={css.layout}><aside className={css.sidebar}>{nav}</aside><main className={css.main}>
- {section!=='collection'&&section!=='featured'&&<p className={css.notice}>{t('サイト運営者専用。ここにはサイト内の通報・申請を表示します。メールは取り込みません。','Site operators only. Reports and requests within Plunode; email is not imported.')}</p>}
+ {section!=='themes'&&section!=='collection'&&section!=='featured'&&<p className={css.notice}>{t('サイト運営者専用。ここにはサイト内の通報・申請を表示します。メールは取り込みません。','Site operators only. Reports and requests within Plunode; email is not imported.')}</p>}
  {identity.status==='checking'?<p role="status">{t('認証を確認しています。','Checking your session…')}</p>:identity.status==='guest'?<p>{t('ログインしてから開いてください。','Sign in to continue.')} <Link href="/member" onClick={e=>{if(!guard())e.preventDefault();}}>{t('アカウント','Account')}</Link></p>:identity.error||identity.status==='error'?<p role="alert">{t('認証を確認できません。','Session verification failed.')}<button onClick={()=>void refreshMemberIdentity(true).then(reload,()=>{})}>{t('再確認','Retry')}</button></p>:null}
  {error&&<p role="alert" className={css.error}>{error} <button onClick={reload}>{t('再取得','Retry')}</button>{cursor&&<button onClick={()=>{setCursor(null);setStack([]);reload();}}>{t('先頭ページから再取得','Reload from first page')}</button>}</p>}
  {paused&&<p role="status">{t('運営権限を再確認しています。入力はこの画面内に保持します。','Rechecking operator access. Inputs stay in this page.')}</p>}
  {busy&&!visible&&<p role="status">{t('運営権限と一覧を確認しています。','Checking operator access and loading…')}</p>}
+ {section==='themes'&&user&&<ThemeProductionOperations key={user.id} userId={user.id} authorized={visible}/>}
  {section==='featured'&&user&&<FeaturedThemesOperations key={user.id} userId={user.id} authorized={visible} registerGuard={guard=>{knowledgeGuard.current=guard;}}/>}
  {section==='knowledge'&&user&&<KnowledgeOperations key={user.id} userId={user.id} authorized={visible} registerGuard={guard=>{knowledgeGuard.current=guard;}}/>}
  {section==='semantics'&&user&&<KnowledgeOrganization key={user.id} userId={user.id} authorized={visible} registerGuard={guard=>{knowledgeGuard.current=guard;}}/>}
  {section==='identity'&&user&&<KnowledgeIdentity key={user.id} userId={user.id} authorized={visible} registerGuard={guard=>{knowledgeGuard.current=guard;}}/>}
  {section==='collection'&&user&&<KnowledgeCollection key={user.id} userId={user.id} authorized={visible} registerGuard={guard=>{knowledgeGuard.current=guard;}}/>}
- {visible&&!['knowledge','collection','semantics','identity','featured'].includes(section)&&<>
+ {visible&&!['themes','knowledge','collection','semantics','identity','featured'].includes(section)&&<>
  {!selected&&(section==='reports'||section==='recoveries')&&<section className={css.queueSummary} aria-label={t('未対応案件','Pending cases')}>
  {notification.status==='ready'&&pending?<><button onClick={()=>{move('reports');setStatus('open');setCursor(null);setStack([]);setSelected(null);}}><span>{t('未対応の通報','Open reports')}</span><strong>{pending.reports}</strong></button><button onClick={()=>{move('recoveries');setStatus('pending');setCursor(null);setStack([]);setSelected(null);}}><span>{t('判断待ちの復帰申請','Recovery decisions')}</span><strong>{pending.recoveries}</strong></button><p>{t('24時間以内の確認期限','Review due within 24h')}: <strong>{pending.dueSoon}</strong>{pending.expiredReports>0&&<> · {t('確認期限終了・未対応','Expired review · still open')}: {pending.expiredReports}</>}{pending.nextDeadline&&<small>{t('次の期限','Next deadline')}: {new Date(pending.nextDeadline).toLocaleString(ja?'ja-JP':'en-US')}</small>}</p></>:<p role="status">{notification.status==='error'?t('未対応件数を確認できません。','Pending counts are unavailable.'):t('未対応件数を確認しています…','Checking pending cases…')}{notification.status==='error'&&<button onClick={()=>void refreshOperationsSummary(true)}>{t('再確認','Retry')}</button>}</p>}
  </section>}

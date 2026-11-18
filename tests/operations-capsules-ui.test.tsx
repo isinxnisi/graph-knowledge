@@ -61,3 +61,14 @@ it('紹介テーマのメニューを運営権限の確認後に開く',async()=
  expect(await screen.findByRole('heading',{name:'Featured selection 0'})).toBeTruthy();
  expect(screen.getByRole('button',{name:'Featured themes'}).getAttribute('aria-current')).toBe('page');
 });
+
+it('テーマ制作を既存運営メニューから認証後に読み取り、他の運営画面へ戻れる',async()=>{
+ history.replaceState(null,'','/operations#themes');
+ mock.request.mockImplementation(async(path:string,schema:z.ZodType)=>schema.parse(path.endsWith('/session')?{operator:true}:path.endsWith('/themes')?{items:[{id:'theme:private',title:'Private working theme',currentRevision:2,publishedRevision:null,state:'review',unfinished:['Full-theme review'],blockers:[]}]}:{items:[report],nextCursor:null,partial:false}));
+ render(<OperationsPage dataset="demo"/>);
+ expect(await screen.findByRole('link',{name:'Private working theme'})).toBeTruthy();
+ expect(screen.getByRole('button',{name:'Theme production'}).getAttribute('aria-current')).toBe('page');
+ expect(mock.request.mock.calls.every(c=>c[2]?.method!=='POST')).toBe(true);
+ fireEvent.click(screen.getByRole('button',{name:'Inbox'}));
+ expect(await screen.findByRole('button',{name:'Review →'})).toBeTruthy();expect(screen.queryByRole('link',{name:'Private working theme'})).toBeNull();
+});
