@@ -20,3 +20,12 @@ it('requires explicit case creation and a complete execution fence for saves; ne
  for(const [name,args] of [['get_theme_production',{ownerId:randomUUID()}],['create_theme_production',{requestId:randomUUID(),environment:'production',progress:{brief:'Draft',scope:'Sources'}}],['update_theme_production',{caseId:randomUUID(),operation:'complete'}]] as const){const body=await(await handler.fetch(rpc('tools/call',{name,arguments:args}))).json();expect(body.error||body.result?.isError).toBeTruthy();}
  expect(call).not.toHaveBeenCalled();
 });
+
+it('advertises manual case creation without changing scheduled defaults and forwards the explicit workflow',async()=>{
+ const call=vi.fn().mockResolvedValue({outcome:'none',case:null}),handler=createMissionMcpHandler(vi.fn(),{call});
+ const listing=await(await handler.fetch(rpc('tools/list',{}))).json(),tool=listing.result.tools.find((t:{name:string})=>t.name==='create_theme_production');
+ expect(tool.inputSchema.properties.workflow.enum).toEqual(['scheduled','manual']);expect(tool.inputSchema.required).not.toContain('workflow');
+ const input={requestId:randomUUID(),workflow:'manual',phase:'production',progress:{brief:'通常チャットの別テーマ',scope:'今回の変更',artifacts:{},unfinished:[],blockers:[]}};
+ const reply=await(await handler.fetch(rpc('tools/call',{name:'create_theme_production',arguments:input}))).json();expect(reply.result.isError).not.toBe(true);expect(call).toHaveBeenCalledWith({action:'create-theme-production',...input});
+ expect(themeAuthoringGuide().productionHandoff.manualExample.input.workflow).toBe('manual');
+});

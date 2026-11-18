@@ -49,7 +49,7 @@ if (command === "prepare") {
   } else {
     if (directory) throw new Error("Web commands do not take a release directory");
     const require = createRequire(import.meta.url);
-    const args = [require.resolve("next/dist/bin/next"), command, ...(command === "build" ? [] : ["--hostname", "127.0.0.1", "--port", "3200"])];
+    const args = [require.resolve("next/dist/bin/next"), command, ...(command === "build" ? ["--webpack"] : ["--hostname", "127.0.0.1", "--port", "3200"])];
     const child = spawn(process.execPath, args, { stdio: "inherit", env: process.env });
     for (const signal of ["SIGINT", "SIGTERM"] as const) process.on(signal, () => child.kill(signal));
     child.on("exit", code => { process.exitCode = code ?? 1; });

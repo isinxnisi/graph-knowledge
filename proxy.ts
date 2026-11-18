@@ -26,6 +26,7 @@ export async function proxy(request: NextRequest) {
   requestHeaders.delete("x-plunode-public-locale");
   if (publicLocalePath(request.nextUrl.pathname, "ja") !== null) requestHeaders.set("x-plunode-public-locale", request.nextUrl.pathname.startsWith("/en") ? "en" : "ja");
   requestHeaders.set("x-plunode-locale", /^\/en(?:\/|$)/.test(request.nextUrl.pathname) || /^\/operations\/themes\//.test(request.nextUrl.pathname)&&request.nextUrl.searchParams.get("locale")==="en" ? "en" : "ja");
+  if (/^\/operations\/themes\/[^/]+$/.test(request.nextUrl.pathname)) requestHeaders.set("x-plunode-public-locale",requestHeaders.get("x-plunode-locale")!);
   const response = NextResponse.next({ request: { headers: requestHeaders } });
   if (/^\/operations\/themes(?:\/|$)/.test(request.nextUrl.pathname)) {response.headers.set("Cache-Control","private, no-store");response.headers.set("X-Robots-Tag","noindex, nofollow, noarchive");response.headers.set("Vary","Cookie");}
   if (lab) {

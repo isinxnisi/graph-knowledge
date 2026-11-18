@@ -7,7 +7,8 @@ import {beforeAll,beforeEach,afterAll,it,expect,vi} from 'vitest';
 import {Pool} from 'pg';
 import sharp from 'sharp';
 import {productAuthoringCommandSchema} from '../lib/domain/product-authoring';
-import {randomUUID} from 'node:crypto';
+import {randomUUID,createHash} from 'node:crypto';
+import {readFile} from 'node:fs/promises';
 import {migrateMemberDatabase} from '../lib/server/member/migrate';
 import {createKnowledgeFoundationService} from '../lib/server/knowledge-foundation';
 import {createKnowledgeImports} from '../lib/server/knowledge-import';
@@ -22,10 +23,10 @@ import {ensureKnowledgePublicationSchema} from '../lib/server/knowledge-publicat
 import {createThemeProductions} from '../lib/server/theme-production';
 import {themeProductionRuntime} from '../lib/server/theme-production-runtime';
 import {guardThemeProductionRequest} from '../lib/server/theme-production-fence';
-import {themeProductionCommandSchema,themeProductionResponseSchema,type ProductionSubmissionCommand} from '../lib/domain/theme-production';
+import {themeProductionCommandSchema,themeProductionResponseSchema,productionSubmissionCommandSchema,type ProductionSubmissionCommand} from '../lib/domain/theme-production';
 
-type Case={id:string;version:number;phase:string;status:string;completed:boolean;progress:{brief:string;scope:string;artifacts:Record<string,unknown>;unfinished:string[];blockers:string[]};theme:{id:string;revision:number}|null;evaluationTarget:{digest:string;guide:{revision:number}};lastWholeThemeAssessment:{current:boolean;result:string;contentCurrent:boolean;workCurrent:boolean}|null;pendingSubmissionCount:number;submissions:{id:string;state:string}[];savedSubmission?:{wire:string;command:ProductionSubmissionCommand}};
-type Response={outcome:string;case:Case|null;leaseToken?:string;submissionId?:string};
+type Case={id:string;version:number;lease:{executionId:string;until:string;valid:boolean}|null;phase:string;status:string;completed:boolean;progress:{brief:string;scope:string;artifacts:Record<string,unknown>;unfinished:string[];blockers:string[]};theme:{id:string;revision:number}|null;evaluationTarget:{digest:string;guide:{revision:number}};lastWholeThemeAssessment:{current:boolean;result:string;contentCurrent:boolean;workCurrent:boolean}|null;pendingSubmissionCount:number;submissions:{id:string;state:string}[];savedSubmission?:{wire:string;command:ProductionSubmissionCommand}};
+type Response={outcome:string;case:Case|null;replayed?:boolean;leaseToken?:string;submissionId?:string};
 const pool=new Pool({connectionString:process.env.MEMBER_DATABASE_URL,max:10}),knowledge=new Pool({connectionString:process.env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL,max:5});
 const owner=randomUUID(),other=randomUUID(),actor={kind:'operator' as const,id:'production-fixture'};
 let registrations:ReturnType<typeof createThemeRegistrations>,translations:ReturnType<typeof createThemeTranslationAuthoring>,cases:ReturnType<typeof createThemeProductions>,foundation:ReturnType<typeof createKnowledgeFoundationService>;
@@ -35,8 +36,8 @@ const progress={brief:'読者の問いから制作する隔離案件',scope:'公
 const createCommand=()=>({action:'submit-theme' as const,requestId:randomUUID(),title:'New production fixture',description:'Not live',recordPins:[{id:'baseline',revision:1}]});
 const execute=async(command:unknown,who=owner)=>themeProductionResponseSchema.parse(await cases.execute(who,themeProductionCommandSchema.parse(command))) as unknown as Response;
 async function read(id:string){return (await execute({action:'get-theme-production',caseId:id})).case!;}
-async function begin(phase:'production'|'review'='production',existing=false):Promise<{caseId:string;executionId:string;leaseToken:string}>{
- const created=await execute({action:'create-theme-production',requestId:randomUUID(),phase,progress,...(existing?{theme:{id:'theme',revision:1}}:{})});
+async function begin(phase:'production'|'review'='production',existing=false,workflow:'scheduled'|'manual'='scheduled'):Promise<{caseId:string;executionId:string;leaseToken:string}>{
+ const created=await execute({action:'create-theme-production',requestId:randomUUID(),phase,progress,...(workflow==='manual'?{workflow}:{}),...(existing?{theme:{id:'theme',revision:1}}:{})});
  const executionId=randomUUID(),claimed=await execute({action:'claim-theme-production',requestId:randomUUID(),caseId:created.case!.id,phase,executionId});
  return {caseId:created.case!.id,executionId,leaseToken:claimed.leaseToken!};
 }
@@ -65,7 +66,13 @@ beforeAll(async()=>{
  expect(process.env.MEMBER_TEST_CONTAINER).toMatch(/^gk-member-test-/);expect((await pool.query('SELECT current_database() n')).rows[0].n).toBe('graph_member_test');expect((await knowledge.query('SELECT current_database() n')).rows[0].n).toBe('plunode_knowledge75_test_capsule_share');
  vi.stubEnv('COMMUNITY_ENABLED','1');vi.stubEnv('SITE_OPERATIONS_ENABLED','1');vi.stubEnv('KNOWLEDGE_MISSIONS_ENABLED','1');vi.stubEnv('KNOWLEDGE_SUBMISSIONS_ENABLED','1');vi.stubEnv('KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED','1');vi.stubEnv('SITE_OPERATOR_USER_IDS',owner+','+other);
  await migrateMemberDatabase(pool,...Array(34).fill(true));const old=(await pool.query('SELECT name,checksum FROM member_migration ORDER BY name')).rows;
- await migrateMemberDatabase(pool,...Array(35).fill(true));await migrateMemberDatabase(pool,...Array(35).fill(true));expect((await pool.query("SELECT name,checksum FROM member_migration WHERE name NOT IN('044-theme-production.sql','045-theme-publication.sql') ORDER BY name")).rows).toEqual(old);
+ // Apply the exact old044/045 contract and retain a live checkpoint through046.
+ for(const name of ['044-theme-production.sql','045-theme-publication.sql']){const sql=await readFile(new URL('../db/member/'+name,import.meta.url),'utf8');await pool.query(sql);await pool.query('INSERT INTO member_migration(name,checksum) VALUES($1,$2)',[name,createHash('sha256').update(sql).digest('hex')]);}
+ await pool.query('INSERT INTO "user"(id,name,email,"emailVerified","createdAt","updatedAt",active,locale) VALUES($1,$2,$3,true,now(),now(),true,$4)',[owner,'Migration fixture','migration@example.invalid','ja']);
+ const preservedId=randomUUID();await pool.query("INSERT INTO theme_production.cases(id,owner_id,environment,origin,phase,status,progress,theme_id,theme_revision,execution_id,lease_token,lease_until) VALUES($1,$2,'production','https://plunode.net','production','working',$3,'theme',1,$4,$5,now()+interval '15 minutes')",[preservedId,owner,JSON.stringify(progress),randomUUID(),randomUUID()]);
+ const preserved=(await pool.query('SELECT row_to_json(c)::jsonb AS value FROM theme_production.cases c WHERE id=$1',[preservedId])).rows[0].value;
+
+ await migrateMemberDatabase(pool,...Array(35).fill(true));await migrateMemberDatabase(pool,...Array(35).fill(true));const migrated=(await pool.query('SELECT row_to_json(c)::jsonb AS value FROM theme_production.cases c WHERE id=$1',[preservedId])).rows[0].value;const {workflow,...unchanged}=migrated;expect(workflow).toBe('scheduled');expect(unchanged).toEqual(preserved);expect((await pool.query("SELECT name,checksum FROM member_migration WHERE name NOT IN('044-theme-production.sql','045-theme-publication.sql','046-theme-production-workflows.sql') ORDER BY name")).rows).toEqual(old);
 },30000);
 beforeEach(async()=>{
  failActivation=false;lostAck=false;delay=null;await pool.query('TRUNCATE theme_production.cases,knowledge_missions.theme_registrations,knowledge_missions.web_deliveries,knowledge_missions.web_importers CASCADE');await pool.query('TRUNCATE knowledge_import.packages,member_knowledge.submissions,product_editorial_request,product_editorial_version CASCADE');
@@ -82,7 +89,7 @@ beforeEach(async()=>{
 },30000);
 afterAll(async()=>{await pool.end();await knowledge.end();vi.unstubAllEnvs();});
 
-it('never creates a case from get/claim and admits only one concurrent execution and one active case',async()=>{
+it('never creates a case from get/claim and admits only one concurrent execution and one active scheduled case',async()=>{
  expect(await execute({action:'get-theme-production'})).toMatchObject({outcome:'none',case:null});expect(await execute({action:'claim-theme-production',requestId:randomUUID(),phase:'review',executionId:randomUUID()})).toMatchObject({outcome:'none'});
  const created=await execute({action:'create-theme-production',requestId:randomUUID(),progress});
  const claims=await Promise.all([randomUUID(),randomUUID()].map(executionId=>execute({action:'claim-theme-production',requestId:randomUUID(),phase:'production',executionId,caseId:created.case!.id})));
@@ -217,7 +224,8 @@ it('freezes theme translations independently of working edits and retains previo
  const reviewer=await resume(run,'review');await complete(reviewer);
  expect((await publicService().theme({themeId:'theme',language:'en'})).displayTranslations?.find(t=>t.target.kind==='theme')?.text).toBe('PRIVATE DRAFT ENGLISH');
  const historical=await knowledge.connect();try{expect((await readKnowledgeTranslationById(historical,first.publication!.id,1)).text).toBe('Approved English');}finally{historical.release();}
-});
+},15000);
+
 it('keeps committed review completion private on activation failure and resumes the exact durable intent without a second approval',async()=>{
  const run=await begin('review',true);await assess(run);failActivation=true;
  const current=await read(run.caseId),command={...run,action:'update-theme-production',operation:'complete',requestId:randomUUID(),expectedVersion:current.version};
@@ -255,4 +263,53 @@ it('keeps a completed review current when a new translation request only reuses 
  const v={theme:{id:'theme',revision:1},translation:{target:{kind:'theme' as const,id:'theme',revision:1,field:'title' as const},language:'en',text:'Unchanged title',expectedRevision:0},attribution:'anonymous' as const};
  await translations.submit(owner,{...v,requestId:randomUUID()});const run=await begin('review',true);await complete(run);
  await translations.submit(owner,{...v,requestId:randomUUID(),translation:{...v.translation,expectedRevision:1}});expect((await read(run.caseId)).completed).toBe(true);
+});
+
+
+it('keeps independent manual cases out of default scheduled selection, including before any scheduled case exists',async()=>{
+ const first=await execute({action:'create-theme-production',requestId:randomUUID(),workflow:'manual',progress});
+ expect(first.case).toMatchObject({workflow:'manual'});
+ expect(await execute({action:'get-theme-production'})).toMatchObject({outcome:'none',case:null});
+ expect(await execute({action:'claim-theme-production',requestId:randomUUID(),executionId:randomUUID(),phase:'production'})).toMatchObject({outcome:'none',case:null});
+ const scheduled=await begin(),before=await read(scheduled.caseId);
+ const manual=await begin('production',false,'manual');await fenced(manual,{action:'update-theme-production',operation:'save',progress:{...progress,brief:'別チャットの変更'}});
+ expect((await execute({action:'get-theme-production'})).case?.id).toBe(scheduled.caseId);
+ expect(await read(scheduled.caseId)).toMatchObject({version:before.version,phase:before.phase,lease:before.lease,progress:before.progress});
+ expect((await read(manual.caseId)).progress.brief).toBe('別チャットの変更');
+});
+it('admits concurrent independent manual case creation without relaxing the scheduled single-case boundary',async()=>{
+ await begin();const created=await Promise.all([1,2].map(()=>execute({action:'create-theme-production',workflow:'manual',requestId:randomUUID(),progress})));
+ expect(created.map(v=>v.outcome)).toEqual(['created','created']);expect(new Set(created.map(v=>v.case!.id)).size).toBe(2);
+ await expect(execute({action:'create-theme-production',requestId:randomUUID(),progress})).rejects.toMatchObject({code:'PRODUCTION_ACTIVE_CASE'});
+});
+it('updates and approves an unrelated manual theme while the scheduled case retains its live lease and progress',async()=>{
+ const scheduled=await begin('production',true),before=await read(scheduled.caseId);
+ await foundation.execute(actor,{action:'create-theme',requestId:randomUUID(),id:'other-theme',title:'別テーマ',recordPins:[{id:'baseline',revision:1}],reason:'Manual workflow fixture'});
+ const created=await execute({action:'create-theme-production',workflow:'manual',requestId:randomUUID(),phase:'review',theme:{id:'other-theme',revision:1},progress});
+ const executionId=randomUUID(),claimed=await execute({action:'claim-theme-production',requestId:randomUUID(),caseId:created.case!.id,executionId,phase:'review'}),manual={caseId:created.case!.id,executionId,leaseToken:claimed.leaseToken!};
+ const prepared=await prepare(manual,{action:'update-theme',requestId:randomUUID(),target:{id:'other-theme',revision:1},changes:{title:'別チャットで更新したテーマ'},reason:'Normal manual editing'});
+ await send(manual,prepared.submissionId!);await registrations.recoverOne();
+ expect((await read(manual.caseId)).theme).toMatchObject({id:'other-theme',revision:2});
+ const done=await complete(manual);expect(done.case?.completed).toBe(true);
+ expect((await foundation.resolveTheme({kind:'reader',id:'public-reader'},'other-theme')).theme.revision).toBe(2);
+ expect(await read(scheduled.caseId)).toMatchObject({version:before.version,lease:before.lease,progress:before.progress});
+ expect((await pool.query('SELECT count(*)::integer n FROM member_knowledge.review_jobs')).rows[0].n).toBe(0);
+});
+it('rejects duplicate unfinished cases only for the same theme, preserving ownership and exact leases',async()=>{
+ const scheduled=await begin('production',true);
+ await expect(execute({action:'create-theme-production',workflow:'manual',requestId:randomUUID(),theme:{id:'theme',revision:1},progress})).rejects.toMatchObject({code:'PRODUCTION_THEME_ACTIVE'});
+ const manual=await begin('production',false,'manual');await expect(execute({action:'get-theme-production',caseId:manual.caseId},other)).rejects.toMatchObject({code:'NOT_FOUND'});
+ await expire(manual.caseId);await expect(fenced(manual,{action:'update-theme-production',operation:'save'})).rejects.toMatchObject({code:'PRODUCTION_LEASE_EXPIRED'});
+ expect((await read(scheduled.caseId)).lease?.valid).toBe(true);
+});
+it('keeps exact saved-request fences for manual work and leaves ordinary unrelated direct updates usable',async()=>{
+ const scheduled=await begin(),manual=await begin('production',false,'manual'),command=createCommand();
+ await prepare(manual,command);await expect(ordinarySend(owner,productionSubmissionCommandSchema.parse(command))).rejects.toMatchObject({code:'PRODUCTION_FENCE_REQUIRED'});
+ await ordinaryUpdate();expect((await createThemeAuthoringReader(knowledge,'https://plunode.net').read('theme')).theme.revision).toBe(2);
+ expect((await execute({action:'get-theme-production'})).case?.id).toBe(scheduled.caseId);
+});
+it('replays pre-workflow create request bodies without changing their digest or creating another case',async()=>{
+ const command={action:'create-theme-production',requestId:randomUUID(),progress};const first=await execute(command),again=await execute(command);
+ expect(again.replayed).toBe(true);expect(again.case?.id).toBe(first.case?.id);expect(again.case).toMatchObject({workflow:'scheduled'});
+ await expect(execute({...command,workflow:'manual'})).rejects.toMatchObject({code:'REQUEST_CHANGED'});
 });

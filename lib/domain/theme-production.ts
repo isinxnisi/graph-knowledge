@@ -4,13 +4,14 @@ import {themeRegistrationInputSchema,themeUpdateInputSchema,amendThemeRegistrati
 import {submitThemeTranslationSchema} from './knowledge-theme-translation';
 import {saveProductSchema,uploadProductImageSchema} from './product-authoring';
 
+export const productionWorkflowSchema=z.enum(['scheduled','manual']);
 export const productionPhaseSchema=z.enum(['production','review']);
 export const productionProgressSchema=z.strictObject({
  brief:z.string().min(1).max(40000),scope:z.string().max(40000),
  artifacts:z.record(z.string().min(1).max(200),z.json()).default({}).describe('Current drafts, sources, immutable image/product refs and material status; retain the exact next-run work, not old AI instructions.'),
  unfinished:z.array(z.string().min(1).max(8000)).default([]),blockers:z.array(z.string().min(1).max(8000)).default([]),
 });
-export const createThemeProductionSchema=z.strictObject({requestId:z.uuidv4(),progress:productionProgressSchema,theme:knowledgePinSchema.optional(),phase:productionPhaseSchema.default('production')});
+export const createThemeProductionSchema=z.strictObject({requestId:z.uuidv4(),workflow:productionWorkflowSchema.optional().describe('Omit for the existing sequential scheduled workflow. Use manual for a normal operator chat independent of scheduled work; retain the returned caseId for every read/claim.'),progress:productionProgressSchema,theme:knowledgePinSchema.optional(),phase:productionPhaseSchema.default('production')});
 export const getThemeProductionSchema=z.strictObject({caseId:z.uuidv4().optional(),submissionId:z.uuidv4().optional(),submissionCursor:z.number().int().min(0).default(0)});
 export const claimThemeProductionSchema=z.strictObject({requestId:z.uuidv4(),executionId:z.uuidv4(),phase:productionPhaseSchema,caseId:z.uuidv4().optional(),leaseSeconds:z.number().int().min(60).max(1800).default(900)});
 export const productionFenceSchema=z.strictObject({requestId:z.uuidv4().describe("This checkpoint/attempt operation ID, not the nested registration requestId. Retry identical HTTP input with this ID; a successor retry uses a new operation ID and the SAME saved registration ID/payload."),caseId:z.uuidv4(),executionId:z.uuidv4(),leaseToken:z.uuidv4(),expectedVersion:z.number().int().positive()});
@@ -34,7 +35,7 @@ export type ProductionProgress=z.infer<typeof productionProgressSchema>;
 export const productionSubmissionSummarySchema=z.strictObject({id:z.uuidv4(),requestId:z.uuidv4(),action:z.string(),digest:z.string(),state:z.enum(['prepared','uncertain','accepted','pending','applied','failed','withdrawn']),reason:z.string(),dispatches:z.number().int().nonnegative()});
 export const productionEvaluationTargetSchema=z.strictObject({theme:knowledgePinSchema,digest:z.string(),guide:z.strictObject({id:z.string(),revision:z.number().int().nonnegative()}),references:z.json()});
 export const themeProductionCaseSchema=z.strictObject({
- id:z.uuidv4(),ownerId:z.uuidv4(),environment:z.enum(['beta','production']),origin:z.url(),version:z.number().int().positive(),phase:productionPhaseSchema,
+ id:z.uuidv4(),ownerId:z.uuidv4(),workflow:productionWorkflowSchema,environment:z.enum(['beta','production']),origin:z.url(),version:z.number().int().positive(),phase:productionPhaseSchema,
  status:z.enum(['ready','working','waiting-publication','blocked','completed','needs-review']),progress:productionProgressSchema,theme:knowledgePinSchema.nullable(),
  lease:z.strictObject({executionId:z.uuidv4(),until:z.iso.datetime(),valid:z.boolean()}).nullable(),evaluationTarget:productionEvaluationTargetSchema.nullable(),
  lastWholeThemeAssessment:productionAssessmentSchema.extend({workDigest:z.string(),evaluatedTheme:knowledgePinSchema,guide:z.strictObject({id:z.string(),revision:z.number().int().nonnegative()}),evaluatedAt:z.iso.datetime(),executionId:z.uuidv4(),contentCurrent:z.boolean(),guideCurrent:z.boolean(),workCurrent:z.boolean(),current:z.boolean()}).nullable(),
