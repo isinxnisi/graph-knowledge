@@ -14,14 +14,16 @@ export async function repairThemeCollectionRelease(member:Pool,knowledge:Pool,ex
   await m.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
   const receipt=(await m.query(`SELECT i.state,i.result,p.principal_id FROM knowledge_import.items i JOIN knowledge_import.packages p ON p.id=i.package_id WHERE i.id=$1`,[expected.requestId])).rows[0];
   if(!receipt||receipt.state!=='published'||receipt.principal_id!==expected.principalId||receipt.result?.id!==expected.record.id||receipt.result?.revision!==expected.record.revision||!receipt.result?.themes?.some((p:{id:string;revision:number})=>p.id===expected.themeId&&p.revision===expected.revision))throw bad();
-  if((await m.query("SELECT 1 FROM theme_production.cases WHERE theme_id=$1 AND status<>'completed'",[expected.themeId])).rowCount)throw bad();
+  // A live production/review case is not a veto on accepted knowledge. The
+  // exact artifact/head checks below protect its unpublished prose; its lease,
+  // pending submissions, assessment and completion remain untouched.
   await k.query('BEGIN');await k.query("SELECT pg_advisory_xact_lock(hashtextextended('knowledge-record-writes-v1',0))");
   const state=await themePublicationState(k,expected.themeId);
   const ready=!!(await k.query("SELECT to_regclass('knowledge75.theme_knowledge_revisions') AS ready")).rows[0].ready;
   if(apply&&!ready)throw new KnowledgeError('011の明示migrationが必要です',503,'MIGRATION_REQUIRED');
   const prior=ready?(await k.query('SELECT * FROM knowledge75.theme_knowledge_revisions WHERE theme_id=$1 AND revision=$2',[expected.themeId,expected.revision])).rows[0]:null;
   if(prior){if(prior.channel!=='published'||prior.parent_revision!==expected.parent||prior.actor_id!==expected.actorId||prior.request_id!==expected.requestId||state.publishedRevision!==expected.revision)throw bad();await k.query('COMMIT');await m.query('COMMIT');return {outcome:'already-repaired',publication:state};}
-  if(state.publishedRevision!==expected.parent||state.workingRevision!==expected.revision)throw bad();
+  if(state.publishedRevision!==expected.parent||state.workingRevision<expected.revision)throw bad();
   const rows=(await k.query("SELECT * FROM knowledge75.revisions WHERE kind='theme' AND id=$1 AND revision=ANY($2::integer[]) ORDER BY revision",[expected.themeId,[expected.parent,expected.revision]])).rows;
   if(rows.length!==2||knowledgeDigest(rows[0].content)!==expected.parentDigest||knowledgeDigest(rows[1].content)!==expected.digest||rows[1].actor_id!==expected.actorId||rows[1].actor_kind!=='import')throw bad();
   const [parent,next]=rows.map(r=>({id:r.id,revision:r.revision,content:r.content,reason:r.reason,createdAt:r.created_at.toISOString()} as KnowledgeThemeVersion));

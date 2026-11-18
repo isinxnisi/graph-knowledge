@@ -349,11 +349,53 @@ it('repairs only a proven legacy collection-only edition and preserves immutable
  expect((await knowledge.query('SELECT kind,id,revision,content FROM knowledge75.revisions ORDER BY kind,id,revision')).rows).toEqual(before);expect(await foundation.get(actor,'theme','theme',1)).toEqual(parent);
  expect((await pool.query('SELECT state FROM knowledge_import.items WHERE id=$1',[expected.requestId])).rows[0].state).toBe('published');
 });
-it('refuses a legacy repair with pending intake, altered content, or another editorial working revision',async()=>{
+it('refuses a legacy repair with pending intake or altered content',async()=>{
  const {expected}=await legacyCollectionArtifact();
  await expect(repairThemeCollectionRelease(pool,knowledge,{...expected,digest:'0'.repeat(64)},true)).rejects.toMatchObject({code:'COLLECTION_REPAIR_CONFLICT'});
  await pool.query("UPDATE knowledge_import.items SET state='applied' WHERE id=$1",[expected.requestId]);await expect(repairThemeCollectionRelease(pool,knowledge,expected,true)).rejects.toMatchObject({code:'COLLECTION_REPAIR_CONFLICT'});
  await pool.query("UPDATE knowledge_import.items SET state='published' WHERE id=$1",[expected.requestId]);
+ expect((await knowledge.query("SELECT published_revision FROM knowledge75.theme_publications WHERE theme_id='theme'")).rows[0].published_revision).toBe(1);
+});
+
+it('repairs accepted knowledge during a live independent review without approving or disturbing its pending editorial submission',async()=>{
+ const {expected}=await legacyCollectionArtifact();
+ const created=await execute({action:'create-theme-production',requestId:randomUUID(),workflow:'manual',phase:'review',theme:{id:'theme',revision:2},progress});
+ const caseId=created.case!.id,executionId=randomUUID(),claimed=await execute({action:'claim-theme-production',requestId:randomUUID(),caseId,phase:'review',executionId});
+ const run={caseId,executionId,leaseToken:claimed.leaseToken!};
+ const pending=await prepare(run,{action:'update-theme',requestId:randomUUID(),target:{id:'theme',revision:2},changes:{title:'Unapproved review draft'},reason:'A genuine editorial revision remains pending'});await send(run,pending.submissionId!);
+ const beforeCases=(await pool.query('SELECT row_to_json(c) AS value FROM theme_production.cases c ORDER BY id')).rows;
+ const beforeSubmissions=(await pool.query('SELECT row_to_json(s) AS value FROM theme_production.submissions s ORDER BY id')).rows;
+ expect(await repairThemeCollectionRelease(pool,knowledge,expected)).toMatchObject({outcome:'verified'});
+ expect(await repairThemeCollectionRelease(pool,knowledge,expected,true)).toMatchObject({outcome:'repaired',publication:{publishedRevision:2,workingRevision:2,workingChanges:false}});
+ expect(await repairThemeCollectionRelease(pool,knowledge,expected,true)).toMatchObject({outcome:'already-repaired'});
+ expect((await pool.query('SELECT row_to_json(c) AS value FROM theme_production.cases c ORDER BY id')).rows).toEqual(beforeCases);
+ expect((await pool.query('SELECT row_to_json(s) AS value FROM theme_production.submissions s ORDER BY id')).rows).toEqual(beforeSubmissions);
+ const reviewing=await read(caseId);expect(reviewing.phase).toBe('review');expect(reviewing.completed).toBe(false);expect(reviewing.lease?.valid).toBe(true);expect(reviewing.pendingSubmissionCount).toBe(1);
+ await registrations.recoverOne();
+ expect((await foundation.get({kind:'reader',id:'public-reader'},'theme','theme')).content.title).toBe('Aの背景');
+ expect((await foundation.get(actor,'theme','theme')).content.title).toBe('Unapproved review draft');
+ expect((await knowledge.query("SELECT published_revision FROM knowledge75.theme_publications WHERE theme_id='theme'")).rows[0].published_revision).toBe(2);
+ expect((await read(caseId)).completed).toBe(false);await fenced(run,{action:'update-theme-production',operation:'renew',leaseSeconds:1200});
+});
+
+it('retains both completed cases when a reviewed knowledge-derived edition later receives another accepted collection update',async()=>{
+ const {expected}=await legacyCollectionArtifact();await repairThemeCollectionRelease(pool,knowledge,expected,true);
+ const created=await execute({action:'create-theme-production',requestId:randomUUID(),workflow:'manual',phase:'review',theme:{id:'theme',revision:2},progress});
+ const caseId=created.case!.id,executionId=randomUUID(),claimed=await execute({action:'claim-theme-production',requestId:randomUUID(),caseId,phase:'review',executionId});
+ await complete({caseId,executionId,leaseToken:claimed.leaseToken!});
+ await foundation.execute({kind:'collection',id:'verified-next-background'},{action:'accept-record',requestId:randomUUID(),entities:[],sources:[],entityPins:[{id:'a',revision:1}],sourcePins:[{id:'s',revision:1}],record:{id:'next-background',content:{kind:'note',subjectId:'a',assertion:'The next source adds accepted background.',evidence:[{id:'q',source:{id:'s',revision:1},locator:'Body',excerpt:'The next source adds accepted background.'}]}},themes:[{id:'theme',revision:2}],reason:'Next accepted collection background'},{verify:async()=>{},prepare:async()=>{}});
+ const reviewed=await read(caseId);expect(reviewed.completed).toBe(true);expect(reviewed.lastWholeThemeAssessment).toMatchObject({current:false,contentCurrent:false});
+ const scheduledId=(await pool.query("SELECT id FROM theme_production.cases WHERE workflow='scheduled'")).rows[0].id;expect((await read(scheduledId)).completed).toBe(true);expect(await execute({action:'get-theme-production'})).toMatchObject({outcome:'none',case:null});
+ expect((await execute({action:'create-theme-production',requestId:randomUUID(),progress})).outcome).toBe('created');
+});
+
+it('repairs the proven accepted edition while preserving a later private editorial head and deliberate record removal',async()=>{
+ const {expected}=await legacyCollectionArtifact();
  await foundation.execute(actor,{action:'edit-theme',requestId:randomUUID(),id:'theme',expectedRevision:2,title:'Unapproved later prose',description:'Private',recordPins:[{id:'baseline',revision:1}],initialView:'graph',reason:'Real manual draft'});
- await expect(repairThemeCollectionRelease(pool,knowledge,expected,true)).rejects.toMatchObject({code:'COLLECTION_REPAIR_CONFLICT'});expect((await knowledge.query("SELECT published_revision FROM knowledge75.theme_publications WHERE theme_id='theme'")).rows[0].published_revision).toBe(1);
+ const draft=await foundation.get(actor,'theme','theme');
+ expect(await repairThemeCollectionRelease(pool,knowledge,expected,true)).toMatchObject({outcome:'repaired',publication:{publishedRevision:2,workingRevision:3,workingChanges:true}});
+ expect(await foundation.get(actor,'theme','theme')).toEqual(draft);
+ const publicTheme=await foundation.get({kind:'reader',id:'public-reader'},'theme','theme');expect(publicTheme.content.title).toBe('Aの背景');expect(publicTheme.content.recordPins.map(p=>p.id)).toContain('legacy-added');
+ await expect(foundation.get({kind:'reader',id:'public-reader'},'theme','theme',3)).rejects.toMatchObject({status:404});
+ expect(await repairThemeCollectionRelease(pool,knowledge,expected,true)).toMatchObject({outcome:'already-repaired',publication:{publishedRevision:2,workingRevision:3,workingChanges:true}});
 });

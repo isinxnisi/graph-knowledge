@@ -8,7 +8,7 @@ import {withThemeProductionSubmission,assertThemeProductionLease} from './theme-
 
 type Target={theme:{id:string;revision:number};digest:string;guide:{id:string;revision:number};references:unknown};
 type Observed={state:'accepted'|'pending'|'applied'|'failed';result:unknown;theme?:{id:string;revision:number}};
-type Dependencies={environment:'beta'|'production';origin:string;authorize:(owner:string)=>Promise<void>;target:(id:string,owner:string,revision?:number)=>Promise<Target>;send:(owner:string,command:ProductionSubmissionCommand)=>Promise<unknown>;observe:(owner:string,command:ProductionSubmissionCommand)=>Promise<Observed|null>;publish:(owner:string,intentId:string)=>Promise<void>;publication:(id:string,intentId?:string)=>Promise<{state:string;publishedRevision:number|null;workingRevision:number;releaseId:string|null;workingChanges:boolean;knowledgeBaseRevision?:number|null;approvalPresent:boolean}>;afterDispatch?:()=>Promise<void>};
+type Dependencies={environment:'beta'|'production';origin:string;authorize:(owner:string)=>Promise<void>;target:(id:string,owner:string,revision?:number)=>Promise<Target>;send:(owner:string,command:ProductionSubmissionCommand)=>Promise<unknown>;observe:(owner:string,command:ProductionSubmissionCommand)=>Promise<Observed|null>;publish:(owner:string,intentId:string)=>Promise<void>;publication:(id:string,intentId?:string,assessedRevision?:number)=>Promise<{state:string;publishedRevision:number|null;workingRevision:number;releaseId:string|null;workingChanges:boolean;knowledgeBaseRevision?:number|null;approvalPresent:boolean}>;afterDispatch?:()=>Promise<void>};
 const failure=(text:string,code='PRODUCTION_CONFLICT',status=409)=>new KnowledgeError(text,status,code);
 const lockKey=(id:string)=>'theme-production:'+id;
 const terminal=(state:string)=>['applied','failed','withdrawn'].includes(state);
@@ -54,7 +54,7 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
   const selected=selection?.submissionId?list.find(s=>s.id===selection.submissionId):null;
   if(selection?.submissionId&&!selected)throw failure('保存済み送信がありません。','NOT_FOUND',404);
   const intent=(await pool.query('SELECT id,completion_command FROM theme_production.publication_intents WHERE case_id=$1 ORDER BY created_at DESC LIMIT 1',[id])).rows[0];
-   const observedPublication=ev.target?await deps.publication(ev.target.theme.id,intent?.id):null;
+   const observedPublication=ev.target?await deps.publication(ev.target.theme.id,intent?.id,ev.assessment?.evaluatedTheme?.revision):null;
    const {knowledgeBaseRevision,...publicState}=observedPublication??{};const publication=observedPublication?publicState as Omit<NonNullable<typeof observedPublication>,'knowledgeBaseRevision'>:null;
    let acceptedKnowledgeOnly=false;
    if(r.status==='completed'&&ev.target&&ev.assessment?.result==='pass'&&ev.assessment.guideCurrent&&ev.assessment.workCurrent&&knowledgeBaseRevision!=null&&knowledgeBaseRevision===ev.assessment.evaluatedTheme?.revision){

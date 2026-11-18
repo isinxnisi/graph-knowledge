@@ -65,13 +65,15 @@ export async function releaseAcceptedThemeKnowledge(c:PoolClient,parent:Knowledg
  await c.query('UPDATE knowledge75.theme_publications SET published_revision=$2,release_id=$3,updated_at=clock_timestamp() WHERE theme_id=$1',[next.id,next.revision,releaseId]);
 }
 
-/** Follow only system-published knowledge edges. Stop at any editorial edition;
- * never claim that the old assessment evaluated the newly added knowledge. */
-export async function knowledgeReleaseBase(c:Pick<PoolClient,'query'>,id:string,revision:number):Promise<number>{
+/** Follow only system-published knowledge edges; ordinary editorial revisions
+ * have no such edge. Stop at the requested assessed edition (which may itself have knowledge ancestry),
+ * and never claim that the old assessment evaluated newly added knowledge. */
+export async function knowledgeReleaseBase(c:Pick<PoolClient,'query'>,id:string,revision:number,assessedRevision=1):Promise<number>{
  const rows=(await c.query(`WITH RECURSIVE ancestry(revision) AS (
   SELECT $2::integer UNION ALL SELECT k.parent_revision FROM ancestry a
   JOIN knowledge75.theme_knowledge_revisions k ON k.theme_id=$1 AND k.revision=a.revision AND k.channel='published'
   JOIN knowledge75.theme_releases r ON r.theme_id=k.theme_id AND r.revision=k.revision
- ) SELECT min(revision)::integer AS revision FROM ancestry`,[id,revision])).rows;
+  WHERE a.revision>$3
+ ) SELECT min(revision)::integer AS revision FROM ancestry`,[id,revision,assessedRevision])).rows;
  return Number(rows[0].revision);
 }
