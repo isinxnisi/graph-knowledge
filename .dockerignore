@@ -82,3 +82,4 @@ migrations/*
 !scripts/knowledge-patrol-worker.ts
 !scripts/knowledge-collection-worker.ts
 !scripts/knowledge-collection-reader.ts
+!scripts/repair-webb-collection-publication.ts
