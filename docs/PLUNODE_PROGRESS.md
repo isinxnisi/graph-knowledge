@@ -1,3 +1,7 @@
+2026-11-19 スマホ表示3点の追補：③初回正式反映とGraph／隣接／運営一覧の正式確認、戻りリンク修正のβ2往復・HTTPS・固定build・本番転送hash照合まで完了｜残り③本人sudoで戻りリンクのWeb追補・正式往復確認｜全体③まで。初回正式af9d4fb8／lIpkQZTjUgXMU7eEDBDk1、追補sourcea1ca2e7b／βYsdByjjz6tjlDvSmTAKce／正式候補b-6Zi81Rn4b42IMUe8Mew。DB・Worker・設定・実内容・予定は保持。iPhone実機は未確認。[検証](verification/MOBILE_GRAPH_OPERATIONS_20261118.md)。
+
+2026-11-18 スマホ表示3点：①確認・②実装／回帰・③β／正式Web反映と正式HTTP・390／1280pxのGraph・隣接一覧、実Chromeの運営一覧／375pxフィルタ・残作業開閉・プレビューまで確認｜残り③プレビューから一覧へ戻る1行修正の追加build・β往復・正式追補｜全体③まで。初回正式sourceaf9d4fb8／build lIpkQZTjUgXMU7eEDBDk1、戻り導線修正a1ca2e7b。DB・Worker・設定・訳文850版を保持。実内容・予定・MCPは未変更、iPhone実機は未確認。[検証](verification/MOBILE_GRAPH_OPERATIONS_20261118.md)。
+
 2026-11-18 スマホ表示3点：①確認・②実装／UI・認証回帰・③固定build・β HTTPSと実Chromeの制作一覧・本番転送hash照合まで完了｜残り③本人sudoによる正式Web切替・正式画面確認｜全体③まで。sourceaf9d4fb8／β T3HIaHnqjkEkRXH4phch5／正式候補 lIpkQZTjUgXMU7eEDBDk1。DB・Worker・実内容・予定・MCPは変更しない。iPhone実機は未確認。[検証](verification/MOBILE_GRAPH_OPERATIONS_20261118.md)。
 
 2026-11-18 スマホ表示3点：①現状確認・②通知／鍵の配置、隣接関係の小型化、テーマ制作一覧の既存運営画面への統合と隔離描画まで完了｜残り③固定build・β／正式Web反映・実URL確認｜全体③まで。新規読取APIは既存運営認証と一覧を再利用、実テーマ・案件・予定・DB・Worker・MCPは変更しない。[検証](verification/MOBILE_GRAPH_OPERATIONS_20261118.md)。

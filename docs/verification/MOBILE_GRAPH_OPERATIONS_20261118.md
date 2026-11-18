@@ -35,3 +35,11 @@
 最初のWeb更新af9d4fb8／build lIpkQZTjUgXMU7eEDBDk1は本番へ反映済み。backup `/opt/graph-knowledge/backups/mobile-ui-web-20261118T144515Z`。ledger47/10、Worker・設定・KG・AI artifactと既存訳文850版を保持。正式HTTP5経路と390／1280pxのGraph・隣接6行は合格。
 
 実Chromeの正式一覧は9件（制作中1、見直し中1、公開7）。375pxでもヘッダ・一覧・状態フィルタを確認できた。ただしプレビューの旧一覧リンクをNext Linkで辿ると、リダイレクト先のfragmentが重複して `/operations#themes#themes` になり、受信箱へfallbackする不具合を発見。Explorerの戻りリンクを `/operations#themes` へ直接指定し、この導線を再検証して追加Web反映する。DB・内容・旧URLの認証契約は変更しない。
+
+実Chromeの正式375px（iPhone SEのChromeエミュレーション）で、一覧と状態フィルタを確認。実データのViking残作業8／阻害理由3は初期閉状態で、PCで開閉・全文保持を確認。運営者プレビューのテーマ本文・年表も表示される。これらは読取と画面内状態だけの確認であり、制作案件・予定の保存操作は行っていない。iPhone実機は未確認。
+
+### 戻り導線の追補資材
+
+source `a1ca2e7b765a2bc946b00ec16b17be5c1902925d`、β build `YsdByjjz6tjlDvSmTAKce`、正式候補 `b-6Zi81Rn4b42IMUe8Mew`。関連経路10件・lint・両buildの型検査成功。βの実Chromeで認証済み非公開プレビューの戻りリンクが `/operations#themes` であることを確認し、直接表示から戻る操作と「一覧→プレビュー→一覧」の再往復でfragment重複も受信箱へのfallbackもないことを確認。βのHTTPS5経路も成功。
+
+Web-only imageのOCI全blob、source・build、ローカル再load後のidentityを照合し、VPS転送後の4ファイルもsha256照合済み。本番の既存sudoは再度本人入力が必要なため、`backups/mobile-ui-return-20261118/run-release.py` を準備。直前afのWeb・buildと初回更新時の検証済みCompose backupのhashを固定して照合し、Web以外の変更を拒否する。DB migration・Worker・実内容は変更せず、失敗時も互換直前af Webだけ復旧する。本番の追補・正式往復確認は未完了。
