@@ -1,3 +1,5 @@
+2026-11-18 プレビュー復旧・並行制作：①原因確認・②046と手動workflow・③隔離32／一般30／UI・MCP16・固定build・④β HTTPS15／実Chrome／Appガイドv3まで完了｜残り④本番sudo適用・正式preview／App更新、本番容量集計｜全体④まで。source2f2dbfaf／β VWTlkSw0YFV0JDhiQgcpK／正式候補 mX9TdhOPP4-HTYKQJpGhD。正式資材は転送・現地hash照合済み、実本番は52aeced6のまま。定期設定・実コンテンツ・共通知識を検証操作では変更していない。[検証と復旧](verification/THEME_PRIVATE_PREVIEW_PARALLEL_20261118.md)。
+
 2026-11-18 継続作業＋通常チャット並行制御：①プレビュー404のURL復号漏れ／入口位置修正、②scheduled／manualの分離と046・隔離32件、一般訳文／投稿30件まで完了、③容量はβ6.50GBの98.34%が公開断面・巡回一覧と確認｜残り④型／build・β／本番反映・App更新、③本番最新容量の集計｜全体④まで。βのTurbopack依存エラーは確認済みwebpack版2jvdBAkNF0hibHgPo9jqzへ復旧し、公開buildもwebpackへ固定。本番は52aeced6のまま、手動workflowは未適用。DQは予定実行で公開21／作業22へ進んでおり、再非公開化・本文操作はしない。[並行設計](design/THEME_PRODUCTION_PARALLEL_MANUAL_20261118.md)・[容量](verification/DATABASE_CAPACITY_20261118.md)。
 
 2026-11-18 制作中テーマの非公開化：①設計・②実装・③隔離／固定image回帰とbuild・④β3200／HTTPS匿名15経路・既存Appから非公開作業版の読取まで完了｜残り④本番045／010適用、正式公開境界・Appツール更新、運営者のPC／スマホ実画面確認｜全体④まで。アプリ52aeced6／β2jvdBAkNF0hibHgPo9jqz、正式候補mX5Ty2YU9Jw7NlYdW8llV。正式資材は転送・現地hash照合済みだが未適用、DQ実非公開化は未反映。共通知識の公開維持。β品質ガイド6版だけ契約追記、本番本文4版は未変更。Chrome操作はURLを確定できず安全停止。[実装・検証・残件](verification/THEME_PRIVATE_PUBLICATION_20261118.md)。
