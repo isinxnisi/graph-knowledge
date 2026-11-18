@@ -2,7 +2,30 @@
 
 ## 範囲と現在地
 
-βの会員・知識PGをread-only transactionで集計。本番は既存backup／sourceを確認し、SSHのdfで同日20時台JSTに `/` 206.90GB中129.05GB使用・77.83GB空き（63%使用）を確認した。これはVPS全体であり、DBの使用量とは区別する。本番DBの最新のtable内訳は、046反映前の本人sudo操作へ同じ読み取りauditorを組み込み、βと分けて記録する。DB削除・履歴整理・VACUUM FULL・ANALYZE・index削除は行っていない。
+βの会員・知識PGをread-only transactionで集計。本番は既存backup／sourceを確認し、SSHのdfで同日20時台JSTに `/` 206.90GB中129.05GB使用・77.83GB空き（63%使用）を確認した。これはVPS全体であり、DBの使用量とは区別する。本番DBの最新のtable内訳も046反映前に同じ読み取りauditorで集計し、βと分けて以下へ記録した。DB削除・履歴整理・VACUUM FULL・ANALYZE・index削除は行っていない。
+
+## 本番の実測（2026-11-18 21:51 JST）
+
+本番反映前のread-only集計を回収した。βと同じ傾向だが、値は別DBの実測である。知識DB **12,427,826,867 bytes（12.43GB）**、会員DB **156,628,659 bytes（156.63MB）**。
+
+| 本番知識DBのtable | data（GB） | index（GB） | 合計（GB） |
+|---|---:|---:|---:|
+| `publication_records` | 5.1775 | 3.3130 | **8.4905** |
+| `target_inventory_entries` | 1.0214 | 1.6617 | **2.6831** |
+| `publication_entities` | 0.9191 | 0.2089 | **1.1280** |
+| `revisions` | 0.00705 | 0.00112 | **0.00817** |
+
+上位3tableが知識DBの **98.984%**。revisionは8,167,424 bytesで **0.0657%**にとどまる。Recordは2,178版／2,169対象、Theme132版／9対象であり、現在の版原本が容量の大部分を占めているわけではない。
+
+公開世代はready962件。active2,169 Recordに対し、過去世代が保持するRecord写しは1,303,915件。直近24時間で53世代・114,574件のRecord写しが追加されている。日別値はUTC境界であり、最古の11月8日は544世代、11月14〜18日も数十世代/日で増加している。最新Record数だけでDB容量を推定できず、共通知識が増えるほど次世代の丸ごとコピーも大きくなる構造である。
+
+巡回一覧はcommon complete349／stale2,085、public-kg complete241 run。直近24hはそれぞれ32／34／23 run追加。`target_inventory_entries_pkey`と補助の`target_inventory_page`は本番でも同じ `(run_id, kind, id)` のbtreeで、**各830,857,216 bytes（約0.83GB）**。補助indexの冗長分が現に存在する。今回は削除していない。
+
+会員DBでは収集command36.09MB、投稿revision33.98MB、投稿request30.26MB、OAuth更新token19.73MBが上位。制作案件tableは約0.37MB、商品画像約6.03MBで、現時点のボトルネックではない。投稿revision等と知識原本の`knowledge75.revisions`は別物として集計した。
+
+切替前のVPS全体は206.90GB中129.46GB使用、77.42GB空き、backup directoryは11.19GB、WAL約0.822GB。最終backup・新旧image保持・復旧後のdfでは **134.12GB使用、72.77GB空き（65%使用）**。これはDBだけでなくOS・他サービス・image・backup等を含む。直ちに容量不足という値ではないが、履歴投影と巡回一覧を保持し続ける現在の増加経路には将来の圧迫懸念がある。物理容量の連続時系列は取得していないため、何日で満杯という期限は断定しない。
+
+優先する対策候補は、(1)同一の巡回一覧や無関係な更新による全件再投影の抑制、(2)補助index重複の解消、(3)旧世代・巡回run・backupの保持契約の整理。旧cursor、Capsule、共有版、巡回の参照を壊さない設計が前提で、原本revisionを先に削除する必要はない。今回は調査のみで、保持期間・SQL・index・WAL・backup・認証tokenの削除や自動清掃設定は変更していない。
 
 ## βの実測
 
@@ -31,7 +54,7 @@
 - `knowledge-target-inventory.ts`は巡回runごとに対象一覧を保存する。`knowledge-patrol.ts`は既定3600秒で次のscanを始め、同じ原本版の完成済み一覧を無期限に共用する設計ではない。変更がなくても定期巡回の保存が増える。
 - この2系統の古い公開世代／完成・stale巡回一覧を通常処理で期限整理する実装は見当たらなかった。古いcursor・共有参照・patrol checkpoint等との契約を先に確認する必要があり、単純な全履歴削除は提案しない。
 - `knowledge_collection.commands`等の冪等操作履歴、取得根拠、登録wire、会員のCapsule／共有版、画像も継続して増える。冪等キーや根拠を無条件に消すと重複再実行や根拠喪失になる。画像は新テーマ数・素材量に応じて増えるが、同一hashの再利用と現行GC契約を保つ。
-- backup・旧image・DBのWAL／index／運用記録もVPS diskを消費する。現在の77.83GB空きをDBだけの余裕日数へ換算しない。本番の実内訳と直近の増分がない段階で、何日後に切迫するかは断定できない。
+- backup・旧image・DBのWAL／index／運用記録もVPS diskを消費する。上記の切替前後の空き容量をDBだけの余裕日数へ換算しない。物理容量の連続測定がないため、何日後に切迫するかは断定できない。
 
 ## 次に検討する順序（今回は未実施）
 

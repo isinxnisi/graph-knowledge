@@ -50,6 +50,8 @@ def main():
      assert v['Image'] in [expected['configId'],expected['manifestId']] and v['Config']['Image']==expected['tag'],'Running image drift: '+s
    assert self.config['services']['web']['environment']['MEMBER_ORIGIN']=='https://plunode.net'
    assert shutil.disk_usage(ROOT).free>6*1024**3
+   # Validate the exact public-host probe on the current healthy Web BEFORE stopping writers.
+   self.run(self.dc+['exec','-T','web','node','-e',PUBLIC_PROBE])
   def images(self,load):
    archive=stage/m['archive']['file'];assert h.digest(archive)==m['archive']['sha256']
    identity=h.archive_identities(archive,m)['web']

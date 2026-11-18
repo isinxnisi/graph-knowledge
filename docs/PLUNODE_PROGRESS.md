@@ -1,3 +1,5 @@
+2026-11-18 プレビュー復旧・並行制作・容量調査：①原因／設計・②実装046・③隔離／固定build・④β／正式反映、正式HTTP29・日英PC／375px・既存両App更新・暗号化backupのPC回収／復号まで完了｜全体④まで、未検証は実機iPhone・ChatGPT Web予定実行と本番manual実書込み。別件Viking既存受付の項目修正エラーは未操作。runtime2f2dbfaf／正式mX9TdhOPP4-HTYKQJpGhD／βVWTlkSw0YFV0JDhiQgcpK。member47／knowledge10を維持し、Workerは同じ52image。配置probeのHost誤判定による停止は同一新版で復旧、停止前probeとHTTP回帰3件追加。実テーマ／共通知識／guide／予定を変更せず、本番容量12.43GBの約99%が公開断面・巡回一覧、revision0.066%と確認。削除はしない。[検証・復旧](verification/THEME_PRIVATE_PREVIEW_PARALLEL_20261118.md)・[容量調査](verification/DATABASE_CAPACITY_20261118.md)。
+
 2026-11-18 本番復旧対応：046・旧row／owner／共通知識の保持検査後、配置末尾の公開API確認がloopback Hostで403となりWeb／3 Workerを停止｜同じsource2f2dbfaf・schema47/10を保持してサービス再開する復旧手順を転送・照合済み、本人sudo入力待ち｜全体④正式確認まで。Node24 fetchはHost指定も無視することを実ネットワーク試験で確認し、Node HTTPへ変更して明示Host到達を検証。DB復元・本文変更・旧Webへのdowngradeは行わない。
 
 2026-11-18 プレビュー復旧・並行制作：①原因確認・②046と手動workflow・③隔離32／一般30／UI・MCP16・固定build・④β HTTPS15／実Chrome／Appガイドv3まで完了｜残り④本番sudo適用・正式preview／App更新、本番容量集計｜全体④まで。source2f2dbfaf／β VWTlkSw0YFV0JDhiQgcpK／正式候補 mX9TdhOPP4-HTYKQJpGhD。正式資材は転送・現地hash照合済み、実本番は52aeced6のまま。定期設定・実コンテンツ・共通知識を検証操作では変更していない。[検証と復旧](verification/THEME_PRIVATE_PREVIEW_PARALLEL_20261118.md)。
