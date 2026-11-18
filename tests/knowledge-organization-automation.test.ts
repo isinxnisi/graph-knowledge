@@ -1,7 +1,8 @@
+import {ensureKnowledgePublicationSchema} from "../lib/server/knowledge-publication";
 import {randomUUID,createHash} from 'node:crypto';
 import {Pool} from 'pg';
 import {beforeAll,afterAll,beforeEach,describe,it,expect} from 'vitest';
-import {createKnowledgeFoundationService,ensureKnowledgeFoundationSchema,knowledgeDigest} from '../lib/server/knowledge-foundation';
+import {createKnowledgeFoundationService,knowledgeDigest} from '../lib/server/knowledge-foundation';
 import {migrateKnowledgeTranslations} from '../lib/server/knowledge-translation-migrate';
 import {migrateKnowledgeIdentities} from '../lib/server/knowledge-identity-migrate';
 import {migrateKnowledgePatrol} from '../lib/server/knowledge-patrol-schema';
@@ -50,7 +51,7 @@ describe.skipIf(!url||!memberUrl)('autonomous organization with durable AI decis
  beforeAll(async()=>{
   expect((await pool.query('SELECT current_database() AS n')).rows[0].n).toMatch(/^plunode_knowledge75_test_/);
   expect((await member.query('SELECT current_database() AS n')).rows[0].n).toMatch(/^graph_member_test_organization_/);
-  await ensureKnowledgeFoundationSchema(pool);await migrateKnowledgeTranslations(pool);await migrateKnowledgeIdentities(pool);await migrateKnowledgePatrol(pool);
+  await ensureKnowledgePublicationSchema(pool);await migrateKnowledgeTranslations(pool);await migrateKnowledgeIdentities(pool);await migrateKnowledgePatrol(pool);
   expect((await migrateKnowledgeOrganization(pool)).applied).toBe(true);expect((await migrateKnowledgeOrganization(pool)).applied).toBe(false);
   await migrateMemberDatabase(member,...Array(24).fill(true));
   const before=(await member.query('SELECT name,checksum FROM member_migration ORDER BY name')).rows;

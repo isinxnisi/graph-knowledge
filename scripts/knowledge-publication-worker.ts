@@ -8,6 +8,11 @@ let stopping = false;
 process.on("SIGTERM", () => { stopping = true; });
 process.on("SIGINT", () => { stopping = true; });
 let failures = 0;
+const retention = process.env.KNOWLEDGE_PUBLICATION_RETENTION_HOURS;
+const retentionHours = retention === undefined ? null : Number(retention);
+if(retentionHours !== null && (!Number.isInteger(retentionHours) || retentionHours < 1 || retentionHours > 24*365))
+  throw new Error("KNOWLEDGE_PUBLICATION_RETENTION_HOURS must be an integer between 1 and 8760");
+let nextCleanup = 0;
 try {
   const publication = await knowledgePublicationPreview(true);
   while (!stopping) {
@@ -20,6 +25,13 @@ try {
         break;
       }
       failures = 0;
+      if(retentionHours !== null && Date.now() >= nextCleanup){
+        nextCleanup = Date.now() + 60_000;
+        try{
+          const retired = await publication.pruneRetired(retentionHours);
+          if(retired) console.log(JSON.stringify({event:"publication-retention",...retired}));
+        }catch{console.error(JSON.stringify({event:"publication-retention-retry"}));}
+      }
     } catch {
       failures++;
       console.error(JSON.stringify({ at: new Date().toISOString(), event: "publication-retry", failures }));

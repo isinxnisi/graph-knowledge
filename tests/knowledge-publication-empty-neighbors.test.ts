@@ -7,9 +7,10 @@ const generation='k75-'+ 'a'.repeat(32);
 const center={id:'subject-with-a-fact',revision:1,content:{name:'新しく登録した場所',kind:'place',description:'',aliases:[],language:'ja'},createdAt:'2026-11-04T00:00:00Z',reason:'公開'};
 function setup(hasRelation:boolean){
  const query=vi.fn(async(sql:string)=>{
-  if(sql.includes('SELECT g.* FROM knowledge75.publication_generations'))return {rows:[{id:generation,source_sequence:'1',digest:'a'.repeat(64),record_count:1,created_at:new Date(),published_at:new Date()}],rowCount:1};
-  if(sql.includes('SELECT e.body FROM knowledge75.publication_entities'))return {rows:[{body:center}],rowCount:1};
-  if(sql.startsWith('SELECT 1 FROM knowledge75.publication_records r'))return {rows:hasRelation?[{'?column?':1}]:[],rowCount:hasRelation?1:0};
+  if(sql.startsWith('SELECT active_generation'))return {rows:[{active_generation:generation}],rowCount:1};
+  if(sql.includes('FROM knowledge75.publication_generations g'))return {rows:[{id:generation,source_sequence:'1',digest:'a'.repeat(64),record_count:1,created_at:new Date(),published_at:new Date()}],rowCount:1};
+  if(sql.includes('SELECT e.body FROM knowledge75.publication_read_entities'))return {rows:[{body:center}],rowCount:1};
+  if(sql.startsWith('SELECT 1 FROM knowledge75.publication_read_records r'))return {rows:hasRelation?[{'?column?':1}]:[],rowCount:hasRelation?1:0};
   return {rows:[],rowCount:0};
  });
  const release=vi.fn(),session=vi.fn(()=>{throw Error('Neo4j temporarily unavailable');});

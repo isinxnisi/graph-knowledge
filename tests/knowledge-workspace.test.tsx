@@ -24,7 +24,7 @@ const theme: KnowledgeThemeRead = {
 const response = (body: unknown, status = 200) => ({ ok: status < 400, status, json: async () => body });
 function server() {
   let active = g1, token = "1", stoppedTheme = false;
-  const hidden = new Set<string>(), requests: URLSearchParams[] = [];
+  const hidden = new Set<string>(), expired = new Set<string>(), requests: URLSearchParams[] = [];
   const delays = new Map<string, { promise: Promise<ReturnType<typeof response>>; resolve: (value: ReturnType<typeof response>) => void; value?: ReturnType<typeof response> }>();
   vi.stubGlobal("fetch", vi.fn((url: string) => {
     const p = new URL(url, "http://localhost").searchParams; requests.push(p);
@@ -34,6 +34,7 @@ function server() {
     const graph = (items: KnowledgePublishedRecord[]) => ({ generation, records: items, entities: [...new Map(items.flatMap(r => r.entities).map(e => [e.id, e])).values()] });
     let result: ReturnType<typeof response>;
     if (mode === "status") result = response({ active: { id: active, publishedAt: "now", recordCount: 2 }, changeToken: token, pending: false, lastFailure: null });
+    else if (["entities","graph","neighbors","record"].includes(mode)&&expired.has(generation)) result = response({code:"GENERATION_EXPIRED",error:"公開世代の期限が過ぎました"},410);
     else if (mode === "entities") result = response({ generation, entities: entities.filter(e => p.has("entityId") ? e.id === p.get("entityId") : p.has("entityIds") ? p.get("entityIds")!.split(",").includes(e.id) : e.id.includes(p.get("q") ?? "")), nextCursor: null, hasMore: false });
     else if (mode === "graph") result = response(graph(records.filter(r => (p.get("recordIds") ?? "").split(",").includes(r.record.id))));
     else if (mode === "neighbors") result = response({ ...graph(p.get("entityId") === "c" ? records.filter(r => r.record.id === "r2") : records.filter(r => r.record.id === "r1")), center: entities.find(e => e.id === p.get("entityId")), nextCursor: null, hasMore: false });
@@ -45,7 +46,7 @@ function server() {
     if (held && !held.value) { held.value = result; return held.promise; }
     return Promise.resolve(result);
   }));
-  return { requests, change: (value: string, generation = active) => { token = value; active = generation; }, hide: (id: string) => hidden.add(id), stopTheme: () => { stoppedTheme = true; },
+  return { requests, change: (value: string, generation = active) => { token = value; active = generation; }, hide: (id: string) => hidden.add(id), expire: (id: string) => expired.add(id), stopTheme: () => { stoppedTheme = true; },
     hold: (mode: string) => {
       let resolve!: (value: ReturnType<typeof response>) => void;
       const delay = { promise: new Promise<ReturnType<typeof response>>(r => { resolve = r; }), resolve: (v: ReturnType<typeof response>) => resolve(v), value: undefined as ReturnType<typeof response> | undefined };
@@ -127,6 +128,18 @@ it("新世代を通知し、明示更新までは通常探索を古い世代で�
   expect(result.current.normal.generation).toBe(g1);
   await act(() => result.current.refreshLatest());
   expect(result.current.normal.generation).toBe(g2);
+});
+
+it("期限切れの探索を最新版で開き、非公開になった根拠を表示から外す", async () => {
+  const { api, result } = await setup();
+  await act(() => result.current.startFrom(a));
+  expect(result.current.normal.records).toHaveLength(1);
+  api.hide("r1"); api.expire(g1); api.change("2",g2);
+  await tick();
+  expect(result.current.normal.generation).toBe(g2);
+  expect(result.current.normal.rootId).toBe("a");
+  expect(result.current.normal.records).toEqual([]);
+  expect(result.current.message).toContain("最新版で開きました");
 });
 
 it("Themeから明示した探索だけは最新世代を使い、URLに表示指定がなければThemeの初期表示を使う", async () => {

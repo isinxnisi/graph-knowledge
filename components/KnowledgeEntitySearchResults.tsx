@@ -36,7 +36,13 @@ export default function KnowledgeEntitySearchResults({q,kind,excludeIds=[],onMat
   if(more&&result?.key===key){params.set('generation',result.page.generation);if(result.page.nextCursor)params.set('cursor',result.page.nextCursor);}
   try{
    const response=await fetch('/api/knowledge/public?'+params,{signal:c.signal,cache:'no-store'}),value=await response.json();
-   if(!response.ok){if(response.status===400||response.status===409){if(token===serial.current)setFailure({key,message:en?'The search conditions changed. Search again from the first page.':'検索条件や公開状態が変わりました。先頭から検索し直せます。',restart:true});return;}throw Error(typeof value.error==='string'?value.error:'対象を検索できませんでした。');}
+   if(!response.ok){if(response.status===400||response.status===409||value.code==='GENERATION_EXPIRED'){
+    const expired=value.code==='GENERATION_EXPIRED';
+    if(token===serial.current)setFailure({key,message:expired
+     ?en?'This search expired. Search again with the latest results.':'この検索の公開版は期限切れです。最新版で検索し直せます。'
+     :en?'The search conditions changed. Search again from the first page.':'検索条件や公開状態が変わりました。先頭から検索し直せます。',restart:true});
+    return;
+   }throw Error(typeof value.error==='string'?value.error:'対象を検索できませんでした。');}
    if(token!==serial.current||c.signal.aborted)return;
    const page=value as KnowledgeEntityPage;
    const items=recordView?[]:page.entities.filter(e=>!kind||knowledgeSearchKinds(kind).includes(e.content.kind));

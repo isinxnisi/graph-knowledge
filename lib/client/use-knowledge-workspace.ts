@@ -29,7 +29,7 @@ type State = {
   normalView?: GraphView; themeCanvasView?: { themeId: string; revision: number; view: GraphView };
   normalRestoration: ViewRestoration | null; themeRestoration: ViewRestoration | null;
 };
-class ReadError extends Error { constructor(message: string, readonly status: number) { super(message); } }
+class ReadError extends Error { constructor(message: string, readonly status: number, readonly code?: string) { super(message); } }
 export async function readKnowledge<T>(mode: string, args: Record<string, unknown> = {}): Promise<T> {
   const params = new URLSearchParams({ mode });
   for (const [key, value] of Object.entries(args)) if (value !== undefined && value !== null && value !== "") params.set(key, String(value));
@@ -39,7 +39,7 @@ export async function readKnowledge<T>(mode: string, args: Record<string, unknow
       (async () => {
         const response = await fetch((mode === "theme" && /^\/operations\/themes\//.test(location.pathname) ? "/api/site-operations/theme-preview?" : "/api/knowledge/public?") + params, { cache: "no-store", signal: controller.signal });
         const data = await response.json();
-        if (!response.ok) throw new ReadError(typeof data?.error === "string" ? data.error : typeof data?.error?.message === "string" ? data.error.message : "読めませんでした。再試行できます。", response.status);
+        if (!response.ok) throw new ReadError(typeof data?.error === "string" ? data.error : typeof data?.error?.message === "string" ? data.error.message : "読めませんでした。再試行できます。", response.status, typeof data?.code==="string"?data.code:undefined);
         return data as T;
       })(),
       new Promise<never>((_, reject) => { timer = setTimeout(() => { reject(new ReadError("取得に時間がかかっています。再試行できます。", 408)); controller.abort(); }, 15_000); }),
@@ -51,6 +51,7 @@ export async function readKnowledge<T>(mode: string, args: Record<string, unknow
 }
 const blankNormal = (): KnowledgeWorkspaceNormal => ({ generation: null, rootId: null, records: [], entities: [], selection: null, epoch: 0 });
 const messageOf = (e: unknown) => e instanceof Error ? e.message : "読めませんでした。再試行できます。";
+const expired = (e: unknown) => e instanceof ReadError && e.code==="GENERATION_EXPIRED";
 const unavailable = (e: unknown) => e instanceof ReadError && [403, 404, 410].includes(e.status);
 const mergeRecords = (a: KnowledgePublishedRecord[], b: KnowledgePublishedRecord[]) => [...new Map([...a, ...b].map(r => [r.record.id, r])).values()].slice(0, 200);
 const mergeEntities = (...lists: KnowledgeEntityVersion[][]) => [...new Map(lists.flat().map(e => [e.id, e])).values()];
@@ -115,14 +116,22 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
     update(s => ({ ...s, query: saved.query, kind: saved.kind, normal: { ...blankNormal(), epoch: s.normal.epoch + 1 }, activeTheme: null, retainedTheme: null, entityPage: null, themeSelection: null, neighborPages: {}, normalRestoration: null, themeRestoration: null }), "none");
     try {
       const s = await readKnowledge<KnowledgeWorkspaceStatus>("status"); if (!live(token)) return; setStatus(s);
-      const generation = saved.generation ?? s.active?.id ?? null;
+      let generation = saved.generation ?? s.active?.id ?? null;
       let normal = { ...blankNormal(), generation, epoch: current.current.normal.epoch };
       let entityPage: KnowledgeEntityPage | null = null;
       if (generation) {
-        const [graph, page] = await Promise.all([
-          readKnowledge<GraphRead>("graph", { generation, recordIds: saved.recordIds.join(",") }),
-          readKnowledge<KnowledgeEntityPage>("entities", { generation, q: saved.query, kind: saved.kind || undefined }),
+        const snapshot = (id:string) => Promise.all([
+          readKnowledge<GraphRead>("graph", { generation:id, recordIds: saved.recordIds.join(",") }),
+          readKnowledge<KnowledgeEntityPage>("entities", { generation:id, q: saved.query, kind: saved.kind || undefined }),
         ]);
+        const [graph, page] = await snapshot(generation).catch(async error => {
+          if(!expired(error)||!s.active||s.active.id===generation||!live(token))throw error;
+          generation=s.active.id;
+          const latest=await snapshot(generation);
+          if(live(token))setMessage(localeRef.current==='en'?'The saved public version expired. Reopened with the latest version.':'保存時の公開版が期限切れのため、最新版で開きました。');
+          return latest;
+        });
+        normal.generation=generation;
         if (!live(token)) return;
         if (graph.generation !== generation || page.generation !== generation) throw new Error("公開版が一致しません。読み直してください。");
         entityPage = page;
@@ -223,6 +232,11 @@ export function useKnowledgeWorkspace({ initialRootId, embedded = false,initialT
           before.themes.length ? readKnowledge<KnowledgeThemePage>("themes", themeCriteria.current) : Promise.resolve(null),
         ]);
         if (!live(token) || current.current !== before || candidateToken !== themeSearch.current) return;
+        if (results.some(result=>result.status==="rejected"&&expired(result.reason))
+            && s.active && generation!==s.active.id && live(token) && current.current===before) {
+          await restore(reference(before));
+          return;
+        }
         const graph = results[0].status === "fulfilled" ? results[0].value : null;
         const themeResult = results[1].status === "fulfilled" ? results[1].value : null;
         const page = results[2].status === "fulfilled" ? results[2].value : null;

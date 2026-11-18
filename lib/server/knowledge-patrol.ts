@@ -15,8 +15,8 @@ const date=(value:Date|string|null)=>value?new Date(value).toISOString():null;
  * A completed scan is not an approval. R2b must reread current public content,
  * evidence and permissions before sending or applying any generated candidate.
  */
-export function createKnowledgePatrol(pool:Pool,legacy:LegacyInventoryReader){
- const inventory=createTargetInventory(pool,legacy);
+export function createKnowledgePatrol(pool:Pool,legacy:LegacyInventoryReader,readLegacyRevision?:()=>Promise<string>){
+ const inventory=createTargetInventory(pool,legacy,readLegacyRevision);
 
  async function retain(c:PoolClient,origin:PatrolOrigin,run:string,entry:InventoryEntry){
   const old=(await c.query('SELECT fingerprint,generation,present FROM knowledge75.patrol_targets WHERE origin=$1 AND kind=$2 AND id=$3 FOR UPDATE',[origin,entry.kind,entry.id])).rows[0];
@@ -43,7 +43,7 @@ export function createKnowledgePatrol(pool:Pool,legacy:LegacyInventoryReader){
   // past an input whose task was not retained, or duplicate a retained task.
   await c.query('BEGIN');
   try{
-   const snapshot=(await c.query("SELECT state FROM knowledge75.target_inventory_runs WHERE id=$1 AND origin=$2",[run,origin])).rows[0];
+   const snapshot=(await c.query("SELECT state FROM knowledge75.target_inventory_runs WHERE id=$1 AND origin=$2 AND purged_at IS NULL",[run,origin])).rows[0];
    if(snapshot?.state!=='complete')throw Error('Completed inventory required');
    const rows=(await c.query(`SELECT kind,id,revision,status_revision AS "statusRevision",digest,visibility,eligible
     FROM knowledge75.target_inventory_entries WHERE run_id=$1 AND ($2::text IS NULL OR (kind COLLATE "C",id COLLATE "C")>($2,$3))
@@ -69,6 +69,7 @@ export function createKnowledgePatrol(pool:Pool,legacy:LegacyInventoryReader){
  }
 
  return {
+  prune:(origin:PatrolOrigin,retentionDays:number)=>inventory.prune(origin,retentionDays),
   async tick(rawOrigin:PatrolOrigin,limit=200,intervalSeconds=3600){
    const origin=patrolOriginSchema.parse(rawOrigin);sizeSchema.parse(limit);intervalSchema.parse(intervalSeconds);
    const c=await pool.connect(),lock='organization-patrol:'+origin;
@@ -86,23 +87,26 @@ export function createKnowledgePatrol(pool:Pool,legacy:LegacyInventoryReader){
      const changed=origin==='common'&&(await c.query(`SELECT coalesce(max(sequence),0)::text<>(SELECT revision FROM knowledge75.target_inventory_runs WHERE id=$1) AS changed FROM knowledge75.changes`,[cycle.completed_run])).rows[0].changed;
      if(!cycle.due&&!changed&&cycle.policy===PATROL_POLICY)return {phase:'idle' as const,visited:0};
      cycle=(await c.query(`UPDATE knowledge75.patrol_cycles SET phase='scanning',inventory_run=NULL,cursor=NULL,scanned=0,total=0,
-      scan_started_at=clock_timestamp(),policy=$2,error_code=NULL,retry_at=NULL,updated_at=clock_timestamp() WHERE origin=$1 RETURNING *`,[origin,PATROL_POLICY])).rows[0];
+      scan_started_at=clock_timestamp(),completed_run=CASE WHEN policy=$2 THEN completed_run ELSE NULL END,policy=$2,error_code=NULL,retry_at=NULL,updated_at=clock_timestamp() WHERE origin=$1 RETURNING *`,[origin,PATROL_POLICY])).rows[0];
     }
     if(cycle.phase==='scanning'){
      // Recover even if the last inventory page committed before the worker died
      // and before it could record that completed run in patrol_cycles.
      const available=(await c.query(`SELECT id,state FROM knowledge75.target_inventory_runs WHERE origin=$1 AND
       (id=$2 OR state='scanning' OR state='complete' AND created_at>= $3)
-      AND state<>'stale' ORDER BY (id=$2) DESC NULLS LAST,created_at DESC,id LIMIT 1`,[origin,cycle.inventory_run,cycle.scan_started_at])).rows[0];
+      AND state<>'stale' AND purged_at IS NULL ORDER BY (id=$2) DESC NULLS LAST,created_at DESC,id LIMIT 1`,[origin,cycle.inventory_run,cycle.scan_started_at])).rows[0];
      const page=available?.state==='complete'?{id:available.id,state:'complete'}:await inventory.scanPage(origin,limit);
      if(page.state==='stale'){
       await c.query('UPDATE knowledge75.patrol_cycles SET inventory_run=NULL,updated_at=clock_timestamp() WHERE origin=$1',[origin]);
       return {phase:'scanning' as const,visited:0};
      }
      const total=page.state==='complete'?Number((await c.query('SELECT count(*) AS n FROM knowledge75.target_inventory_entries WHERE run_id=$1',[page.id])).rows[0].n):0;
+     const phase=page.state==='complete'?(page.id===cycle.completed_run?'idle':'queueing'):'scanning';
      await c.query(`UPDATE knowledge75.patrol_cycles SET inventory_run=$2,phase=$3,total=$4,
-      next_scan_at=clock_timestamp()+$5*interval '1 second',error_code=NULL,retry_at=NULL,updated_at=clock_timestamp() WHERE origin=$1`,[origin,page.id,page.state==='complete'?'queueing':'scanning',total,intervalSeconds]);
-     return {phase:page.state==='complete'?'queueing' as const:'scanning' as const,visited:0};
+      scanned=CASE WHEN $3='idle' THEN $4 ELSE scanned END,
+      completed_at=CASE WHEN $3='idle' THEN clock_timestamp() ELSE completed_at END,
+      next_scan_at=clock_timestamp()+$5*interval '1 second',error_code=NULL,retry_at=NULL,updated_at=clock_timestamp() WHERE origin=$1`,[origin,page.id,phase,total,intervalSeconds]);
+     return {phase,visited:0};
     }
     return await queuePage(c,origin,cycle.inventory_run,cycle.cursor,limit);
    }catch(e){

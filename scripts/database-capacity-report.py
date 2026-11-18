@@ -33,6 +33,16 @@ def report(sql):
   result['publicationByDay']=read("""SELECT coalesce(json_agg(x),'[]') FROM (
   SELECT created_at::date AS day,count(*) AS generations,sum(record_count) AS record_copies,max(record_count) AS largest_record_count
   FROM knowledge75.publication_generations GROUP BY created_at::date ORDER BY day DESC LIMIT 30)x""")
+ if 'knowledge75.publication_record_values' in names:
+  result['publicationStorage']=read("""SELECT json_build_object(
+   'retained_ready_generations',(SELECT count(*) FROM knowledge75.publication_generations WHERE state='ready' AND expired_at IS NULL),
+   'expired_generations',(SELECT count(*) FROM knowledge75.publication_generations WHERE expired_at IS NOT NULL),
+   'retained_legacy_record_count',(SELECT coalesce(sum(record_count),0) FROM knowledge75.publication_generations WHERE content_digest IS NULL AND purged_at IS NULL),
+   'record_memberships',(SELECT count(*) FROM knowledge75.publication_record_members),
+   'unique_record_projections',(SELECT count(*) FROM knowledge75.publication_record_values),
+   'unique_entity_projections',(SELECT count(*) FROM knowledge75.publication_entity_values),
+   'first_public_record_contexts',(SELECT count(*) FROM knowledge75.publication_record_context),
+   'pruned_inventory_runs',(SELECT count(*) FROM knowledge75.target_inventory_runs WHERE purged_at IS NOT NULL))""")
  if 'knowledge75.target_inventory_runs' in names:
   result['targetInventories']=read("""SELECT coalesce(json_agg(x),'[]') FROM (
   SELECT origin,state,count(*) AS runs,min(created_at) AS oldest,max(created_at) AS newest,

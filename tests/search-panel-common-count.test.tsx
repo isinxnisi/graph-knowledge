@@ -42,7 +42,9 @@ it("does not restore counts or results from late responses for an older query",a
 it('reads all result pages with server-side filters, keeps results after a failed next page, and does not silently restart the generation',async()=>{
  const calls:URLSearchParams[]=[],generation='k75-'+ 'a'.repeat(32);let fail=true;
  vi.stubGlobal('fetch',vi.fn(async(url:string)=>{
-  const params=new URL(url,'http://localhost').searchParams;calls.push(params);
+  const request=new URL(url,'http://localhost');
+  if(request.pathname!=='/api/knowledge/public')return {ok:true,json:async()=>({translations:[]})};
+  const params=request.searchParams;calls.push(params);
   if(params.has('cursor')&&fail){fail=false;return {ok:false,json:async()=>({error:'一時的な接続失敗'})};}
   return {ok:true,json:async()=>({generation,entities:params.has('cursor')?[entity('second','続きの候補','人物')]:[entity('first','最初の候補','人物')],hasMore:!params.has('cursor'),nextCursor:params.has('cursor')?null:'next-cursor'})};
  }));
@@ -56,7 +58,25 @@ it('reads all result pages with server-side filters, keeps results after a faile
 });
 it('searches subject-free Theme information as knowledge, rather than dropping it from the ordinary record list',async()=>{
  const choose=vi.fn(),calls:URLSearchParams[]=[];
- vi.stubGlobal('fetch',vi.fn(async(url:string)=>{calls.push(new URL(url,'http://localhost').searchParams);return {ok:true,json:async()=>({generation:'k75-'+ 'a'.repeat(32),records:[{record:{id:'theme-background',content:{kind:'note',assertion:'このテーマの背景',subjectId:null,objectId:null}},entities:[]}],hasMore:false,nextCursor:null})};}));
+ vi.stubGlobal('fetch',vi.fn(async(url:string)=>{calls.push(new URL(url,'http://localhost').searchParams);return {ok:true,json:async()=>({generation:'k75-'+ 'a'.repeat(32),records:[{record:{id:'theme-background',content:{kind:'note',assertion:'このテーマの背景',subjectId:null,objectId:null,times:[]}},entities:[]}],hasMore:false,nextCursor:null})};}));
  render(<KnowledgeEntitySearchResults q="背景" kind={null} allowEmpty recordView onChooseRecord={choose}/>);await tick();
  fireEvent.click(screen.getByText('このテーマの背景'));expect(choose).toHaveBeenCalledWith('theme-background');expect(calls[0].get('mode')).toBe('search');
+});
+
+it('restarts an expired cursor from the first page of the latest publication',async()=>{
+ const calls:URLSearchParams[]=[],old='k75-'+ 'a'.repeat(32),latest='k75-'+ 'b'.repeat(32);
+ vi.stubGlobal('fetch',vi.fn(async(url:string)=>{
+  const request=new URL(url,'http://localhost');
+  if(request.pathname!=='/api/knowledge/public')return {ok:true,json:async()=>({translations:[]})};
+  const params=request.searchParams;calls.push(params);
+  if(params.has('cursor'))return {ok:false,status:410,json:async()=>({code:'GENERATION_EXPIRED'})};
+  const first=calls.length===1;
+  return {ok:true,json:async()=>({generation:first?old:latest,entities:[entity(first?'before':'after',first?'旧版の候補':'最新版の候補')],hasMore:first,nextCursor:first?'cursor':null})};
+ }));
+ render(<KnowledgeEntitySearchResults q="候補" kind={null}/>);await tick();
+ fireEvent.click(screen.getByRole('button',{name:/対象の続きを表示/}));await act(async()=>{});
+ expect(screen.getByText('旧版の候補')).toBeTruthy();
+ fireEvent.click(screen.getByRole('button',{name:'先頭から再検索'}));await tick();
+ expect(screen.getByText('最新版の候補')).toBeTruthy();
+ expect(calls.map(p=>[p.get('generation'),p.get('cursor')])).toEqual([[null,null],[old,'cursor'],[null,null]]);
 });

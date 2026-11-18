@@ -1,3 +1,5 @@
+知識DBの公開投影・巡回台帳の世代管理。[現行設計](design/KNOWLEDGE_PUBLICATION_STORAGE.md)・[隔離比較とβ確認](verification/KNOWLEDGE_PUBLICATION_STORAGE_20261119.md)・[移行と復帰](runbooks/KNOWLEDGE_PUBLICATION_STORAGE.md)。
+
 受入済み資料収集とテーマ制作・公開版の分離：[現行補足契約](design/COLLECTION_THEME_PUBLICATION_20261119.md)。
 
 テーマ制作中の非公開化・承認公開版・運営者プレビューの現行実装設計は [THEME_PRIVATE_PUBLICATION_20261117.md](design/THEME_PRIVATE_PUBLICATION_20261117.md)。検証・配置の完了状態は [PLUNODE_PROGRESS.md](PLUNODE_PROGRESS.md) を参照。

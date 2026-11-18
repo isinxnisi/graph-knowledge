@@ -1,3 +1,4 @@
+import {ensureKnowledgePublicationSchema} from "../lib/server/knowledge-publication";
 import {migrateKnowledgeIdentities} from '../lib/server/knowledge-identity-migrate';
 import {captureDuplicates} from '../lib/server/knowledge-duplicates';
 import {reuseDuplicatePlan,type AcceptancePlan} from '../lib/server/knowledge-acceptance';
@@ -5,7 +6,7 @@ import {knowledgeCommandSchema} from '../lib/domain/knowledge-foundation';
 import {randomUUID} from 'node:crypto';
 import {Pool} from 'pg';
 import {beforeAll,afterAll,describe,it,expect} from 'vitest';
-import {createKnowledgeFoundationService,ensureKnowledgeFoundationSchema,knowledgeDigest} from '../lib/server/knowledge-foundation';
+import {createKnowledgeFoundationService,knowledgeDigest} from '../lib/server/knowledge-foundation';
 import {knownSourceDocuments,retainSourceAcquisitions,acquisitionProofSchema} from '../lib/server/knowledge-source-registry';
 import {matchSourceExcerpt} from '../lib/server/knowledge-source-verification';
 import {verifiedSourceDocumentKey} from '../lib/domain/knowledge-source-identity';
@@ -16,7 +17,7 @@ describe.skipIf(!url)('shared proof registry and resumable target inventory',()=
  const proof=matchSourceExcerpt({url:'https://example.org/source',type:'text/plain',body:Buffer.from('A launched B. Other context.')},'A launched B.');
  const command=(id:string)=>({action:'accept-record',requestId:randomUUID(),entities:[{id:id+'-a',content:{name:'A',kind:'person'}},{id:id+'-b',content:{name:'B',kind:'work'}}],sources:[{id:id+'-s',content:{title:'Original source',url:proof.url}}],entityPins:[],sourcePins:[],record:{id,content:{kind:'relation',subjectId:id+'-a',objectId:id+'-b',relation:'launched',assertion:'A launched B.',evidence:[{id:'ev',source:{id:id+'-s',revision:1},locator:'First sentence',excerpt:'A launched B.'}]}},reason:'隔離検証'});
  async function seed(id:string,proofs=[proof]){const cmd=command(id);return f.execute(actor,cmd,{verify:async()=>{},prepare:async()=>{},retain:async(c,result)=>retainSourceAcquisitions(c,{actorId:actor.id,requestId:cmd.requestId,result,proofs})});}
- beforeAll(async()=>{expect((await pool.query('SELECT current_database() AS n')).rows[0].n).toMatch(/^plunode_knowledge75_test_/);await ensureKnowledgeFoundationSchema(pool);await migrateKnowledgeIdentities(pool);const before=(await pool.query('SELECT name,checksum FROM knowledge75.migrations ORDER BY name')).rows;await ensureKnowledgeFoundationSchema(pool);expect((await pool.query('SELECT name,checksum FROM knowledge75.migrations ORDER BY name')).rows).toEqual(before);});afterAll(()=>pool.end());
+ beforeAll(async()=>{expect((await pool.query('SELECT current_database() AS n')).rows[0].n).toMatch(/^plunode_knowledge75_test_/);await ensureKnowledgePublicationSchema(pool);await migrateKnowledgeIdentities(pool);const before=(await pool.query('SELECT name,checksum FROM knowledge75.migrations ORDER BY name')).rows;await ensureKnowledgePublicationSchema(pool);expect((await pool.query('SELECT name,checksum FROM knowledge75.migrations ORDER BY name')).rows).toEqual(before);});afterAll(()=>pool.end());
  it('retains one fixed observation and binding on replay without creating a new record edition',async()=>{
   const cmd=command('proof-replay'),hooks={verify:async()=>{},prepare:async()=>{},retain:async(c:import('pg').PoolClient,result:unknown)=>retainSourceAcquisitions(c,{actorId:actor.id,requestId:cmd.requestId,result,proofs:[proof]})};
   const result=await f.execute(actor,cmd,hooks);expect(await f.execute(actor,cmd,hooks)).toEqual(result);
@@ -59,7 +60,8 @@ describe.skipIf(!url)('shared proof registry and resumable target inventory',()=
   expect(all.find(e=>e.id==='proof-stop-s')?.eligible).toBe(false);expect(new Set(all.map(e=>e.kind+':'+e.id)).size).toBe(all.length);
  });
  it('abandons a changed generation without reporting unseen targets deleted',async()=>{
-  const inventory=createTargetInventory(pool,async()=>{throw Error('Not used')});const first=await inventory.scanPage('common',1);await seed('inventory-new');const second=await inventory.scanPage('common',1);expect(second.id).not.toBe(first.id);expect((await pool.query('SELECT state FROM knowledge75.target_inventory_runs WHERE id=$1',[first.id])).rows[0].state).toBe('stale');
+  await seed('inventory-start');
+  const inventory=createTargetInventory(pool,async()=>{throw Error('Not used')});const first=await inventory.scanPage('common',1);expect(first.state).toBe('scanning');await seed('inventory-new');const second=await inventory.scanPage('common',1);expect(second.id).not.toBe(first.id);expect((await pool.query('SELECT state FROM knowledge75.target_inventory_runs WHERE id=$1',[first.id])).rows[0].state).toBe('stale');
  });
  it('resumes the legacy origin, includes withdrawn records, and never treats a partial page as the whole KG',async()=>{
   const items=[{kind:'entity' as const,id:'legacy-a',revision:'kg-1',statusRevision:'kg-1',digest:knowledgeDigest({name:'A'}),visibility:'public',eligible:true},{kind:'record' as const,id:'legacy-r',revision:'kg-1',statusRevision:'kg-1',digest:knowledgeDigest({fact:'A'}),visibility:'withdrawn',eligible:false},{kind:'source' as const,id:'legacy-s',revision:'kg-1',statusRevision:'kg-1',digest:knowledgeDigest({url:proof.url}),visibility:'public',eligible:true}];

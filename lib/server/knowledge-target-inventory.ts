@@ -11,10 +11,23 @@ export type LegacyInventoryReader=(input:{revision?:string;after:InventoryCursor
 const cursorSchema=z.strictObject({kind:z.enum(['entity','record','source','theme','mapping']),id:z.string().min(1).max(240)});
 const entrySchema=z.strictObject({kind:cursorSchema.shape.kind,id:cursorSchema.shape.id,revision:z.string().min(1).max(200),statusRevision:z.string().min(1).max(200),digest:z.string().regex(/^[a-f0-9]{64}$/),visibility:z.string().max(50),eligible:z.boolean()});
 const key=(v:InventoryCursor)=>JSON.stringify([v.kind,v.id]);
+async function completed(c:PoolClient,origin:string,revision:string){
+ return (await c.query<{id:string}>(`SELECT id FROM knowledge75.target_inventory_runs
+  WHERE origin=$1 AND revision=$2 AND state='complete' AND purged_at IS NULL
+  ORDER BY completed_at DESC,id LIMIT 1`,[origin,revision])).rows[0];
+}
+async function discardEntries(c:PoolClient,run:string){
+ return (await c.query(`DELETE FROM knowledge75.target_inventory_entries WHERE ctid IN
+  (SELECT ctid FROM knowledge75.target_inventory_entries WHERE run_id=$1 LIMIT 10000)`,[run])).rowCount??0;
+}
+async function markStale(c:PoolClient,run:string){
+ await c.query("UPDATE knowledge75.target_inventory_runs SET state='stale' WHERE id=$1",[run]);
+ await discardEntries(c,run);
+}
 const after=(a:InventoryCursor,b:InventoryCursor)=>Buffer.compare(Buffer.from(a.kind),Buffer.from(b.kind))>0||a.kind===b.kind&&Buffer.compare(Buffer.from(a.id),Buffer.from(b.id))>0;
 /** Internal inventory, not a public search index or publication authorization.
  * Each origin has its own generation; current gates must be checked at use. */
-export function createTargetInventory(pool:Pool,legacy:LegacyInventoryReader){
+export function createTargetInventory(pool:Pool,legacy:LegacyInventoryReader,readLegacyRevision?:()=>Promise<string>){
  async function tx<T>(run:(c:PoolClient)=>Promise<T>){const c=await pool.connect();try{await c.query('BEGIN');await assertAcquisitionSchema(c);const v=await run(c);await c.query('COMMIT');return v;}catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}}
  return {
   async scanPage(origin:'common'|'public-kg',limit=200){
@@ -24,7 +37,16 @@ export function createTargetInventory(pool:Pool,legacy:LegacyInventoryReader){
     let run=(await c.query("SELECT * FROM knowledge75.target_inventory_runs WHERE origin=$1 AND state='scanning' FOR UPDATE",[origin])).rows[0];
     if(origin==='common')await c.query("SELECT pg_advisory_xact_lock_shared(hashtextextended('knowledge-record-writes-v1',0))");
     const commonRevision=origin==='common'?(await c.query('SELECT coalesce(max(sequence),0)::text AS revision FROM knowledge75.changes')).rows[0].revision:undefined;
-    if(run&&origin==='common'&&run.revision!==commonRevision){await c.query("UPDATE knowledge75.target_inventory_runs SET state='stale' WHERE id=$1",[run.id]);run=undefined;}
+    if(run&&origin==='common'&&run.revision!==commonRevision){await markStale(c,run.id);run=undefined;}
+    if(!run&&commonRevision!==undefined){
+     const reuse=await completed(c,origin,commonRevision);
+     if(reuse)return {id:reuse.id,state:'complete' as const,count:0};
+    }
+    const legacyRevision=!run&&origin==='public-kg'?await readLegacyRevision?.():undefined;
+    if(legacyRevision!==undefined){
+     const reuse=await completed(c,origin,legacyRevision);
+     if(reuse)return {id:reuse.id,state:'complete' as const,count:0};
+    }
     const position=run?.cursor?cursorSchema.parse(run.cursor):null;
     let page:LegacyInventoryPage;
     if(origin==='common'){
@@ -32,13 +54,21 @@ export function createTargetInventory(pool:Pool,legacy:LegacyInventoryReader){
      const items=rows.slice(0,limit).map(r=>entrySchema.parse({kind:r.kind,id:r.id,revision:String(r.current_revision),statusRevision:String(r.status_revision),digest:knowledgeDigest(r.content),visibility:r.visibility,eligible:r.visibility==='public'&&r.published}));
      page={revision:commonRevision!,items,next:rows.length>limit?{kind:items.at(-1)!.kind,id:items.at(-1)!.id}:null};
     }else{
-     try{page=await legacy({revision:run?.revision,after:position,limit});}catch(e){if(e&&typeof e==='object'&&'code'in e&&e.code==='DATASET_CHANGED'&&run){await c.query("UPDATE knowledge75.target_inventory_runs SET state='stale' WHERE id=$1",[run.id]);return {id:run.id,state:'stale' as const,count:0};}throw e;}
+     try{page=await legacy({revision:run?.revision??legacyRevision,after:position,limit});}catch(e){if(e&&typeof e==='object'&&'code'in e&&e.code==='DATASET_CHANGED'&&run){await markStale(c,run.id);return {id:run.id,state:'stale' as const,count:0};}throw e;}
     }
     z.string().min(1).max(200).parse(page.revision);page.items.forEach(e=>entrySchema.parse(e));
     if(page.items.length>limit||new Set(page.items.map(key)).size!==page.items.length||page.items.some((v,i)=>position&&!after(v,position)||i>0&&!after(v,page.items[i-1]))||page.next&&(page.items.length===0||key(page.next)!==key(page.items.at(-1)!)))throw new KnowledgeError('対象一覧の順序・継続位置が不正です',503,'INVENTORY_PAGE_INVALID');
     if(run&&run.revision!==page.revision)throw new KnowledgeError('対象一覧の原本版が変わりました',409,'INVENTORY_CHANGED');
-    if(!run)run=(await c.query("INSERT INTO knowledge75.target_inventory_runs(id,origin,revision,state) VALUES($1,$2,$3,'scanning') RETURNING *",[randomUUID(),origin,page.revision])).rows[0];
-    for(const e of page.items)await c.query('INSERT INTO knowledge75.target_inventory_entries(run_id,kind,id,revision,status_revision,digest,visibility,eligible) VALUES($1,$2,$3,$4,$5,$6,$7,$8)',[run.id,e.kind,e.id,e.revision,e.statusRevision,e.digest,e.visibility,e.eligible]);
+    if(!run){
+     if(origin==='public-kg'&&legacyRevision===undefined){
+      const reuse=await completed(c,origin,page.revision);
+      if(reuse)return {id:reuse.id,state:'complete' as const,count:0};
+     }
+     run=(await c.query("INSERT INTO knowledge75.target_inventory_runs(id,origin,revision,state) VALUES($1,$2,$3,'scanning') RETURNING *",[randomUUID(),origin,page.revision])).rows[0];
+    }
+    if(page.items.length)await c.query(`INSERT INTO knowledge75.target_inventory_entries(run_id,kind,id,revision,status_revision,digest,visibility,eligible)
+     SELECT $1,kind,id,revision,"statusRevision",digest,visibility,eligible FROM jsonb_to_recordset($2::jsonb)
+       AS e(kind text,id text,revision text,"statusRevision" text,digest text,visibility text,eligible boolean)`,[run.id,JSON.stringify(page.items)]);
     const state=page.next?'scanning':'complete';
     await c.query("UPDATE knowledge75.target_inventory_runs SET state=$2,cursor=$3,completed_at=CASE WHEN $2='complete' THEN clock_timestamp() ELSE NULL END WHERE id=$1",[run.id,state,page.next]);
     return {id:String(run.id),state:state as 'scanning'|'complete',count:page.items.length};
@@ -47,10 +77,29 @@ export function createTargetInventory(pool:Pool,legacy:LegacyInventoryReader){
   async page(runId:string,afterCursor:InventoryCursor|null=null,limit=200){
    z.uuidv4().parse(runId);if(afterCursor)cursorSchema.parse(afterCursor);z.number().int().min(1).max(500).parse(limit);
    return tx(async c=>{
-    const run=(await c.query("SELECT id,origin,revision,state,created_at,completed_at FROM knowledge75.target_inventory_runs WHERE id=$1",[runId])).rows[0];
+    const run=(await c.query("SELECT id,origin,revision,state,created_at,completed_at FROM knowledge75.target_inventory_runs WHERE id=$1 AND purged_at IS NULL FOR SHARE",[runId])).rows[0];
     if(!run||run.state!=='complete')throw new KnowledgeError('全件列挙が完了した台帳を指定してください',409,'INVENTORY_INCOMPLETE');
     const rows=(await c.query(`SELECT kind,id,revision,status_revision AS "statusRevision",digest,visibility,eligible FROM knowledge75.target_inventory_entries WHERE run_id=$1 AND ($2::text IS NULL OR (kind COLLATE "C",id COLLATE "C")>($2,$3)) ORDER BY kind COLLATE "C",id COLLATE "C" LIMIT $4`,[runId,afterCursor?.kind??null,afterCursor?.id??null,limit+1])).rows;
     const items=rows.slice(0,limit).map(r=>entrySchema.parse(r));return {run,items,next:rows.length>limit?{kind:items.at(-1)!.kind,id:items.at(-1)!.id}:null};
+   });
+  },
+  async prune(origin:'common'|'public-kg',retentionDays:number){
+   z.enum(['common','public-kg']).parse(origin);z.number().int().min(1).max(365).parse(retentionDays);
+   return tx(async c=>{
+    const locked=(await c.query('SELECT pg_try_advisory_xact_lock(hashtextextended($1,0)) AS held',['organization-patrol:'+origin])).rows[0].held;
+    if(!locked)return null;
+    await c.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['target-inventory:'+origin]);
+    const run=(await c.query<{id:string}>(`SELECT r.id FROM knowledge75.target_inventory_runs r
+      WHERE r.origin=$1 AND r.state IN ('stale','complete')
+       AND coalesce(r.completed_at,r.created_at)<clock_timestamp()-$2*interval '1 day'
+       AND (r.purged_at IS NULL OR EXISTS(SELECT 1 FROM knowledge75.target_inventory_entries e WHERE e.run_id=r.id))
+       AND NOT EXISTS(SELECT 1 FROM knowledge75.patrol_cycles c WHERE r.id IN (c.inventory_run,c.completed_run))
+       AND NOT EXISTS(SELECT 1 FROM knowledge75.patrol_targets p WHERE p.origin=r.origin AND p.inventory_run=r.id AND p.present)
+      ORDER BY r.created_at,r.id LIMIT 1 FOR UPDATE`,[origin,retentionDays])).rows[0];
+    if(!run)return null;
+    // Keep the run header and its audit references when dropping bulky entries.
+    await c.query('UPDATE knowledge75.target_inventory_runs SET purged_at=coalesce(purged_at,clock_timestamp()) WHERE id=$1',[run.id]);
+    return {id:run.id,removed:await discardEntries(c,run.id)};
    });
   }
  };

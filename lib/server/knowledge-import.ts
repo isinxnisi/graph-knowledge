@@ -229,7 +229,7 @@ export function createKnowledgeImports(pool:Pool,knowledge:Pool,principal:(id:st
   await ensure();
   for(const row of (await pool.query("SELECT * FROM knowledge_import.items WHERE state='applied' LIMIT 20")).rows){
    const v=row.result as {id:string;revision:number},translation=row.decision?.plan.command.action==='accept-translation';
-   const visible=translation||!!(await knowledge.query("SELECT 1 FROM knowledge75.publication_control c JOIN knowledge75.publication_records r ON r.generation=c.active_generation JOIN knowledge75.objects o ON o.kind='record' AND o.id=r.id WHERE c.singleton AND r.id=$1 AND r.revision>=$2 AND o.visibility='public'",[v.id,v.revision])).rowCount;
+   const visible=translation||!!(await knowledge.query("SELECT 1 FROM knowledge75.publication_control c JOIN knowledge75.publication_read_records r ON r.generation=c.active_generation JOIN knowledge75.objects o ON o.kind='record' AND o.id=r.id WHERE c.singleton AND r.id=$1 AND r.revision>=$2 AND o.visibility='public'",[v.id,v.revision])).rowCount;
    if(visible)await pool.query("UPDATE knowledge_import.items SET state='published',reason='知識へ反映しました。' WHERE id=$1 AND state='applied'",[row.id]);
   }
   const l=await lease();if(!l)return false;let pendingAttempt:string|null=null,dispatched=false;

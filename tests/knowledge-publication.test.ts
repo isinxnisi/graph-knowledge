@@ -49,6 +49,8 @@ describe.skipIf(!url||!password)("publication PostgreSQL indexes and real Neo4j 
     await seed('usage-left-');await seed('usage-right-');const g=await publish();
     const themeId='usage-related-theme';
     await run('create-theme',{id:themeId,title:'同じ対象を含むテーマ',recordPins:[{id:'usage-right-r0',revision:1}],initialView:'graph'});
+    await pool.query("INSERT INTO knowledge75.theme_releases(theme_id,revision) VALUES($1,1)",[themeId]);
+    await pool.query("UPDATE knowledge75.theme_publications SET published_revision=1 WHERE theme_id=$1",[themeId]);
     const identities=createKnowledgeIdentity(pool),cmd={requestId:randomUUID(),left:{id:'usage-left-b',revision:1},right:{id:'usage-right-a',revision:1},expectedRevision:0,state:'same',reason:'同一対象の近傍と経路の隔離検証',reference:'https://example.com/proof',locator:'本人の識別'};
     await identities.act(operator.id,cmd);
     const page=await publication.neighbors({generation:g,entityId:'usage-left-b',limit:1});expect(page.hasMore).toBe(true);
@@ -95,6 +97,57 @@ describe.skipIf(!url||!password)("publication PostgreSQL indexes and real Neo4j 
   it("leaves changes committed after the snapshot pending for the next normal projection",async()=>{await seed("outbox-");let changed=false;const racing=createKnowledgePublicationService(pool,driver,{afterStage:async()=>{if(changed)return;changed=true;await seed("outbox-later-");}});const result=await racing.publishPending();expect(result.pending).toBe(true);expect((await publication.search({generation:result.active!.id,q:"outbox-later-"})).records).toEqual([]);await publish();expect((await publication.search({q:"outbox-later-"})).records).toHaveLength(3);expect((await publication.status()).pending).toBe(false);});
   it("acknowledges committed outbox IDs rather than skipping a late lower sequence",async()=>{await seed("late-");await publish();const old=await foundation.get(operator,"record","late-r0");const c=await pool.connect();try{await c.query("BEGIN");await c.query("INSERT INTO knowledge75.revisions(kind,id,revision,content,reason,actor_id,actor_kind) VALUES('record',$1,2,$2,'late commit','test','operator')",[old.id,JSON.stringify({...old.content,assertion:"遅れてcommitした内容"})]);await c.query("UPDATE knowledge75.objects SET current_revision=2,status_revision=status_revision+1 WHERE kind='record' AND id=$1",[old.id]);await c.query("INSERT INTO knowledge75.published_revisions(kind,id,revision) VALUES('record',$1,2)",[old.id]);const lower=String((await c.query("INSERT INTO knowledge75.changes(kind,id,content_revision,status_revision,operation,actor_id,request_id) VALUES('record',$1,2,2,'correct','test',$2) RETURNING sequence",[old.id,randomUUID()])).rows[0].sequence);await seed("late-committed-first-");const middle=await publish();const before=await publication.status();expect(BigInt(before.latestSequence)).toBeGreaterThan(BigInt(lower));expect(before.pending).toBe(false);await c.query("COMMIT");const after=await publication.status();expect(after.latestSequence).toBe(before.latestSequence);expect(after.changeToken).not.toBe(before.changeToken);expect(after.pending).toBe(true);expect((await publication.detail({generation:middle,recordId:old.id})).record.record.revision).toBe(1);const final=await publish();expect((await publication.detail({generation:final,recordId:old.id})).record.record.content.assertion).toBe("遅れてcommitした内容");expect((await publication.status()).pending).toBe(false);}finally{await c.query("ROLLBACK");c.release();}});
   it("serializes simultaneous publishers and leaves no duplicate generation rows",async()=>{await seed("parallel-");let entered!:()=>void;let resume!:()=>void;const wait=new Promise<void>(r=>{entered=r;});const held=new Promise<void>(r=>{resume=r;});const first=createKnowledgePublicationService(pool,driver,{afterStage:async()=>{entered();await held;}});const publishing=first.publishPending();await wait;expect((await publication.publishPending()).state).toBe("busy");resume();await publishing;expect((await publication.publishPending()).state).toBe("unchanged");});
+  it("acknowledges unrelated changes and shares unchanged search and Graph projections",async()=>{
+    await seed("compact-");const first=await publish();const before=await publication.status();
+    await run("create-theme",{id:"compact-theme",title:"投影と独立したテーマ",recordPins:[{id:"compact-r0",revision:1}],initialView:"graph"});
+    const unchanged=await publication.publishPending();
+    expect(unchanged).toMatchObject({state:"unchanged",active:{id:first},pending:false});
+    expect(unchanged.changeToken).not.toBe(before.changeToken);
+    const old=await publication.search({generation:first,q:"compact-",limit:1});
+    const r=await foundation.get(operator,"record","compact-r1");
+    await run("correct",{kind:"record",id:r.id,expectedRevision:1,content:{...r.content,assertion:"compact-訂正後"}});
+    const second=await publish();expect(second).not.toBe(first);
+    const rows=(await pool.query("SELECT id,count(DISTINCT projection)::int AS n FROM knowledge75.publication_record_members WHERE generation=ANY($1) AND id LIKE 'compact-%' GROUP BY id ORDER BY id",[[first,second]])).rows;
+    expect(rows).toEqual([{id:"compact-r0",n:1},{id:"compact-r1",n:2},{id:"compact-r2",n:1}]);
+    expect((await pool.query("SELECT graph_generation FROM knowledge75.publication_generations WHERE id=$1",[second])).rows[0].graph_generation).toBe(first);
+    expect((await publication.search({q:"compact-",limit:1,cursor:old.nextCursor!})).records[0].record.revision).toBe(1);
+    expect((await publication.neighbors({generation:second,entityId:"compact-b"})).records.find(r=>r.record.id==="compact-r1")?.record.revision).toBe(2);
+  });
+  it("expires only retired data, preserves first-public context, and protects in-flight and shared Graph reads",async()=>{
+    await seed("retention-");const first=await publish();
+    const initial=await publication.recordVersion("retention-r0",1);
+    const cursor=(await publication.search({generation:first,q:"retention-",limit:1})).nextCursor!;
+    const record=await foundation.get(operator,"record","retention-r0");
+    await run("correct",{kind:"record",id:record.id,expectedRevision:1,content:{...record.content,assertion:"retention-訂正後"}});
+    const current=await publish();
+    // Emulate a pre-012 generation with the older fixed Entity/Source context.
+    const legacy="k75-"+"0011".repeat(8);
+    await pool.query("INSERT INTO knowledge75.publication_generations(id,state,source_sequence,digest,record_count,published_at,retired_at) VALUES($1,'ready',0,'legacy',1,clock_timestamp()-interval '4 days',clock_timestamp()-interval '4 days')",[legacy]);
+    await pool.query("INSERT INTO knowledge75.publication_records SELECT $1,id,revision,body,dependencies,search_text,subject_id,object_id,relation_label,polarity,concept_id,predicate,role_id,isbn13,organization_position_id,event_role_id,event_id,event_from,event_to FROM knowledge75.publication_read_records WHERE generation=$2 AND id='retention-r0'",[legacy,first]);
+    await pool.query("UPDATE knowledge75.publication_generations SET retired_at=clock_timestamp()-interval '4 days' WHERE id IN ($1,$2)",[first,current]);
+    const guard=await pool.connect();
+    try{
+      await guard.query("SELECT pg_advisory_lock_shared(hashtextextended($1,0))",["knowledge-publication-graph:"+legacy]);
+      await expect(publication.pruneRetired(72)).resolves.toBeNull();
+      expect((await publication.search({q:"retention-",limit:1,cursor})).generation).toBe(first);
+    }finally{await guard.query("SELECT pg_advisory_unlock_shared(hashtextextended($1,0))",["knowledge-publication-graph:"+legacy]);guard.release();}
+    const activeReader=await pool.connect();
+    try{
+      await activeReader.query("SELECT pg_advisory_lock_shared(hashtextextended($1,0))",["knowledge-publication-graph:"+current]);
+      for(let i=0;i<2;i++)expect((await publication.pruneRetired(72))?.complete).toBe(true);
+    }finally{await activeReader.query("SELECT pg_advisory_unlock_shared(hashtextextended($1,0))",["knowledge-publication-graph:"+current]);activeReader.release();}
+    await expect(publication.search({q:"retention-",limit:1,cursor})).rejects.toMatchObject({status:410,code:"GENERATION_EXPIRED"});
+    expect((await publication.status()).active?.id).toBe(current);
+    expect((await publication.recordVersion("retention-r0",1)).record).toEqual(initial.record);
+    const preservedPins=[[{kind:"record",id:"retention-r0",revision:1},{kind:"source",id:"retention-s",revision:1}]];
+    expect(await publication.capsulesReadable(preservedPins)).toEqual([true]);
+    expect((await pool.query("SELECT generation FROM knowledge75.publication_record_context WHERE id='retention-r0' AND revision=1")).rows[0].generation).toBe(legacy);
+    expect((await pool.query("SELECT count(*)::int AS n FROM knowledge75.publication_records WHERE generation=$1",[legacy])).rows[0].n).toBe(0);
+    expect((await publication.neighbors({generation:current,entityId:"retention-a"})).records).toHaveLength(2);
+    await hide("source","retention-s");
+    await expect(publication.recordVersion("retention-r0",1)).rejects.toMatchObject({status:404});
+    expect(await publication.capsulesReadable(preservedPins)).toEqual([false]);
+  });
   it("does not report a missing Neo4j generation as a graph with no relationships",async()=>{await seed("missing-graph-");const generation=await publish();const session=driver.session({database:"neo4j"});try{await session.run("MATCH (g:K75U2Generation {id:$generation}) DELETE g",{generation});}finally{await session.close();}await expect(publication.neighbors({generation,entityId:"missing-graph-a"})).rejects.toMatchObject({code:"GRAPH_GENERATION_UNAVAILABLE"});await expect(publication.paths({generation,fromEntityId:"missing-graph-a",toEntityId:"missing-graph-c"})).rejects.toMatchObject({code:"GRAPH_GENERATION_UNAVAILABLE"});expect((await publication.search({generation,q:"missing-graph-"})).records).toHaveLength(3);const rebuilt=await publication.publishPending({force:true});expect(rebuilt.active!.id).not.toBe(generation);expect((await publication.neighbors({generation:rebuilt.active!.id,entityId:"missing-graph-a"})).records).toHaveLength(2);await expect(publication.neighbors({generation,entityId:"missing-graph-a"})).rejects.toMatchObject({code:"GRAPH_GENERATION_UNAVAILABLE"});});
   it("does not show an abandoned old failure as the failure of later pending changes",async()=>{await seed("old-failure-");const broken=createKnowledgePublicationService(pool,driver,{afterStage:async()=>{throw new Error("old attempt");}});await expect(broken.publishPending()).rejects.toThrow("old attempt");expect((await publication.status()).lastFailure).not.toBeNull();await seed("after-failure-");await publish();expect((await publication.status()).lastFailure).toBeNull();await seed("new-pending-");const status=await publication.status();expect(status.pending).toBe(true);expect(status.lastFailure).toBeNull();await publish();});
   it("reapplies 002 without changing source rows or the active generation",async()=>{const before=await publication.status();expect((await ensureKnowledgePublicationSchema(pool)).applied).toBe(false);expect(await publication.status()).toEqual(before);});

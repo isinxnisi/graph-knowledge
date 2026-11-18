@@ -18,7 +18,13 @@ export async function readKnowledgeRecordVersion(c:PoolClient,raw:unknown){
  if(row.content.aboutTheme&&!(await c.query("SELECT 1 FROM knowledge75.objects WHERE kind='theme' AND id=$1 AND visibility='public'",[row.content.aboutTheme])).rowCount)throw new KnowledgeError('この内容版は現在閲覧できません',404,'NOT_FOUND');
  // A ready generation can have been activated before being superseded. Staged
  // or failed unpublished captures are never used as historical public content.
- const published=(await c.query("SELECT r.body FROM knowledge75.publication_records r JOIN knowledge75.publication_generations g ON g.id=r.generation WHERE r.id=$1 AND r.revision=$2 AND g.published_at IS NOT NULL ORDER BY g.published_at,g.id LIMIT 1",[q.id,q.revision])).rows[0]?.body as KnowledgePublishedRecord|undefined;
+ const published=(await c.query(`SELECT body FROM (
+   SELECT body,published_at,generation FROM knowledge75.publication_record_context WHERE id=$1 AND revision=$2
+   UNION ALL
+   SELECT r.body,g.published_at,g.id FROM knowledge75.publication_records r
+   JOIN knowledge75.publication_generations g ON g.id=r.generation
+   WHERE r.id=$1 AND r.revision=$2 AND g.published_at IS NOT NULL
+ ) first_context ORDER BY published_at,generation LIMIT 1`,[q.id,q.revision])).rows[0]?.body as KnowledgePublishedRecord|undefined;
  if(published){for(const e of published.entities)await load('entity',e);for(const s of published.sources)await load('source',s);return {record:published,currentRevision:Number(row.current_revision),contextBasis:'published-generation' as const};}
  const record={id:row.id,revision:Number(row.revision),content:knowledgeRecordContentSchema.parse(row.content),createdAt:new Date(row.created_at).toISOString(),reason:row.reason};
  const op=(await c.query("SELECT op.input FROM knowledge75.changes ch JOIN knowledge75.operations op ON op.actor_id=ch.actor_id AND op.request_id=ch.request_id WHERE ch.kind='record' AND ch.id=$1 AND ch.content_revision=$2 AND ch.operation IN('accept-record','create-bundle','correct') ORDER BY ch.sequence LIMIT 1",[q.id,q.revision])).rows[0]?.input;

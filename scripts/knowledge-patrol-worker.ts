@@ -5,8 +5,9 @@ import {pathToFileURL} from 'node:url';
 import {assertKnowledgeWorker,knowledgeDeployment,knowledgePublishingEnabled,reviewMemberScope} from '../lib/server/knowledge-deployment';
 import {knowledgeReadConfiguration} from '../lib/server/knowledge-read-runtime';
 import {createKnowledgePatrol} from '../lib/server/knowledge-patrol';
+import {ensureKnowledgePublicationSchema} from '../lib/server/knowledge-publication';
 import {migrateKnowledgePatrol} from '../lib/server/knowledge-patrol-schema';
-import {readLegacyTargetInventory} from '../lib/server/knowledge-target-inventory-legacy';
+import {readLegacyTargetInventory,readLegacyInventoryRevision} from '../lib/server/knowledge-target-inventory-legacy';
 import {migrateKnowledgeOrganization} from '../lib/server/knowledge-organization-schema';
 import {readOrganizationStatus} from '../lib/server/knowledge-organization-status';
 import {createOrganizationMaterialReader} from '../lib/server/knowledge-organization-material';
@@ -42,10 +43,15 @@ export async function main(args=process.argv.slice(2)){
  process.once('SIGTERM',halt);process.once('SIGINT',halt);
  try{
   if(action==='migrate'){
+   await ensureKnowledgePublicationSchema(pool);
    const patrol=await migrateKnowledgePatrol(pool);
    console.log(JSON.stringify({patrol,...(organizing?{organization:await migrateKnowledgeOrganization(pool)}:{})}));return;
   }
-  const patrol=createKnowledgePatrol(pool,readLegacyTargetInventory);
+  const patrol=createKnowledgePatrol(pool,readLegacyTargetInventory,readLegacyInventoryRevision);
+  const retention=process.env.KNOWLEDGE_INVENTORY_RETENTION_DAYS;
+  const retentionDays=retention===undefined?null:Number(retention);
+  if(retentionDays!==null&&(!Number.isInteger(retentionDays)||retentionDays<1||retentionDays>365))throw Error('KNOWLEDGE_INVENTORY_RETENTION_DAYS must be an integer between 1 and 365');
+  let nextCleanup=0;
   if(action==='status'){console.log(JSON.stringify({...await patrol.status(),...(organizing?{organization:await readOrganizationStatus(pool)}:{})}));return;}
   const reader=createOrganizationMaterialReader(pool),planner=organizing?createOrganizationCandidates(pool,reader,organizeAllowed):null;
   let runOrganization:(()=>Promise<boolean>)|undefined;
@@ -79,6 +85,14 @@ export async function main(args=process.argv.slice(2)){
      console.error(JSON.stringify({event:'knowledge-patrol',origin,state:'retry',code:'PATROL_RETRY'}));
      if(action==='once')process.exitCode=1;
     }
+   }
+   if(retentionDays!==null&&action==='run'&&!stop&&Date.now()>=nextCleanup){
+    nextCleanup=Date.now()+60_000;
+    for(const origin of ['common','public-kg'] as const){try{
+     allowed();
+     const result=await patrol.prune(origin,retentionDays);
+     if(result)console.log(JSON.stringify({event:'knowledge-inventory-retention',origin,...result}));
+    }catch{console.error(JSON.stringify({event:'knowledge-inventory-retention-retry',origin}));}}
    }
    if(planner&&!stop){try{
     const indexed=await planner.indexPage(),planned=await planner.planPage();

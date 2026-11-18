@@ -177,6 +177,7 @@ describe('authenticated immutable external knowledge packages',()=>{
   const sql=await readFile('db/member/030-knowledge-import.sql','utf8');expect(ledger.find(v=>v.name==='030-knowledge-import.sql')?.checksum).toBe(sha(sql));
  });
  it('creates a new named entity and appends a pinned theme without requiring a human member',async()=>{
+  await knowledge.query("INSERT INTO knowledge75.theme_releases(theme_id,revision) VALUES('theme',1); UPDATE knowledge75.theme_publications SET published_revision=1 WHERE theme_id='theme'");
   const v=payload();const id=await send({...v,entityPins:[],entities:[{id:'new',content:{name:'New subject',kind:'person'}}],items:[{...item(),operation:'create-entity',themes:[{id:'theme',revision:1}],record:{kind:'note',subjectId:'new',assertion:'New subjectという名前が記録された。',evidence:item().record.evidence}}]});
   await core.processNext(cfg,dispatch);expect((await status(id)).items[0].state).toBe('applied');
   const theme=await foundation.get({kind:'reader',id:'fixture'},'theme','theme');expect(theme.revision).toBe(2);expect(theme.content.recordPins).toHaveLength(2);expect((await status(id)).items[0].result?.themes).toEqual([{id:'theme',revision:2}]);

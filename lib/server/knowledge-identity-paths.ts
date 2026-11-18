@@ -7,13 +7,13 @@ export async function readIdentityPaths(c:PoolClient,input:{generation:string;fr
  await c.query('SET LOCAL jit=off');
  const rows=(await c.query(`WITH RECURSIVE
  identity_edges AS MATERIALIZED (${activeIdentityEdges}
-  AND EXISTS(SELECT 1 FROM knowledge75.publication_entities x WHERE x.generation=$1 AND x.id=r.left_id AND x.revision=r.left_revision)
-  AND EXISTS(SELECT 1 FROM knowledge75.publication_entities x WHERE x.generation=$1 AND x.id=r.right_id AND x.revision=r.right_revision)),
+  AND EXISTS(SELECT 1 FROM knowledge75.publication_read_entities x WHERE x.generation=$1 AND x.id=r.left_id AND x.revision=r.left_revision)
+  AND EXISTS(SELECT 1 FROM knowledge75.publication_read_entities x WHERE x.generation=$1 AND x.id=r.right_id AND x.revision=r.right_revision)),
  members(seed,id) AS (
-  SELECT e.id,e.id FROM knowledge75.publication_entities e JOIN knowledge75.objects o ON o.kind='entity' AND o.id=e.id AND o.visibility='public' WHERE e.generation=$1
+  SELECT e.id,e.id FROM knowledge75.publication_read_entities e JOIN knowledge75.objects o ON o.kind='entity' AND o.id=e.id AND o.visibility='public' WHERE e.generation=$1
   UNION SELECT m.seed,CASE WHEN i.left_id=m.id THEN i.right_id ELSE i.left_id END FROM members m JOIN identity_edges i ON i.left_id=m.id OR i.right_id=m.id),
  canonical AS MATERIALIZED (SELECT seed AS id,min(id) AS canonical FROM members GROUP BY seed),
- records AS MATERIALIZED (SELECT r.id,r.subject_id,r.object_id,a.canonical AS a,b.canonical AS b FROM knowledge75.publication_records r
+ records AS MATERIALIZED (SELECT r.id,r.subject_id,r.object_id,a.canonical AS a,b.canonical AS b FROM knowledge75.publication_read_records r
   JOIN canonical a ON a.id=r.subject_id JOIN canonical b ON b.id=r.object_id
   WHERE r.generation=$1 AND r.body#>>'{record,content,kind}'='relation' AND ${input.readableSql}),
  arcs AS (SELECT id,a AS from_id,b AS to_id,subject_id AS source_id,object_id AS target_id FROM records UNION ALL SELECT id,b,a,object_id,subject_id FROM records),

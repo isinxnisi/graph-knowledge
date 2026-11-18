@@ -1,7 +1,8 @@
+import {ensureKnowledgePublicationSchema} from "../lib/server/knowledge-publication";
 import {randomUUID} from 'node:crypto';
 import {Pool} from 'pg';
 import {beforeAll,afterAll,beforeEach,describe,it,expect} from 'vitest';
-import {ensureKnowledgeFoundationSchema,createKnowledgeFoundationService,knowledgeDigest} from '../lib/server/knowledge-foundation';
+import {createKnowledgeFoundationService,knowledgeDigest} from '../lib/server/knowledge-foundation';
 import {migrateKnowledgePatrol} from '../lib/server/knowledge-patrol-schema';
 import {createKnowledgePatrol} from '../lib/server/knowledge-patrol';
 import type {InventoryEntry,LegacyInventoryReader} from '../lib/server/knowledge-target-inventory';
@@ -32,7 +33,7 @@ describe.skipIf(!url)('autonomous metadata patrol and durable work inputs',()=>{
   (SELECT count(*)::int FROM knowledge75.patrol_tasks WHERE state='superseded') AS superseded`)).rows[0];}
  beforeAll(async()=>{
   expect((await pool.query('SELECT current_database() AS name')).rows[0].name).toMatch(/^plunode_knowledge75_test_/);
-  await ensureKnowledgeFoundationSchema(pool);
+  await ensureKnowledgePublicationSchema(pool);
   expect((await migrateKnowledgePatrol(pool)).applied).toBe(true);
   const ledger=(await pool.query('SELECT name,checksum FROM knowledge75.migrations ORDER BY name')).rows;
   expect((await migrateKnowledgePatrol(pool)).applied).toBe(false);
@@ -60,10 +61,15 @@ describe.skipIf(!url)('autonomous metadata patrol and durable work inputs',()=>{
   expect((await pool.query('SELECT kind,id,revision,content FROM knowledge75.revisions ORDER BY kind,id,revision')).rows).toEqual(original);
  });
  it('does not create another task on unchanged periodic scans or concurrent ticks',async()=>{
-  await drain('public-kg');const before=await counts();await refresh();
+  await drain('public-kg');const before=await counts();
+  const runs=await pool.query('SELECT id FROM knowledge75.target_inventory_runs');
+  const observation=await pool.query('SELECT checked_at FROM knowledge75.patrol_targets ORDER BY id');
+  await refresh();
   await Promise.all(Array.from({length:5},()=>createKnowledgePatrol(pool,reader).tick('public-kg',2)));
   await drain('public-kg',2);
   expect(await counts()).toEqual(before);
+  expect((await pool.query('SELECT id FROM knowledge75.target_inventory_runs')).rows).toEqual(runs.rows);
+  expect((await pool.query('SELECT checked_at FROM knowledge75.patrol_targets ORDER BY id')).rows).toEqual(observation.rows);
   expect((await pool.query('SELECT max(generation)::int AS n FROM knowledge75.patrol_targets')).rows[0].n).toBe(1);
  });
  it('follows common content/status changes without waiting for the next periodic scan',async()=>{
@@ -107,11 +113,22 @@ describe.skipIf(!url)('autonomous metadata patrol and durable work inputs',()=>{
   expect((await counts()).pending).toBe(16);
  });
  it('restarts a changing legacy inventory without losing prior coverage',async()=>{
-  await drain('public-kg');await refresh();await createKnowledgePatrol(pool,reader).tick('public-kg',1);
-  release='kg-2';entries.push(make('legacy-99'));
+  await drain('public-kg');release='kg-2';await refresh();await createKnowledgePatrol(pool,reader).tick('public-kg',1);
+  release='kg-3';entries.push(make('legacy-99'));
   await drain('public-kg',1);
   expect((await createKnowledgePatrol(pool,reader).status()).origins[0]).toMatchObject({scanned:18,present:18,pending:17});
   expect((await pool.query("SELECT count(*)::int AS n FROM knowledge75.target_inventory_runs WHERE state='stale'")).rows[0].n).toBe(1);
+  expect((await pool.query("SELECT count(*)::int AS n FROM knowledge75.target_inventory_runs r JOIN knowledge75.target_inventory_entries e ON e.run_id=r.id WHERE r.state='stale'")).rows[0].n).toBe(0);
+ });
+ it('prunes entries but preserves live checkpoints, absence audit and the current inventory',async()=>{
+  await drain('public-kg');const patrol=createKnowledgePatrol(pool,reader);
+  const previous=(await pool.query('SELECT completed_run FROM knowledge75.patrol_cycles')).rows[0].completed_run;
+  await pool.query("UPDATE knowledge75.target_inventory_runs SET completed_at=clock_timestamp()-interval '8 days'");
+  expect(await patrol.prune('public-kg',7)).toBeNull();
+  release='kg-2';entries=entries.filter(e=>e.id!=='legacy-00');await refresh();await drain('public-kg');
+  const result=await patrol.prune('public-kg',7);expect(result).toEqual({id:previous,removed:17});
+  expect((await pool.query("SELECT inventory_run,present FROM knowledge75.patrol_targets WHERE id='legacy-00'")).rows[0]).toEqual({inventory_run:previous,present:false});
+  expect((await pool.query("SELECT count(*)::int AS n FROM knowledge75.target_inventory_entries")).rows[0].n).toBe(16);
  });
  it('backs off a failed origin, reports the wait, and never declares it complete',async()=>{
   failLegacy=true;const patrol=createKnowledgePatrol(pool,reader);

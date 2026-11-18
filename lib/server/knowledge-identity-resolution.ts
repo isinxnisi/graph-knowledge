@@ -10,7 +10,7 @@ export async function resolveIdentityGroups(c:PoolClient,ids:string[],generation
  const seeds=[...new Set(ids)].sort();
  if(!seeds.length)return new Map<string,string[]>();
  await c.query('SET LOCAL jit=off');
- const projected=generation?` AND EXISTS(SELECT 1 FROM knowledge75.publication_entities x WHERE x.generation=$2 AND x.id=r.left_id AND x.revision=r.left_revision) AND EXISTS(SELECT 1 FROM knowledge75.publication_entities x WHERE x.generation=$2 AND x.id=r.right_id AND x.revision=r.right_revision)`:'';
+ const projected=generation?` AND EXISTS(SELECT 1 FROM knowledge75.publication_read_entities x WHERE x.generation=$2 AND x.id=r.left_id AND x.revision=r.left_revision) AND EXISTS(SELECT 1 FROM knowledge75.publication_read_entities x WHERE x.generation=$2 AND x.id=r.right_id AND x.revision=r.right_revision)`:'';
  const rows=(await c.query(`WITH RECURSIVE edges AS MATERIALIZED (${activeIdentityEdges}${projected}),
  members(seed,id) AS (SELECT id,id FROM unnest($1::text[]) id UNION
  SELECT m.seed,CASE WHEN e.left_id=m.id THEN e.right_id ELSE e.left_id END

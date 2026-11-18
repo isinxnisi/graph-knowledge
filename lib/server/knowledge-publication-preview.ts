@@ -8,7 +8,7 @@ import { knowledgeReadConfiguration } from "./knowledge-read-runtime";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import path from "node:path";
-import { createKnowledgePublicationService, ensureKnowledgePublicationSchema } from "./knowledge-publication";
+import { createKnowledgePublicationService, ensureKnowledgePublicationSchema, publicationStorageMigration } from "./knowledge-publication";
 
 let pool: Pool | undefined;
 let writerPool: Pool | undefined;
@@ -36,7 +36,7 @@ export async function closeKnowledgePublicationPreview() {
 
 /** Beta Web never performs migrations as a side effect of opening the TOP. */
 export async function verifyKnowledgeReadSchema(target:Pool){
- for(const name of ["001-records.sql","002-publication.sql","006-entity-identities.sql","010-theme-publication.sql","011-theme-knowledge-updates.sql"]){
+ for(const name of ["001-records.sql","002-publication.sql","006-entity-identities.sql","010-theme-publication.sql","011-theme-knowledge-updates.sql",publicationStorageMigration]){
   const checksum=createHash("sha256").update(await readFile(path.join(process.cwd(),"migrations/knowledge-foundation",name),"utf8")).digest("hex");
   const row=(await target.query("SELECT checksum FROM knowledge75.migrations WHERE name=$1",[name])).rows[0];
   if(row?.checksum!==checksum)throw new ThemeError("知識DBの明示migrationを確認してください",503);
