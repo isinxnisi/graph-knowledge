@@ -29,3 +29,9 @@
 `sudo -n true` は既存パスワード要求で終了1。本人入力用 `backups/mobile-ui-20261118/run-release.py` は準備済み（ignored/private、Gitには配置ロジックだけ）。公開許可の再確認ではなく既存認証の本人入力が残る。切替後の正式URL・実Chromeは未確認。
 
 β反映版の実公開データ：独立Chromeの390pxタッチ／1280pxでPLUTO本線Graphを確認。表示中のoverlayと鍵（非表示の同名要素は除外）のbboxがともに非0で、間隔は8px。隣接関係6行は各112.17px、横はみ出し・pageerrorなし。長文の閉枝メッセージは隔離画面で320／390pxを確認済み。検証用ページはignoredな一時ソースにだけ置き、受入source・imageには含めない。
+
+## 正式反映後の確認と戻り導線の追補
+
+最初のWeb更新af9d4fb8／build lIpkQZTjUgXMU7eEDBDk1は本番へ反映済み。backup `/opt/graph-knowledge/backups/mobile-ui-web-20261118T144515Z`。ledger47/10、Worker・設定・KG・AI artifactと既存訳文850版を保持。正式HTTP5経路と390／1280pxのGraph・隣接6行は合格。
+
+実Chromeの正式一覧は9件（制作中1、見直し中1、公開7）。375pxでもヘッダ・一覧・状態フィルタを確認できた。ただしプレビューの旧一覧リンクをNext Linkで辿ると、リダイレクト先のfragmentが重複して `/operations#themes#themes` になり、受信箱へfallbackする不具合を発見。Explorerの戻りリンクを `/operations#themes` へ直接指定し、この導線を再検証して追加Web反映する。DB・内容・旧URLの認証契約は変更しない。
