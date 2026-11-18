@@ -1,3 +1,5 @@
+import {knowledgeDigest} from '../lib/server/knowledge-foundation';
+import {repairThemeCollectionRelease,type CollectionReleaseRepair} from '../lib/server/repair-theme-collection-release';
 import neo4j from 'neo4j-driver';
 import {createKnowledgePublicationService} from '../lib/server/knowledge-publication';
 import {createThemeAuthoringReader} from '../lib/server/knowledge-theme-authoring-reader';
@@ -247,7 +249,7 @@ it('rejects stale activation after a post-completion edit and requires a new ind
 it('migrates existing approved editions without changing content, except withholding the specified unfinished Dragon Quest theme',async()=>{
  const dq='theme:1ab040a3a68b1e5666de0ba354fa484891d56e95d5e6bda3';await foundation.execute(actor,{action:'create-theme',requestId:randomUUID(),id:dq,title:'制作途中',recordPins:[{id:'baseline',revision:1}],reason:'Isolated migration target'});
  const before=(await knowledge.query('SELECT kind,id,revision,content FROM knowledge75.revisions ORDER BY kind,id,revision')).rows;
- await knowledge.query("DROP TRIGGER knowledge_new_theme_draft ON knowledge75.objects;DROP FUNCTION knowledge75.new_theme_draft();DROP TABLE knowledge75.theme_release_approvals,knowledge75.theme_releases,knowledge75.theme_publications;DROP FUNCTION knowledge75.immutable_theme_approval();DELETE FROM knowledge75.migrations WHERE name='010-theme-publication.sql'");
+ await knowledge.query("DROP TRIGGER knowledge_new_theme_draft ON knowledge75.objects;DROP FUNCTION knowledge75.new_theme_draft();DROP TABLE knowledge75.theme_knowledge_revisions,knowledge75.theme_release_approvals,knowledge75.theme_releases,knowledge75.theme_publications;DROP FUNCTION knowledge75.immutable_theme_approval();DELETE FROM knowledge75.migrations WHERE name IN('010-theme-publication.sql','011-theme-knowledge-updates.sql')");
  await ensureKnowledgeFoundationSchema(knowledge);await ensureKnowledgeFoundationSchema(knowledge);
  expect((await knowledge.query('SELECT kind,id,revision,content FROM knowledge75.revisions ORDER BY kind,id,revision')).rows).toEqual(before);
  expect((await publicService().themes()).themes.map(t=>t.id)).toEqual(['theme']);await expect(publicService().theme({themeId:dq,revision:1})).rejects.toMatchObject({status:404});
@@ -312,4 +314,46 @@ it('replays pre-workflow create request bodies without changing their digest or 
  const command={action:'create-theme-production',requestId:randomUUID(),progress};const first=await execute(command),again=await execute(command);
  expect(again.replayed).toBe(true);expect(again.case?.id).toBe(first.case?.id);expect(again.case).toMatchObject({workflow:'scheduled'});
  await expect(execute({...command,workflow:'manual'})).rejects.toMatchObject({code:'REQUEST_CHANGED'});
+});
+
+// Accepted collection updates are ordinary public knowledge, not a new production turn.
+it('keeps a completed scheduled case completed after accepted knowledge, without relabelling its old assessment as current',async()=>{
+ const run=await begin('review',true);await complete(run);
+ await foundation.execute({kind:'collection',id:'verified-background'},{action:'accept-record',requestId:randomUUID(),entities:[],sources:[],entityPins:[{id:'a',revision:1}],sourcePins:[{id:'s',revision:1}],record:{id:'accepted-background',content:{kind:'note',subjectId:'a',assertion:'A has accepted background.',evidence:[{id:'q',source:{id:'s',revision:1},locator:'Body',excerpt:'A has accepted background.'}]}},themes:[{id:'theme',revision:1}],reason:'Accepted collection background'},{verify:async()=>{},prepare:async()=>{}});
+ const updated=await read(run.caseId);expect(updated.completed).toBe(true);expect(updated.status).toBe('completed');expect(updated.lastWholeThemeAssessment).toMatchObject({current:false,contentCurrent:false});
+ const next=await execute({action:'create-theme-production',requestId:randomUUID(),progress});expect(next.outcome).toBe('created');
+ // A genuine editorial change still invalidates the old completion.
+ await registrations.submit(owner,{requestId:randomUUID(),target:{id:'theme',revision:2},changes:{description:'A new unpublished editorial draft'},reason:'Manual editorial change'});await registrations.recoverOne();
+ expect((await read(run.caseId)).completed).toBe(false);expect((await read(run.caseId)).status).toBe('needs-review');
+});
+
+async function legacyCollectionArtifact(){
+ const run=await begin('review',true);await complete(run);
+ await foundation.execute(actor,{action:'create-bundle',requestId:randomUUID(),entityPins:[{id:'a',revision:1}],records:[{id:'legacy-added',content:{kind:'note',subjectId:'a',assertion:'Accepted old collection artifact.',evidence:[{id:'q',source:{id:'s',revision:1},locator:'Body',excerpt:'Accepted old collection artifact.'}]}}],reason:'Legacy accepted record fixture'});
+ const parent=await foundation.get(actor,'theme','theme'),record=await foundation.get(actor,'record','legacy-added'),requestId=randomUUID(),packageId=randomUUID();
+ const content={...parent.content,recordPins:[...parent.content.recordPins,{id:record.id,revision:record.revision}]};
+ const result={...record,themes:[{id:'theme',revision:2}]},input={action:'accept-record',requestId,record:{id:record.id,content:record.content},themes:[{id:'theme',revision:1}]};
+ await knowledge.query("INSERT INTO knowledge75.operations(actor_id,request_id,actor_kind,digest,input,result) VALUES('legacy-import',$1,'import',$2,$3,$4)",[requestId,knowledgeDigest(input),JSON.stringify(input),JSON.stringify(result)]);
+ await knowledge.query("INSERT INTO knowledge75.revisions(kind,id,revision,content,reason,actor_id,actor_kind) VALUES('theme','theme',2,$1,'Legacy collection addition','legacy-import','import');",[JSON.stringify(content)]);
+ await knowledge.query("UPDATE knowledge75.objects SET current_revision=2 WHERE kind='theme' AND id='theme';INSERT INTO knowledge75.published_revisions(kind,id,revision) VALUES('theme','theme',2);UPDATE knowledge75.theme_publications SET draft_updated_at=clock_timestamp() WHERE theme_id='theme'");
+ await pool.query('INSERT INTO knowledge_import.packages(id,principal_id,namespace,package_id,revision,digest,payload,resource_issues) VALUES($1,$2,$3,$4,1,$5,$6,$7)',[packageId,'mission:legacy-fixture','fixture','legacy',knowledgeDigest(input),'{}','[]']);
+ await pool.query("INSERT INTO knowledge_import.items(id,package_id,ordinal,item_key,input_digest,normalized,state,reason,result) VALUES($1,$2,0,'background',$3,$4,'published','Legacy accepted source',$5)",[requestId,packageId,knowledgeDigest(input),'{}',JSON.stringify(result)]);
+ const expected:CollectionReleaseRepair={themeId:'theme',parent:1,revision:2,parentDigest:knowledgeDigest(parent.content),digest:knowledgeDigest(content),actorId:'legacy-import',principalId:'mission:legacy-fixture',requestId,record:{id:record.id,revision:1}};
+ return {expected,parent};
+}
+it('repairs only a proven legacy collection-only edition and preserves immutable content, receipts and old releases',async()=>{
+ const {expected,parent}=await legacyCollectionArtifact(),before=(await knowledge.query('SELECT kind,id,revision,content FROM knowledge75.revisions ORDER BY kind,id,revision')).rows;
+ expect(await repairThemeCollectionRelease(pool,knowledge,expected)).toMatchObject({outcome:'verified'});expect((await read((await pool.query('SELECT id FROM theme_production.cases LIMIT 1')).rows[0].id)).completed).toBe(false);
+ expect(await repairThemeCollectionRelease(pool,knowledge,expected,true)).toMatchObject({outcome:'repaired',publication:{publishedRevision:2,workingRevision:2,workingChanges:false}});
+ expect(await repairThemeCollectionRelease(pool,knowledge,expected,true)).toMatchObject({outcome:'already-repaired'});
+ expect((await knowledge.query('SELECT kind,id,revision,content FROM knowledge75.revisions ORDER BY kind,id,revision')).rows).toEqual(before);expect(await foundation.get(actor,'theme','theme',1)).toEqual(parent);
+ expect((await pool.query('SELECT state FROM knowledge_import.items WHERE id=$1',[expected.requestId])).rows[0].state).toBe('published');
+});
+it('refuses a legacy repair with pending intake, altered content, or another editorial working revision',async()=>{
+ const {expected}=await legacyCollectionArtifact();
+ await expect(repairThemeCollectionRelease(pool,knowledge,{...expected,digest:'0'.repeat(64)},true)).rejects.toMatchObject({code:'COLLECTION_REPAIR_CONFLICT'});
+ await pool.query("UPDATE knowledge_import.items SET state='applied' WHERE id=$1",[expected.requestId]);await expect(repairThemeCollectionRelease(pool,knowledge,expected,true)).rejects.toMatchObject({code:'COLLECTION_REPAIR_CONFLICT'});
+ await pool.query("UPDATE knowledge_import.items SET state='published' WHERE id=$1",[expected.requestId]);
+ await foundation.execute(actor,{action:'edit-theme',requestId:randomUUID(),id:'theme',expectedRevision:2,title:'Unapproved later prose',description:'Private',recordPins:[{id:'baseline',revision:1}],initialView:'graph',reason:'Real manual draft'});
+ await expect(repairThemeCollectionRelease(pool,knowledge,expected,true)).rejects.toMatchObject({code:'COLLECTION_REPAIR_CONFLICT'});expect((await knowledge.query("SELECT published_revision FROM knowledge75.theme_publications WHERE theme_id='theme'")).rows[0].published_revision).toBe(1);
 });

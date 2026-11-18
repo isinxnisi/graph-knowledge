@@ -1,3 +1,4 @@
+import {themePublicationState} from '../lib/server/knowledge-theme-publication';
 import {beforeAll,beforeEach,afterAll,it,expect,vi} from 'vitest';
 import {Pool} from 'pg';
 import {randomUUID} from 'node:crypto';
@@ -30,7 +31,7 @@ const deliver=(l:Lease,pkg:unknown=payload(l))=>core.worker('fixture-delivery',m
 beforeAll(async()=>{
  expect(process.env.MEMBER_TEST_CONTAINER).toMatch(/^gk-member-test-/);expect((await pool.query('SELECT current_database() name')).rows[0].name).toBe('graph_member_test');
  expect((await knowledge.query('SELECT current_database() name')).rows[0].name).toBe('plunode_knowledge75_test_capsule_share');
- await migrateMemberDatabase(pool,...Array(25).fill(true));process.env.KNOWLEDGE_MISSIONS_ENABLED='1';
+ await migrateMemberDatabase(pool,...Array(25).fill(true));process.env.KNOWLEDGE_MISSIONS_ENABLED='1';process.env.COMMUNITY_ENABLED='1';
 },30000);
 beforeEach(async()=>{
  await pool.query('TRUNCATE knowledge_missions.plans,knowledge_missions.commands,knowledge_missions.workers CASCADE');await pool.query('TRUNCATE knowledge_import.packages CASCADE');await knowledge.query('DROP SCHEMA IF EXISTS knowledge75 CASCADE');
@@ -39,7 +40,7 @@ beforeEach(async()=>{
  inbox=createKnowledgeImports(pool,knowledge,(id,client)=>id.startsWith('web:')?webImportPrincipal(pool,id,client):missionImportPrincipal(pool,id,client),{verify:async(url,excerpt)=>matchSourceExcerpt({url,type:'text/plain',body:Buffer.from(excerpt)},excerpt)});lostAck=false;sourceBody='A is an organization.';
  core=createKnowledgeMissions(pool,knowledge,()=>({...inbox,intake:async(...args:Parameters<typeof inbox.intake>)=>{const result=await inbox.intake(...args);if(lostAck){lostAck=false;throw Error('fixture ACK lost after durable intake');}return result;}}),{fetchDocument:async url=>({url,type:'text/plain',body:Buffer.from(sourceBody)})});
 },30000);
-afterAll(async()=>{delete process.env.KNOWLEDGE_MISSIONS_ENABLED;await pool.end();await knowledge.end();});
+afterAll(async()=>{delete process.env.KNOWLEDGE_MISSIONS_ENABLED;delete process.env.COMMUNITY_ENABLED;await pool.end();await knowledge.end();});
 
 it('saves idempotently, claims once, and keeps published context pins',async()=>{
  const requestId=randomUUID(),a=await create(plan,requestId),replay=await act({action:'create',requestId,content:plan});expect(replay).toMatchObject({result:a,replayed:true});
@@ -85,7 +86,7 @@ it('accepts an explicit pinned correction only after observing its source and pr
 it('collects a theme-only background without inventing a graph entity',async()=>{
  const f=createKnowledgeFoundationService(knowledge);await f.execute({kind:'operator',id:'fixture'},{action:'create-bundle',requestId:randomUUID(),records:[{id:'reading-context',content:{kind:'note',assertion:'A theme has a reading context.',evidence:[{id:'e',source:{id:'base',revision:1},locator:'Intro',excerpt:'A theme has a reading context.'}]}}],reason:'Fixture editorial theme context'});
  await f.execute({kind:'operator',id:'fixture'},{action:'create-theme',requestId:randomUUID(),id:'reading',title:'A reading theme',recordPins:[{id:'reading-context',revision:1}],initialView:'timeline'});
- await create({...plan,themeId:'reading',entityIds:[]});const l=(await claim())!;
+ await knowledge.query("INSERT INTO knowledge75.theme_releases(theme_id,revision) VALUES('reading',1); UPDATE knowledge75.theme_publications SET published_revision=1,updated_at=clock_timestamp() WHERE theme_id='reading'");await create({...plan,themeId:'reading',entityIds:[]});const l=(await claim())!;
  expect(l.snapshot).toMatchObject({entities:[],records:[{id:'reading-context',revision:1}]});
  const pkg={format:'plunode-knowledge-package',schemaVersion:1,...l.packageIdentity,sources:payload(l).sources,items:[{key:'context',operation:'add-information',about:{kind:'theme',id:'reading',revision:1},themes:[{id:'reading',revision:1}],record:{kind:'note',aboutTheme:'reading',assertion:'A theme has a reading context.',evidence:[{id:'e',source:{id:'s',revision:1},locator:'Intro',excerpt:'A theme has a reading context.'}]}}]};
  expect((await deliver(l,pkg) as {receipt:{items:{state:string}[]}}).receipt.items[0].state).toBe('queued');
@@ -159,6 +160,7 @@ it('uses the next released slot when a changed frequency has several runs in its
 
 it('pins the current theme and accepts its timeless background without an isolated graph node',async()=>{
  const foundation=createKnowledgeFoundationService(knowledge);await foundation.execute({kind:'operator',id:'fixture'},{action:'create-theme',requestId:randomUUID(),id:'theme',title:'Fixture theme',recordPins:[{id:'baseline',revision:1}],initialView:'graph'});
+ await knowledge.query("INSERT INTO knowledge75.theme_releases(theme_id,revision) VALUES('theme',1); UPDATE knowledge75.theme_publications SET published_revision=1,updated_at=clock_timestamp() WHERE theme_id='theme'");
  await create({...plan,themeId:'theme',entityIds:[]});const lease=(await claim())!;
  const pkg={format:'plunode-knowledge-package',schemaVersion:1,...lease.packageIdentity,sources:payload(lease).sources,items:[{key:'background',operation:'add-information',about:{kind:'theme',id:'theme',revision:1},themes:[{id:'theme',revision:1}],record:{kind:'note',assertion:'This theme describes instruments.',evidence:[{id:'proof',source:{id:'s',revision:1},locator:'Introduction',excerpt:'This theme describes instruments.'}]}}]};
  const value=await deliver(lease,pkg) as {receipt:{items:{state:string}[]}};expect(value.receipt.items[0].state).toBe('queued');
@@ -171,4 +173,16 @@ it('serializes a stop with the importer final permission boundary',async()=>{
   await new Promise(resolve=>setTimeout(resolve,25));expect(done).toBe(false);await c.query('COMMIT');await stop;
   expect(await missionImportPrincipal(pool,'mission:'+lease.runId)).toBeNull();
  }finally{await c.query('ROLLBACK');c.release();}
+});
+
+it('deliver_collection acceptance advances only the approved edition and a replay creates no revision',async()=>{
+ const foundation=createKnowledgeFoundationService(knowledge);await foundation.execute({kind:'operator',id:'fixture'},{action:'create-theme',requestId:randomUUID(),id:'theme',title:'Approved fixture',recordPins:[{id:'baseline',revision:1}],initialView:'graph'});
+ await knowledge.query("INSERT INTO knowledge75.theme_releases(theme_id,revision) VALUES('theme',1); UPDATE knowledge75.theme_publications SET published_revision=1,updated_at=clock_timestamp() WHERE theme_id='theme'");
+ await create({...plan,themeId:'theme',entityIds:[]});const lease=(await claim())!;
+ const pkg={format:'plunode-knowledge-package',schemaVersion:1,...lease.packageIdentity,sources:payload(lease).sources,items:[{key:'background',operation:'add-information',about:{kind:'theme',id:'theme',revision:1},themes:[{id:'theme',revision:1}],record:{kind:'note',aboutTheme:'theme',assertion:'A source describes the mission background.',evidence:[{id:'proof',source:{id:'s',revision:1},locator:'Introduction',excerpt:'A source describes the mission background.'}]}}]};
+ await deliver(lease,pkg);
+ const cfg=reviewConfigSchema.parse({projectId:'mission-publication-fixture',billingTier:'free',verifiedAt:new Date().toISOString(),model:'gemini-3.1-flash-lite',rpm:10,tokensPerMinute:30000,requestsPerDay:400,requestsPerMonth:12000,inputTokensPerDay:250000,outputTokensPerDay:160000,inputTokensPerMonth:7500000,outputTokensPerMonth:4800000,apiKeyFile:'/unused',allowedUsers:[randomUUID()]});
+ await createReviewQueue(pool).heartbeat(cfg);await inbox.processNext(cfg,async()=>({state:'received',status:200,raw:{responseId:'fixture-background',modelVersion:cfg.model,usageMetadata:{promptTokenCount:100,candidatesTokenCount:20,thoughtsTokenCount:0,totalTokenCount:120},candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify({suitability:'legitimate',support:'supported',reason:'Original source supports this isolated fixture.'})}]}}]}}));
+ expect(await themePublicationState(knowledge,'theme')).toMatchObject({publishedRevision:2,workingRevision:2,workingChanges:false});
+ await deliver(lease,pkg);expect(await themePublicationState(knowledge,'theme')).toMatchObject({publishedRevision:2,workingRevision:2});
 });

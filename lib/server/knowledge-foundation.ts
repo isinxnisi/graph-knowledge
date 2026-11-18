@@ -1,3 +1,4 @@
+import {applyAcceptedThemeKnowledge} from './knowledge-theme-knowledge-update';
 import {operatorThemeRead,withOperatorThemeRead,withPublicThemeRead} from './knowledge-theme-access';
 import {themePublicationRevision,themeRevisionPublic,freezeThemeReleases,approvedThemeTranslations} from './knowledge-theme-publication';
 import {themeStoriesReferenceError} from "../domain/theme-stories";
@@ -70,7 +71,7 @@ export async function ensureKnowledgeFoundationSchema(pool: Pool) {
       await c.query(sql);
       await c.query("INSERT INTO knowledge75.migrations(name,checksum) VALUES($1,$2)", ["001-records.sql", checksum]);
     }
-    for(const referenceName of ["004-submission-references.sql","007-acquisition-inventory.sql","010-theme-publication.sql"]){
+    for(const referenceName of ["004-submission-references.sql","007-acquisition-inventory.sql","010-theme-publication.sql","011-theme-knowledge-updates.sql"]){
       const referenceSql=await readFile(path.join(process.cwd(),"migrations/knowledge-foundation",referenceName),"utf8");
       const referenceChecksum=createHash("sha256").update(referenceSql).digest("hex");
       const referenceOld=(await c.query("SELECT checksum FROM knowledge75.migrations WHERE name=$1",[referenceName])).rows[0];
@@ -396,18 +397,22 @@ export function createKnowledgeFoundationService(pool: Pool,options:{prepareSche
         for(const p of [...(cmd.themes??[])].sort((a,b)=>a.id.localeCompare(b.id))){
           const h=await head(c,'theme',p.id,'FOR UPDATE');if(!internal)expected(h.current_revision,p.revision);await assertRevisionPublic(c,'theme',p.id,p.revision);
           const old=await version(c,'theme',p.id,h.current_revision);
-          if(old.content.recordPins.some(v=>v.id===cmd.record.id&&v.revision===revision)){appliedThemes.push({id:p.id,revision:h.current_revision});continue;}
-          themeChanged=true;
-          const recordPins=old.content.recordPins.some(v=>v.id===cmd.record.id)?old.content.recordPins.map(v=>v.id===cmd.record.id?{id:v.id,revision}:v):[...old.content.recordPins,{id:cmd.record.id,revision}];
-          let timeline=old.content.timeline?structuredClone(old.content.timeline):undefined;
-          if(timeline){
-            const previous=new Map(old.content.recordPins.map(p=>[p.id,p.revision]));
-            const definitions=(await c.query("SELECT id,revision,content->'times' AS times FROM knowledge75.revisions WHERE kind='record' AND id=ANY($1::text[])",[[...previous.keys()]])).rows.filter(v=>previous.get(v.id)===v.revision).map(v=>({id:v.id,content:{times:v.times}}));
-            timeline=appendKnowledgeTimelineRecord(timeline,cmd.record.id,r.times,definitions,knowledgeDigest);
-          }
-          const snapshot=await capture(c,recordPins,{timeline,initialView:old.content.initialView,publicOnly:true});
-          await put('theme',p.id,{...old.content,readingBaseRevision:undefined,...snapshotPins(snapshot),...(timeline?{timeline}:{})},h.current_revision+1,'確認済みの投稿をテーマへ追加');
-          appliedThemes.push({id:p.id,revision:h.current_revision+1});
+          const applied=await applyAcceptedThemeKnowledge(c,{id:p.id,working:old,record:{id:cmd.record.id,revision},actorId:actor.id,requestId:cmd.requestId,
+            read:revision=>version(c,'theme',p.id,revision),
+            put:(content,revision)=>put('theme',p.id,content,revision,'確認済みの投稿をテーマへ追加'),
+            append:async base=>{
+              const recordPins=base.content.recordPins.some(v=>v.id===cmd.record.id)?base.content.recordPins.map(v=>v.id===cmd.record.id?{id:v.id,revision}:v):[...base.content.recordPins,{id:cmd.record.id,revision}];
+              let timeline=base.content.timeline?structuredClone(base.content.timeline):undefined;
+              if(timeline){
+                const previous=new Map(base.content.recordPins.map(p=>[p.id,p.revision]));
+                const definitions=(await c.query("SELECT id,revision,content->'times' AS times FROM knowledge75.revisions WHERE kind='record' AND id=ANY($1::text[])",[[...previous.keys()]])).rows.filter(v=>previous.get(v.id)===v.revision).map(v=>({id:v.id,content:{times:v.times}}));
+                timeline=appendKnowledgeTimelineRecord(timeline,cmd.record.id,r.times,definitions,knowledgeDigest);
+              }
+              const snapshot=await capture(c,recordPins,{timeline,initialView:base.content.initialView,publicOnly:true});
+              return {...base.content,...snapshotPins(snapshot),...(timeline?{timeline}:{})};
+            }});
+          themeChanged ||= applied.changed;
+          appliedThemes.push({id:p.id,revision:applied.revision});
         }
         result={...(result as object),...(appliedThemes.length?{themes:appliedThemes}:{}),disposition:unchanged?(themeChanged?'theme-linked':'existing'):cmd.expectedRevision?'updated':'created'};
       } else if (cmd.action === "create-bundle") {

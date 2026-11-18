@@ -8,7 +8,7 @@ import {withThemeProductionSubmission,assertThemeProductionLease} from './theme-
 
 type Target={theme:{id:string;revision:number};digest:string;guide:{id:string;revision:number};references:unknown};
 type Observed={state:'accepted'|'pending'|'applied'|'failed';result:unknown;theme?:{id:string;revision:number}};
-type Dependencies={environment:'beta'|'production';origin:string;authorize:(owner:string)=>Promise<void>;target:(id:string,owner:string)=>Promise<Target>;send:(owner:string,command:ProductionSubmissionCommand)=>Promise<unknown>;observe:(owner:string,command:ProductionSubmissionCommand)=>Promise<Observed|null>;publish:(owner:string,intentId:string)=>Promise<void>;publication:(id:string,intentId?:string)=>Promise<{state:string;publishedRevision:number|null;workingRevision:number;releaseId:string|null;workingChanges:boolean;approvalPresent:boolean}>;afterDispatch?:()=>Promise<void>};
+type Dependencies={environment:'beta'|'production';origin:string;authorize:(owner:string)=>Promise<void>;target:(id:string,owner:string,revision?:number)=>Promise<Target>;send:(owner:string,command:ProductionSubmissionCommand)=>Promise<unknown>;observe:(owner:string,command:ProductionSubmissionCommand)=>Promise<Observed|null>;publish:(owner:string,intentId:string)=>Promise<void>;publication:(id:string,intentId?:string)=>Promise<{state:string;publishedRevision:number|null;workingRevision:number;releaseId:string|null;workingChanges:boolean;knowledgeBaseRevision?:number|null;approvalPresent:boolean}>;afterDispatch?:()=>Promise<void>};
 const failure=(text:string,code='PRODUCTION_CONFLICT',status=409)=>new KnowledgeError(text,status,code);
 const lockKey=(id:string)=>'theme-production:'+id;
 const terminal=(state:string)=>['applied','failed','withdrawn'].includes(state);
@@ -54,9 +54,14 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
   const selected=selection?.submissionId?list.find(s=>s.id===selection.submissionId):null;
   if(selection?.submissionId&&!selected)throw failure('保存済み送信がありません。','NOT_FOUND',404);
   const intent=(await pool.query('SELECT id,completion_command FROM theme_production.publication_intents WHERE case_id=$1 ORDER BY created_at DESC LIMIT 1',[id])).rows[0];
-   const publication=ev.target?await deps.publication(ev.target.theme.id,intent?.id):null;
+   const observedPublication=ev.target?await deps.publication(ev.target.theme.id,intent?.id):null;
+   const {knowledgeBaseRevision,...publicState}=observedPublication??{};const publication=observedPublication?publicState as Omit<NonNullable<typeof observedPublication>,'knowledgeBaseRevision'>:null;
+   let acceptedKnowledgeOnly=false;
+   if(r.status==='completed'&&ev.target&&ev.assessment?.result==='pass'&&ev.assessment.guideCurrent&&ev.assessment.workCurrent&&knowledgeBaseRevision!=null&&knowledgeBaseRevision===ev.assessment.evaluatedTheme?.revision){
+    const original=await deps.target(ev.target.theme.id,owner,knowledgeBaseRevision);acceptedKnowledgeOnly=original.digest===ev.assessment.targetDigest;
+   }
    const publicationPending=!!intent&&publication?.approvalPresent!==true;
-   const complete=r.status==='completed'&&ev.assessment?.current===true&&ev.assessment.result==='pass'&&!publicationPending&&publication?.state==='published'&&!publication.workingChanges&&publication.publishedRevision===ev.target?.theme.revision;
+   const complete=r.status==='completed'&&(ev.assessment?.current===true||acceptedKnowledgeOnly)&&ev.assessment.result==='pass'&&!publicationPending&&publication?.state==='published'&&!publication.workingChanges&&publication.publishedRevision===ev.target?.theme.revision;
   const summary=(s:QueryResultRow)=>({id:s.id,requestId:s.command_request_id,action:s.command_action,digest:s.digest,state:s.state,reason:s.reason,dispatches:s.dispatches});
   const currentWork=list.filter(s=>!terminal(s.state)||s.state==='failed');
   return json({id:r.id,ownerId:owner,workflow:r.workflow,environment:r.environment,origin:r.origin,version:r.version,phase:r.phase,status:r.status==='completed'&&!complete?(ev.assessment?.current&&publicationPending?'waiting-publication':'needs-review'):r.status,
@@ -107,7 +112,7 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
   return response(owner,await tx(owner,undefined,async c=>{
    const old=await previous(c,owner,command);if(old)return old;
    const workflow=command.workflow??'scheduled';const active=workflow==='scheduled'?await current(c,owner):undefined;
-   if(active){const r=await row(c,owner,active);if(r.status!=='completed')throw failure('定期制作の進行中案件を先に見直し完了まで進めてください。通常チャットの別案件はworkflow: manualで作成できます。','PRODUCTION_ACTIVE_CASE');const ev=await evaluation(r,await submissions(c,r));if((await view(owner,active)).publication?.pending)throw failure('前の案件の公開切替が未完了です。同一の完了要求を再送してください。','PRODUCTION_PUBLICATION_PENDING');if(!ev.assessment?.current||!(await view(owner,active)).completed)throw failure('前の案件の対象が未承認または変更されています。見直しへ戻してください。','PRODUCTION_REVIEW_REQUIRED');}
+   if(active){const r=await row(c,owner,active);if(r.status!=='completed')throw failure('定期制作の進行中案件を先に見直し完了まで進めてください。通常チャットの別案件はworkflow: manualで作成できます。','PRODUCTION_ACTIVE_CASE');if((await view(owner,active)).publication?.pending)throw failure('前の案件の公開切替が未完了です。同一の完了要求を再送してください。','PRODUCTION_PUBLICATION_PENDING');if(!(await view(owner,active)).completed)throw failure('前の案件の対象が未承認または変更されています。見直しへ戻してください。','PRODUCTION_REVIEW_REQUIRED');}
    if(command.phase==='review'&&!command.theme)throw failure('既存テーマの見直し開始には正確なテーマ版が必要です。','PRODUCTION_TARGET_REQUIRED',400);
    if(command.theme){await availableTheme(c,owner,command.theme.id);const target=await deps.target(command.theme.id,owner);if(target.theme.revision!==command.theme.revision)throw failure('対象テーマ版を読み直してください。','REVISION_CONFLICT');}
    const id=randomUUID();await c.query("INSERT INTO theme_production.cases(id,owner_id,environment,origin,phase,status,progress,theme_id,theme_revision,workflow) VALUES($1,$2,$3,$4,$5,'ready',$6,$7,$8,$9)",[id,owner,deps.environment,deps.origin,command.phase,JSON.stringify(command.progress),command.theme?.id??null,command.theme?.revision??null,workflow]);
@@ -119,7 +124,7 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
   try{return response(owner,await tx(owner,id,async c=>{
    const old=await previous(c,owner,command);if(old)return old;const r=await row(c,owner,id);
    if(r.status==='completed'){
-    const ev=await evaluation(r,await submissions(c,r));const v=await view(owner,id);if(ev.assessment?.current&&(v.completed||v.publication?.pending))return {outcome:'found',caseId:id};
+    const ev=await evaluation(r,await submissions(c,r));const v=await view(owner,id);if(v.completed||(ev.assessment?.current&&v.publication?.pending))return {outcome:'found',caseId:id};
     if(command.phase!=='review')return {outcome:'phase-mismatch',caseId:id};
     if(r.theme_id)await availableTheme(c,owner,r.theme_id,r.id);r.phase='review';await c.query("UPDATE theme_production.cases SET phase='review',status='ready' WHERE id=$1",[id]);
    }

@@ -1,3 +1,5 @@
+2026-11-19 資料収集とテーマ制作の分離：①経路／Webb28→29の受入履歴監査・②公開／作業分岐、訳文継承、完了済み案件の扱いを実装｜③隔離回帰中、残り④β／正式反映・Webb限定復旧｜全体④まで。[設計](design/COLLECTION_THEME_PUBLICATION_20261119.md)。
+
 2026-11-19 スマホ表示3点と戻り導線：①確認・②実装／回帰・③β／正式Web反映と正式HTTP・390／1280px Graph／隣接一覧、実Chromeの運営一覧／375px・残作業開閉・プレビュー→制作一覧の戻りまで完了｜全体③まで完了。sourcea1ca2e7b／正式b-6Zi81Rn4b42IMUe8Mew／βYsdByjjz6tjlDvSmTAKce。member47／knowledge10、Worker・設定・既存訳文850版を保持し、実内容・案件・予定・MCPは未変更。残る実機確認はiPhone／Safari。[検証と復旧](verification/MOBILE_GRAPH_OPERATIONS_20261118.md)。
 
 2026-11-19 スマホ表示3点の追補：③初回正式反映とGraph／隣接／運営一覧の正式確認、戻りリンク修正のβ2往復・HTTPS・固定build・本番転送hash照合まで完了｜残り③本人sudoで戻りリンクのWeb追補・正式往復確認｜全体③まで。初回正式af9d4fb8／lIpkQZTjUgXMU7eEDBDk1、追補sourcea1ca2e7b／βYsdByjjz6tjlDvSmTAKce／正式候補b-6Zi81Rn4b42IMUe8Mew。DB・Worker・設定・実内容・予定は保持。iPhone実機は未確認。[検証](verification/MOBILE_GRAPH_OPERATIONS_20261118.md)。

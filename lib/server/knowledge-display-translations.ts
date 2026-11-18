@@ -26,7 +26,11 @@ export async function publicDisplayTranslations(c: PoolClient, targets: Knowledg
     }
     if (target.kind !== "theme") continue;
     const slot = (t: KnowledgeTextTarget) => translationTargetKey({ ...t, revision: 1 });
-    const candidates = heads.filter(h => slot(h.target) === slot(target) && h.target.revision < target.revision)
+    const ancestors=(await c.query(`WITH RECURSIVE lineage(revision) AS (
+      SELECT $2::integer UNION ALL SELECT COALESCE(k.parent_revision,l.revision-1) FROM lineage l
+      LEFT JOIN knowledge75.theme_knowledge_revisions k ON k.theme_id=$1 AND k.revision=l.revision WHERE l.revision>1
+    ) SELECT r.revision,r.content FROM lineage l JOIN knowledge75.revisions r ON r.kind='theme' AND r.id=$1 AND r.revision=l.revision`,[target.id,target.revision])).rows;
+    const candidates = heads.filter(h => slot(h.target) === slot(target) && h.target.revision < target.revision && ancestors.some(v=>v.revision===h.target.revision))
       .sort((a,b) => b.target.revision - a.target.revision);
     // A withdrawn newer translation must not resurrect an older one.
     const candidate = candidates[0];
@@ -35,9 +39,9 @@ export async function publicDisplayTranslations(c: PoolClient, targets: Knowledg
       const current = await readKnowledgeTextOriginal(c, target);
       const translation = await readKnowledgeTranslationById(c, candidate.id);
       if (translation.originalText !== current.text) continue;
-      const editions = (await c.query(`SELECT content FROM knowledge75.revisions WHERE kind='theme' AND id=$1 AND revision>=$2 AND revision<=$3 ORDER BY revision`, [target.id, translation.target.revision, target.revision])).rows;
+      const editions=ancestors.filter(v=>v.revision>=translation.target.revision);
       // Do not reuse across an edit/revert, a removed axis, or changed language.
-      if (editions.length !== target.revision - translation.target.revision + 1 || editions.some(v => {
+      if (!editions.some(v=>v.revision===translation.target.revision) || editions.some(v => {
         try { const value = knowledgeOriginalText(target, v.content); return value.text !== current.text || JSON.stringify(value.language) !== JSON.stringify(current.language); }
         catch { return true; }
       })) continue;

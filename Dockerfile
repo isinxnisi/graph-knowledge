@@ -43,6 +43,7 @@ CMD ["validate"]
 FROM ops AS knowledge-ops
 USER root
 COPY scripts/knowledge-migrate.ts scripts/knowledge-review-worker.ts scripts/knowledge-publication-worker.ts scripts/knowledge-patrol-worker.ts scripts/knowledge-collection-worker.ts scripts/knowledge-collection-reader.ts ./scripts/
+COPY scripts/repair-webb-collection-publication.ts ./scripts/
 # Local launchers load this file. Production values arrive only through runtime
 # environment variables, so the compatibility file is deliberately empty.
 RUN install -m 0444 /dev/null /app/.env.public
