@@ -19,4 +19,13 @@
 
 ## 反映・復旧
 
-固定source、β build、本番build、反映結果は実行後に追記する。Webのみ更新し、DB migrationとWorker更新は不要。現行2f2dbfafは同じschema47/10と非公開境界を扱える直前版であり、失敗時はそのWebに限って戻せる。DB dumpの復元や古い非互換Webへのdowngradeはしない。
+固定source `af9d4fb89a022a9d4a67370599fd084aafcaccb6`、β build `T3HIaHnqjkEkRXH4phch5`、本番候補 build `lIpkQZTjUgXMU7eEDBDk1`。βは反映済み。本番はまだ未反映。Webのみ更新し、DB migrationとWorker更新は不要。現行2f2dbfafは同じschema47/10と非公開境界を扱える直前版であり、失敗時はそのWebに限って戻せる。DB dumpの復元や古い非互換Webへのdowngradeはしない。
+
+
+β実確認：HTTPSのdataset／公開catalogue／operationsは200、匿名の制作一覧・新APIは404とprivate/no-store/noindexを確認。ログイン済み実Chromeで `/operations/themes` → `/operations#themes`、実一覧8件（制作中1・公開済み7）、ヘッダ・運営メニュー・作業／公開版を確認した。
+
+本番資材：Web imageをOCI archiveにして全blob・sourceラベル・buildを検証し、ローカルで再loadしてidentity照合。VPSへ転送して全4ファイルのsha256を現地検証済み。本番preflightは互換直前2fのimage/build、既知backupから導出したCompose、private設定、ledger47/10、既存HTTP Host到達を照合する。変更候補のComposeはWeb image以外が同一であることを比較する。
+
+`sudo -n true` は既存パスワード要求で終了1。本人入力用 `backups/mobile-ui-20261118/run-release.py` は準備済み（ignored/private、Gitには配置ロジックだけ）。公開許可の再確認ではなく既存認証の本人入力が残る。切替後の正式URL・実Chromeは未確認。
+
+β反映版の実公開データ：独立Chromeの390pxタッチ／1280pxでPLUTO本線Graphを確認。表示中のoverlayと鍵（非表示の同名要素は除外）のbboxがともに非0で、間隔は8px。隣接関係6行は各112.17px、横はみ出し・pageerrorなし。長文の閉枝メッセージは隔離画面で320／390pxを確認済み。検証用ページはignoredな一時ソースにだけ置き、受入source・imageには含めない。
