@@ -34,3 +34,12 @@
 - 本番配置ガードのPython5件も合格。正しいcandidate opsの利用、隔離復旧で本番設定をmountしないこと、Webb以外／旧版の保全、011だけを既存ledger ownerで適用、checksum差異の事前拒否を確認。合計79件合格。
 - 2 imageのOCI archiveは590,193,816 bytes、SHA256 `822b6fa91adc8357e4b26c7fa2d6e2bcac93a76e1871a84dcaeed5a0d35d0d70`。source label／config／manifest／layer diff IDを照合し、本番転送後も全資材hashを確認した。
 - 本番適用は `scripts/release-collection-theme-publication-production.py`。現在の正式構成／Webbを切替前とwriter停止後に再照合する。migrationはknowledge011のみ、会員migrationは追加しない。原稿・既存受付・ガイド本文・予定設定を変更しない。旧Web／旧dumpへの機械的な巻戻しは行わない。
+
+
+## 本番適用前の隔離試験停止と診断待ち
+
+本人実行の配置は、稼働中backupを復元した隔離DBでの限定復旧処理で停止した。Web停止・本番011適用・Webb公開切替の前なので、正式サイトと本番Appを再読取し、公開28／head29と稼働を維持していることを確認した。
+
+最初の隔離実行ラッパーは例外の実メッセージを捨て、root専用ログにも汎用文しか残さなかった。この不足を修正し、復旧の前提条件（状態・版・digest一致・受入状態・有効案件・固定訳文の有無）を内容や資格情報を出さず診断できるようにした。Pythonガード6件と固定ops imageのNode構文検査に合格。
+
+`--diagnose` は既存の今回backupだけを隔離復元し、同じimage／011／復旧条件で実エラーを再現する。稼働中の両DB・Web・Worker・正式設定は変更せず、image再build／予定変更／公開承認の緩和も行わない。診断資材の転送・現地hash照合は完了。`sudo -n` はパスワード要求で拒否されているため、本人実行後に原因を特定する。本番反映・Webb復旧は未完了。

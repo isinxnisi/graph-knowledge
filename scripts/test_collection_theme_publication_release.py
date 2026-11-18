@@ -16,9 +16,11 @@ class CollectionReleaseGuards(unittest.TestCase):
         main = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == 'main')
         klass = next(n for n in main.body if isinstance(n, ast.ClassDef))
         self.capture = []
+        self.events = []
         self.manifest = {'additions': {}, 'webbRepair': {'themeId': 'fixed-fixture'}, 'memberOps': {'tag': 'fixed-ops'}}
         legacy = types.SimpleNamespace(Release=object, ident=lambda s: '"' + s + '"')
         self.ns = {'legacy': legacy, 'm': self.manifest, 'prev': {}, 'json': json,
+                   'h': types.SimpleNamespace(emit=lambda *args, **kwargs: self.events.append((args, kwargs))),
                    'hashlib': hashlib, 're': __import__('re'), 'WEBB': 'theme:webb'}
         exec(compile(ast.Module(body=[klass], type_ignores=[]), str(SCRIPT), 'exec'), self.ns)
         self.release = object.__new__(self.ns['Release'])
@@ -41,6 +43,20 @@ class CollectionReleaseGuards(unittest.TestCase):
         self.assertNotIn('--mount', command)
         self.assertIn('isolated-pg:5432/graph_member', command[-1])
         self.assertIn('isolated-pg:5432/plunode_knowledge75_production', command[-1])
+        self.assertIn('ISOLATED_REPAIR_AUDIT', command[-1])
+        self.assertIn('ISOLATED_REPAIR_ERROR', command[-1])
+
+    def test_isolated_failure_surfaces_the_real_error_and_safe_precondition_audit(self):
+        with tempfile.TemporaryDirectory() as folder:
+            self.release.stage = pathlib.Path(folder)
+            detail = 'ISOLATED_REPAIR_AUDIT {"parentFrozen":false}\nISOLATED_REPAIR_ERROR {"code":"COLLECTION_REPAIR_CONFLICT"}'
+            def fail(command):
+                (self.release.stage / 'command-failure.json').write_text(json.dumps({'exit': 1, 'stderr': detail}))
+                raise RuntimeError('Protected command failed')
+            self.release.run = fail
+            with self.assertRaisesRegex(RuntimeError, 'Protected command failed'):
+                self.release.repair(network='isolated-net', pg='isolated-pg', apply=True)
+            self.assertEqual(self.events, [(('isolated-repair-diagnostic',), {'exitCode': 1, 'detail': detail})])
 
     def test_fingerprints_preserve_other_themes_and_old_webb_editions(self):
         queries = []

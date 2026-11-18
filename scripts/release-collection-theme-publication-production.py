@@ -3,7 +3,7 @@
 No immutable content rewrite, common-knowledge withdrawal, guide/schedule/OS change.
 Never downgrade to an old Web after applying the new publication boundary.
 """
-import copy,datetime,fcntl,hashlib,importlib.util,json,os,pathlib,pwd,re,shutil,subprocess,time
+import copy,datetime,fcntl,hashlib,importlib.util,json,os,pathlib,pwd,re,shutil,subprocess,time,sys
 ROOT=pathlib.Path('/opt/graph-knowledge')
 PUBLIC_PROBE="const http=require('node:http');const request=http.get('http://127.0.0.1:3000/api/knowledge/public?mode=themes',{headers:{host:'plunode.net'}},response=>{let text='';response.setEncoding('utf8');response.on('data',chunk=>text+=chunk);response.on('end',()=>{try{if(response.statusCode!==200)throw Error('Catalogue readiness failed: '+response.statusCode);JSON.parse(text)}catch(e){console.error(e.message);process.exitCode=1}});response.on('error',e=>{console.error(e.message);process.exitCode=1})});request.setTimeout(15000,()=>request.destroy(Error('Catalogue readiness timed out')));request.on('error',e=>{console.error(e.message);process.exitCode=1});"
 SOURCE='48a2153309ca5ffef4bd88132f0a86a13571ecf1'
@@ -97,7 +97,7 @@ def main():
    assert k("SELECT count(*) FROM knowledge75.objects o LEFT JOIN knowledge75.theme_publications h ON h.theme_id=o.id WHERE o.kind='theme' AND h.theme_id IS NULL")=='0'
    assert json.loads(sqls[DATABASES[0]]('SELECT json_object_agg(name,checksum) FROM member_migration'))==m['memberMigrations']
    assert json.loads(k('SELECT json_object_agg(name,checksum) FROM knowledge75.migrations'))==m['knowledgeMigrations']
-  def rehearsal(self,folder,baselines):
+  def rehearsal(self,folder,baselines=None):
    name='plunode-private-theme-rehearsal-'+legacy.secrets.token_hex(5);created=False;volume=False
    self.run(['docker','network','create','--internal',name])
    try:
@@ -117,6 +117,7 @@ def main():
       p=subprocess.run(['docker','exec','-i',name,'pg_restore','-h','127.0.0.1','-U','restore_admin','-d',db,'--exit-on-error'],stdin=stream,capture_output=True,timeout=600)
      assert p.returncode==0,'Isolated restore failed'
     sqls={db:(lambda q,db=db:sql(q,db)) for db in DATABASES}
+    if baselines is None:baselines={db:(columns.columns(sqls[db]),self.fingerprints(sqls[db],columns.columns(sqls[db]))) for db in DATABASES}
     for db in DATABASES:assert self.fingerprints(sqls[db],baselines[db][0])==baselines[db][1],'Restored baseline differs'
     self.migrate(name);self.verify_migrated(sqls,baselines)
     repair=self.repair(network=name,pg=name,apply=True);assert repair['outcome']=='repaired'
@@ -133,8 +134,26 @@ def main():
     self.run(['docker','network','rm',name])
   def repair(self,network=None,pg=None,apply=False):
    if network:
-    js="const {Pool}=require('pg');const {repairThemeCollectionRelease}=require('./lib/server/repair-theme-collection-release');const m=new Pool({connectionString:"+json.dumps('postgresql://restore_admin@'+pg+':5432/graph_member')+",max:1}),k=new Pool({connectionString:"+json.dumps('postgresql://restore_admin@'+pg+':5432/plunode_knowledge75_production')+",max:1});(async()=>{try{console.log(JSON.stringify(await repairThemeCollectionRelease(m,k,"+json.dumps(m['webbRepair'])+",true)))}finally{await m.end();await k.end()}})().catch(()=>{console.error('Isolated exact collection repair failed');process.exitCode=1});"
-    return json.loads(self.run(['docker','run','--rm','--network',network,'--read-only','--tmpfs','/tmp','--memory','384m','--entrypoint','node',m['memberOps']['tag'],'--import','tsx','-e',js]))
+    js="""const {Pool}=require('pg');
+const {repairThemeCollectionRelease}=require('./lib/server/repair-theme-collection-release');
+const {knowledgeDigest}=require('./lib/server/knowledge-foundation');
+const m=new Pool({connectionString:MEMBER,max:1}),k=new Pool({connectionString:KNOWLEDGE,max:1});
+const expected=EXPECTED;
+(async()=>{try{
+ const cases=(await m.query("SELECT id,phase,status FROM theme_production.cases WHERE theme_id=$1",[expected.themeId])).rows;
+ const receipt=(await m.query('SELECT i.state,i.result,p.principal_id FROM knowledge_import.items i JOIN knowledge_import.packages p ON p.id=i.package_id WHERE i.id=$1',[expected.requestId])).rows[0];
+ const operation=(await k.query('SELECT actor_kind,input,result FROM knowledge75.operations WHERE actor_id=$1 AND request_id=$2',[expected.actorId,expected.requestId])).rows[0];
+ const heads=(await k.query("SELECT o.current_revision,h.published_revision FROM knowledge75.objects o JOIN knowledge75.theme_publications h ON h.theme_id=o.id WHERE o.kind='theme' AND o.id=$1",[expected.themeId])).rows[0];
+ const versions=(await k.query("SELECT revision,content,actor_id,actor_kind FROM knowledge75.revisions WHERE kind='theme' AND id=$1 AND revision=ANY($2::integer[]) ORDER BY revision",[expected.themeId,[expected.parent,expected.revision]])).rows;
+ const frozen=(await k.query('SELECT theme_translations IS NOT NULL AS frozen FROM knowledge75.theme_releases WHERE theme_id=$1 AND revision=$2',[expected.themeId,expected.parent])).rows[0];
+ console.error('ISOLATED_REPAIR_AUDIT '+JSON.stringify({cases,heads,receiptState:receipt?.state,principalMatches:receipt?.principal_id===expected.principalId,receiptRecordMatches:receipt?.result?.id===expected.record.id&&receipt?.result?.revision===expected.record.revision,receiptThemeMatches:receipt?.result?.themes?.some(p=>p.id===expected.themeId&&p.revision===expected.revision),operationPresent:!!operation,operationKind:operation?.actor_kind,receiptResultMatches:!!operation&&!!receipt&&knowledgeDigest(operation.result)===knowledgeDigest(receipt.result),parentDigestMatches:versions[0]&&knowledgeDigest(versions[0].content)===expected.parentDigest,digestMatches:versions[1]&&knowledgeDigest(versions[1].content)===expected.digest,parentFrozen:frozen?.frozen}));
+ console.log(JSON.stringify(await repairThemeCollectionRelease(m,k,expected,true)));
+}finally{await m.end();await k.end()}})().catch(e=>{console.error('ISOLATED_REPAIR_ERROR '+JSON.stringify({name:e.name,code:e.code??null,message:e.message}));process.exitCode=1});""".replace('MEMBER',json.dumps('postgresql://restore_admin@'+pg+':5432/graph_member')).replace('KNOWLEDGE',json.dumps('postgresql://restore_admin@'+pg+':5432/plunode_knowledge75_production')).replace('EXPECTED',json.dumps(m['webbRepair']))
+    try:return json.loads(self.run(['docker','run','--rm','--network',network,'--read-only','--tmpfs','/tmp','--memory','384m','--entrypoint','node',m['memberOps']['tag'],'--import','tsx','-e',js]))
+    except RuntimeError:
+     failure=json.loads((self.stage/'command-failure.json').read_text())
+     h.emit('isolated-repair-diagnostic',exitCode=failure.get('exit'),detail=failure.get('stderr','')[-12000:])
+     raise
    command=self.candidateDc+['run','--rm','--no-deps','--entrypoint','node','knowledge-ops','--import','tsx','scripts/repair-webb-collection-publication.ts','--apply' if apply else '--check']
    return json.loads(self.run(command))
   def directory(self):
@@ -153,6 +172,21 @@ def main():
  if (stage/'activated.json').is_file():
   result=json.loads((stage/'activated.json').read_text());assert result['source']==SOURCE and r.ledgers()==[m['memberMigrations'],m['knowledgeMigrations']]
   assert r.run(r.dc+['exec','-T','web','cat','/app/.next-public/BUILD_ID'])==m['build'];h.emit('already-activated',**result);return
+ if sys.argv[1:]==['--diagnose']:
+  r.preflight();r.images(load=False)
+  folders=[]
+  for folder in (ROOT/'backups').glob('collection-theme-*'):
+   if folder.is_symlink() or not folder.is_dir() or not (folder/'manifest.json').is_file():continue
+   if json.loads((folder/'manifest.json').read_text()).get('sourceCommit')!=SOURCE:continue
+   if all((folder/name).is_file() and (folder/name).stat().st_size>0 for name in ['member.dump','knowledge.dump']):folders.append(folder)
+  assert folders,'No existing release backup to diagnose'
+  folder=max(folders,key=lambda p:p.stat().st_mtime)
+  assert folder.resolve().is_relative_to((ROOT/'backups').resolve())
+  h.emit('diagnostic-start',source=SOURCE,backup=str(folder),liveServicesStopped=False,liveDatabaseChanged=False)
+  result=r.rehearsal(folder)
+  h.emit('diagnostic-complete',**result,liveServicesStopped=False,liveDatabaseChanged=False)
+  return
+ assert not sys.argv[1:],'Use no arguments to release, or --diagnose for isolated diagnosis'
  r.preflight();r.images(load=True)
  original=(ROOT/'compose.yaml').read_text();candidate=h.patch_image(original,'web',m['web']['tag']);expected=copy.deepcopy(r.config);expected['services']['web']['image']=m['web']['tag']
  for name in IMAGE_SERVICES:candidate=h.patch_image(candidate,name,m['memberOps']['tag']);expected['services'][name]['image']=m['memberOps']['tag']

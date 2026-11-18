@@ -1,3 +1,5 @@
+2026-11-19 資料収集の公開分離：④本番適用前の隔離復旧で停止、正式HTTP／Appの稼働とWebb公開28／head29維持を確認｜残り④root例外の診断・修正・正式適用／Webb復旧｜全体④まで。診断出力の不足を修正し、稼働系を変更しない既存backup再現モードと6件ガードを確認・転送hash照合済み。本番011・Web／Worker切替は未実施。[記録](verification/COLLECTION_THEME_PUBLICATION_20261119.md)。
+
 2026-11-19 資料収集と制作の分離：①経路／Webb履歴監査・②実装011・③隔離回帰79件／型・Lint・④固定Web／Worker build、β011／HTTPS／既存App読取、正式転送hash照合まで完了｜残り④本人sudoで正式反映・Webb29公開復旧・正式確認｜全体④まで。app source48a21533／正式候補9sn6e2_Y8JF_dIJOqij9h／βT90bycRtIRqke2ShzqRsE。本番は未変更、予定／ガイド本文／既存原稿は保持。[検証](verification/COLLECTION_THEME_PUBLICATION_20261119.md)。
 
 2026-11-19 資料収集とテーマ制作の分離：①経路／Webb28→29の受入履歴監査・②公開／作業分岐、訳文継承、完了済み案件の扱いを実装｜③隔離回帰中、残り④β／正式反映・Webb限定復旧｜全体④まで。[設計](design/COLLECTION_THEME_PUBLICATION_20261119.md)。
