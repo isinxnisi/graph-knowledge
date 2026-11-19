@@ -1,3 +1,4 @@
+import {approveThemeFixture} from './helpers/approved-theme-fixture';
 import {afterAll,beforeAll,describe,expect,it} from 'vitest';
 import {randomUUID} from 'node:crypto';
 import {Pool} from 'pg';
@@ -14,7 +15,7 @@ const evidence=[{id:'evidence',source:{id:source,revision:1},locator:'本文',ex
 const record=(extra:Record<string,unknown>={})=>knowledgeRecordContentSchema.parse({kind:'note',subjectId:entity,assertion:'根拠のある事実。',evidence,...extra});
 const cmd=(action:string,fields:Record<string,unknown>)=>({action,requestId:randomUUID(),reason:'独立DBで申請参照の検証',...fields});
 const accept=(recordId:string,content:unknown,themes:unknown[]=[])=>cmd('accept-record',{entities:[],sources:[],entityPins:[{id:entity,revision:1}],sourcePins:[{id:source,revision:1}],record:{id:recordId,content},themes});
-beforeAll(async()=>{if(!process.env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL)throw Error('Use the isolated --submissions harness');await ensureKnowledgeFoundationSchema(pool);await service.execute(operator,cmd('create-bundle',{entities:[{id:entity,content:{name:'検証対象',kind:'person'}}],sources:[{id:source,content:{title:'根拠',url:'https://example.org/source'}}],records:[{id:seed,content:record()}]}));for(const theme of [one,two])await service.execute(operator,cmd('create-theme',{id:theme,title:'参照の検証',description:'前からある説明',recordPins:[{id:seed,revision:1}],initialView:'graph'}));});
+beforeAll(async()=>{if(!process.env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL)throw Error('Use the isolated --submissions harness');await ensureKnowledgeFoundationSchema(pool);await service.execute(operator,cmd('create-bundle',{entities:[{id:entity,content:{name:'検証対象',kind:'person'}}],sources:[{id:source,content:{title:'根拠',url:'https://example.org/source'}}],records:[{id:seed,content:record()}]}));for(const theme of [one,two]){await service.execute(operator,cmd('create-theme',{id:theme,title:'参照の検証',description:'前からある説明',recordPins:[{id:seed,revision:1}],initialView:'graph'}));await approveThemeFixture(pool,theme);}});
 afterAll(()=>pool.end());
 describe('accepted user records keep reachable identities and atomic theme membership',()=>{
  it('keeps operator preparation possible while rejecting orphan user publications',async()=>{const orphan=id('orphan');await expect(service.execute(actor,accept(orphan,record({subjectId:null})))).rejects.toThrow('辿れる');expect((await pool.query("SELECT 1 FROM knowledge75.objects WHERE kind='record' AND id=$1",[orphan])).rowCount).toBe(0);await expect(service.execute(operator,cmd('create-bundle',{records:[{id:orphan,content:record({subjectId:null})}],entityPins:[]}))).resolves.toBeTruthy();});
@@ -37,6 +38,7 @@ describe('accepted user records keep reachable identities and atomic theme membe
   await service.execute(operator,cmd('create-bundle',{records:[{id:oldRecord,content:record({times:seedTimes})}],entityPins:[{id:entity,revision:1}]}));
   const timeline={version:1,axes:[{id:'calendar',kind:'calendar',label:'年月日'},{id:'cycle',kind:'cycle',label:'一日'},{id:'qualitative',kind:'qualitative',label:'活動',order:['開始','終了']}],placements:[{recordId:oldRecord,timeId:'cal',axisId:'calendar'},{recordId:oldRecord,timeId:'day',axisId:'cycle'},{recordId:oldRecord,timeId:'stage',axisId:'qualitative'}],insets:[]};
   await service.execute(operator,cmd('create-theme',{id:theme,title:'時期の種類を保つ',recordPins:[{id:oldRecord,revision:1}],timeline,initialView:'timeline'}));
+  await approveThemeFixture(pool,theme);
   await service.execute(actor,accept(next,record({times:[{id:'added-time',time:test.time}]}),[{id:theme,revision:1}]));
   const resolved=await service.resolveTheme(operator,theme),placed=resolved.theme.content.timeline!.placements.find(p=>p.recordId===next)!;
   const axis=resolved.theme.content.timeline!.axes.find(a=>a.id===placed.axisId)!;

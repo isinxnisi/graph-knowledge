@@ -1,3 +1,4 @@
+import {ordinaryPublicationSnapshot,publishOrdinaryTheme} from '../lib/server/knowledge-theme-operator-publication';
 import {knowledgeDigest} from '../lib/server/knowledge-foundation';
 import {repairThemeCollectionRelease,type CollectionReleaseRepair} from '../lib/server/repair-theme-collection-release';
 import neo4j from 'neo4j-driver';
@@ -38,8 +39,8 @@ const progress={brief:'読者の問いから制作する隔離案件',scope:'公
 const createCommand=()=>({action:'submit-theme' as const,requestId:randomUUID(),title:'New production fixture',description:'Not live',recordPins:[{id:'baseline',revision:1}]});
 const execute=async(command:unknown,who=owner)=>themeProductionResponseSchema.parse(await cases.execute(who,themeProductionCommandSchema.parse(command))) as unknown as Response;
 async function read(id:string){return (await execute({action:'get-theme-production',caseId:id})).case!;}
-async function begin(phase:'production'|'review'='production',existing=false,workflow:'scheduled'|'manual'='scheduled'):Promise<{caseId:string;executionId:string;leaseToken:string}>{
- const created=await execute({action:'create-theme-production',requestId:randomUUID(),phase,progress,...(workflow==='manual'?{workflow}:{}),...(existing?{theme:{id:'theme',revision:1}}:{})});
+async function begin(phase:'production'|'review'='production',existing=false,workflow:'scheduled'|'manual'='scheduled',revision=1):Promise<{caseId:string;executionId:string;leaseToken:string}>{
+ const created=await execute({action:'create-theme-production',requestId:randomUUID(),phase,progress,...(workflow==='manual'?{workflow}:{}),...(existing?{theme:{id:'theme',revision}}:{})});
  const executionId=randomUUID(),claimed=await execute({action:'claim-theme-production',requestId:randomUUID(),caseId:created.case!.id,phase,executionId});
  return {caseId:created.case!.id,executionId,leaseToken:claimed.leaseToken!};
 }
@@ -138,15 +139,16 @@ it('hands production to a separate review invocation and does not treat producti
  await expect(execute({action:'claim-theme-production',requestId:randomUUID(),caseId:run.caseId,phase:'review',executionId:run.executionId})).rejects.toMatchObject({code:'PRODUCTION_INDEPENDENT_RUN_REQUIRED'});
  const reviewer=await resume(run,'review');expect((await complete(reviewer)).case?.completed).toBe(true);
 });
-it.each(['theme','translation','associated-product','guide'])('invalidates historical pass when %s changes, even when the Theme revision is unchanged',async mode=>{
+it.each(['theme','translation','associated-product','guide'])('reports a stale assessment after %s without reopening the completed case',async mode=>{
  const run=await begin('review',true);await complete(run);const old=await read(run.caseId);expect(old.completed).toBe(true);
  if(mode==='theme')await ordinaryUpdate();
  if(mode==='translation')await translations.submit(owner,{requestId:randomUUID(),theme:{id:'theme',revision:1},translation:{target:{kind:'theme',id:'theme',revision:1,field:'title'},language:'en',text:'The background of A',expectedRevision:0},attribution:'anonymous'});
  if(mode==='associated-product')await dispatchProductAuthoring(pool,owner,{action:'save-product',requestId:randomUUID(),expectedRevision:0,offers:[],product:{id:'fixture-product',workId:'',author:'',edition:'',title:'Reader edition',language:'ja',metadataSource:'https://example.org/product'},reason:{ja:'理解を深める',en:'Read further'},appliesTo:[{kind:'entity',id:'a'}]});
  if(mode==='guide'){const guides=createThemeQualityGuides(pool),current=await guides.read(owner);await guides.update(owner,{requestId:randomUUID(),expectedRevision:current.revision,markdown:'# Revised isolated current guide',reason:'Fixture guide revision'});}
- const stale=await read(run.caseId);expect(stale.completed).toBe(false);expect(stale.status).toBe('needs-review');expect(stale.lastWholeThemeAssessment?.current).toBe(false);const skipped=await execute({action:'claim-theme-production',requestId:randomUUID(),caseId:run.caseId,executionId:randomUUID(),phase:'production'});expect(skipped.outcome).toBe('phase-mismatch');expect((await read(run.caseId)).version).toBe(stale.version);if(mode!=='theme')expect(stale.theme?.revision).toBe(1);
- await expect(execute({action:'create-theme-production',requestId:randomUUID(),progress})).rejects.toMatchObject({code:'PRODUCTION_REVIEW_REQUIRED'});
- const reviewer=await resume(run,'review');expect((await complete(reviewer)).case?.completed).toBe(true);
+ const stale=await read(run.caseId);expect(stale.completed).toBe(true);expect(stale.status).toBe('completed');expect(stale.lastWholeThemeAssessment?.current).toBe(false);
+ const skipped=await execute({action:'claim-theme-production',requestId:randomUUID(),caseId:run.caseId,executionId:randomUUID(),phase:'production'});
+ expect(skipped.outcome).toBe('found');expect((await read(run.caseId)).version).toBe(stale.version);
+ await expect(execute({action:'create-theme-production',requestId:randomUUID(),progress})).resolves.toMatchObject({outcome:'created'});
 });
 it('checkpoint replay preserves current state, exact operation IDs cannot change input and pending sends cannot be withdrawn as success',async()=>{
  const run=await begin('production',true),c=await read(run.caseId),command={...run,action:'update-theme-production',requestId:randomUUID(),expectedVersion:c.version,operation:'save',progress:{...progress,artifacts:{draft:'Saved current manuscript'}}};
@@ -209,7 +211,7 @@ it('serves the last approved edition while private updates and their direct old/
  expect(await publicService().capsulesReadable([[{kind:'theme',id:'theme',revision:1}],[{kind:'theme',id:'theme',revision:2}]])).toEqual([true,false]);
  expect((await createThemeAuthoringReader(knowledge,'https://plunode.net').read('theme')).theme.revision).toBe(2);
  expect((await publicService().theme({themeId:'theme',revision:1})).theme.revision).toBe(1);
- const review=await resume(run,'review');await complete(review);
+ const review=await begin('review',true,'manual',2);await complete(review);
  expect((await publicService().theme({themeId:'theme'})).theme.revision).toBe(2);
  expect((await publicService().theme({themeId:'theme',revision:1})).theme.revision).toBe(1);
 });
@@ -217,13 +219,13 @@ it('freezes theme translations independently of working edits and retains previo
  const sendTranslation=(text:string,expectedRevision:number)=>translations.submit(owner,{requestId:randomUUID(),theme:{id:'theme',revision:1},translation:{target:{kind:'theme',id:'theme',revision:1,field:'title'},language:'en',text,expectedRevision},attribution:'anonymous'});
  const first=await sendTranslation('Approved English',0),run=await begin('review',true);await complete(run);
  const second=await sendTranslation('PRIVATE DRAFT ENGLISH',1);
- expect((await read(run.caseId)).completed).toBe(false);
+ expect((await read(run.caseId)).completed).toBe(true);
  const published=await publicService().theme({themeId:'theme',language:'en'});expect(published.displayTranslations?.find(t=>t.target.kind==='theme')?.text).toBe('Approved English');
  const c=await knowledge.connect();try{
   await expect(readKnowledgeTranslationById(c,second.publication!.id,2)).rejects.toMatchObject({status:404});
   expect((await readKnowledgeTranslation(c,{kind:'theme',id:'theme',revision:1,field:'title'},'en')).translation?.revision).toBe(1);
  }finally{c.release();}
- const reviewer=await resume(run,'review');await complete(reviewer);
+ const reviewer=await begin('review',true,'manual');await complete(reviewer);
  expect((await publicService().theme({themeId:'theme',language:'en'})).displayTranslations?.find(t=>t.target.kind==='theme')?.text).toBe('PRIVATE DRAFT ENGLISH');
  const historical=await knowledge.connect();try{expect((await readKnowledgeTranslationById(historical,first.publication!.id,1)).text).toBe('Approved English');}finally{historical.release();}
 },15000);
@@ -249,7 +251,7 @@ it('rejects stale activation after a post-completion edit and requires a new ind
 it('migrates existing approved editions without changing content, except withholding the specified unfinished Dragon Quest theme',async()=>{
  const dq='theme:1ab040a3a68b1e5666de0ba354fa484891d56e95d5e6bda3';await foundation.execute(actor,{action:'create-theme',requestId:randomUUID(),id:dq,title:'制作途中',recordPins:[{id:'baseline',revision:1}],reason:'Isolated migration target'});
  const before=(await knowledge.query('SELECT kind,id,revision,content FROM knowledge75.revisions ORDER BY kind,id,revision')).rows;
- await knowledge.query("DROP TRIGGER knowledge_new_theme_draft ON knowledge75.objects;DROP FUNCTION knowledge75.new_theme_draft();DROP TABLE knowledge75.theme_knowledge_revisions,knowledge75.theme_release_approvals,knowledge75.theme_releases,knowledge75.theme_publications;DROP FUNCTION knowledge75.immutable_theme_approval();DELETE FROM knowledge75.migrations WHERE name IN('010-theme-publication.sql','011-theme-knowledge-updates.sql')");
+ await knowledge.query("DROP TRIGGER knowledge_new_theme_draft ON knowledge75.objects;DROP FUNCTION knowledge75.new_theme_draft();DROP TABLE knowledge75.theme_operator_drafts,knowledge75.theme_editorial_lineage,knowledge75.theme_knowledge_revisions,knowledge75.theme_release_approvals,knowledge75.theme_releases,knowledge75.theme_publications;DROP FUNCTION knowledge75.immutable_theme_approval();DELETE FROM knowledge75.migrations WHERE name IN('010-theme-publication.sql','011-theme-knowledge-updates.sql','013-theme-editorial-drafts.sql')");
  await ensureKnowledgeFoundationSchema(knowledge);await ensureKnowledgeFoundationSchema(knowledge);
  expect((await knowledge.query('SELECT kind,id,revision,content FROM knowledge75.revisions ORDER BY kind,id,revision')).rows).toEqual(before);
  expect((await publicService().themes()).themes.map(t=>t.id)).toEqual(['theme']);await expect(publicService().theme({themeId:dq,revision:1})).rejects.toMatchObject({status:404});
@@ -322,9 +324,9 @@ it('keeps a completed scheduled case completed after accepted knowledge, without
  await foundation.execute({kind:'collection',id:'verified-background'},{action:'accept-record',requestId:randomUUID(),entities:[],sources:[],entityPins:[{id:'a',revision:1}],sourcePins:[{id:'s',revision:1}],record:{id:'accepted-background',content:{kind:'note',subjectId:'a',assertion:'A has accepted background.',evidence:[{id:'q',source:{id:'s',revision:1},locator:'Body',excerpt:'A has accepted background.'}]}},themes:[{id:'theme',revision:1}],reason:'Accepted collection background'},{verify:async()=>{},prepare:async()=>{}});
  const updated=await read(run.caseId);expect(updated.completed).toBe(true);expect(updated.status).toBe('completed');expect(updated.lastWholeThemeAssessment).toMatchObject({current:false,contentCurrent:false});
  const next=await execute({action:'create-theme-production',requestId:randomUUID(),progress});expect(next.outcome).toBe('created');
- // A genuine editorial change still invalidates the old completion.
+ // Further editorial changes leave the historic case complete.
  await registrations.submit(owner,{requestId:randomUUID(),target:{id:'theme',revision:2},changes:{description:'A new unpublished editorial draft'},reason:'Manual editorial change'});await registrations.recoverOne();
- expect((await read(run.caseId)).completed).toBe(false);expect((await read(run.caseId)).status).toBe('needs-review');
+ expect((await read(run.caseId)).completed).toBe(true);expect((await read(run.caseId)).status).toBe('completed');
 });
 
 async function legacyCollectionArtifact(){
@@ -343,7 +345,7 @@ async function legacyCollectionArtifact(){
 }
 it('repairs only a proven legacy collection-only edition and preserves immutable content, receipts and old releases',async()=>{
  const {expected,parent}=await legacyCollectionArtifact(),before=(await knowledge.query('SELECT kind,id,revision,content FROM knowledge75.revisions ORDER BY kind,id,revision')).rows;
- expect(await repairThemeCollectionRelease(pool,knowledge,expected)).toMatchObject({outcome:'verified'});expect((await read((await pool.query('SELECT id FROM theme_production.cases LIMIT 1')).rows[0].id)).completed).toBe(false);
+ expect(await repairThemeCollectionRelease(pool,knowledge,expected)).toMatchObject({outcome:'verified'});expect((await read((await pool.query('SELECT id FROM theme_production.cases LIMIT 1')).rows[0].id)).completed).toBe(true);
  expect(await repairThemeCollectionRelease(pool,knowledge,expected,true)).toMatchObject({outcome:'repaired',publication:{publishedRevision:2,workingRevision:2,workingChanges:false}});
  expect(await repairThemeCollectionRelease(pool,knowledge,expected,true)).toMatchObject({outcome:'already-repaired'});
  expect((await knowledge.query('SELECT kind,id,revision,content FROM knowledge75.revisions ORDER BY kind,id,revision')).rows).toEqual(before);expect(await foundation.get(actor,'theme','theme',1)).toEqual(parent);
@@ -399,3 +401,109 @@ it('repairs the proven accepted edition while preserving a later private editori
  await expect(foundation.get({kind:'reader',id:'public-reader'},'theme','theme',3)).rejects.toMatchObject({status:404});
  expect(await repairThemeCollectionRelease(pool,knowledge,expected,true)).toMatchObject({outcome:'already-repaired',publication:{publishedRevision:2,workingRevision:3,workingChanges:true}});
 });
+
+const readEdition=(view:'working'|'editorial'|'published')=>createThemeAuthoringReader(knowledge,'https://plunode.net').read('theme',undefined,view);
+async function saveOrdinary(changes:Record<string,unknown>,restart=false){
+ const current=await readEdition(restart?'published':'editorial');
+ const requestId=randomUUID();
+ await registrations.submit(owner,{requestId,target:current.target,editorial:{base:current.edition!.published,...(restart?{replaceDraftRevision:current.edition!.draft!.revision}:{})},changes,reason:'通常編集'});
+ await registrations.recoverOne();
+ expect(await registrations.status(owner,requestId)).toMatchObject({state:'published'});
+ return (await readEdition('editorial')).publicationCandidate!;
+}
+const publishOrdinary=(candidate:NonNullable<Awaited<ReturnType<typeof ordinaryPublicationSnapshot>>>['candidate'],requestId=randomUUID(),who=owner)=>
+ publishOrdinaryTheme(pool,knowledge,who,{...candidate,requestId,reason:'通常版を公開'},registrations.authorize);
+
+it('publishes an exact ordinary edition without a case, persists the receipt, and protects first publication',async()=>{
+ const requestId=randomUUID();
+ await registrations.submit(owner,{requestId,title:'案件不要の新規テーマ',description:'初版',recordPins:[{id:'baseline',revision:1}],editorial:true});
+ await registrations.recoverOne();
+ const {theme}=await registrations.status(owner,requestId);
+ const author=createThemeAuthoringReader(knowledge,'https://plunode.net');
+ const initial=await author.read(theme!.id,undefined,'editorial');
+ await expect(publicService().theme({themeId:theme!.id})).rejects.toMatchObject({status:404});
+ const updated=randomUUID();
+ await registrations.submit(owner,{requestId:updated,target:initial.target,editorial:{base:initial.edition!.published},changes:{description:'更新済み初版'},reason:'同じ下書きを更新'});
+ await registrations.recoverOne();
+ const candidate=(await author.read(theme!.id,undefined,'editorial')).publicationCandidate!;
+ const requests=[randomUUID(),randomUUID()];
+ const attempts=await Promise.allSettled(requests.map(id=>publishOrdinary(candidate,id)));
+ expect(attempts.filter(a=>a.status==='fulfilled')).toHaveLength(1);
+ expect(attempts.find(a=>a.status==='rejected')).toMatchObject({reason:{code:'THEME_OPERATOR_DRAFT_REQUIRED'}});
+ const publishId=requests[attempts.findIndex(a=>a.status==='fulfilled')];
+ const replay=await publishOrdinary(candidate,publishId);
+ expect(replay).toMatchObject({theme:{revision:2},replayed:true});
+ await expect(publishOrdinary(candidate,publishId,other)).rejects.toMatchObject({code:'REQUEST_CHANGED'});
+ expect((await publicService().theme({themeId:theme!.id})).theme.content.description).toBe('更新済み初版');
+ await expect(publicService().theme({themeId:theme!.id,revision:1})).rejects.toMatchObject({status:404});
+ expect(await execute({action:'get-theme-production'})).toMatchObject({outcome:'none'});
+});
+
+it('publishes a correction on the same theme during production and requires explicit reconciliation before reviewed release',async()=>{
+ await complete(await begin('review',true));
+ const production=await begin('production',true);
+ const prepared=await prepare(production,{action:'update-theme',requestId:randomUUID(),target:{id:'theme',revision:1},changes:{description:'Private production prose'},reason:'制作の原稿'});
+ await send(production,prepared.submissionId!);
+ await expire(production.caseId);
+ await registrations.recoverOne();
+ const working=await readEdition('working');
+ expect(working.theme.content.description).toBe('Private production prose');
+ const draft=await saveOrdinary({title:'Corrected public title'});
+ expect((await readEdition('editorial')).theme.content.description).not.toBe('Private production prose');
+ await expect(publishOrdinary({...draft,target:working.target})).rejects.toMatchObject({code:'THEME_OPERATOR_DRAFT_REQUIRED'});
+ const saved=await publishOrdinary(draft);
+ const published=await readEdition('published');
+ expect(published.target).toEqual(saved.theme);
+ expect(published.theme.content.title).toBe('Corrected public title');
+ expect((await readEdition('working')).target).toEqual(working.target);
+ await expect(publicService().theme({themeId:'theme',revision:working.target.revision})).rejects.toMatchObject({status:404});
+ const resumed=await resume(production,'production');
+ await fenced(resumed,{action:'update-theme-production',operation:'handoff'});
+ const review=await resume(production,'review');
+ await assess(review);
+ await expect(fenced(review,{action:'update-theme-production',operation:'complete'})).rejects.toMatchObject({code:'THEME_PUBLICATION_CONFLICT'});
+ const reconciled=await prepare(review,{action:'update-theme',requestId:randomUUID(),target:working.target,
+  reconcilePublished:published.edition!.published,changes:{title:'Corrected public title'},reason:'訂正を保持して原稿を照合'});
+ await send(review,reconciled.submissionId!);await registrations.recoverOne();
+ expect((await complete(review)).case?.completed).toBe(true);
+ expect((await readEdition('published')).theme.content).toMatchObject({title:'Corrected public title',description:'Private production prose'});
+ await publishOrdinary(await saveOrdinary({description:'Later ordinary edit'}));
+ expect((await read(review.caseId)).completed).toBe(true);
+ expect((await execute({action:'create-theme-production',requestId:randomUUID(),progress})).outcome).toBe('created');
+},20000);
+
+it('keeps the ordinary draft private when accepted knowledge advances the public base',async()=>{
+ await complete(await begin('review',true));
+ const draft=await saveOrdinary({title:'Ordinary draft'});
+ await foundation.execute({kind:'collection',id:'verified-background'},{action:'accept-record',requestId:randomUUID(),entities:[],sources:[],entityPins:[{id:'a',revision:1}],sourcePins:[{id:'s',revision:1}],record:{id:'new-source-note',content:{kind:'note',subjectId:'a',assertion:'New accepted background.',evidence:[{id:'q',source:{id:'s',revision:1},locator:'Body',excerpt:'New accepted background.'}]}},themes:[{id:'theme',revision:1}],reason:'Accepted collection background'},{verify:async()=>{},prepare:async()=>{}});
+ expect((await readEdition('published')).theme.content.recordPins).toContainEqual({id:'new-source-note',revision:1});
+ expect((await readEdition('editorial')).theme.content.title).toBe('Ordinary draft');
+ await expect(publishOrdinary(draft)).rejects.toMatchObject({code:'THEME_PUBLICATION_CONFLICT'});
+ const rebased=await saveOrdinary({title:'Ordinary draft'},true);
+ await publishOrdinary(rebased);
+ const latest=await readEdition('published');
+ expect(latest.theme.content.title).toBe('Ordinary draft');
+ expect(latest.theme.content.recordPins).toContainEqual({id:'new-source-note',revision:1});
+});
+
+it('inherits only the released translation and rejects a stale ordinary publication digest',async()=>{
+ const translate=async(revision:number,text:string,expectedRevision:number)=>withOperatorThemeRead(()=>translations.submit(owner,{
+  requestId:randomUUID(),theme:{id:'theme',revision},
+  translation:{target:{kind:'theme',id:'theme',revision,field:'title'},language:'en',text,expectedRevision},attribution:'anonymous',
+ }));
+ await translate(1,'Approved English',0);
+ await complete(await begin('review',true));
+ await translate(1,'Private production translation',1);
+ const first=await saveOrdinary({description:'Ordinary description'});
+ const revised=await translate(first.target.revision,'Ordinary approved translation',0);
+ await expect(publishOrdinary(first)).rejects.toMatchObject({code:'THEME_PUBLICATION_CONFLICT'});
+ const current=(await readEdition('editorial')).publicationCandidate!;
+ await publishOrdinary(current);
+ const published=await publicService().theme({themeId:'theme',language:'en'});
+ expect(published.displayTranslations?.find(v=>v.target.kind==='theme')?.text).toBe('Ordinary approved translation');
+ const c=await knowledge.connect();try{
+  const row=(await c.query('SELECT inherited_translations FROM knowledge75.theme_editorial_lineage WHERE theme_id=$1 AND revision=$2',['theme',first.target.revision])).rows[0];
+  expect(row.inherited_translations.find((v:{language:string})=>v.language==='en')?.text).toBe('Approved English');
+  expect((await readKnowledgeTranslationById(c,revised.publication!.id,1)).text).toBe('Ordinary approved translation');
+ }finally{c.release();}
+},20000);

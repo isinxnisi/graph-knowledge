@@ -1,3 +1,5 @@
+2026-11-20追記：通常編集の作業版・制作原稿・公開版の分離と、案件なしの明示公開は[現行の契約と移行記録](../verification/THEME_EDITORIAL_PUBLICATION_20261120.md)を参照。
+
 ## テーマ固有情報の非公開制作と承認公開版（2026-11-18）
 
 [公開境界の現行設計](THEME_PRIVATE_PUBLICATION_20261117.md) を優先する。新規Themeと編集中の新版は運営者専用。共通Record／Entity／Sourceの公開は維持する。受付の `published` は通常検証を経てThemeへ**保存・反映済み**という既存互換の状態であり、一般公開の承認ではない。`read_theme.publication`、`previewUrl` と制作案件の `publication` を区別して読む。

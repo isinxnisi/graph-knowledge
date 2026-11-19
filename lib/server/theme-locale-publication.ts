@@ -1,3 +1,4 @@
+import {readThemeLineage} from './knowledge-theme-editions';
 import {themeRevisionPublic} from './knowledge-theme-publication';
 import type {PoolClient} from 'pg';
 import type {KnowledgeThemeResolved,KnowledgeThemeVersion} from '../domain/knowledge-foundation';
@@ -15,10 +16,10 @@ export async function resolveThemeLocalePublication(c:PoolClient,current:Knowled
  const latestTranslations=await publicThemeSnapshotTranslations(c,current,language);
  const latest={resolved:current,displayTranslations:latestTranslations};
  if(language==='ja'||hasThemeLocale({...current,displayTranslations:latestTranslations},language))return latest;
- const history=(await c.query("SELECT revision,content,created_at FROM knowledge75.revisions WHERE kind='theme' AND id=$1 AND revision<$2 ORDER BY revision DESC",[current.theme.id,current.theme.revision])).rows;
+ const history=(await readThemeLineage(c,current.theme.id,current.theme.revision)).slice(1);
  let next=current.theme;
  for(const row of history){
-  if(Number(row.revision)!==next.revision-1||!additiveThemeContent(row.content,next.content))break;
+  if(!additiveThemeContent(row.content,next.content))break;
   const transitionRevision=next.revision;
   next={id:current.theme.id,revision:Number(row.revision),content:row.content,createdAt:new Date(row.created_at).toISOString(),reason:''} as KnowledgeThemeVersion;
   // Private intermediate editions participate in continuity checks, but can
@@ -31,7 +32,7 @@ export async function resolveThemeLocalePublication(c:PoolClient,current:Knowled
   if((await c.query("SELECT 1 FROM jsonb_to_recordset($1::jsonb) AS p(kind text,id text,revision integer) JOIN knowledge75.objects o USING(kind,id) WHERE o.current_revision>p.revision LIMIT 1",[JSON.stringify(pins)])).rowCount)break;
   const translations=await publicThemeSnapshotTranslations(c,candidate,language);
   const slots=new Set(translations.filter(t=>(t.displayTarget??t.target).kind==='theme').map(t=>translationTargetKey({...t.displayTarget??t.target,revision:1})));
-  const hidden=(await c.query("SELECT target FROM knowledge75.text_translation_heads WHERE language=$1 AND visibility<>'public' AND target->>'kind'='theme' AND target->>'id'=$2 AND (target->>'revision')::integer BETWEEN $3 AND $4",[language,next.id,next.revision,current.theme.revision])).rows;
+  const hidden=(await c.query("SELECT target FROM knowledge75.text_translation_heads WHERE language=$1 AND visibility<>'public' AND target->>'kind'='theme' AND target->>'id'=$2 AND (target->>'revision')::integer=ANY($3::integer[])",[language,next.id,[current.theme.revision,...history.filter(v=>v.revision>=next.revision).map(v=>v.revision)]])).rows;
   if(hidden.some(h=>slots.has(translationTargetKey({...h.target,revision:1}))))break;
   if(!hasThemeLocale({...candidate,displayTranslations:translations},language))continue;
   // Prove this was an available language edition before the next composition,

@@ -11,7 +11,7 @@ export async function applyAcceptedThemeKnowledge(c:PoolClient,input:{
  id:string;working:KnowledgeThemeVersion;record:KnowledgePin;actorId:string;requestId:string;
  read:(revision:number)=>Promise<KnowledgeThemeVersion>;
  append:(theme:KnowledgeThemeVersion)=>Promise<KnowledgeThemeContent>;
- put:(content:KnowledgeThemeContent,revision:number)=>Promise<KnowledgeThemeVersion>;
+ put:(content:KnowledgeThemeContent,parent:number)=>Promise<KnowledgeThemeVersion>;
 }){
  const {id,working,record}=input;
  const state=(await c.query('SELECT *,draft_updated_at>updated_at AS translation_draft FROM knowledge75.theme_publications WHERE theme_id=$1 FOR UPDATE',[id])).rows[0];
@@ -21,7 +21,7 @@ export async function applyAcceptedThemeKnowledge(c:PoolClient,input:{
  const includes=(t:KnowledgeThemeVersion)=>t.content.recordPins.some(p=>p.id===record.id&&p.revision===record.revision);
  if(!state.published_revision){
   if(includes(working))return {revision:working.revision,changed:false};
-  const next=await input.put(await input.append(working),working.revision+1);await provenance(next.revision,working.revision,'working');
+  const next=await input.put(await input.append(working),working.revision);await provenance(next.revision,working.revision,'working');
   return {revision:next.revision,changed:true};
  }
  const published=await input.read(Number(state.published_revision));
@@ -29,7 +29,7 @@ export async function applyAcceptedThemeKnowledge(c:PoolClient,input:{
  // draft removal, or manufacture a new release/revision.
  if(includes(published))return {revision:published.revision,changed:false};
  await freezeThemeReleases(c,id);
- const next=await input.put(await input.append(published),working.revision+1);
+ const next=await input.put(await input.append(published),published.revision);
  await provenance(next.revision,published.revision,'published');
  await releaseAcceptedThemeKnowledge(c,published,next,{actorId:input.actorId,requestId:input.requestId,record});
  if(working.revision!==published.revision){
@@ -37,7 +37,7 @@ export async function applyAcceptedThemeKnowledge(c:PoolClient,input:{
   // Three-way merge: respect explicit removal/replacement of this pin in the
   // editorial draft. All other prose, stories, pins and timeline stay there.
   const diverged=basePin?.revision!==draftPin?.revision;
-  const draft=await input.put(diverged?working.content:await input.append(working),next.revision+1);
+  const draft=await input.put(diverged?working.content:await input.append(working),working.revision);
   await provenance(draft.revision,working.revision,'working');
   return {revision:next.revision,changed:true};
  }

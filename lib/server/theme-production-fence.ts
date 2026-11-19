@@ -5,6 +5,7 @@ import type {ProductionSubmissionCommand} from '../domain/theme-production';
 
 type Context={pool:Pool;owner:string;caseId:string;executionId:string;leaseToken:string;submissionId:string;digest:string};
 const context=new AsyncLocalStorage<Context>();
+export const inThemeProductionSubmission=()=>context.getStore()!==undefined;
 export const withThemeProductionSubmission=<T>(value:Context,call:()=>Promise<T>)=>context.run(value,call);
 /** Inert for ordinary/manual writes and all normal worker processing. */
 export async function assertThemeProductionLease(client?:Pool|PoolClient){

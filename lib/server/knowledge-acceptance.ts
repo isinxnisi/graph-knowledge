@@ -1,3 +1,6 @@
+import {operatorThemeRead} from './knowledge-theme-access';
+import {themeEditions} from './knowledge-theme-editions';
+import {themePublicationRevision} from './knowledge-theme-publication';
 import {knowledgeCapability,deploymentMemberAllowed,reviewMemberScope} from "./knowledge-deployment";
 import {verifyTranslationReviewContext} from "./knowledge-translation-context";
 import {GEMINI_TRANSLATION_POLICY} from "./gemini-knowledge-review";
@@ -95,10 +98,18 @@ export async function verifyAcceptanceReferences(c:PoolClient,refs:AcceptancePla
   const row=(await c.query(`SELECT o.*,r.content,EXISTS(SELECT 1 FROM knowledge75.published_revisions p WHERE p.kind=o.kind AND p.id=o.id AND p.revision=$3) AS published FROM knowledge75.objects o JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=$3 WHERE o.kind=$1 AND o.id=$2 ${lock?(ref.kind==='theme'?"FOR UPDATE OF o":"FOR SHARE OF o"):""}`,[ref.kind,ref.id,ref.revision])).rows[0];
   if(!row&&ref.legacy)continue;
   if(!row||row.visibility!=='public'||!row.published||(ref.kind!=='theme'&&ref.kind!=='source'&&row.current_revision!==ref.revision))throw new SourceCheckError('取得元の内容や公開範囲が変わりました。最新版を確認して投稿し直してください。');
-  if(ref.kind==='theme'&&row.current_revision!==ref.revision){
-   const current=(await c.query("SELECT content FROM knowledge75.revisions WHERE kind='theme' AND id=$1 AND revision=$2",[ref.id,row.current_revision])).rows[0]?.content;
-   const base=ref.content as {title:string;description:string;initialView:string;timeline?:{axes:unknown;insets:unknown;placements:unknown[]};recordPins:{id:string;revision:number}[]};
-   if(!current||!base||['title','description','initialView'].some(k=>current[k]!==base[k as keyof typeof base])||knowledgeDigest(current.timeline?.axes??null)!==knowledgeDigest(base.timeline?.axes??null)||knowledgeDigest(current.timeline?.insets??null)!==knowledgeDigest(base.timeline?.insets??null)||base.recordPins.some(p=>!current.recordPins.some((v:{id:string;revision:number})=>v.id===p.id&&v.revision===p.revision))||(base.timeline?.placements??[]).some(p=>!current.timeline?.placements.some((v:unknown)=>knowledgeDigest(v)===knowledgeDigest(p))))throw new SourceCheckError('追加先テーマの内容が変わりました。最新版を確認して投稿し直してください。');
+  if(ref.kind==='theme'){
+   const state=await themeEditions(c,ref.id);
+   let currentRevision=state.published.revision;
+   if(operatorThemeRead()){
+    if(state.draft?.revision===ref.revision)currentRevision=ref.revision;
+    else if(currentRevision!==ref.revision)currentRevision=state.workingRevision;
+   }else await themePublicationRevision(c,ref.id,ref.revision);
+   if(currentRevision!==ref.revision){
+    const current=(await c.query("SELECT content FROM knowledge75.revisions WHERE kind='theme' AND id=$1 AND revision=$2",[ref.id,currentRevision])).rows[0]?.content;
+    const base=ref.content as {title:string;description:string;initialView:string;timeline?:{axes:unknown;insets:unknown;placements:unknown[]};recordPins:{id:string;revision:number}[]};
+    if(!current||!base||['title','description','initialView'].some(k=>current[k]!==base[k as keyof typeof base])||knowledgeDigest(current.timeline?.axes??null)!==knowledgeDigest(base.timeline?.axes??null)||knowledgeDigest(current.timeline?.insets??null)!==knowledgeDigest(base.timeline?.insets??null)||base.recordPins.some(p=>!current.recordPins.some((v:{id:string;revision:number})=>v.id===p.id&&v.revision===p.revision))||(base.timeline?.placements??[]).some(p=>!current.timeline?.placements.some((v:unknown)=>knowledgeDigest(v)===knowledgeDigest(p))))throw new SourceCheckError('追加先テーマの内容が変わりました。最新版を確認して投稿し直してください。');
+   }
   }
   if(ref.content&&knowledgeDigest(ref.content)!==knowledgeDigest(row.content))throw new SourceCheckError('対象名・資料の取得版が原記録と異なります。取得元の内容を確認してください。');
  }

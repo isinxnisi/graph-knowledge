@@ -41,8 +41,8 @@ export const publicationStorageMigration = "012-publication-storage.sql";
 const publisherLock = 7500002;
 
 
-export async function ensureKnowledgePublicationSchema(pool: Pool) {
-  await ensureKnowledgeFoundationSchema(pool);
+export async function ensureKnowledgePublicationSchema(pool: Pool, options:{editorial?:boolean}={}) {
+  await ensureKnowledgeFoundationSchema(pool,options);
   await migrateKnowledgeIdentities(pool);
   const sql = await readFile(path.join(process.cwd(),"migrations/knowledge-foundation",schemaVersion),"utf8");
   const checksum = createHash("sha256").update(sql).digest("hex");

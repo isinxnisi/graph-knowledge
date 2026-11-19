@@ -1,6 +1,7 @@
+import {ordinaryThemeBaseline,themeEditions,type ThemeEdit} from './knowledge-theme-editions';
 import {themePublicationState} from './knowledge-theme-publication';
 import {withOperatorThemeRead} from './knowledge-theme-access';
-import {assertThemeProductionLease,guardThemeProductionRequest} from './theme-production-fence';
+import {assertThemeProductionLease,guardThemeProductionRequest,inThemeProductionSubmission} from './theme-production-fence';
 import {ensureThemeRetries,controlThemeRetries,readThemeRetries} from './knowledge-theme-retries';
 import {controlThemeRetrySchema} from '../domain/knowledge-theme-registration';
 import {amendThemeItems,readThemeItemAmendments,ensureThemeItemAmendments,themeItemAmendmentsAvailable} from './knowledge-theme-item-amendments';
@@ -64,18 +65,29 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
   if(presentation?.some((v:{imageId?:string})=>v.imageId))await c.query('UPDATE theme_editorial_asset_reference SET published=true WHERE request_id=$1',[r.request_id]);
   await c.query("UPDATE knowledge_missions.theme_registrations SET state=$2,result=$3,reason=$4,updated_at=clock_timestamp() WHERE request_id=$1",[r.request_id,issues.length?'published-with-issues':'published',JSON.stringify({id:result.id,revision:result.revision,excludedKeys:issues}),issues.length?'確認を通った項目でテーマへ反映しました。未反映の項目は受付結果で確認できます。':'テーマへの反映が完了しました。']);
  }
+ async function baselineFor(owner:string,input:Extract<ReturnType<typeof themeAuthoringRequestSchema.parse>,{target:unknown}>){
+  if(input.editorial)await ordinaryThemeBaseline(knowledge,input.target.id,input.target.revision,input.editorial);
+  else {
+   const state=await themeEditions(knowledge,input.target.id);
+   if(state.draft&&state.published.revision===null)throw new KnowledgeError('通常編集の新規テーマは通常編集として更新してください。',409,'PRODUCTION_EDIT_CHANNEL');
+  }
+  const theme=await withOperatorThemeRead(()=>foundation.get({kind:'reader',id:actorId(owner)},'theme',input.target.id,input.editorial?input.target.revision:undefined));
+  if(theme.revision!==input.target.revision)throw new KnowledgeError('テーマが更新されています。Chatから読み直し、変更内容を照合してください。',409,'REVISION_CONFLICT');
+  return theme;
+ }
  async function submit(owner:string,raw:unknown){
   await current(pool,owner);
   const input=themeAuthoringRequestSchema.parse(raw),hash=knowledgeDigest(input);
   await guardThemeProductionRequest(pool,owner,{action:'target' in input?'update-theme':'submit-theme',...input});
+  if(input.editorial&&inThemeProductionSubmission())throw new KnowledgeError('制作案件の登録には通常編集の指定を使えません。',409,'PRODUCTION_EDIT_CHANNEL');
+  if('reconcilePublished' in input&&input.reconcilePublished&&!inThemeProductionSubmission())throw new KnowledgeError('制作原稿の公開版照合は案件から送信してください。',409,'PRODUCTION_EDIT_CHANNEL');
   const productPins='target' in input?input.changes.productPins:input.productPins;if(productPins)await validateProductPins(pool,productPins);
   await ensure();
   const saved=(await pool.query('SELECT owner_id,input_hash,state FROM knowledge_missions.theme_registrations WHERE request_id=$1',[input.requestId])).rows[0];
   if(saved){if(saved.owner_id!==owner||saved.input_hash!==hash)throw new KnowledgeError('同じ受付IDに異なる内容は送れません。',409,'REQUEST_CHANGED');return {requestId:input.requestId,state:saved.state,replayed:true};}
   if('target' in input){
    await ensureThemeUpdateSchema(pool);
-   const theme=await withOperatorThemeRead(()=>foundation.get({kind:'reader',id:actorId(owner)},'theme',input.target.id));
-   if(theme.revision!==input.target.revision)throw new KnowledgeError('テーマが更新されています。Chatから読み直し、変更内容を照合してください。',409,'REVISION_CONFLICT');
+   const theme=await baselineFor(owner,input);
    if(input.removeRecordIds.some(id=>!theme.content.recordPins.some(p=>p.id===id)))throw new KnowledgeError('掲載解除する記録が対象テーマにありません。',400,'THEME_MEMBER_REQUIRED');
    for(const item of input.package?.items??[])
     if(item.operation==='correct-record'&&item.correction&&!theme.content.recordPins.some(p=>p.id===item.correction!.id)&&!input.recordPins.some(p=>p.id===item.correction!.id))throw new KnowledgeError('訂正する記録を対象テーマから選んでください。',400,'THEME_MEMBER_REQUIRED');
@@ -104,7 +116,7 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
   if(r.result?.id)try{const v=await withOperatorThemeRead(()=>foundation.get({kind:'reader',id:actorId(owner)},'theme',r.result.id,r.result.revision));theme={id:v.id,revision:v.revision,title:v.content.title,url:(process.env.MEMBER_ORIGIN??'')+'/?ktheme='+encodeURIComponent(v.id)+'&krev='+v.revision};}catch{/* No stopped/private dependency is disclosed through old receipt links. */}
   const requestedPresentation=r.input.target?r.input.changes?.presentation:r.input.presentation;
   const components={presentation:{requestedLocales:requestedPresentation?.map((p:{locale:string})=>p.locale)??null,applied:theme!==null&&['published','published-with-issues'].includes(r.state)},imageIds:requestedPresentation?.flatMap((p:{imageId?:string})=>p.imageId?[p.imageId]:[])??[],productPins:r.input.target?r.input.changes?.productPins??null:r.input.productPins??null};
-  return {requestId,state:r.state,publication:theme?await themePublicationState(knowledge,theme.id):null,previewUrl:theme?(process.env.MEMBER_ORIGIN??'')+'/operations/themes/'+encodeURIComponent(theme.id):null,reason:r.reason,components,retryControl:await readThemeRetries(pool,r,selection?.itemKey,knowledge),itemAmendments:await readThemeItemAmendments(pool,r,selection),operation:r.input.target?'update':'create',target:r.input.target??null,title:theme?.title??r.input.title??r.input.changes?.title??'',receipt,theme,excludedKeys:r.result?.excludedKeys??[],nextAttemptAt:['saved','processing'].includes(r.state)?r.next_attempt:null};
+  return {requestId,state:r.state,...(theme&&r.input.editorial?{editorial:(await themeEditions(knowledge,theme.id)).draft}:{}),publication:theme?await themePublicationState(knowledge,theme.id):null,previewUrl:theme?(process.env.MEMBER_ORIGIN??'')+'/operations/themes/'+encodeURIComponent(theme.id)+(r.input.editorial?'?revision='+theme.revision:''):null,reason:r.reason,components,retryControl:await readThemeRetries(pool,r,selection?.itemKey,knowledge),itemAmendments:await readThemeItemAmendments(pool,r,selection),operation:r.input.target?'update':'create',target:r.input.target??null,title:theme?.title??r.input.title??r.input.changes?.title??'',receipt,theme,excludedKeys:r.result?.excludedKeys??[],nextAttemptAt:['saved','processing'].includes(r.state)?r.next_attempt:null};
  }
  async function amend(owner:string,raw:unknown){
   const input=amendThemeRegistrationSchema.parse(raw);
@@ -151,8 +163,7 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
    let baseline:Awaited<ReturnType<typeof foundation.get<'theme'>>>|undefined;
    if('target' in input){
     await ensureThemeUpdateSchema(pool);
-    baseline=await withOperatorThemeRead(()=>foundation.get({kind:'reader',id:actorId(r.owner_id)},'theme',input.target.id));
-    if(baseline.revision!==input.target.revision)throw new KnowledgeError('テーマが更新されています。Chatから読み直し、変更内容を照合してください。未反映の構成を自動で上書きしません。',409,'REVISION_CONFLICT');
+    baseline=await baselineFor(r.owner_id,input);
    }
    if(input.package&&!r.receipt_id){
     const delivered=await web.deliver(r.owner_id,r.request_id,input.package);
@@ -216,7 +227,10 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
     textLanguages:input.changes.textLanguages?{...baseline.content.textLanguages,...input.changes.textLanguages}:baseline.content.textLanguages,
     reading,stories,initialView:input.changes.initialView??baseline.content.initialView,productPins:input.changes.productPins??baseline.content.productPins,recordPins:pins,timeline,reason:input.reason,
    }:{action:'create-theme',requestId:r.request_id,id:r.theme_id,reading,...(!('target' in input)?{title:input.title,description:input.description,stories,textLanguages:input.textLanguages,initialView:input.initialView,productPins:input.productPins}:{}),recordPins:pins,timeline,reason:'ChatGPTから受け付けた運営テーマ。原資料確認を通った公開記録の版を構成へ固定。'});
-   const result=await foundation.execute({kind:'operator',id:actorId(r.owner_id)},command) as {id:string;revision:number};
+   const themeEdit:ThemeEdit|undefined='target' in input
+    ?input.editorial?{ordinary:input.editorial}:input.reconcilePublished?{reconcile:input.reconcilePublished}:undefined
+    :input.editorial?{ordinary:{base:{revision:null,releaseId:null}}}:undefined;
+   const result=await foundation.execute({kind:'operator',id:actorId(r.owner_id)},command,undefined,themeEdit) as {id:string;revision:number};
    await options.afterThemeCommit?.();
    await savePublished(c,r,result,excluded);return true;
   });}catch(e){

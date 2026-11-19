@@ -1,5 +1,6 @@
+import {themeEditions} from './knowledge-theme-editions';
 import {withOperatorThemeRead} from './knowledge-theme-access';
-import {assertThemeProductionLease,withThemeProductionPublication,guardThemeProductionRequest} from './theme-production-fence';
+import {assertThemeProductionLease,withThemeProductionPublication,guardThemeProductionRequest,inThemeProductionSubmission} from './theme-production-fence';
 import type {Pool} from 'pg';
 import {readThemeTranslationSchema,submitThemeTranslationSchema,type SubmitThemeTranslation,type ReadThemeTranslation} from '../domain/knowledge-theme-translation';
 import {knowledgeSubmissionContentSchema,type KnowledgeSubmissionContext} from '../domain/knowledge-submission';
@@ -57,12 +58,14 @@ export function createThemeTranslationAuthoring(pool:Pool,knowledge:Pool,origin:
   const states=value.review?.items.map(v=>v.publication?.state==='published'?'published':v.state)??[];
   const state=accepted?'published':value.state==='cancelled'?'cancelled':states.length&&states.every(s=>s==='published')?'published':states.some(s=>['needs-changes','declined'].includes(s))?'needs-changes':states.length?'processing':'saved';
   return {requestId,submissionId:value.id,state,theme:{id:theme.id,revision:theme.revision},target:item.translation!.target,language:item.translation!.language,publication:accepted?{kind:'translation',...accepted}:null,review:value.review??null,
-   reason:state==='saved'?'送信は未完了です。同じrequestIdと内容でsubmit_theme_translationを再送すると続きから処理します。':state==='published'?'訳文を登録しました。テーマ固有の訳文の一般公開は独立見直し完了時に切り替わります。原文・テーマの内容版と保存済みCapsuleは保持しています。':'原文・版を確認して登録しています。同じrequestIdで再送すると処理を再開できます。'};
+   reason:state==='saved'?'送信は未完了です。同じrequestIdと内容でsubmit_theme_translationを再送すると続きから処理します。':state==='published'?'訳文を登録しました。テーマ固有の訳文は、その作業版を公開するときに一般公開へ切り替わります。原文・テーマの内容版と保存済みCapsuleは保持しています。':'原文・版を確認して登録しています。同じrequestIdで再送すると処理を再開できます。'};
  }
  async function submit(owner:string,raw:SubmitThemeTranslation){
   await allowed(owner);const input=submitThemeTranslationSchema.parse(raw),command=themeTranslationCapture(owner,input);
   await guardThemeProductionRequest(pool,owner,{action:'submit-translation',...input});
   const theme=await member(input.theme,input.translation.target);
+  if(inThemeProductionSubmission()&&input.translation.target.kind==='theme'&&(await themeEditions(knowledge,theme.id)).draft?.revision===theme.revision)
+   throw new KnowledgeError('制作案件の訳文は制作原稿の版を指定してください。',409,'PRODUCTION_EDIT_CHANNEL');
   let captured=await store.replay(owner,command.requestId,knowledgeDigest(command));
   if(!captured){
    const c=await knowledge.connect();let context:KnowledgeSubmissionContext;

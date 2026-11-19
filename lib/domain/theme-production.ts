@@ -33,7 +33,7 @@ export type ThemeOperatorCommand=ThemeRegistrationCommand|ThemeProductionCommand
 export type ProductionFence=z.infer<typeof productionFenceSchema>;
 export type ProductionProgress=z.infer<typeof productionProgressSchema>;
 export const productionSubmissionSummarySchema=z.strictObject({id:z.uuidv4(),requestId:z.uuidv4(),action:z.string(),digest:z.string(),state:z.enum(['prepared','uncertain','accepted','pending','applied','failed','withdrawn']),reason:z.string(),dispatches:z.number().int().nonnegative()});
-export const productionEvaluationTargetSchema=z.strictObject({theme:knowledgePinSchema,digest:z.string(),guide:z.strictObject({id:z.string(),revision:z.number().int().nonnegative()}),references:z.json()});
+export const productionEvaluationTargetSchema=z.strictObject({theme:knowledgePinSchema,digest:z.string(),guide:z.strictObject({id:z.string(),revision:z.number().int().nonnegative()}),references:z.json(),publicationConflict:z.json().optional()});
 export const themeProductionCaseSchema=z.strictObject({
  id:z.uuidv4(),ownerId:z.uuidv4(),workflow:productionWorkflowSchema,environment:z.enum(['beta','production']),origin:z.url(),version:z.number().int().positive(),phase:productionPhaseSchema,
  status:z.enum(['ready','working','waiting-publication','blocked','completed','needs-review']),progress:productionProgressSchema,theme:knowledgePinSchema.nullable(),

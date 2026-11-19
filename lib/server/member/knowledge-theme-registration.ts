@@ -1,3 +1,4 @@
+import {publishOrdinaryTheme} from '../knowledge-theme-operator-publication';
 import {withOperatorThemeRead} from '../knowledge-theme-access';
 import {themePublicationState} from '../knowledge-theme-publication';
 import {checkThemePublication} from '../theme-publication-check';
@@ -61,22 +62,31 @@ export async function dispatchThemeRegistration(owner:string,raw:ThemeOperatorCo
   if(command.action==='read-quality-guide'){const {action,...input}=command;void action;return await createThemeQualityGuides(memberRuntime().pool).read(owner,input);}
   if(command.action==='update-quality-guide'){const {action,...input}=command;void action;return await createThemeQualityGuides(memberRuntime().pool).update(owner,input);}
   if(command.action==='find-themes')return await reader!.find('theme',command.query,command.cursor);
+  if(command.action==='publish-theme'){
+   const {action,...input}=command;void action;
+   return publishOrdinaryTheme(memberRuntime().pool,knowledgePool!,owner,input,id=>registration!.authorize(id));
+  }
   if(command.action==='check-theme-publication'){
-   const original=await reader!.read(command.theme),service=await knowledgePublicationPreview(),origin=memberRuntime().config.origin;
+   const original=await reader!.read(command.theme,undefined,command.view),service=await knowledgePublicationPreview(),origin=memberRuntime().config.origin;
    if(!['https://plunode.net','https://graph-beta.isinxnisi.com'].includes(origin))throw new KnowledgeError('正規公開originの接続で確認してください。',400,'INVALID_ORIGIN');
    if(command.expectedRevision&&original.theme.revision!==command.expectedRevision)throw new KnowledgeError('対象テーマが更新されました。現在版を読み直してください。',409,'REVISION_CONFLICT');
    const publication=await themePublicationState(knowledgePool!,original.theme.id);
-   if(publication.state==='private'||publication.workingChanges||publication.publishedRevision!==original.theme.revision)return {state:publication.state==='private'?'private':'working-private',publication,previewUrl:origin+'/operations/themes/'+encodeURIComponent(original.theme.id),message:'運営者プレビューで独立した全体見直しを完了してください。登録済みは一般公開済みを意味しません。'};
+   if(command.view!=='published'&&(publication.state==='private'||publication.workingChanges||publication.publishedRevision!==original.theme.revision))return {state:publication.state==='private'?'private':'working-private',publication,previewUrl:origin+'/operations/themes/'+encodeURIComponent(original.theme.id),message:'運営者プレビューで独立した全体見直しを完了してください。登録済みは一般公開済みを意味しません。'};
    const expectations=await Promise.all([...new Set(command.languages)].map(async language=>{
     const value=await service.theme({themeId:original.theme.id,language},{localeEdition:true});
     if(!hasThemeLocale(value,language))throw new KnowledgeError('指定言語の本文はまだ公開準備中です。',409,'LOCALE_NOT_READY');
     const t=value.theme,p=value.presentation,first=value.snapshot.records.find(r=>r.content.times.length)??value.snapshot.records[0];
     return {id:t.id,language,title:themeLocaleTitle(value,language),bodyText:p?.lead||knowledgeDisplayText(value.displayTranslations,{kind:'theme',id:t.id,revision:t.revision,field:'description'},language,t.content.description)||p?.records.find(r=>r.target.id===first?.id)?.shortTitle||(first?knowledgeDisplayText(value.displayTranslations,{kind:'record',id:first.id,revision:first.revision,field:'assertion'},language,first.content.assertion):''),servedRevision:t.revision,latestRevision:value.localeEdition?.latestRevision??t.revision};
    }));
-   return await checkThemePublication(origin,expectations);
+   const result=await checkThemePublication(origin,expectations);
+   if(command.view==='published'){
+    const after=await themePublicationState(knowledgePool!,original.theme.id);
+    if(after.publishedRevision!==original.theme.revision||after.releaseId!==publication.releaseId)throw new KnowledgeError('公開版が更新されました。提供内容を再確認してください。',409,'THEME_PUBLICATION_CONFLICT');
+   }
+   return result;
   }
   if(command.action==='read-theme'){
-   const result=await reader!.read(command.theme,command.revision);
+   const result=await reader!.read(command.theme,command.revision,command.view);
    return {...result,presentation:result.theme.content.reading??['ja','en'].map(locale=>themeReadingPresentation(result.theme,locale,result.snapshot)).filter(Boolean),products:await Promise.all((result.theme.content.productPins??[]).map(pin=>readEditorialProduct(memberRuntime().pool,pin.id,pin.revision)))};
   }
   if(command.action==='find-knowledge')return await reader!.find(command.kind,command.query,command.cursor);

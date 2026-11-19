@@ -1,4 +1,6 @@
-import {withOperatorThemeRead} from './knowledge-theme-access';
+import {ordinaryPublicationSnapshot} from './knowledge-theme-operator-publication';
+import {themeEditions} from './knowledge-theme-editions';
+import {withOperatorThemeRead,withPublicThemeRead} from './knowledge-theme-access';
 import {themePublicationState} from './knowledge-theme-publication';
 import {themeReadingPresentation} from "./theme-reading-presentation";
 import {themeStoryEntries} from "../domain/theme-stories";
@@ -21,8 +23,12 @@ export function createThemeAuthoringReader(pool:Pool,origin:string){
   if(parsed.origin!==origin||!parsed.searchParams.get('ktheme')&&!path)throw new KnowledgeError('この接続先のテーマURLを指定してください。');
   return parsed.searchParams.get('ktheme')??decodeURIComponent(path![1]);
  }
- async function read(theme:string,revision?:number){
-  const result=await foundation.resolveTheme(reader,themeId(theme),revision);
+ async function read(theme:string,revision?:number,view?:'working'|'editorial'|'published'){
+  const id=themeId(theme),editions=await themeEditions(pool,id);
+  const targetRevision=revision??(view==='editorial'?editions.draft?.revision??editions.published.revision??undefined:undefined);
+  if(view==='editorial'&&!targetRevision)throw new KnowledgeError('通常編集の作業版または公開版がありません。',404,'NOT_FOUND');
+  const result=await (view==='published'?withPublicThemeRead:withOperatorThemeRead)(()=>foundation.resolveTheme(reader,id,targetRevision));
+  const forPublication=view==='editorial'?await ordinaryPublicationSnapshot(pool,id,result.theme.revision):null;
   const translationTargets=[...themeTimelineTextTargets(result.theme),...result.snapshot.records.flatMap(recordTimeTextTargets)].map(target=>({target,original:knowledgeOriginalText(target,target.kind==='theme'?result.theme.content:result.snapshot.records.find(r=>r.id===target.id)!.content).text}));
   const presentations=(['ja','en'] as const).map(locale=>themeReadingPresentation(result.theme,locale,result.snapshot)).filter(p=>p!==null);
   const stories=result.theme.content.stories;
@@ -31,7 +37,7 @@ export function createThemeAuthoringReader(pool:Pool,origin:string){
    candidates:result.snapshot.records.map(record=>({target:{id:record.id,revision:record.revision},kind:record.content.kind,
     assertion:record.content.assertion,headings:presentations.flatMap(p=>p.records.filter(r=>r.target.id===record.id&&r.target.revision===record.revision).map(r=>({locale:p.locale,shortTitle:r.shortTitle,chapterQuestion:r.chapterQuestion,explanations:r.explanations}))),evidence:record.content.evidence})),
    updateField:'update_theme.changes.stories',rules:'Selection is independent of timeline/Graph membership. All kinds are candidates. Ordered items may group multiple exact Record versions. Omit to retain; {version:1,items:[]} explicitly empties the list. Missing/private records are never exposed. Source URLs and exact source versions are in snapshot.sources. Read the current quality guide to edit prose; no automatic AI selection or review.'};
-  return {...result,publication:await themePublicationState(pool,result.theme.id),previewUrl:origin+'/operations/themes/'+encodeURIComponent(result.theme.id),storyEditing,translationTargets,target:{id:result.theme.id,revision:result.theme.revision},url:url(result.theme.id,result.theme.revision)};
+  return {...result,edition:view?{view,...editions}:undefined,publicationCandidate:view==='editorial'?forPublication?.candidate??null:undefined,themeTranslations:forPublication?.translations,productionConflict:editions.productionConflict?{previous:editions.productionConflict,current:editions.published}:undefined,publication:await themePublicationState(pool,result.theme.id),previewUrl:origin+'/operations/themes/'+encodeURIComponent(result.theme.id)+(view==='editorial'?'?revision='+result.theme.revision:''),storyEditing,translationTargets,target:{id:result.theme.id,revision:result.theme.revision},url:url(result.theme.id,result.theme.revision)};
  }
  async function find(kind:'theme'|'entity'|'record'|'source',query:string,cursor:number){
   // Candidates are bounded and independently checked for public dependencies.

@@ -29,3 +29,21 @@ it('advertises manual case creation without changing scheduled defaults and forw
  const reply=await(await handler.fetch(rpc('tools/call',{name:'create_theme_production',arguments:input}))).json();expect(reply.result.isError).not.toBe(true);expect(call).toHaveBeenCalledWith({action:'create-theme-production',...input});
  expect(themeAuthoringGuide().productionHandoff.manualExample.input.workflow).toBe('manual');
 });
+
+it('exposes explicit ordinary publication to compose without weakening collection or legacy tools',async()=>{
+ const publish={requestId:randomUUID(),target:{id:'theme',revision:3},base:{revision:1,releaseId:null},digest:'b'.repeat(64),reason:'確認済みの通常編集'};
+ const call=vi.fn().mockResolvedValue({state:'published'});
+ const handler=createMissionMcpHandler(vi.fn(),{call});
+ const data=await(await handler.fetch(rpc('tools/list',{}))).json();
+ const tool=data.result.tools.find((v:{name:string})=>v.name==='publish_theme');
+ expect(tool.inputSchema.required).toContain('digest');
+ expect(tool._meta.securitySchemes[0].scopes).toContain('themes:compose');
+ expect(data.result.tools.map((v:{name:string})=>v.name)).toEqual(expect.arrayContaining(['claim_collection','deliver_collection',...names]));
+ await handler.fetch(rpc('tools/call',{name:'publish_theme',arguments:publish}));
+ expect(call).toHaveBeenCalledWith({action:'publish-theme',...publish});
+ call.mockClear();
+ const denied=createMissionMcpHandler(vi.fn(),{call,authChallenge:'Bearer scope="themes:compose"'});
+ const rejected=await(await denied.fetch(rpc('tools/call',{name:'publish_theme',arguments:publish}))).json();
+ expect(rejected.result.isError).toBe(true);
+ expect(call).not.toHaveBeenCalled();
+});

@@ -35,3 +35,15 @@ export async function approvedThemeTranslations(c:PoolClient,target:KnowledgeTex
  const ids=rows.map(t=>t.id),visible=new Set((await c.query("SELECT id FROM knowledge75.text_translation_heads WHERE id=ANY($1::text[]) AND visibility='public'",[ids])).rows.map(r=>r.id));
  return rows.filter(t=>visible.has(t.id));
 }
+
+/** Called with the common knowledge writer lock held. The release row serves
+ * the latest approval of an edition; approvals retain each exact snapshot. */
+export async function writeEditorialThemeRelease(c:PoolClient,theme:KnowledgeThemeVersion,releaseId:string,proof:unknown,translations:KnowledgeDisplayTranslation[]){
+ const images=[...new Set((theme.content.reading??[]).flatMap(p=>p.image?.id?[p.image.id]:[]))];
+ const values=[theme.id,theme.revision,releaseId,JSON.stringify(proof),JSON.stringify(translations),JSON.stringify(images)];
+ await c.query(`INSERT INTO knowledge75.theme_releases(theme_id,revision,release_id,proof,theme_translations,image_ids)
+  VALUES($1,$2,$3,$4,$5,$6) ON CONFLICT(theme_id,revision) DO UPDATE
+  SET release_id=EXCLUDED.release_id,proof=EXCLUDED.proof,theme_translations=EXCLUDED.theme_translations,image_ids=EXCLUDED.image_ids,approved_at=clock_timestamp()`,values);
+ await c.query('INSERT INTO knowledge75.theme_release_approvals(theme_id,revision,release_id,proof,theme_translations,image_ids) VALUES($1,$2,$3,$4,$5,$6)',values);
+ await c.query('UPDATE knowledge75.theme_publications SET published_revision=$2,release_id=$3,updated_at=clock_timestamp() WHERE theme_id=$1',[theme.id,theme.revision,releaseId]);
+}

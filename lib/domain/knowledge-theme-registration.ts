@@ -8,11 +8,28 @@ import {readThemeTranslationSchema,submitThemeTranslationSchema} from './knowled
 import {missionMcpPackageSchema} from './knowledge-mission-mcp';
 import {knowledgeThemeContentSchema,knowledgePinSchema,knowledgeTimelineSchema,knowledgeIdSchema} from './knowledge-foundation';
 
+export const publishedThemeBaseSchema=z.strictObject({
+ revision:z.number().int().positive().nullable(),
+ releaseId:z.string().min(1).max(600).nullable(),
+});
+export const themeReconciliationSchema=publishedThemeBaseSchema.extend({
+ supersede:z.array(z.enum(['title','description','initialView','textLanguages','recordPins','timeline','stories','reading','productPins','translations'])).max(10).optional()
+  .describe('Name each public field intentionally superseded after comparing both editions. Unlisted public changes must be retained.'),
+});
+export const themeEditionViewSchema=z.enum(['working','editorial','published']);
+export const publishThemeSchema=z.strictObject({
+ requestId:z.uuidv4(),target:knowledgePinSchema,
+ base:publishedThemeBaseSchema,
+ digest:z.string().regex(/^[a-f0-9]{64}$/),
+ reason:z.string().trim().min(1).max(4000),
+});
+
 /** Editorial composition is independent of the evidence review of its records.
  * This contract is for an authenticated operator's ChatGPT connection, not a
  * public/member Theme-posting form. Unreviewed items never become Theme pins. */
 export const themeRegistrationInputSchema=z.strictObject({
  requestId:z.uuidv4(),
+ editorial:z.literal(true).optional().describe("Create an ordinary private draft eligible for explicit publish_theme. Omit for saved production commands."),
  title:knowledgeThemeContentSchema.shape.title,
  description:knowledgeThemeContentSchema.shape.description,
  textLanguages:knowledgeThemeContentSchema.shape.textLanguages,
@@ -39,6 +56,10 @@ export type ThemeRegistrationInput=z.infer<typeof themeRegistrationInputSchema>;
 export const themeUpdateInputSchema=z.strictObject({
  requestId:z.uuidv4(),
  target:knowledgePinSchema.describe('Existing theme id and exact revision returned by read_theme. Never guess the current revision.'),
+ editorial:z.strictObject({base:publishedThemeBaseSchema,replaceDraftRevision:z.number().int().positive().optional()}).optional()
+  .describe('Ordinary edit. Use the publication base returned by read_theme; replaceDraftRevision explicitly restarts from the published version while keeping earlier versions.'),
+ reconcilePublished:themeReconciliationSchema.optional()
+  .describe('Production only. After comparing the production draft, prior public base and current release, submit the reconciled changes against the exact current release.'),
  changes:z.strictObject({
   title:knowledgeThemeContentSchema.shape.title.optional(),
   description:z.string().max(8000).optional(),
@@ -62,7 +83,8 @@ export const themeUpdateInputSchema=z.strictObject({
  for(const [field,ids] of [['recordPins',v.recordPins.map(p=>p.id)],['removeRecordIds',v.removeRecordIds],['recordOrder',v.recordOrder??[]]] as const)
   if(new Set(ids).size!==ids.length)c.addIssue({code:'custom',path:[field],message:'同じ記録は一度だけ指定してください。'});
  if(v.removeRecordIds.some(id=>v.recordPins.some(p=>p.id===id)))c.addIssue({code:'custom',path:['removeRecordIds'],message:'追加・更新と掲載解除を同時に指定できません。'});
- if(!v.package&&!v.recordPins.length&&!v.removeRecordIds.length&&!v.recordOrder&&!Object.keys(v.changes).length)c.addIssue({code:'custom',message:'変更する内容を指定してください。'});
+ if(v.editorial&&v.reconcilePublished)c.addIssue({code:'custom',path:['editorial'],message:'通常編集と制作原稿の照合は別の操作です。'});
+ if(!v.reconcilePublished&&!v.package&&!v.recordPins.length&&!v.removeRecordIds.length&&!v.recordOrder&&!Object.keys(v.changes).length)c.addIssue({code:'custom',message:'変更する内容を指定してください。'});
  for(const [i,item] of (v.package?.items??[]).entries()){
   if(item.themes?.some(p=>p.id!==v.target.id||p.revision!==v.target.revision))c.addIssue({code:'custom',path:['package','items',i,'themes'],message:'この更新で追加するテーマは、対象テーマの取得版だけを指定してください。'});
   if(item.about?.kind==='theme'&&(item.about.id!==v.target.id||item.about.revision!==v.target.revision))c.addIssue({code:'custom',path:['package','items',i,'about'],message:'テーマの情報は、この更新の対象テーマに結び付けてください。'});
@@ -101,6 +123,7 @@ export type ControlThemeRetry=z.infer<typeof controlThemeRetrySchema>;
 export const themeRegistrationCommandSchema=z.discriminatedUnion('action',[
  ...productAuthoringCommandSchema.options,
  themePublicationCheckSchema.extend({action:z.literal('check-theme-publication')}),
+ publishThemeSchema.extend({action:z.literal('publish-theme')}),
  themeRetryStatusSchema.extend({action:z.literal('theme-retry-status')}),
  controlThemeRetrySchema.safeExtend({action:z.literal('control-theme-retry')}),
  uploadEditorialImageSchema.safeExtend({action:z.literal('upload-editorial-image')}),
@@ -117,7 +140,7 @@ export const themeRegistrationCommandSchema=z.discriminatedUnion('action',[
  readThemeQualityGuideSchema.extend({action:z.literal('read-quality-guide')}),
  updateThemeQualityGuideSchema.safeExtend({action:z.literal('update-quality-guide')}),
  z.strictObject({action:z.literal('find-themes'),query:z.string().trim().max(200).default(''),cursor:z.number().int().min(0).max(1000000).default(0)}),
- z.strictObject({action:z.literal('read-theme'),theme:z.string().min(1).max(2000),revision:z.number().int().positive().optional()}),
+ z.strictObject({action:z.literal('read-theme'),theme:z.string().min(1).max(2000),revision:z.number().int().positive().optional(),view:themeEditionViewSchema.optional()}),
  z.strictObject({action:z.literal('find-knowledge'),kind:z.enum(['entity','record','source']),query:z.string().trim().max(200).default(''),cursor:z.number().int().min(0).max(1000000).default(0)}),
  z.strictObject({action:z.literal('read-knowledge'),kind:z.enum(['entity','record','source']),id:knowledgeIdSchema,revision:z.number().int().positive().optional()}),
 ]);
