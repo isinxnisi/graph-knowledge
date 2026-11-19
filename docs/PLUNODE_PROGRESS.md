@@ -1,4 +1,4 @@
-2026-11-20 テーマ管理API ⑤-a正式監査・⑤-b開発PC復旧／β再確認／固定資材の照合まで完了｜残り正式切替の承認・適用・ChatGPT Web予定3件の確認｜全体⑤まで。source 89fb67b0／β 7anx-y_qLu5lbz-mAi-SI／正式候補 Z_Qv5CFufUf3HwEDuiPdL。正式は会員47／知識12、知識013とWeb・知識3 Workerの切替を承認待ち。[正式移行と各予定への引継ぎ](verification/THEME_EDITORIAL_PUBLICATION_20261120.md)。
+2026-11-20 テーマ管理API ⑤-a正式監査・⑤-b開発PC復旧／β再確認／固定資材の承認・VPS転送照合まで完了｜残り正式切替のsudo実行・検証・ChatGPT Web予定3件の確認｜全体⑤まで。source 89fb67b0／β 7anx-y_qLu5lbz-mAi-SI／正式候補 Z_Qv5CFufUf3HwEDuiPdL。正式は会員47／知識12、知識013とWeb・知識3 Workerの切替はsudo入力待ち。[正式移行と各予定への引継ぎ](verification/THEME_EDITORIAL_PUBLICATION_20261120.md)。
 
 2026-11-20 テーマ管理API：①版分離・②通常公開とガイド・③隔離回帰・④3200／HTTPS β、既存β App更新と通常Chatの正規URL確認まで完了｜残り⑤正式の監査・承認・切替、ChatGPT Web予定3件の引継ぎと実行確認｜全体⑤まで。source f852a3db／β 24aEt-CJv5f0R_JSnqHOy、会員47／知識12。通常公開成功と制作・見直し・収集の書込みは隔離DBで確認。正式と予定プロンプトは未変更。[検証と各予定への引継ぎ](verification/THEME_EDITORIAL_PUBLICATION_20261120.md)。
 

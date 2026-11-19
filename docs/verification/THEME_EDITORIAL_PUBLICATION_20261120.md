@@ -76,7 +76,15 @@ EOF
 - 正式候補buildは `Z_Qv5CFufUf3HwEDuiPdL`。承認対象のseal（`RELEASE-SHA256SUMS` のSHA-256）は `0ef1fb4ad5e687d4d043e19741fca55662fa4e96f5b489ab684cc927665d418d`。ローカルの `.local/theme-admin-20261120/production-release-89fb67b0/` に保管。計画、適用SQL、WebとWorkerのimageのIDとレイヤー、梱包済みarchive（590,611,356 bytes）を照合した。正式公開ツールの隔離Docker検証は7件成功。切替検証の失敗からの旧サービス復帰と、適用済みSQLをスキップする再実行を含む。
 - 承認後、VPSでsealと稼働構成・台帳を再照合する。監査時点と異なる構成・台帳を検出したら停止して再計画する。知識DBを稼働中に `pg_dump -Fc` で退避し、`pg_restore --list` とSHA-256を確認。知識3 Worker → Webの順に停止し、013と台帳を同じトランザクションで確定する。Webの内部経路を確認してから知識3 Workerを再開し、稼働ソース・台帳・正常性、正式HTTPSと既存Appの代表読取を照合する。Web停止中は一時的にアクセスが途切れる。
 - 013確定前かつ新版の起動前の失敗は退避したComposeで旧版へ復帰。013確定または新版Web・Workerの起動開始後は `state.json` と実台帳に従って前進復旧する。一時障害なら同じ承認済み資材で再実行する。修正が必要なら復旧候補の隔離検証と承認を経る。
-- 正式への転送・切替は明示承認待ち。ChatGPT Web側は、30分の競合時指示の追記・読み戻し、00分の引継ぎ指示の読み戻し、3件の実行確認を残す。正式の互換APIを確認した後、ユーザーとChatGPTが指示を更新する。20分の現行経路にはプロンプト変更不要。
+- 正式切替を明示承認済み。承認済みsealの資材をVPSの運用アカウント専用ディレクトリに転送し、現地でtransport SHA-256 `1e704aa5bcbef78ee4c0d76486cafbb9bc2680a1e5fc40426b9f1c8dc8bbdf62` の一致を確認した。切替実行は管理者のsudo入力待ち。ChatGPT Web側は、30分の競合時指示の追記・読み戻し、00分の引継ぎ指示の読み戻し、3件の実行確認を残す。正式の互換APIを確認した後、ユーザーとChatGPTが指示を更新する。20分の現行経路にはプロンプト変更不要。
+
+### 承認後の実行コマンド
+
+この開発PCのPowerShellで実行し、VPSのsudoパスワードを端末に入力する。rootのステージで承認済みsealを照合し、共通手順の `apply` を実行する。結果が `activated` なら正式HTTPSと既存Appを確認する。復旧条件が表示された場合は、その出力と台帳に基づいて判断する。
+
+```powershell
+wsl.exe -d Ubuntu --cd /home/isinxnisi/1.projects/7.graph-knowledge -- python3 scripts/autopilot.py guard -- python3 .local/theme-admin-20261120/apply-approved-release.py apply
+```
 
 ## 開発PCの再起動後の復旧
 
