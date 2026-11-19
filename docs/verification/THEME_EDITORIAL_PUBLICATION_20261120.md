@@ -37,6 +37,13 @@
 
 ## ⑤-a 正式監査の実行コマンド
 
+通常はこの開発PCのPowerShellで次を実行する。設定済みのSSH接続がVPSのsudo入力を開く。監査が通ると、同じ開発PCの `.local/theme-admin-20261120/baseline.json` へJSONを保存する。保存済みの監査JSONは上書きしない。
+
+```powershell
+wsl.exe -d Ubuntu --cd /home/isinxnisi/1.projects/7.graph-knowledge -- python3 scripts/autopilot.py guard -- python3 scripts/audit-theme-editorial-production.py
+```
+
+
 VPSにある4ファイルを、β検証済みコミット `f852a3db642ae91e0b870fe561034e3f648c5f9a` の内容とSHA-256で照合済み。VPSで以下を実行し、表示されたJSONを `baseline.json` として共有する。監査は公開ロックを短時間取得して、稼働中の構成・Webと3 Workerのソース・両DBの台帳を読む。設定値・テーマ本文は出力しない。サービス停止、DB移行、公開切替はこのコマンドの対象外。
 
 ```bash
