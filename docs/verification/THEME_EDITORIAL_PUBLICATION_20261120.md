@@ -33,7 +33,7 @@
 - 同じテーマに対する通常公開と制作の並行、同時公開の一方だけが確定すること、後から公開された訂正の保持、収集時の通常原稿と制作原稿の隔離、訳文だけが更新された場合の公開競合、旧案件の送信再開、完了済み案件の次の定期枠への影響を検証。運営登録・訳文のAI送信0と、一般投稿の審査経路も確認した。
 - βのバックアップから別DBへスキーマを復元して013をリハーサル。実βの知識台帳は11→12件、従来のチェックサムは一致。アプリ実装 `13e8f38a` を3200／HTTPS β（build `8lUamdYWl3Ff4wbg1HTLH`）に反映し、既存の5 Workerを再起動した。既存β Appのツール更新は36件、`publish_theme` の表示、技術ガイドと定期制作案件の読取まで確認した。β AppのOAuth接続と定期実行プロンプトは保持した。
 - 通常Chatからはβの公開版10を取得した。初回の正規URL検査はWSLからの外部HTTPS到達でタイムアウト。差分 `f852a3db` は、βの固定公開ページ・robots.txt・sitemap.xmlだけを既存のWindows HTTPS経路で取得する。通信・公開検査の25件と、修正後の運営処理による実β HTTPS（公開版10、HTTP 200、検査の指摘0）を確認した。修正版は3200／HTTPS βに反映済み。固定source `f852a3db642ae91e0b870fe561034e3f648c5f9a`、build `24aEt-CJv5f0R_JSnqHOy`、会員47／知識12。従来のβ Appを選んだ同じ[通常Chat](https://chatgpt.com/c/6aff25af-3300-83ee-84d1-508715463fa1)で正規URLを再検査し、日本語版10、HTTP 200、指摘0を確認した。βの実データを書き換える検証は行わず、通常公開の書込、制作・見直しと収集配送の代表操作は隔離DBで確認した。
-- 正式は未切替。既存の正式Appで制作工程の反映待ち1件を読取確認した。VPSの非対話sudoは不可。正式台帳の管理者監査（`baseline.json`）と固定候補の承認後に、共通本番公開手順へ進む。正式計画には `--migration knowledge/013-theme-editorial-drafts.sql` を指定する。β証拠は `.local/theme-admin-20261120/beta-evidence.json`。ChatGPT Web実予定は3件とも新APIで未確認。前節の引継ぎと結果確認が残る。
+- 正式台帳の管理者監査と現行の切替候補は下の⑤-bを参照。ChatGPT Web実予定は3件とも新APIで未確認。前節の引継ぎと結果確認が残る。
 
 ## ⑤-a 正式監査の実行コマンド
 
@@ -68,15 +68,31 @@ EOF
 )
 ```
 
-監査JSONを受領した後に、正式の稼働ソースと台帳をβ証拠に突き合わせる。候補は `f852a3db642ae91e0b870fe561034e3f648c5f9a`、β buildは `24aEt-CJv5f0R_JSnqHOy`。現時点の想定は知識013、Webと知識3 Workerの切替、公開投影の強制作り直しなし。実際の切替範囲は監査から生成した計画で確認する。固定資材のseal、バックアップ対象、停止順、内部・正式HTTPS確認、復旧境界を提示し、明示承認後に適用する。013確定または新版Web起動を境に前進復旧とする案を監査後に再確認する。
+## ⑤-b 正式切替の承認前確認
+
+- 保存された `baseline.json` を使用。正式のWebと知識3 Workerは `977903e7eb45`、Web buildは `z4msL0EMPkA1qWbFFCKcU`。会員47件／知識12件。正式HTTPSのdataset、公開互換性、テーマ一覧はHTTP 200。既存の正式Appで制作工程の反映待ち案件を読取確認した。
+- 最初の固定候補 `f852a3db642ae91e0b870fe561034e3f648c5f9a` は承認対象から外した。独立見直しの完了記録と実際の公開の間に通常公開が入ると、原稿と後発の公開版は保持されたが、`claim_theme_production` で見直しを再取得できなかった。修正版は `needs-review` を返し、実行権の再取得、`reconcilePublished`、再評価と `complete` で復旧する。競合のない中断は同じ完了要求で再実行できる。制作・MCPの隔離回帰44件を確認。
+- 正式候補の固定ソースは `89fb67b026f2d2ff695efaa023b33200d1456ec6`。3200およびHTTPS βのbuildは `7anx-y_qLu5lbz-mAi-SI`。βの会員47件／知識12件、既存Appで制作案件と技術ガイド、日本語の正規URLで公開版11・HTTP 200・指摘0を確認。正式への適用は知識DBの `013-theme-editorial-drafts.sql` のみ。SQLのSHA-256は `e05bc25ae914026f9a22f61267bd894381fa4e847ab4aa3e9eefb69af4be2b4f`。適用後は会員47件／知識13件の予定。対象はWeb、`knowledge-publisher`、`knowledge-review`、`knowledge-patrol`。公開投影の強制作り直しは計画外。
+- 正式候補buildは `Z_Qv5CFufUf3HwEDuiPdL`。承認対象のseal（`RELEASE-SHA256SUMS` のSHA-256）は `0ef1fb4ad5e687d4d043e19741fca55662fa4e96f5b489ab684cc927665d418d`。ローカルの `.local/theme-admin-20261120/production-release-89fb67b0/` に保管。計画、適用SQL、WebとWorkerのimageのIDとレイヤー、梱包済みarchive（590,611,356 bytes）を照合した。正式公開ツールの隔離Docker検証は7件成功。切替検証の失敗からの旧サービス復帰と、適用済みSQLをスキップする再実行を含む。
+- 承認後、VPSでsealと稼働構成・台帳を再照合する。監査時点と異なる構成・台帳を検出したら停止して再計画する。知識DBを稼働中に `pg_dump -Fc` で退避し、`pg_restore --list` とSHA-256を確認。知識3 Worker → Webの順に停止し、013と台帳を同じトランザクションで確定する。Webの内部経路を確認してから知識3 Workerを再開し、稼働ソース・台帳・正常性、正式HTTPSと既存Appの代表読取を照合する。Web停止中は一時的にアクセスが途切れる。
+- 013確定前かつ新版の起動前の失敗は退避したComposeで旧版へ復帰。013確定または新版Web・Workerの起動開始後は `state.json` と実台帳に従って前進復旧する。一時障害なら同じ承認済み資材で再実行する。修正が必要なら復旧候補の隔離検証と承認を経る。
+- 正式への転送・切替は明示承認待ち。ChatGPT Web側は、30分の競合時指示の追記・読み戻し、00分の引継ぎ指示の読み戻し、3件の実行確認を残す。正式の互換APIを確認した後、ユーザーとChatGPTが指示を更新する。20分の現行経路にはプロンプト変更不要。
+
+## 開発PCの再起動後の復旧
+
+正式資材の初回梱包はCドライブの空き不足で中断した。PC再起動後、Ubuntuの書込、Dockerの既存DBと共有Kev、3200／HTTPS βのbuild `7anx-y_qLu5lbz-mAi-SI`、公開テーマのHTTP 200を確認。βの5 Workerと、正式APIを使うPCの既存2 Workerを再開した。新APIの正式反映とChatGPT Webの実予定確認は承認後に残る。
+
+失敗・旧候補の梱包、旧buildとWebpack cacheなど、再生成可能なPlunode資材を5.34 GiB削除した。Dockerの24時間以上前の未使用build cacheは7.174 GB削除。Dockerのimage 382件、container 24件、volume 68件は保持。WindowsのCドライブの実空きは約21.2 GiB。VHD圧縮は実施していない。再取得したβ台帳と正式計画は初回の各記録と一致した。
+
+復旧後の既存β Appで案件読取に成功した。App内の公開検査は再認証を求められたため、復旧後の当該確認には公開正規URLを直接取得した結果を用いた。
 
 ## 30分の独立見直しに追記する指示案
 
-> `evaluationTarget.publicationConflict` がある、または公開時に `THEME_PUBLICATION_CONFLICT` が返ったら、案件とテーマを読み直す。競合の `previous` と `current` が指す公開版を `read_theme(view: published, revision: …)` で取得し、`view: working` の制作原稿と比較する。
+> `evaluationTarget.publicationConflict` がある、または公開時に `THEME_PUBLICATION_CONFLICT` が返ったら、案件とテーマを読み直す。`needs-review` で有効な見直しの実行権がなければ、`claim_theme_production` で見直しを再取得する。競合の `previous` と `current` が指す公開版を `read_theme(view: published, revision: …)` で取得し、`view: working` の制作原稿と比較する。
 >
 > 後から公開された訂正を保持して制作原稿を照合する。照合済みの変更を、制作原稿の正確な `target` と現在の公開版の `revision`・`releaseId` を指定する `reconcilePublished` 付き `update_theme` として、既存の prepare → dispatch で送り、受付の反映を確認する。公開済み項目の意図的な置換が承認済みの場合だけ `reconcilePublished.supersede` にその項目を列挙する。照合できない場合は阻害要因を案件に記録して止める。
 >
-> 反映後に案件を再取得し、最新の評価対象で全体を再評価する。現行digestとガイド版で `assessment` を記録し、更新された状態版で `complete`。公開待ちで競合が解消済みなら、既存の `publication.retryCommand` の再送契約に従う。公開が確定したら対象言語の正規URLを確認する。制作案件の公開には `publish_theme` を使わない。
+> 反映後に案件を再取得し、最新の評価対象で全体を再評価する。現行digestとガイド版で `assessment` を記録し、更新された状態版で `complete`。公開待ちで `publication.retryCommand` が返る場合は、その完了要求をそのまま再送する。公開が確定したら対象言語の正規URLを確認する。制作案件の公開には `publish_theme` を使わない。
 
 ## 正式切替後の実予定の確認
 

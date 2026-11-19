@@ -1,3 +1,5 @@
+2026-11-20 テーマ管理API ⑤-a正式監査・⑤-b開発PC復旧／β再確認／固定資材の照合まで完了｜残り正式切替の承認・適用・ChatGPT Web予定3件の確認｜全体⑤まで。source 89fb67b0／β 7anx-y_qLu5lbz-mAi-SI／正式候補 Z_Qv5CFufUf3HwEDuiPdL。正式は会員47／知識12、知識013とWeb・知識3 Workerの切替を承認待ち。[正式移行と各予定への引継ぎ](verification/THEME_EDITORIAL_PUBLICATION_20261120.md)。
+
 2026-11-20 テーマ管理API：①版分離・②通常公開とガイド・③隔離回帰・④3200／HTTPS β、既存β App更新と通常Chatの正規URL確認まで完了｜残り⑤正式の監査・承認・切替、ChatGPT Web予定3件の引継ぎと実行確認｜全体⑤まで。source f852a3db／β 24aEt-CJv5f0R_JSnqHOy、会員47／知識12。通常公開成功と制作・見直し・収集の書込みは隔離DBで確認。正式と予定プロンプトは未変更。[検証と各予定への引継ぎ](verification/THEME_EDITORIAL_PUBLICATION_20261120.md)。
 
 2026-11-19 知識DB最適化の残工程：③本番自動整理の有効化と巡回初回まで完了｜残り③巡回の残対象・11月22日13:25以降の旧公開世代の実処理、④容量・性能比較｜今回④まで。7日／72時間を実稼働で確認。初回4一覧・11,885行減、原本8,611版・固定文脈2,169件・両巡回checkpointを照合。PG割当は初回時点で同じ。読み取り専用の事後監査を予約済み。[実測と次回時刻](verification/KNOWLEDGE_RETENTION_20261119.md#有効化直後の実測)。
