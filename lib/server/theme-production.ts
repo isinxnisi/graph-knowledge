@@ -58,14 +58,17 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
   const themeId=targetId(r,list);
   const publication=themeId?await deps.publication(themeId,intent?.id):null;
   const publicationPending=!!intent&&publication?.approvalPresent!==true;
+  // A durable intent may need a new review even when the private draft digest has stayed the same.
+  const retryCommand=r.status==='completed'&&publicationPending&&ev.assessment?.current&&!ev.target?.publicationConflict
+   ?intent.completion_command:null;
   // A successful approval closes this historical case permanently. Current
   // evaluation freshness is still reported independently of that outcome.
   const complete=r.status==='completed'&&ev.assessment?.result==='pass'&&publication?.approvalPresent===true;
   const summary=(s:QueryResultRow)=>({id:s.id,requestId:s.command_request_id,action:s.command_action,digest:s.digest,state:s.state,reason:s.reason,dispatches:s.dispatches});
   const currentWork=list.filter(s=>!terminal(s.state)||s.state==='failed');
-  return json({id:r.id,ownerId:owner,workflow:r.workflow,environment:r.environment,origin:r.origin,version:r.version,phase:r.phase,status:r.status==='completed'&&!complete?(ev.assessment?.current&&publicationPending?'waiting-publication':'needs-review'):r.status,
+  return json({id:r.id,ownerId:owner,workflow:r.workflow,environment:r.environment,origin:r.origin,version:r.version,phase:r.phase,status:r.status==='completed'&&!complete?(retryCommand?'waiting-publication':'needs-review'):r.status,
    progress:r.progress,theme:ev.target?.theme??(r.theme_id?{id:r.theme_id,revision:r.theme_revision}:null),lease:r.execution_id?{executionId:r.execution_id,until:r.lease_until,valid:r.lease_live===true}:null,
-   publication:publication?{...publication,pending:publicationPending,...(publicationPending?{retryCommand:intent.completion_command}:{})}:null,evaluationTarget:ev.target,lastWholeThemeAssessment:ev.assessment,evaluationUnavailable:ev.unavailable,completed:complete,
+   publication:publication?{...publication,pending:publicationPending,...(retryCommand?{retryCommand}:{})}:null,evaluationTarget:ev.target,lastWholeThemeAssessment:ev.assessment,evaluationUnavailable:ev.unavailable,completed:complete,
    submissions:currentWork.slice(cursor,cursor+20).map(summary),nextSubmissionCursor:currentWork.length>cursor+20?cursor+20:null,completedSubmissionCount:list.length-currentWork.length,pendingSubmissionCount:list.filter(s=>!terminal(s.state)).length,
    ...(selected?{savedSubmission:{...summary(selected),result:selected.result,encoding:'json',wire:selected.command_wire,command:JSON.parse(selected.command_wire)}}:{}),updatedAt:r.updated_at});
  }
@@ -124,7 +127,7 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
   try{return response(owner,await tx(owner,id,async c=>{
    const old=await previous(c,owner,command);if(old)return old;const r=await row(c,owner,id);
    if(r.status==='completed'){
-    const ev=await evaluation(r,await submissions(c,r));const v=await view(owner,id);if(v.completed||(ev.assessment?.current&&v.publication?.pending))return {outcome:'found',caseId:id};
+    const v=await view(owner,id);if(v.completed||v.status==='waiting-publication')return {outcome:'found',caseId:id};
     if(command.phase!=='review')return {outcome:'phase-mismatch',caseId:id};
     if(r.theme_id)await availableTheme(c,owner,r.theme_id,r.id);r.phase='review';await c.query("UPDATE theme_production.cases SET phase='review',status='ready' WHERE id=$1",[id]);
    }

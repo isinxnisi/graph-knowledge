@@ -34,6 +34,7 @@ const pool=new Pool({connectionString:process.env.MEMBER_DATABASE_URL,max:10}),k
 const owner=randomUUID(),other=randomUUID(),actor={kind:'operator' as const,id:'production-fixture'};
 let registrations:ReturnType<typeof createThemeRegistrations>,translations:ReturnType<typeof createThemeTranslationAuthoring>,cases:ReturnType<typeof createThemeProductions>,foundation:ReturnType<typeof createKnowledgeFoundationService>;
 let failActivation=false;
+let beforeActivation:(()=>Promise<unknown>)|null=null;
 let lostAck=false,delay:Promise<void>|null=null;
 const progress={brief:'読者の問いから制作する隔離案件',scope:'公開資料に基づく背景と着想',artifacts:{draft:'再開に必要な原稿全文',themeImage:{state:'not-needed'}},unfinished:[],blockers:[]};
 const createCommand=()=>({action:'submit-theme' as const,requestId:randomUUID(),title:'New production fixture',description:'Not live',recordPins:[{id:'baseline',revision:1}]});
@@ -78,7 +79,7 @@ beforeAll(async()=>{
  await migrateMemberDatabase(pool,...Array(35).fill(true));await migrateMemberDatabase(pool,...Array(35).fill(true));const migrated=(await pool.query('SELECT row_to_json(c)::jsonb AS value FROM theme_production.cases c WHERE id=$1',[preservedId])).rows[0].value;const {workflow,...unchanged}=migrated;expect(workflow).toBe('scheduled');expect(unchanged).toEqual(preserved);expect((await pool.query("SELECT name,checksum FROM member_migration WHERE name NOT IN('044-theme-production.sql','045-theme-publication.sql','046-theme-production-workflows.sql') ORDER BY name")).rows).toEqual(old);
 },30000);
 beforeEach(async()=>{
- failActivation=false;lostAck=false;delay=null;await pool.query('TRUNCATE theme_production.cases,knowledge_missions.theme_registrations,knowledge_missions.web_deliveries,knowledge_missions.web_importers CASCADE');await pool.query('TRUNCATE knowledge_import.packages,member_knowledge.submissions,product_editorial_request,product_editorial_version CASCADE');
+ failActivation=false;beforeActivation=null;lostAck=false;delay=null;await pool.query('TRUNCATE theme_production.cases,knowledge_missions.theme_registrations,knowledge_missions.web_deliveries,knowledge_missions.web_importers CASCADE');await pool.query('TRUNCATE knowledge_import.packages,member_knowledge.submissions,product_editorial_request,product_editorial_version CASCADE');
  await pool.query('INSERT INTO "user"(id,name,email,"emailVerified","createdAt","updatedAt",active,locale) VALUES($1,$2,$3,true,now(),now(),true,$7),($4,$5,$6,true,now(),now(),true,$7) ON CONFLICT(id) DO UPDATE SET active=true',[owner,'Operator','production-owner@example.invalid',other,'Other','production-other@example.invalid','ja']);
  const guides=createThemeQualityGuides(pool),g=await guides.read(owner);if(!g.revision)await guides.update(owner,{requestId:randomUUID(),expectedRevision:0,markdown:`# 隔離品質ガイド
 
@@ -88,7 +89,7 @@ beforeEach(async()=>{
  await migrateKnowledgeTranslations(knowledge);await migrateKnowledgeIdentities(knowledge);await ensureKnowledgePublicationSchema(knowledge);
  await foundation.execute(actor,{action:'create-theme',requestId:randomUUID(),id:'theme',title:'Aの背景',recordPins:[{id:'baseline',revision:1}],reason:'Isolated existing theme'});
  const imports=createKnowledgeImports(pool,knowledge,(id,c)=>webImportPrincipal(pool,id,c)),web=createWebKnowledgeImports(pool,()=>imports);registrations=createThemeRegistrations(pool,knowledge,web,imports);translations=createThemeTranslationAuthoring(pool,knowledge,'https://plunode.net',id=>registrations.authorize(id));
- cases=createThemeProductions(pool,{environment:'production',origin:'https://plunode.net',authorize:id=>registrations.authorize(id),...(()=>{const runtime=themeProductionRuntime(pool,knowledge,'https://plunode.net',registrations,translations);return {...runtime,publish:async(owner:string,id:string)=>{if(failActivation){failActivation=false;throw Error('Isolated activation interruption');}await runtime.publish(owner,id);}};})(),send:ordinarySend,afterDispatch:async()=>{if(lostAck){lostAck=false;throw Error('Response lost after normal intake commit');}}});
+ cases=createThemeProductions(pool,{environment:'production',origin:'https://plunode.net',authorize:id=>registrations.authorize(id),...(()=>{const runtime=themeProductionRuntime(pool,knowledge,'https://plunode.net',registrations,translations);return {...runtime,publish:async(owner:string,id:string)=>{if(failActivation){failActivation=false;throw Error('Isolated activation interruption');}const callback=beforeActivation;beforeActivation=null;await callback?.();await runtime.publish(owner,id);}};})(),send:ordinarySend,afterDispatch:async()=>{if(lostAck){lostAck=false;throw Error('Response lost after normal intake commit');}}});
 },30000);
 afterAll(async()=>{await pool.end();await knowledge.end();vi.unstubAllEnvs();});
 
@@ -506,4 +507,36 @@ it('inherits only the released translation and rejects a stale ordinary publicat
   expect(row.inherited_translations.find((v:{language:string})=>v.language==='en')?.text).toBe('Approved English');
   expect((await readKnowledgeTranslationById(c,revised.publication!.id,1)).text).toBe('Ordinary approved translation');
  }finally{c.release();}
+},20000);
+
+it('reopens an interrupted review when ordinary publication advances after its completion record',async()=>{
+ await complete(await begin('review',true));
+ const review=await begin('review',true);
+ const prepared=await prepare(review,{action:'update-theme',requestId:randomUUID(),target:{id:'theme',revision:1},changes:{description:'Private production prose'},reason:'制作の原稿'});
+ await send(review,prepared.submissionId!);await registrations.recoverOne();
+ const working=await readEdition('working');
+ const draft=await saveOrdinary({title:'Late public correction'});
+ beforeActivation=()=>publishOrdinary(draft);
+
+ const interrupted=await complete(review);
+ expect(interrupted.case).toMatchObject({completed:false,status:'needs-review'});
+ const interruptedRead=await cases.execute(owner,themeProductionCommandSchema.parse({action:'get-theme-production',caseId:review.caseId}));
+ expect(interruptedRead.case).toMatchObject({publication:{pending:true}});
+ expect(interruptedRead.case?.publication).not.toHaveProperty('retryCommand');
+ expect((await readEdition('published')).theme.content.title).toBe('Late public correction');
+ expect((await readEdition('working')).target).toEqual(working.target);
+ await expect(publicService().theme({themeId:'theme',revision:working.target.revision})).rejects.toMatchObject({status:404});
+ const reopened=await execute({action:'claim-theme-production',requestId:randomUUID(),caseId:review.caseId,executionId:randomUUID(),phase:'review'});
+ expect(reopened.outcome).toBe('claimed');
+ const nextReview={caseId:review.caseId,executionId:reopened.case!.lease!.executionId,leaseToken:reopened.leaseToken!};
+ const published=await readEdition('published');
+ const reconciled=await prepare(nextReview,{action:'update-theme',requestId:randomUUID(),target:working.target,
+  reconcilePublished:published.edition!.published,changes:{title:'Late public correction'},reason:'訂正を保持して原稿を照合'});
+ await send(nextReview,reconciled.submissionId!);await registrations.recoverOne();
+ await assess(nextReview);
+ const reassessed=await cases.execute(owner,themeProductionCommandSchema.parse({action:'get-theme-production',caseId:review.caseId}));
+ expect(reassessed.case?.publication).not.toHaveProperty('retryCommand');
+ expect((await fenced(nextReview,{action:'update-theme-production',operation:'complete'})).case?.completed).toBe(true);
+ expect((await readEdition('published')).theme.content).toMatchObject({title:'Late public correction',description:'Private production prose'});
+ expect((await execute({action:'create-theme-production',requestId:randomUUID(),progress})).outcome).toBe('created');
 },20000);
