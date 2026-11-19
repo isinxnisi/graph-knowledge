@@ -35,3 +35,11 @@
 - 最終型検査込みbuild、差分検査は成功。対象lintのエラー0、探索hookの依存配列に警告1件。WSLの外部HTTPSに到達できなかったため、HTTPS確認はWindowsのcurlとChromeで実行した。本番への適用、削除、Web／Worker切替は今回の範囲外。
 
 [保存設計](../design/KNOWLEDGE_PUBLICATION_STORAGE.md)・[移行と復帰](../runbooks/KNOWLEDGE_PUBLICATION_STORAGE.md)・[従来の容量調査](DATABASE_CAPACITY_20261118.md)。
+
+## 正式切替資材と実行待ち
+
+012とWeb／知識3 Workerの正式切替について承認を取得。自動整理の有効化は保留。正式の現行Web build 8JAqMFTgOxwZF46rOMvp7 と公開検索・カーソル・隣接・固定Record版を読み取り確認した。
+
+正式候補は固定source 977903e7、build z4msL0EMPkA1qWbFFCKcU。Web／knowledge-ops archive 590,353,305 bytes、SHA256 d3b9403feab13b5d4cc955cd2c0beccfdfa516644cda5c537c283eb17fd6e6b4。VPSのdevelop専用stageでarchive・012・切替script・manifestのSHA256を照合した。ローカルではimageの既存モジュール読込、Composeのimageピン限定、現役ポインタの復帰条件、HTTP Host・旧カーソル・固定Record版の照合と差分拒否、012の適用済みledgerからの再試行条件を確認した。
+
+非対話sudoはパスワード要求で停止。PowerShellで `wsl -d Ubuntu --cd /home/isinxnisi/1.projects/7.graph-knowledge python3 .local/publication-storage-production-20261119/run-release.py` を実行し、VPSのsudoパスワードを端末へ入力する。実行ログはVPS専用stageの activation.log に残る。正式適用と切替後の確認は管理者実行待ち。

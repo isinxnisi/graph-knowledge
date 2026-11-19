@@ -1,3 +1,5 @@
+2026-11-19 知識DBの正式切替：①承認・現行011のHTTP照合・固定build／VPS資材照合完了｜残り②本人sudoで012・Web／Worker切替、③正式経路の確認｜今回③まで。source 977903e7／正式候補 z4msL0EMPkA1qWbFFCKcU、β C8IsB-9clWQwv0Yjue0tS。自動整理は保留。[実測と管理者の実行入口](verification/KNOWLEDGE_PUBLICATION_STORAGE_20261119.md#正式切替資材と実行待ち)。
+
 2026-11-19 知識DBの公開投影と巡回台帳：①参照調査・②共用投影と期限整理・③隔離比較・④3200／HTTPS βと本番移行手順まで完了｜今回④まで。source 977903e7／β C8IsB-9clWQwv0Yjue0tS、知識012。合成の同一負荷でDB155.44→37.71MB・18→10世代、βの旧カーソル／固定版と原本7,822版を保全。βの条件なし検索の遅延を主キー照合で修正し最終HTTPS306ms。本番未適用、期限整理は隔離で検証済みでβでは未有効化。[設計](design/KNOWLEDGE_PUBLICATION_STORAGE.md)・[実測](verification/KNOWLEDGE_PUBLICATION_STORAGE_20261119.md)・[移行・復帰](runbooks/KNOWLEDGE_PUBLICATION_STORAGE.md)。
 
 2026-11-19 資料収集の公開分離：④修正版7bd4e557の固定build／β・App確認と正式転送照合まで完了｜残り④本人sudoで正式適用・Webb29復旧／最終確認｜全体④まで。正式候補8JAqMFTgOxwZF46rOMvp7／β5bJDIF63j81B1oYEcI6Lx。全DB再backup・復元は省略し検証済み同一011と対象メタデータ保全を使用。案件／原稿／予定は維持。[記録](verification/COLLECTION_THEME_PUBLICATION_20261119.md)。
