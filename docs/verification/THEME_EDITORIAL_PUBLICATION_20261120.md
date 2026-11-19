@@ -34,3 +34,51 @@
 - βのバックアップから別DBへスキーマを復元して013をリハーサル。実βの知識台帳は11→12件、従来のチェックサムは一致。アプリ実装 `13e8f38a` を3200／HTTPS β（build `8lUamdYWl3Ff4wbg1HTLH`）に反映し、既存の5 Workerを再起動した。既存β Appのツール更新は36件、`publish_theme` の表示、技術ガイドと定期制作案件の読取まで確認した。β AppのOAuth接続と定期実行プロンプトは保持した。
 - 通常Chatからはβの公開版10を取得した。初回の正規URL検査はWSLからの外部HTTPS到達でタイムアウト。差分 `f852a3db` は、βの固定公開ページ・robots.txt・sitemap.xmlだけを既存のWindows HTTPS経路で取得する。通信・公開検査の25件と、修正後の運営処理による実β HTTPS（公開版10、HTTP 200、検査の指摘0）を確認した。修正版は3200／HTTPS βに反映済み。固定source `f852a3db642ae91e0b870fe561034e3f648c5f9a`、build `24aEt-CJv5f0R_JSnqHOy`、会員47／知識12。従来のβ Appを選んだ同じ[通常Chat](https://chatgpt.com/c/6aff25af-3300-83ee-84d1-508715463fa1)で正規URLを再検査し、日本語版10、HTTP 200、指摘0を確認した。βの実データを書き換える検証は行わず、通常公開の書込、制作・見直しと収集配送の代表操作は隔離DBで確認した。
 - 正式は未切替。既存の正式Appで制作工程の反映待ち1件を読取確認した。VPSの非対話sudoは不可。正式台帳の管理者監査（`baseline.json`）と固定候補の承認後に、共通本番公開手順へ進む。正式計画には `--migration knowledge/013-theme-editorial-drafts.sql` を指定する。β証拠は `.local/theme-admin-20261120/beta-evidence.json`。ChatGPT Web実予定は3件とも新APIで未確認。前節の引継ぎと結果確認が残る。
+
+## ⑤-a 正式監査の実行コマンド
+
+VPSにある4ファイルを、β検証済みコミット `f852a3db642ae91e0b870fe561034e3f648c5f9a` の内容とSHA-256で照合済み。VPSで以下を実行し、表示されたJSONを `baseline.json` として共有する。監査は公開ロックを短時間取得して、稼働中の構成・Webと3 Workerのソース・両DBの台帳を読む。設定値・テーマ本文は出力しない。サービス停止、DB移行、公開切替はこのコマンドの対象外。
+
+```bash
+(
+  set -eu
+  umask 077
+  src=/home/develop/plunode-knowledge-retention-20261119/f10c99952768
+  audit_dir=$(sudo mktemp -d /root/plunode-theme-audit.XXXXXXXX)
+  for file in production_release.py production_release_plan.py production_release_bundle.py production_image_verification.py; do
+    sudo install -m 0600 "$src/$file" "$audit_dir/$file"
+  done
+  sudo sha256sum --check --strict - <<EOF
+e063a3ed08934ed1dcd243c4df253d8c55b2c6cc7c41e2be4b1488544328bf65  $audit_dir/production_release.py
+5b2f351307f11d9487cd685aad2dd11de5811cd9773099bf3b2196710704bfa6  $audit_dir/production_release_plan.py
+ff1441728b006228bded0e138c47d9709f3d02c45fcefb08f7ae7972e1d5a3b1  $audit_dir/production_release_bundle.py
+903668f451309cb41dec8a4c642606b710320c7e930bbb8f7a1984538bfb4ea8  $audit_dir/production_image_verification.py
+EOF
+  baseline=$(mktemp "$HOME/plunode-theme-baseline.XXXXXXXX.json")
+  sudo python3 -Es "$audit_dir/production_release.py" audit > "$baseline"
+  python3 -m json.tool "$baseline" >/dev/null
+  printf "監査JSON: %s\n" "$baseline"
+)
+```
+
+監査JSONを受領した後に、正式の稼働ソースと台帳をβ証拠に突き合わせる。候補は `f852a3db642ae91e0b870fe561034e3f648c5f9a`、β buildは `24aEt-CJv5f0R_JSnqHOy`。現時点の想定は知識013、Webと知識3 Workerの切替、公開投影の強制作り直しなし。実際の切替範囲は監査から生成した計画で確認する。固定資材のseal、バックアップ対象、停止順、内部・正式HTTPS確認、復旧境界を提示し、明示承認後に適用する。013確定または新版Web起動を境に前進復旧とする案を監査後に再確認する。
+
+## 30分の独立見直しに追記する指示案
+
+> `evaluationTarget.publicationConflict` がある、または公開時に `THEME_PUBLICATION_CONFLICT` が返ったら、案件とテーマを読み直す。競合の `previous` と `current` が指す公開版を `read_theme(view: published, revision: …)` で取得し、`view: working` の制作原稿と比較する。
+>
+> 後から公開された訂正を保持して制作原稿を照合する。照合済みの変更を、制作原稿の正確な `target` と現在の公開版の `revision`・`releaseId` を指定する `reconcilePublished` 付き `update_theme` として、既存の prepare → dispatch で送り、受付の反映を確認する。公開済み項目の意図的な置換が承認済みの場合だけ `reconcilePublished.supersede` にその項目を列挙する。照合できない場合は阻害要因を案件に記録して止める。
+>
+> 反映後に案件を再取得し、最新の評価対象で全体を再評価する。現行digestとガイド版で `assessment` を記録し、更新された状態版で `complete`。公開待ちで競合が解消済みなら、既存の `publication.retryCommand` の再送契約に従う。公開が確定したら対象言語の正規URLを確認する。制作案件の公開には `publish_theme` を使わない。
+
+## 正式切替後の実予定の確認
+
+内部確認と正式HTTPS確認が通ってから、次の対象案件がある通常の予定実行を観察する。予定が実行されても案件・対象・新資料がなければ、その回は正常な終了として記録する。該当する実処理の確認は次の対象回まで保留する。実行時刻はJSTで、判定・案件IDまたは受付ID・照合した版を記録する。
+
+| 予定 | 確認する動作 | 成功の証拠 |
+| --- | --- | --- |
+| 毎時00分 テーマ制作 | 既存の `scheduled` 案件の取得・claim、保存済みrequestIdによる prepare／dispatch または再開、見直しへの引継ぎ | 既存案件IDと受付が継続し、公開前の原稿が非公開のまま。工程が見直しに進み、既存の全体評価と混ざらない |
+| 毎時20分 テーマ資料収集 | `claim_collection → deliver_collection` の受付を読み戻し、後続処理による知識反映を別に確認 | 受付の重複がなく、受入済み知識だけが公開版へ反映。通常下書き・制作原稿と案件状態が保持される。受付だけの回は公開確認を保留する |
+| 毎時30分 独立見直し | 別実行IDでのclaim、現行対象の全体評価、`complete`、公開結果と正規URLを確認。競合が実際に発生した回は追記案の照合から確認する | 未確認の版を公開せず、照合・全体評価後の版だけ公開。正規URLの提供版が一致し、完了案件が次の00分の制作を塞がない。競合がない回は実競合経路を別に未確認として記録する |
+
+本番の予定やプロンプトは変更していない。新API確認後の追記・読み戻しと実予定3件の確認は運用作業として残る。
