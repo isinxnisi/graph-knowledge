@@ -1,3 +1,5 @@
+2026-11-19 知識DBの正式切替：①準備・②本番012とWeb／知識3 Worker切替・③正式HTTPS確認まで完了｜今回③まで。source 977903e7／正式 z4msL0EMPkA1qWbFFCKcU／β C8IsB-9clWQwv0Yjue0tS。会員47／知識12、原本8,574版・公開2,169件・旧カーソル／固定版を保全。自動整理は保留。[正式確認記録](verification/KNOWLEDGE_PUBLICATION_STORAGE_20261119.md#正式切替と切替後の確認)。
+
 2026-11-19 知識DBの正式切替：①承認・現行011のHTTP照合・固定build／VPS資材照合完了｜残り②本人sudoで012・Web／Worker切替、③正式経路の確認｜今回③まで。source 977903e7／正式候補 z4msL0EMPkA1qWbFFCKcU、β C8IsB-9clWQwv0Yjue0tS。自動整理は保留。[実測と管理者の実行入口](verification/KNOWLEDGE_PUBLICATION_STORAGE_20261119.md#正式切替資材と実行待ち)。
 
 2026-11-19 知識DBの公開投影と巡回台帳：①参照調査・②共用投影と期限整理・③隔離比較・④3200／HTTPS βと本番移行手順まで完了｜今回④まで。source 977903e7／β C8IsB-9clWQwv0Yjue0tS、知識012。合成の同一負荷でDB155.44→37.71MB・18→10世代、βの旧カーソル／固定版と原本7,822版を保全。βの条件なし検索の遅延を主キー照合で修正し最終HTTPS306ms。本番未適用、期限整理は隔離で検証済みでβでは未有効化。[設計](design/KNOWLEDGE_PUBLICATION_STORAGE.md)・[実測](verification/KNOWLEDGE_PUBLICATION_STORAGE_20261119.md)・[移行・復帰](runbooks/KNOWLEDGE_PUBLICATION_STORAGE.md)。

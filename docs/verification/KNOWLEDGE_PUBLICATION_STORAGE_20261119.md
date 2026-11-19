@@ -43,3 +43,11 @@
 正式候補は固定source 977903e7、build z4msL0EMPkA1qWbFFCKcU。Web／knowledge-ops archive 590,353,305 bytes、SHA256 d3b9403feab13b5d4cc955cd2c0beccfdfa516644cda5c537c283eb17fd6e6b4。VPSのdevelop専用stageでarchive・012・切替script・manifestのSHA256を照合した。ローカルではimageの既存モジュール読込、Composeのimageピン限定、現役ポインタの復帰条件、HTTP Host・旧カーソル・固定Record版の照合と差分拒否、012の適用済みledgerからの再試行条件を確認した。
 
 非対話sudoはパスワード要求で停止。PowerShellで `wsl -d Ubuntu --cd /home/isinxnisi/1.projects/7.graph-knowledge python3 .local/publication-storage-production-20261119/run-release.py` を実行し、VPSのsudoパスワードを端末へ入力する。実行ログはVPS専用stageの activation.log に残る。正式適用と切替後の確認は管理者実行待ち。
+
+## 正式切替と切替後の確認
+
+管理者による切替は成功。source 977903e7、正式build z4msL0EMPkA1qWbFFCKcU。知識DBバックアップは /opt/graph-knowledge/backups/publication-storage-20261119T042432Z。012の適用と再実行時の照合を経て、Web、knowledge-publisher、knowledge-review、knowledge-patrolを切り替えた。会員ledgerは47件、知識ledgerは12件。公開2,169件と原本8,574版を保持した。
+
+旧世代 k75-5b33f28eeeb7a651f8e3b2c47f9d8e0b から新世代 k75-129c6632fa36cf344f89f74efe6abb18 へ切り替えた。切替時に旧検索カーソルと固定Record版の応答の一致を確認。切替後の正式HTTPSでTOPと新buildの資材、dataset、公開状態、現役世代の検索1・2ページ目、旧世代の指定検索、Graph、隣接、経路、出典付き固定Record版、テーマ一覧と固定テーマ版を確認した。公開処理の未反映・失敗は確認時点で0。HTTPS βの既存buildも200。実共有URLと認証後の書込みはこの正式確認の範囲に含めていない。
+
+012で削除した重複インデックスの切替前の割当は865,902,592 bytes。ホストの空き容量は再測定していない。公開世代と巡回一覧の自動整理は保留。
