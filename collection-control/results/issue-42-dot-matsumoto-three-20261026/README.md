@@ -1,10 +1,10 @@
 # 収集Workerの処理結果
 
-issue-42-dot-matsumoto-three-20261026：**blocked**
+issue-42-dot-matsumoto-three-20261026：**retry-wait**
 
 公開apply・restore・本番配置は行わない。承認者名は本人認証の証明ではない。
 
-Immutable GitHub artifact changed: collection-control/artifacts/issue-42-dot-matsumoto-three-20261026/.local/collection-issues/issue-42-dot-matsumoto-three-20261026/request-cache/requests.json
+Command '['git', '-c', 'http.version=HTTP/2', '-c', 'http.lowSpeedLimit=1', '-c', 'http.lowSpeedTime=20', '-c', 'credential.helper=!"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe"', '-c', 'credential.interactive=never', '--git-dir=/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/control.git', 'credential', 'fill']' timed out after 90 seconds
 
 ```json
 {
