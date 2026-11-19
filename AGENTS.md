@@ -16,6 +16,8 @@ ChatGPT運営テーマの作成・更新・訳文登録はシステム投入経�
 
 画面・機能を変更した手動作業と自動開発の受け入れでは、完了報告までに検証済みmainの変更をローカル3200へ反映し、日常確認先 `https://graph-beta.isinxnisi.com/` でも代表経路を確認する。ユーザーから更新を指示されるのを待たない。VPSの正式originは `https://plunode.net`（旧 `https://graph.isinxnisi.net` はpreview維持）。VPSは[確認環境の更新契約](docs/design/PRODUCTION_DEPLOYMENT.md#確認環境の更新契約)の区切りで必ず更新する。文書だけの変更は不要な再buildをせず、両環境の反映状態と未反映・失敗があれば報告する。自動worktreeの未受入変更を3200やVPSへ直接配置しない。
 
+既存VPSの通常の正式公開には[共通本番公開手順](docs/runbooks/PRODUCTION_RELEASE.md)を使う。固定ソースと正式・βの台帳で変更範囲を決め、承認後に切替・代表経路確認・必要な復旧を行う。
+
 main側などの手動作業では、最初に `make autopilot-review` と必要に応じて `make autopilot-status` を実行し、未反映commit・開発失敗・dirty・実行中を確認する。詳細は [docs/AUTOPILOT_COLLABORATION.md](docs/AUTOPILOT_COLLABORATION.md)。
 
 - 変更・テスト・DB操作・受け入れ作業の前に、別terminalで `make autopilot-hold` を起動し、そのterminalを作業完了まで保持する。Codexは `exec_command` の `tty: true` でセッションを保持できる。共通ロックが使用中なら変更せず、終了後に再確認する。ロックファイルを削除したり、実行中の自動開発を強制終了しない。

@@ -1,3 +1,5 @@
+2026-11-19 共通本番公開手順：①既存手順・台帳確認、②変更範囲の計画・切替・復旧を統合、③隔離Compose／実PostgreSQLの切替・旧版復帰・途中再開と正式／βの読取確認まで完了｜今回③まで。通常の公開入口を共通化。実際の012直前台帳とβの証拠から知識012だけを選ぶことを確認。正式build z4msL0EMPkA1qWbFFCKcU、β C8IsB-9clWQwv0Yjue0tS。共通手順での正式切替は次回の承認済み公開から。自動整理は保留。[共通手順](runbooks/PRODUCTION_RELEASE.md)。
+
 2026-11-19 知識DBの正式切替：①準備・②本番012とWeb／知識3 Worker切替・③正式HTTPS確認まで完了｜今回③まで。source 977903e7／正式 z4msL0EMPkA1qWbFFCKcU／β C8IsB-9clWQwv0Yjue0tS。会員47／知識12、原本8,574版・公開2,169件・旧カーソル／固定版を保全。自動整理は保留。[正式確認記録](verification/KNOWLEDGE_PUBLICATION_STORAGE_20261119.md#正式切替と切替後の確認)。
 
 2026-11-19 知識DBの正式切替：①承認・現行011のHTTP照合・固定build／VPS資材照合完了｜残り②本人sudoで012・Web／Worker切替、③正式経路の確認｜今回③まで。source 977903e7／正式候補 z4msL0EMPkA1qWbFFCKcU、β C8IsB-9clWQwv0Yjue0tS。自動整理は保留。[実測と管理者の実行入口](verification/KNOWLEDGE_PUBLICATION_STORAGE_20261119.md#正式切替資材と実行待ち)。

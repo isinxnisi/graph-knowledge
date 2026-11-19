@@ -1,3 +1,5 @@
+[通常の本番公開手順](runbooks/PRODUCTION_RELEASE.md)。Web・Worker・migrationの計画、切替、確認と復旧。
+
 知識DBの公開投影・巡回台帳の世代管理。[現行設計](design/KNOWLEDGE_PUBLICATION_STORAGE.md)・[隔離比較とβ確認](verification/KNOWLEDGE_PUBLICATION_STORAGE_20261119.md)・[移行と復帰](runbooks/KNOWLEDGE_PUBLICATION_STORAGE.md)。
 
 受入済み資料収集とテーマ制作・公開版の分離：[現行補足契約](design/COLLECTION_THEME_PUBLICATION_20261119.md)。
