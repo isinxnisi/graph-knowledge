@@ -1,3 +1,5 @@
+import {Resolver} from 'node:dns/promises';
+import {windowsBetaHttps,windowsBetaHttpsEnabled} from './windows-beta-https';
 import {parse,type DefaultTreeAdapterMap} from 'parse5';
 export type ThemePageExpectation={id:string;language:'ja'|'en';title:string;bodyText:string;servedRevision:number;latestRevision:number};
 type Node=DefaultTreeAdapterMap['node'];
@@ -33,9 +35,27 @@ export function robotsAllows(body:string,path:string){
  }
  return matches.sort((a,b)=>b.length-a.length||Number(b.allow)-Number(a.allow))[0]?.allow??true;
 }
-export async function checkThemePublication(origin:string,expectations:ThemePageExpectation[],fetcher:typeof fetch=fetch){
+export async function checkThemePublication(origin:string,expectations:ThemePageExpectation[],fetcher?:typeof fetch){
  const requestedAt=new Date().toISOString(),beta=origin==='https://graph-beta.isinxnisi.com';
- const get=async(path:string)=>{try{const response=await fetcher(origin+path,{method:'GET',redirect:'manual',signal:AbortSignal.timeout(30000),headers:{Accept:'text/html, application/xml, text/plain'}});const raw=await response.text();if(Buffer.byteLength(raw)>6_000_000)return {code:'RESPONSE_TOO_LARGE',status:response.status};return {status:response.status,body:raw,robots:response.headers.get('x-robots-tag')};}catch(e){const code=(e as {cause?:{code?:string};code?:string}).cause?.code??(e as {code?:string}).code;return {code:['ENOTFOUND','EAI_AGAIN'].includes(code??'')?'DNS_FAILED':(/TIMEOUT/i.test(code??'')||e instanceof Error&&/timeout|abort/i.test(e.name))?'TIMEOUT':'NETWORK_FAILED'};}};
+ const windows=beta&&!fetcher&&windowsBetaHttpsEnabled();
+ const addresses=windows?new Resolver({timeout:1000,tries:2}).resolve4(new URL(origin).hostname):null;
+ const get=async(path:string)=>{
+  try{
+   const url=origin+path,signal=AbortSignal.timeout(30000),headers={Accept:'text/html, application/xml, text/plain'};
+   let response:Response;
+   if(addresses){
+    const [address]=await addresses;
+    if(!address)throw Object.assign(Error('No public IPv4 address'),{code:'ENOTFOUND'});
+    response=await windowsBetaHttps(new URL(url),address,'theme-publication',signal,'GET',headers);
+   }else response=await (fetcher??fetch)(url,{method:'GET',redirect:'manual',signal,headers});
+   const raw=await response.text();
+   if(Buffer.byteLength(raw)>6_000_000)return {code:'RESPONSE_TOO_LARGE',status:response.status};
+   return {status:response.status,body:raw,robots:response.headers.get('x-robots-tag')};
+  }catch(e){
+   const code=(e as {cause?:{code?:string};code?:string}).cause?.code??(e as {code?:string}).code;
+   return {code:['ENOTFOUND','EAI_AGAIN','ENODATA'].includes(code??'')?'DNS_FAILED':(/TIMEOUT/i.test(code??'')||e instanceof Error&&/timeout|abort/i.test(e.name))?'TIMEOUT':'NETWORK_FAILED'};
+  }
+ };
  const [sitemap,robots,...pages]=await Promise.all([get('/sitemap.xml'),get('/robots.txt'),...expectations.map(e=>get((e.language==='en'?'/en':'')+'/t/'+encodeURIComponent(e.id)))]);
  const results=expectations.map((expected,i)=>{const path=(expected.language==='en'?'/en':'')+'/t/'+encodeURIComponent(expected.id),url=origin+path,page=pages[i];const issues:string[]=[];
   if(page.code)issues.push(page.code);else if(page.status!==200)issues.push('HTTP_ERROR');

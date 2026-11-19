@@ -29,3 +29,10 @@ it('allows anonymous source retrieval with pinned public IPv4 without widening a
  expect(()=>validateWindowsBetaDestination(new URL('https://example.org:444/'),'8.8.8.8','source')).toThrow();
  expect(()=>validateWindowsBetaDestination(new URL('https://example.org/'),'8.8.8.8','attachment')).toThrow();
 });
+
+it('allows only fixed beta publication pages through the external Windows transport',()=>{
+ const validate=(url:string,address='104.18.21.3')=>validateWindowsBetaDestination(new URL(url),address,'theme-publication');
+ for(const path of ['/robots.txt','/sitemap.xml','/t/theme%3Aid','/en/t/theme%3Aid'])expect(()=>validate('https://graph-beta.isinxnisi.com'+path)).not.toThrow();
+ for(const url of ['https://plunode.net/t/theme%3Aid','https://graph-beta.isinxnisi.com/operations','https://graph-beta.isinxnisi.com/t/theme%3Aid?draft=1','http://graph-beta.isinxnisi.com/robots.txt'])expect(()=>validate(url)).toThrow('BETA_HTTPS_DESTINATION');
+ expect(()=>validate('https://graph-beta.isinxnisi.com/robots.txt','127.0.0.1')).toThrow('BETA_HTTPS_DESTINATION');
+});
