@@ -76,7 +76,7 @@ EOF
 - 正式候補buildは `Z_Qv5CFufUf3HwEDuiPdL`。承認対象のseal（`RELEASE-SHA256SUMS` のSHA-256）は `0ef1fb4ad5e687d4d043e19741fca55662fa4e96f5b489ab684cc927665d418d`。ローカルの `.local/theme-admin-20261120/production-release-89fb67b0/` に保管。計画、適用SQL、WebとWorkerのimageのIDとレイヤー、梱包済みarchive（590,611,356 bytes）を照合した。正式公開ツールの隔離Docker検証は7件成功。切替検証の失敗からの旧サービス復帰と、適用済みSQLをスキップする再実行を含む。
 - 承認後、VPSでsealと稼働構成・台帳を再照合する。監査時点と異なる構成・台帳を検出したら停止して再計画する。知識DBを稼働中に `pg_dump -Fc` で退避し、`pg_restore --list` とSHA-256を確認。知識3 Worker → Webの順に停止し、013と台帳を同じトランザクションで確定する。Webの内部経路を確認してから知識3 Workerを再開し、稼働ソース・台帳・正常性、正式HTTPSと既存Appの代表読取を照合する。Web停止中は一時的にアクセスが途切れる。
 - 013確定前かつ新版の起動前の失敗は退避したComposeで旧版へ復帰。013確定または新版Web・Workerの起動開始後は `state.json` と実台帳に従って前進復旧する。一時障害なら同じ承認済み資材で再実行する。修正が必要なら復旧候補の隔離検証と承認を経る。
-- 正式切替を明示承認済み。承認済みsealの資材をVPSの運用アカウント専用ディレクトリに転送し、現地でtransport SHA-256 `1e704aa5bcbef78ee4c0d76486cafbb9bc2680a1e5fc40426b9f1c8dc8bbdf62` の一致を確認した。切替実行は管理者のsudo入力待ち。ChatGPT Web側は、30分の競合時指示の追記・読み戻し、00分の引継ぎ指示の読み戻し、3件の実行確認を残す。正式の互換APIを確認した後、ユーザーとChatGPTが指示を更新する。20分の現行経路にはプロンプト変更不要。
+- 正式切替を明示承認済み。承認済みsealの資材をVPSの運用アカウント専用ディレクトリに転送し、現地でtransport SHA-256 `1e704aa5bcbef78ee4c0d76486cafbb9bc2680a1e5fc40426b9f1c8dc8bbdf62` の一致を確認した。管理者による実行結果は下記の⑤-cに記録した。ChatGPT Web側は、30分の競合時指示の追記・読み戻し、00分の引継ぎ指示の読み戻し、3件の実行確認を残す。正式の互換APIを確認した後、ユーザーとChatGPTが指示を更新する。20分の現行経路にはプロンプト変更不要。
 
 ### 承認後の実行コマンド
 
@@ -85,6 +85,13 @@ EOF
 ```powershell
 wsl.exe -d Ubuntu --cd /home/isinxnisi/1.projects/7.graph-knowledge -- python3 scripts/autopilot.py guard -- python3 .local/theme-admin-20261120/apply-approved-release.py apply
 ```
+
+## ⑤-c 正式切替・互換API確認
+
+- 管理者のPowerShell実行で転送ファイル・seal・各ファイルの照合が成功し、`release-prepared` → `activated` を確認。正式sourceは `89fb67b026f2d2ff695efaa023b33200d1456ec6`、buildは `Z_Qv5CFufUf3HwEDuiPdL`。切替はWeb・知識3 Worker、適用SQLは知識013。共通手順の切替後照合で会員47件／知識13件、起動したimage、既存envのハッシュを確認済み。知識DBの切替前バックアップは `/opt/graph-knowledge/backups/release-89fb67b026f2-0ef1fb4ad5e687d4`。
+- 正式HTTPSでTOP、dataset、互換性API、検索2ページを確認し、公開世代 `k75-295e1b6dae82fa59d7f715a00ef4608a` が切替出力と一致した。既存の正式Appで技術ガイド、公開テーマの読取と日本語正規URL（版16、HTTP 200、指摘0）、`scheduled` の制作案件を確認した。切替前からある1件の更新受付は同じrequestIdで取得でき、確認時は `processing`。この読取確認は次回の定期実行の結果には含めない。
+- 正式APIの技術ガイドでは通常編集・`publish_theme`・`reconcilePublished` と `needs-review` の再開手順を確認。こちらで参照できる正式Appのツール定義は旧版で、`publish_theme`、`read_theme` と公開確認の `view`、制作送信の `reconcilePublished` が一覧に出ていない。既存Appのツール一覧を更新し、この4点を確認してから新しい操作を使う。共有品質ガイドは改訂5を読み戻した。競合時の詳しい手順は下記への追記として引き継ぐ。
+- APIとWorkerの正式切替は完了。ChatGPT Webの保存済みプロンプト、Appのツール定義の読み戻し、毎時00分・20分・30分の実行結果の確認は運用作業として残る。既存の定期経路を変えず、Appを更新して30分の競合時指示を追記・読み戻した後、各予定の対象回で結果を記録する。
 
 ## 開発PCの再起動後の復旧
 
