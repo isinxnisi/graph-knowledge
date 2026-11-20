@@ -93,9 +93,8 @@
       "checkedAt": "2026-11-11T12:03:31+00:00"
     },
     "collection-control/issue-sources/57.json": {
-      "status": "held",
-      "reason": "Remote end closed connection without response",
-      "checkedAt": "2026-11-20T15:49:48+00:00"
+      "status": "registered: issue-57-dot-oshima-two-20261028",
+      "checkedAt": "2026-11-20T15:56:42+00:00"
     },
     "collection-control/issue-sources/58.json": {
       "status": "registered: issue-58-dot-takeuchi-two-20261028",
@@ -193,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-20T15:54:02.973133+00:00"
+  "checkedAt": "2026-11-20T15:57:54.249085+00:00"
 }
