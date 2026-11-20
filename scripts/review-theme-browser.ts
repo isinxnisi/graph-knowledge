@@ -45,13 +45,13 @@ export async function themeSnapshot(context: BrowserContext, origin: string, id:
   };
 }
 
-export async function inspectThemePage(page: Page, url: string, revision: number, locale: string, hasImage: boolean, folder: string, width: number, save?: (file:string, bytes:Buffer)=>Promise<void>) {
+export async function inspectThemePage(page: Page, url: string, revision: number, locale: string, hasImage: boolean, folder: string, width: number, save?: (file:string, bytes:Buffer)=>Promise<void>, expected?: {timeline:boolean;story:boolean}) {
   const response = await page.goto(url, { waitUntil: 'domcontentloaded' });
   if (!response?.ok() || new URL(page.url()).href !== new URL(url).href) {
     throw new Error('Authenticated preview page unavailable.');
   }
-  const expected = '運営者プレビュー · 作業版 ' + revision;
-  await page.getByRole('navigation', { name: '運営者プレビュー' }).getByText(expected, { exact: true }).waitFor();
+  const editionLabel = '運営者プレビュー · 作業版 ' + revision;
+  await page.getByRole('navigation', { name: '運営者プレビュー' }).getByText(editionLabel, { exact: true }).waitFor();
   const screenshots: string[] = [];
   async function capture(step: string) {
     const file = width + '-' + step + '.png';
@@ -76,8 +76,16 @@ export async function inspectThemePage(page: Page, url: string, revision: number
   const horizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
   await capture('overview');
 
-  const evidence = page.locator('[data-evidence-toggle]:visible').first();
+  const pane = page.locator('#explorer-detail');
+  const detail = await pane.count() ? pane : page.locator('body');
+  const evidence = detail.locator('[data-evidence-toggle]:visible').first();
   const timeline = reading.locator('[data-timeline-row-id]:visible button[aria-pressed]').first();
+  let timelineReturn:'back-button'|'desktop-inline'|null=null;
+  async function revealEvidence(){
+    await evidence.waitFor();
+    if(await evidence.getAttribute('aria-expanded')!=='true')await evidence.click();
+    return await evidence.getAttribute('aria-expanded')==='true';
+  }
   const steps: Record<string, string> = {};
   async function check(name: string, action: () => Promise<boolean>) {
     try {
@@ -98,47 +106,54 @@ export async function inspectThemePage(page: Page, url: string, revision: number
     return true;
   });
   await check('timelineSourceAndBack', async () => {
-    if (!await timeline.count()) return false;
+    if(expected?.timeline===false)return false;
+    if(!expected&&!await timeline.count())return false;
     await timeline.click();
-    await evidence.waitFor();
-    await evidence.click();
-    if (await evidence.getAttribute('aria-expanded') !== 'true') return false;
+    if(!await revealEvidence())return false;
     await capture('timeline-source');
-    await page.locator('[data-detail-back]:visible').first().click();
-    await timeline.waitFor();
+    const back=detail.locator('[data-detail-back]:visible').first();
+    if(await back.isVisible()){
+      await back.click();
+      await timeline.waitFor();
+      timelineReturn='back-button';
+    }else if(width>=1200){
+      // On desktop the timeline and detail are adjacent. Confirm the timeline
+      // stays actionable while an open source is visible in its own pane.
+      await timeline.click({trial:true});
+      timelineReturn='desktop-inline';
+    }else return false;
     return true;
   });
   await check('storySourceAndBack', async () => {
+    if(expected?.story===false)return false;
     const about = reading.getByRole('button', { name: label(locale, 'このテーマについて', 'About this theme'), exact: true });
     await (await about.count() ? about : reading.getByRole('button', {
       name: label(locale, 'テーマについて', 'About this theme'), exact: true,
     })).first().click();
-    const stories = page.getByRole('heading', { name: label(locale, 'エピソード・豆知識', 'Stories & background'), exact: true })
+    const stories = detail.getByRole('heading', { name: label(locale, 'エピソード・豆知識', 'Stories & background'), exact: true })
       .locator('xpath=ancestor::section[1]');
-    await stories.waitFor();
-    const summary = stories.locator('details > summary:visible').first();
-    if (!await summary.count()) return false;
+    if(!expected&&!await stories.count())return false;
+    const summary = stories.locator('details > summary').first();
+    await summary.waitFor();
     await summary.click();
     await stories.locator('button[data-detail-record]:visible').first().click();
-    await evidence.waitFor();
-    await evidence.click();
-    if (await evidence.getAttribute('aria-expanded') !== 'true') return false;
+    if(!await revealEvidence())return false;
     await capture('story-source');
-    await page.getByRole('button', { name: label(locale, '一覧に戻る', 'Back to the list'), exact: true }).click();
+    await detail.getByRole('button', { name: label(locale, '一覧に戻る', 'Back to the list'), exact: true }).click();
     await summary.waitFor();
-    const selected = page.getByRole('button', {
+    const selected = detail.getByRole('button', {
       name: label(locale, '選んだ記録に戻る', 'Back to selected record'), exact: true,
     });
     if (await selected.isVisible()) {
       await selected.click();
-      await page.locator('[data-detail-back]:visible').first().waitFor();
+      await detail.locator('[data-detail-back]').first().waitFor({state:width>=1200?'attached':'visible'});
     } else {
-      await page.getByRole('button', { name: label(locale, '閲覧に戻る', 'Back to reading'), exact: true }).click();
+      await detail.getByRole('button', { name: label(locale, '閲覧に戻る', 'Back to reading'), exact: true }).click();
       await reading.waitFor();
     }
     return true;
   });
-  return { width, image: imageMetrics, horizontalOverflow, steps, screenshots };
+  return { width, image: imageMetrics, horizontalOverflow, steps, screenshots, timelineReturn };
 }
 
 async function main() {
