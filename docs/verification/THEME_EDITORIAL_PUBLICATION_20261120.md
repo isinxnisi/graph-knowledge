@@ -25,7 +25,7 @@
 3. βでは既存のoperator設定で `scripts/knowledge-migrate.ts --theme-editorial-only --confirm-origin https://graph-beta.isinxnisi.com --confirm-database plunode_knowledge75_beta` を使用する。正式は [共通本番公開手順](../runbooks/PRODUCTION_RELEASE.md)で正式DB・βの台帳と固定資材を照合する。Webと受付を処理するWorkerを同じ固定ソースへ切り替える。適用前に正式切替の承認を得る。旧操作を正式で確認した後、通常ChatのAppへ新ツールを反映する。共通品質ガイドの通常編集・制作見直し・公開確認の記述（改訂5の第7・9・10節）も読み戻して用途別の指示に揃える。
 4. ユーザーとChatGPTが必要な予定の指示を更新・読み戻しし、3件の次回予定で別々に結果を確認する。競合して停止した見直しは保留のまま保持でき、公開済み案件は次の定期枠を塞がない。
 
-**ChatGPT Web側は未実施。** 保存済みプロンプトの読み戻し、見直しの競合時指示の更新、必要に応じた制作側の引継ぎ指示の更新、新しいツール定義のAppへの反映、3件の予定実行結果の確認が残る。API実装および隔離・β検証と、上記の運用切替は別々に完了を記録する。
+**ChatGPT Web側の保存確認を受領。** 本番Appの新APIと定期実行設定の保存はユーザー確認済み。Codexでは保存内容の全文を取得していない。3件の対象回の実行結果を確認後、運用切替を完了する。
 
 ## 隔離・βでの確認
 
@@ -90,7 +90,7 @@ wsl.exe -d Ubuntu --cd /home/isinxnisi/1.projects/7.graph-knowledge -- python3 s
 
 - 管理者のPowerShell実行で転送ファイル・seal・各ファイルの照合が成功し、`release-prepared` → `activated` を確認。正式sourceは `89fb67b026f2d2ff695efaa023b33200d1456ec6`、buildは `Z_Qv5CFufUf3HwEDuiPdL`。切替はWeb・知識3 Worker、適用SQLは知識013。共通手順の切替後照合で会員47件／知識13件、起動したimage、既存envのハッシュを確認済み。知識DBの切替前バックアップは `/opt/graph-knowledge/backups/release-89fb67b026f2-0ef1fb4ad5e687d4`。
 - 正式HTTPSでTOP、dataset、互換性API、検索2ページを確認し、公開世代 `k75-295e1b6dae82fa59d7f715a00ef4608a` が切替出力と一致した。既存の正式Appで技術ガイド、公開テーマの読取と日本語正規URL（版16、HTTP 200、指摘0）、`scheduled` の制作案件を確認した。切替前からある1件の更新受付は同じrequestIdで取得でき、確認時は `processing`。この読取確認は次回の定期実行の結果には含めない。
-- 正式APIの技術ガイドでは通常編集・`publish_theme`・`reconcilePublished` と `needs-review` の再開手順を確認。こちらで参照できる正式Appのツール定義は旧版で、`publish_theme`、`read_theme` と公開確認の `view`、制作送信の `reconcilePublished` が一覧に出ていない。既存Appのツール一覧を更新し、この4点を確認してから新しい操作を使う。共有品質ガイドは改訂5を読み戻した。競合時の詳しい手順は下記への追記として引き継ぐ。
+- 正式APIの技術ガイドでは通常編集・`publish_theme`・`reconcilePublished` と `needs-review` の再開手順を確認。正式切替直後にCodexから参照できたツール定義は旧版で、`publish_theme`、`read_theme` と公開確認の `view`、制作送信の `reconcilePublished` が一覧に出ていない。本番Appでの新API確認は⑤-dに記録した。共有品質ガイドは改訂5を読み戻した。競合時の詳しい手順は下記への追記として引き継ぐ。
 - APIとWorkerの正式切替は完了。ChatGPT Webの保存済みプロンプト、Appのツール定義の読み戻し、毎時00分・20分・30分の実行結果の確認は運用作業として残る。既存の定期経路を変えず、Appを更新して30分の競合時指示を追記・読み戻した後、各予定の対象回で結果を記録する。
 
 ## 開発PCの再起動後の復旧
@@ -119,4 +119,8 @@ wsl.exe -d Ubuntu --cd /home/isinxnisi/1.projects/7.graph-knowledge -- python3 s
 | 毎時20分 テーマ資料収集 | `claim_collection → deliver_collection` の受付を読み戻し、後続処理による知識反映を別に確認 | 受付の重複がなく、受入済み知識だけが公開版へ反映。通常下書き・制作原稿と案件状態が保持される。受付だけの回は公開確認を保留する |
 | 毎時30分 独立見直し | 別実行IDでのclaim、現行対象の全体評価、`complete`、公開結果と正規URLを確認。競合が実際に発生した回は追記案の照合から確認する | 未確認の版を公開せず、照合・全体評価後の版だけ公開。正規URLの提供版が一致し、完了案件が次の00分の制作を塞がない。競合がない回は実競合経路を別に未確認として記録する |
 
-本番の予定やプロンプトは変更していない。新API確認後の追記・読み戻しと実予定3件の確認は運用作業として残る。
+### ⑤-d 本番Appと設定保存の確認
+
+- ユーザーから、本番Appの新APIと定期実行設定の保存を確認済みとの報告を受領。Codexからは保存済みの文面・各予定の実行結果を取得できず、設定の保存確認を3件の実行確認と区別する。
+- 2026-11-20 11:12 JST頃に正式HTTPSを再確認。build `Z_Qv5CFufUf3HwEDuiPdL` で公式検証を通過。正式APIで取得したscheduled制作案件は制作工程にあり、更新受付が `needs-changes`。解説が対象記録の正確な版に紐づく公開済みの説明であることを求める検証で差し戻されていた。この検証は切替前後で同じ。公開と独立見直しへの引継ぎは未確認。
+- この受付を特定の予定回に帰属させる情報、資料収集の受付と公開反映、独立見直しの全体評価と公開結果は未確認。各対象回の実行時刻、案件IDまたは受付ID、最終状態と公開版を照合してから運用切替を完了する。
