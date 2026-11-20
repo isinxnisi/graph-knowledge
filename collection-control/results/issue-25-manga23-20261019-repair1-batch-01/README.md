@@ -1,8 +1,8 @@
 # 収集Workerの処理結果
 
-issue-25-manga23-20261019-repair1-batch-01：**retry-wait**
+issue-25-manga23-20261019-repair1-batch-01：**blocked**
 
 公開apply・restore・本番配置は行わない。承認者名は本人認証の証明ではない。
 
-GitHub Issue read failed: HTTP 502
+Installed code differs from source commit; reviewed worker upgrade required
 
