@@ -50,8 +50,18 @@ export async function dispatchThemeRegistration(owner:string,raw:ThemeOperatorCo
   if(['submit-theme','update-theme','submit-translation','amend-theme-items','control-theme-retry','save-product','upload-product-image','upload-editorial-image','cancel-theme','cancel-translation'].includes(command.action))await guardThemeProductionRequest(memberRuntime().pool,owner,command);
   if(command.action==='upload-editorial-image'){
    const {file,purpose,action,...metadata}=command;void action;
-   const bytes=await downloadEditorialFile(file.download_url);
-   return await dispatchProductAuthoring(memberRuntime().pool,owner,{action:'upload-product-image',...metadata,role:purpose==='product-photo'?'product-photo':'illustration',base64:bytes.toString('base64')});
+   const {pool,config}=memberRuntime();
+   let failureStage:'download'|'storage'='download';
+   try{
+    const bytes=await downloadEditorialFile(file.download_url);
+    failureStage='storage';
+    const result=await dispatchProductAuthoring(pool,owner,{action:'upload-product-image',...metadata,role:purpose==='product-photo'?'product-photo':'illustration',base64:bytes.toString('base64')});
+    if(config.origin==='https://plunode.net')console.info('Editorial image MCP stored',{requestId:metadata.requestId});
+    return result;
+   }catch(error){
+    if(config.origin==='https://plunode.net')console.warn('Editorial image MCP rejected',{requestId:metadata.requestId,failureStage,code:error instanceof KnowledgeError?error.code:'INTERNAL'});
+    throw error;
+   }
   }
   if(command.action==="upload-product-image"||command.action==="save-product"||command.action==="read-product"||command.action==="find-products")return await dispatchProductAuthoring(memberRuntime().pool,owner,command);
   if(command.action==='read-translation'){const {action,...input}=command;void action;return await translations!.read(owner,input);}

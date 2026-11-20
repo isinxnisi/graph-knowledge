@@ -10,6 +10,23 @@ import {knowledgeCapability} from '../../../../lib/server/knowledge-deployment';
 import {createMissionMcpHandler,missionMcpBridge} from '../../../../lib/server/knowledge-mission-mcp';
 import {dispatchThemeRegistration} from '../../../../lib/server/member/knowledge-theme-registration';
 
+const imageRequestId=z.uuidv4();
+const imageCall=z.object({
+ method:z.literal('tools/call'),
+ params:z.object({name:z.literal('upload_editorial_image'),arguments:z.unknown().optional()}),
+});
+function logImageArrival(body:unknown){
+ // Keep the correlation ID only. The signed URL and file identifier never enter the log.
+ const members=Array.isArray(body)?body:[body];
+ for(const member of members){
+  const call=imageCall.safeParse(member);
+  if(!call.success)continue;
+  const args=call.data.params.arguments;
+  const id=imageRequestId.safeParse(args&&typeof args==='object'&&'requestId' in args?args.requestId:undefined);
+  console.info('Editorial image MCP received',{requestId:id.success?id.data:null});
+ }
+}
+
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
 export async function POST(request:Request){return missionHandle(async()=>{
@@ -20,6 +37,7 @@ export async function POST(request:Request){return missionHandle(async()=>{
  const response=await requireMcpAuth(auth,async(req,claims)=>{
   try{await assertMissionMcpUser(pool,claims);}catch(error){if(trace)console.warn('Collection MCP operator check',{code:error instanceof MemberError?error.code:'INTERNAL'});throw error;}
   const body=await memberInput(req,z.json(),2100000);
+  if(config.origin==='https://plunode.net')logImageArrival(body);
   const handler=createMissionMcpHandler(async command=>{
    const client=await pool.connect();let held=false;
    try{
