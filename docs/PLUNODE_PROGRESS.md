@@ -1,3 +1,5 @@
+2026-11-20 テーマ制作の外部制約 ①案件記録とAPI境界の照合・②切分けログと運営者ブラウザ工具の実装／回帰／3200・HTTPS β反映まで完了｜残り①管理者の本番ログ照合、③正式反映とWeb予定引継ぎ・ヴァイキングの実案件再開｜全体③まで。source c9030b8d／β l4ggiYTMO5haoHa8t7pih。隔離計172件、β公開200／匿名プレビュー404。 [状況と再開手順](runbooks/THEME_PRODUCTION_EXTERNAL_BLOCKERS.md)。
+
 2026-11-20 テーマ管理API ⑤-a監査・⑤-b承認と転送・⑤-c正式切替・⑤-d本番Appの新APIと定期実行設定の保存確認まで完了｜残りChatGPT Webの対象回3件の実行結果照合｜全体⑤まで。source 89fb67b0／正式 Z_Qv5CFufUf3HwEDuiPdL／会員47・知識13。最新の読取では制作受付は解説参照の検証で差し戻し。[正式移行と各予定への引継ぎ](verification/THEME_EDITORIAL_PUBLICATION_20261120.md)。
 
 2026-11-20 テーマ管理API：①版分離・②通常公開とガイド・③隔離回帰・④3200／HTTPS β、既存β App更新と通常Chatの正規URL確認まで完了｜残り⑤正式の監査・承認・切替、ChatGPT Web予定3件の引継ぎと実行確認｜全体⑤まで。source f852a3db／β 24aEt-CJv5f0R_JSnqHOy、会員47／知識12。通常公開成功と制作・見直し・収集の書込みは隔離DBで確認。正式と予定プロンプトは未変更。[検証と各予定への引継ぎ](verification/THEME_EDITORIAL_PUBLICATION_20261120.md)。

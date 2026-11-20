@@ -4,6 +4,8 @@
 
 通常編集・公開APIとChatGPT Web定期実行の[移行・引継ぎ記録](verification/THEME_EDITORIAL_PUBLICATION_20261120.md)。
 
+テーマ制作が添付送出やブラウザ不足で止まった場合の[切分け・画像登録・認証済み画面確認・再開手順](runbooks/THEME_PRODUCTION_EXTERNAL_BLOCKERS.md)。
+
 受入済み資料収集とテーマ制作・公開版の分離：[現行補足契約](design/COLLECTION_THEME_PUBLICATION_20261119.md)。
 
 テーマ制作中の非公開化・承認公開版・運営者プレビューの現行実装設計は [THEME_PRIVATE_PUBLICATION_20261117.md](design/THEME_PRIVATE_PUBLICATION_20261117.md)。検証・配置の完了状態は [PLUNODE_PROGRESS.md](PLUNODE_PROGRESS.md) を参照。
