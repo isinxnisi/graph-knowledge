@@ -7,15 +7,20 @@ import {authorizeProductOperator,dispatchProductAuthoring} from './member/produc
 import {memberTransaction} from './member/operations';
 import {automationFailure,hashPreviewToken} from './theme-automation';
 import {diagnosticError,themeDiagnostic} from './theme-automation-diagnostics';
-import type {ThemeImageGenerator} from './theme-image-generator';
+import {defaultThemeImageModel,type ThemeImageGenerator} from './theme-image-generator';
 
 type PreviewResult={evidence:Map<string,Buffer>;result:{build?:string;complete:boolean;names:string[]}};
 type Job=QueryResultRow & {id:string;case_id:string;owner_id:string;execution_id:string;attempt_id:string;state:string;kind:'image'|'preview'};
 type Outcome={state:'queued'|'generated'|'ready'|'blocked';code:string;bytes?:Buffer;result?:unknown;imageId?:string;preview?:Map<string,Buffer>};
 const imageInput=z.strictObject({prompt:z.string().min(10).max(2500),alt:uploadProductImageSchema.shape.alt});
 const leaseSeconds=300;
+export const themeImageTrialOrigin='https://graph-beta.isinxnisi.com';
+export const themeImageTrialPrompt=/^[ -~]{10,512}$/;
 
-export function createThemeAutomationWorker(pool:Pool,origin:string,generator:ThemeImageGenerator|null,capture:(target:AutomationTarget,token:string)=>Promise<PreviewResult>){
+export function createThemeAutomationWorker(pool:Pool,origin:string,generator:ThemeImageGenerator|null,capture:(target:AutomationTarget,token:string)=>Promise<PreviewResult>,trialImageId?:string){
+  if(trialImageId&&(origin!==themeImageTrialOrigin||generator?.name!=='openai'||generator.model!==defaultThemeImageModel||!z.uuidv4().safeParse(trialImageId).success)){
+    throw Error('A beta image trial requires one exact receipt and the fixed OpenAI image model.');
+  }
   const event=(job:Job,stage:string,code:string)=>({stage,code,caseId:job.case_id,requestId:job.id,executionId:job.execution_id,attemptId:job.attempt_id});
   async function recover(c:PoolClient){
     const expired=(await c.query(`UPDATE theme_production.automation_requests a SET
@@ -23,8 +28,9 @@ export function createThemeAutomationWorker(pool:Pool,origin:string,generator:Th
       reason=CASE WHEN a.state='storing' THEN 'STORAGE_RESUMED' WHEN a.kind='preview' THEN 'PREVIEW_INTERRUPTED' ELSE 'IMAGE_GENERATION_UNKNOWN' END,
       lease_until=NULL,updated_at=clock_timestamp()
       FROM theme_production.cases p WHERE p.id=a.case_id AND p.origin=$1
+      AND ($2::uuid IS NULL OR (a.id=$2 AND a.kind='image' AND p.environment='beta' AND p.workflow='manual'))
       AND a.state IN ('running','storing') AND a.lease_until<=clock_timestamp()
-      RETURNING a.*`,[origin])).rows as Job[];
+      RETURNING a.*`,[origin,trialImageId??null])).rows as Job[];
     for(const row of expired)await themeDiagnostic(c,origin,event(row,row.kind,row.reason));
   }
 
@@ -34,16 +40,20 @@ export function createThemeAutomationWorker(pool:Pool,origin:string,generator:Th
       await recover(c);
       const job=(await c.query(`SELECT a.*,p.owner_id FROM theme_production.automation_requests a JOIN theme_production.cases p ON p.id=a.case_id
         WHERE p.origin=$1 AND p.status<>'completed' AND a.available_at<=clock_timestamp()
-        AND ((a.kind='image' AND (a.state='generated' OR $2 AND a.state='queued')) OR
+        AND ($3::uuid IS NULL OR (a.id=$3 AND a.kind='image' AND p.environment='beta' AND p.workflow='manual'))
+        AND ((a.kind='image' AND (a.state='generated' OR $2 AND a.state='queued' AND a.provider_started_at IS NULL)) OR
              (a.kind='preview' AND p.phase='review' AND a.state='queued'))
-        ORDER BY a.available_at,a.created_at FOR UPDATE OF a SKIP LOCKED LIMIT 1`,[origin,!!generator])).rows[0] as Job|undefined;
+        ORDER BY a.available_at,a.created_at FOR UPDATE OF a SKIP LOCKED LIMIT 1`,[origin,!!generator,trialImageId??null])).rows[0] as Job|undefined;
       if(!job)return null;
       const storing=job.state==='generated';
       if(job.kind==='image'&&!storing){
+        if(trialImageId&&!themeImageTrialPrompt.test(imageInput.parse(job.input).prompt)){
+          throw automationFailure('IMAGE_TRIAL_PROMPT','Use a short ASCII text-only trial prompt (10–512 characters).',400);
+        }
         const daily=(await c.query(`SELECT count(*)::int AS n FROM theme_production.automation_requests a
           JOIN theme_production.cases p ON p.id=a.case_id
           WHERE p.origin=$1 AND a.provider=$2 AND a.provider_started_at>=date_trunc('day',clock_timestamp(),'UTC')`,[origin,generator!.name])).rows[0].n;
-        if(daily>=generator!.dailyLimit){
+        if(daily>=(trialImageId?1:generator!.dailyLimit)){
           await c.query("UPDATE theme_production.automation_requests SET reason='IMAGE_DAILY_LIMIT',available_at=date_trunc('day',clock_timestamp(),'UTC')+interval '1 day' WHERE id=$1",[job.id]);
           await themeDiagnostic(c,origin,event(job,'image','IMAGE_DAILY_LIMIT'));
           return null;
@@ -106,8 +116,10 @@ export function createThemeAutomationWorker(pool:Pool,origin:string,generator:Th
     }
     const input=imageInput.parse(job.input);
     await themeDiagnostic(pool,origin,event(job,'image-provider','SEND_STARTED'));
-    const bytes=await generator!.generate(input.prompt,job.attempt_id);
-    return {state:'generated',code:'IMAGE_BYTES_STORED',bytes,result:{provider:generator!.name,model:generator!.model}};
+    const {bytes,usage,providerRequestId}=await generator!.generate(input.prompt,job.attempt_id);
+    return {state:'generated',code:'IMAGE_BYTES_STORED',bytes,result:{
+      provider:generator!.name,model:generator!.model,providerAttemptId:job.attempt_id,usage:usage??null,providerRequestId:providerRequestId??null,
+    }};
   }
 
   async function runOnce(){
@@ -120,7 +132,7 @@ export function createThemeAutomationWorker(pool:Pool,origin:string,generator:Th
       const code=diagnosticError(error,fallback);
       outcome=storing&&job.attempt_count<4&&code==='IMAGE_STORAGE_UNAVAILABLE'
         ?{state:'generated',code:'STORAGE_RETRY',bytes:job.generated_bytes,result:job.result}
-        :{state:'blocked',code};
+        :{state:'blocked',code,...(storing?{result:job.result}:{})};
     }
     await settle(job,outcome);
     return true;
@@ -136,5 +148,12 @@ export function createThemeAutomationWorker(pool:Pool,origin:string,generator:Th
       await c.query("DELETE FROM theme_production.diagnostics WHERE at<clock_timestamp()-interval '30 days'");
     });
   }
-  return {runOnce,prune};
+  async function trialResult(){
+    if(!trialImageId)return null;
+    return (await pool.query(`SELECT a.state,a.reason,a.image_id AS "imageId",a.result
+      FROM theme_production.automation_requests a JOIN theme_production.cases c ON c.id=a.case_id
+      WHERE a.id=$1 AND a.kind='image' AND c.origin=$2 AND c.environment='beta' AND c.workflow='manual'`,
+    [trialImageId,origin])).rows[0]??null;
+  }
+  return {runOnce,prune,trialResult};
 }
