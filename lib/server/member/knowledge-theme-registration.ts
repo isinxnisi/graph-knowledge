@@ -1,3 +1,5 @@
+import {themeAutomationActions} from '../../domain/theme-automation';
+import {diagnosticError,themeAutomationEnabled,themeDiagnostic} from '../theme-automation-diagnostics';
 import {publishOrdinaryTheme} from '../knowledge-theme-operator-publication';
 import {withOperatorThemeRead} from '../knowledge-theme-access';
 import {themePublicationState} from '../knowledge-theme-publication';
@@ -42,9 +44,12 @@ export async function dispatchThemeRegistration(owner:string,raw:ThemeOperatorCo
   await registration.authorize(owner);
   return await withOperatorThemeRead(async()=>{
   const production=themeProductionCommandSchema.safeParse(raw);
-  if(production.success){
+  const automation=themeAutomationActions.safeParse(raw);
+  if(production.success||automation.success){
    const {pool,config}=memberRuntime(),runtime=themeProductionRuntime(pool,knowledgePool!,config.origin,registration!,translations!);
-   return await createThemeProductions(pool,{environment:config.origin==='https://plunode.net'?'production':'beta',origin:config.origin,authorize:id=>registration!.authorize(id),...runtime,send:(id,value)=>dispatchThemeRegistration(id,value)}).execute(owner,production.data);
+   const service=createThemeProductions(pool,{environment:config.origin==='https://plunode.net'?'production':'beta',origin:config.origin,authorize:id=>registration!.authorize(id),...runtime,send:(id,value)=>dispatchThemeRegistration(id,value)});
+   if(automation.success)return service.executeAutomation(owner,automation.data);
+   if(production.success)return service.execute(owner,production.data);
   }
   const command=themeRegistrationCommandSchema.parse(raw);
   if(['submit-theme','update-theme','submit-translation','amend-theme-items','control-theme-retry','save-product','upload-product-image','upload-editorial-image','cancel-theme','cancel-translation'].includes(command.action))await guardThemeProductionRequest(memberRuntime().pool,owner,command);
@@ -53,13 +58,16 @@ export async function dispatchThemeRegistration(owner:string,raw:ThemeOperatorCo
    const {pool,config}=memberRuntime();
    let failureStage:'download'|'storage'='download';
    try{
+    if(themeAutomationEnabled())await themeDiagnostic(pool,config.origin,{stage:'attachment-download',code:'STARTED',requestId:metadata.requestId}).catch(()=>{});
     const bytes=await downloadEditorialFile(file.download_url);
     failureStage='storage';
     const result=await dispatchProductAuthoring(pool,owner,{action:'upload-product-image',...metadata,role:purpose==='product-photo'?'product-photo':'illustration',base64:bytes.toString('base64')});
     if(config.origin==='https://plunode.net')console.info('Editorial image MCP stored',{requestId:metadata.requestId});
+    if(themeAutomationEnabled())await themeDiagnostic(pool,config.origin,{stage:'attachment-storage',code:'STORED',requestId:metadata.requestId}).catch(()=>{});
     return result;
    }catch(error){
     if(config.origin==='https://plunode.net')console.warn('Editorial image MCP rejected',{requestId:metadata.requestId,failureStage,code:error instanceof KnowledgeError?error.code:'INTERNAL'});
+    if(themeAutomationEnabled())await themeDiagnostic(pool,config.origin,{stage:'attachment-'+failureStage,code:diagnosticError(error,'INTERNAL'),requestId:metadata.requestId}).catch(()=>{});
     throw error;
    }
   }

@@ -1,3 +1,4 @@
+import {themeAutomationEnabled,themeMcpDiagnostics,withThemeIngress} from '../../../../lib/server/theme-automation-diagnostics';
 import {requireMcpAuth} from '@better-auth/mcp';
 import {windowsBetaHttpsEnabled} from '../../../../lib/server/windows-beta-https';
 import {z} from 'zod';
@@ -29,8 +30,12 @@ function logImageArrival(body:unknown){
 
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
-export async function POST(request:Request){return missionHandle(async()=>{
+export async function POST(request:Request){
+ let diag:ReturnType<typeof themeMcpDiagnostics>|undefined;
+ const result=await missionHandle(async()=>{
  const {auth,config,pool}=memberRuntime();
+ const current=themeMcpDiagnostics(pool,config.origin);
+ if(themeAutomationEnabled()){diag=current;await diag.received();}
  if(!missionMcpEnabled()||process.env.KNOWLEDGE_MISSIONS_ENABLED!=='1'||!knowledgeCapability('missions',config.origin))throw new MemberError(404,'NOT_FOUND');
  if(request.headers.has('origin')&&request.headers.get('origin')!==config.origin)throw new MemberError(403,'INVALID_ORIGIN');
  const trace=process.env.KNOWLEDGE_RUNTIME==='beta'&&process.env.PLUNODE_WINDOWS_HTTPS_TRANSPORT==='1';
@@ -38,6 +43,7 @@ export async function POST(request:Request){return missionHandle(async()=>{
   try{await assertMissionMcpUser(pool,claims);}catch(error){if(trace)console.warn('Collection MCP operator check',{code:error instanceof MemberError?error.code:'INTERNAL'});throw error;}
   const body=await memberInput(req,z.json(),2100000);
   if(config.origin==='https://plunode.net')logImageArrival(body);
+  if(diag)await diag.authenticated(body);
   const handler=createMissionMcpHandler(async command=>{
    const client=await pool.connect();let held=false;
    try{
@@ -48,7 +54,12 @@ export async function POST(request:Request){return missionHandle(async()=>{
     return await missionMcpBridge().call(command);
    }finally{if(held)await client.query('SELECT pg_advisory_unlock(71900261,75)');client.release();}
   },themeComposeScopeEnabled()?{
-   call:command=>dispatchThemeRegistration(z.uuidv4().parse(claims.sub),command),
+   call:command=>withThemeIngress(current.ingressId,async()=>{
+    const value=await dispatchThemeRegistration(z.uuidv4().parse(claims.sub),command);
+    if(diag)await diag.command(command,value);
+    return value;
+   }),
+   automationEnabled:themeAutomationEnabled(),
    authChallenge:grantedThemeComposeScope(claims.scope)?undefined:'Bearer resource_metadata="'+config.origin+'/.well-known/oauth-protected-resource/api/knowledge-collection/mcp", error="insufficient_scope", error_description="Reconnect to register and update themes.", scope="missions:collect themes:compose"',
   }:undefined);
   const response=await handler.fetch(new Request(req.url,{method:'POST',headers:req.headers,body:JSON.stringify(body)}));
@@ -62,4 +73,7 @@ export async function POST(request:Request){return missionHandle(async()=>{
  })(request);
  if(trace&&response.status>=400)console.warn('Collection MCP access failed',{status:response.status});
  return response;
-});}
+ });
+ if(diag){await diag.finished(result.status);result.headers.set('X-Plunode-Ingress-Id',diag.ingressId);}
+ return result;
+}

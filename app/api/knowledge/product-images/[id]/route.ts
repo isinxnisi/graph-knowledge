@@ -10,7 +10,7 @@ export async function GET(request:Request,{params}:{params:Promise<{id:string}>}
   if(!row)return new Response(null,{status:404,headers:PRIVATE_THEME_HEADERS});
   let isPublic=!!row.product;
   if(!isPublic){const knowledge=await operatorThemePool();isPublic=!!(await knowledge.query("SELECT 1 FROM knowledge75.theme_publications h JOIN knowledge75.theme_releases r ON r.theme_id=h.theme_id JOIN knowledge75.objects o ON o.kind='theme' AND o.id=h.theme_id WHERE h.published_revision IS NOT NULL AND o.visibility='public' AND r.image_ids ? $1 LIMIT 1",[id])).rowCount;}
-  if(!isPublic){try{await themeOperator(request.headers);}catch{return new Response(null,{status:404,headers:PRIVATE_THEME_HEADERS});}}
+  if(!isPublic){try{await themeOperator(request.headers,{imageId:id});}catch{return new Response(null,{status:404,headers:PRIVATE_THEME_HEADERS});}}
   const small=new URL(request.url).searchParams.get('size')==='small',data=small?row.thumbnail:row.bytes;
   return new Response(new Uint8Array(data),{headers:{...(!isPublic?PRIVATE_THEME_HEADERS:{'Cache-Control':row.product?'public, max-age=31536000, immutable':'public, max-age=0, must-revalidate'}),'Content-Type':'image/webp','Content-Length':String(data.length),'X-Content-Type-Options':'nosniff','Content-Security-Policy':"default-src 'none'; sandbox",'ETag':'"'+id+(small?'-small':'')+'"'}});
  }catch{return new Response(null,{status:503,headers:PRIVATE_THEME_HEADERS});}

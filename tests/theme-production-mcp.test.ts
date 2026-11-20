@@ -47,3 +47,22 @@ it('exposes explicit ordinary publication to compose without weakening collectio
  expect(rejected.result.isError).toBe(true);
  expect(call).not.toHaveBeenCalled();
 });
+
+it('exposes case automation under compose consent and returns screenshot bytes as MCP image content',async()=>{
+ const args={requestId:randomUUID(),caseId:randomUUID(),executionId:randomUUID(),leaseToken:randomUUID(),expectedVersion:7,automationId:randomUUID(),name:'ja-390-overview.png'};
+ const call=vi.fn().mockResolvedValue({metadata:{name:args.name},image:Buffer.from('test bytes')});
+ const handler=createMissionMcpHandler(vi.fn(),{call,automationEnabled:true});
+ const listing=await(await handler.fetch(rpc('tools/list',{}))).json();
+ const n='read_theme_review_evidence';
+ for(const name of ['generate_theme_image','capture_theme_review_preview','read_theme_automation','report_theme_external_blocker',n]){
+  expect(listing.result.tools.find((v:{name:string})=>v.name===name)?._meta.securitySchemes[0].scopes).toContain('themes:compose');
+ }
+ const result=await(await handler.fetch(rpc('tools/call',{name:n,arguments:args}))).json();
+ expect(result.result.content).toContainEqual({type:'image',mimeType:'image/png',data:Buffer.from('test bytes').toString('base64')});
+ expect(call).toHaveBeenCalledWith({action:'read-theme-evidence',...args});
+ call.mockClear();
+ const denied=createMissionMcpHandler(vi.fn(),{call,automationEnabled:true,authChallenge:'Bearer scope="themes:compose"'});
+ const rejected=await(await denied.fetch(rpc('tools/call',{name:n,arguments:args}))).json();
+ expect(rejected.result.isError).toBe(true);
+ expect(call).not.toHaveBeenCalled();
+});

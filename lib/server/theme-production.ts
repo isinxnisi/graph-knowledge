@@ -1,3 +1,6 @@
+import type {AutomationTarget,ThemeAutomationCommand} from '../domain/theme-automation';
+import {automationFailure,assertThemeEvidence,enqueueThemeAutomation,readThemeAutomation,readThemeEvidence} from './theme-automation';
+import {themeAutomationEnabled,themeDiagnostic} from './theme-automation-diagnostics';
 import {lockThemeCaseBinding} from './knowledge-theme-editions';
 import {randomUUID,createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
@@ -9,7 +12,7 @@ import {withThemeProductionSubmission,assertThemeProductionLease} from './theme-
 
 type Target={theme:{id:string;revision:number};digest:string;guide:{id:string;revision:number};references:unknown;publicationConflict?:unknown};
 type Observed={state:'accepted'|'pending'|'applied'|'failed';result:unknown;theme?:{id:string;revision:number}};
-type Dependencies={environment:'beta'|'production';origin:string;authorize:(owner:string)=>Promise<void>;target:(id:string,owner:string,revision?:number)=>Promise<Target>;send:(owner:string,command:ProductionSubmissionCommand)=>Promise<unknown>;observe:(owner:string,command:ProductionSubmissionCommand)=>Promise<Observed|null>;publish:(owner:string,intentId:string)=>Promise<void>;publication:(id:string,intentId?:string)=>Promise<{state:string;publishedRevision:number|null;workingRevision:number;releaseId:string|null;workingChanges:boolean;approvalPresent:boolean}>;afterDispatch?:()=>Promise<void>};
+type Dependencies={environment:'beta'|'production';origin:string;authorize:(owner:string)=>Promise<void>;target:(id:string,owner:string,revision?:number)=>Promise<Target>;send:(owner:string,command:ProductionSubmissionCommand)=>Promise<unknown>;observe:(owner:string,command:ProductionSubmissionCommand)=>Promise<Observed|null>;publish:(owner:string,intentId:string)=>Promise<void>;publication:(id:string,intentId?:string)=>Promise<{state:string;publishedRevision:number|null;workingRevision:number;releaseId:string|null;workingChanges:boolean;approvalPresent:boolean}>;automationTarget?:(id:string,owner:string)=>Promise<AutomationTarget>;afterDispatch?:()=>Promise<void>};
 const failure=(text:string,code='PRODUCTION_CONFLICT',status=409)=>new KnowledgeError(text,status,code);
 const lockKey=(id:string)=>'theme-production:'+id;
 const terminal=(state:string)=>['applied','failed','withdrawn'].includes(state);
@@ -159,11 +162,13 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
     if(a.targetDigest!==ev.target.digest||a.guideRevision!==ev.target.guide.revision)throw failure('評価対象または品質ガイドが変わりました。現在の全体を再評価してください。','PRODUCTION_ASSESSMENT_STALE');
     if(a.result==='pass'&&pending.length)throw failure('未反映の送信を合格扱いにはできません。','PRODUCTION_PUBLICATION_PENDING');
     for(const item of list.filter(s=>s.state==='failed'))if(a.result==='pass'&&!a.exceptions.some(e=>e.submissionId===item.id))throw failure('未反映の失敗を未解消例外として明示してください。','PRODUCTION_EXCEPTION_REQUIRED');
+    if(a.result==='pass')await assertThemeEvidence(c,r.id,command.executionId,a.reviewEvidenceId,ev.target);
     await c.query('UPDATE theme_production.cases SET assessment=$2 WHERE id=$1',[r.id,JSON.stringify({...a,workDigest:knowledgeDigest(list.map(s=>[s.id,s.digest,s.state])),evaluatedTheme:ev.target.theme,guide:ev.target.guide,evaluatedAt:new Date().toISOString(),executionId:command.executionId})]);
    }else if(command.operation==='complete'){
     if(ev.target?.publicationConflict)throw failure('通常公開が進みました。制作版と公開版を照合してから全体を再評価してください。','THEME_PUBLICATION_CONFLICT');
     if(r.phase!=='review'||!ev.assessment?.current||ev.assessment.result!=='pass'||!ev.target)throw failure('現在の対象版とガイドに基づく独立した全体評価が必要です。','PRODUCTION_ASSESSMENT_STALE');
     if(pending.length||r.progress.unfinished.length||r.progress.blockers.length)throw failure('未反映・未完作業・阻害要因が残っています。対応不能点は全体評価の例外へ内容と理由を明示してください。','PRODUCTION_INCOMPLETE');
+    await assertThemeEvidence(c,r.id,command.executionId,r.assessment?.reviewEvidenceId,ev.target);
     await c.query('INSERT INTO theme_production.publication_intents(id,case_id,owner_id,theme_id,theme_revision,target_digest,guide_revision,assessment,completion_command) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)',[command.requestId,r.id,owner,ev.target.theme.id,ev.target.theme.revision,ev.target.digest,ev.target.guide.revision,JSON.stringify(r.assessment),JSON.stringify(command)]);
      await c.query("UPDATE theme_production.cases SET status='completed',execution_id=NULL,lease_token=NULL,lease_until=NULL WHERE id=$1",[r.id]);
    }
@@ -177,10 +182,11 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
  async function prepare(owner:string,command:Extract<ThemeProductionCommand,{action:'prepare-theme-production-submission'}>){
   const result=await tx(owner,command.caseId,async c=>{
    const old=await previous(c,owner,command);if(old)return old;const r=await row(c,owner,command.caseId);fence(r,command);const list=await submissions(c,r);
-   const wire=JSON.stringify(command.command);if(Buffer.byteLength(wire)>1800000)throw failure('送信の事前保存は1.8MB以内で分割してください。案件・ターン全体の制限ではありません。','PRODUCTION_SUBMISSION_SIZE',413);
-   const digest=knowledgeDigest(command.command),prior=(await c.query('SELECT * FROM theme_production.submissions WHERE owner_id=$1 AND command_action=$2 AND command_request_id=$3',[owner,command.command.action,command.command.requestId])).rows[0];
+   const payload=await bindGeneratedImage(c,r.id,command);
+   const wire=JSON.stringify(payload);if(Buffer.byteLength(wire)>1800000)throw failure('送信の事前保存は1.8MB以内で分割してください。案件・ターン全体の制限ではありません。','PRODUCTION_SUBMISSION_SIZE',413);
+   const digest=knowledgeDigest(payload),prior=(await c.query('SELECT * FROM theme_production.submissions WHERE owner_id=$1 AND command_action=$2 AND command_request_id=$3',[owner,command.command.action,command.command.requestId])).rows[0];
    if(prior&&(prior.case_id!==r.id||prior.digest!==digest))throw failure('同じ登録requestIdの保存内容や案件は変更できません。','REQUEST_CHANGED');
-   if(!prior)await scope(c,r,command.command,list);
+   if(!prior)await scope(c,r,payload,list);
    fence(await row(c,owner,r.id),command);
    const id=prior?.id??command.requestId;
    if(!prior)await c.query('INSERT INTO theme_production.submissions(id,case_id,owner_id,command_action,command_request_id,command_wire,digest) VALUES($1,$2,$3,$4,$5,$6,$7)',[id,r.id,owner,command.command.action,command.command.requestId,wire,digest]);
@@ -223,5 +229,41 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
   if(command.action==='prepare-theme-production-submission')return prepare(owner,command);
   return dispatch(owner,command);
  }
- return {execute,view};
+ async function bindGeneratedImage(c:PoolClient,caseId:string,command:Extract<ThemeProductionCommand,{action:'prepare-theme-production-submission'}>){
+  const {generatedImage,command:payload}=command;
+  if(!generatedImage)return payload;
+  if(!themeAutomationEnabled())throw automationFailure('AUTOMATION_DISABLED','画像の自動関連付けは有効化されていません。');
+  const r=(await c.query("SELECT image_id FROM theme_production.automation_requests WHERE id=$1 AND case_id=$2 AND kind='image' AND state='ready'",[generatedImage.automationId,caseId])).rows[0];
+  if(!r?.image_id)throw automationFailure('GENERATED_IMAGE_UNAVAILABLE','この案件で登録済みの生成画像を指定してください。');
+  const presentation=payload.action==='submit-theme'?payload.presentation:payload.action==='update-theme'?payload.changes.presentation:null;
+  if(!presentation||generatedImage.locales.some(locale=>!presentation.some(p=>p.locale===locale)))throw automationFailure('GENERATED_IMAGE_PRESENTATION','指定言語のpresentationを指定してください。');
+  const updated=presentation.map(row=>generatedImage.locales.includes(row.locale)?{...row,imageId:r.image_id}:row);
+  return productionSubmissionCommandSchema.parse(payload.action==='submit-theme'?{...payload,presentation:updated}:payload.action==='update-theme'?{...payload,changes:{...payload.changes,presentation:updated}}:payload);
+ }
+ async function executeAutomation(owner:string,command:ThemeAutomationCommand){
+  if(!themeAutomationEnabled())throw automationFailure('AUTOMATION_DISABLED','テーマ制作の自動処理は有効化されていません。',404);
+  await deps.authorize(owner);await ensure();
+  if(command.action==='read-theme-automation'){
+   await row(pool,owner,command.caseId);
+   return readThemeAutomation(pool,command.caseId,command.automationId);
+  }
+  return tx(owner,command.caseId,async c=>{
+   const current=await row(c,owner,command.caseId);
+   fence(current,command);
+   if(command.action==='report-theme-external'){
+    await themeDiagnostic(c,deps.origin,{stage:'externally-reported',code:command.code,caseId:command.caseId,requestId:command.requestId,executionId:command.executionId});
+    return {recorded:true,observation:'reported-by-caller'};
+   }
+   if(command.action==='generate-theme-image')return enqueueThemeAutomation(c,deps.origin,command);
+   const list=await submissions(c,current),id=targetId(current,list);
+   if(current.phase!=='review'||!id||!deps.automationTarget)throw automationFailure('PREVIEW_REVIEW_REQUIRED','見直し工程の評価対象が必要です。');
+   if(command.action==='capture-theme-preview'&&list.some(s=>!terminal(s.state)))throw automationFailure('PRODUCTION_PUBLICATION_PENDING','先に制作の受付を確定してください。');
+   const target=await deps.automationTarget(id,owner);
+   fence(await row(c,owner,current.id),command);
+   if(command.action==='read-theme-evidence')return readThemeEvidence(c,deps.origin,command,target);
+   if(target.digest!==command.targetDigest)throw automationFailure('PREVIEW_TARGET_CHANGED','評価対象を読み直してください。');
+   return enqueueThemeAutomation(c,deps.origin,command,target);
+  });
+ }
+ return {execute,view,executeAutomation};
 }

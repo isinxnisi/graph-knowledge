@@ -1,3 +1,4 @@
+import {generateThemeImageSchema,captureThemePreviewSchema,readThemeAutomationSchema,readThemeEvidenceSchema,reportThemeExternalSchema} from '../domain/theme-automation';
 import {themePublicationCheckSchema} from '../domain/theme-publication-check';
 import {createThemeProductionSchema,getThemeProductionSchema,claimThemeProductionSchema,updateThemeProductionSchema,prepareThemeProductionSubmissionSchema,dispatchThemeProductionSubmissionSchema,themeProductionResponseSchema,type ThemeOperatorCommand} from '../domain/theme-production';
 import {readThemeQualityGuideSchema,updateThemeQualityGuideSchema} from '../domain/theme-quality-guide';
@@ -9,7 +10,7 @@ import {themeRetryStatusSchema,controlThemeRetrySchema,amendThemeRegistrationSch
 
 /** An authenticated operator can discover compose tools. Execution still requires
  * the separate scope; old collection tokens receive an OAuth step-up challenge. */
-export function registerThemeMcpTools(server:McpServer,call:(command:ThemeOperatorCommand)=>Promise<unknown>,authChallenge?:string){
+export function registerThemeMcpTools(server:McpServer,call:(command:ThemeOperatorCommand)=>Promise<unknown>,authChallenge?:string,automationEnabled=false){
  const run=async(command:ThemeOperatorCommand)=>{if(authChallenge)return {content:[{type:'text' as const,text:'Reconnect this app to grant theme registration and update permissions.'}],isError:true,_meta:{'mcp/www_authenticate':[authChallenge]}};const value=await call(command);return {content:[{type:'text' as const,text:JSON.stringify(value)}],...(typeof value==='object'&&value!==null&&'ok' in value&&value.ok===false?{isError:true}:{})};};
  const securitySchemes=[{type:'oauth2',scopes:['missions:collect','themes:compose']}];
  const annotations={readOnlyHint:false,destructiveHint:false,openWorldHint:false,idempotentHint:true};
@@ -22,6 +23,22 @@ export function registerThemeMcpTools(server:McpServer,call:(command:ThemeOperat
   ['dispatch_theme_production_submission',dispatchThemeProductionSubmissionSchema,'dispatch-theme-production-submission','Execute the immutable saved command using the ordinary operator source/reference/version/limit checks, with zero AI review. Requires live lease and state version. After lost responses read this case and existing receipt, then recover with the same saved submission and requestId. Acceptance is not publication, and publication is not independent review.'],
  ] as const;
  for(const [name,inputSchema,action,description] of handoff)server.registerTool(name,{description,inputSchema,outputSchema:themeProductionResponseSchema,_meta:{securitySchemes},annotations:{...annotations,readOnlyHint:name==='get_theme_production'}},async (input:unknown)=>{const result=await run({action,...inputSchema.parse(input)} as ThemeOperatorCommand);if(result.isError)return result;return {...result,structuredContent:themeProductionResponseSchema.parse(JSON.parse(result.content[0].text))};});
+
+ if(automationEnabled){
+  server.registerTool('generate_theme_image',{description:'Queue one server-side illustration for a live production or review claim. Supply a sanitized standalone prompt and both alt texts. Reuse the requestId after interruption. Poll read_theme_automation. This prepares material only. Use ready automationId as generatedImage in prepare_theme_production_submission, then dispatch it.',inputSchema:generateThemeImageSchema,_meta:{securitySchemes},annotations},input=>run({action:'generate-theme-image',...input}));
+  server.registerTool('capture_theme_review_preview',{description:'Queue authenticated PC and mobile screenshots and navigation evidence for the exact evaluationTarget.digest during independent review. Poll read_theme_automation. Once this case uses capture, a passing whole-theme assessment requires displayed evidence from the current target in the same review execution.',inputSchema:captureThemePreviewSchema,_meta:{securitySchemes},annotations},input=>run({action:'capture-theme-preview',...input}));
+  server.registerTool('read_theme_automation',{description:'Read this case’s material and preview receipts, screenshot names and redacted diagnostic events. No observed events does not establish external rejection.',inputSchema:readThemeAutomationSchema,_meta:{securitySchemes},annotations:{...annotations,readOnlyHint:true}},input=>run({action:'read-theme-automation',...input}));
+  server.registerTool('report_theme_external_blocker',{description:'Record a client-observed reference or browser limitation separately from server observations. Use the current lease. Never send URLs, credentials or file IDs.',inputSchema:reportThemeExternalSchema,_meta:{securitySchemes},annotations},input=>run({action:'report-theme-external',...input}));
+  server.registerTool('read_theme_review_evidence',{description:'Read ONE named screenshot as actual image content using your current review lease. Read every named screenshot and inspect it before assessing the whole theme. If the client cannot display it, record the blocker and stop. Include the automationId as assessment.reviewEvidenceId when it passes.',inputSchema:readThemeEvidenceSchema,_meta:{securitySchemes},annotations},async input=>{
+   const command={action:'read-theme-evidence' as const,...input};
+   if(authChallenge)return run(command);
+   const value=await call(command);
+   if(value&&typeof value==='object'&&'image' in value&&Buffer.isBuffer(value.image)&&'metadata' in value){
+    return {content:[{type:'text' as const,text:JSON.stringify(value.metadata)},{type:'image' as const,mimeType:'image/png',data:value.image.toString('base64')}]};
+   }
+   return {content:[{type:'text' as const,text:JSON.stringify(value)}],isError:true};
+  });
+ }
 
  server.registerTool('publish_theme',{
   description:'Explicitly publish the exact ordinary editorial draft after the operator has asked to publish. First read_theme with view editorial and use its publicationCandidate (target, base, digest). Pass a new requestId and reason, and retry unchanged on a lost response. Production drafts require their independent review path. Confirm the public result with check_theme_publication (view published and expectedRevision).',

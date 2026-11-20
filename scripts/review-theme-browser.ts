@@ -5,10 +5,11 @@ import { homedir } from 'node:os';
 import { basename, join } from 'node:path';
 import { createInterface } from 'node:readline/promises';
 import { pathToFileURL } from 'node:url';
+import {themeStoryEntries} from '../lib/domain/theme-stories';
 import { uploadProductImageSchema } from '../lib/domain/product-authoring';
 
 const origins = new Set(['https://plunode.net', 'https://graph-beta.isinxnisi.com', 'http://127.0.0.1:3200']);
-const viewports = [{ width: 1440, height: 1000 }, { width: 390, height: 844 }];
+export const viewports = [{ width: 1440, height: 1000 }, { width: 390, height: 844 }];
 const privateState = join(homedir(), '.local/state/plunode-theme-review');
 
 async function privateDirectory(path: string) {
@@ -23,9 +24,9 @@ function label(locale: string, ja: string, en: string) {
   return locale === 'en' ? en : ja;
 }
 
-async function themeSnapshot(context: BrowserContext, origin: string, id: string, revision: number, locale: string) {
+export async function themeSnapshot(context: BrowserContext, origin: string, id: string, revision: number, locale: string, grant?: Record<string,string>) {
   const query = new URLSearchParams({ themeId: id, language: locale, revision: String(revision) });
-  const response = await context.request.get(origin + '/api/site-operations/theme-preview?' + query, { maxRedirects: 0 });
+  const response = await context.request.get(origin + '/api/site-operations/theme-preview?' + query, { maxRedirects: 0, headers: grant });
   const headers = response.headers();
   if (response.status() !== 200) throw new Error('Operator preview unavailable (HTTP ' + response.status() + ').');
   if (!headers['cache-control']?.includes('no-store') || !headers['x-robots-tag']?.includes('noindex')) {
@@ -36,10 +37,15 @@ async function themeSnapshot(context: BrowserContext, origin: string, id: string
   if (preview.operatorPreview !== true || preview.theme?.id !== id || preview.theme?.revision !== revision) {
     throw new Error('The preview did not serve the requested private edition.');
   }
-  return { digest: createHash('sha256').update(data).digest('hex'), hasImage: Boolean(preview.presentation?.image) };
+  const records=preview.snapshot?.records??[];
+  return {
+    digest:createHash('sha256').update(data).digest('hex'), hasImage:Boolean(preview.presentation?.image), build:headers['x-plunode-preview-build'],
+    hasTimeline:records.some((record:{content:{times?:unknown[]}})=>Boolean(record.content.times?.length)),
+    hasStory:themeStoryEntries(records,preview.theme.content?.stories,preview.presentation,locale==='en'?'en':'ja').length>0,
+  };
 }
 
-export async function inspectThemePage(page: Page, url: string, revision: number, locale: string, hasImage: boolean, folder: string, width: number) {
+export async function inspectThemePage(page: Page, url: string, revision: number, locale: string, hasImage: boolean, folder: string, width: number, save?: (file:string, bytes:Buffer)=>Promise<void>) {
   const response = await page.goto(url, { waitUntil: 'domcontentloaded' });
   if (!response?.ok() || new URL(page.url()).href !== new URL(url).href) {
     throw new Error('Authenticated preview page unavailable.');
@@ -49,7 +55,9 @@ export async function inspectThemePage(page: Page, url: string, revision: number
   const screenshots: string[] = [];
   async function capture(step: string) {
     const file = width + '-' + step + '.png';
-    await writeFile(join(folder, file), await page.screenshot({ animations: 'disabled' }), { mode: 0o600, flag: 'wx' });
+    const bytes=await page.screenshot({ animations: 'disabled' });
+    if(save)await save(file,bytes);
+    else await writeFile(join(folder, file), bytes, { mode: 0o600, flag: 'wx' });
     screenshots.push(file);
   }
 

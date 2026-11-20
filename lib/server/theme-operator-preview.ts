@@ -1,3 +1,4 @@
+import {assertPreviewTheme,previewGrant,PREVIEW_HEADER} from './theme-automation';
 import {Pool} from 'pg';
 import type {KnowledgeThemeRead} from '../domain/knowledge-theme-reader';
 import {buildKnowledgePublishedRecord} from '../domain/knowledge-publication';
@@ -12,8 +13,16 @@ import {withOperatorThemeRead} from './knowledge-theme-access';
 import {themeReadingPresentation} from './theme-reading-presentation';
 export const PRIVATE_THEME_HEADERS={'Cache-Control':'private, no-store','X-Robots-Tag':'noindex, nofollow, noarchive','Vary':'Cookie'};
 let pool:Pool|undefined;
-export async function themeOperator(headers:Headers){
- const runtime=memberRuntime(),session=await runtime.auth.api.getSession({headers,query:{disableCookieCache:true}});
+type PreviewScope={themeId:string;revision?:number;locale?:'ja'|'en'}|{imageId:string};
+export async function themeOperator(headers:Headers,scope?:PreviewScope){
+ const runtime=memberRuntime();
+ if(scope&&headers.has(PREVIEW_HEADER)){
+  const target=await previewGrant(runtime.pool,runtime.config.origin,headers);
+  if('themeId' in scope)assertPreviewTheme(target,scope.themeId,scope.revision,scope.locale);
+  else if(!target.imageIds.includes(scope.imageId))throw new KnowledgeError('閲覧できません',404,'NOT_FOUND');
+  return '';
+ }
+ const session=await runtime.auth.api.getSession({headers,query:{disableCookieCache:true}});
  if(!session?.user.active||!isSiteOperator(session.user.id))throw new KnowledgeError('閲覧できません',404,'NOT_FOUND');
  return session.user.id;
 }

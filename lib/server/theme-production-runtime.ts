@@ -1,3 +1,5 @@
+import {hasThemeLocale} from '../domain/theme-locale';
+import {automationTargetSchema} from '../domain/theme-automation';
 import {activateReviewedTheme} from './theme-production-publication';
 import {withOperatorThemeRead} from './knowledge-theme-access';
 import {themePublicationState} from './knowledge-theme-publication';
@@ -23,9 +25,11 @@ export function themeProductionRuntime(pool:Pool,knowledge:Pool,origin:string,re
   const c=await knowledge.connect();let displayTranslations;try{displayTranslations=await Promise.all(['ja','en'].map(locale=>publicThemeSnapshotTranslations(c,read,locale)));}finally{c.release();}
   const presentation=['ja','en'].map(locale=>themeReadingPresentation(t,locale,read.snapshot));
   const references={theme:{id:t.id,revision:t.revision},translations:read.snapshot.translations?.map(v=>({id:v.id,revision:v.revision})),pinnedProducts:products.map(p=>({id:p.id,revision:p.revision})),associatedProducts:associatedPins};
-  return {theme:{id:t.id,revision:t.revision},digest:knowledgeDigest({theme:t,snapshot:read.snapshot,displayTranslations,presentation,products,associated,associatedPins}),guide:{id:guide.id,revision:guide.currentRevision},references,...(read.productionConflict?{publicationConflict:read.productionConflict}:{})};
+  const locales=(['ja','en'] as const).filter((locale,i)=>hasThemeLocale({...read,displayTranslations:displayTranslations[i]},locale));
+  const target={theme:{id:t.id,revision:t.revision},digest:knowledgeDigest({theme:t,snapshot:read.snapshot,displayTranslations,presentation,products,associated,associatedPins}),guide:{id:guide.id,revision:guide.currentRevision},references,...(read.productionConflict?{publicationConflict:read.productionConflict}:{})};
+  return {target,locales,imageIds:[...new Set(t.content.reading?.flatMap(v=>v.image?[v.image.id]:[])??[])]};
  }
- const target=(id:string,owner:string,revision?:number)=>withOperatorThemeRead(()=>targetValue(id,owner,revision));
+ const target=(id:string,owner:string,revision?:number)=>withOperatorThemeRead(async()=>(await targetValue(id,owner,revision)).target);
  async function observe(owner:string,command:ProductionSubmissionCommand){
   if(command.action==='submit-theme'||command.action==='update-theme'||command.action==='cancel-theme'){
    let value:Awaited<ReturnType<typeof registrations.status>>;
@@ -43,5 +47,5 @@ export function themeProductionRuntime(pool:Pool,knowledge:Pool,origin:string,re
   const table=command.action==='amend-theme-items'?'theme_item_amendments':'theme_retry_operations';
   const r=(await pool.query('SELECT response FROM knowledge_missions.'+table+' WHERE request_id=$1 AND owner_id=$2',[command.requestId,owner])).rows[0];return r?{state:'applied' as const,result:r.response}:null;
  }
- return {target,observe,publish:(owner:string,id:string)=>activateReviewedTheme(pool,knowledge,owner,id,{origin,target,authorize:owner=>registrations.authorize(owner)}),publication:async(id:string,intentId?:string)=>{const state=await themePublicationState(knowledge,id);return {...state,approvalPresent:!!intentId&&!!(await knowledge.query('SELECT 1 FROM knowledge75.theme_release_approvals WHERE release_id=$1 AND theme_id=$2',[intentId,id])).rowCount};}};
+ return {target,observe,automationTarget:async(id:string,owner:string)=>{const {target:t,locales,imageIds}=await withOperatorThemeRead(()=>targetValue(id,owner));return automationTargetSchema.parse({theme:t.theme,digest:t.digest,guideRevision:t.guide.revision,locales,imageIds});},publish:(owner:string,id:string)=>activateReviewedTheme(pool,knowledge,owner,id,{origin,target,authorize:owner=>registrations.authorize(owner)}),publication:async(id:string,intentId?:string)=>{const state=await themePublicationState(knowledge,id);return {...state,approvalPresent:!!intentId&&!!(await knowledge.query('SELECT 1 FROM knowledge75.theme_release_approvals WHERE release_id=$1 AND theme_id=$2',[intentId,id])).rowCount};}};
 }
