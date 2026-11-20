@@ -27,12 +27,12 @@
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
   "nextStartAt": "2026-11-11T20:10:42.603358+00:00",
-  "phase": "outside-window",
+  "phase": "ready",
   "recoveredAttempt": null,
   "admission": {
-    "ready": false,
-    "reason": "outside-window",
-    "eligibleAt": "2026-11-20T00:00:00+00:00",
+    "ready": true,
+    "reason": "ready",
+    "eligibleAt": null,
     "windowEndAt": "2026-11-20T03:00:00+00:00"
   },
   "activeAttempt": null,
@@ -46,7 +46,7 @@
     "completed": 42,
     "retry-wait": 1,
     "awaiting-recovery": 5,
-    "waiting-control": 2
+    "waiting-lock": 2
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -193,5 +193,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-19T23:49:56.659276+00:00"
+  "checkedAt": "2026-11-20T00:02:28.532695+00:00"
 }
