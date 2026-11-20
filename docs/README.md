@@ -6,6 +6,8 @@
 
 テーマ制作が添付送出やブラウザ不足で止まった場合の[切分け・画像登録・認証済み画面確認・再開手順](runbooks/THEME_PRODUCTION_EXTERNAL_BLOCKERS.md)。
 
+テーマ自動制作の画像生成・実画面検証・診断の[全体設計と実装計画](design/THEME_PRODUCTION_AUTOMATION_20261120.md)。設計評価待ち。
+
 受入済み資料収集とテーマ制作・公開版の分離：[現行補足契約](design/COLLECTION_THEME_PUBLICATION_20261119.md)。
 
 テーマ制作中の非公開化・承認公開版・運営者プレビューの現行実装設計は [THEME_PRIVATE_PUBLICATION_20261117.md](design/THEME_PRIVATE_PUBLICATION_20261117.md)。検証・配置の完了状態は [PLUNODE_PROGRESS.md](PLUNODE_PROGRESS.md) を参照。
