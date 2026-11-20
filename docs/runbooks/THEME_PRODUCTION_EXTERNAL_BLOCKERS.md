@@ -4,7 +4,7 @@
 
 対象は正式案件 `4c649f02-a749-4ccd-822b-ddba9757d8fc`。正式APIの取得では見直し工程が `blocked`、版14、未反映の送信0。案件中の11月18日の一次診断には、生成された正規添付をコネクタが `BLOCKED_FILE_REFERENCE` で拒否し、`imageId` が発行されなかったとある。認証済みプレビューの阻害要因は接続元ブラウザの不足。どちらもWeb予定の保存済み文面からの推定ではなく、案件に保存された実行記録。
 
-正式の画像受信コードに `BLOCKED_FILE_REFERENCE` の生成箇所はない。Plunodeの添付URL拒否は `FILE_REFERENCE_INVALID`、取得失敗は `FILE_DOWNLOAD_UNAVAILABLE`。既存の記録と実装は、ChatGPT側の添付送出での停止を示す。旧Webのアプリログと正式プロキシの要求記録の照合は管理者権限が必要。読取結果の記録が無い場合は、アクセスログの有無とコンテナの保持期間を確認し、未到達の証明には使わない。
+正式の画像受信コードに `BLOCKED_FILE_REFERENCE` の生成箇所はない。Plunodeの添付URL拒否は `FILE_REFERENCE_INVALID`、取得失敗は `FILE_DOWNLOAD_UNAVAILABLE`。既存の記録と実装は、ChatGPT側の添付送出での停止を示す。管理者の集計結果では、11月18日00:00から21日00:00 JSTを検索し、CaddyのjournalとDockerのログを読み取れた。Caddyの設定にHTTPアクセスログはなく、Webログは11月20日08:59 JST作成の現行コンテナ1件、6,509行のみ。画像関連の一致はすべて0件だった。11月18日の診断は取得できたWebログより前で、今回追加したMCP受付ログも正式未配置。このため、0件から当時の未到達は確定できない。既存の診断とエラーコードから、ChatGPTの添付送出段階での拒否を最有力とする。
 
 このPCのPowerShellから、対象期間の集計を取得する。入力するのはVPSのsudoパスワード。共有するのは集計JSON。署名付きURL・file ID・本文・認証情報をログや報告に複製しない。
 
