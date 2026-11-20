@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-11T20:10:42.603358+00:00",
-  "phase": "ready",
+  "nextStartAt": "2026-11-20T01:09:17.434639+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
-    "ready": true,
-    "reason": "ready",
-    "eligibleAt": null,
+    "ready": false,
+    "reason": "interval",
+    "eligibleAt": "2026-11-20T01:09:17.434639+00:00",
     "windowEndAt": "2026-11-20T03:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-60-dot-ichikawa-houseki-20261028",
+    "startedAt": "2026-11-20T00:04:17.434645+00:00",
+    "limitAt": "2026-11-20T00:59:17.434639+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-57-dot-oshima-two-20261028-batch-01",
     "endedAt": "2026-11-11T20:00:42.603361+00:00"
@@ -193,5 +197,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-20T00:02:28.532695+00:00"
+  "checkedAt": "2026-11-20T00:04:19.730891+00:00"
 }
