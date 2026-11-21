@@ -143,3 +143,14 @@
 - 正式Appの新ツール読み戻しと、認証済みの案件に対する採取・PNG取得・永続診断は確認待ち。ヴァイキング案件は見直し工程の停止状態で、実行権は空いている。採取した案件では以後の公開承認に画面証拠が必要になるため、検証に使う案件を確認してから採取する。OpenAI画像生成APIの利用額・利用枠の照合と、既存の定期予定3件の対象回確認は後続。
 
 正式の認証済みPNGを確認するには、本番Plunode Appのツールを更新し、対象として確認済みの案件を取得する。見直し実行権が空いていれば、新しい実行IDでreviewをclaimし、最新のdigestで画面採取を1件依頼する。同じ実行で採取得果と全画面名を読み出し、各PNGを取得してPC・スマートフォンの表示と診断を照合する。表示できなかった画面は阻害要因とし、検証記録に残す。この疎通試験では評価保存・公開操作を行わず、実行権を解放する。
+
+### 2026-11-21 正式Workerの運営者認可
+
+- ヴァイキング案件 `4c649f02-a749-4ccd-822b-ddba9757d8fc` の採取受付 `6c6b2ee2-88b6-4a1e-b6bb-364baf7d9a8c` は、正式build `8KGRoVvhFNgTYCT3r5L3x` で `blocked / OPERATOR_REQUIRED`。MCPの受付と診断保存までは通り、見直し実行権は解放済み。
+- `authorizeProductOperator()` は `isSiteOperator()` に加え、案件所有者がDBで有効なアカウントであることを要求する。専用Workerの起動手順は、Webが使う `COMMUNITY_ENABLED`、`SITE_OPERATIONS_ENABLED`、`SITE_OPERATOR_USER_IDS` を渡していなかった。修正は既存Webと同じ設定の継承で、認可ロジックとWebの許可リストは既存のものを使う。
+- 修正手順は、旧受付・所有者・実行権の取得記録・アカウントの有効状態を実DBで照合し、Workerの実際の `authorizeProductOperator()` で修正前後を確認する。WebとWorkerが同じ会員DBを使用し、修正差分が専用Workerの運営者設定3項目だけであることを確認して、専用Workerを再起動する。手順の転送SHA-256は `928d0adaa5517fb23360be582cf7914a9cd4166c4ce585c8987b8976e75a2e45`、sealは `f541d53ec5f569d139441f991b89cef0416675674dd6d59888301e746097477f`。 [運営者設定の修正手順](../../scripts/repair-theme-preview-operator-production.py)
+- 固定WorkerイメージとComposeの隔離検証で、継承した運営者設定と有効アカウントの組み合わせを許可し、設定欠落・無関係な利用者・無効アカウント・無効フラグを拒否した。専用Workerの再起動に失敗する隔離試験で、元の環境ファイルと復旧記録が戻ることも確認した。
+
+- 正式の実査で、案件所有者とclaim記録は一致し、アカウントは有効でWebの許可リストに含まれていた。Webと専用Workerは同じ会員DBを使用していた。Worker側で運営者設定3項目が欠けていたため、既存Webの値をそのまま継承し、専用Workerだけを再起動。稼働Workerで同じ案件所有者の `authorizeProductOperator()` が `OPERATOR_REQUIRED` から `AUTHORIZED` に変わった。
+- 本番Appで新しい見直し実行 `7c8f8d03-c7a4-4a22-88e9-e39fd98d2a60` を取得し、同じ現行digest・ガイド第5版で新規受付 `fb9ad4b8-c5ef-4628-9546-b5e9063fe730` を作成。正式build `8KGRoVvhFNgTYCT3r5L3x` で `QUEUED`、`STARTED`、`EVIDENCE_READY` と進んだ。日本語・英語それぞれでPC 1440pxとスマートフォン390pxの概要、年表、StoryのPNG計12枚をMCPから取得し、受付・対象digest・画面名を照合した。`SERVED` 診断も確認した。直近35件の診断表示では、今回の取得に対応する11件が見えた。
+- 実行権を解放後、案件を読み直して、見直し工程・停止状態・評価対象digest・既存評価が保持されていることを確認した。今回の疎通試験で全体評価、公開、OpenAI画像生成APIの有効化は行っていない。
