@@ -230,3 +230,9 @@
 - 最初に読む情報は案件の目的、続行に必要なこと、残作業。全体評価は見出しに結果だけを表示し、開いた時点で評価日時とコメント全文を表示する。案件を開いたまま一覧上部から更新できる。
 - 検証データでPC 1280px、スマートフォン390pxの初期表示と評価・履歴を開いた状態を確認。全幅の見出し、内側の枠の境界、キーボードでの開閉と横幅の収まりをChromiumで確認した。運営画面テスト5件が成功。
 - 実装 `0a94174d`、build `YxP38Te5kwOry1XkQJk6F` を3200とHTTPS βへ反映し、運営画面とdatasetの200、未認証の案件APIの404、配信JSのハッシュ一致を確認した。本番は表示改善の切替前。
+
+#### #76 表示改善の正式切替候補
+
+- 承認済みのUIは `0a94174d0dfb456e0392f6245f1e8bfcda67c8bc`、βbuild `YxP38Te5kwOry1XkQJk6F`。最新の監査で正式build `E-2KKBgQfOIONbdAWUXdZ`、会員台帳50、知識台帳13を照合した。切替はWeb・知識3 Worker・画面採取Workerの固定イメージ差し替え。DB移行と公開投影の再構築はない。
+- 固定buildは `rBZkI07m-jCGFNPGM-VL7`、全体sealは `2450025c9553937429d8cd616089aec36f93ae2a97560918d20f117beb089744`。VPSへの転送SHA-256 `ede77695685e35d17ca05d805c77746e1ae3b919dabfc76f9c1c8c5b1fcf598c` を現地で再照合した。非rootでのWebと知識Workerのファイル読取、専用Workerのbuild一致とChromium PNG採取を確認した。
+- 画面採取Workerの処理を待って停止し、知識3 Workerを止めてWebを差し替える。公開読取を確認してからWorkerを起動する。画像生成設定とUTC日次30送信・30枚を保持する。新Worker起動前の失敗は旧イメージとComposeに戻す。新Workerの起動を始めた後は同じ固定資材で再開する。切替後は `case-ui-readback`、HTTPS、運営画面のJS／CSS、既存Appの認証済み読取を照合する。
