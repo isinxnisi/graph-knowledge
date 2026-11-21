@@ -158,9 +158,9 @@
 ### 2026-11-21 OpenAI画像生成APIの正式接続準備
 
 - βの受付 `2c329dce-5f47-49c3-ac64-11dfb95178f7` は、11月21日01:55:38 JST（11月20日16:55:38 UTC）に `gpt-image-2.6-flare` へ1回送信し、画像1枚を登録した。応答の使用量はテキスト入力77、画像出力1,132、合計1,209トークン。公開単価で換算すると0.034345 USD。実際の請求額は対象プロジェクトのSpend、特典クレジットはBillingで照合する。 [モデル単価](https://developers.openai.com/api/docs/models/gpt-image-2.6-flare)・[使用量と費用の確認](https://help.openai.com/en/articles/10478918-reviewing-api-usage-and-costs)
-- 正式の初期案は同じモデル・1536×1024・medium・1送信につき1枚。専用Workerの送信上限はUTCの1日につき1件で、JSTの09:00に日付が切り替わる。実費、利用可能なクレジット、最初の上限の承認を確認してから有効化する。切替時に送信待ちの画像受付があれば内容を照合し、意図しない先行送信を防ぐ。
-- 正式の設定用資材をVPSへ転送・照合した。転送SHA-256は `485a038b15036e784474d8eab0e40578cd85041810a4382012ddce75d3bd4f18`、sealは `7720f16e521288ff04d1238d121d7f42ae7f89d2c26e622765ae1de0dc929b6e`。PowerShellから `wsl.exe -d Ubuntu --cd /home/isinxnisi/1.projects/7.graph-knowledge -- python3 .local/theme-automation-release-20261121/configure-image-api-approved.py enable` を実行し、承認済みプロジェクトのキーをVPS端末で入力する。設定対象は専用Worker。停止時は同じスクリプトの `disable` で処理中の受付の確定を待ち、送信設定とキーを外して画面採取Workerを起動する。 [正式切替スクリプト](../../scripts/configure-theme-image-api-production.py)
-- Composeの差分、キーの非表示入力、待機中の受付があれば有効化を止める動作、専用Workerの起動失敗時に元の設定へ戻る動作を隔離検証した。固定Workerイメージの設定読み込みも、ネットワークを切った状態で確認した。正式Workerの設定は有効化承認待ち。
+- 正式は同じモデル・1536×1024・medium・1送信につき1枚。承認済みの送信前ガードはUTCの1日につき最大30送信・30枚で、JSTの09:00に日付が切り替わる。30送信に達した受付は次のUTC日まで待機する。利用状況の照合と送信の有効化は後続。切替時に送信待ちの画像受付があれば内容を照合する。
+- 日次30送信の正式設定用資材に差し替え、VPSへ転送・照合した。転送SHA-256は `fb0cd5591eaff7554a4ad978abedc65771d4a15284369182e34c82dcb484b0ee`、sealは `188007323911020305b9749794e6f8bddd7681c6910b0ba0307fb714b932c28e`。PowerShellから `wsl.exe -d Ubuntu --cd /home/isinxnisi/1.projects/7.graph-knowledge -- python3 .local/theme-automation-release-20261121/configure-image-api-approved.py enable` を実行し、承認済みプロジェクトのキーをVPS端末で入力する。設定対象は専用Worker。停止時は同じスクリプトの `disable` で処理中の受付の確定を待ち、送信設定とキーを外して画面採取Workerを起動する。 [正式切替スクリプト](../../scripts/configure-theme-image-api-production.py)
+- Composeの差分、キーの非表示入力、待機中の受付があれば有効化を止める動作、専用Workerの起動失敗時に元の設定へ戻る動作を隔離検証した。固定Workerイメージの設定読み込みも、ネットワークを切った状態で確認した。日次ガードの資材を固定した段階で、正式WorkerはOpenAI画像生成APIへの送信を無効にした状態。 隔離PostgreSQLで当日の架空履歴29件と前日の1件を用意し、疑似応答で30件目を計上した。31件目は `IMAGE_DAILY_LIMIT` で次のUTC日まで待機した。OpenAIへの実送信は0件。
 - ヴァイキング案件の正式画面採取受付はreadyで、画像生成受付は0件。画像関連とプレビュー関連の阻害記録が残っている。OpenAI画像生成APIの有効化後、同じ案件の実行権で1枚を依頼し、同じ受付で画像登録まで確認する。既存のprepare → dispatchで日英の作業版へ関連付けた後、新digestで画面を再採取する。独立見直しを進めるときは、新しい実行IDで全画面と根拠を確認する。公開承認は既存の全体評価・競合確認を通す。
 
 #### Web定期実行への引継ぎ
