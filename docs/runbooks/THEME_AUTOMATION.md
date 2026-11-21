@@ -242,3 +242,10 @@
 - 正式候補 `0a94174d`、build `rBZkI07m-jCGFNPGM-VL7` をWeb・知識3 Worker・画面採取Workerへ反映した。適用済みSQLの追加はなく、`case-ui-readback` で会員台帳50、知識台帳13、画像生成APIが有効でUTC日次30送信・30枚を確認した。切替記録は `/opt/graph-knowledge/backups/release-0a94174d0dfb-d6d075cb10186973`。
 - 正式HTTPSで公開世代 `k75-7b442fd186fb23aea245dca8d9f64acf`、公開検索、案件APIの未認証404を確認した。正式の運営ページが参照するJSとCSSを取得し、固定イメージの両資材とSHA-256が一致した。本番Appから定期制作案件および通常Webbの終了済み案件と公開第32版を読み戻した。
 - PC・スマートフォンの見た目と開閉はβ用の検証データで確認済み。正式の認証済み画面を追加で確認する操作は、Computer UseがブラウザのURLを確認できず停止した。正式で確認できた範囲はHTTPSの配信と認証済みAppの読取。
+
+### 自動生成画像の公開クレジット
+
+2026-11-21、専用Workerを `7a7efeaa` に切り替えた。新規登録には `Plunode Original` と `creditDisplay: public` を指定し、生成元・モデルは受付結果に保持する。旧プロフィールと分け、既に登録済みの旧受付は同じ画像IDで再開する。
+
+- 正式の稼働イメージ、コードのSHA-256、運営者認可、日次UTC 30送信・1送信1枚、会員50／知識13の台帳を照合。Webはbuild `x4sTNrI_5QlnOncYuYYog` の公開検索・公開世代をHTTPSで確認した。退避先は `/opt/graph-knowledge/backups/theme-image-credit-7a7efeaaab30-f0a2cd1c56c905a2`。
+- 本番の生成・更新は利用者がテストテーマで確認中。Codex側は画像生成APIへの試験送信を行わず、βでは登録・画面表示、隔離環境では旧受付の再開・切替と復旧を確認した。
