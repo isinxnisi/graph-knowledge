@@ -66,12 +66,12 @@
   },
   "requestSha256": "80479c281c4da7ad392241f815105e48758c0e9db0cc54e3177791e0061164ec",
   "kind": "issue-prepare",
-  "phase": "completed",
-  "generation": 2966,
+  "phase": "retry-wait",
+  "generation": 4686,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-10T18:26:20+00:00",
+  "updatedAt": "2026-11-21T03:32:01+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -195,5 +195,6 @@
     }
   },
   "executionComplete": true,
-  "retryAt": 1793686283.361513
+  "retryAt": 1795232052.7698216,
+  "message": "GitHub Issue read failed: HTTP 502"
 }
