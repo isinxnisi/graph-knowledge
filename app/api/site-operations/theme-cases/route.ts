@@ -34,10 +34,19 @@ export function GET(request:Request){
    if(!input.success)throw new MemberError(400,'INVALID_ARGUMENT');
    const result=themeProductionResponseSchema.parse(await dispatchThemeRegistration(owner,{action:'get-theme-production',...input.data}));
    const current=themeProductionCaseSchema.parse(result.case);
-   const {id,version,progress,submissions,nextSubmissionCursor,operationHistory}=current;
+   const {id,version,workflow,phase,status,updatedAt,lease,abandonReason,progress,pendingSubmissionCount,
+    submissions,nextSubmissionCursor,operationHistory,lastWholeThemeAssessment}=current;
+   const safeProgress={brief:progress.brief,scope:progress.scope,unfinished:progress.unfinished,blockers:progress.blockers};
+   const base={id,version,progress:safeProgress,submissions,nextSubmissionCursor,operationHistory};
+   if(query.get('includeCaseContext')!=='1')return base;
+   const assessment=lastWholeThemeAssessment?{
+    result:lastWholeThemeAssessment.result,current:lastWholeThemeAssessment.current,
+    evaluatedAt:lastWholeThemeAssessment.evaluatedAt,summary:lastWholeThemeAssessment.summary,
+   }:null;
    return operatorThemeCaseDetailsSchema.parse({
-    id,version,progress:{brief:progress.brief,scope:progress.scope,unfinished:progress.unfinished,blockers:progress.blockers},
-    submissions,nextSubmissionCursor,operationHistory,
+    ...base,workflow,phase,status,updatedAt,lease,abandonReason,pendingSubmissionCount,
+    publicationPending:current.publication?.pending===true,
+    publicationConflict:!!current.evaluationTarget?.publicationConflict,assessment,
    });
   }
   const input=listThemeProductionsSchema.safeParse({themeId:query.get('themeId'),cursor:Number(query.get('cursor')??0)});
