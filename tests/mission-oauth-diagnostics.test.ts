@@ -21,13 +21,16 @@ it('logs only presence and origin classification for request credentials',()=>{
 it('distinguishes an early private-key JWT and its grant without recording any credential data',async()=>{
  const origin='https://graph-beta.isinxnisi.com',client='https://chatgpt.com/oauth/client.json';
  const encoded=Buffer.from(JSON.stringify({nbf:150,exp:500,iss:client,sub:client,aud:origin+'/api/auth/oauth2/token',jti:'SECRET_PAYLOAD'})).toString('base64url');
- const wire=new URLSearchParams({grant_type:'refresh_token',client_assertion:'e30.'+encoded+'.SECRET_SIGNATURE',refresh_token:'SECRET_REFRESH'}).toString();
+ const wire=new URLSearchParams({grant_type:'refresh_token',client_assertion_type:'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',client_assertion:'e30.'+encoded+'.SECRET_SIGNATURE',refresh_token:'SECRET_REFRESH'}).toString();
  const req=new Request(origin+'/api/auth/oauth2/token',{method:'POST',headers:{'content-type':'application/x-www-form-urlencoded','content-length':String(Buffer.byteLength(wire))},body:wire});
  const details=await inspectMissionOAuthTokenRequest(req,origin,149650);
- expect(details?.(149990)).toEqual({grantType:'refresh_token',assertion:'decoded',issuerMatches:true,subjectMatches:true,
+ expect(details?.summary(149990)).toEqual({grantType:'refresh_token',assertion:'decoded',issuerMatches:true,subjectMatches:true,
   audienceMatches:true,notBeforeAtReceipt:'future',notBefore:'future',expiration:'valid'});
- expect(details?.(150010)).toMatchObject({notBeforeAtReceipt:'future',notBefore:'reached'});
- expect(JSON.stringify(details?.(150010))).not.toMatch(/SECRET|https|150|500/);
+ expect(details?.summary(150010)).toMatchObject({notBeforeAtReceipt:'future',notBefore:'reached'});
+ expect(JSON.stringify(details?.summary(150010))).not.toMatch(/SECRET|https|150|500/);
+ expect(details?.waitMs?.(149650)).toBe(350);
+ expect(details?.waitMs?.(147999)).toBe(0);
+ expect(details?.waitMs?.(150000)).toBe(0);
  expect(await req.text()).toBe(wire);
 });
 
@@ -37,5 +40,27 @@ it('skips bodies outside the beta diagnostic size gate and redacts a malformed a
  const mk=(len:string)=>new Request(url,{method:'POST',headers:{'content-type':'application/x-www-form-urlencoded','content-length':len},body});
  expect(await inspectMissionOAuthTokenRequest(mk('17000'),origin,0)).toBeUndefined();
  const details=await inspectMissionOAuthTokenRequest(mk(String(body.length)),origin,0);
- expect(details?.(1000)).toEqual({grantType:'other',assertion:'malformed'});
+ expect(details?.summary(1000)).toEqual({grantType:'other',assertion:'malformed'});
+});
+
+it('waits only for the beta ChatGPT token grant shape within its lifetime',async()=>{
+ const origin='https://graph-beta.isinxnisi.com',client='https://chatgpt.com/oauth/client.json';
+ const url=origin+'/api/auth/oauth2/token',claims={iss:client,sub:client,aud:url,nbf:150,exp:500};
+ const parameters={grant_type:'authorization_code',client_assertion_type:'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'};
+ const cases=[
+  {claims:{iss:'https://other.example'},params:{}},
+  {claims:{sub:'https://other.example'},params:{}},
+  {claims:{aud:'https://other.example'},params:{}},
+  {claims:{exp:150},params:{}},
+  {claims:{nbf:150.5},params:{}},
+  {claims:{},params:{grant_type:'client_credentials'}},
+  {claims:{},params:{client_assertion_type:'other'}},
+ ];
+ for(const input of cases){
+  const encoded=Buffer.from(JSON.stringify({...claims,...input.claims})).toString('base64url');
+  const request=new Request(url,{method:'POST',body:new URLSearchParams({...parameters,...input.params,
+   client_assertion:'e30.'+encoded+'.placeholder'})});
+  const probe=await inspectMissionOAuthTokenRequest(request,origin,149900);
+  expect(probe?.waitMs?.(149900),JSON.stringify(input)).toBe(0);
+ }
 });

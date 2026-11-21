@@ -1,4 +1,7 @@
 import {decodeJwt} from 'jose';
+const CHATGPT_CLIENT='https://chatgpt.com/oauth/client.json';
+const CLIENT_ASSERTION_TYPE='urn:ietf:params:oauth:client-assertion-type:jwt-bearer';
+const MAX_ASSERTION_WAIT_MS=2000;
 const errors=new Set(['invalid_client','invalid_grant','invalid_scope','invalid_request','unauthorized_client','access_denied','server_error','temporarily_unavailable','unsupported_grant_type']);
 const safeError=(value:unknown)=>typeof value==='string'&&errors.has(value)?value:'other';
 /** No tokens, code/state values, URLs, cookies, or raw error descriptions. */
@@ -21,10 +24,14 @@ export function missionOAuthRequestSummary(path:string,request:Request,origin:st
   hasAuthorization:request.headers.has('authorization')};
 }
 
+type TokenProbe={
+ summary(at:number):Record<string,string|boolean|undefined>;
+ waitMs?(at:number):number;
+};
 
-// A beta-only observation. The OAuth provider still handles the original
-// request and its signature, audience, lifetime and replay checks.
-export async function inspectMissionOAuthTokenRequest(request:Request,origin:string,receivedAt:number){
+// Used only by the beta token route. Decoded claims are untrusted and can
+// request a bounded delay, never authenticate the client.
+export async function inspectMissionOAuthTokenRequest(request:Request,origin:string,receivedAt:number):Promise<TokenProbe|undefined>{
  const advertised=request.headers.get('content-length'),length=Number(advertised);
  if(!request.headers.get('content-type')?.startsWith('application/x-www-form-urlencoded')||
     advertised!==null&&(!Number.isSafeInteger(length)||length<1||length>16384))return undefined;
@@ -46,7 +53,7 @@ export async function inspectMissionOAuthTokenRequest(request:Request,origin:str
   const grant=params.get('grant_type');
   const grantType=grant==='authorization_code'||grant==='refresh_token'?grant:'other';
   const compact=params.get('client_assertion');
-  if(!compact)return ()=>({grantType,assertion:'absent'});
+  if(!compact)return {summary:()=>({grantType,assertion:'absent'})};
   try{
    const {nbf,exp,iss,sub,aud}=decodeJwt(compact);
    const window=(at:number)=>{
@@ -56,11 +63,20 @@ export async function inspectMissionOAuthTokenRequest(request:Request,origin:str
    };
    const issuer=origin+'/api/auth';
    const audiences=Array.isArray(aud)?aud:[aud];
-   const client='https://chatgpt.com/oauth/client.json';
-   return (finishedAt:number)=>({grantType,assertion:'decoded',issuerMatches:iss===client,subjectMatches:sub===client,
-    audienceMatches:audiences.includes(issuer)||audiences.includes(issuer+'/oauth2/token'),
-    notBeforeAtReceipt:window(receivedAt).notBefore,...window(finishedAt)});
-  }catch{return ()=>({grantType,assertion:'malformed'});}
+   const issuerMatches=iss===CHATGPT_CLIENT,subjectMatches=sub===CHATGPT_CLIENT;
+   const audienceMatches=audiences.includes(issuer)||audiences.includes(issuer+'/oauth2/token');
+   return {
+    summary:(finishedAt:number)=>({grantType,assertion:'decoded',issuerMatches,subjectMatches,audienceMatches,
+     notBeforeAtReceipt:window(receivedAt).notBefore,...window(finishedAt)}),
+    waitMs(at:number){
+     if(!issuerMatches||!subjectMatches||!audienceMatches||grantType==='other'||
+        params.get('client_assertion_type')!==CLIENT_ASSERTION_TYPE||
+        typeof nbf!=='number'||!Number.isSafeInteger(nbf)||typeof exp!=='number'||!(exp>nbf))return 0;
+     const remaining=nbf*1000-at;
+     return remaining>0&&remaining<=MAX_ASSERTION_WAIT_MS?remaining:0;
+    },
+   };
+  }catch{return {summary:()=>({grantType,assertion:'malformed'})};}
  }catch{return undefined;}
  finally{if(timer)clearTimeout(timer);void reader.cancel().catch(()=>{});reader.releaseLock();}
 }

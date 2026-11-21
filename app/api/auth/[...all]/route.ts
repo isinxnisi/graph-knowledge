@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { setTimeout as wait } from 'node:timers/promises';
 import { memberAuthReady } from "../../../../lib/server/member/auth";
 import { z } from "zod";
 import { memberRuntime } from "../../../../lib/server/member/runtime";
@@ -55,12 +56,18 @@ async function handle(request: Request) {
     const receivedAt=Date.now();
     const betaTokenTrace=config.origin==='https://graph-beta.isinxnisi.com'&&trace&&path==='/oauth2/token'?randomUUID():undefined;
     const tokenProbe=betaTokenTrace?await inspectMissionOAuthTokenRequest(authRequest,config.origin,receivedAt):undefined;
+    const waitMs=tokenProbe?.waitMs?.(Date.now())??0;
+    // Let a near-future client assertion reach nbf. Better Auth checks the
+    // original request once, with the normal signature and replay protection.
+    if(waitMs>0)await wait(waitMs,undefined,{signal:request.signal}).catch(()=>undefined);
+    const verificationStartedAt=Date.now();
     const response = await auth.handler(authRequest);
     if(trace){
       const data=await response.clone().json().catch(()=>null);
       const summary=missionOAuthResponseSummary(response.status,data);
       console.info('Collection OAuth response',{endpoint:path,...summary,...(betaTokenTrace?{
-        traceId:betaTokenTrace,at:new Date(receivedAt).toISOString(),...tokenProbe?.(Date.now()),
+        traceId:betaTokenTrace,at:new Date(receivedAt).toISOString(),waitedForNbf:waitMs>0,
+        notBeforeAtVerification:tokenProbe?.summary(verificationStartedAt).notBefore,...tokenProbe?.summary(Date.now()),
       }:{})});
       if(betaTokenTrace)response.headers.set('X-Plunode-OAuth-Id',betaTokenTrace);
     }
