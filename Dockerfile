@@ -51,6 +51,18 @@ USER node
 ENTRYPOINT ["node", "--import", "tsx"]
 CMD ["scripts/knowledge-migrate.ts"]
 
+# Dedicated image for private browser evidence and theme image generation.
+FROM dependencies AS theme-automation-ops
+ENV NODE_ENV=production PLAYWRIGHT_BROWSERS_PATH=/opt/playwright
+RUN ./node_modules/.bin/playwright install --with-deps --only-shell chromium \
+    && rm -rf /var/lib/apt/lists/*
+COPY tsconfig.json ./
+COPY lib ./lib
+COPY scripts/theme-automation-worker.ts scripts/theme-automation-browser.ts scripts/review-theme-browser.ts ./scripts/
+COPY --from=builder /app/.next-public/BUILD_ID ./.next-public/BUILD_ID
+USER node
+ENTRYPOINT ["node", "--import", "tsx", "scripts/theme-automation-worker.ts"]
+
 # One-shot public-artifact validator/publisher. No KG/member env or model runtime.
 FROM dependencies AS lab-artifact-ops
 COPY lib/domain ./lib/domain

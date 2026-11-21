@@ -83,3 +83,6 @@ migrations/*
 !scripts/knowledge-collection-worker.ts
 !scripts/knowledge-collection-reader.ts
 !scripts/repair-webb-collection-publication.ts
+!scripts/theme-automation-worker.ts
+!scripts/theme-automation-browser.ts
+!scripts/review-theme-browser.ts

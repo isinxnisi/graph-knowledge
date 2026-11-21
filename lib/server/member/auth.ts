@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { betterAuth } from "better-auth";
 import { genericOAuth } from "better-auth/plugins/generic-oauth";
 import { Pool } from "pg";
@@ -30,7 +31,9 @@ export function createMemberAuth(config: MemberConfig, pool: Pool) {
       requireIdTokenVerification: true, scopes: ["openid", "profile", "email"], pkce: true,
       tokenEndpointAuth: { method: "none" },
     }] })] : [...(missionMcpEnabled() ? missionOAuthPlugins(config.origin) : []),...googleBetaTransportPlugins(config)],
-    advanced: { disableOriginCheck: false, disableCSRFCheck: false, database: { generateId: "uuid" }, cookiePrefix: config.cookiePrefix,
+    // Generate UUIDs for ordinary rows. A custom generator also allows the
+    // OAuth adapter to retain its explicitly supplied assertion digest.
+    advanced: { disableOriginCheck: false, disableCSRFCheck: false, database: { generateId: () => randomUUID() }, cookiePrefix: config.cookiePrefix,
       useSecureCookies: config.origin.startsWith("https:"), defaultCookieAttributes: { httpOnly: true, sameSite: "lax" } },
     session: { expiresIn: 60 * 60 * 24 * 7, updateAge: 60 * 60 * 24, cookieCache: { enabled: false } },
     account: { accountLinking: { enabled: false }, encryptOAuthTokens: true, storeAccountCookie: false, storeStateStrategy: "database" },

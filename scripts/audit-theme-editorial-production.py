@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Run the interactive VPS audit for the theme editorial release from this PC."""
+import argparse
 import hashlib
 import json
 import os
@@ -40,8 +41,10 @@ def audit_command(remote_json):
 
 
 def main():
-    LOCAL.mkdir(mode=0o700, parents=True, exist_ok=True)
-    output = LOCAL / 'baseline.json'
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output', type=Path, default=LOCAL / 'baseline.json')
+    output = parser.parse_args().output
+    output.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
     if output.exists():
         raise ValueError(f'既存の監査JSONがあります。別名に保管してから再実行してください。 {output}')
     connection = json.loads(CONNECTION.read_text())

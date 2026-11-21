@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {randomUUID,randomBytes,createHash} from 'node:crypto';
 import {Pool} from 'pg';
 import {serializeSignedCookie} from 'better-call';
-import {createLocalJWKSet,jwtVerify} from 'jose';
+import {createLocalJWKSet,exportJWK,generateKeyPair,jwtVerify,SignJWT} from 'jose';
 import {verifyOAuthQueryParams} from '@better-auth/oauth-provider';
 import {createMemberAuth} from '../lib/server/member/auth';
 import {migrateMemberDatabase} from '../lib/server/member/migrate';
@@ -25,8 +25,10 @@ try{
  for(const old of ledger)assert(current.some(v=>v.name===old.name&&v.checksum===old.checksum));
  await migrateMemberDatabase(pool,...Array(26).fill(true));assert.deepEqual((await pool.query('SELECT name,checksum FROM member_migration ORDER BY name')).rows,current);assert.deepEqual(await fingerprints(),before);checked.push('restored migration, old rows and checksums preserved, repeated unchanged');
  const auth=createMemberAuth({origin,databaseUrl:connectionString,secret,cookiePrefix:'gk-mcp-fixture',provider:{kind:'google',clientId:'fixture',clientSecret:'fixture'}},pool),ctx=await auth.$context;
+ await ctx.checkSchema?.();
  const user=await ctx.internalAdapter.createUser({name:'OAuth fixture',email:randomUUID()+'@example.test',emailVerified:true,active:true,locale:'ja'},{method:'oauth',oauth:{providerId:'google',profile:{}}});
  const session=await ctx.internalAdapter.createSession(user.id,false);
+ for(const id of [user.id,session.id])assert.match(id,/^[a-f0-9-]{36}$/);
  const cookie=(await serializeSignedCookie(ctx.authCookies.sessionToken.name,session.token,secret)).split(';')[0];
  await pool.query('INSERT INTO mission_oauth_client (id,"clientId",name,"redirectUris",scopes,"grantTypes","responseTypes","tokenEndpointAuthMethod","requirePKCE",disabled,"skipConsent") VALUES ($1,$2,$3,$4,$5,$6,$7,$8,true,false,false)',[randomUUID(),clientId,'Fixture client',JSON.stringify([redirect]),JSON.stringify([MISSION_SCOPE,'offline_access']),JSON.stringify(['authorization_code','refresh_token']),JSON.stringify(['code']),'none']);
  await pool.query('INSERT INTO mission_oauth_client_resource (id,"clientId","resourceId") VALUES ($1,$2,$3)',[randomUUID(),clientId,resource]);
@@ -50,5 +52,40 @@ try{
  const refresh=await tokenRequest({grant_type:'refresh_token',client_id:clientId,refresh_token:tokens.refresh_token,resource});assert.equal(refresh.status,200);const rotated=await refresh.json();assert(rotated.access_token&&rotated.refresh_token);checked.push('refresh rotation');
  const revoked=await request('/oauth2/revoke',{method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},body:new URLSearchParams({token:rotated.refresh_token,client_id:clientId,token_type_hint:'refresh_token'})});assert.equal(revoked.status,200);
  assert.equal((await tokenRequest({grant_type:'refresh_token',client_id:clientId,refresh_token:rotated.refresh_token,resource})).status,400);assert.equal((await tokenRequest(exchange)).status,400);checked.push('revocation and one-use authorization code');
+ // A fresh grant for the same fixture client, now configured for signed assertions.
+ const nextAuthorize=await request('/oauth2/authorize?'+params,{headers:{cookie}});
+ assert.equal(nextAuthorize.status,302);
+ const nextConsentURL=new URL(nextAuthorize.headers.get('location')!,origin);
+ let nextCode=nextConsentURL.searchParams.get('code');
+ if(!nextCode){
+  const nextConsent=await request('/oauth2/consent',{method:'POST',headers:{cookie,origin,'content-type':'application/json'},
+   body:JSON.stringify({accept:true,oauth_query:signedMissionOAuthQuery(nextConsentURL.searchParams)})});
+  assert.equal(nextConsent.status,200);
+  nextCode=new URL((await nextConsent.json()).url).searchParams.get('code');
+ }
+ assert(nextCode);
+ const {publicKey,privateKey}=await generateKeyPair('ES256');
+ const jwk={...await exportJWK(publicKey),kid:'fixture-key',alg:'ES256'};
+ await pool.query('UPDATE mission_oauth_client SET "tokenEndpointAuthMethod"=$2,jwks=$3 WHERE "clientId"=$1',
+  [clientId,'private_key_jwt',JSON.stringify({keys:[jwk]})]);
+ const assertClient=()=>new SignJWT({}).setProtectedHeader({alg:'ES256',kid:jwk.kid}).setIssuer(clientId).setSubject(clientId)
+  .setAudience(origin+'/api/auth/oauth2/token').setIssuedAt().setExpirationTime('2m').setJti(randomUUID()).sign(privateKey);
+ const authenticatedRequest=(body:Record<string,string>,assertion:string)=>tokenRequest({...body,
+  client_assertion_type:'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',client_assertion:assertion});
+ const signedExchange=await authenticatedRequest({...exchange,code:nextCode},await assertClient());
+ assert.equal(signedExchange.status,200);
+ const signedTokens=await signedExchange.json();
+ const signedRefresh={grant_type:'refresh_token',client_id:clientId,refresh_token:signedTokens.refresh_token,resource};
+ const sameAssertion=await assertClient();
+ const concurrent=await Promise.all([authenticatedRequest(signedRefresh,sameAssertion),authenticatedRequest(signedRefresh,sameAssertion)]);
+ assert.deepEqual(concurrent.map(r=>r.status).sort(),[200,400]);
+ const refused=concurrent.find(r=>r.status===400)!;
+ const error=await refused.json();
+ assert.equal(error.error,'invalid_client');
+ assert.equal(error.error_description,'client assertion jti has already been used');
+ const nextRefresh=(await concurrent.find(r=>r.ok)!.json()).refresh_token;
+ assert.equal((await authenticatedRequest({...signedRefresh,refresh_token:nextRefresh},await assertClient())).status,200);
+ checked.push('one acceptance for concurrent signed assertion; a fresh assertion can still rotate the grant');
+
  console.log(JSON.stringify({ok:true,checks:checked,realGoogle:false,realChatGPT:false}));
 }finally{await pool.end();}
