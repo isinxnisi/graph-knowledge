@@ -35,6 +35,10 @@ export async function themeDiagnostic(db:Pool|PoolClient,origin:string,event:Eve
   ]);
 }
 
+const betaProtocolMethods=new Map([
+  ['initialize','INITIALIZE'],['notifications/initialized','INITIALIZED'],['tools/list','TOOLS_LIST'],['ping','PING'],
+]);
+const betaReadOperations=new Set(['get_theme_authoring_guide','get_theme_production','read_theme_quality_guide','read_theme']);
 const operations=new Set([
   'upload_editorial_image','generate_theme_image','capture_theme_review_preview','read_theme_review_evidence',
   'claim_theme_production','update_theme_production','prepare_theme_production_submission','dispatch_theme_production_submission',
@@ -43,6 +47,7 @@ const operations=new Set([
 export function themeMcpDiagnostics(pool:Pool,origin:string){
   const ingressId=randomUUID();
   let tracked=false;
+  const beta=origin==='https://graph-beta.isinxnisi.com';
   async function record(event:Event){
     if(!themeAutomationEnabled())return;
     try{await themeDiagnostic(pool,origin,{...event,ingressId});}
@@ -61,10 +66,16 @@ export function themeMcpDiagnostics(pool:Pool,origin:string){
     },
     async authenticated(body:unknown){
       for(const member of Array.isArray(body)?body:[body]){
+        if(beta&&member&&typeof member==='object'&&'method' in member&&typeof member.method==='string'){
+          const method=betaProtocolMethods.get(member.method);
+          if(method){tracked=true;await record({stage:'mcp-protocol',code:method});continue;}
+        }
         const parsed=z.object({method:z.literal('tools/call'),params:z.object({
           name:z.string(),arguments:z.object({requestId:uuid.optional(),caseId:uuid.optional(),executionId:uuid.optional()}).optional(),
         })}).safeParse(member);
-        if(!parsed.success||!operations.has(parsed.data.params.name))continue;
+        if(!parsed.success)continue;
+        const name=parsed.data.params.name;
+        if(!operations.has(name)&&!(beta&&betaReadOperations.has(name)))continue;
         tracked=true;
         const ids=parsed.data.params.arguments;
         await record({stage:'mcp-authenticated',code:parsed.data.params.name,requestId:ids?.requestId,caseId:ids?.caseId,executionId:ids?.executionId});
