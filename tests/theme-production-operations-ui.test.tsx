@@ -56,10 +56,15 @@ it('opens the actual case content in one step and keeps IDs and history out of t
  const technical=within(row).getByText('Technical details and operation history').parentElement as HTMLDetailsElement;
  expect(technical.open).toBe(false);
  expect(technical.textContent).toContain(caseId);
- const full=within(row).getByText('Full assessment comments').parentElement as HTMLDetailsElement;
+ const assessmentHeader=within(row).getByText('Whole-theme assessment',{exact:true});
+ const full=assessmentHeader.closest('details')!;
  expect(full.open).toBe(false);
+ expect(full.querySelector('summary')?.textContent).toContain('Needs changes');
+ expect(full.querySelector('summary')?.textContent).not.toContain(assessment);
+ expect(full.querySelector('time')?.dateTime).toBe('2026-11-21T00:00:00Z');
  expect(full.textContent).toContain(assessment);
- expect(within(row).getByText('Needs changes',{exact:false}).parentElement?.closest('details')).toBe(disclosure);
+ full.open=true;
+ expect(full.open).toBe(true);
 });
 
 it('refreshes the theme list and the open case through the single list control',async()=>{

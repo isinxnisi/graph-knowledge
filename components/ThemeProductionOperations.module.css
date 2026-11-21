@@ -247,8 +247,18 @@
   display: flow-root;
 }
 
+.assessmentResult {
+  margin-inline-start: 9px;
+  color: var(--color-text);
+}
+
+.assessmentDate {
+  color: var(--color-muted);
+  font-size: 12px;
+}
+
 .caseBody .assessmentText {
-  margin: 0;
+  margin: 4px 0 0;
   white-space: pre-wrap;
 }
 

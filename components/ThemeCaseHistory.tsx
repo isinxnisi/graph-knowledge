@@ -127,16 +127,16 @@ export function ThemeCaseHistory({userId,themeId,currentCaseId,refreshVersion,re
      <h3>{t('残作業','Remaining work')}</h3>
      <ul>{selected.progress.unfinished.map((note,i)=><li key={i}>{note}</li>)}</ul>
     </section>}
-    {selected.assessment&&<section className={css.caseNotes}>
-     <h3>{selected.assessment.current?t('全体評価','Whole-theme assessment'):t('前回の全体評価','Previous whole-theme assessment')}</h3>
-     <p>{selected.assessment.result==='pass'?t('合格','Passed'):t('要修正','Needs changes')} <span aria-hidden="true">·</span> {format(selected.assessment.evaluatedAt)}</p>
-     {selected.assessment.summary.length>280||selected.assessment.summary.split('\n').length>4
-      ?<details className={css.secondaryDisclosure}>
-       <summary>{t('評価コメント全文','Full assessment comments')}</summary>
-       <div className={css.secondaryBody}><p className={css.assessmentText}>{selected.assessment.summary}</p></div>
-      </details>
-      :<p className={css.assessmentText}>{selected.assessment.summary}</p>}
-    </section>}
+    {selected.assessment&&<details className={css.secondaryDisclosure}>
+     <summary>
+      {selected.assessment.current?t('全体評価','Whole-theme assessment'):t('前回の全体評価','Previous whole-theme assessment')}
+      <span className={css.assessmentResult}>{selected.assessment.result==='pass'?t('合格','Passed'):t('要修正','Needs changes')}</span>
+     </summary>
+     <div className={css.secondaryBody}>
+      <time className={css.assessmentDate} dateTime={selected.assessment.evaluatedAt}>{format(selected.assessment.evaluatedAt)}</time>
+      <p className={css.assessmentText}>{selected.assessment.summary}</p>
+     </div>
+    </details>}
     <details className={css.secondaryDisclosure}>
      <summary>{t('技術情報・操作履歴','Technical details and operation history')}</summary>
      <div className={css.secondaryBody}>
