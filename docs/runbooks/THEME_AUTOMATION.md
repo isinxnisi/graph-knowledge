@@ -137,4 +137,9 @@
 - 同じWeb build・台帳を確認し、既存Composeへの差分をWebの機能フラグと専用Workerに固定する。非rootの採取Workerを起動し、ChromiumでPNGを採取してからWebを再起動する。アプリの環境ファイルと既存3 Workerの設定は既存値を使用する。
 - 専用Workerに必要な会員接続設定は稼働中のWebから取り出し、VPSの管理者専用ファイルに保存する。文字列を二重解釈しないComposeのraw形式を使い、値を出力しない。候補の正規Composeが承認済み追加設定と一致することを確かめる。
 - 失敗時は専用Workerを停止し、Composeの控えからWebを戻して公開代表経路を再確認する。適用・復旧は同じ資材と共通公開ロックを使う。 [正式の画面採取有効化スクリプト](../../scripts/activate-theme-preview-production.py)
-- 本番用資材の転送SHA-256は `4b59879508cdd99165f00f37d0bbe05321bd730e733738ea9a00b74c00aa6d06`、有効化手順を含むsealは `57fce99c63d84192d666e2448fd6562335719daec53a51993c5ad4d90bceffe3`。VPS側の転送照合まで完了した。管理者のsudoによる有効化と実際の画面証拠の確認を待つ。
+- 本番用資材の転送SHA-256は `4b59879508cdd99165f00f37d0bbe05321bd730e733738ea9a00b74c00aa6d06`、有効化手順を含むsealは `57fce99c63d84192d666e2448fd6562335719daec53a51993c5ad4d90bceffe3`。VPS側で転送を照合後、管理者のsudoで有効化した。
+- 正式build `8KGRoVvhFNgTYCT3r5L3x` で `theme-preview-activated` を確認。専用Workerの非root ChromiumでPNG採取が通り、Webの再起動後に既存サービス・環境・台帳を再確認した。OpenAI画像生成APIへ送信しない設定を稼働コンテナで確認した。復旧用Composeは `/opt/graph-knowledge/backups/theme-preview-e4946790d5f8-676aa8f31646f7a9` に保存済み。
+- 正式HTTPSの公開世代 `k75-5d1288ffc3cff4fd5b64fe2084331665` と検索を確認した。既存Appの認証済み操作ガイド、ヴァイキング案件、品質ガイド、テーマ検索を連続で取得し、ガイドに `capture_theme_review_preview`、`read_theme_review_evidence`、`read_theme_automation` が載った。対象版のHTMLとプレビューAPIは未認証で404、`private, no-store` と `noindex` だった。
+- 正式Appの新ツール読み戻しと、認証済みの案件に対する採取・PNG取得・永続診断は確認待ち。ヴァイキング案件は見直し工程の停止状態で、実行権は空いている。採取した案件では以後の公開承認に画面証拠が必要になるため、検証に使う案件を確認してから採取する。OpenAI画像生成APIの利用額・利用枠の照合と、既存の定期予定3件の対象回確認は後続。
+
+正式の認証済みPNGを確認するには、本番Plunode Appのツールを更新し、対象として確認済みの案件を取得する。見直し実行権が空いていれば、新しい実行IDでreviewをclaimし、最新のdigestで画面採取を1件依頼する。同じ実行で採取得果と全画面名を読み出し、各PNGを取得してPC・スマートフォンの表示と診断を照合する。表示できなかった画面は阻害要因とし、検証記録に残す。この疎通試験では評価保存・公開操作を行わず、実行権を解放する。
