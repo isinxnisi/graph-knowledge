@@ -34,7 +34,10 @@ export function ThemeLink({ theme, onOpen, appearance = "row", showDescription =
     <Icon name={icon}/><span className={home.recentThemeText}><span className={home.recentThemeTitle}>{title}</span><small>{type}</small></span>
   </a>;
   if (appearance === "featured") return <a className={`${home.themeFeature} ${css.featureLink}`} href={href} target={openInNewTab ? "_blank" : undefined} rel={openInNewTab ? "noopener" : undefined} onClick={choose}>
-    <>{presentation?.image?<Image unoptimized className={css.themeImage} data-kind={presentation.image.kind} src={presentation.image.src} width={96} height={80} alt={presentation.image.alt} style={{objectPosition:presentation.image.focus}}/>:<Icon name={icon}/>}</><span><small>{type}</small><strong>{title}</strong>
+    {presentation.image ? <span className={css.themeImageFrame}>
+      <Image unoptimized className={css.themeImage} src={presentation.image.src} width={96} height={64} alt={presentation.image.alt} style={{objectPosition:presentation.image.focus}}/>
+    </span> : <Icon name={icon}/>}
+    <span className={css.featureCopy}><small>{type}</small><strong>{title}</strong>
       {showDescription && theme.description && <span className={css.featureDescription}>{presentation.intro?.hook||description}</span>}
     </span><Icon name="arrow"/>
   </a>;
