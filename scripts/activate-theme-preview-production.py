@@ -19,6 +19,7 @@ SEAL = '676aa8f31646f7a9766cd5fce28a34d2699dd97bc7738b6fd417d4dbf36e342c'
 PREVIOUS_RELEASE = 'release-e4946790d5f8-d1453ed41bfc8b70'
 SERVICE = 'theme-automation'
 FLAG = 'THEME_AUTOMATION_ENABLED'
+OPERATOR_ENV = ('COMMUNITY_ENABLED', 'SITE_OPERATIONS_ENABLED', 'SITE_OPERATOR_USER_IDS')
 SECRETS = ('MEMBER_DATABASE_URL', 'MEMBER_AUTH_SECRET', 'MEMBER_GOOGLE_CLIENT_ID', 'MEMBER_GOOGLE_CLIENT_SECRET')
 SAFE_IMAGE_ENV = {'THEME_IMAGE_PROVIDER': '', 'THEME_IMAGE_PAID_ENABLED': '0'}
 FILES = ('images.tar.gz', 'compose-overlay.yaml', 'manifest.json')
@@ -87,7 +88,7 @@ def compose_config(runtime, *files):
 def isolated_env(web_env):
     env = dict(entry.split('=', 1) for entry in web_env)
     result = []
-    for key in SECRETS:
+    for key in (*SECRETS, *OPERATOR_ENV):
         value = env.get(key)
         require(isinstance(value, str) and value and not any(c in value for c in '\n\r\0'),
                 'The Web member settings are unavailable to the preview Worker')
@@ -106,8 +107,11 @@ def check_difference(before, after):
     env = worker['environment']
     require(all(env.get(k) == v for k, v in SAFE_IMAGE_ENV.items()) and not env.get('THEME_IMAGE_OPENAI_API_KEY'),
             'Image API must be disabled')
-    require(env.get('MEMBER_DATABASE_URL') == expected['services']['web']['environment'].get('MEMBER_DATABASE_URL'),
+    web_env = expected['services']['web']['environment']
+    require(env.get('MEMBER_DATABASE_URL') == web_env.get('MEMBER_DATABASE_URL'),
             'Web and preview Worker must use the same member database')
+    require(all(env.get(key) == web_env.get(key) for key in OPERATOR_ENV),
+            'Web and preview Worker must use the same operator policy')
 
 
 def image_id(runtime, stage, manifest):
