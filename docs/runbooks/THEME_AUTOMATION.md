@@ -236,3 +236,9 @@
 - 承認済みのUIは `0a94174d0dfb456e0392f6245f1e8bfcda67c8bc`、βbuild `YxP38Te5kwOry1XkQJk6F`。最新の監査で正式build `E-2KKBgQfOIONbdAWUXdZ`、会員台帳50、知識台帳13を照合した。切替はWeb・知識3 Worker・画面採取Workerの固定イメージ差し替え。DB移行と公開投影の再構築はない。
 - 固定buildは `rBZkI07m-jCGFNPGM-VL7`、全体sealは `2450025c9553937429d8cd616089aec36f93ae2a97560918d20f117beb089744`。VPSへの転送SHA-256 `ede77695685e35d17ca05d805c77746e1ae3b919dabfc76f9c1c8c5b1fcf598c` を現地で再照合した。非rootでのWebと知識Workerのファイル読取、専用Workerのbuild一致とChromium PNG採取を確認した。
 - 画面採取Workerの処理を待って停止し、知識3 Workerを止めてWebを差し替える。公開読取を確認してからWorkerを起動する。画像生成設定とUTC日次30送信・30枚を保持する。新Worker起動前の失敗は旧イメージとComposeに戻す。新Workerの起動を始めた後は同じ固定資材で再開する。切替後は `case-ui-readback`、HTTPS、運営画面のJS／CSS、既存Appの認証済み読取を照合する。
+
+#### #76 表示改善の正式反映
+
+- 正式候補 `0a94174d`、build `rBZkI07m-jCGFNPGM-VL7` をWeb・知識3 Worker・画面採取Workerへ反映した。適用済みSQLの追加はなく、`case-ui-readback` で会員台帳50、知識台帳13、画像生成APIが有効でUTC日次30送信・30枚を確認した。切替記録は `/opt/graph-knowledge/backups/release-0a94174d0dfb-d6d075cb10186973`。
+- 正式HTTPSで公開世代 `k75-7b442fd186fb23aea245dca8d9f64acf`、公開検索、案件APIの未認証404を確認した。正式の運営ページが参照するJSとCSSを取得し、固定イメージの両資材とSHA-256が一致した。本番Appから定期制作案件および通常Webbの終了済み案件と公開第32版を読み戻した。
+- PC・スマートフォンの見た目と開閉はβ用の検証データで確認済み。正式の認証済み画面を追加で確認する操作は、Computer UseがブラウザのURLを確認できず停止した。正式で確認できた範囲はHTTPSの配信と認証済みAppの読取。
