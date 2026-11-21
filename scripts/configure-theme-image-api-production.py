@@ -17,7 +17,7 @@ preview = importlib.import_module('activate-theme-preview-production')
 SERVICE = preview.SERVICE
 KEY = 'THEME_IMAGE_OPENAI_API_KEY'
 MODEL = 'gpt-image-2.6-flare'
-LIMIT = '1'
+LIMIT = '30'
 PROVIDER = {
     'THEME_IMAGE_PROVIDER': 'openai',
     'THEME_IMAGE_PAID_ENABLED': '1',
