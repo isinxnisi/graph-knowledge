@@ -1,3 +1,5 @@
+TOP紹介テーマとテーマ詳細の表示調整を正式反映・配信確認まで完了。アプリ `1ed7db46`、β build `SmfjUtGpfgAo8mXZtbDpr`、正式 build `o7DaleY5Log8O3tDmkuVb`。Webのみ切替、会員50／知識13の台帳と各Workerを照合。公開世代 `k75-da4c11ef85364b596a18f6bcdf2036f7`、退避先 `/opt/graph-knowledge/backups/release-1ed7db4668cb-3f5d4d7a473e93a3`。TOP・詳細の3:2トリミング、PCのホバー、元画像モーダル、320・390・796・801・1440pxでの案内配置と往復を正式HTTPSで確認。
+
 2026-11-21 自動生成画像の公開クレジットを専用Workerへ正式反映し、稼働イメージ・コード・HTTPS読取を照合｜本番テストテーマの生成・更新は利用者が確認中｜反映工程は切替と稼働確認まで完了。 [公開クレジットの正式反映](runbooks/THEME_AUTOMATION.md#自動生成画像の公開クレジット)。
 
 2026-11-21 #76 表示改善を正式反映し、Web／4 Worker・台帳・運営画面JS／CSSと既存App読取まで確認｜ブラウザ実視認はβで確認済み、正式の認証済み画面はComputer UseのURL判定で未確認｜正式切替と配信照合まで完了。 [表示改善の正式反映](runbooks/THEME_AUTOMATION.md#76-表示改善の正式反映)。
