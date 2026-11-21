@@ -11,6 +11,8 @@ import {startMemberOidc} from './support/member-oidc';import {memberRuntime} fro
 import * as auth from '../app/api/auth/[...all]/route';import * as profile from '../app/api/member/profile/route';
 import * as operator from '../app/api/site-operations/collection-reading/route';import * as worker from '../app/api/knowledge-collection/reading-worker/route';
 import {createKnowledgeFoundationService} from '../lib/server/knowledge-foundation';
+import {withOperatorThemeRead} from '../lib/server/knowledge-theme-access';
+import {writeEditorialThemeRelease} from '../lib/server/knowledge-theme-publication';
 import {createCollectionReading} from '../lib/server/knowledge-collection-reading';
 import {quotaDate} from '../lib/server/knowledge-ai-budget';
 import {createReviewQueue,reviewConfigSchema} from '../lib/server/knowledge-review-queue';
@@ -85,6 +87,15 @@ expect(record.content.times[0].time).toMatchObject({meaning:'point',from:'2030-0
  });
  it('automatically appends to the selected theme while retaining its older edition',async()=>{
   const theme='reading-theme';await foundation.execute({kind:'operator',id:'fixture'},{action:'create-theme',requestId:randomUUID(),id:theme,title:'Aの出来事',recordPins:[{id:'reading-initial',revision:1}],initialView:'timeline',timeline:{version:1,axes:[{id:'calendar',kind:'calendar',label:'年月日'}],placements:[]}});
+  // The collection target must already be public. Creating a Theme now only saves a private working edition.
+  const edition=await withOperatorThemeRead(()=>foundation.resolveTheme({kind:'operator',id:'fixture'},theme,1));
+  const transaction=await knowledge.connect();
+  try{
+   await transaction.query('BEGIN');
+   await transaction.query("SELECT pg_advisory_xact_lock(hashtextextended('knowledge-record-writes-v1',0))");
+   await writeEditorialThemeRelease(transaction,edition.theme,'collection-reading-test-release',{fixture:true},[]);
+   await transaction.query('COMMIT');
+  }catch(error){await transaction.query('ROLLBACK');throw error;}finally{transaction.release();}
   const c=await capture();const r=await act({action:'read',requestId:randomUUID(),captureJobId:c.id,sourceIds:[c.source],target:{kind:'theme',id:theme,revision:1},scope:'Aの較正試験を年表へ追加',publish:true,externalProcessing:true});expect(r.status).toBe(200);await approve((await claim())!,extraction());await approve((await claim())!,review());
   const current=await foundation.resolveTheme({kind:'reader',id:'test'},theme),old=await foundation.resolveTheme({kind:'reader',id:'test'},theme,1);expect(current.theme.revision).toBe(2);expect(current.snapshot.records).toHaveLength(2);expect(old.snapshot.records).toHaveLength(1);expect(current.theme.content.timeline?.placements).toHaveLength(1);
  });
