@@ -113,13 +113,18 @@
 }
 
 .caseDisclosure {
-  margin-top: 7px;
+  margin-top: 9px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: clip;
+}
+
+.caseDisclosure[open] {
+  border-color: var(--color-control-border);
 }
 
 .caseDisclosure > summary,
 .secondaryDisclosure > summary {
-  width: fit-content;
-  padding: 4px 2px;
   color: var(--color-accent);
   cursor: pointer;
   font-size: 13px;
@@ -127,15 +132,29 @@
   line-height: 1.65;
 }
 
+.caseDisclosure > summary {
+  padding: 7px 12px;
+  background: var(--color-hover);
+}
+
+.caseDisclosure[open] > summary {
+  background: var(--color-accent-soft);
+  border-bottom: 1px solid var(--color-control-border);
+}
+
 .caseDisclosure > summary:hover,
 .secondaryDisclosure > summary:hover {
   text-decoration: underline;
 }
 
+.caseDisclosure > summary:focus-visible,
+.secondaryDisclosure > summary:focus-visible {
+  outline-offset: -3px;
+}
+
 .caseBody {
-  margin-top: 5px;
-  padding: 12px 0 2px;
-  border-top: 1px solid var(--color-border);
+  padding: 12px;
+  background: var(--color-canvas);
   overflow-wrap: anywhere;
 }
 
@@ -205,15 +224,32 @@
 
 .secondaryDisclosure {
   margin-top: 8px;
-}
-
-.secondaryDisclosure + .secondaryDisclosure {
-  margin-top: 2px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  overflow: clip;
+  background: var(--color-panel);
 }
 
 .secondaryDisclosure > summary {
+  padding: 6px 10px;
   color: var(--color-muted);
   font-size: 12px;
+}
+
+.secondaryDisclosure[open] > summary {
+  background: var(--color-hover);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.secondaryBody {
+  padding: 9px 10px;
+  display: flow-root;
+}
+
+.caseBody .assessmentText {
+  margin: 0;
+  white-space: pre-wrap;
 }
 
 .technical {

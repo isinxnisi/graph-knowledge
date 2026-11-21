@@ -32,10 +32,11 @@ it('filters and refreshes through read-only requests without creating or editing
 });
 it('opens the actual case content in one step and keeps IDs and history out of the main view',async()=>{
  const caseId='a1d5b21e-94fb-4a75-a94b-d160d5335b4c';
+ const assessment='A detailed assessment of the timeline and citations. '.repeat(9).trim();
  const item={...items[1],caseId,caseBrief:'Explain the launch',currentRevision:32,publishedRevision:32};
  mock.request.mockResolvedValueOnce({items:[item]}).mockResolvedValueOnce({
   id:caseId,version:4,phase:'review',status:'needs-review',workflow:'manual',pendingSubmissionCount:0,
-  publicationPending:false,publicationConflict:false,lease:null,assessment:null,updatedAt:'2026-11-21T00:00:00Z',
+  publicationPending:false,publicationConflict:false,lease:null,assessment:{result:'needs-changes',current:true,evaluatedAt:'2026-11-21T00:00:00Z',summary:assessment},updatedAt:'2026-11-21T00:00:00Z',
   progress:{brief:'Review the launch and deployment timeline',scope:'',blockers:['Awaiting approval'],unfinished:['Check the official source']},
   submissions:[],nextSubmissionCursor:null,
  });
@@ -55,6 +56,10 @@ it('opens the actual case content in one step and keeps IDs and history out of t
  const technical=within(row).getByText('Technical details and operation history').parentElement as HTMLDetailsElement;
  expect(technical.open).toBe(false);
  expect(technical.textContent).toContain(caseId);
+ const full=within(row).getByText('Full assessment comments').parentElement as HTMLDetailsElement;
+ expect(full.open).toBe(false);
+ expect(full.textContent).toContain(assessment);
+ expect(within(row).getByText('Needs changes',{exact:false}).parentElement?.closest('details')).toBe(disclosure);
 });
 
 it('refreshes the theme list and the open case through the single list control',async()=>{

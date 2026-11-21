@@ -130,45 +130,56 @@ export function ThemeCaseHistory({userId,themeId,currentCaseId,refreshVersion,re
     {selected.assessment&&<section className={css.caseNotes}>
      <h3>{selected.assessment.current?t('全体評価','Whole-theme assessment'):t('前回の全体評価','Previous whole-theme assessment')}</h3>
      <p>{selected.assessment.result==='pass'?t('合格','Passed'):t('要修正','Needs changes')} <span aria-hidden="true">·</span> {format(selected.assessment.evaluatedAt)}</p>
-     <p>{selected.assessment.summary}</p>
+     {selected.assessment.summary.length>280||selected.assessment.summary.split('\n').length>4
+      ?<details className={css.secondaryDisclosure}>
+       <summary>{t('評価コメント全文','Full assessment comments')}</summary>
+       <div className={css.secondaryBody}><p className={css.assessmentText}>{selected.assessment.summary}</p></div>
+      </details>
+      :<p className={css.assessmentText}>{selected.assessment.summary}</p>}
     </section>}
     <details className={css.secondaryDisclosure}>
      <summary>{t('技術情報・操作履歴','Technical details and operation history')}</summary>
-     <dl className={css.technical}>
-      <dt>{t('案件ID','Case ID')}</dt><dd><code>{selected.id}</code></dd>
-      <dt>{t('案件版','Case version')}</dt><dd>{selected.version}</dd>
-      {selected.lease?.valid&&<><dt>{t('実行権の期限','Lease expires')}</dt><dd>{format(selected.lease.until)}</dd></>}
-     </dl>
-     {selected.submissions.length>0&&<><h3>{t('登録受付履歴','Submission history')}</h3>
-      <ul>{selected.submissions.map(row=><li key={row.id}>{row.action} · {row.state}{row.reason&&(' · '+row.reason)} · <code>{row.id}</code></li>)}</ul></>}
-     {selected.nextSubmissionCursor!==null&&<button className={css.quietButton} onClick={()=>setSubmissionCursor(selected.nextSubmissionCursor!)}>{t('次の登録受付','Next submissions')}</button>}
-     {!!selected.operationHistory?.items.length&&<><h3>{t('操作履歴','Operation history')}</h3>
-      <ul>{selected.operationHistory.items.map(row=><li key={row.requestId}>{format(row.at)} · {row.outcome} · <code>{row.requestId}</code></li>)}</ul></>}
-     {selected.operationHistory?.nextCursor!=null&&<button className={css.quietButton} onClick={()=>setOperationCursor(selected.operationHistory!.nextCursor!)}>{t('次の操作履歴','Next operations')}</button>}
+     <div className={css.secondaryBody}>
+      <dl className={css.technical}>
+       <dt>{t('案件ID','Case ID')}</dt><dd><code>{selected.id}</code></dd>
+       <dt>{t('案件版','Case version')}</dt><dd>{selected.version}</dd>
+       {selected.lease?.valid&&<><dt>{t('実行権の期限','Lease expires')}</dt><dd>{format(selected.lease.until)}</dd></>}
+      </dl>
+      {selected.submissions.length>0&&<><h3>{t('登録受付履歴','Submission history')}</h3>
+       <ul>{selected.submissions.map(row=><li key={row.id}>{row.action} · {row.state}{row.reason&&(' · '+row.reason)} · <code>{row.id}</code></li>)}</ul></>}
+      {selected.nextSubmissionCursor!==null&&<button className={css.quietButton} onClick={()=>setSubmissionCursor(selected.nextSubmissionCursor!)}>{t('次の登録受付','Next submissions')}</button>}
+      {!!selected.operationHistory?.items.length&&<><h3>{t('操作履歴','Operation history')}</h3>
+       <ul>{selected.operationHistory.items.map(row=><li key={row.requestId}>{format(row.at)} · {row.outcome} · <code>{row.requestId}</code></li>)}</ul></>}
+      {selected.operationHistory?.nextCursor!=null&&<button className={css.quietButton} onClick={()=>setOperationCursor(selected.operationHistory!.nextCursor!)}>{t('次の操作履歴','Next operations')}</button>}
+     </div>
     </details>
     {canEnd&&<details className={css.secondaryDisclosure} onToggle={event=>{if(!event.currentTarget.open)setEnding(false);}}>
      <summary>{t('案件の終了','Close this case')}</summary>
-     {!ending&&<button onClick={()=>setEnding(true)}>{t('公開せずに終了する','Close without publishing')}</button>}
-     {ending&&<form className={css.endForm} onSubmit={e=>{e.preventDefault();void abandon();}}>
-      <label>{t('終了理由','Closure reason')}<textarea required maxLength={2000} value={reason} onChange={e=>{setReason(e.target.value);setAttempt(null);}}/></label>
-      <p>{t('公開版・作業版・履歴は保持されます。','The published edition, draft and history are kept.')}</p>
-      <div><button type="submit" disabled={!reason.trim()||saving}>{t('終了を確定','Confirm closure')}</button>
-       <button type="button" disabled={saving} onClick={()=>setEnding(false)}>{t('戻る','Back')}</button></div>
-     </form>}
+     <div className={css.secondaryBody}>
+      {!ending&&<button onClick={()=>setEnding(true)}>{t('公開せずに終了する','Close without publishing')}</button>}
+      {ending&&<form className={css.endForm} onSubmit={e=>{e.preventDefault();void abandon();}}>
+       <label>{t('終了理由','Closure reason')}<textarea required maxLength={2000} value={reason} onChange={e=>{setReason(e.target.value);setAttempt(null);}}/></label>
+       <p>{t('公開版・作業版・履歴は保持されます。','The published edition, draft and history are kept.')}</p>
+       <div><button type="submit" disabled={!reason.trim()||saving}>{t('終了を確定','Confirm closure')}</button>
+        <button type="button" disabled={saving} onClick={()=>setEnding(false)}>{t('戻る','Back')}</button></div>
+      </form>}
+     </div>
     </details>}
    </>}
    <details className={css.secondaryDisclosure} onToggle={event=>setHistoryOpen(event.currentTarget.open)}>
     <summary>{t('過去の案件','Case history')}</summary>
-    {historyError&&<p role="alert" className={css.problem}>{requestError(null,t)}</p>}
-    {history===null&&!historyError&&<p role="status">{t('履歴を読み込んでいます…','Loading case history…')}</p>}
-    {older?.length===0&&history?.nextCursor===null&&<p>{t('過去の案件はありません。','No earlier cases.')}</p>}
-    <ul className={css.earlierCases}>{older?.map(row=><li key={row.id}>
-     <button className={css.quietButton} aria-pressed={row.id===historicalId} onClick={()=>selectCase(row.id)}>
-      {format(row.updatedAt)} <span aria-hidden="true">·</span> {row.phase==='review'?t('見直し','Review'):t('制作','Production')}
-     </button>
-     {(row.abandonReason||row.blockers[0]||row.unfinished[0])&&<p>{row.abandonReason||row.blockers[0]||row.unfinished[0]}</p>}
-    </li>)}</ul>
-    {history?.nextCursor!=null&&<button disabled={loadingHistory} className={css.quietButton} onClick={()=>void moreHistory()}>{t('さらに案件を表示','More cases')}</button>}
+    <div className={css.secondaryBody}>
+     {historyError&&<p role="alert" className={css.problem}>{requestError(null,t)}</p>}
+     {history===null&&!historyError&&<p role="status">{t('履歴を読み込んでいます…','Loading case history…')}</p>}
+     {older?.length===0&&history?.nextCursor===null&&<p>{t('過去の案件はありません。','No earlier cases.')}</p>}
+     <ul className={css.earlierCases}>{older?.map(row=><li key={row.id}>
+      <button className={css.quietButton} aria-pressed={row.id===historicalId} onClick={()=>selectCase(row.id)}>
+       {format(row.updatedAt)} <span aria-hidden="true">·</span> {row.phase==='review'?t('見直し','Review'):t('制作','Production')}
+      </button>
+      {(row.abandonReason||row.blockers[0]||row.unfinished[0])&&<p>{row.abandonReason||row.blockers[0]||row.unfinished[0]}</p>}
+     </li>)}</ul>
+     {history?.nextCursor!=null&&<button disabled={loadingHistory} className={css.quietButton} onClick={()=>void moreHistory()}>{t('さらに案件を表示','More cases')}</button>}
+    </div>
    </details>
   </div>
  </details>;
