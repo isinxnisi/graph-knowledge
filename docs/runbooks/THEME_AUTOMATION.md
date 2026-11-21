@@ -205,3 +205,9 @@
 - 正式候補のWebと専用Workerはbuild `E-2KKBgQfOIONbdAWUXdZ`。共通sealは `93e8083f63f892564da26556a65ac0e756456a43c559922ebf89d918b8676efb`、専用Workerを含む全体sealは `21e92c0b8d8945edc0884ed77ccc52c8408bf614d28980a5816040c33d783607`。VPS転送SHA-256 `4a50e4ab956c3e2d301d5dc359df8032b81bebcff2819158e6944ebd00da187e` をVPSで再照合した。初回資材は展開時の権限で非rootのWorkerがpackage.jsonを読めなかった。展開時の設定を是正して再ビルドし、非rootのWeb／知識Workerの読取と、専用Workerのネットワークを切ったChromiumによるPNG採取を確認した。
 - 承認後に共通公開ロック内で監査を再照合し、会員DBバックアップを確認する。画面採取Workerが処理中の受付を確定できる時間を取って停止し、知識3 WorkerとWebを停止して049を適用する。Webの公開読取を確認してからWorkerを起動する。Composeは各image参照だけを差し替え、既存Workerのキーと設定のハッシュ、Webと同じ運営者認可、日次30送信・30枚を読み戻す。
 - 049の確定前に切替が失敗した場合は、旧Compose・旧イメージを用いてWeb・4 Workerを再起動する。049の確定後はバックアップと移行台帳を確認し、同じ固定資材で未完了の切替を再開する。旧DBへの自動巻き戻しは行わない。端末へ `case-management-readback` が出たら、正式HTTPSと既存APIを確認し、通常Webbの案件を読み取る。
+
+#### #76 正式切替の実測
+
+- 承認済みの全体seal `21e92c0b8d8945edc0884ed77ccc52c8408bf614d28980a5816040c33d783607` で正式切替が完了した。ユーザー端末の `case-management-readback` でソース `6b0f4e8f`、Webと画面採取Workerのbuild `E-2KKBgQfOIONbdAWUXdZ`、会員台帳50、知識台帳13、画像生成APIの有効状態とUTC日次30送信・30枚を照合した。会員バックアップは `/opt/graph-knowledge/backups/release-6b0f4e8faa23-93e8083f63f89256`。
+- 正式HTTPSで現行buildと公開世代 `k75-767a200edbb80c38e8d5a11afb3bf5f9`、公開検索と、未認証の案件履歴APIがHTTP 404になることを確認した。既存本番Appから技術ガイドの新しい案件管理操作、現行の定期制作案件、通常Webbの公開版32を読み戻した。
+- 通常Webbの案件詳細は、ChatGPT Webの本番Appで新しいツール定義を取り込んだ後、またはログイン済みの運営一覧から読み取る。この時点のCodex側のAppは旧ツール定義で、開いていた運営タブはログインが必要だった。既存案件の終了・公開操作や予定設定の編集は行っていない。
