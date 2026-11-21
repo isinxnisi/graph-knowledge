@@ -94,6 +94,6 @@
  .themeCards { grid-template-columns: 1fr; }
  .workspace.details h2 { font-size: 22px; }
  .details .return { min-height: 36px; margin-bottom: 4px; }
- .details p.mobileLead { display: block; margin: 0 0 12px; font-size: 13px; line-height: 1.7; color: var(--color-text); }
+ .details p.mobileLead { white-space: pre-line; display: block; margin: 0 0 12px; font-size: 13px; line-height: 1.7; color: var(--color-text); }
  .guideTools > details > summary { min-height: 36px; padding-block: 7px; }
 }
