@@ -94,11 +94,23 @@ export function createThemeAutomationWorker(pool:Pool,origin:string,generator:Th
 
   async function store(job:Job){
     const input=imageInput.parse(job.input),source=z.object({provider:z.string(),model:z.string()}).parse(job.result);
-    const value=await dispatchProductAuthoring(pool,job.owner_id,{
-      action:'upload-product-image',requestId:job.id,role:'illustration',alt:input.alt,base64:Buffer.from(job.generated_bytes).toString('base64'),
-      provenance:{id:'theme-generation:'+source.provider+':'+source.model,kind:'generated',
-        terms:source.provider==='fixture'?'β検証用の代替画像。':'生成挿絵。原資料ではありません。',credit:source.provider+' '+source.model,creditDisplay:'internal'},
-    });
+    const upload={action:'upload-product-image',requestId:job.id,role:'illustration',alt:input.alt,
+      base64:Buffer.from(job.generated_bytes).toString('base64')} as const;
+    const sourceId=source.provider+':'+source.model;
+    const terms=source.provider==='fixture'?'β検証用の代替画像。':'生成挿絵。原資料ではありません。';
+    let value;
+    try{
+      value=await dispatchProductAuthoring(pool,job.owner_id,{...upload,
+        provenance:{id:'theme-generation-public-v1:'+sourceId,kind:'generated',terms,credit:'Plunode Original',creditDisplay:'public'},
+      });
+    }catch(error){
+      if(diagnosticError(error,'IMAGE_STORAGE_UNAVAILABLE')!=='REQUEST_CHANGED')throw error;
+      // The previous Worker may have registered the asset before acknowledging this job.
+      // Replay the exact legacy request so its receipt and image ID remain valid.
+      value=await dispatchProductAuthoring(pool,job.owner_id,{...upload,
+        provenance:{id:'theme-generation:'+sourceId,kind:'generated',terms,credit:source.provider+' '+source.model,creditDisplay:'internal'},
+      });
+    }
     return z.object({imageId:z.string().regex(/^[a-f0-9]{64}$/)}).parse(value).imageId;
   }
 
