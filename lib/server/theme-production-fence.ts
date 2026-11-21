@@ -12,7 +12,7 @@ export async function assertThemeProductionLease(client?:Pool|PoolClient){
  const ctx=context.getStore();if(!ctx)return;
  const c=client&&'release' in client?client:ctx.pool;
  if('release' in c)await c.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['theme-production:'+ctx.caseId]);
- const r=await c.query(`SELECT 1 FROM theme_production.cases WHERE id=$1 AND owner_id=$2 AND execution_id=$3 AND lease_token=$4 AND lease_until>clock_timestamp() AND status<>'completed'`,[ctx.caseId,ctx.owner,ctx.executionId,ctx.leaseToken]);
+ const r=await c.query(`SELECT 1 FROM theme_production.cases WHERE id=$1 AND owner_id=$2 AND execution_id=$3 AND lease_token=$4 AND lease_until>clock_timestamp() AND status NOT IN ('completed','abandoned')`,[ctx.caseId,ctx.owner,ctx.executionId,ctx.leaseToken]);
  if(!r.rowCount)throw new KnowledgeError('実行権が失効しました。現在の案件を読み、新しい実行権で再開してください。',409,'PRODUCTION_LEASE_EXPIRED');
 }
 /** A known prepared request cannot be delivered through the old API without its live case capability. */

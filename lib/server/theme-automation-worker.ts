@@ -39,7 +39,7 @@ export function createThemeAutomationWorker(pool:Pool,origin:string,generator:Th
       if(!(await c.query('SELECT pg_try_advisory_xact_lock(hashtextextended($1,0)) AS held',['theme-automation:'+origin])).rows[0].held)return null;
       await recover(c);
       const job=(await c.query(`SELECT a.*,p.owner_id FROM theme_production.automation_requests a JOIN theme_production.cases p ON p.id=a.case_id
-        WHERE p.origin=$1 AND p.status<>'completed' AND a.available_at<=clock_timestamp()
+        WHERE p.origin=$1 AND p.status NOT IN ('completed','abandoned') AND a.available_at<=clock_timestamp()
         AND ($3::uuid IS NULL OR (a.id=$3 AND a.kind='image' AND p.environment='beta' AND p.workflow='manual'))
         AND ((a.kind='image' AND (a.state='generated' OR $2 AND a.state='queued' AND a.provider_started_at IS NULL)) OR
              (a.kind='preview' AND p.phase='review' AND a.state='queued'))

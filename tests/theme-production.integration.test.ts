@@ -30,7 +30,7 @@ import {ensureKnowledgePublicationSchema} from '../lib/server/knowledge-publicat
 import {createThemeProductions} from '../lib/server/theme-production';
 import {themeProductionRuntime} from '../lib/server/theme-production-runtime';
 import {guardThemeProductionRequest} from '../lib/server/theme-production-fence';
-import {themeProductionCommandSchema,themeProductionResponseSchema,productionSubmissionCommandSchema,type ProductionSubmissionCommand} from '../lib/domain/theme-production';
+import {themeProductionCommandSchema,themeProductionResponseSchema,themeProductionListSchema,productionSubmissionCommandSchema,type ProductionSubmissionCommand} from '../lib/domain/theme-production';
 
 type Case={id:string;version:number;lease:{executionId:string;until:string;valid:boolean}|null;phase:string;status:string;completed:boolean;progress:{brief:string;scope:string;artifacts:Record<string,unknown>;unfinished:string[];blockers:string[]};theme:{id:string;revision:number}|null;evaluationTarget:{digest:string;guide:{revision:number}};lastWholeThemeAssessment:{current:boolean;result:string;contentCurrent:boolean;workCurrent:boolean}|null;pendingSubmissionCount:number;submissions:{id:string;state:string}[];savedSubmission?:{wire:string;command:ProductionSubmissionCommand}};
 type Response={outcome:string;case:Case|null;replayed?:boolean;leaseToken?:string;submissionId?:string};
@@ -80,7 +80,7 @@ beforeAll(async()=>{
  const preservedId=randomUUID();await pool.query("INSERT INTO theme_production.cases(id,owner_id,environment,origin,phase,status,progress,theme_id,theme_revision,execution_id,lease_token,lease_until) VALUES($1,$2,'production','https://plunode.net','production','working',$3,'theme',1,$4,$5,now()+interval '15 minutes')",[preservedId,owner,JSON.stringify(progress),randomUUID(),randomUUID()]);
  const preserved=(await pool.query('SELECT row_to_json(c)::jsonb AS value FROM theme_production.cases c WHERE id=$1',[preservedId])).rows[0].value;
 
- await migrateMemberDatabase(pool,...Array(35).fill(true));await migrateMemberDatabase(pool,...Array(35).fill(true));const migrated=(await pool.query('SELECT row_to_json(c)::jsonb AS value FROM theme_production.cases c WHERE id=$1',[preservedId])).rows[0].value;const {workflow,...unchanged}=migrated;expect(workflow).toBe('scheduled');expect(unchanged).toEqual(preserved);expect((await pool.query("SELECT name,checksum FROM member_migration WHERE name NOT IN('044-theme-production.sql','045-theme-publication.sql','046-theme-production-workflows.sql') ORDER BY name")).rows).toEqual(old);
+ await migrateMemberDatabase(pool,...Array(35).fill(true));await migrateMemberDatabase(pool,...Array(35).fill(true));const migrated=(await pool.query('SELECT row_to_json(c)::jsonb AS value FROM theme_production.cases c WHERE id=$1',[preservedId])).rows[0].value;const {workflow,abandon_reason,...unchanged}=migrated;expect(workflow).toBe('scheduled');expect(abandon_reason).toBeNull();expect(unchanged).toEqual(preserved);expect((await pool.query("SELECT name,checksum FROM member_migration WHERE name NOT IN('044-theme-production.sql','045-theme-publication.sql','046-theme-production-workflows.sql','049-theme-production-case-management.sql') ORDER BY name")).rows).toEqual(old);
 },30000);
 beforeEach(async()=>{
  failActivation=false;beforeActivation=null;lostAck=false;delay=null;await pool.query('TRUNCATE theme_production.cases,knowledge_missions.theme_registrations,knowledge_missions.web_deliveries,knowledge_missions.web_importers CASCADE');await pool.query('TRUNCATE knowledge_import.packages,member_knowledge.submissions,product_editorial_request,product_editorial_version CASCADE');
@@ -96,6 +96,70 @@ beforeEach(async()=>{
  cases=createThemeProductions(pool,{environment:'production',origin:'https://plunode.net',authorize:id=>registrations.authorize(id),...(()=>{const runtime=themeProductionRuntime(pool,knowledge,'https://plunode.net',registrations,translations);return {...runtime,publish:async(owner:string,id:string)=>{if(failActivation){failActivation=false;throw Error('Isolated activation interruption');}const callback=beforeActivation;beforeActivation=null;await callback?.();await runtime.publish(owner,id);}};})(),send:ordinarySend,afterDispatch:async()=>{if(lostAck){lostAck=false;throw Error('Response lost after normal intake commit');}}});
 },30000);
 afterAll(async()=>{await pool.end();await knowledge.end();vi.unstubAllEnvs();});
+
+it('discovers only owned cases for an exact theme, with paged history and a separate public edition',async()=>{
+ const released=await begin('review',true);
+ await complete(released);
+ const run=await begin('review',true,'manual');
+ await pool.query(`INSERT INTO theme_production.cases(id,owner_id,environment,origin,phase,status,progress,theme_id,theme_revision)
+  VALUES($1,$2,'production','https://plunode.net','review','completed',$3,'theme',1),
+        ($4,$5,'beta','https://graph-beta.isinxnisi.com','review','working',$3,'theme',1),
+        ($6,$5,'production','https://another.example','review','completed',$3,'theme',1)`,
+  [randomUUID(),other,progress,randomUUID(),owner,randomUUID()]);
+ const list={action:'list-theme-productions' as const,themeId:'theme',cursor:0};
+ const result=themeProductionListSchema.parse(await cases.execute(owner,list));
+ expect(result.items).toMatchObject([{id:run.caseId,workflow:'manual',phase:'review',publication:{publishedRevision:1,workingRevision:1}},{id:released.caseId,status:'completed'}]);
+ expect(result.items[0].lease).not.toHaveProperty('leaseToken');
+ expect(await cases.execute(owner,{...list,cursor:5})).toEqual({items:[],nextCursor:null});
+ expect((await execute({action:'get-theme-production',caseId:run.caseId,includeSettledSubmissions:true,operationCursor:0})).case).toMatchObject({
+  operationHistory:{items:expect.arrayContaining([expect.objectContaining({outcome:'claimed'})])},
+ });
+ expect((await execute({action:'get-theme-production'})).outcome).toBe('none');
+});
+
+it('ends a live case without publishing, preserving stored work and allowing a successor',async()=>{
+ await complete(await begin('review',true,'manual'));
+ const run=await begin('review',true);
+ const command={action:'abandon-theme-production',requestId:randomUUID(),caseId:run.caseId,expectedVersion:(await read(run.caseId)).version,reason:'Superseded by current public work'};
+ await expect(execute(command,other)).rejects.toMatchObject({code:'NOT_FOUND'});
+ await expect(execute(command)).rejects.toMatchObject({code:'PRODUCTION_BUSY'});
+ const prepared=await prepare(run,{action:'update-theme',requestId:randomUUID(),target:{id:'theme',revision:1},changes:{title:'Pending change'},reason:'Draft'});
+ await fenced(run,{action:'update-theme-production',operation:'release'});
+ command.expectedVersion=(await read(run.caseId)).version;
+ await expect(execute(command)).rejects.toMatchObject({code:'PRODUCTION_PUBLICATION_PENDING'});
+ const nextRun=await resume(run,'review');
+ await fenced(nextRun,{action:'update-theme-production',operation:'withdraw-submission',submissionId:prepared.submissionId,reason:'No longer needed'});
+ await fenced(nextRun,{action:'update-theme-production',operation:'release'});
+ await expect(execute(command)).rejects.toMatchObject({code:'PRODUCTION_VERSION_CONFLICT'});
+ command.expectedVersion=(await read(run.caseId)).version;
+ const ended=await execute(command);
+ expect(ended.case).toMatchObject({status:'abandoned',completed:false,lease:null,abandonReason:command.reason,progress,publication:{publishedRevision:1,workingRevision:1}});
+ expect(await execute(command)).toMatchObject({outcome:'abandoned',replayed:true});
+ await expect(execute({...command,reason:'Changed'})).rejects.toMatchObject({code:'REQUEST_CHANGED'});
+ expect(await execute({action:'claim-theme-production',caseId:run.caseId,executionId:randomUUID(),requestId:randomUUID(),phase:'review'})).toMatchObject({outcome:'found',case:{status:'abandoned'}});
+ expect((await execute({action:'get-theme-production'})).outcome).toBe('none');
+ expect((await begin('review',true)).caseId).not.toBe(run.caseId);
+ expect((await execute({action:'get-theme-production',caseId:run.caseId,includeSettledSubmissions:true})).case?.submissions).toMatchObject([{id:prepared.submissionId,state:'withdrawn'}]);
+});
+
+it('blocks closure while automation may be claimed or is unsettled',async()=>{
+ await migrateMemberDatabase(pool,...Array(36).fill(true));
+ const run=await begin('review',true,'manual');
+ const digest='f'.repeat(64),preview=randomUUID();
+ await pool.query("INSERT INTO theme_production.automation_requests(id,case_id,execution_id,kind,digest,input) VALUES($1,$2,$3,'preview',$4,'{}')",[preview,run.caseId,run.executionId,digest]);
+ await fenced(run,{action:'update-theme-production',operation:'release'});
+ const command={action:'abandon-theme-production',requestId:randomUUID(),caseId:run.caseId,expectedVersion:(await read(run.caseId)).version,reason:'Audit test'};
+ await expect(execute(command)).rejects.toMatchObject({code:'PRODUCTION_AUTOMATION_PENDING'});
+ await pool.query("UPDATE theme_production.automation_requests SET state='blocked',reason='PREVIEW_INTERRUPTED' WHERE id=$1",[preview]);
+ const worker=await pool.connect();
+ try{
+  await worker.query('BEGIN');
+  await worker.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['theme-automation:https://plunode.net']);
+  await expect(execute(command)).rejects.toMatchObject({code:'PRODUCTION_BUSY'});
+ }finally{await worker.query('ROLLBACK');worker.release();}
+ expect(await execute(command)).toMatchObject({outcome:'abandoned'});
+ expect((await pool.query('SELECT state FROM theme_production.automation_requests WHERE id=$1',[preview])).rows).toEqual([{state:'blocked'}]);
+});
 
 it('never creates a case from get/claim and admits only one concurrent execution and one active scheduled case',async()=>{
  expect(await execute({action:'get-theme-production'})).toMatchObject({outcome:'none',case:null});expect(await execute({action:'claim-theme-production',requestId:randomUUID(),phase:'review',executionId:randomUUID()})).toMatchObject({outcome:'none'});
@@ -524,7 +588,7 @@ it('reopens an interrupted review when ordinary publication advances after its c
 
  const interrupted=await complete(review);
  expect(interrupted.case).toMatchObject({completed:false,status:'needs-review'});
- const interruptedRead=await cases.execute(owner,themeProductionCommandSchema.parse({action:'get-theme-production',caseId:review.caseId}));
+ const interruptedRead=themeProductionResponseSchema.parse(await cases.execute(owner,themeProductionCommandSchema.parse({action:'get-theme-production',caseId:review.caseId})));
  expect(interruptedRead.case).toMatchObject({publication:{pending:true}});
  expect(interruptedRead.case?.publication).not.toHaveProperty('retryCommand');
  expect((await readEdition('published')).theme.content.title).toBe('Late public correction');
@@ -538,7 +602,7 @@ it('reopens an interrupted review when ordinary publication advances after its c
   reconcilePublished:published.edition!.published,changes:{title:'Late public correction'},reason:'訂正を保持して原稿を照合'});
  await send(nextReview,reconciled.submissionId!);await registrations.recoverOne();
  await assess(nextReview);
- const reassessed=await cases.execute(owner,themeProductionCommandSchema.parse({action:'get-theme-production',caseId:review.caseId}));
+ const reassessed=themeProductionResponseSchema.parse(await cases.execute(owner,themeProductionCommandSchema.parse({action:'get-theme-production',caseId:review.caseId})));
  expect(reassessed.case?.publication).not.toHaveProperty('retryCommand');
  expect((await fenced(nextReview,{action:'update-theme-production',operation:'complete'})).case?.completed).toBe(true);
  expect((await readEdition('published')).theme.content).toMatchObject({title:'Late public correction',description:'Private production prose'});

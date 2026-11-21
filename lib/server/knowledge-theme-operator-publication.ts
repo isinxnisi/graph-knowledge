@@ -51,7 +51,7 @@ export async function publishOrdinaryTheme(pool:Pool,knowledge:Pool,owner:string
   if(images.length&&(await m.query("SELECT id FROM product_image_asset WHERE id=ANY($1::text[]) AND role='illustration' FOR SHARE",[images])).rowCount!==images.length)throw new KnowledgeError('公開する挿絵を確認してください。',409,'THEME_IMAGE_INVALID');
   await freezeThemeReleases(k,theme.id);
   const hasActiveCase=published.revision!==null&&(await m.query(
-   "SELECT 1 FROM theme_production.cases WHERE theme_id=$1 AND status<>'completed' LIMIT 1",[theme.id])).rowCount===1;
+   "SELECT 1 FROM theme_production.cases WHERE theme_id=$1 AND status NOT IN ('completed','abandoned') LIMIT 1",[theme.id])).rowCount===1;
   const keepWorking=workingRevision!==theme.revision&&(hasActiveCase||workingChanges&&(published.revision!==null||workingRevision!==1));
   if(keepWorking){
    await k.query('UPDATE knowledge75.theme_publications SET production_conflict=$2 WHERE theme_id=$1',[theme.id,JSON.stringify(productionConflict??published)]);

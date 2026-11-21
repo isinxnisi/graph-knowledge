@@ -11,6 +11,21 @@ it('advertises the six private handoff operations with input/output schemas in t
  const guide=themeAuthoringGuide().productionHandoff;expect(Object.values(guide.operations)).toEqual(names);expect(guide.schemas.prepare.properties?.command).toBeTruthy();
  const response=await handler.fetch(rpc('tools/call',{name:'get_theme_production',arguments:{}})),body=await response.json();expect(body.result.isError).not.toBe(true);expect(body.result.structuredContent).toEqual({outcome:'none',case:null});expect(call).toHaveBeenCalledWith({action:'get-theme-production',submissionCursor:0});
 });
+it('advertises scoped case management and forwards only the resolved theme ID',async()=>{
+ const call=vi.fn().mockResolvedValue({items:[],nextCursor:null}),handler=createMissionMcpHandler(vi.fn(),{call});
+ const data=await(await handler.fetch(rpc('tools/list',{}))).json();
+ const list=data.result.tools.find((tool:{name:string})=>tool.name==='list_theme_productions');
+ const abandon=data.result.tools.find((tool:{name:string})=>tool.name==='abandon_theme_production');
+ expect(list.annotations.readOnlyHint).toBe(true);
+ expect(abandon.annotations.destructiveHint).toBe(true);
+ expect(list._meta.securitySchemes[0].scopes).toContain('themes:compose');
+ const body=await(await handler.fetch(rpc('tools/call',{name:'list_theme_productions',arguments:{themeId:'theme',cursor:5}}))).json();
+ expect(body.result.structuredContent).toEqual({items:[],nextCursor:null});
+ expect(call).toHaveBeenCalledWith({action:'list-theme-productions',themeId:'theme',cursor:5});
+ const blocked=await(await handler.fetch(rpc('tools/call',{name:'abandon_theme_production',arguments:{caseId:randomUUID(),requestId:randomUUID(),expectedVersion:4,reason:'  '}}))).json();
+ expect(blocked.error||blocked.result?.isError).toBeTruthy();
+ expect(call).toHaveBeenCalledTimes(1);
+});
 it('does not expose handoff to a collection-only server or bypass missing compose consent',async()=>{
  const plain=createMissionMcpHandler(vi.fn()),data=await(await plain.fetch(rpc('tools/list',{}))).json();expect(data.result.tools.some((t:{name:string})=>names.includes(t.name))).toBe(false);
  const call=vi.fn(),handler=createMissionMcpHandler(vi.fn(),{call,authChallenge:'Bearer scope="themes:compose"'}),body=await(await handler.fetch(rpc('tools/call',{name:'claim_theme_production',arguments:{requestId:randomUUID(),executionId:randomUUID(),phase:'review'}}))).json();expect(body.result.isError).toBe(true);expect(call).not.toHaveBeenCalled();

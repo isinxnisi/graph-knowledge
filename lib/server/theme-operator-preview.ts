@@ -34,6 +34,23 @@ export async function operatorThemePreview(id:string,locale:'ja'|'en',revision?:
 }
 export async function operatorThemeList(owner:string){
  const knowledge=await operatorThemePool(),rows=(await knowledge.query("SELECT o.id,o.current_revision,r.content->>'title' AS title,h.published_revision,(h.draft_updated_at>h.updated_at) AS working_changes FROM knowledge75.objects o JOIN knowledge75.revisions r ON r.kind=o.kind AND r.id=o.id AND r.revision=o.current_revision JOIN knowledge75.theme_publications h ON h.theme_id=o.id WHERE o.kind='theme' AND o.visibility='public' ORDER BY r.created_at DESC,o.id LIMIT 200")).rows;
- const cases=(await memberRuntime().pool.query('SELECT DISTINCT ON(theme_id) theme_id,phase,status,progress FROM theme_production.cases WHERE owner_id=$1 AND theme_id=ANY($2::text[]) ORDER BY theme_id,created_at DESC',[owner,rows.map(r=>r.id)])).rows;
- return rows.map(r=>{const work=cases.find(c=>c.theme_id===r.id),editing=!r.published_revision||r.working_changes||r.current_revision!==r.published_revision||work&&work.status!=='completed';return {...r,label:editing?(work?.phase==='review'?'見直し中':'制作中'):'公開済み',work};});
+ const {pool:member,config}=memberRuntime();
+ const environment=config.origin==='https://plunode.net'?'production':'beta';
+ const cases=(await member.query(
+  `SELECT DISTINCT ON(c.theme_id) c.id,c.theme_id,c.phase,c.status,c.progress,intent.id AS intent_id
+   FROM theme_production.cases c
+   LEFT JOIN LATERAL (SELECT id FROM theme_production.publication_intents WHERE case_id=c.id ORDER BY created_at DESC LIMIT 1) intent ON true
+   WHERE c.owner_id=$1 AND c.environment=$2 AND c.origin=$3 AND c.theme_id=ANY($4::text[])
+   ORDER BY c.theme_id,(c.status NOT IN ('completed','abandoned')) DESC,c.created_at DESC,c.id DESC`,
+  [owner,environment,config.origin,rows.map(r=>r.id)])).rows;
+ const intents=cases.filter(c=>c.status==='completed'&&c.intent_id).map(c=>c.intent_id);
+ const approvals=new Set(intents.length?(await knowledge.query(
+  'SELECT release_id FROM knowledge75.theme_release_approvals WHERE release_id=ANY($1::text[])',[intents])).rows.map(r=>r.release_id):[]);
+ return rows.map(row=>{
+  const work=cases.find(c=>c.theme_id===row.id);
+  const active=work&&work.status!=='abandoned'&&(work.status!=='completed'||!approvals.has(work.intent_id));
+  const editing=active||!row.published_revision||row.working_changes||row.current_revision!==row.published_revision;
+  const state=work?.status==='abandoned'?'inactive':active&&work.phase==='review'?'review':editing?'production':'published';
+  return {...row,state,work};
+ });
 }

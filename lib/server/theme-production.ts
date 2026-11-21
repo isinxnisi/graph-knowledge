@@ -10,6 +10,7 @@ import {themeProductionCommandSchema,productionSubmissionCommandSchema,type Them
 import {KnowledgeError,knowledgeDigest} from './knowledge-foundation';
 import {withThemeProductionSubmission,assertThemeProductionLease} from './theme-production-fence';
 
+type CaseSelection=Partial<Pick<Extract<ThemeProductionCommand,{action:'get-theme-production'}>,'submissionId'|'submissionCursor'|'includeSettledSubmissions'|'operationCursor'>>;
 type Target={theme:{id:string;revision:number};digest:string;guide:{id:string;revision:number};references:unknown;publicationConflict?:unknown};
 type Observed={state:'accepted'|'pending'|'applied'|'failed';result:unknown;theme?:{id:string;revision:number}};
 type Dependencies={environment:'beta'|'production';origin:string;authorize:(owner:string)=>Promise<void>;target:(id:string,owner:string,revision?:number)=>Promise<Target>;send:(owner:string,command:ProductionSubmissionCommand)=>Promise<unknown>;observe:(owner:string,command:ProductionSubmissionCommand)=>Promise<Observed|null>;publish:(owner:string,intentId:string)=>Promise<void>;publication:(id:string,intentId?:string)=>Promise<{state:string;publishedRevision:number|null;workingRevision:number;releaseId:string|null;workingChanges:boolean;approvalPresent:boolean}>;automationTarget?:(id:string,owner:string)=>Promise<AutomationTarget>;afterDispatch?:()=>Promise<void>};
@@ -18,7 +19,7 @@ const lockKey=(id:string)=>'theme-production:'+id;
 const terminal=(state:string)=>['applied','failed','withdrawn'].includes(state);
 function json(value:unknown){return JSON.parse(JSON.stringify(value));}
 export async function ensureThemeProduction(pool:Pool){
- for(const name of ['044-theme-production.sql','045-theme-publication.sql','046-theme-production-workflows.sql']){const checksum=createHash('sha256').update(await readFile(path.join(process.cwd(),'db/member',name))).digest('hex');
+ for(const name of ['044-theme-production.sql','045-theme-publication.sql','046-theme-production-workflows.sql','049-theme-production-case-management.sql']){const checksum=createHash('sha256').update(await readFile(path.join(process.cwd(),'db/member',name))).digest('hex');
  if((await pool.query('SELECT checksum FROM member_migration WHERE name=$1',[name])).rows[0]?.checksum!==checksum)throw failure('制作案件の明示migrationが必要です。','MIGRATION_REQUIRED',503);}
 }
 /** A private current checkpoint, not a scheduler, collection plan or model runner. */
@@ -29,10 +30,10 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
   if(!r)throw failure('制作案件がありません。','NOT_FOUND',404);return r;
  }
  async function availableTheme(c:PoolClient,owner:string,id:string,except?:string){
-  if((await c.query("SELECT id FROM theme_production.cases WHERE owner_id=$1 AND environment=$2 AND origin=$3 AND theme_id=$4 AND status<>'completed' AND ($5::uuid IS NULL OR id<>$5)",[owner,deps.environment,deps.origin,id,except??null])).rowCount)throw failure('同じテーマの未完了案件があります。その案件IDを指定して再開してください。','PRODUCTION_THEME_ACTIVE');
+  if((await c.query("SELECT id FROM theme_production.cases WHERE owner_id=$1 AND environment=$2 AND origin=$3 AND theme_id=$4 AND status NOT IN ('completed','abandoned') AND ($5::uuid IS NULL OR id<>$5)",[owner,deps.environment,deps.origin,id,except??null])).rowCount)throw failure('同じテーマの未完了案件があります。その案件IDを指定して再開してください。','PRODUCTION_THEME_ACTIVE');
  }
  async function current(c:Pool|PoolClient,owner:string){
-  return (await c.query("SELECT id FROM theme_production.cases WHERE owner_id=$1 AND environment=$2 AND origin=$3 AND workflow='scheduled' ORDER BY (status<>'completed') DESC,created_at DESC LIMIT 1",[owner,deps.environment,deps.origin])).rows[0]?.id as string|undefined;
+  return (await c.query("SELECT id FROM theme_production.cases WHERE owner_id=$1 AND environment=$2 AND origin=$3 AND workflow='scheduled' AND status<>'abandoned' ORDER BY (status<>'completed') DESC,created_at DESC LIMIT 1",[owner,deps.environment,deps.origin])).rows[0]?.id as string|undefined;
  }
  async function submissions(c:Pool|PoolClient,r:QueryResultRow){
   const list=(await c.query('SELECT * FROM theme_production.submissions WHERE case_id=$1 ORDER BY created_at,id',[r.id])).rows;
@@ -53,7 +54,7 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
   const assessment=r.assessment,workCurrent=!!assessment&&assessment.workDigest===workDigest,contentCurrent=!!assessment&&!!target&&assessment.targetDigest===target.digest,guideCurrent=!!assessment&&!!target&&assessment.guideRevision===target.guide.revision;
   return {target,assessment:assessment?{...assessment,contentCurrent,guideCurrent,workCurrent,current:contentCurrent&&guideCurrent&&workCurrent}:null,unavailable};
  }
- async function view(owner:string,id:string,selection?:{submissionId?:string;submissionCursor?:number}){
+ async function view(owner:string,id:string,selection?:CaseSelection){
   const r=await row(pool,owner,id),list=await submissions(pool,r),ev=await evaluation(r,list),cursor=selection?.submissionCursor??0;
   const selected=selection?.submissionId?list.find(s=>s.id===selection.submissionId):null;
   if(selection?.submissionId&&!selected)throw failure('保存済み送信がありません。','NOT_FOUND',404);
@@ -69,13 +70,43 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
   const complete=r.status==='completed'&&ev.assessment?.result==='pass'&&publication?.approvalPresent===true;
   const summary=(s:QueryResultRow)=>({id:s.id,requestId:s.command_request_id,action:s.command_action,digest:s.digest,state:s.state,reason:s.reason,dispatches:s.dispatches});
   const currentWork=list.filter(s=>!terminal(s.state)||s.state==='failed');
+  const displayed=selection?.includeSettledSubmissions?list:currentWork;
+  const offset=selection?.operationCursor;
+  const operations=offset===undefined?null:(await pool.query(
+   `SELECT request_id AS "requestId",result->>'outcome' AS outcome,created_at AS at
+    FROM theme_production.operations WHERE case_id=$1 AND owner_id=$2
+    ORDER BY created_at DESC,request_id DESC LIMIT 21 OFFSET $3`,[id,owner,offset])).rows;
   return json({id:r.id,ownerId:owner,workflow:r.workflow,environment:r.environment,origin:r.origin,version:r.version,phase:r.phase,status:r.status==='completed'&&!complete?(retryCommand?'waiting-publication':'needs-review'):r.status,
    progress:r.progress,theme:ev.target?.theme??(r.theme_id?{id:r.theme_id,revision:r.theme_revision}:null),lease:r.execution_id?{executionId:r.execution_id,until:r.lease_until,valid:r.lease_live===true}:null,
    publication:publication?{...publication,pending:publicationPending,...(retryCommand?{retryCommand}:{})}:null,evaluationTarget:ev.target,lastWholeThemeAssessment:ev.assessment,evaluationUnavailable:ev.unavailable,completed:complete,
-   submissions:currentWork.slice(cursor,cursor+20).map(summary),nextSubmissionCursor:currentWork.length>cursor+20?cursor+20:null,completedSubmissionCount:list.length-currentWork.length,pendingSubmissionCount:list.filter(s=>!terminal(s.state)).length,
-   ...(selected?{savedSubmission:{...summary(selected),result:selected.result,encoding:'json',wire:selected.command_wire,command:JSON.parse(selected.command_wire)}}:{}),updatedAt:r.updated_at});
+   submissions:displayed.slice(cursor,cursor+20).map(summary),nextSubmissionCursor:displayed.length>cursor+20?cursor+20:null,completedSubmissionCount:list.length-currentWork.length,pendingSubmissionCount:list.filter(s=>!terminal(s.state)).length,
+   ...(selected?{savedSubmission:{...summary(selected),result:selected.result,encoding:'json',wire:selected.command_wire,command:JSON.parse(selected.command_wire)}}:{}),updatedAt:r.updated_at,...(r.abandon_reason?{abandonReason:r.abandon_reason}:{}),
+   ...(operations&&offset!==undefined?{createdAt:r.created_at,operationHistory:{items:operations.slice(0,20),nextCursor:operations.length>20?offset+20:null}}:{})});
  }
- async function response(owner:string,result:Record<string,unknown>,selection?:{submissionId?:string;submissionCursor?:number}){
+ async function listCases(owner:string,command:Extract<ThemeProductionCommand,{action:'list-theme-productions'}>){
+  const pageSize=5;
+  const rows=(await pool.query(
+   `SELECT id,created_at FROM theme_production.cases WHERE owner_id=$1 AND environment=$2 AND origin=$3 AND theme_id=$4
+    ORDER BY created_at DESC,id DESC LIMIT $5 OFFSET $6`,
+   [owner,deps.environment,deps.origin,command.themeId,pageSize+1,command.cursor])).rows;
+  const items=[];
+  for(const {id,created_at} of rows.slice(0,pageSize)){
+   const current=await view(owner,id);
+   const {workflow,phase,status,version,theme,lease,updatedAt,pendingSubmissionCount,abandonReason,lastWholeThemeAssessment}=current;
+   const {unfinished,blockers}=current.progress;
+   // Saved commands and execution credentials are accessible only through their existing, explicit tools.
+   const publication=current.publication?{
+    state:current.publication.state,publishedRevision:current.publication.publishedRevision,workingRevision:current.publication.workingRevision,
+    releaseId:current.publication.releaseId,workingChanges:current.publication.workingChanges,approvalPresent:current.publication.approvalPresent,pending:current.publication.pending,
+   }:null;
+   const assessment=lastWholeThemeAssessment?{
+    result:lastWholeThemeAssessment.result,current:lastWholeThemeAssessment.current,evaluatedAt:lastWholeThemeAssessment.evaluatedAt,
+   }:null;
+   items.push({id,workflow,phase,status,version,theme,lease,createdAt:new Date(created_at).toISOString(),updatedAt,pendingSubmissionCount,abandonReason,unfinished,blockers,publication,assessment});
+  }
+  return {items,nextCursor:rows.length>pageSize?command.cursor+pageSize:null};
+ }
+ async function response(owner:string,result:Record<string,unknown>,selection?:CaseSelection){
   const id=result.caseId as string|undefined;const resultCase=id?await view(owner,id,selection):null;const value:Record<string,unknown>={...result,case:resultCase};delete value.caseId;
   if(value.leaseToken){const lease=await row(pool,owner,id!);if(lease.lease_live!==true||lease.execution_id!==result.executionId||lease.lease_token!==value.leaseToken){delete value.leaseToken;if(value.outcome==='claimed')value.outcome='found';}}
   delete value.executionId;return value;
@@ -96,7 +127,7 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
  }
  function fence(r:QueryResultRow,v:ProductionFence){
   if(r.version!==v.expectedVersion)throw failure('進捗が更新されました。現在の状態版を読み直してください。','PRODUCTION_VERSION_CONFLICT');
-  if(r.status==='completed'||r.execution_id!==v.executionId||r.lease_token!==v.leaseToken||r.lease_live!==true)throw failure('実行権が失効しています。','PRODUCTION_LEASE_EXPIRED');
+  if(['completed','abandoned'].includes(r.status)||r.execution_id!==v.executionId||r.lease_token!==v.leaseToken||r.lease_live!==true)throw failure('実行権が失効しています。','PRODUCTION_LEASE_EXPIRED');
  }
  async function increment(c:PoolClient,id:string){await c.query('UPDATE theme_production.cases SET version=version+1,updated_at=clock_timestamp() WHERE id=$1',[id]);}
  async function scope(c:PoolClient,r:QueryResultRow,cmd:ProductionSubmissionCommand,list:QueryResultRow[]){
@@ -129,6 +160,7 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
   const id=command.caseId??await current(pool,owner);if(!id)return {outcome:'none',case:null};
   try{return response(owner,await tx(owner,id,async c=>{
    const old=await previous(c,owner,command);if(old)return old;const r=await row(c,owner,id);
+   if(r.status==='abandoned')return {outcome:'found',caseId:id};
    if(r.status==='completed'){
     const v=await view(owner,id);if(v.completed||v.status==='waiting-publication')return {outcome:'found',caseId:id};
     if(command.phase!=='review')return {outcome:'phase-mismatch',caseId:id};
@@ -179,6 +211,30 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
   if(command.operation==='complete'){try{await deps.publish(owner,command.requestId);}catch(e){return {...await response(owner,result),publicationError:{code:e instanceof KnowledgeError?e.code:'PUBLICATION_UNAVAILABLE',message:e instanceof KnowledgeError?e.message:'公開切替を完了できませんでした。未承認版は非公開のままです。同一完了要求を再送してください。'}};}}
   return response(owner,result);
  }
+ async function abandon(owner:string,command:Extract<ThemeProductionCommand,{action:'abandon-theme-production'}>){
+  const result=await tx(owner,command.caseId,async c=>{
+   const current=await row(c,owner,command.caseId);
+   const old=await previous(c,owner,command);if(old)return old;
+   if(current.version!==command.expectedVersion)throw failure('進捗が更新されました。現在の状態版を読み直してください。','PRODUCTION_VERSION_CONFLICT');
+   if(['completed','abandoned'].includes(current.status))throw failure('既に終端へ進んだ案件です。公開切替待ちの場合は既存の公開復旧手順を使ってください。','PRODUCTION_CASE_TERMINAL');
+   const intent=(await c.query('SELECT id,theme_id FROM theme_production.publication_intents WHERE case_id=$1 ORDER BY created_at DESC LIMIT 1',[current.id])).rows[0];
+   if(intent&&!(await deps.publication(intent.theme_id,intent.id)).approvalPresent)throw failure('公開切替の結果を確定してから終了してください。','PRODUCTION_PUBLICATION_PENDING');
+   if(current.lease_live)throw failure('別の実行が使用中です。実行権解放後に案件を確認してください。','PRODUCTION_BUSY');
+   if((await submissions(c,current)).some(item=>!terminal(item.state)))throw failure('未決の登録受付を確定してから終了してください。','PRODUCTION_PUBLICATION_PENDING');
+   if((await c.query("SELECT to_regclass('theme_production.automation_requests') AS present")).rows[0].present){
+    // Serialize with the Worker before checking whether a queued request can be claimed.
+    if(!(await c.query('SELECT pg_try_advisory_xact_lock(hashtextextended($1,0)) AS held',['theme-automation:'+deps.origin])).rows[0].held)throw failure('画像または画面採取の受付を確認中です。','PRODUCTION_BUSY');
+    const pending=(await c.query(`SELECT 1 FROM theme_production.automation_requests
+     WHERE case_id=$1 AND (state IN ('queued','running','generated','storing') OR reason='IMAGE_GENERATION_UNKNOWN') LIMIT 1`,[current.id])).rowCount;
+    if(pending)throw failure('画像生成または画面採取の結果を確定してから終了してください。','PRODUCTION_AUTOMATION_PENDING');
+   }
+   await deps.authorize(owner);
+   await c.query("UPDATE theme_production.cases SET status='abandoned',abandon_reason=$2,execution_id=NULL,lease_token=NULL,lease_until=NULL WHERE id=$1",[current.id,command.reason]);
+   await increment(c,current.id);
+   return record(c,owner,command,{outcome:'abandoned',caseId:current.id});
+  });
+  return response(owner,result);
+ }
  async function prepare(owner:string,command:Extract<ThemeProductionCommand,{action:'prepare-theme-production-submission'}>){
   const result=await tx(owner,command.caseId,async c=>{
    const old=await previous(c,owner,command);if(old)return old;const r=await row(c,owner,command.caseId);fence(r,command);const list=await submissions(c,r);
@@ -223,6 +279,8 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
    const id=command.caseId??await current(pool,owner);if(!id)return {outcome:'none',case:null};
    const result=await view(owner,id,command);if(!command.caseId&&result.completed)return {outcome:'none',case:null};return {outcome:'found',case:result};
   }
+  if(command.action==='list-theme-productions')return listCases(owner,command);
+  if(command.action==='abandon-theme-production')return abandon(owner,command);
   if(command.action==='create-theme-production')return create(owner,command);
   if(command.action==='claim-theme-production')return claim(owner,command);
   if(command.action==='update-theme-production')return update(owner,command);

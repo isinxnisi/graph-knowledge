@@ -84,7 +84,7 @@ export async function previewGrant(pool:Pool,origin:string,headers:Headers){
     JOIN theme_production.automation_requests a ON a.id=g.request_id AND a.attempt_id=g.attempt_id
     JOIN theme_production.cases c ON c.id=a.case_id JOIN "user" u ON u.id=c.owner_id
     WHERE g.token_hash=$1 AND g.expires_at>clock_timestamp() AND a.lease_until>clock_timestamp()
-    AND a.kind='preview' AND a.state='running' AND c.phase='review' AND c.status<>'completed'
+    AND a.kind='preview' AND a.state='running' AND c.phase='review' AND c.status NOT IN ('completed','abandoned')
     AND u.active AND c.origin=$2`,[key,origin])).rows[0];
   if(!r||!isSiteOperator(r.owner_id)||!timingSafeEqual(Buffer.from(key),Buffer.from(r.token_hash)))throw missing();
   return automationTargetSchema.parse(r.target);
