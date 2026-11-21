@@ -36,3 +36,12 @@
   ```
 
 - 同期後にWindowsとWSLの時刻差を再計測し、既存β Appで接続確認とガイド・案件の連続読み取りを実施する。保存済みの接続で未承認が続く場合はβ Appだけを一度認証し、トークン交換とツール呼び出しの結果を照合する。現在版と一致する非公開のPNG証拠8枚を確認済みで、見直し実行権は空いている。接続回復後、テスト予定から画像の視認と独立評価を再開する。 [β検証の引継ぎ](THEME_AUTOMATION.md)
+
+## 2026-11-21 時刻同期後の再発とβの修正
+
+- 管理者による09:36、09:40 JSTのWindows時刻同期は成功した。約10分後もWindowsとWSLは外部時刻より約0.69秒遅れていた。WSLの時計を一度だけ約0.67秒進め、直後は約1 msまで戻ったが、ほどなく約0.66秒の遅れが再発した。Windowsの時刻補正は設定された閾値内で徐々に進む。Windowsレジストリ・時刻サービス設定の変更は行わなかった。[Windows時刻サービスの補正仕様](https://learn.microsoft.com/windows-server/networking/windows-time-service/windows-time-service-tools-and-settings?tabs=config)
+- `cloudflared-resale-research` と `cloudflared-resale-research-replica` が同じ共有トンネルに接続していた。対象区間の切断・β origin到達失敗は両方で0件。3200とHTTPS βで同じWeb build・OAuth issuer・resource metadata・公開JWKSを確認した。匿名MCPの初期化・ツール一覧・ツール呼び出しは、いずれもHTTP 401と認証用challengeで応答した。
+- 秘匿診断を反映後、実接続の認可コード交換は10:00:11 JSTに200、その直後のrefreshは10:00:13に401。10:02にも認可コードと一部refreshが200になった後、refreshの401が再発した。2回の401はissuer・subject・audienceが正規と一致し、expiryが有効で、応答時点でも `nbf` が未来だった。隔離DBでも同じ署名済みJWTが `nbf` の前は401、到達後は200になった。接続済みAppが `Unauthorized` を返しβ入口に記録が増えないケースもあり、その応答はサーバー上のツール実行と区別する。
+- 10:08 JSTにβへソース `250dc470`、build `4JpkEG3jRrLNTeHXjsUmD` を反映。正規のChatGPTクライアント・対象のgrant・audienceで、JWTの `nbf` が最大2秒先の場合だけ検証開始を待つ。元のリクエストを1回だけ既存のBetter Auth検証器に渡す。応答の相関IDとHTTP状態、時刻判定のみを記録し、トークン・認可コード・署名・Cookieは記録しない。
+- 対象7 suiteの38件、ESLint、型検査、β buildが成功。隔離DBでrefresh rotation、待機した更新からのMCP初期化・連続一覧取得、別audience拒否を確認した。隔離の追加確認では、既存Better AuthのUUID ID設定でクライアントJWTの再利用を拒否できない事例も確認した。今回の待機修正と別の認証課題として、正式に導入する前にライブラリ側のID処理と再利用防止を確認する。
+- 実生成済み画像を保持する非公開の手動検証案件 `e61171da-bdec-486c-abd7-9c5ad4532052` で、同buildのPC 1440px・スマートフォン390pxの全8 PNGを再採取した。証拠受付は `a284ce31-648f-4923-a911-ddd6a7fa5bf3`。ハッシュ照合と匿名404を確認した。ChatGPT Webで修正後の認証済み連続読み取りが通れば、別テスト予定で新規の見直し実行権を取得し、同じ実行で8 PNGを視認して全体評価を行う。正式環境・本番予定・そのプロンプトは今回の変更対象外。 [βテスト予定の手順](THEME_AUTOMATION.md#2026-11-21-実生成とweb予定の統合検証)
