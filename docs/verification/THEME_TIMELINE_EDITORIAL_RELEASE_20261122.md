@@ -24,3 +24,14 @@
 - 退避先は `/opt/graph-knowledge/backups/release-3f388eb5cd31-8b39ca8bdf6c80ef`。旧Composeと切替状態を保存し、旧イメージの参照と存在を切替前に確認した。
 - 切替中断時は退避先の `state.json` とroot専用の切替ログを確認する。新Web起動前の切替工程では共通手順による旧サービス復旧を使う。新Web起動後は新しい契約の書き込みを受け付け得るため、同じseal `8b39ca8bdf6c80ef13f4d108588d4dd39763ab9ca18e9c88e41b823ceb0c9a55` の資材を再適用して前進復旧する。詳細は[共通本番公開手順](../runbooks/PRODUCTION_RELEASE.md#失敗中断時)を参照する。
 - ルート66の年表編集と独立見直しはChatGPT側の工程。正式反映の確認は本番Appと公開ページの読取で実施し、案件・定期実行設定・品質ガイドへの書込みは行っていない。
+
+## 年表の記録画像を正式反映
+
+2026-11-22 JST。年表と記録詳細に画像を表示する登録契約、枠線なしの7px角丸と左端の余白、画像から記録詳細を開く操作を、固定コミット `9a39541981e4f6f3679fc1a003c7aabe9dda8fa0` で正式反映した。β build は `R5l9_1ewj1cGlIWdNOJ8x`、正式 build は `t5qLsCpLkl9FGwOFmON7Q`。年表で画像または見出しを押すと詳細を開く。詳細の画像から拡大できる。 [年表の記録画像の登録契約](../design/KNOWLEDGE_CHATGPT_THEME_REGISTRATION.md#年表の記録画像)
+
+- Web、`knowledge-publisher`、`knowledge-review`、`knowledge-patrol`、`theme-automation` の稼働版をそろえた。正式の会員50・知識13の台帳と環境設定を照合し、追加migrationは0件。画像生成APIの既存上限はUTCで1日30送信、1送信1枚。切替時の公開世代は `k75-004cf68ab4f101c81e41ba24f1c522e9`。
+- 正式HTTPSのTOP・検索・互換性APIと、認証済みの `get_theme_authoring_guide` を確認した。作成・更新の `presentation[].records[].imageId` と制作受付の `generatedImage.target` を読み戻した。認証済み `read_theme` ではルート66第13版とWebb第34版の固定版、年表設定、スナップショット、表示情報が切替前と一致した。
+- 既存公開テーマ2件の日英・1440px／390pxの計8条件で、年表の行数・表紙・詳細の出典を切替前後で照合した。初回の切替後検査では表示直後のクリックで詳細を拾えなかったため、選択状態の反映を待つ検査で8条件を再確認した。画像の登録から年表・詳細・拡大までの通し確認はβの非公開テーマで実施した。
+- Codexで確認できる接続済み本番Appのツール定義は、切替後も `prepare_theme_production_submission.generatedImage` に `target` を含まなかった。記録への指定は既存の `command` 内の `presentation[].records[].imageId` でも行える。生成結果を `generatedImage.target` で直接指定する場合は、ChatGPT WebでAppのツール定義を更新し、同フィールドを読み戻してから使用する。定期実行設定と品質ガイドへの書込みは行っていない。
+
+退避先は `/opt/graph-knowledge/backups/release-9a39541981e4-6b2ac9f477eab4d4`。退避したCompose・旧イメージ・`state.json` を復旧判断に使う。新Web起動後は新しい画像の紐付け契約を受け付けるため、同じseal `6b2ac9f477eab4d43fada2d53416ff23391462cff77efd182a63049043aee609` の資材で前進復旧する。 [共通本番公開手順](../runbooks/PRODUCTION_RELEASE.md#失敗中断時)

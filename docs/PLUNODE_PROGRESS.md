@@ -1,3 +1,5 @@
+2026-11-22 年表の記録画像登録・角丸表示・詳細への遷移を正式反映。Web／4 Worker・認証済みAPI・既存公開画面を確認。アプリ `9a395419`、β build `R5l9_1ewj1cGlIWdNOJ8x`、正式 build `t5qLsCpLkl9FGwOFmON7Q`。ChatGPT WebのApp定義更新は `generatedImage.target` を使う段階で確認する。 [切替・検証・復旧の記録](verification/THEME_TIMELINE_EDITORIAL_RELEASE_20261122.md#年表の記録画像を正式反映)
+
 2026-11-22 年表画像を枠線なしの7px角丸に調整。3200／HTTPS βで日英・PC／スマートフォンの角丸と、左端の位置・詳細への遷移を確認。β build `R5l9_1ewj1cGlIWdNOJ8x`。本番反映は別工程。
 
 2026-11-22 年表のサムネイル左端を見出しにそろえ、画像でも記録の詳細を開くよう変更。3200／HTTPS βで日英・PC／スマートフォンの位置、詳細からの拡大、出典と自動画面採取を確認。β build `gZLGzIzh8498Y20ah2_6c`。本番反映は別工程。
