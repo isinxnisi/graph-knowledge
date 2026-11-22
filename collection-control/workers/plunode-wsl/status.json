@@ -26,30 +26,27 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-22T07:17:38.436719+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-22T06:22:44.698620+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-22T07:17:38.436719+00:00",
+    "eligibleAt": "2026-11-22T06:22:44.698620+00:00",
     "windowEndAt": "2026-11-22T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1-batch-07",
-    "startedAt": "2026-11-22T06:12:38.436726+00:00",
-    "limitAt": "2026-11-22T07:07:38.436719+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-49-dot-hara-souten-20261027-batch-01",
-    "endedAt": "2026-11-21T18:00:38.491561+00:00"
+    "requestId": "issue-25-manga23-20261019-repair1-batch-07",
+    "endedAt": "2026-11-22T06:12:44.698623+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
-    "blocked": 12,
-    "waiting-lock": 3,
+    "blocked": 13,
+    "waiting-control": 1,
     "completed": 41,
-    "awaiting-recovery": 6
+    "awaiting-recovery": 6,
+    "waiting-lock": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -161,7 +158,7 @@
   "recoveryRequests": {
     "issue-25-utc-recovery-01": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-03",
-      "phase": "waiting-lock"
+      "phase": "waiting-control"
     },
     "issue-25-utc-recovery-02": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-01",
@@ -196,5 +193,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-22T06:12:40.216344+00:00"
+  "checkedAt": "2026-11-22T06:13:24.145154+00:00"
 }
