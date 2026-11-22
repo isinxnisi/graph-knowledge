@@ -1,3 +1,5 @@
+2026-11-23 Issue #78 の管理用ガイド空応答をβで修正。版・必須本文・5節・履歴と、更新済みβ Appの新規通常Chatで本文ページの終端まで確認。Web build `QxQxq_0J_KQh_6LMoCO54`、回帰58件。 [切り分け・検証記録](verification/THEME_WORK_GUIDES_BETA_20261123.md#追補--issue-78-の管理用読み取り)
+
 2026-11-23 動的作業ガイドのβ実装・技術検証まで完了。Web／画面採取Workerと会員050を反映し、56件と非公開案件の受付再開・PNG取得・要修正の保存を確認。ChatGPT Webでの新ツール実利用と複数起動の比較が残る。 [β実測と比較手順](verification/THEME_WORK_GUIDES_BETA_20261123.md)
 
 2026-11-23 記録詳細の画像レイアウトを正式反映し、日英のPC・スマートフォンで中央表示・拡大を確認。Webのみ更新。アプリ `4e9ea9da`、β build `2YhIu7BZkqtjP0ynP-x_L`、正式 build `wq3tH5qGxsQwA53htv1em`。黒澤の確認用画像はβのみ。 [切替・検証・復旧の記録](verification/THEME_TIMELINE_EDITORIAL_RELEASE_20261122.md#記録詳細の画像レイアウトを正式反映)

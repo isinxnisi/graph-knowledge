@@ -786,6 +786,7 @@ it('serves mandatory review guidance regardless of focus and shares legacy CAS, 
  const origin='https://plunode.net';
  for(const focuses of [[],['images'],['unrecognized']]){
   const guide=await guides.readWork(owner,origin,{phase:'review',caseId:run.caseId,focuses,knownVersions:{principles:saved.revision,'whole-theme-review':saved.revision,images:saved.revision}});
+  if(!('sections' in guide))throw Error('Work response expected');
   expect(guide.required).toEqual(initialWorkGuide.required);
   expect(guide.safety.join()).toContain('現行lease');
   if(focuses.includes('images'))expect(guide.sections).toContainEqual({key:'images',revision:saved.revision});
@@ -800,7 +801,9 @@ it('serves mandatory review guidance regardless of focus and shares legacy CAS, 
  expect(restored).toMatchObject({markdown:saved.markdown,restoredFrom:saved.revision,versions:{criteriaRevision:restored.revision,evidenceRevision:restored.revision}});
  expect((await guides.read(owner)).markdown).toBe(restored.markdown);
  const history=await guides.readWork(owner,origin,{phase:'review',focuses:[],revision:saved.revision,historyBefore:restored.revision,management:true});
- expect(history).toMatchObject({content:initialWorkGuide,currentRevision:restored.revision,history:[{revision:fallback.revision},{revision:saved.revision},...history.history!.slice(2)]});
+ expect(history).toMatchObject({content:initialWorkGuide,currentRevision:restored.revision});
+ if(!('history' in history))throw Error('Management response expected');
+ expect(history.history.slice(0,2)).toMatchObject([{revision:fallback.revision},{revision:saved.revision}]);
 });
 
 it('fences a scheduled dynamic assessment and activation across assistance, mandatory and evidence edits',async()=>{
@@ -850,8 +853,8 @@ it('fences a scheduled dynamic assessment and activation across assistance, mand
   expect((await read(run.caseId)).lastWholeThemeAssessment?.current).toBe(true);
   await expect(capture(review,evidenceId)).resolves.toMatchObject({automationId:evidenceId,replayed:true});
   const profile=await guides.readWork(owner,'https://plunode.net',{phase:'review',caseId:run.caseId,focuses:['review'],profile:'test-model'});
-  expect(profile.assistance).toHaveLength(1);
-  expect((await guides.readWork(owner,'https://plunode.net',{phase:'review',focuses:['review']})).assistance).toEqual([]);
+  expect(profile).toMatchObject({assistance:[{key:'assistance-observed-model'}]});
+  await expect(guides.readWork(owner,'https://plunode.net',{phase:'review',focuses:['review']})).resolves.toMatchObject({assistance:[]});
   const original=content.required.principles;
   content.required.principles='Read the revised criteria.';
   content.sections[0].markdown=original;
@@ -887,3 +890,46 @@ it('fences a scheduled dynamic assessment and activation across assistance, mand
   expect((await execute({action:'get-theme-production'})).outcome).toBe('none');
  }finally{if(previous===undefined)delete process.env.THEME_AUTOMATION_ENABLED;else process.env.THEME_AUTOMATION_ENABLED=previous;}
 },45_000);
+
+it('bounds management responses and reads long guide bodies from a pinned historical revision',async()=>{
+ const guides=createThemeQualityGuides(pool),origin='https://plunode.net';
+ const before=await guides.read(owner);
+ const content=structuredClone(initialWorkGuide);
+ const body='見出しと引用「本文」😀\n"'.repeat(1400);
+ content.sections[0].markdown=body;
+ const saved=await guides.updateWork(owner,{expectedRevision:before.revision,requestId:randomUUID(),reason:'Long body fixture',changes:content});
+ const read=(input:Partial<Parameters<typeof guides.readWork>[2]>={})=>guides.readWork(owner,origin,{phase:'review',focuses:[],management:true,...input});
+ const index=await read({focuses:['unknown-focus']});
+ expect(index).toMatchObject({versions:{revision:saved.revision},content:{required:content.required,sections:[
+  {key:'timeline-and-sources',bodyKey:'timeline-and-sources'},...content.sections.slice(1).map(section=>({key:section.key})),
+  ]},unknownFocuses:['unknown-focus']});
+ if(!('history' in index))throw Error('Management response expected');
+ expect(index.history[0]).toMatchObject({revision:saved.revision});
+ expect(Buffer.byteLength(JSON.stringify(index))).toBeLessThan(14000);
+ const first=await read({revision:saved.revision,managementBody:{key:'timeline-and-sources',offset:0}});
+ const current=await guides.update(owner,{expectedRevision:saved.revision,requestId:randomUUID(),reason:'Legacy full-text fixture',markdown:body});
+ await expect(read()).resolves.toMatchObject({legacyBodyKey:'legacy'});
+ const collect=async(revision:number,key:string)=>{
+  let offset:number|null=0,text='';
+  do{
+   const page=await read({revision,managementBody:{key,offset}});
+   expect(page.versions.revision).toBe(revision);
+   if(!('body' in page))throw Error('Body page expected');
+   expect(page.body.offset).toBe(offset);
+   text+=page.body.text;
+   offset=page.body.nextOffset;
+  }while(offset!==null);
+  return text;
+ };
+ if(!('body' in first))throw Error('Body page expected');
+ expect(first.body.nextOffset).toBeGreaterThan(0);
+ expect(await collect(saved.revision,'timeline-and-sources')).toBe(body);
+ expect(await collect(current.revision,'legacy')).toBe(body);
+ const history=await read({revision:saved.revision,historyBefore:current.revision});
+ if(!('history' in history))throw Error('Management response expected');
+ expect(history.history[0].revision).toBe(saved.revision);
+ await expect(read({managementBody:{key:'legacy',offset:0}})).rejects.toMatchObject({code:'GUIDE_BODY_REVISION_REQUIRED'});
+ await expect(read({management:false,revision:saved.revision,managementBody:{key:'legacy',offset:0}})).rejects.toMatchObject({code:'GUIDE_HISTORY_REQUIRES_MANAGEMENT'});
+ await expect(read({revision:saved.revision,managementBody:{key:'legacy',offset:0}})).rejects.toMatchObject({code:'GUIDE_BODY_NOT_FOUND'});
+ await expect(guides.readWork(randomUUID(),origin,{phase:'review',focuses:[],management:true,revision:saved.revision,managementBody:{key:'timeline-and-sources',offset:0}})).rejects.toMatchObject({code:'OPERATOR_REQUIRED'});
+},30_000);

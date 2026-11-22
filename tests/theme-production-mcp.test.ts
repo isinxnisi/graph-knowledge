@@ -99,3 +99,16 @@ it('discovers versioned work-guide tools under compose and forwards only their d
  await handler.fetch(rpc('tools/call',{name:'update_theme_work_guide',arguments:update}));
  expect(call).toHaveBeenCalledWith({action:'update-work-guide',...update});
 });
+
+it('publishes a management page as MCP structured content with a text fallback',async()=>{
+ const page={versions:{revision:9},content:{required:{principles:'Guide'},sections:[{key:'images',bodyKey:'images'}]},history:[{revision:9}]};
+ const call=vi.fn().mockResolvedValue(page),handler=createMissionMcpHandler(vi.fn(),{call});
+ const response=await(await handler.fetch(rpc('tools/call',{name:'read_theme_work_guide',arguments:{phase:'production',management:true}}))).json();
+ expect(response.result.structuredContent).toEqual(page);
+ expect(JSON.parse(response.result.content[0].text)).toEqual(page);
+ const input={phase:'production',management:true,revision:9,managementBody:{key:'assistance-'+('a'.repeat(64)),offset:0}};
+ await handler.fetch(rpc('tools/call',{name:'read_theme_work_guide',arguments:input}));
+ expect(call).toHaveBeenLastCalledWith({action:'read-work-guide',...input,focuses:[]});
+ const normal=await(await handler.fetch(rpc('tools/call',{name:'read_theme_work_guide',arguments:{phase:'production'}}))).json();
+ expect(normal.result.structuredContent).toBeUndefined();
+});

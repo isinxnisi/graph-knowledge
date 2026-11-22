@@ -4,6 +4,7 @@ import {THEME_QUALITY_GUIDE_ID,readThemeQualityGuideSchema,updateThemeQualityGui
 import {readThemeWorkGuideSchema,updateThemeWorkGuideSchema,workGuideFocuses,type ReadThemeWorkGuide,type UpdateThemeWorkGuide,type WorkGuideContent} from '../../domain/theme-work-guide';
 import {KnowledgeError,knowledgeDigest} from '../knowledge-foundation';
 import {initialWorkGuide,workGuideSafety} from '../theme-work-guide-content';
+import {boundedManagementHistory,managementGuideBody,managementGuideIndex} from './theme-work-guide-management';
 import {workGuideTechnical} from '../theme-work-guide-technical';
 import {isSiteOperator} from './site-operations';
 import {memberTransaction} from './operations';
@@ -113,9 +114,12 @@ async function save(c:PoolClient,owner:string,input:UpdateThemeQualityGuide|Upda
 
 async function readWork(c:PoolClient,owner:string,origin:string,input:ReadThemeWorkGuide){
  const current=await guideRow(c);
- const row=input.revision?await guideRow(c,input.revision):current;
+ if(input.revision===0&&(!input.managementBody||current))throw notFound();
+ const row=input.revision===0?undefined:input.revision?await guideRow(c,input.revision):current;
  if(!row&&input.revision)throw notFound();
- if((input.revision||input.historyBefore)&&!input.management)throw new KnowledgeError('履歴の取得はmanagementを指定してください。',400,'GUIDE_HISTORY_REQUIRES_MANAGEMENT');
+ if((input.revision||input.historyBefore||input.managementBody)&&!input.management)throw new KnowledgeError('履歴の取得はmanagementを指定してください。',400,'GUIDE_HISTORY_REQUIRES_MANAGEMENT');
+ if(input.managementBody&&input.revision===undefined)
+  throw new KnowledgeError('本文取得には一覧で確認したrevisionを指定してください。',400,'GUIDE_BODY_REVISION_REQUIRED');
  let recovery=false;
  if(input.caseId){
   const item=(await c.query('SELECT phase,theme_id FROM theme_production.cases WHERE id=$1 AND owner_id=$2 AND origin=$3 AND environment=$4',
@@ -127,13 +131,36 @@ async function readWork(c:PoolClient,owner:string,origin:string,input:ReadThemeW
  }
  const content:WorkGuideContent=row?.work_guide??initialWorkGuide;
  const focuses=new Set([...input.focuses,...(recovery?['recovery']:[]),...(!input.caseId&&input.phase==='production'?['planning']:[])]);
+ const mode=row?.work_guide?'structured':'full-text';
+ if(input.management){
+  const base={contractVersion:2,phase:input.phase,mode,versions:guideVersions(row),currentRevision:current?.revision??0};
+  const legacyMarkdown=row?.markdown??null;
+  if(input.managementBody){
+   const {key,offset}=input.managementBody;
+   return {...base,body:managementGuideBody(content,legacyMarkdown,key,offset)};
+  }
+  const {legacyMarkdown:legacy,...index}=managementGuideIndex(content,legacyMarkdown);
+  const revisions=await history(c,current?.revision??0,input.historyBefore,true);
+  return {...base,required:{
+    principles:index.required.principles,...(input.phase==='review'?{'whole-theme-review':index.required['whole-theme-review']}:{}),
+   },
+   safety:[...(!input.caseId&&input.phase==='production'?[workGuideSafety.planning]:[]),workGuideSafety[input.phase]],
+   technical:{fullContract:'get_theme_authoring_guide',workGuidance:'Use read_theme_work_guide without management for phase-specific schemas.'},
+   supportedFocuses:workGuideFocuses,unknownFocuses:input.focuses.filter(value=>!workGuideFocuses.some(key=>key===value)),
+   content:row?.work_guide?index:null,starter:row?.work_guide?undefined:index,
+   ...(legacy?{markdown:legacy.markdown??null,legacyBodyKey:legacy.bodyKey}:{}),
+   bodyRead:{tool:'read_theme_work_guide',management:true,revision:row?.revision??0,offset:0,
+    instructions:'A bodyKey means the full field is available via managementBody:{key,offset}. Keep the selected revision for every part; concatenate body.text in order until nextOffset is null. Parse assistance bodies as JSON before updating.'},
+   ...boundedManagementHistory(revisions.history,revisions.nextHistoryBefore),
+  };
+ }
  const selected=content.sections.filter(section=>section.focuses.some(focus=>focuses.has(focus)));
  const optional=(key:string,body:string)=>{
   const revision=row?.section_versions?.[key]??row?.revision??0;
   return {key,revision,...(revision>0&&input.knownVersions?.[key]===revision?{}:{markdown:body})};
  };
  return {
-  contractVersion:2,phase:input.phase,mode:row?.work_guide?'structured':'full-text',
+  contractVersion:2,phase:input.phase,mode,
   versions:guideVersions(row),currentRevision:current?.revision??0,
   supportedFocuses:workGuideFocuses,unknownFocuses:input.focuses.filter(value=>!workGuideFocuses.some(key=>key===value)),
   required:{principles:content.required.principles,...(input.phase==='review'?{'whole-theme-review':content.required['whole-theme-review']}: {})},
@@ -145,8 +172,6 @@ async function readWork(c:PoolClient,owner:string,origin:string,input:ReadThemeW
    (!rule.phases.length||rule.phases.includes(input.phase))&&(!rule.focuses.length||rule.focuses.some(focus=>focuses.has(focus))))
    .map(rule=>({...optional('assistance-'+rule.key,rule.markdown),observation:rule.observation,revisitOn:rule.revisitOn,retireWhen:rule.retireWhen})):[],
   ...(!row?.work_guide?{markdown:row?.markdown??null}: {}),
-  ...(input.management?{content:row?.work_guide??null,starter:row?.work_guide?undefined:initialWorkGuide,
-   ...await history(c,current?.revision??0,input.historyBefore,true)}: {}),
  };
 }
 

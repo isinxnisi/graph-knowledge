@@ -32,8 +32,10 @@ export const readThemeWorkGuideSchema = z.strictObject({
  phase:workGuidePhaseSchema,caseId:z.uuidv4().optional(),
  contractVersion:z.literal(2).optional(),focuses:z.array(key).max(20).default([]),
  profile:key.optional(),knownVersions:z.record(key,z.number().int().positive()).optional(),
- revision:z.number().int().positive().optional(),historyBefore:z.number().int().positive().optional(),
- management:z.boolean().optional().describe('Return the complete editable structured guide and revision history. Use for an explicitly requested guide edit.'),
+ revision:z.number().int().nonnegative().optional(),historyBefore:z.number().int().positive().optional(),
+ management:z.boolean().optional().describe('Return the editable guide index and history. Read deferred bodies using managementBody and the returned revision.'),
+ managementBody:z.strictObject({key:z.string().regex(/^[a-z][a-z0-9-]{0,79}$/),offset:z.number().int().nonnegative().default(0)}).optional()
+  .describe('Read one indexed body. Pass management:true and the exact revision, then follow nextOffset until null.'),
 });
 export type ReadThemeWorkGuide = z.infer<typeof readThemeWorkGuideSchema>;
 export const updateThemeWorkGuideSchema = z.strictObject({
