@@ -10,7 +10,7 @@ import css from "./ThemeImageButton.module.css";
 export default function ThemeImageButton({ image, en, variant = "cover", className, onError }: {
   image: ThemeReadingImage;
   en: boolean;
-  variant?: "cover" | "timeline" | "detail";
+  variant?: "cover" | "detail";
   className?: string;
   onError?: () => void;
 }) {
@@ -27,7 +27,7 @@ export default function ThemeImageButton({ image, en, variant = "cover", classNa
     <button type="button" className={className ?? css[variant]} aria-label={label}
       aria-haspopup="dialog" data-record-image={cover ? undefined : variant}
       onClick={() => setExpanded(true)}>
-      <Image unoptimized src={image.src + (variant === "timeline" ? "?size=small" : "")}
+      <Image unoptimized src={image.src}
         width={image.width} height={image.height} alt={image.alt}
         style={{objectPosition:image.focus}}
         onError={() => { setBroken(true); onError?.(); }} />

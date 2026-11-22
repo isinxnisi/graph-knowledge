@@ -10,7 +10,7 @@ import { timelineRecordId, type TimelineDisplayRecord, type TimelineDisplayEntit
 import { buildTimelineGroups, type ThemeTimelineGroup } from "../lib/domain/theme-timeline";
 import { calendarMeaning, themeTimeLabel } from "../lib/domain/theme-time";
 import css from "./ThemeTimeline.module.css";
-import ThemeImageButton from "./ThemeImageButton";
+import Image from "next/image";
 import CalendarTimelineGraph from "./CalendarTimelineGraph";
 import Icon from "./Icon";
 import KnowledgeReadingBadge from "./KnowledgeReadingBadge";
@@ -403,7 +403,6 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                   onChange={() => onToggleSelected(timelineRecordId(record))}
                 />
               )}
-              {reading&&record.readingImage&&<ThemeImageButton key={record.readingImage.src} image={record.readingImage} en={locale==="en"} variant="timeline" />}
               <button
                 type="button"
                 className={css.openRow}
@@ -412,6 +411,11 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                 aria-controls={reading?undefined:`${prefix}-${encodeURIComponent(group.id)}-${record.id}`}
                 onClick={() => toggle(record.id, open)}
               >
+                {reading&&record.readingImage&&<Image key={record.readingImage.src} unoptimized
+                  className={css.thumbnail} data-record-image="timeline"
+                  src={record.readingImage.src+"?size=small"} width={record.readingImage.width}
+                  height={record.readingImage.height} alt="" style={{objectPosition:record.readingImage.focus}}
+                  onError={event=>{event.currentTarget.hidden=true;}} />}
                 <span className={css.rowText}>
                   <span className={css.rowHeading}>
 

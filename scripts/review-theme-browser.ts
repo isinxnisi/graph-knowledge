@@ -110,27 +110,26 @@ export async function inspectThemePage(page: Page, url: string, revision: number
     await dialog.waitFor({ state: 'hidden' });
     return true;
   });
-  if(hasRecordImage)await check('timelineImageDialog', async () => {
-    await thumbnail.click();
-    const dialog=page.getByRole('dialog',{name:label(locale,'記録の画像','Record image')});
-    await dialog.waitFor();
-    await dialog.locator('img').evaluate((img:HTMLImageElement)=>img.decode());
-    await capture('timeline-image');
-    await dialog.getByRole('button',{name:label(locale,'閉じる','Close')}).click();
-    await dialog.waitFor({state:'hidden'});
-    return true;
-  });
   await check('timelineSourceAndBack', async () => {
     if(expected?.timeline===false)return false;
     if(!expected&&!await timeline.count())return false;
-    await timeline.click();
-    if(hasRecordImage){
-      const detailImage=detail.locator('[data-record-image="detail"]:visible img');
-      await detailImage.waitFor();
-      await detailImage.evaluate((img:HTMLImageElement)=>img.decode());
-    }
+    await (hasRecordImage ? thumbnail : timeline).click();
     if(!await revealEvidence())return false;
+    if(hasRecordImage){
+      const detailImage=detail.locator('[data-record-image="detail"]:visible');
+      await detailImage.locator('img').evaluate((img:HTMLImageElement)=>img.decode());
+    }
     await capture('timeline-source');
+    if(hasRecordImage)await check('timelineImageDialog', async () => {
+      await detail.locator('[data-record-image="detail"]:visible').click();
+      const dialog=page.getByRole('dialog',{name:label(locale,'記録の画像','Record image')});
+      await dialog.waitFor();
+      await dialog.locator('img').evaluate((img:HTMLImageElement)=>img.decode());
+      await capture('timeline-image');
+      await dialog.getByRole('button',{name:label(locale,'閉じる','Close')}).click();
+      await dialog.waitFor({state:'hidden'});
+      return true;
+    });
     const back=detail.locator('[data-detail-back]:visible').first();
     if(await back.isVisible()){
       await back.click();

@@ -4,7 +4,7 @@
 
 - 通常Chatでは既存の `upload_editorial_image` に `purpose: "theme-illustration"` を指定して画像を登録し、取得した `imageId` を `submit_theme.presentation[].records[]` または `update_theme.changes.presentation[].records[]` の `{target:{id,revision},imageId}` に指定する。年表行と記録の詳細に同じ画像が出る。言語は各 `presentation[].locale` で指定する。既存の表示を保つため、更新時は現在の `presentation` を読んで対象行だけ差し替え、既存の項目を含む全体を送る。画像だけの行は `shortTitle` を省略できる。
 - 定期制作では同じ入力を既存の prepare → dispatch で送る。案件内で生成した画像は、prepare の `generatedImage:{automationId,locales,target:{id,revision}}` でも紐付けられる。各言語の `presentation.records` に同じ `target` を含める。 `generatedImage.target` を省略すると従来どおりテーマの導入画像に使う。
-- `read_theme` の `presentation[].records[].image.id` で保存結果を照合し、作業版の年表・詳細・拡大表示を確認する。既存の画像配信、クレジット、公開承認および過去版の保護を適用する。画像の紐付けはテーマの編集情報として保存される。 自動画面採取では、表示中の最初の画像付き年表行を使い、`timeline-image` の拡大画面と `timeline-source` の詳細・出典を確認する。
+- `read_theme` の `presentation[].records[].image.id` で保存結果を照合し、作業版の年表・詳細・拡大表示を確認する。既存の画像配信、クレジット、公開承認および過去版の保護を適用する。画像の紐付けはテーマの編集情報として保存される。 年表では画像と見出しのどちらからも記録の詳細を開ける。詳細の画像を押すと拡大する。自動画面採取では、最初に表示された画像付き年表行から `timeline-source` の詳細・出典を開き、詳細の画像から `timeline-image` の拡大画面を確認する。
 
 ## テーマ固有情報の非公開制作と承認公開版（2026-11-18）
 

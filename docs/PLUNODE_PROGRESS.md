@@ -1,3 +1,5 @@
+2026-11-22 年表のサムネイル左端を見出しにそろえ、画像でも記録の詳細を開くよう変更。3200／HTTPS βで日英・PC／スマートフォンの位置、詳細からの拡大、出典と自動画面採取を確認。β build `gZLGzIzh8498Y20ah2_6c`。本番反映は別工程。
+
 2026-11-22 年表の記録画像を3200／HTTPS βへ反映し、日英・PC／スマートフォンの年表・詳細・拡大表示、匿名画像取得の拒否、既存の表紙と制作経路を確認。スマートフォン幅では日付をそろえて画像を下へ配置した。β build `FTQlQVP80i7WhjhnlwPLG`。本番反映は別工程。 [登録・読み戻しの契約](design/KNOWLEDGE_CHATGPT_THEME_REGISTRATION.md#年表の記録画像)
 
 2026-11-22 #77 年表編集契約を正式反映し、Web／4 Worker・認証済みAPI・日英の公開画面確認まで完了。アプリ `3f388eb5`、正式 build `UxEm5YCPPjAvD5m9GGl4P`。ルート66の編集と独立見直しはChatGPT側の工程。 [切替・検証・復旧の記録](verification/THEME_TIMELINE_EDITORIAL_RELEASE_20261122.md)

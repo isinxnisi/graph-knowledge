@@ -812,7 +812,16 @@
 
 
 /* Reading hierarchy: a main sentence, quiet context, optional background, and an explicit source. */
-.timeline.reading .openRow { min-height:0; padding:4px 5px; border:0; background:transparent; box-shadow:none; }
+.timeline.reading .openRow { min-height:0; justify-content:flex-start; padding:4px 5px; border:0; background:transparent; box-shadow:none; }
+.reading .thumbnail {
+  flex: 0 0 auto;
+  width: 74px;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  border-radius: 5px;
+  object-fit: cover;
+}
+.reading .thumbnail[hidden] { display:none; }
 .timeline.reading .openRow[aria-pressed="true"] { border:0; background:transparent; }
 .timeline.reading .openRow:focus:not(:focus-visible) { outline:none; }
 .timeline.reading .openRow:focus-visible { outline:none; }
@@ -851,6 +860,7 @@
  .timeline.reading .readingDate { display:block; padding:6px 5px 0; font-size:11px; line-height:18px; font-weight:400; color:var(--color-muted); }
  .timeline.reading .readingDate + .rowMain { padding-top:0; }
  .timeline.reading .readingDate + .rowMain .openRow { padding-block-start:2px; }
+ .reading .thumbnail { width:66px; }
  .timeline.reading .calendarMeta { display:none; }
 }
 
