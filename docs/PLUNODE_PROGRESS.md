@@ -1,3 +1,5 @@
+2026-11-23 動的作業ガイドのβ実装・技術検証まで完了。Web／画面採取Workerと会員050を反映し、56件と非公開案件の受付再開・PNG取得・要修正の保存を確認。ChatGPT Webでの新ツール実利用と複数起動の比較が残る。 [β実測と比較手順](verification/THEME_WORK_GUIDES_BETA_20261123.md)
+
 2026-11-23 記録詳細の画像レイアウトを正式反映し、日英のPC・スマートフォンで中央表示・拡大を確認。Webのみ更新。アプリ `4e9ea9da`、β build `2YhIu7BZkqtjP0ynP-x_L`、正式 build `wq3tH5qGxsQwA53htv1em`。黒澤の確認用画像はβのみ。 [切替・検証・復旧の記録](verification/THEME_TIMELINE_EDITORIAL_RELEASE_20261122.md#記録詳細の画像レイアウトを正式反映)
 
 2026-11-22 年表の記録画像登録・角丸表示・詳細への遷移を正式反映。Web／4 Worker・認証済みAPI・既存公開画面を確認。アプリ `9a395419`、β build `R5l9_1ewj1cGlIWdNOJ8x`、正式 build `t5qLsCpLkl9FGwOFmON7Q`。ChatGPT WebのApp定義更新は `generatedImage.target` を使う段階で確認する。 [切替・検証・復旧の記録](verification/THEME_TIMELINE_EDITORIAL_RELEASE_20261122.md#年表の記録画像を正式反映)

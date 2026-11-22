@@ -67,6 +67,11 @@ export async function captureAutomationPreview(origin:string,target:AutomationTa
   }finally{await browser.close();}
   if(!evidence.size)throw automationFailure('PREVIEW_NO_EVIDENCE','画面証拠を採取できませんでした。');
   const names=[...evidence.keys()];
+  if(target.requirements){
+    for(const locale of target.locales)for(const {width} of viewports){
+      if(['overview',...target.requirements.requiredScreens].some(name=>!evidence.has(`${locale}-${width}-${name}.png`)))complete=false;
+    }
+  }
   return {evidence,result:{build,complete,screens,names,visualReviewRequired:true,observedAt:new Date().toISOString(),
     hashes:Object.fromEntries([...evidence].map(([name,bytes])=>[name,createHash('sha256').update(bytes).digest('hex')]))}};
 }

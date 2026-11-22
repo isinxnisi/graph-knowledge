@@ -8,7 +8,7 @@ import {publicThemeSnapshotTranslations} from './knowledge-display-translations'
 import type {Pool} from 'pg';
 import type {ProductionSubmissionCommand} from '../domain/theme-production';
 import {createThemeAuthoringReader} from './knowledge-theme-authoring-reader';
-import {createThemeQualityGuides} from './member/theme-quality-guide';
+import {currentThemeGuideVersions,currentThemeEvidenceRequirements} from './member/theme-quality-guide';
 import {associatedEditorialCatalogue,readEditorialProduct} from './member/product-editorial';
 import {themeReadingPresentation} from './theme-reading-presentation';
 import {KnowledgeError,knowledgeDigest} from './knowledge-foundation';
@@ -17,8 +17,9 @@ import type {createThemeTranslationAuthoring} from './knowledge-theme-translatio
 
 export function themeProductionRuntime(pool:Pool,knowledge:Pool,origin:string,registrations:ReturnType<typeof createThemeRegistrations>,translations:ReturnType<typeof createThemeTranslationAuthoring>){
  const reader=createThemeAuthoringReader(knowledge,origin);
- async function targetValue(id:string,owner:string,revision?:number){
-  const read=await reader.read(id,revision,'working'),guide=await createThemeQualityGuides(pool).read(owner),t=read.theme;
+ async function targetValue(id:string,owner:string,revision?:number,dynamic=false){
+  const read=await reader.read(id,revision,'working'),guide=await currentThemeGuideVersions(pool,dynamic),t=read.theme;
+  void owner;
   if(!read.edition?.published.revision&&read.edition?.draft)throw new KnowledgeError('通常編集の新規テーマは通常編集として公開してください。',409,'PRODUCTION_EDIT_CHANNEL');
   const products=await Promise.all((t.content.productPins??[]).map(p=>readEditorialProduct(pool,p.id,p.revision)));
   const associated=await associatedEditorialCatalogue(pool,[...read.snapshot.entities.map(v=>({kind:'entity' as const,id:v.id})),...read.snapshot.records.map(v=>({kind:'record' as const,id:v.id}))],{products:[],offers:[],recommendations:[]});
@@ -27,10 +28,10 @@ export function themeProductionRuntime(pool:Pool,knowledge:Pool,origin:string,re
   const presentation=['ja','en'].map(locale=>themeReadingPresentation(t,locale,read.snapshot));
   const references={theme:{id:t.id,revision:t.revision},translations:read.snapshot.translations?.map(v=>({id:v.id,revision:v.revision})),pinnedProducts:products.map(p=>({id:p.id,revision:p.revision})),associatedProducts:associatedPins};
   const locales=(['ja','en'] as const).filter((locale,i)=>hasThemeLocale({...read,displayTranslations:displayTranslations[i]},locale));
-  const target={theme:{id:t.id,revision:t.revision},digest:knowledgeDigest({theme:t,snapshot:read.snapshot,displayTranslations,presentation,products,associated,associatedPins}),guide:{id:guide.id,revision:guide.currentRevision},references,...(read.productionConflict?{publicationConflict:read.productionConflict}:{})};
+  const target={theme:{id:t.id,revision:t.revision},digest:knowledgeDigest({theme:t,snapshot:read.snapshot,displayTranslations,presentation,products,associated,associatedPins}),guide,references,...(read.productionConflict?{publicationConflict:read.productionConflict}:{})};
   return {target,locales,imageIds:themeEditorialImageIds(t.content.reading)};
  }
- const target=(id:string,owner:string,revision?:number)=>withOperatorThemeRead(async()=>(await targetValue(id,owner,revision)).target);
+ const target=(id:string,owner:string,revision?:number,dynamic=false)=>withOperatorThemeRead(async()=>(await targetValue(id,owner,revision,dynamic)).target);
  async function observe(owner:string,command:ProductionSubmissionCommand){
   if(command.action==='submit-theme'||command.action==='update-theme'||command.action==='cancel-theme'){
    let value:Awaited<ReturnType<typeof registrations.status>>;
@@ -48,5 +49,12 @@ export function themeProductionRuntime(pool:Pool,knowledge:Pool,origin:string,re
   const table=command.action==='amend-theme-items'?'theme_item_amendments':'theme_retry_operations';
   const r=(await pool.query('SELECT response FROM knowledge_missions.'+table+' WHERE request_id=$1 AND owner_id=$2',[command.requestId,owner])).rows[0];return r?{state:'applied' as const,result:r.response}:null;
  }
- return {target,observe,automationTarget:async(id:string,owner:string)=>{const {target:t,locales,imageIds}=await withOperatorThemeRead(()=>targetValue(id,owner));return automationTargetSchema.parse({theme:t.theme,digest:t.digest,guideRevision:t.guide.revision,locales,imageIds});},publish:(owner:string,id:string)=>activateReviewedTheme(pool,knowledge,owner,id,{origin,target,authorize:owner=>registrations.authorize(owner)}),publication:async(id:string,intentId?:string)=>{const state=await themePublicationState(knowledge,id);return {...state,approvalPresent:!!intentId&&!!(await knowledge.query('SELECT 1 FROM knowledge75.theme_release_approvals WHERE release_id=$1 AND theme_id=$2',[intentId,id])).rowCount};}};
+ return {target,observe,automationTarget:async(id:string,owner:string,dynamic=false)=>{
+  const {target:t,locales,imageIds}=await withOperatorThemeRead(()=>targetValue(id,owner));
+  const policy=dynamic?await currentThemeEvidenceRequirements(pool):null;
+  if(policy?.requirements.requiredLocales.some(locale=>!locales.includes(locale)))
+   throw new KnowledgeError('画面確認に必要な言語の作業版がありません。',409,'PREVIEW_LOCALE_REQUIRED');
+  return automationTargetSchema.parse({theme:t.theme,digest:t.digest,guideRevision:t.guide.revision,locales,imageIds,
+   ...(policy?{evidenceRevision:policy.versions.evidenceRevision,requirements:policy.requirements}: {})});
+ },publish:(owner:string,id:string)=>activateReviewedTheme(pool,knowledge,owner,id,{origin,target,authorize:owner=>registrations.authorize(owner)}),publication:async(id:string,intentId?:string)=>{const state=await themePublicationState(knowledge,id);return {...state,approvalPresent:!!intentId&&!!(await knowledge.query('SELECT 1 FROM knowledge75.theme_release_approvals WHERE release_id=$1 AND theme_id=$2',[intentId,id])).rowCount};}};
 }

@@ -1,5 +1,6 @@
 import {themePublicationCheckSchema} from './theme-publication-check';
 import {themeStoriesSchema} from "./theme-stories";
+import {readThemeWorkGuideSchema,updateThemeWorkGuideSchema} from './theme-work-guide';
 import {readThemeQualityGuideSchema,updateThemeQualityGuideSchema} from './theme-quality-guide';
 import {themeEditorialInputSchema} from './theme-editorial';
 import {z} from 'zod';
@@ -137,6 +138,8 @@ export const themeRegistrationCommandSchema=z.discriminatedUnion('action',[
  amendThemeRegistrationSchema.safeExtend({action:z.literal('amend-theme-items')}),
  z.strictObject({action:z.literal('cancel-theme'),requestId:z.uuidv4()}),
  z.strictObject({action:z.literal('theme-guide')}),
+ readThemeWorkGuideSchema.extend({action:z.literal('read-work-guide')}),
+ updateThemeWorkGuideSchema.safeExtend({action:z.literal('update-work-guide')}),
  readThemeQualityGuideSchema.extend({action:z.literal('read-quality-guide')}),
  updateThemeQualityGuideSchema.safeExtend({action:z.literal('update-quality-guide')}),
  z.strictObject({action:z.literal('find-themes'),query:z.string().trim().max(200).default(''),cursor:z.number().int().min(0).max(1000000).default(0)}),

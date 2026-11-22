@@ -38,7 +38,7 @@ export async function themeDiagnostic(db:Pool|PoolClient,origin:string,event:Eve
 const betaProtocolMethods=new Map([
   ['initialize','INITIALIZE'],['notifications/initialized','INITIALIZED'],['tools/list','TOOLS_LIST'],['ping','PING'],
 ]);
-const betaReadOperations=new Set(['get_theme_authoring_guide','get_theme_production','read_theme_quality_guide','read_theme']);
+const betaReadOperations=new Set(['get_theme_authoring_guide','get_theme_production','read_theme_quality_guide','read_theme_work_guide','read_theme']);
 const operations=new Set([
   'upload_editorial_image','generate_theme_image','capture_theme_review_preview','read_theme_review_evidence',
   'claim_theme_production','update_theme_production','prepare_theme_production_submission','dispatch_theme_production_submission',

@@ -2,7 +2,7 @@ import {z} from 'zod';
 import {createThemeProductionSchema,getThemeProductionSchema,listThemeProductionsSchema,abandonThemeProductionSchema,claimThemeProductionSchema,updateThemeProductionSchema,prepareThemeProductionSubmissionSchema,dispatchThemeProductionSubmissionSchema,themeProductionResponseSchema} from '../domain/theme-production';
 export function themeProductionGuide(){
  const schema=(value:z.ZodType)=>z.toJSONSchema(value,{io:'input',unrepresentable:'any'});
- return {version:3,purpose:'Private handoff between ordinary ChatGPT Web production and independent review schedules. ChatGPT does research/writing/revision/evaluation; Plunode holds state. No new scheduler, worker, model runner or collection plan.',
+ return {version:3,workGuide:{contractVersion:2,read:'read_theme_work_guide',update:'update_theme_work_guide',optIn:'Pass guideContract:2 on create only after both scheduled clients support it. Use evaluationTarget.guide criteriaRevision and evidenceRevision for assessment. Existing cases keep their original contract.'},purpose:'Private handoff between ordinary ChatGPT Web production and independent review schedules. ChatGPT does research/writing/revision/evaluation; Plunode holds state. No new scheduler, worker, model runner or collection plan.',
   operations:{create:'create_theme_production',read:'get_theme_production',claim:'claim_theme_production',checkpoint:'update_theme_production',prepare:'prepare_theme_production_submission',dispatch:'dispatch_theme_production_submission'},
   caseManagement:{
    list:'list_theme_productions',end:'abandon_theme_production',

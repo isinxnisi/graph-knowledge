@@ -1,6 +1,8 @@
+import type {GuideVersions} from '../domain/theme-work-guide';
+import {lockThemeQualityGuide,themeGuideRevision} from './member/theme-quality-guide';
 import type {AutomationTarget,ThemeAutomationCommand} from '../domain/theme-automation';
 import {automationFailure,assertThemeEvidence,enqueueThemeAutomation,readThemeAutomation,readThemeEvidence} from './theme-automation';
-import {themeAutomationEnabled,themeDiagnostic} from './theme-automation-diagnostics';
+import {themeAutomationBuild,themeAutomationEnabled,themeDiagnostic} from './theme-automation-diagnostics';
 import {lockThemeCaseBinding} from './knowledge-theme-editions';
 import {randomUUID,createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
@@ -11,9 +13,9 @@ import {KnowledgeError,knowledgeDigest} from './knowledge-foundation';
 import {withThemeProductionSubmission,assertThemeProductionLease} from './theme-production-fence';
 
 type CaseSelection=Partial<Pick<Extract<ThemeProductionCommand,{action:'get-theme-production'}>,'submissionId'|'submissionCursor'|'includeSettledSubmissions'|'operationCursor'>>;
-type Target={theme:{id:string;revision:number};digest:string;guide:{id:string;revision:number};references:unknown;publicationConflict?:unknown};
+type Target={theme:{id:string;revision:number};digest:string;guide:GuideVersions;references:unknown;publicationConflict?:unknown};
 type Observed={state:'accepted'|'pending'|'applied'|'failed';result:unknown;theme?:{id:string;revision:number}};
-type Dependencies={environment:'beta'|'production';origin:string;authorize:(owner:string)=>Promise<void>;target:(id:string,owner:string,revision?:number)=>Promise<Target>;send:(owner:string,command:ProductionSubmissionCommand)=>Promise<unknown>;observe:(owner:string,command:ProductionSubmissionCommand)=>Promise<Observed|null>;publish:(owner:string,intentId:string)=>Promise<void>;publication:(id:string,intentId?:string)=>Promise<{state:string;publishedRevision:number|null;workingRevision:number;releaseId:string|null;workingChanges:boolean;approvalPresent:boolean}>;automationTarget?:(id:string,owner:string)=>Promise<AutomationTarget>;afterDispatch?:()=>Promise<void>};
+type Dependencies={environment:'beta'|'production';origin:string;authorize:(owner:string)=>Promise<void>;target:(id:string,owner:string,revision?:number,dynamic?:boolean)=>Promise<Target>;send:(owner:string,command:ProductionSubmissionCommand)=>Promise<unknown>;observe:(owner:string,command:ProductionSubmissionCommand)=>Promise<Observed|null>;publish:(owner:string,intentId:string)=>Promise<void>;publication:(id:string,intentId?:string)=>Promise<{state:string;publishedRevision:number|null;workingRevision:number;releaseId:string|null;workingChanges:boolean;approvalPresent:boolean}>;automationTarget?:(id:string,owner:string,dynamic?:boolean)=>Promise<AutomationTarget>;afterDispatch?:()=>Promise<void>};
 const failure=(text:string,code='PRODUCTION_CONFLICT',status=409)=>new KnowledgeError(text,status,code);
 const lockKey=(id:string)=>'theme-production:'+id;
 const terminal=(state:string)=>['applied','failed','withdrawn'].includes(state);
@@ -49,9 +51,15 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
  function targetId(r:QueryResultRow,list:QueryResultRow[]){return r.theme_id??list.find(s=>s.command_action==='submit-theme'&&s.theme)?.theme.id;}
  async function evaluation(r:QueryResultRow,list:QueryResultRow[]){
   const id=targetId(r,list);let target:Target|null=null,unavailable:string|null=null;
-  if(id)try{target=await deps.target(id,r.owner_id);}catch(e){unavailable=e instanceof KnowledgeError?e.message:'評価対象の現在版を確認できません。';}
+  if(id)try{target=await deps.target(id,r.owner_id,undefined,r.guide_contract===2);}catch(e){unavailable=e instanceof KnowledgeError?e.message:'評価対象の現在版を確認できません。';}
   const workDigest=knowledgeDigest(list.map(s=>[s.id,s.digest,s.state]));
-  const assessment=r.assessment,workCurrent=!!assessment&&assessment.workDigest===workDigest,contentCurrent=!!assessment&&!!target&&assessment.targetDigest===target.digest,guideCurrent=!!assessment&&!!target&&assessment.guideRevision===target.guide.revision;
+  const assessment=r.assessment;
+  const workCurrent=!!assessment&&assessment.workDigest===workDigest;
+  const contentCurrent=!!assessment&&!!target&&assessment.targetDigest===target.digest&&
+   (!assessment.evidenceBuild||assessment.evidenceBuild===themeAutomationBuild());
+  const guideCurrent=!!assessment&&!!target&&(r.guide_contract===2
+   ?assessment.criteriaRevision===target.guide.criteriaRevision&&assessment.evidenceRevision===target.guide.evidenceRevision
+   :assessment.guideRevision===target.guide.revision);
   return {target,assessment:assessment?{...assessment,contentCurrent,guideCurrent,workCurrent,current:contentCurrent&&guideCurrent&&workCurrent}:null,unavailable};
  }
  async function view(owner:string,id:string,selection?:CaseSelection){
@@ -77,7 +85,7 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
     FROM theme_production.operations WHERE case_id=$1 AND owner_id=$2
     ORDER BY created_at DESC,request_id DESC LIMIT 21 OFFSET $3`,[id,owner,offset])).rows;
   return json({id:r.id,ownerId:owner,workflow:r.workflow,environment:r.environment,origin:r.origin,version:r.version,phase:r.phase,status:r.status==='completed'&&!complete?(retryCommand?'waiting-publication':'needs-review'):r.status,
-   progress:r.progress,theme:ev.target?.theme??(r.theme_id?{id:r.theme_id,revision:r.theme_revision}:null),lease:r.execution_id?{executionId:r.execution_id,until:r.lease_until,valid:r.lease_live===true}:null,
+   ...(r.guide_contract===2?{guideContract:2}:{}),progress:r.progress,theme:ev.target?.theme??(r.theme_id?{id:r.theme_id,revision:r.theme_revision}:null),lease:r.execution_id?{executionId:r.execution_id,until:r.lease_until,valid:r.lease_live===true}:null,
    publication:publication?{...publication,pending:publicationPending,...(retryCommand?{retryCommand}:{})}:null,evaluationTarget:ev.target,lastWholeThemeAssessment:ev.assessment,evaluationUnavailable:ev.unavailable,completed:complete,
    submissions:displayed.slice(cursor,cursor+20).map(summary),nextSubmissionCursor:displayed.length>cursor+20?cursor+20:null,completedSubmissionCount:list.length-currentWork.length,pendingSubmissionCount:list.filter(s=>!terminal(s.state)).length,
    ...(selected?{savedSubmission:{...summary(selected),result:selected.result,encoding:'json',wire:selected.command_wire,command:JSON.parse(selected.command_wire)}}:{}),updatedAt:r.updated_at,...(r.abandon_reason?{abandonReason:r.abandon_reason}:{}),
@@ -152,7 +160,12 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
    if(active){const r=await row(c,owner,active);if(r.status!=='completed')throw failure('定期制作の進行中案件を先に見直し完了まで進めてください。通常チャットの別案件はworkflow: manualで作成できます。','PRODUCTION_ACTIVE_CASE');if((await view(owner,active)).publication?.pending)throw failure('前の案件の公開切替が未完了です。同一の完了要求を再送してください。','PRODUCTION_PUBLICATION_PENDING');if(!(await view(owner,active)).completed)throw failure('前の案件の対象が未承認または変更されています。見直しへ戻してください。','PRODUCTION_REVIEW_REQUIRED');}
    if(command.phase==='review'&&!command.theme)throw failure('既存テーマの見直し開始には正確なテーマ版が必要です。','PRODUCTION_TARGET_REQUIRED',400);
    if(command.theme){await lockThemeCaseBinding(c,command.theme.id);await availableTheme(c,owner,command.theme.id);const target=await deps.target(command.theme.id,owner);if(target.theme.revision!==command.theme.revision)throw failure('対象テーマ版を読み直してください。','REVISION_CONFLICT');}
-   const id=randomUUID();await c.query("INSERT INTO theme_production.cases(id,owner_id,environment,origin,phase,status,progress,theme_id,theme_revision,workflow) VALUES($1,$2,$3,$4,$5,'ready',$6,$7,$8,$9)",[id,owner,deps.environment,deps.origin,command.phase,JSON.stringify(command.progress),command.theme?.id??null,command.theme?.revision??null,workflow]);
+   const id=randomUUID(), values=[id,owner,deps.environment,deps.origin,command.phase,JSON.stringify(command.progress),command.theme?.id??null,command.theme?.revision??null,workflow];
+   if(command.guideContract===2){
+    await c.query("INSERT INTO theme_production.cases(id,owner_id,environment,origin,phase,status,progress,theme_id,theme_revision,workflow,guide_contract) VALUES($1,$2,$3,$4,$5,'ready',$6,$7,$8,$9,2)",values);
+   }else{
+    await c.query("INSERT INTO theme_production.cases(id,owner_id,environment,origin,phase,status,progress,theme_id,theme_revision,workflow) VALUES($1,$2,$3,$4,$5,'ready',$6,$7,$8,$9)",values);
+   }
    return record(c,owner,command,{outcome:'created',caseId:id});
   }));
  }
@@ -178,6 +191,9 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
    const old=await previous(c,owner,command);if(old)return old;let r=await row(c,owner,command.caseId);fence(r,command);
    if(command.progress){if(Buffer.byteLength(JSON.stringify(command.progress))>1500000)throw failure('一回の進捗保存は1.5MB以内に分けてください。案件・ターンの総量制限ではありません。','PRODUCTION_CHECKPOINT_SIZE',413);await c.query('UPDATE theme_production.cases SET progress=$2 WHERE id=$1',[r.id,JSON.stringify(command.progress)]);r.progress=command.progress;}
    if(command.status)await c.query('UPDATE theme_production.cases SET status=$2 WHERE id=$1',[r.id,command.status]);
+   const dynamic=r.guide_contract===2;
+   if(dynamic&&['assess','complete'].includes(command.operation))await lockThemeQualityGuide(c,true);
+   const evidenceRequired=dynamic&&r.workflow==='scheduled';
    const list=await submissions(c,r),pending=list.filter(s=>!terminal(s.state));const ev=await evaluation(r,list);
    if(ev.target){await availableTheme(c,owner,ev.target.theme.id,r.id);await c.query('UPDATE theme_production.cases SET theme_id=$2,theme_revision=$3 WHERE id=$1',[r.id,ev.target.theme.id,ev.target.theme.revision]);}
    r=await row(c,owner,r.id);fence(r,command);
@@ -191,16 +207,21 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
     await c.query("UPDATE theme_production.submissions SET state='withdrawn',reason=$2 WHERE id=$1",[item.id,command.reason]);
    }else if(command.operation==='assess'){
     const a=command.assessment;if(r.phase!=='review'||!a||!ev.target)throw failure('見直し工程でテーマ全体の評価を指定してください。','PRODUCTION_ASSESSMENT_REQUIRED');
-    if(a.targetDigest!==ev.target.digest||a.guideRevision!==ev.target.guide.revision)throw failure('評価対象または品質ガイドが変わりました。現在の全体を再評価してください。','PRODUCTION_ASSESSMENT_STALE');
+    const reviewed=dynamic?await themeGuideRevision(c,a.guideRevision):null;
+    const guideMatches=dynamic
+     ?reviewed&&a.criteriaRevision!==undefined&&a.criteriaRevision===reviewed.criteriaRevision&&a.criteriaRevision===ev.target.guide.criteriaRevision&&a.evidenceRevision===reviewed.evidenceRevision&&a.evidenceRevision===ev.target.guide.evidenceRevision
+     :a.guideRevision===ev.target.guide.revision;
+    if(a.targetDigest!==ev.target.digest||!guideMatches)throw failure('評価対象または品質ガイドが変わりました。現在の全体を再評価してください。','PRODUCTION_ASSESSMENT_STALE');
     if(a.result==='pass'&&pending.length)throw failure('未反映の送信を合格扱いにはできません。','PRODUCTION_PUBLICATION_PENDING');
     for(const item of list.filter(s=>s.state==='failed'))if(a.result==='pass'&&!a.exceptions.some(e=>e.submissionId===item.id))throw failure('未反映の失敗を未解消例外として明示してください。','PRODUCTION_EXCEPTION_REQUIRED');
-    if(a.result==='pass')await assertThemeEvidence(c,r.id,command.executionId,a.reviewEvidenceId,ev.target);
-    await c.query('UPDATE theme_production.cases SET assessment=$2 WHERE id=$1',[r.id,JSON.stringify({...a,workDigest:knowledgeDigest(list.map(s=>[s.id,s.digest,s.state])),evaluatedTheme:ev.target.theme,guide:ev.target.guide,evaluatedAt:new Date().toISOString(),executionId:command.executionId})]);
+    if(a.result==='pass')await assertThemeEvidence(c,r.id,command.executionId,a.reviewEvidenceId,ev.target,evidenceRequired);
+    await c.query('UPDATE theme_production.cases SET assessment=$2 WHERE id=$1',[r.id,JSON.stringify({...a,...(dynamic&&a.reviewEvidenceId?{evidenceBuild:themeAutomationBuild()}:{}),workDigest:knowledgeDigest(list.map(s=>[s.id,s.digest,s.state])),evaluatedTheme:ev.target.theme,guide:ev.target.guide,evaluatedAt:new Date().toISOString(),executionId:command.executionId})]);
    }else if(command.operation==='complete'){
     if(ev.target?.publicationConflict)throw failure('通常公開が進みました。制作版と公開版を照合してから全体を再評価してください。','THEME_PUBLICATION_CONFLICT');
     if(r.phase!=='review'||!ev.assessment?.current||ev.assessment.result!=='pass'||!ev.target)throw failure('現在の対象版とガイドに基づく独立した全体評価が必要です。','PRODUCTION_ASSESSMENT_STALE');
     if(pending.length||r.progress.unfinished.length||r.progress.blockers.length)throw failure('未反映・未完作業・阻害要因が残っています。対応不能点は全体評価の例外へ内容と理由を明示してください。','PRODUCTION_INCOMPLETE');
-    await assertThemeEvidence(c,r.id,command.executionId,r.assessment?.reviewEvidenceId,ev.target);
+    await assertThemeEvidence(c,r.id,command.executionId,r.assessment?.reviewEvidenceId,ev.target,evidenceRequired);
+    if(dynamic&&r.assessment?.executionId!==command.executionId)throw failure('今回の見直しで全体評価を記録してください。','PRODUCTION_ASSESSMENT_STALE');
     await c.query('INSERT INTO theme_production.publication_intents(id,case_id,owner_id,theme_id,theme_revision,target_digest,guide_revision,assessment,completion_command) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)',[command.requestId,r.id,owner,ev.target.theme.id,ev.target.theme.revision,ev.target.digest,ev.target.guide.revision,JSON.stringify(r.assessment),JSON.stringify(command)]);
      await c.query("UPDATE theme_production.cases SET status='completed',execution_id=NULL,lease_token=NULL,lease_until=NULL WHERE id=$1",[r.id]);
    }
@@ -324,7 +345,9 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
    const list=await submissions(c,current),id=targetId(current,list);
    if(current.phase!=='review'||!id||!deps.automationTarget)throw automationFailure('PREVIEW_REVIEW_REQUIRED','見直し工程の評価対象が必要です。');
    if(command.action==='capture-theme-preview'&&list.some(s=>!terminal(s.state)))throw automationFailure('PRODUCTION_PUBLICATION_PENDING','先に制作の受付を確定してください。');
-   const target=await deps.automationTarget(id,owner);
+   const dynamic=current.guide_contract===2;
+   if(dynamic)await lockThemeQualityGuide(c,true);
+   const target=await deps.automationTarget(id,owner,dynamic);
    fence(await row(c,owner,current.id),command);
    if(command.action==='read-theme-evidence')return readThemeEvidence(c,deps.origin,command,target);
    if(target.digest!==command.targetDigest)throw automationFailure('PREVIEW_TARGET_CHANGED','評価対象を読み直してください。');

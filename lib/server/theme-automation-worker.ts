@@ -4,6 +4,7 @@ import {z} from 'zod';
 import {automationTargetSchema,type AutomationTarget} from '../domain/theme-automation';
 import {uploadProductImageSchema} from '../domain/product-authoring';
 import {authorizeProductOperator,dispatchProductAuthoring} from './member/product-editorial';
+import {currentThemeEvidenceRequirements} from './member/theme-quality-guide';
 import {memberTransaction} from './member/operations';
 import {automationFailure,hashPreviewToken} from './theme-automation';
 import {diagnosticError,themeDiagnostic} from './theme-automation-diagnostics';
@@ -116,10 +117,19 @@ export function createThemeAutomationWorker(pool:Pool,origin:string,generator:Th
 
   async function execute(job:Job):Promise<Outcome>{
     if(job.kind==='preview'){
+      const target=automationTargetSchema.parse(job.target);
+      const checkRequirements=async()=>{
+        if(target.evidenceRevision===undefined)return;
+        const {versions}=await currentThemeEvidenceRequirements(pool);
+        if(target.evidenceRevision!==versions.evidenceRevision)
+          throw automationFailure('PREVIEW_TARGET_CHANGED','画面要件が更新されました。現在版を採取してください。');
+      };
+      await checkRequirements();
       const token=randomBytes(32).toString('hex');
       await pool.query(`INSERT INTO theme_production.preview_grants SELECT $1,id,attempt_id,lease_until
         FROM theme_production.automation_requests WHERE id=$2 AND attempt_id=$3 AND lease_until>clock_timestamp()`,[hashPreviewToken(token),job.id,job.attempt_id]);
-      const value=await capture(automationTargetSchema.parse(job.target),token);
+      const value=await capture(target,token);
+      await checkRequirements();
       return {state:'ready',code:value.result.complete?'EVIDENCE_READY':'EVIDENCE_INCOMPLETE',result:{...value.result,target:job.target},preview:value.evidence};
     }
     if(job.state==='storing'){

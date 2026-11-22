@@ -1,3 +1,4 @@
+import {initialWorkGuide} from '../lib/server/theme-work-guide-content';
 import {themeAutomationActions,type AutomationTarget} from '../lib/domain/theme-automation';
 import {createThemeAutomationWorker} from '../lib/server/theme-automation-worker';
 import {assertPreviewTheme,previewGrant,PREVIEW_HEADER} from '../lib/server/theme-automation';
@@ -32,7 +33,7 @@ import {themeProductionRuntime} from '../lib/server/theme-production-runtime';
 import {guardThemeProductionRequest} from '../lib/server/theme-production-fence';
 import {themeProductionCommandSchema,themeProductionResponseSchema,themeProductionListSchema,productionSubmissionCommandSchema,type ProductionSubmissionCommand} from '../lib/domain/theme-production';
 
-type Case={id:string;version:number;lease:{executionId:string;until:string;valid:boolean}|null;phase:string;status:string;completed:boolean;progress:{brief:string;scope:string;artifacts:Record<string,unknown>;unfinished:string[];blockers:string[]};theme:{id:string;revision:number}|null;evaluationTarget:{digest:string;guide:{revision:number}};lastWholeThemeAssessment:{current:boolean;result:string;contentCurrent:boolean;workCurrent:boolean}|null;pendingSubmissionCount:number;submissions:{id:string;state:string}[];savedSubmission?:{wire:string;command:ProductionSubmissionCommand}};
+type Case={id:string;version:number;lease:{executionId:string;until:string;valid:boolean}|null;phase:string;status:string;completed:boolean;progress:{brief:string;scope:string;artifacts:Record<string,unknown>;unfinished:string[];blockers:string[]};theme:{id:string;revision:number}|null;evaluationTarget:{digest:string;guide:{revision:number;criteriaRevision?:number;evidenceRevision?:number}};lastWholeThemeAssessment:{current:boolean;result:string;contentCurrent:boolean;workCurrent:boolean}|null;pendingSubmissionCount:number;submissions:{id:string;state:string}[];savedSubmission?:{wire:string;command:ProductionSubmissionCommand}};
 type Response={outcome:string;case:Case|null;replayed?:boolean;leaseToken?:string;submissionId?:string};
 const pool=new Pool({connectionString:process.env.MEMBER_DATABASE_URL,max:10}),knowledge=new Pool({connectionString:process.env.KNOWLEDGE_CAPSULE_TEST_DATABASE_URL,max:5});
 const owner=randomUUID(),other=randomUUID(),actor={kind:'operator' as const,id:'production-fixture'};
@@ -44,8 +45,8 @@ const progress={brief:'読者の問いから制作する隔離案件',scope:'公
 const createCommand=()=>({action:'submit-theme' as const,requestId:randomUUID(),title:'New production fixture',description:'Not live',recordPins:[{id:'baseline',revision:1}]});
 const execute=async(command:unknown,who=owner)=>themeProductionResponseSchema.parse(await cases.execute(who,themeProductionCommandSchema.parse(command))) as unknown as Response;
 async function read(id:string){return (await execute({action:'get-theme-production',caseId:id})).case!;}
-async function begin(phase:'production'|'review'='production',existing=false,workflow:'scheduled'|'manual'='scheduled',revision=1):Promise<{caseId:string;executionId:string;leaseToken:string}>{
- const created=await execute({action:'create-theme-production',requestId:randomUUID(),phase,progress,...(workflow==='manual'?{workflow}:{}),...(existing?{theme:{id:'theme',revision}}:{})});
+async function begin(phase:'production'|'review'='production',existing=false,workflow:'scheduled'|'manual'='scheduled',revision=1,guideContract?:2):Promise<{caseId:string;executionId:string;leaseToken:string}>{
+ const created=await execute({action:'create-theme-production',requestId:randomUUID(),phase,progress,...(guideContract?{guideContract}:{}),...(workflow==='manual'?{workflow}:{}),...(existing?{theme:{id:'theme',revision}}:{})});
  const executionId=randomUUID(),claimed=await execute({action:'claim-theme-production',requestId:randomUUID(),caseId:created.case!.id,phase,executionId});
  return {caseId:created.case!.id,executionId,leaseToken:claimed.leaseToken!};
 }
@@ -81,6 +82,9 @@ beforeAll(async()=>{
  const preserved=(await pool.query('SELECT row_to_json(c)::jsonb AS value FROM theme_production.cases c WHERE id=$1',[preservedId])).rows[0].value;
 
  await migrateMemberDatabase(pool,...Array(35).fill(true));await migrateMemberDatabase(pool,...Array(35).fill(true));const migrated=(await pool.query('SELECT row_to_json(c)::jsonb AS value FROM theme_production.cases c WHERE id=$1',[preservedId])).rows[0].value;const {workflow,abandon_reason,...unchanged}=migrated;expect(workflow).toBe('scheduled');expect(abandon_reason).toBeNull();expect(unchanged).toEqual(preserved);expect((await pool.query("SELECT name,checksum FROM member_migration WHERE name NOT IN('044-theme-production.sql','045-theme-publication.sql','046-theme-production-workflows.sql','049-theme-production-case-management.sql') ORDER BY name")).rows).toEqual(old);
+ await migrateMemberDatabase(pool,...Array(37).fill(true));
+ const {guide_contract,...previousCase}=(await pool.query('SELECT row_to_json(c)::jsonb AS value FROM theme_production.cases c WHERE id=$1',[preservedId])).rows[0].value;
+ expect(guide_contract).toBe(1);expect(previousCase).toEqual(migrated);
 },30000);
 beforeEach(async()=>{
  failActivation=false;beforeActivation=null;lostAck=false;delay=null;await pool.query('TRUNCATE theme_production.cases,knowledge_missions.theme_registrations,knowledge_missions.web_deliveries,knowledge_missions.web_importers CASCADE');await pool.query('TRUNCATE knowledge_import.packages,member_knowledge.submissions,product_editorial_request,product_editorial_version CASCADE');
@@ -140,7 +144,7 @@ it('ends a live case without publishing, preserving stored work and allowing a s
  expect((await execute({action:'get-theme-production'})).outcome).toBe('none');
  expect((await begin('review',true)).caseId).not.toBe(run.caseId);
  expect((await execute({action:'get-theme-production',caseId:run.caseId,includeSettledSubmissions:true})).case?.submissions).toMatchObject([{id:prepared.submissionId,state:'withdrawn'}]);
-});
+},30_000);
 
 it('blocks closure while automation may be claimed or is unsettled',async()=>{
  await migrateMemberDatabase(pool,...Array(36).fill(true));
@@ -769,3 +773,117 @@ it('runs only the pinned beta receipt, saves metering across worker instances, a
   expect(ids).toEqual([{request_id:requestId,code:'SEND_STARTED'}]);
  }finally{if(previous===undefined)delete process.env.THEME_AUTOMATION_ENABLED;else process.env.THEME_AUTOMATION_ENABLED=previous;}
 },30_000);
+
+it('serves mandatory review guidance regardless of focus and shares legacy CAS, receipts and restore history',async()=>{
+ const guides=createThemeQualityGuides(pool);
+ const legacy=await guides.read(owner);
+ const command={expectedRevision:legacy.revision,requestId:randomUUID(),reason:'Structured fixture',changes:initialWorkGuide};
+ const saved=await guides.updateWork(owner,command);
+ await expect(guides.updateWork(owner,command)).resolves.toMatchObject({revision:saved.revision,replayed:true});
+ await expect(guides.update(owner,{expectedRevision:legacy.revision,requestId:command.requestId,reason:'Different API',markdown:'Changed input'})).rejects.toMatchObject({code:'REQUEST_REUSED'});
+ await expect(guides.update(owner,{expectedRevision:legacy.revision,requestId:randomUUID(),reason:'Concurrent edit',markdown:'Legacy'})).rejects.toMatchObject({code:'GUIDE_CHANGED'});
+ const run=await begin('review',true,'manual',1,2);
+ const origin='https://plunode.net';
+ for(const focuses of [[],['images'],['unrecognized']]){
+  const guide=await guides.readWork(owner,origin,{phase:'review',caseId:run.caseId,focuses,knownVersions:{principles:saved.revision,'whole-theme-review':saved.revision,images:saved.revision}});
+  expect(guide.required).toEqual(initialWorkGuide.required);
+  expect(guide.safety.join()).toContain('現行lease');
+  if(focuses.includes('images'))expect(guide.sections).toContainEqual({key:'images',revision:saved.revision});
+  if(focuses.includes('unrecognized'))expect(guide.unknownFocuses).toEqual(focuses);
+ }
+ await expect(guides.readWork(owner,origin,{phase:'production',caseId:run.caseId,focuses:[]})).rejects.toMatchObject({code:'PRODUCTION_PHASE_MISMATCH'});
+ await expect(guides.readWork(owner,'https://graph-beta.isinxnisi.com',{phase:'review',caseId:run.caseId,focuses:[]})).rejects.toMatchObject({code:'NOT_FOUND'});
+ const fallback=await guides.update(owner,{expectedRevision:saved.revision,requestId:randomUUID(),reason:'Unstructured legacy edit',markdown:'# Free-form revision'});
+ const full=await guides.readWork(owner,origin,{phase:'review',caseId:run.caseId,focuses:['images']});
+ expect(full).toMatchObject({mode:'full-text',markdown:'# Free-form revision',sections:[],assistance:[],versions:{criteriaRevision:fallback.revision,evidenceRevision:fallback.revision}});
+ const restored=await guides.updateWork(owner,{expectedRevision:fallback.revision,requestId:randomUUID(),reason:'Restore the structured content',restoreRevision:saved.revision});
+ expect(restored).toMatchObject({markdown:saved.markdown,restoredFrom:saved.revision,versions:{criteriaRevision:restored.revision,evidenceRevision:restored.revision}});
+ expect((await guides.read(owner)).markdown).toBe(restored.markdown);
+ const history=await guides.readWork(owner,origin,{phase:'review',focuses:[],revision:saved.revision,historyBefore:restored.revision,management:true});
+ expect(history).toMatchObject({content:initialWorkGuide,currentRevision:restored.revision,history:[{revision:fallback.revision},{revision:saved.revision},...history.history!.slice(2)]});
+});
+
+it('fences a scheduled dynamic assessment and activation across assistance, mandatory and evidence edits',async()=>{
+ const previous=process.env.THEME_AUTOMATION_ENABLED;process.env.THEME_AUTOMATION_ENABLED='1';
+ try{
+  const guides=createThemeQualityGuides(pool);
+  let content=structuredClone(initialWorkGuide);
+  const edit=async()=>{
+   const {revision}=await guides.read(owner);
+   return guides.updateWork(owner,{expectedRevision:revision,requestId:randomUUID(),reason:'Isolated guide revision',changes:content});
+  };
+  await edit();
+  const run=await begin('production',true,'scheduled',1,2);
+  const automation=async(who:typeof run,fields:Record<string,unknown>)=>cases.executeAutomation(owner,
+   themeAutomationActions.parse({...who,requestId:randomUUID(),expectedVersion:(await read(run.caseId)).version,...fields}));
+  const capture=(who:typeof run,requestId=randomUUID())=>automation(who,{action:'capture-theme-preview',requestId,targetDigest:(targetDigest!)});
+  const targetDigest=(await read(run.caseId)).evaluationTarget.digest;
+  await expect(capture(run)).rejects.toMatchObject({code:'PREVIEW_REVIEW_REQUIRED'});
+  await fenced(run,{action:'update-theme-production',operation:'handoff'});
+  const review=await resume(run,'review');
+  const assessment=async(reviewEvidenceId?:string)=>{
+   const target=(await read(run.caseId)).evaluationTarget;
+   return fenced(review,{action:'update-theme-production',operation:'assess',assessment:{
+    scope:'whole-theme',targetDigest:target.digest,guideRevision:target.guide.revision,
+    criteriaRevision:target.guide.criteriaRevision,evidenceRevision:target.guide.evidenceRevision,
+    result:'pass',summary:'Independent fixture assessment.',reviewEvidenceId,
+   }});
+  };
+  await expect(assess(review)).rejects.toMatchObject({code:'PRODUCTION_ASSESSMENT_STALE'});
+  await expect(assessment()).rejects.toMatchObject({code:'PREVIEW_EVIDENCE_REQUIRED'});
+  const evidenceId=randomUUID();
+  await capture(review,evidenceId);
+  const bytes=await sharp({create:{width:16,height:16,channels:3,background:'navy'}}).png().toBuffer();
+  const names=['ja-1440-overview.png','ja-390-overview.png'];
+  const worker=createThemeAutomationWorker(pool,'https://plunode.net',null,async target=>{
+   const screens=[...names,...(target.requirements?.requiredScreens.includes('image')?['ja-1440-image.png','ja-390-image.png']:[])];
+   return {evidence:new Map(screens.map(name=>[name,bytes])),result:{build:themeAutomationBuild(),complete:true,names:screens,target}};
+  });
+  expect(await worker.runOnce()).toBe(true);
+  await expect(assessment(evidenceId)).rejects.toMatchObject({code:'PREVIEW_EVIDENCE_UNREAD'});
+  const readEvidence=(name:string)=>automation(review,{action:'read-theme-evidence',automationId:evidenceId,name});
+  for(const name of names)await readEvidence(name);
+  await assessment(evidenceId);
+  content.assistance.push({key:'observed-model',enabled:true,profiles:['test-model'],phases:['review'],focuses:['review'],
+   observation:'Repeated title forms',retireWhen:'Varied titles',revisitOn:'2027-01-01',markdown:'Consider alternatives.'});
+  await edit();
+  expect((await read(run.caseId)).lastWholeThemeAssessment?.current).toBe(true);
+  await expect(capture(review,evidenceId)).resolves.toMatchObject({automationId:evidenceId,replayed:true});
+  const profile=await guides.readWork(owner,'https://plunode.net',{phase:'review',caseId:run.caseId,focuses:['review'],profile:'test-model'});
+  expect(profile.assistance).toHaveLength(1);
+  expect((await guides.readWork(owner,'https://plunode.net',{phase:'review',focuses:['review']})).assistance).toEqual([]);
+  const original=content.required.principles;
+  content.required.principles='Read the revised criteria.';
+  content.sections[0].markdown=original;
+  await edit();
+  expect((await read(run.caseId)).lastWholeThemeAssessment?.current).toBe(false);
+  await expect(readEvidence(names[0])).resolves.toMatchObject({image:bytes});
+  await expect(fenced(review,{action:'update-theme-production',operation:'complete'})).rejects.toMatchObject({code:'PRODUCTION_ASSESSMENT_STALE'});
+  await assessment(evidenceId);
+  beforeActivation=async()=>{
+   content={...content,evidence:{requiredLocales:[],requiredScreens:['image']}};
+   return edit();
+  };
+  await expect(fenced(review,{action:'update-theme-production',operation:'complete'})).resolves.toMatchObject({
+   publicationError:{code:'PRODUCTION_ASSESSMENT_STALE'},case:{status:'needs-review',completed:false},
+  });
+  const next=await resume(review,'review');
+  await expect(automation(next,{action:'read-theme-evidence',automationId:evidenceId,name:names[0]})).rejects.toMatchObject({code:'PREVIEW_TARGET_CHANGED'});
+  const freshId=randomUUID();
+  await capture(next,freshId);
+  expect(await worker.runOnce()).toBe(true);
+  for(const name of [...names,'ja-1440-image.png','ja-390-image.png'])
+   await automation(next,{action:'read-theme-evidence',automationId:freshId,name});
+  const target=(await read(run.caseId)).evaluationTarget;
+  await fenced(next,{action:'update-theme-production',operation:'assess',assessment:{
+   scope:'whole-theme',targetDigest:target.digest,guideRevision:target.guide.revision,
+   criteriaRevision:target.guide.criteriaRevision,evidenceRevision:target.guide.evidenceRevision,
+   result:'pass',summary:'Independently reassessed with current evidence',reviewEvidenceId:freshId,
+  }});
+  await expect(fenced(next,{action:'update-theme-production',operation:'complete'})).resolves.toMatchObject({case:{completed:true}});
+  content.required.principles='Published history remains closed.';
+  await edit();
+  expect((await read(run.caseId)).completed).toBe(true);
+  expect((await execute({action:'get-theme-production'})).outcome).toBe('none');
+ }finally{if(previous===undefined)delete process.env.THEME_AUTOMATION_ENABLED;else process.env.THEME_AUTOMATION_ENABLED=previous;}
+},45_000);

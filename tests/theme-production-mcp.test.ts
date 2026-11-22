@@ -83,3 +83,19 @@ it('exposes case automation under compose consent and returns screenshot bytes a
  expect(rejected.result.isError).toBe(true);
  expect(call).not.toHaveBeenCalled();
 });
+
+it('discovers versioned work-guide tools under compose and forwards only their declared inputs',async()=>{
+ const call=vi.fn().mockResolvedValue({contractVersion:2}),handler=createMissionMcpHandler(vi.fn(),{call});
+ const listing=await(await handler.fetch(rpc('tools/list',{}))).json();
+ const tools=listing.result.tools;
+ for(const name of ['read_theme_work_guide','update_theme_work_guide']){
+  expect(tools.find((tool:{name:string})=>tool.name===name)._meta.securitySchemes[0].scopes).toContain('themes:compose');
+ }
+ const input={phase:'review',caseId:randomUUID(),focuses:['images']};
+ const reply=await(await handler.fetch(rpc('tools/call',{name:'read_theme_work_guide',arguments:input}))).json();
+ expect(reply.result.isError).not.toBe(true);
+ expect(call).toHaveBeenCalledWith({action:'read-work-guide',...input});
+ const update={expectedRevision:4,requestId:randomUUID(),reason:'Restore current beta guide',restoreRevision:2};
+ await handler.fetch(rpc('tools/call',{name:'update_theme_work_guide',arguments:update}));
+ expect(call).toHaveBeenCalledWith({action:'update-work-guide',...update});
+});

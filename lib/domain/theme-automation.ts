@@ -1,5 +1,6 @@
 import {z} from 'zod';
 import {uploadProductImageSchema} from './product-authoring';
+import {evidenceRequirementsSchema} from './theme-work-guide';
 import {knowledgePinSchema} from './knowledge-foundation';
 
 export const automationDigest=z.string().regex(/^[a-f0-9]{64}$/);
@@ -21,6 +22,7 @@ export const reportThemeExternalSchema=automationFence.extend({
 });
 export const automationTargetSchema=z.strictObject({
   theme:knowledgePinSchema,digest:automationDigest,guideRevision:z.number().int().nonnegative(),
+  evidenceRevision:z.number().int().nonnegative().optional(),requirements:evidenceRequirementsSchema.optional(),
   locales:z.array(locale).min(1).max(2),imageIds:z.array(z.string().regex(/^[a-f0-9]{64}$/)).max(802),
 });
 export const themeAutomationActions=z.discriminatedUnion('action',[

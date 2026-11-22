@@ -1,3 +1,4 @@
+import type {GuideVersions} from '../domain/theme-work-guide';
 import type {Pool,PoolClient,QueryResultRow} from 'pg';
 import {createHash,timingSafeEqual} from 'node:crypto';
 import {isSiteOperator} from './member/site-operations';
@@ -12,7 +13,9 @@ type AutomationEventIdentity={caseId:string;requestId:string;executionId:string}
 export async function enqueueThemeAutomation(c:PoolClient,origin:string,command:Extract<ThemeAutomationCommand,{action:'generate-theme-image'|'capture-theme-preview'}>,target?:AutomationTarget){
   const kind=command.action==='generate-theme-image'?'image':'preview';
   const input=command.action==='generate-theme-image'?{prompt:command.prompt,alt:command.alt}:{targetDigest:command.targetDigest};
-  const digest=knowledgeDigest({kind,input,target});
+  // A model-assistance edit may advance the audit revision during a preview retry.
+  const evidenceTarget=target?.evidenceRevision===undefined?target:{...target,guideRevision:target.evidenceRevision};
+  const digest=knowledgeDigest({kind,input,target:evidenceTarget});
   const prior=(await c.query('SELECT case_id,digest FROM theme_production.automation_requests WHERE id=$1',[command.requestId])).rows[0];
   if(prior){
     if(prior.case_id!==command.caseId||prior.digest!==digest)throw automationFailure('REQUEST_CHANGED','同じ受付IDに異なる内容は送れません。');
@@ -57,21 +60,35 @@ export async function readThemeEvidence(c:PoolClient,origin:string,command:Extra
   await themeDiagnostic(c,origin,{...identity(command),stage:'preview-evidence',code:'SERVED'});
   return {metadata:{automationId:command.automationId,name:command.name,target:r.target,build:r.result.build},image:Buffer.from(r.bytes)};
 }
-function assertEvidenceTarget(row:QueryResultRow,target:{digest:string;guide:{revision:number}}|AutomationTarget){
+function assertEvidenceTarget(row:QueryResultRow,target:{digest:string;guide:GuideVersions}|AutomationTarget){
   const guide='guide' in target?target.guide.revision:target.guideRevision;
-  if(row.target?.digest!==target.digest||row.target.guideRevision!==guide||row.result?.build!==themeAutomationBuild())throw automationFailure('PREVIEW_TARGET_CHANGED','対象版・ガイド・画面ビルドのいずれかが変わりました。現在版で再採取してください。');
+  const evidenceRevision='guide' in target?target.guide.evidenceRevision:target.evidenceRevision;
+  const guideMatches=evidenceRevision===undefined?row.target?.guideRevision===guide:row.target?.evidenceRevision===evidenceRevision;
+  if(row.target?.digest!==target.digest||!guideMatches||row.result?.build!==themeAutomationBuild())throw automationFailure('PREVIEW_TARGET_CHANGED','対象版・ガイド・画面ビルドのいずれかが変わりました。現在版で再採取してください。');
 }
-export async function assertThemeEvidence(c:PoolClient,caseId:string,executionId:string,evidenceId:string|undefined,target:{digest:string;guide:{revision:number}}){
-  if(!(await c.query("SELECT to_regclass('theme_production.automation_requests') AS ready")).rows[0].ready)return;
+export async function assertThemeEvidence(c:PoolClient,caseId:string,executionId:string,evidenceId:string|undefined,target:{digest:string;guide:GuideVersions},required=false){
+  if(!(await c.query("SELECT to_regclass('theme_production.automation_requests') AS ready")).rows[0].ready){
+    if(required)throw automationFailure('PREVIEW_EVIDENCE_REQUIRED','現在版の必須画面証拠を取得してください。');
+    return;
+  }
   const opted=(await c.query("SELECT 1 FROM theme_production.automation_requests WHERE case_id=$1 AND kind='preview' LIMIT 1",[caseId])).rowCount;
-  if(!opted)return;
+  if(!required&&!opted&&!evidenceId)return;
   const r=evidenceId&&(await c.query("SELECT target,result FROM theme_production.automation_requests WHERE id=$1 AND case_id=$2 AND kind='preview' AND state='ready'",[evidenceId,caseId])).rows[0];
   if(!r||r.result?.complete!==true)throw automationFailure('PREVIEW_EVIDENCE_REQUIRED','現在版の必須画面証拠を取得してください。');
   assertEvidenceTarget(r,target);
-  const missingRead=(await c.query(`SELECT 1 FROM theme_production.preview_evidence e WHERE request_id=$1 AND NOT EXISTS
-    (SELECT 1 FROM theme_production.preview_reads r WHERE r.request_id=e.request_id AND r.execution_id=$2 AND r.name=e.name) LIMIT 1`,[evidenceId,executionId])).rowCount;
-  const images=(await c.query('SELECT count(*)::int AS n FROM theme_production.preview_evidence WHERE request_id=$1',[evidenceId])).rows[0].n;
-  if(missingRead||images!==r.result.names?.length)throw automationFailure('PREVIEW_EVIDENCE_UNREAD','すべての画面証拠を今回の見直し実行で読み取ってください。');
+  const rows=(await c.query(`SELECT e.name,r.execution_id IS NOT NULL AS served FROM theme_production.preview_evidence e
+    LEFT JOIN theme_production.preview_reads r ON r.request_id=e.request_id AND r.execution_id=$2 AND r.name=e.name WHERE e.request_id=$1`,
+    [evidenceId,executionId])).rows;
+  const names=new Set(rows.map(row=>row.name));
+  if(rows.some(row=>!row.served)||!Array.isArray(r.result.names)||!rows.length||
+   rows.length!==r.result.names.length||r.result.names.some((name:string)=>!names.has(name)))
+   throw automationFailure('PREVIEW_EVIDENCE_UNREAD','すべての画面証拠を今回の見直し実行で読み取ってください。');
+  if(target.guide.evidenceRevision!==undefined){
+   const snapshot=automationTargetSchema.parse(r.target);
+   if(snapshot.locales.some(locale=>[390,1440].some(width=>['overview',...(snapshot.requirements?.requiredScreens??[])]
+    .some(name=>!names.has(`${locale}-${width}-${name}.png`)))))
+    throw automationFailure('PREVIEW_EVIDENCE_REQUIRED','必須の言語・画面幅・画面証拠が揃っていません。');
+  }
 }
 
 export const PREVIEW_HEADER='x-plunode-preview-grant';

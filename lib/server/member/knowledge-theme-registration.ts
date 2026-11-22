@@ -76,7 +76,16 @@ export async function dispatchThemeRegistration(owner:string,raw:ThemeOperatorCo
   if(command.action==='submit-translation'){const {action,...input}=command;void action;return await translations!.submit(owner,input);}
   if(command.action==='translation-status')return await translations!.status(owner,command.requestId);
   if(command.action==='cancel-translation')return await translations!.cancel(owner,command.requestId);
-  if(command.action==='theme-guide')return {...themeAuthoringGuide(),qualityGuide:await createThemeQualityGuides(memberRuntime().pool).read(owner),qualityGuideOperations:{read:'read_theme_quality_guide',update:'update_theme_quality_guide',rules:'Fetch the current guide at the start of theme authoring. Markdown is editable reference content, not executable schema or authorization. Use expectedRevision and a new requestId for each requested revision; retry identical input with the same requestId. Read historical revisions and restore them as a new revision, never overwrite history. No build, deployment or App refresh is needed for ordinary text revisions.'}};
+  if(command.action==='theme-guide')return {...themeAuthoringGuide(),qualityGuide:await createThemeQualityGuides(memberRuntime().pool).read(owner),qualityGuideOperations:{workRead:'read_theme_work_guide',workUpdate:'update_theme_work_guide',read:'read_theme_quality_guide',update:'update_theme_quality_guide',rules:'Fetch the current guide at the start of theme authoring. Markdown is editable reference content, not executable schema or authorization. Use expectedRevision and a new requestId for each requested revision; retry identical input with the same requestId. Read historical revisions and restore them as a new revision, never overwrite history. No build, deployment or App refresh is needed for ordinary text revisions.'}};
+  if(command.action==='read-work-guide'){
+   const {action,...input}=command;void action;
+   const {pool,config}=memberRuntime();
+   return createThemeQualityGuides(pool).readWork(owner,config.origin,input);
+  }
+  if(command.action==='update-work-guide'){
+   const {action,...input}=command;void action;
+   return createThemeQualityGuides(memberRuntime().pool).updateWork(owner,input);
+  }
   if(command.action==='read-quality-guide'){const {action,...input}=command;void action;return await createThemeQualityGuides(memberRuntime().pool).read(owner,input);}
   if(command.action==='update-quality-guide'){const {action,...input}=command;void action;return await createThemeQualityGuides(memberRuntime().pool).update(owner,input);}
   if(command.action==='find-themes')return await reader!.find('theme',command.query,command.cursor);
