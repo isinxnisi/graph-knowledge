@@ -6,6 +6,7 @@ import { basename, join } from 'node:path';
 import { createInterface } from 'node:readline/promises';
 import { pathToFileURL } from 'node:url';
 import {themeStoryEntries} from '../lib/domain/theme-stories';
+import {themeTimelineRecords} from '../lib/domain/knowledge-timeline';
 import { uploadProductImageSchema } from '../lib/domain/product-authoring';
 
 const origins = new Set(['https://plunode.net', 'https://graph-beta.isinxnisi.com', 'http://127.0.0.1:3200']);
@@ -40,7 +41,7 @@ export async function themeSnapshot(context: BrowserContext, origin: string, id:
   const records=preview.snapshot?.records??[];
   return {
     digest:createHash('sha256').update(data).digest('hex'), hasImage:Boolean(preview.presentation?.image), build:headers['x-plunode-preview-build'],
-    hasTimeline:records.some((record:{content:{times?:unknown[]}})=>Boolean(record.content.times?.length)),
+    hasTimeline:themeTimelineRecords({records,timeline:preview.snapshot?.timeline}).some(record=>record.content.times.length>0),
     hasStory:themeStoryEntries(records,preview.theme.content?.stories,preview.presentation,locale==='en'?'en':'ja').length>0,
   };
 }

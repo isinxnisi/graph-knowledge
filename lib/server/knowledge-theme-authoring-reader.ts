@@ -4,6 +4,7 @@ import {withOperatorThemeRead,withPublicThemeRead} from './knowledge-theme-acces
 import {themePublicationState} from './knowledge-theme-publication';
 import {themeReadingPresentation} from "./theme-reading-presentation";
 import {themeStoryEntries} from "../domain/theme-stories";
+import {knowledgeTimelineProjection, themeTimelineRecords} from "../domain/knowledge-timeline";
 import {recordTimeTextTargets,themeTimelineTextTargets} from "../domain/knowledge-timeline-text";
 import {knowledgeOriginalText} from "../domain/knowledge-translation";
 import type {Pool} from 'pg';
@@ -37,7 +38,16 @@ export function createThemeAuthoringReader(pool:Pool,origin:string){
    candidates:result.snapshot.records.map(record=>({target:{id:record.id,revision:record.revision},kind:record.content.kind,
     assertion:record.content.assertion,headings:presentations.flatMap(p=>p.records.filter(r=>r.target.id===record.id&&r.target.revision===record.revision).map(r=>({locale:p.locale,shortTitle:r.shortTitle,chapterQuestion:r.chapterQuestion,explanations:r.explanations}))),evidence:record.content.evidence})),
    updateField:'update_theme.changes.stories',rules:'Selection is independent of timeline/Graph membership. All kinds are candidates. Ordered items may group multiple exact Record versions. Omit to retain; {version:1,items:[]} explicitly empties the list. Missing/private records are never exposed. Source URLs and exact source versions are in snapshot.sources. Read the current quality guide to edit prose; no automatic AI selection or review.'};
-  return {...result,edition:view?{view,...editions}:undefined,publicationCandidate:view==='editorial'?forPublication?.candidate??null:undefined,themeTranslations:forPublication?.translations,productionConflict:editions.productionConflict?{previous:editions.productionConflict,current:editions.published}:undefined,publication:await themePublicationState(pool,result.theme.id),previewUrl:origin+'/operations/themes/'+encodeURIComponent(result.theme.id)+(view==='editorial'?'?revision='+result.theme.revision:''),storyEditing,translationTargets,target:{id:result.theme.id,revision:result.theme.revision},url:url(result.theme.id,result.theme.revision)};
+  const timeline = result.snapshot.timeline;
+  const hasTimeline = themeTimelineRecords(result.snapshot).some(record => record.content.times.length > 0);
+  const timelineEditing = {
+   updateField: 'update_theme.changes.timeline',
+   excludedRecordIds: timeline?.excludedRecordIds ?? [],
+   visibleRecordIds: hasTimeline ? [...new Set(knowledgeTimelineProjection(result.snapshot, {
+    themeReading: true, untimedInContext: true,
+   }).records.map(row => row.recordId))] : [],
+  };
+  return {...result,timelineEditing,edition:view?{view,...editions}:undefined,publicationCandidate:view==='editorial'?forPublication?.candidate??null:undefined,themeTranslations:forPublication?.translations,productionConflict:editions.productionConflict?{previous:editions.productionConflict,current:editions.published}:undefined,publication:await themePublicationState(pool,result.theme.id),previewUrl:origin+'/operations/themes/'+encodeURIComponent(result.theme.id)+(view==='editorial'?'?revision='+result.theme.revision:''),storyEditing,translationTargets,target:{id:result.theme.id,revision:result.theme.revision},url:url(result.theme.id,result.theme.revision)};
  }
  async function find(kind:'theme'|'entity'|'record'|'source',query:string,cursor:number){
   // Candidates are bounded and independently checked for public dependencies.

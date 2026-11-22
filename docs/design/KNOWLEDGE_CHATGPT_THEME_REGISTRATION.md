@@ -65,6 +65,9 @@ package内の新しいEntityは、名称と分類（name／kind）を基本に�
 - `get_theme_authoring_guide` が登録・更新の完全なschemaと資料URLの例を返す。URLは `package.sources[].content.url` へ保存し、事実・引用・箇所と結ぶ。URLだけを根拠確認済みの知識と扱う意味ではない。
 - `search_themes` → `read_theme`（IDまたは当該環境のテーマURL）で構成・原文・資料URL・取得版を読む。共通Entity／Record／Sourceの再利用・根拠追加・訂正には公開参照の検索・読取操作も使える。未公開・停止済み情報を開示しない。検索は共通原本と取得済み旧KGを対象とし、未取得の旧KGまで検索済みと偽らない。
 - `update_theme` は取得した `{id, revision}` を対象に、新しい根拠付き項目・既存Recordの追加／版選択、タイトル・説明・原語・初期表示・年表構成、掲載解除・順序を変更する。省略した値と掲載項目は保持。同じテーマIDに新しい内容版を作り、別テーマの新規作成へ置き換えない。
+- `recordPins` はテーマ内の記録版を固定し、`snapshot.records` はそれらを解決した読み取り結果。 `presentation.records` は言語別の見出し・補足を提供する。年表の `placements` が無い日時付き記録は自動配置される。
+- 年表だけから非表示にする場合は、現在の `snapshot.timeline` を保ったまま `changes.timeline.excludedRecordIds` に対象の記録IDを指定して年表設定全体を送る。自動配置のみの場合は `{version:1,axes:[],placements:[],insets:[],excludedRecordIds:[id]}` を使う。設定の省略で保持し、リストからIDを外すと再表示される。 `timeline:null` は年表設定全体のリセット。除外する記録に接続された子年表があれば、先に接続先を明示する。
+- この指定はテーマ閲覧の年表に適用する。関係図・Story・詳細の記録はそのまま利用できる。 `read_theme.timelineEditing` で選択結果を読み、適用後の版のプレビューで、対象行と残す導線をPC・スマートフォンで確認する。
 - `removeRecordIds` はそのテーマへの掲載解除だけ。共通知識・別テーマ・既存Capsule・過去の共有断面を削除しない。期間配置は掲載解除した項目のものだけを外す。明示した年表の不整合を推測で修正しない。
 - 根拠付き項目の通常確認と意味重複処理を再利用。テーマ自身への出来事・背景は対象テーマの取得版へ結び、共通Recordの受理時に構成だけ先に更新しない。確認済みの構成を最後に適用する。
 - 受付／処理／最終適用の各段階で運営権限と公開範囲を確認。対象版が変わったら競合を返し、新しいテーマ版へ勝手に付け替えない。共通DB commit後のACK喪失は同じreceiptから回復する。

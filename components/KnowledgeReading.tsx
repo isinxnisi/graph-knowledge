@@ -24,6 +24,7 @@ import {createSelectionSubmission,knowledgeSubmissionSelection,submissionHandoff
 import {MemberClientError} from "../lib/client/member-api";
 import GraphCanvas, {type GraphCanvasHandle} from "./GraphCanvas";
 import KnowledgeTimeline from "./KnowledgeTimeline";
+import { themeTimelineRecords } from "../lib/domain/knowledge-timeline";
 import ThemeProducts,{ThemeItemsResult,useThemeItems,ThemeProductLinks,EntityProducts} from "./ThemeProducts";
 import ThemeReadingHero from "./ThemeReadingHero";
 import {readingRecordTitle,readingExplanations} from "../lib/domain/theme-reading-presentation";
@@ -125,7 +126,7 @@ export default function KnowledgeReading({children,operatorEnabled=true,initialT
  const normalState=useMemo(()=>emptyGraph(w.normal.epoch),[w.normal.epoch]);
  const themeState=useMemo(()=>emptyGraph(retained?.theme.revision??0),[retained?.theme.revision]);
  const themeContent=useMemo(()=>{const rows=retained?.records.filter(r=>r.record.content.kind==="relation")??[];const ids=new Set(rows.flatMap(r=>[r.record.content.subjectId,r.record.content.objectId]));return knowledgeCanvas(retained?.records??[],retained?.snapshot.entities.filter(e=>ids.has(e.id))??[],themeDisplayTranslations,locale,presentation?.entityNotes);},[retained,themeDisplayTranslations,locale,presentation]);
- const themeHasTime=Boolean(retained?.snapshot.records.some(r=>r.content.times.length)),themeHasGraph=Boolean(themeContent.nodes.length);
+ const themeHasTime=Boolean(themeSnapshot && themeTimelineRecords(themeSnapshot).some(r => r.content.times.length)),themeHasGraph=Boolean(themeContent.nodes.length);
  const themeMode=themeHasTime?themeHasGraph&&w.themeView==="split"?"split":"timeline":"graph";
  const busy=w.busy||w.restoring;
  useEffect(()=>{const sync=()=>{const url=new URL(location.href);setCommonVisible(!!initialEntityId||url.searchParams.has("kentity")||url.searchParams.has("krecord"));setRequested(!!initialEntityId||url.searchParams.has("ktheme")||url.searchParams.has("kentity")||url.searchParams.has("krecord"));};queueMicrotask(sync);window.addEventListener("popstate",sync);return()=>window.removeEventListener("popstate",sync);},[initialEntityId]);

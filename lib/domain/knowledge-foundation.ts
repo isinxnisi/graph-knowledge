@@ -54,7 +54,10 @@ export const knowledgeMappingContentSchema = z.strictObject({ recordRevision: kn
 export const knowledgeTimelineSchema = z.strictObject({
   version: z.literal(1),
   axes: z.array(z.strictObject({ id: knowledgeIdSchema, kind: z.enum(["calendar", "cycle", "qualitative"]), label: text.max(200), order: z.array(text.max(200)).max(400).optional(), originLabel: z.string().max(1000).optional() })).max(32),
-  placements: z.array(z.strictObject({ recordId: knowledgeIdSchema, timeId: knowledgeIdSchema, axisId: knowledgeIdSchema })).max(400),
+  placements: z.array(z.strictObject({ recordId: knowledgeIdSchema, timeId: knowledgeIdSchema, axisId: knowledgeIdSchema })).max(400)
+    .describe("Axis assignment only. A dated theme member without a placement still appears on an automatic axis."),
+  excludedRecordIds: z.array(knowledgeIdSchema).max(400).optional()
+    .describe("Explicitly hide these theme members (all their time annotations) from this theme's reading timeline only. Keep their Record pins, Story and Graph. An inset parent cannot be excluded while its inset is configured."),
   insets: z.array(z.strictObject({ parentRecordId: knowledgeIdSchema, parentTimeId:knowledgeIdSchema.optional(), axisId: knowledgeIdSchema, label: text.max(200) })).max(32).default([]),
 });
 export const knowledgeThemeContentSchema = z.strictObject({

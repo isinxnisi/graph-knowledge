@@ -51,18 +51,24 @@ export function knowledgeTimelineLayout(records: KnowledgeRecordVersion[], timel
   return { version: 1, axes: timeline.axes.map(a => ({ ...a, id: axisId(a.id), ...(a.order ? { order: [...a.order] } : {}) })), placements, insets };
 }
 
+export function themeTimelineRecords(snapshot: Pick<KnowledgeSnapshot, "records" | "timeline">) {
+  const excluded = new Set(snapshot.timeline?.excludedRecordIds);
+  return snapshot.records.filter(record => !excluded.has(record.id));
+}
+
 /** Read only the supplied fixed snapshot. Never fetch current entity/source
  * heads and never create a fake subject, URL, quotation, or period entity. */
-export function knowledgeTimelineProjection(snapshot: KnowledgeSnapshot, options: { untimedInContext?: boolean; locale?: string } = {}): {
+export function knowledgeTimelineProjection(snapshot: KnowledgeSnapshot, options: { untimedInContext?: boolean; locale?: string; themeReading?: boolean } = {}): {
   records: TimelineDisplayRecord[];
   entities: TimelineDisplayEntity[];
   timeline?: ThemeTimelineConfig;
   graphRecordIds: string[];
 } {
   const insetParents = new Set(snapshot.timeline?.insets.map(i => i.parentRecordId));
+  const selectedRecords = options.themeReading ? themeTimelineRecords(snapshot) : snapshot.records;
   const displayedRecords = options.untimedInContext
-    ? snapshot.records.filter(r => r.content.times.length > 0 || insetParents.has(r.id))
-    : snapshot.records;
+    ? selectedRecords.filter(r => r.content.times.length > 0 || insetParents.has(r.id))
+    : selectedRecords;
   const recordById = new Map(displayedRecords.map(r => [r.id, r]));
   const sourceByPin = new Map(snapshot.sources.map(s => [JSON.stringify([s.id, s.revision]), s]));
   const entityIds = new Set(snapshot.entities.map(e => e.id));

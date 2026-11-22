@@ -60,3 +60,13 @@ it("renders translated headings and time labels in the actual shared timeline co
  const html=renderToStaticMarkup(<UiLocaleProvider initialLocale="en"><KnowledgeTimeline snapshot={snapshot} focusedRecordId={null} onFocusRecord={()=>{}}/></UiLocaleProvider>);
  expect(html).toContain("From concept to deployment");expect(html).toContain("Workshop");expect(html).toContain("Activities that day");expect(html).toContain("Morning");expect(html).not.toContain("構想から展開");expect(html).not.toContain("検討会");
 });
+
+it("uses the translated assertion as the theme timeline heading when there is no editorial title",()=>{
+ const assertion=translated(target("assertion",{}),"The workshop began.");
+ const calendar={...snapshot,records:[{...record,content:{...record.content,times:[{
+  id:"when",time:{kind:"calendar" as const,from:"1989",label:"1989"}
+ }]}}],timeline:undefined,translations:[assertion]};
+ const html=renderToStaticMarkup(<UiLocaleProvider initialLocale="en"><KnowledgeTimeline reading snapshot={calendar} focusedRecordId={null} onFocusRecord={()=>{}}/></UiLocaleProvider>);
+ expect(html).toContain("The workshop began.");
+ expect(html).toContain("1989");
+});

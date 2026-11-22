@@ -40,11 +40,11 @@ beforeAll(async()=>{
  const before=(await pool.query('SELECT name,checksum FROM member_migration ORDER BY name')).rows;
  await migrateMemberDatabase(pool,...Array(27).fill(true));await migrateMemberDatabase(pool,...Array(27).fill(true));
  expect((await pool.query('SELECT name,checksum FROM member_migration WHERE name<>$1 ORDER BY name',['036-theme-registration.sql'])).rows).toEqual(before);
- expect((await pool.query('SELECT count(*)::int n FROM member_migration')).rows[0].n).toBe(37);
+ expect((await pool.query('SELECT count(*)::int n FROM member_migration')).rows[0].n).toBe(before.length+1);
  const baseline=(await pool.query('SELECT name,checksum FROM member_migration ORDER BY name')).rows;
  await migrateMemberDatabase(pool,...Array(29).fill(true));await migrateMemberDatabase(pool,...Array(29).fill(true));
  expect((await pool.query("SELECT name,checksum FROM member_migration WHERE name NOT IN('037-featured-themes.sql','038-theme-updates.sql') ORDER BY name")).rows).toEqual(baseline);
- expect((await pool.query('SELECT count(*)::int n FROM member_migration')).rows[0].n).toBe(39);
+ expect((await pool.query('SELECT count(*)::int n FROM member_migration')).rows[0].n).toBe(baseline.length+2);
  process.env.KNOWLEDGE_MISSIONS_ENABLED='1';process.env.SITE_OPERATOR_USER_IDS=owner+','+other;
 },30000);
 beforeEach(async()=>{
@@ -120,6 +120,42 @@ it('updates the same theme, keeps the original snapshot, recovers a replay after
  expect((await reader.find('theme','より詳しく',0)).items.map(i=>i.id)).toEqual([t.id]);
  const guide=JSON.stringify(themeAuthoringGuide());expect(guide).toContain('package.sources[].content.url');expect(guide).toContain('https://science.nasa.gov/mission/webb/launch/');
 });
+it('edits the theme timeline selection independently of exact Record and Story pins',async()=>{
+ const actor={kind:'operator',id:'fixture'} as const;
+ const pins=['history','context'].map(id=>({id,revision:1}));
+ await foundation().execute(actor,{action:'create-bundle',requestId:randomUUID(),
+  entityPins:[{id:'a',revision:1}],entities:[{id:'b',content:{name:'B',kind:'work'}}],
+  records:pins.map(({id})=>({id,content:{kind:'relation',subjectId:'a',objectId:'b',relation:'documents',
+   assertion:'A documents B.',times:[{id:'date',time:{kind:'calendar',from:'1939',label:'1939'}}],
+   evidence:[{id:'proof',source:{id:'base',revision:1},locator:'Name',excerpt:'A documents B.'}]}})),reason:'Timeline test'});
+ const stories={version:1,items:[{key:'background',records:[pins[1]]}]};
+ const create={...input(),recordPins:pins,stories};
+ await service.submit(owner,create);await service.recoverOne();
+ const t=(await service.status(owner,create.requestId)).theme!;
+ const reader=createThemeAuthoringReader(knowledge,'https://plunode.net');
+ const before=await reader.read(t.id);
+ expect(before.timelineEditing.visibleRecordIds).toEqual(['history','context']);
+ const layout={version:1,axes:[],placements:[],insets:[]};
+ const invalid=edit(t,{timeline:{...layout,excludedRecordIds:['missing']}});
+ await service.submit(owner,invalid);await service.recoverOne();
+ expect(await service.status(owner,invalid.requestId)).toMatchObject({state:'needs-changes',theme:null});
+ const hide=edit(t,{timeline:{...layout,excludedRecordIds:['context']}});
+ await service.submit(owner,hide);await service.recoverOne();
+ expect(await service.status(owner,hide.requestId)).toMatchObject({state:'published',theme:{revision:2}});
+ const after=await reader.read(t.id);
+ expect(after.timelineEditing).toMatchObject({visibleRecordIds:['history'],excludedRecordIds:['context']});
+ expect(after.theme.content.recordPins).toEqual(pins);
+ expect(after.snapshot.records).toEqual(before.snapshot.records);
+ expect(after.theme.content.stories).toEqual(stories);
+ expect((await reader.read(t.id,1)).timelineEditing).toMatchObject({visibleRecordIds:['history','context'],excludedRecordIds:[]});
+ const keep=edit(after.target,{description:'A revised introduction'});
+ await service.submit(owner,keep);await service.recoverOne();
+ expect((await reader.read(t.id)).timelineEditing.visibleRecordIds).toEqual(['history']);
+ const restore=edit({id:t.id,revision:3},{timeline:{...layout,excludedRecordIds:[]}});
+ await service.submit(owner,restore);await service.recoverOne();
+ expect((await reader.read(t.id)).timelineEditing.visibleRecordIds).toEqual(['history','context']);
+});
+
 it('appends existing records, reorders and removes only membership, retaining common data and prior theme versions',async()=>{
  const t=await theme();
  await foundation().execute({kind:'operator',id:'fixture'},{action:'create-bundle',requestId:randomUUID(),entityPins:[{id:'a',revision:1}],sources:[{id:'extra-source',content:{title:'Second source',url:'https://example.org/extra'}}],records:[{id:'extra',content:{kind:'note',subjectId:'a',assertion:'A works internationally.',evidence:[{id:'proof',source:{id:'extra-source',revision:1},locator:'Work',excerpt:'A works internationally.'}]}}],reason:'Second published fact'});

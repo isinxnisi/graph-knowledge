@@ -205,7 +205,11 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
    let timeline=providedTimeline===null?undefined:providedTimeline??baseline?.content.timeline;
    if(timeline){
     const removed='target' in input?input.removeRecordIds:[];
-    timeline={...timeline,placements:timeline.placements.flatMap(v=>{
+    const excludedRecordIds=timeline.excludedRecordIds?.flatMap(v=>{
+     if(providedTimeline===undefined&&removed.includes(v))return [];
+     const id=resolve(v);return id?[id]:[];
+    });
+    timeline={...timeline,...(excludedRecordIds?{excludedRecordIds}:{}),placements:timeline.placements.flatMap(v=>{
      if(providedTimeline===undefined&&removed.includes(v.recordId))return [];
      const id=resolve(v.recordId);return id?[{...v,recordId:id}]:[];
     }),insets:timeline.insets.flatMap(v=>{

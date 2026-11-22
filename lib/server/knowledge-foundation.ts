@@ -203,6 +203,16 @@ async function capture(c: PoolClient, recordPins: KnowledgePin[], options: { ent
     if (m.content.recordRevision === r.revision) mappings.push(m);
   }
   const issues = knowledgeTimelineIssues(records, options.timeline);
+  const excluded = options.timeline?.excludedRecordIds;
+  if (excluded) {
+    const members = new Set(records.map(record => record.id));
+    if (new Set(excluded).size !== excluded.length || excluded.some(id => !members.has(id))) {
+      issues.push("年表の非表示にはテーマに掲載する記録を一度ずつ指定してください");
+    }
+    if (options.timeline?.insets.some(inset => excluded.includes(inset.parentRecordId))) {
+      issues.push("子年表の親記録を非表示にする場合は、子年表の接続先も変更してください");
+    }
+  }
   if (issues.length) throw new KnowledgeError(issues.join(" / "), 409, "TIMELINE_CONFLICT");
   return { schemaVersion: 1, entities, sources, records, mappings, ...(options.timeline ? { timeline: options.timeline } : {}), initialView: options.initialView ?? "graph" };
 }
@@ -493,10 +503,17 @@ export function createKnowledgeFoundationService(pool: Pool,options:{prepareSche
         const reading=cmd.reading??retainedThemeEditorial(old.content.reading,snapshot);
         if(reading){const issue=editorialReferenceError(reading,snapshot);if(issue)throw new KnowledgeError(issue,400,'THEME_EDITORIAL_REFERENCE');}
         const content={...(stories?{stories}:{}),...(reading?{reading}:{}),title:cmd.title,description:cmd.description,...((cmd.productPins??old.content.productPins)?{productPins:cmd.productPins??old.content.productPins}:{}),...(cmd.textLanguages?{textLanguages:cmd.textLanguages}:{}),...snapshotPins(snapshot),...(cmd.timeline?{timeline:cmd.timeline}:{}),initialView:cmd.initialView};
-        // Product selection is editorial metadata: preserve the checked reading/SEO
-        // presentation only when every knowledge/text/time pin is unchanged.
-        const readingBody=(value:Record<string,unknown>)=>{const {productPins,stories,readingBaseRevision,...body}=value;void productPins;void stories;void readingBaseRevision;return knowledgeDigest(body);};
-        if((cmd.stories!==undefined||cmd.productPins!==undefined||old.content.productPins!==undefined)&&readingBody(content)===readingBody(old.content)){
+        // Keep checked legacy reading copy for metadata-only changes.
+        const readingBody=(value:Pick<KnowledgeThemeContent,"timeline"> & Record<string,unknown>)=>{
+          const {productPins,stories,readingBaseRevision,timeline,...body}=value;
+          void productPins;void stories;void readingBaseRevision;
+          if(!timeline)return knowledgeDigest(body);
+          const {excludedRecordIds,...layout}=timeline;
+          void excludedRecordIds;
+          return knowledgeDigest(layout.axes.length||layout.placements.length||layout.insets.length?{...body,timeline:layout}:body);
+        };
+        const timelineSelectionChanged=knowledgeDigest(cmd.timeline?.excludedRecordIds??[])!==knowledgeDigest(old.content.timeline?.excludedRecordIds??[]);
+        if((timelineSelectionChanged||cmd.stories!==undefined||cmd.productPins!==undefined||old.content.productPins!==undefined)&&readingBody(content)===readingBody(old.content)){
           const editions=(await c.query("SELECT revision,content FROM knowledge75.revisions WHERE kind='theme' AND id=$1 AND revision<=$2 ORDER BY revision DESC LIMIT 50",[cmd.id,old.revision])).rows;
           const origin=old.content.readingBaseRevision??[...editions].reverse().find(v=>readingBody(v.content)===readingBody(content))?.revision??old.revision;
           Object.assign(content,{readingBaseRevision:Number(origin)});
