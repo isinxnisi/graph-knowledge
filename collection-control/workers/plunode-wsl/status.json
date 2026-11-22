@@ -26,29 +26,24 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-22T08:29:53.028301+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-22T07:35:10.778778+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-22T08:29:53.028301+00:00",
+    "eligibleAt": "2026-11-22T07:35:10.778778+00:00",
     "windowEndAt": "2026-11-22T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-25-utc-recovery-01",
-    "startedAt": "2026-11-22T07:24:53.028307+00:00",
-    "limitAt": "2026-11-22T08:19:53.028301+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-51-dot-araki-rohan-20261027",
-    "endedAt": "2026-11-22T06:24:18.643805+00:00"
+    "requestId": "issue-25-utc-recovery-01",
+    "endedAt": "2026-11-22T07:25:10.778785+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 13,
-    "waiting-lock": 1,
-    "completed": 42,
+    "completed": 43,
     "awaiting-recovery": 6
   },
   "issueIntake": {
@@ -161,7 +156,7 @@
   "recoveryRequests": {
     "issue-25-utc-recovery-01": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-03",
-      "phase": "waiting-lock"
+      "phase": "completed"
     },
     "issue-25-utc-recovery-02": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-01",
@@ -196,5 +191,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-22T07:24:55.110387+00:00"
+  "checkedAt": "2026-11-22T07:25:35.166260+00:00"
 }
