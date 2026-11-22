@@ -1,3 +1,5 @@
+2026-11-22 #77 年表編集契約を正式反映し、Web／4 Worker・認証済みAPI・日英の公開画面確認まで完了。アプリ `3f388eb5`、正式 build `UxEm5YCPPjAvD5m9GGl4P`。ルート66の編集と独立見直しはChatGPT側の工程。 [切替・検証・復旧の記録](verification/THEME_TIMELINE_EDITORIAL_RELEASE_20261122.md)
+
 TOP紹介テーマとテーマ詳細の表示調整を正式反映・配信確認まで完了。アプリ `1ed7db46`、β build `SmfjUtGpfgAo8mXZtbDpr`、正式 build `o7DaleY5Log8O3tDmkuVb`。Webのみ切替、会員50／知識13の台帳と各Workerを照合。公開世代 `k75-da4c11ef85364b596a18f6bcdf2036f7`、退避先 `/opt/graph-knowledge/backups/release-1ed7db4668cb-3f5d4d7a473e93a3`。TOP・詳細の3:2トリミング、PCのホバー、元画像モーダル、320・390・796・801・1440pxでの案内配置と往復を正式HTTPSで確認。
 
 2026-11-21 自動生成画像の公開クレジットを専用Workerへ正式反映し、稼働イメージ・コード・HTTPS読取を照合｜本番テストテーマの生成・更新は利用者が確認中｜反映工程は切替と稼働確認まで完了。 [公開クレジットの正式反映](runbooks/THEME_AUTOMATION.md#自動生成画像の公開クレジット)。
