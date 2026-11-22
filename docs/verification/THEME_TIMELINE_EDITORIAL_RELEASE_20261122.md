@@ -35,3 +35,13 @@
 - Codexで確認できる接続済み本番Appのツール定義は、切替後も `prepare_theme_production_submission.generatedImage` に `target` を含まなかった。記録への指定は既存の `command` 内の `presentation[].records[].imageId` でも行える。生成結果を `generatedImage.target` で直接指定する場合は、ChatGPT WebでAppのツール定義を更新し、同フィールドを読み戻してから使用する。定期実行設定と品質ガイドへの書込みは行っていない。
 
 退避先は `/opt/graph-knowledge/backups/release-9a39541981e4-6b2ac9f477eab4d4`。退避したCompose・旧イメージ・`state.json` を復旧判断に使う。新Web起動後は新しい画像の紐付け契約を受け付けるため、同じseal `6b2ac9f477eab4d43fada2d53416ff23391462cff77efd182a63049043aee609` の資材で前進復旧する。 [共通本番公開手順](../runbooks/PRODUCTION_RELEASE.md#失敗中断時)
+
+## 記録詳細の画像レイアウトを正式反映
+
+2026-11-23 JST。固定コミット `4e9ea9dac29d5aeea5fdc45ac59ebcd3bc79d94d` のCSS修正を、Webのみの差し替えで正式反映した。β build は `2YhIu7BZkqtjP0ynP-x_L`、正式 build は `wq3tH5qGxsQwA53htv1em`。切替時に台帳（会員50、知識13）、Worker 4本と既存の環境設定の一致を確認した。追加migrationは0件。
+
+- 正式HTTPSのTOP・dataset・検索・互換性APIを確認した。公開世代は切替前後で `k75-7a0743aeb940667b13430af82d43103a`。
+- 本番の『Illmatic』で、日英・1440px／390pxの4条件を確認した。年表の画像から記録詳細を開き、詳細の画像とボタンが同じ幅で、外枠なし・中央揃えの角丸画像になった。拡大・クレジット表示・閉じる操作も確認した。
+- 黒澤明のアカデミー名誉賞のイラストはβの確認用として保持した。正式の画像配信経路では当該画像がHTTP 404となることを確認した。
+
+公開資材のsealは `47367ab257b47d607aedb4c9d5d540668e68341a33eae44fb8a7d10afc828a16`。退避先は `/opt/graph-knowledge/backups/release-4e9ea9dac29d-47367ab257b47d60`。復旧時は旧Composeと旧Webイメージを使い、共通公開手順のWebのみの復旧に従う。 [共通本番公開手順](../runbooks/PRODUCTION_RELEASE.md#失敗中断時)
