@@ -92,12 +92,12 @@
   },
   "requestSha256": "485d298e7753f789d88bd9b89912d594586bb9d811dc9e1c3704515d368da200",
   "kind": "collect-review",
-  "phase": "blocked",
-  "generation": 14620,
+  "phase": "retry-wait",
+  "generation": 16467,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
-  "updatedAt": "2026-11-11T19:15:35+00:00",
-  "message": "Installed code differs from source commit; reviewed worker upgrade required",
-  "retryAt": 1794405231.3073409
+  "updatedAt": "2026-11-22T03:28:18+00:00",
+  "message": "GitHub Issue read failed: HTTP 502",
+  "retryAt": 1795318230.0274544
 }
