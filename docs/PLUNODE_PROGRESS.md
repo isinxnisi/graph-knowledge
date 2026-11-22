@@ -1,3 +1,5 @@
+2026-11-22 年表の記録画像を3200／HTTPS βへ反映し、日英・PC／スマートフォンの年表・詳細・拡大表示、匿名画像取得の拒否、既存の表紙と制作経路を確認。スマートフォン幅では日付をそろえて画像を下へ配置した。β build `FTQlQVP80i7WhjhnlwPLG`。本番反映は別工程。 [登録・読み戻しの契約](design/KNOWLEDGE_CHATGPT_THEME_REGISTRATION.md#年表の記録画像)
+
 2026-11-22 #77 年表編集契約を正式反映し、Web／4 Worker・認証済みAPI・日英の公開画面確認まで完了。アプリ `3f388eb5`、正式 build `UxEm5YCPPjAvD5m9GGl4P`。ルート66の編集と独立見直しはChatGPT側の工程。 [切替・検証・復旧の記録](verification/THEME_TIMELINE_EDITORIAL_RELEASE_20261122.md)
 
 TOP紹介テーマとテーマ詳細の表示調整を正式反映・配信確認まで完了。アプリ `1ed7db46`、β build `SmfjUtGpfgAo8mXZtbDpr`、正式 build `o7DaleY5Log8O3tDmkuVb`。Webのみ切替、会員50／知識13の台帳と各Workerを照合。公開世代 `k75-da4c11ef85364b596a18f6bcdf2036f7`、退避先 `/opt/graph-knowledge/backups/release-1ed7db4668cb-3f5d4d7a473e93a3`。TOP・詳細の3:2トリミング、PCのホバー、元画像モーダル、320・390・796・801・1440pxでの案内配置と往復を正式HTTPSで確認。

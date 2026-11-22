@@ -14,8 +14,10 @@ import { useUiLocale } from "../lib/client/ui-locale";
 import KnowledgeContributors from "./KnowledgeContributors";
 import css from "./KnowledgeReadingDetail.module.css";
 import ReadingDetailSection from "./ReadingDetailSection";
+import ThemeImageButton from "./ThemeImageButton";
+import type { ThemeReadingImage } from "../lib/domain/theme-reading-presentation";
 
-export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme,onTranslation,title,correction,onBack,backLabel,nestedBack=false,contextEntry=false,explanations=[],openEvidenceIds,onEvidenceOpen,evidenceRequest,displayTranslations }: {correction?:ReactNode;displayTranslations?:readonly KnowledgeDisplayTranslation[];onTranslation?:(v:KnowledgeTranslationVersion)=>void;onRecord?:(id:string)=>void;onTheme?:(id:string)=>void; dto: KnowledgePublishedRecord; onEntity: (id: string) => void;title?:string;onBack?:()=>void;backLabel?:string;nestedBack?:boolean;contextEntry?:boolean;explanations?:{dto:KnowledgePublishedRecord;role:"importance"|"background"|"insight"|"next";heading?:string}[];openEvidenceIds?:string[];onEvidenceOpen?:(ids:string[])=>void;evidenceRequest?:EvidenceRequest|null }) {
+export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme,onTranslation,title,image,correction,onBack,backLabel,nestedBack=false,contextEntry=false,explanations=[],openEvidenceIds,onEvidenceOpen,evidenceRequest,displayTranslations }: {correction?:ReactNode;displayTranslations?:readonly KnowledgeDisplayTranslation[];onTranslation?:(v:KnowledgeTranslationVersion)=>void;onRecord?:(id:string)=>void;onTheme?:(id:string)=>void; dto: KnowledgePublishedRecord; onEntity: (id: string) => void;title?:string;image?:ThemeReadingImage;onBack?:()=>void;backLabel?:string;nestedBack?:boolean;contextEntry?:boolean;explanations?:{dto:KnowledgePublishedRecord;role:"importance"|"background"|"insight"|"next";heading?:string}[];openEvidenceIds?:string[];onEvidenceOpen?:(ids:string[])=>void;evidenceRequest?:EvidenceRequest|null }) {
   const { locale } = useUiLocale(), en = locale === "en";
   const loadedTranslations=useKnowledgeDisplayTranslations(dto.entities,[dto.record],undefined,locale,displayTranslations===undefined);
   const translations=[...(displayTranslations??[]),...loadedTranslations];
@@ -34,8 +36,9 @@ export default function KnowledgeRecordDetail({ dto, onEntity,onRecord,onTheme,o
   return <article className={css.detail}>
     <div className={css.detailNav}>{onBack&&<button data-detail-back className={css.back} data-nested={nestedBack||undefined} onClick={onBack} title={backLabel}><Icon name="back"/><span>{backLabel||(en?"Back to reading":"年表・図に戻る")}</span></button>}
     {!contextEntry&&<KnowledgeReadingBadge kind={r.kind} polarity={r.polarity} en={en}/>}</div>
-    {heading!==assertion&&<h2>{heading}</h2>}
-    <p className={css.statement} lang={assertion!==r.assertion?locale:originalLanguage}>{assertion}</p>
+    {(heading!==assertion||image)&&<h2>{heading}</h2>}
+    {image&&<ThemeImageButton key={image.src} image={image} en={en} variant="detail" />}
+    {(heading!==assertion||!image)&&<p className={css.statement} lang={assertion!==r.assertion?locale:originalLanguage}>{assertion}</p>}
 
     {scope&&!longScope&&<p className={css.scope}>{scope}</p>}
     {explanations.length>0&&<ReadingDetailSection title={en?"Explanation":"解説"} icon="book">

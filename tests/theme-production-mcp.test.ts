@@ -9,6 +9,8 @@ it('advertises the six private handoff operations with input/output schemas in t
  const call=vi.fn().mockResolvedValue({outcome:'none',case:null}),handler=createMissionMcpHandler(vi.fn(),{call});
  const r=await handler.fetch(rpc('tools/list',{})),data=await r.json();for(const name of names){const tool=data.result.tools.find((t:{name:string})=>t.name===name);expect(tool).toBeTruthy();expect(tool.inputSchema.type).toBe('object');expect(tool.outputSchema.properties.outcome).toBeTruthy();expect(tool._meta.securitySchemes[0].scopes).toContain('themes:compose');}
  const guide=themeAuthoringGuide().productionHandoff;expect(Object.values(guide.operations)).toEqual(names);expect(guide.schemas.prepare.properties?.command).toBeTruthy();
+ const prepare=data.result.tools.find((t:{name:string})=>t.name==='prepare_theme_production_submission');
+ expect(prepare.inputSchema.properties.generatedImage.properties.target.properties.revision.type).toBe('integer');
  const response=await handler.fetch(rpc('tools/call',{name:'get_theme_production',arguments:{}})),body=await response.json();expect(body.result.isError).not.toBe(true);expect(body.result.structuredContent).toEqual({outcome:'none',case:null});expect(call).toHaveBeenCalledWith({action:'get-theme-production',submissionCursor:0});
 });
 it('advertises scoped case management and forwards only the resolved theme ID',async()=>{

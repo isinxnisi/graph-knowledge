@@ -1,3 +1,4 @@
+import {requestedThemeImageIds} from '../domain/theme-editorial';
 import {ordinaryThemeBaseline,themeEditions,type ThemeEdit} from './knowledge-theme-editions';
 import {themePublicationState} from './knowledge-theme-publication';
 import {withOperatorThemeRead} from './knowledge-theme-access';
@@ -115,7 +116,7 @@ export function createThemeRegistrations(pool:Pool,knowledge:Pool,web:ReturnType
   if(r.receipt_id)receipt=await readReceipt(r);
   if(r.result?.id)try{const v=await withOperatorThemeRead(()=>foundation.get({kind:'reader',id:actorId(owner)},'theme',r.result.id,r.result.revision));theme={id:v.id,revision:v.revision,title:v.content.title,url:(process.env.MEMBER_ORIGIN??'')+'/?ktheme='+encodeURIComponent(v.id)+'&krev='+v.revision};}catch{/* No stopped/private dependency is disclosed through old receipt links. */}
   const requestedPresentation=r.input.target?r.input.changes?.presentation:r.input.presentation;
-  const components={presentation:{requestedLocales:requestedPresentation?.map((p:{locale:string})=>p.locale)??null,applied:theme!==null&&['published','published-with-issues'].includes(r.state)},imageIds:requestedPresentation?.flatMap((p:{imageId?:string})=>p.imageId?[p.imageId]:[])??[],productPins:r.input.target?r.input.changes?.productPins??null:r.input.productPins??null};
+  const components={presentation:{requestedLocales:requestedPresentation?.map((p:{locale:string})=>p.locale)??null,applied:theme!==null&&['published','published-with-issues'].includes(r.state)},imageIds:requestedThemeImageIds(requestedPresentation),productPins:r.input.target?r.input.changes?.productPins??null:r.input.productPins??null};
   return {requestId,state:r.state,...(theme&&r.input.editorial?{editorial:(await themeEditions(knowledge,theme.id)).draft}:{}),publication:theme?await themePublicationState(knowledge,theme.id):null,previewUrl:theme?(process.env.MEMBER_ORIGIN??'')+'/operations/themes/'+encodeURIComponent(theme.id)+(r.input.editorial?'?revision='+theme.revision:''):null,reason:r.reason,components,retryControl:await readThemeRetries(pool,r,selection?.itemKey,knowledge),itemAmendments:await readThemeItemAmendments(pool,r,selection),operation:r.input.target?'update':'create',target:r.input.target??null,title:theme?.title??r.input.title??r.input.changes?.title??'',receipt,theme,excludedKeys:r.result?.excludedKeys??[],nextAttemptAt:['saved','processing'].includes(r.state)?r.next_attempt:null};
  }
  async function amend(owner:string,raw:unknown){

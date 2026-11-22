@@ -1,3 +1,4 @@
+import {themeEditorialImageIds} from '../domain/theme-editorial';
 import type {Pool,PoolClient} from 'pg';
 import type {z} from 'zod';
 import type {publishThemeSchema} from '../domain/knowledge-theme-registration';
@@ -47,7 +48,7 @@ export async function publishOrdinaryTheme(pool:Pool,knowledge:Pool,owner:string
   const {theme,translations,digest:actual}=await resolveCandidate(k,input.target.id,input.target.revision);
   if(input.digest!==actual)throw new KnowledgeError('原稿や訳文が変わりました。確認した通常編集の版を読み直してください。',409,'THEME_PUBLICATION_CONFLICT');
   await validateProductPins(m,theme.content.productPins??[]);
-  const images=[...new Set((theme.content.reading??[]).flatMap(p=>p.image?.id?[p.image.id]:[]))];
+  const images=themeEditorialImageIds(theme.content.reading);
   if(images.length&&(await m.query("SELECT id FROM product_image_asset WHERE id=ANY($1::text[]) AND role='illustration' FOR SHARE",[images])).rowCount!==images.length)throw new KnowledgeError('公開する挿絵を確認してください。',409,'THEME_IMAGE_INVALID');
   await freezeThemeReleases(k,theme.id);
   const hasActiveCase=published.revision!==null&&(await m.query(

@@ -1,4 +1,5 @@
 import type { ThemeTime } from "./theme-workbench";
+import type { ThemeReadingImage } from "./theme-reading-presentation";
 
 /** A drawing row is not a persisted factual Record. Old one-time records are
  * structurally compatible; common records can produce several time rows. */
@@ -11,6 +12,7 @@ export type TimelineDisplayRecord = {
   object: string | null;
   assertion: string;
   readingTitle?: string; readingSummary?:string;
+  readingImage?: ThemeReadingImage;
   relation: string;
   scope: string;
   polarity: "affirmed" | "denied" | "uncertain";

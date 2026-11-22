@@ -10,6 +10,7 @@ import { timelineRecordId, type TimelineDisplayRecord, type TimelineDisplayEntit
 import { buildTimelineGroups, type ThemeTimelineGroup } from "../lib/domain/theme-timeline";
 import { calendarMeaning, themeTimeLabel } from "../lib/domain/theme-time";
 import css from "./ThemeTimeline.module.css";
+import ThemeImageButton from "./ThemeImageButton";
 import CalendarTimelineGraph from "./CalendarTimelineGraph";
 import Icon from "./Icon";
 import KnowledgeReadingBadge from "./KnowledgeReadingBadge";
@@ -392,6 +393,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
               ))}
           </div>
           <div className={css.content}>
+            {reading&&t?.kind==="calendar"&&<span className={css.readingDate}>{readingCalendarLabel(t,locale)}</span>}
             <div className={css.rowMain}>
               {onToggleSelected && (
                 <input
@@ -401,6 +403,7 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                   onChange={() => onToggleSelected(timelineRecordId(record))}
                 />
               )}
+              {reading&&record.readingImage&&<ThemeImageButton key={record.readingImage.src} image={record.readingImage} en={locale==="en"} variant="timeline" />}
               <button
                 type="button"
                 className={css.openRow}
@@ -410,7 +413,6 @@ export default function ThemeTimeline<R extends TimelineDisplayRecord>({
                 onClick={() => toggle(record.id, open)}
               >
                 <span className={css.rowText}>
-                  {reading&&t?.kind==="calendar"&&<span className={css.readingDate}>{readingCalendarLabel(t,locale)}</span>}
                   <span className={css.rowHeading}>
 
                     <span className={css.assertion}>{reading?record.readingTitle||record.assertion:record.assertion}</span>

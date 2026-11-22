@@ -80,7 +80,11 @@ export async function inspectThemePage(page: Page, url: string, revision: number
   const pane = page.locator('#explorer-detail');
   const detail = await pane.count() ? pane : page.locator('body');
   const evidence = detail.locator('[data-evidence-toggle]:visible').first();
-  const timeline = reading.locator('[data-timeline-row-id]:visible button[aria-pressed]').first();
+  const rows = reading.locator('[data-timeline-row-id]:visible');
+  const illustratedRow = rows.filter({ has: page.locator('[data-record-image="timeline"]:visible') }).first();
+  const thumbnail = illustratedRow.locator('[data-record-image="timeline"]');
+  const hasRecordImage = await thumbnail.count() > 0;
+  const timeline = (hasRecordImage ? illustratedRow : rows).locator('button[aria-pressed]').first();
   let timelineReturn:'back-button'|'desktop-inline'|null=null;
   async function revealEvidence(){
     await evidence.waitFor();
@@ -106,10 +110,25 @@ export async function inspectThemePage(page: Page, url: string, revision: number
     await dialog.waitFor({ state: 'hidden' });
     return true;
   });
+  if(hasRecordImage)await check('timelineImageDialog', async () => {
+    await thumbnail.click();
+    const dialog=page.getByRole('dialog',{name:label(locale,'記録の画像','Record image')});
+    await dialog.waitFor();
+    await dialog.locator('img').evaluate((img:HTMLImageElement)=>img.decode());
+    await capture('timeline-image');
+    await dialog.getByRole('button',{name:label(locale,'閉じる','Close')}).click();
+    await dialog.waitFor({state:'hidden'});
+    return true;
+  });
   await check('timelineSourceAndBack', async () => {
     if(expected?.timeline===false)return false;
     if(!expected&&!await timeline.count())return false;
     await timeline.click();
+    if(hasRecordImage){
+      const detailImage=detail.locator('[data-record-image="detail"]:visible img');
+      await detailImage.waitFor();
+      await detailImage.evaluate((img:HTMLImageElement)=>img.decode());
+    }
     if(!await revealEvidence())return false;
     await capture('timeline-source');
     const back=detail.locator('[data-detail-back]:visible').first();

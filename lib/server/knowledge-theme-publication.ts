@@ -1,3 +1,4 @@
+import {themeEditorialImageIds} from '../domain/theme-editorial';
 import type {PoolClient,Pool} from 'pg';
 import {KnowledgeError} from './knowledge-foundation';
 import {operatorThemeRead,withOperatorThemeRead} from './knowledge-theme-access';
@@ -39,7 +40,7 @@ export async function approvedThemeTranslations(c:PoolClient,target:KnowledgeTex
 /** Called with the common knowledge writer lock held. The release row serves
  * the latest approval of an edition; approvals retain each exact snapshot. */
 export async function writeEditorialThemeRelease(c:PoolClient,theme:KnowledgeThemeVersion,releaseId:string,proof:unknown,translations:KnowledgeDisplayTranslation[]){
- const images=[...new Set((theme.content.reading??[]).flatMap(p=>p.image?.id?[p.image.id]:[]))];
+ const images=themeEditorialImageIds(theme.content.reading);
  const values=[theme.id,theme.revision,releaseId,JSON.stringify(proof),JSON.stringify(translations),JSON.stringify(images)];
  await c.query(`INSERT INTO knowledge75.theme_releases(theme_id,revision,release_id,proof,theme_translations,image_ids)
   VALUES($1,$2,$3,$4,$5,$6) ON CONFLICT(theme_id,revision) DO UPDATE

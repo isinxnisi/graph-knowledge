@@ -8,14 +8,18 @@ export const themeReadingPresentationSchema=z.object({
  version:z.literal(1),theme:pin,locale:language,state:z.literal("checked"),
  hook:z.string().min(1).max(300),lead:z.string().max(1200),image:image.optional(),
  entityNotes:z.array(z.object({target:pin,text:z.string().min(1).max(500)})).optional(),
- records:z.array(z.object({target:pin,chapterQuestion:z.string().min(1).max(180).optional(),shortTitle:z.string().min(1).max(180),timelineSummary:z.string().max(260).optional(),explanations:z.array(z.object({record:pin,role:z.enum(["background","importance","insight","next"]),heading:z.string().min(1).max(100).optional()})).default([])})).default([]),
+ records:z.array(z.object({target:pin,chapterQuestion:z.string().min(1).max(180).optional(),shortTitle:z.string().min(1).max(180).optional(),image:image.optional(),timelineSummary:z.string().max(260).optional(),explanations:z.array(z.object({record:pin,role:z.enum(["background","importance","insight","next"]),heading:z.string().min(1).max(100).optional()})).default([])})).default([]),
 });
 export type ThemeReadingPresentation=z.infer<typeof themeReadingPresentationSchema>;
+export type ThemeReadingImage=z.infer<typeof image>;
+export function readingRecordEditorial(presentation:ThemeReadingPresentation|null|undefined,id:string,revision:number){
+ return presentation?.records.find(record=>record.target.id===id&&record.target.revision===revision);
+}
 /** Use a supplied short heading or an authored time label; never truncate a claim mid-sentence. */
 export function readingRecordTitle(record:KnowledgeRecordVersion,presentation?:ThemeReadingPresentation|null){
- return presentation?.records.find(r=>r.target.id===record.id&&r.target.revision===record.revision)?.shortTitle || record.content.times.find(t=>t.time.label)?.time.label || record.content.assertion;
+ return readingRecordEditorial(presentation,record.id,record.revision)?.shortTitle || record.content.times.find(t=>t.time.label)?.time.label || record.content.assertion;
 }
 export function readingExplanations(record:KnowledgeRecordVersion,snapshot:KnowledgeSnapshot,presentation?:ThemeReadingPresentation|null){
- const entry=presentation?.records.find(r=>r.target.id===record.id&&r.target.revision===record.revision);
+ const entry=readingRecordEditorial(presentation,record.id,record.revision);
  return (entry?.explanations??[]).flatMap(ref=>{const note=snapshot.records.find(r=>r.id===ref.record.id&&r.revision===ref.record.revision);return note?[{record:note,role:ref.role,heading:ref.heading}]:[];});
 }

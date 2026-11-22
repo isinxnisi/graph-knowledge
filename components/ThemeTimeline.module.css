@@ -848,8 +848,9 @@
 
 .readingDate { display:none; }
 @media(max-width:600px) {
- .timeline.reading .readingDate { display:block; font-size:11px; line-height:18px; font-weight:400; color:var(--color-muted); }
- .timeline.reading .rowText:has(.readingDate) { gap:2px; }
+ .timeline.reading .readingDate { display:block; padding:6px 5px 0; font-size:11px; line-height:18px; font-weight:400; color:var(--color-muted); }
+ .timeline.reading .readingDate + .rowMain { padding-top:0; }
+ .timeline.reading .readingDate + .rowMain .openRow { padding-block-start:2px; }
  .timeline.reading .calendarMeta { display:none; }
 }
 

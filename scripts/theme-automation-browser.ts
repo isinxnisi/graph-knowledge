@@ -53,6 +53,7 @@ export async function captureAutomationPreview(origin:string,target:AutomationTa
             screens.push({locale,...screen});
             if(screen.horizontalOverflow||before.hasImage&&screen.steps.imageDialog!=='observed'||
               before.hasTimeline&&screen.steps.timelineSourceAndBack!=='observed'||before.hasStory&&screen.steps.storySourceAndBack!=='observed'||
+              (screen.steps.timelineImageDialog!==undefined&&screen.steps.timelineImageDialog!=='observed')||
               Object.values(screen.steps).includes('unverified'))complete=false;
           }catch{
             screens.push({locale,width:viewport.width,status:'preview-unverified'});

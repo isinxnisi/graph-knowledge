@@ -74,6 +74,11 @@ it('exposes and forwards reading composition through the EXISTING App update too
  const listed=(await(await handler.fetch(rpc('tools/list',{}))).json()).result.tools;
  const update=listed.find((t:{name:string})=>t.name==='update_theme');expect(update.inputSchema.properties.changes.properties.stories.properties.items.type).toBe('array');
  const stories={version:1,items:[{key:'editorial',records:[{id:'r',revision:2}],title:{ja:'制作の背景'}}]};
- const input={requestId:randomUUID(),target:{id:'theme',revision:3},changes:{stories},reason:'読み物の掲載を編集'};
- await handler.fetch(rpc('tools/call',{name:'update_theme',arguments:input}));expect(call).toHaveBeenCalledWith(expect.objectContaining({action:'update-theme',changes:{stories}}));
+ const imageId='b'.repeat(64);
+ expect(update.inputSchema.properties.changes.properties.presentation.items.properties.records.items.properties.imageId.type).toBe('string');
+ const presentation=[{locale:'ja',hook:'制作の背景',lead:'',records:[{target:{id:'r',revision:2},imageId}]}];
+ const input={requestId:randomUUID(),target:{id:'theme',revision:3},changes:{stories,presentation},reason:'読み物と記録画像を編集'};
+ await handler.fetch(rpc('tools/call',{name:'update_theme',arguments:input}));expect(call).toHaveBeenCalledWith(expect.objectContaining({action:'update-theme',changes:expect.objectContaining({
+  stories,presentation:[expect.objectContaining({records:[expect.objectContaining({target:{id:'r',revision:2},imageId})]})],
+ })}));
 });

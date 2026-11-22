@@ -21,7 +21,7 @@ export const reportThemeExternalSchema=automationFence.extend({
 });
 export const automationTargetSchema=z.strictObject({
   theme:knowledgePinSchema,digest:automationDigest,guideRevision:z.number().int().nonnegative(),
-  locales:z.array(locale).min(1).max(2),imageIds:z.array(z.string().regex(/^[a-f0-9]{64}$/)).max(2),
+  locales:z.array(locale).min(1).max(2),imageIds:z.array(z.string().regex(/^[a-f0-9]{64}$/)).max(802),
 });
 export const themeAutomationActions=z.discriminatedUnion('action',[
   generateThemeImageSchema.extend({action:z.literal('generate-theme-image')}),

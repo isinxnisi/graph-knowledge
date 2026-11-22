@@ -7,7 +7,7 @@ import {knowledgeDisplaySnapshot} from "../lib/domain/knowledge-display";
 import {useUiLocale} from "../lib/client/ui-locale";
 import { timelineRecordId } from "../lib/domain/timeline-display";
 import ThemeTimeline from "./ThemeTimeline";
-import type { ThemeReadingPresentation } from "../lib/domain/theme-reading-presentation";
+import { readingRecordEditorial, type ThemeReadingPresentation } from "../lib/domain/theme-reading-presentation";
 
 /** The Explorer owns the selected immutable Record and the view switch. */
 export default function KnowledgeTimeline({ snapshot, focusedRecordId, focusedEntityId, onFocusRecord, onShowGraph, untimedInContext = false, headerAction, emptyMessage,reading=false,presentation, mobileDocumentFlow=false }: {
@@ -30,8 +30,8 @@ export default function KnowledgeTimeline({ snapshot, focusedRecordId, focusedEn
   return <ThemeTimeline
     {...projection}
     records={reading?projection.records.map(row=>{
-      const editorial = presentation?.records.find(entry => entry.target.id === row.recordId && entry.target.revision === row.revision);
-      return { ...row, readingTitle: editorial?.shortTitle || row.assertion, readingSummary: editorial?.timelineSummary };
+      const editorial = readingRecordEditorial(presentation, timelineRecordId(row), row.revision);
+      return { ...row, readingTitle: editorial?.shortTitle || row.assertion, readingSummary: editorial?.timelineSummary, readingImage: editorial?.image };
     }):projection.records}
     reading={reading}
     emptyMessage={emptyMessage}

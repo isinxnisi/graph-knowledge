@@ -295,7 +295,15 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
   if(!r?.image_id)throw automationFailure('GENERATED_IMAGE_UNAVAILABLE','この案件で登録済みの生成画像を指定してください。');
   const presentation=payload.action==='submit-theme'?payload.presentation:payload.action==='update-theme'?payload.changes.presentation:null;
   if(!presentation||generatedImage.locales.some(locale=>!presentation.some(p=>p.locale===locale)))throw automationFailure('GENERATED_IMAGE_PRESENTATION','指定言語のpresentationを指定してください。');
-  const updated=presentation.map(row=>generatedImage.locales.includes(row.locale)?{...row,imageId:r.image_id}:row);
+  const {target}=generatedImage;
+  const updated=presentation.map(row=>{
+   if(!generatedImage.locales.includes(row.locale))return row;
+   if(!target)return {...row,imageId:r.image_id};
+   if(!row.records.some(record=>record.target.id===target.id&&record.target.revision===target.revision))
+    throw automationFailure('GENERATED_IMAGE_PRESENTATION','指定言語のpresentation.recordsに、画像を付ける記録版を指定してください。');
+   return {...row,records:row.records.map(record=>
+    record.target.id===target.id&&record.target.revision===target.revision?{...record,imageId:r.image_id}:record)};
+  });
   return productionSubmissionCommandSchema.parse(payload.action==='submit-theme'?{...payload,presentation:updated}:payload.action==='update-theme'?{...payload,changes:{...payload.changes,presentation:updated}}:payload);
  }
  async function executeAutomation(owner:string,command:ThemeAutomationCommand){

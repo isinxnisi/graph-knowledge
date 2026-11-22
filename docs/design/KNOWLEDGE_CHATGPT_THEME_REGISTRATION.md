@@ -1,5 +1,11 @@
 2026-11-20追記：通常編集の作業版・制作原稿・公開版の分離と、案件なしの明示公開は[現行の契約と移行記録](../verification/THEME_EDITORIAL_PUBLICATION_20261120.md)を参照。
 
+## 年表の記録画像
+
+- 通常Chatでは既存の `upload_editorial_image` に `purpose: "theme-illustration"` を指定して画像を登録し、取得した `imageId` を `submit_theme.presentation[].records[]` または `update_theme.changes.presentation[].records[]` の `{target:{id,revision},imageId}` に指定する。年表行と記録の詳細に同じ画像が出る。言語は各 `presentation[].locale` で指定する。既存の表示を保つため、更新時は現在の `presentation` を読んで対象行だけ差し替え、既存の項目を含む全体を送る。画像だけの行は `shortTitle` を省略できる。
+- 定期制作では同じ入力を既存の prepare → dispatch で送る。案件内で生成した画像は、prepare の `generatedImage:{automationId,locales,target:{id,revision}}` でも紐付けられる。各言語の `presentation.records` に同じ `target` を含める。 `generatedImage.target` を省略すると従来どおりテーマの導入画像に使う。
+- `read_theme` の `presentation[].records[].image.id` で保存結果を照合し、作業版の年表・詳細・拡大表示を確認する。既存の画像配信、クレジット、公開承認および過去版の保護を適用する。画像の紐付けはテーマの編集情報として保存される。 自動画面採取では、表示中の最初の画像付き年表行を使い、`timeline-image` の拡大画面と `timeline-source` の詳細・出典を確認する。
+
 ## テーマ固有情報の非公開制作と承認公開版（2026-11-18）
 
 [公開境界の現行設計](THEME_PRIVATE_PUBLICATION_20261117.md) を優先する。新規Themeと編集中の新版は運営者専用。共通Record／Entity／Sourceの公開は維持する。受付の `published` は通常検証を経てThemeへ**保存・反映済み**という既存互換の状態であり、一般公開の承認ではない。`read_theme.publication`、`previewUrl` と制作案件の `publication` を区別して読む。

@@ -1,3 +1,4 @@
+import {themeEditorialImageIds} from '../domain/theme-editorial';
 import {hasThemeLocale} from '../domain/theme-locale';
 import {automationTargetSchema} from '../domain/theme-automation';
 import {activateReviewedTheme} from './theme-production-publication';
@@ -27,7 +28,7 @@ export function themeProductionRuntime(pool:Pool,knowledge:Pool,origin:string,re
   const references={theme:{id:t.id,revision:t.revision},translations:read.snapshot.translations?.map(v=>({id:v.id,revision:v.revision})),pinnedProducts:products.map(p=>({id:p.id,revision:p.revision})),associatedProducts:associatedPins};
   const locales=(['ja','en'] as const).filter((locale,i)=>hasThemeLocale({...read,displayTranslations:displayTranslations[i]},locale));
   const target={theme:{id:t.id,revision:t.revision},digest:knowledgeDigest({theme:t,snapshot:read.snapshot,displayTranslations,presentation,products,associated,associatedPins}),guide:{id:guide.id,revision:guide.currentRevision},references,...(read.productionConflict?{publicationConflict:read.productionConflict}:{})};
-  return {target,locales,imageIds:[...new Set(t.content.reading?.flatMap(v=>v.image?[v.image.id]:[])??[])]};
+  return {target,locales,imageIds:themeEditorialImageIds(t.content.reading)};
  }
  const target=(id:string,owner:string,revision?:number)=>withOperatorThemeRead(async()=>(await targetValue(id,owner,revision)).target);
  async function observe(owner:string,command:ProductionSubmissionCommand){
