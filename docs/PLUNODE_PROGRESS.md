@@ -1,3 +1,5 @@
+2026-11-23 Issue #80のβ修正・日英20枚のChatGPT Web視認・同条件Webb 1ペアの独立比較まで完了。全体は動的ガイドの本番採否まで。両案とも要修正で、黒澤の翻訳・出典補正と別題材の同条件比較が残る。 [原因・証拠・比較結果](verification/THEME_WORK_GUIDES_EVIDENCE_20261123.md)
+
 2026-11-23 Issue #79 のβ比較準備A完了。2題材・4ペアと再開試験2ペアを非公開で用意し、開始データと受付を照合。全体の残りはBのChatGPT Web独立起動による作品品質・作業量・再開の比較。 [案件IDと比較手順](verification/THEME_WORK_GUIDES_COMPARISON_20261123.md)
 
 2026-11-23 Issue #78 の管理用ガイド空応答をβで修正。版・必須本文・5節・履歴と、更新済みβ Appの新規通常Chatで本文ページの終端まで確認。Web build `QxQxq_0J_KQh_6LMoCO54`、回帰58件。 [切り分け・検証記録](verification/THEME_WORK_GUIDES_BETA_20261123.md#追補--issue-78-の管理用読み取り)
