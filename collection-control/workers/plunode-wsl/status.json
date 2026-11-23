@@ -26,30 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-23T19:16:49.567443+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-23T18:22:00.665670+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-23T19:16:49.567443+00:00",
+    "eligibleAt": "2026-11-23T18:22:00.665670+00:00",
     "windowEndAt": "2026-11-23T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-65-dot-inoue-three-20261029-batch-01",
-    "startedAt": "2026-11-23T18:11:49.567448+00:00",
-    "limitAt": "2026-11-23T19:06:49.567443+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1",
-    "endedAt": "2026-11-23T18:01:07.764009+00:00"
+    "requestId": "issue-65-dot-inoue-three-20261029-batch-01",
+    "endedAt": "2026-11-23T18:12:00.665673+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 13,
-    "completed": 42,
-    "awaiting-recovery": 6,
-    "waiting-control": 1
+    "completed": 43,
+    "awaiting-recovery": 6
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -196,5 +191,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-23T18:11:51.046090+00:00"
+  "checkedAt": "2026-11-23T18:12:02.651700+00:00"
 }
