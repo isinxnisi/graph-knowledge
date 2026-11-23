@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-23T06:19:45.987061+00:00",
-  "phase": "outside-window",
+  "nextStartAt": "2026-11-23T19:06:02.046858+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
-    "reason": "outside-window",
-    "eligibleAt": "2026-11-23T18:00:00+00:00",
+    "reason": "interval",
+    "eligibleAt": "2026-11-23T19:06:02.046858+00:00",
     "windowEndAt": "2026-11-23T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-25-manga23-20261019-repair1",
+    "startedAt": "2026-11-23T18:01:02.046861+00:00",
+    "limitAt": "2026-11-23T18:56:02.046858+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-42-matsumoto-recovery-20261026",
     "endedAt": "2026-11-23T06:09:45.987064+00:00"
@@ -192,5 +196,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-23T17:59:48.237010+00:00"
+  "checkedAt": "2026-11-23T18:01:03.527918+00:00"
 }
