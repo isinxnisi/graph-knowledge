@@ -1,7 +1,7 @@
-import {randomBytes,randomUUID} from 'node:crypto';
+import {createHash,randomBytes,randomUUID} from 'node:crypto';
 import type {Pool,PoolClient,QueryResultRow} from 'pg';
 import {z} from 'zod';
-import {automationTargetSchema,type AutomationTarget} from '../domain/theme-automation';
+import {automationTargetSchema,themeEvidenceNameSchema,type AutomationTarget} from '../domain/theme-automation';
 import {uploadProductImageSchema} from '../domain/product-authoring';
 import {authorizeProductOperator,dispatchProductAuthoring} from './member/product-editorial';
 import {currentThemeEvidenceRequirements} from './member/theme-quality-guide';
@@ -130,7 +130,9 @@ export function createThemeAutomationWorker(pool:Pool,origin:string,generator:Th
         FROM theme_production.automation_requests WHERE id=$2 AND attempt_id=$3 AND lease_until>clock_timestamp()`,[hashPreviewToken(token),job.id,job.attempt_id]);
       const value=await capture(target,token);
       await checkRequirements();
-      return {state:'ready',code:value.result.complete?'EVIDENCE_READY':'EVIDENCE_INCOMPLETE',result:{...value.result,target:job.target},preview:value.evidence};
+      const hashes=Object.fromEntries([...value.evidence].map(([name,bytes])=>
+        [themeEvidenceNameSchema.parse(name),createHash('sha256').update(bytes).digest('hex')]));
+      return {state:'ready',code:value.result.complete?'EVIDENCE_READY':'EVIDENCE_INCOMPLETE',result:{...value.result,hashes,target:job.target},preview:value.evidence};
     }
     if(job.state==='storing'){
       const imageId=await store(job);

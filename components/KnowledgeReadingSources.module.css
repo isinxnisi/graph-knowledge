@@ -20,7 +20,7 @@
 .toggle[aria-expanded="true"] :global(.ui-icon) { transform: rotate(180deg); }
 .quotation { margin: 8px 0 0; border-inline-start: 2px solid var(--color-border); padding-inline-start: 10px; font-size: 12px; line-height: 1.65; overflow-wrap: anywhere; animation: reveal 160ms ease-out; }
 .quotation .locator { margin: 0; color: var(--color-muted); font-size: 12px; line-height: 1.6; }
-.quotation blockquote { margin: 7px 0; line-height: 1.65; white-space: pre-wrap; }
+.quotation :is(blockquote, .passage) { margin: 7px 0; line-height: 1.65; white-space: pre-wrap; }
 .quotation small, .bibliography { font-size: 11px; line-height: 1.6; color: var(--color-muted); }
 @keyframes reveal { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: none; } }
 @media (max-width: 800px) { .source .heading > button.toggle { min-height: 36px; margin-top: -7px; } }

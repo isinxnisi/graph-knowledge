@@ -77,6 +77,6 @@ export function knowledgeRecordTranslationFields(dto:KnowledgePublishedRecord,en
      ...(r.relation?[{label:en?'Relation':'矢印の言葉',target:{kind:'record' as const,id:dto.record.id,revision:dto.record.revision,field:'relation' as const}}]:[]),
      ...(r.scope?[{label:en?'Scope':'範囲',target:{kind:'record' as const,id:dto.record.id,revision:dto.record.revision,field:'scope' as const}}]:[]),
      ...r.evidence.map((e,i)=>({label:(en?'Location ':'該当箇所 ')+(i+1),target:{kind:'record' as const,id:dto.record.id,revision:dto.record.revision,field:'locator' as const,evidenceId:e.id}})),
-     ...r.evidence.filter(e=>e.excerpt).map((e,i)=>({label:(en?'Quotation ':'引用 ')+(i+1),target:{kind:'record' as const,id:dto.record.id,revision:dto.record.revision,field:'excerpt' as const,evidenceId:e.id}})),
+     ...r.evidence.filter(e=>e.excerpt).map((e,i)=>({label:(e.excerptKind==='quotation'?(en?'Quotation ':'引用 '):e.excerptKind==='summary'?(en?'Summary ':'要約 '):(en?'Source note ':'資料メモ '))+(i+1),target:{kind:'record' as const,id:dto.record.id,revision:dto.record.revision,field:'excerpt' as const,evidenceId:e.id}})),
      ...dto.sources.flatMap(v=>[{label:(en?'Source title: ':'資料名：')+v.content.title,target:{kind:'source' as const,id:v.id,revision:v.revision,field:'title' as const}},...(v.content.bibliography?[{label:(en?'Bibliography: ':'書誌：')+v.content.title,target:{kind:'source' as const,id:v.id,revision:v.revision,field:'bibliography' as const}}]:[])]),
     ];}

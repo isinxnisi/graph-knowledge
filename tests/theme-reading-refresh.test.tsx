@@ -20,10 +20,26 @@ afterEach(cleanup);
 it("source shortcut opens precisely the requested evidence and retains independent open states",async()=>{
  HTMLElement.prototype.scrollIntoView=vi.fn();let opened:string[]=[];const dto=buildKnowledgePublishedRecord(snapshot.records[0],snapshot);
  function Host(){const [ids,set]=React.useState<string[]>([]);return <KnowledgeReadingSources dto={dto} locale="en" translations={[]} openIds={ids} onOpen={value=>{opened=value;set(value);}} request={{recordId:"r",evidenceId:"e-b",token:1}}/>;}
- render(<Host/>);await act(async()=>{});expect(opened).toEqual(["e-b"]);expect(screen.getByText("opposing passage")).toBeTruthy();expect(screen.queryByText("supporting passage")).toBeNull();fireEvent.click(screen.getAllByRole("button",{name:/quotation|passage|引用|該当/})[0]);expect(opened).toEqual(["e-b","e-a"]);
+ render(<Host/>);await act(async()=>{});expect(opened).toEqual(["e-b"]);expect(screen.getByText("opposing passage")).toBeTruthy();expect(screen.queryByText("supporting passage")).toBeNull();fireEvent.click(screen.getAllByRole("button",{name:/source note|passage|資料の内容|該当/})[0]);expect(opened).toEqual(["e-b","e-a"]);
+});
+it("does not present legacy notes or untranslated Japanese summaries as quotations",()=>{
+ const [a,b]=snapshot.records[0].content.evidence;
+ const record={...snapshot.records[0],content:{...snapshot.records[0].content,evidence:[
+  {...a,excerpt:"望遠鏡の展開を記録した。",locator:"冒頭の段落"},
+  {...b,excerptKind:"quotation" as const,excerpt:"An exact quotation.",textLanguages:{excerpt:{tag:"en",basis:"declared" as const}}},
+ ]}};
+ const dto=buildKnowledgePublishedRecord(record,snapshot);
+ render(<KnowledgeReadingSources dto={dto} locale="en" translations={[]} openIds={[a.id,b.id]} onOpen={vi.fn()}/>);
+ expect(screen.getByText("Source note")).toBeTruthy();
+ expect(screen.getByText("望遠鏡の展開を記録した。").closest("blockquote")).toBeNull();
+ expect(screen.getByText("望遠鏡の展開を記録した。").getAttribute("lang")).toBe("ja");
+ expect(screen.getByText("Japanese text shown where an English translation is unavailable.")).toBeTruthy();
+ expect(screen.getByText("An exact quotation.").closest("blockquote")).toBeTruthy();
 });
 it("reading selects a time annotation, leaves source links to the detail pane and does not duplicate full scope or quote",()=>{
- const focus=vi.fn();render(<KnowledgeTimeline snapshot={snapshot} reading focusedRecordId={null} onFocusRecord={focus}/>);
+ const focus=vi.fn();
+ const presentation=themeReadingPresentationSchema.parse({version:1,theme:{id:"t",revision:1},locale:"ja",state:"checked",hook:"Question",lead:"",records:[{target:{id:"r",revision:1},shortTitle:"Short heading"}]});
+ render(<KnowledgeTimeline snapshot={snapshot} reading presentation={presentation} focusedRecordId={null} onFocusRecord={focus}/>);
  expect(screen.queryByText("出来事",{exact:true})).toBeNull();const row=screen.getByText("Short heading",{exact:true}).closest("button")!;expect(row.hasAttribute("aria-expanded")).toBe(false);fireEvent.click(row);expect(focus).toHaveBeenLastCalledWith("r","start");expect(screen.queryByText(snapshot.records[0].content.scope)).toBeNull();expect(screen.queryByText("supporting passage")).toBeNull();expect(screen.queryByRole("button",{name:/Source B/})).toBeNull();
 });
 it("both undated prototypes make every item reachable, including a one-item collapsed list",()=>{
@@ -85,9 +101,9 @@ it("evidence navigation opens a source beyond the initial three and still lets t
  const dto=buildKnowledgePublishedRecord(record,snapshot);
  function Host(){const [ids,set]=React.useState<string[]>([]);return <KnowledgeReadingSources dto={dto} locale="en" translations={[]} openIds={ids} onOpen={set} request={{recordId:"r",evidenceId:"e-4",token:2}}/>;}
  render(<Host/>);await act(async()=>{});
- expect(screen.getByText("Passage 4")).toBeTruthy();expect(screen.getAllByRole("button",{name:/Read the quotation/})).toHaveLength(5);
+ expect(screen.getByText("Passage 4")).toBeTruthy();expect(screen.getAllByRole("button",{name:/Read the source note/})).toHaveLength(5);
  fireEvent.click(screen.getByRole("button",{name:"Sources：Show less"}));
- expect(screen.getAllByRole("button",{name:/Read the quotation/})).toHaveLength(3);
+ expect(screen.getAllByRole("button",{name:/Read the source note/})).toHaveLength(3);
 });
 
 it("related knowledge fetches later pages only while expanded, keeps loaded pages and cancels on close",async()=>{

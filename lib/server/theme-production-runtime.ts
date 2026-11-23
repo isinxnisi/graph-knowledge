@@ -1,5 +1,5 @@
 import {themeEditorialImageIds} from '../domain/theme-editorial';
-import {hasThemeLocale} from '../domain/theme-locale';
+import {missingThemeLocaleRequirements} from '../domain/theme-locale';
 import {automationTargetSchema} from '../domain/theme-automation';
 import {activateReviewedTheme} from './theme-production-publication';
 import {withOperatorThemeRead} from './knowledge-theme-access';
@@ -27,9 +27,11 @@ export function themeProductionRuntime(pool:Pool,knowledge:Pool,origin:string,re
   const c=await knowledge.connect();let displayTranslations;try{displayTranslations=await Promise.all(['ja','en'].map(locale=>publicThemeSnapshotTranslations(c,read,locale)));}finally{c.release();}
   const presentation=['ja','en'].map(locale=>themeReadingPresentation(t,locale,read.snapshot));
   const references={theme:{id:t.id,revision:t.revision},translations:read.snapshot.translations?.map(v=>({id:v.id,revision:v.revision})),pinnedProducts:products.map(p=>({id:p.id,revision:p.revision})),associatedProducts:associatedPins};
-  const locales=(['ja','en'] as const).filter((locale,i)=>hasThemeLocale({...read,displayTranslations:displayTranslations[i]},locale));
+  const missingEnglish=missingThemeLocaleRequirements({...read,displayTranslations:displayTranslations[1]},'en');
+  const locales=missingEnglish.length?['ja']:['ja','en'];
+  const unavailableLocales=missingEnglish.length?[{locale:'en',missingCount:missingEnglish.length,missing:missingEnglish.slice(0,10)}]:[];
   const target={theme:{id:t.id,revision:t.revision},digest:knowledgeDigest({theme:t,snapshot:read.snapshot,displayTranslations,presentation,products,associated,associatedPins}),guide,references,...(read.productionConflict?{publicationConflict:read.productionConflict}:{})};
-  return {target,locales,imageIds:themeEditorialImageIds(t.content.reading)};
+  return {target,locales,unavailableLocales,imageIds:themeEditorialImageIds(t.content.reading)};
  }
  const target=(id:string,owner:string,revision?:number,dynamic=false)=>withOperatorThemeRead(async()=>(await targetValue(id,owner,revision,dynamic)).target);
  async function observe(owner:string,command:ProductionSubmissionCommand){
@@ -50,11 +52,9 @@ export function themeProductionRuntime(pool:Pool,knowledge:Pool,origin:string,re
   const r=(await pool.query('SELECT response FROM knowledge_missions.'+table+' WHERE request_id=$1 AND owner_id=$2',[command.requestId,owner])).rows[0];return r?{state:'applied' as const,result:r.response}:null;
  }
  return {target,observe,automationTarget:async(id:string,owner:string,dynamic=false)=>{
-  const {target:t,locales,imageIds}=await withOperatorThemeRead(()=>targetValue(id,owner));
+  const {target:t,locales,unavailableLocales,imageIds}=await withOperatorThemeRead(()=>targetValue(id,owner));
   const policy=dynamic?await currentThemeEvidenceRequirements(pool):null;
-  if(policy?.requirements.requiredLocales.some(locale=>!locales.includes(locale)))
-   throw new KnowledgeError('画面確認に必要な言語の作業版がありません。',409,'PREVIEW_LOCALE_REQUIRED');
-  return automationTargetSchema.parse({theme:t.theme,digest:t.digest,guideRevision:t.guide.revision,locales,imageIds,
+  return automationTargetSchema.parse({theme:t.theme,digest:t.digest,guideRevision:t.guide.revision,locales,unavailableLocales,imageIds,
    ...(policy?{evidenceRevision:policy.versions.evidenceRevision,requirements:policy.requirements}: {})});
  },publish:(owner:string,id:string)=>activateReviewedTheme(pool,knowledge,owner,id,{origin,target,authorize:owner=>registrations.authorize(owner)}),publication:async(id:string,intentId?:string)=>{const state=await themePublicationState(knowledge,id);return {...state,approvalPresent:!!intentId&&!!(await knowledge.query('SELECT 1 FROM knowledge75.theme_release_approvals WHERE release_id=$1 AND theme_id=$2',[intentId,id])).rowCount};}};
 }

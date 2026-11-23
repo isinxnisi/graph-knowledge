@@ -28,6 +28,7 @@ export const knowledgeSourceContentSchema = z.strictObject({
 export const knowledgeEvidenceSchema = z.strictObject({
   id: knowledgeIdSchema, source: knowledgePinSchema,
   locator: text.max(1000), excerpt: z.string().max(4000).default(""),
+  excerptKind: z.enum(["quotation","summary"]).optional(),
   textLanguages: z.strictObject({ locator: originalLanguage.optional(), excerpt: originalLanguage.optional() }).optional(),
   stance: z.enum(["support", "refute", "background"]).default("support"),
 });

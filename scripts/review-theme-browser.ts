@@ -5,6 +5,7 @@ import { homedir } from 'node:os';
 import { basename, join } from 'node:path';
 import { createInterface } from 'node:readline/promises';
 import { pathToFileURL } from 'node:url';
+import type {evidenceScreenNames} from '../lib/domain/theme-automation';
 import {themeStoryEntries} from '../lib/domain/theme-stories';
 import {themeTimelineRecords} from '../lib/domain/knowledge-timeline';
 import { uploadProductImageSchema } from '../lib/domain/product-authoring';
@@ -39,9 +40,12 @@ export async function themeSnapshot(context: BrowserContext, origin: string, id:
     throw new Error('The preview did not serve the requested private edition.');
   }
   const records=preview.snapshot?.records??[];
+  const timed=themeTimelineRecords({records,timeline:preview.snapshot?.timeline}).filter(record=>record.content.times.length>0);
+  const timedIds=new Set(timed.map(record=>record.id));
   return {
     digest:createHash('sha256').update(data).digest('hex'), hasImage:Boolean(preview.presentation?.image), build:headers['x-plunode-preview-build'],
-    hasTimeline:themeTimelineRecords({records,timeline:preview.snapshot?.timeline}).some(record=>record.content.times.length>0),
+    hasTimeline:timed.length>0,
+    hasTimelineImage:Boolean(preview.presentation?.records?.some((record:{target:{id:string};image?:unknown})=>record.image&&timedIds.has(record.target.id))),
     hasStory:themeStoryEntries(records,preview.theme.content?.stories,preview.presentation,locale==='en'?'en':'ja').length>0,
   };
 }
@@ -54,7 +58,7 @@ export async function inspectThemePage(page: Page, url: string, revision: number
   const editionLabel = '運営者プレビュー · 作業版 ' + revision;
   await page.getByRole('navigation', { name: '運営者プレビュー' }).getByText(editionLabel, { exact: true }).waitFor();
   const screenshots: string[] = [];
-  async function capture(step: string) {
+  async function capture(step: typeof evidenceScreenNames[number]) {
     const file = width + '-' + step + '.png';
     const bytes=await page.screenshot({ animations: 'disabled' });
     if(save)await save(file,bytes);

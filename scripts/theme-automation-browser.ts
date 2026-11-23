@@ -1,5 +1,4 @@
 import {chromium} from '@playwright/test';
-import {createHash} from 'node:crypto';
 import sharp from 'sharp';
 import type {AutomationTarget} from '../lib/domain/theme-automation';
 import {automationFailure,PREVIEW_HEADER} from '../lib/server/theme-automation';
@@ -53,7 +52,7 @@ export async function captureAutomationPreview(origin:string,target:AutomationTa
             screens.push({locale,...screen});
             if(screen.horizontalOverflow||before.hasImage&&screen.steps.imageDialog!=='observed'||
               before.hasTimeline&&screen.steps.timelineSourceAndBack!=='observed'||before.hasStory&&screen.steps.storySourceAndBack!=='observed'||
-              (screen.steps.timelineImageDialog!==undefined&&screen.steps.timelineImageDialog!=='observed')||
+              (before.hasTimelineImage&&screen.steps.timelineImageDialog!=='observed')||
               Object.values(screen.steps).includes('unverified'))complete=false;
           }catch{
             screens.push({locale,width:viewport.width,status:'preview-unverified'});
@@ -72,6 +71,5 @@ export async function captureAutomationPreview(origin:string,target:AutomationTa
       if(['overview',...target.requirements.requiredScreens].some(name=>!evidence.has(`${locale}-${width}-${name}.png`)))complete=false;
     }
   }
-  return {evidence,result:{build,complete,screens,names,visualReviewRequired:true,observedAt:new Date().toISOString(),
-    hashes:Object.fromEntries([...evidence].map(([name,bytes])=>[name,createHash('sha256').update(bytes).digest('hex')]))}};
+  return {evidence,result:{build,complete,screens,names,visualReviewRequired:true,observedAt:new Date().toISOString()}};
 }

@@ -351,6 +351,13 @@ export function createThemeProductions(pool:Pool,deps:Dependencies){
    fence(await row(c,owner,current.id),command);
    if(command.action==='read-theme-evidence')return readThemeEvidence(c,deps.origin,command,target);
    if(target.digest!==command.targetDigest)throw automationFailure('PREVIEW_TARGET_CHANGED','評価対象を読み直してください。');
+   const required=[...new Set([...(target.requirements?.requiredLocales??[]),...(command.requiredLocales??[])])];
+   const unavailable=required.filter(locale=>!target.locales.includes(locale));
+   if(unavailable.length){
+    const missing=target.unavailableLocales?.filter(row=>unavailable.includes(row.locale));
+    const details=missing?.map(row=>`${row.locale}: ${row.missingCount}件（${row.missing.map(pin=>`${pin.id}@${pin.revision}#${pin.field}`).join(', ')}）`).join(' / ');
+    throw automationFailure('PREVIEW_LOCALE_REQUIRED',`画面確認に必要な言語の作業版がありません: ${details||unavailable.join(', ')}`);
+   }
    return enqueueThemeAutomation(c,deps.origin,command,target);
   });
  }

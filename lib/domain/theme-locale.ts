@@ -6,8 +6,11 @@ export function themeLocaleRequirements(value:Pick<KnowledgeThemeRead,'theme'|'s
  const t=value.theme,timed=value.snapshot.records.filter(r=>r.content.times.length),bodies=timed.length?timed:value.snapshot.records;
  return [...(['title','description'] as const).filter(field=>field==='title'||!!t.content.description).map(field=>({target:{kind:'theme',id:t.id,revision:t.revision,field} as KnowledgeTextTarget,text:t.content[field],native:t.content.textLanguages?.[field]?.tag===locale})),...bodies.map(r=>({target:{kind:'record',id:r.id,revision:r.revision,field:'assertion'} as KnowledgeTextTarget,text:r.content.assertion,native:r.content.textLanguages?.assertion?.tag===locale}))];
 }
+export function missingThemeLocaleRequirements(value:Pick<KnowledgeThemeRead,'theme'|'snapshot'|'displayTranslations'>,locale:string){
+ return locale==='ja'?[]:themeLocaleRequirements(value,locale).filter(r=>!r.native&&knowledgeDisplayText(value.displayTranslations,r.target,locale,r.text)===r.text).map(r=>r.target);
+}
 export function hasThemeLocale(value:Pick<KnowledgeThemeRead,'theme'|'snapshot'|'displayTranslations'>,locale:string){
- return locale==='ja'||!!value.theme.content.title&&themeLocaleRequirements(value,locale).every(r=>r.native||knowledgeDisplayText(value.displayTranslations,r.target,locale,r.text)!==r.text);
+ return locale==='ja'||!!value.theme.content.title&&missingThemeLocaleRequirements(value,locale).length===0;
 }
 /** Ordered additions only: no edits, removals, changed pins or edit/revert crossing. */
 export function additiveThemeContent(previous:unknown,current:unknown):boolean{

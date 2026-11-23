@@ -12,9 +12,12 @@ type AutomationEventIdentity={caseId:string;requestId:string;executionId:string}
 
 export async function enqueueThemeAutomation(c:PoolClient,origin:string,command:Extract<ThemeAutomationCommand,{action:'generate-theme-image'|'capture-theme-preview'}>,target?:AutomationTarget){
   const kind=command.action==='generate-theme-image'?'image':'preview';
-  const input=command.action==='generate-theme-image'?{prompt:command.prompt,alt:command.alt}:{targetDigest:command.targetDigest};
+  const input=command.action==='generate-theme-image'?{prompt:command.prompt,alt:command.alt}:{
+    targetDigest:command.targetDigest,...(command.requiredLocales?{requiredLocales:[...new Set(command.requiredLocales)].sort()}:{}),
+  };
   // A model-assistance edit may advance the audit revision during a preview retry.
-  const evidenceTarget=target?.evidenceRevision===undefined?target:{...target,guideRevision:target.evidenceRevision};
+  const targetIdentity=target&&Object.fromEntries(Object.entries(target).filter(([key])=>key!=='unavailableLocales'));
+  const evidenceTarget=target?.evidenceRevision===undefined?targetIdentity:{...targetIdentity,guideRevision:target.evidenceRevision};
   const digest=knowledgeDigest({kind,input,target:evidenceTarget});
   const prior=(await c.query('SELECT case_id,digest FROM theme_production.automation_requests WHERE id=$1',[command.requestId])).rows[0];
   if(prior){
@@ -56,9 +59,12 @@ export async function readThemeEvidence(c:PoolClient,origin:string,command:Extra
     WHERE a.id=$1 AND a.case_id=$2 AND a.kind='preview' AND a.state='ready' AND e.name=$3`,[command.automationId,command.caseId,command.name])).rows[0];
   if(!r)throw missing();
   assertEvidenceTarget(r,target);
+  const image=Buffer.from(r.bytes);
+  if(r.result?.hashes?.[command.name]!==createHash('sha256').update(image).digest('hex'))
+    throw automationFailure('PREVIEW_EVIDENCE_CORRUPT','画面証拠のハッシュが一致しません。現在版で再採取してください。');
   await c.query('INSERT INTO theme_production.preview_reads VALUES($1,$2,$3) ON CONFLICT DO NOTHING',[command.automationId,command.executionId,command.name]);
   await themeDiagnostic(c,origin,{...identity(command),stage:'preview-evidence',code:'SERVED'});
-  return {metadata:{automationId:command.automationId,name:command.name,target:r.target,build:r.result.build},image:Buffer.from(r.bytes)};
+  return {metadata:{automationId:command.automationId,name:command.name,target:r.target,build:r.result.build},image};
 }
 function assertEvidenceTarget(row:QueryResultRow,target:{digest:string;guide:GuideVersions}|AutomationTarget){
   const guide='guide' in target?target.guide.revision:target.guideRevision;

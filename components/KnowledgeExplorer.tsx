@@ -45,7 +45,9 @@ function Detail({ dto, onEntity }: { dto: KnowledgePublishedRecord; onEntity: (i
       {s?.content.url ? <ExternalSourceLink href={s.content.url} label={s.content.title}/> : <strong>{s?.content.title ?? "資料"}</strong>}
       <div className={css.meta}>資料版 {e.source.revision} · {e.locator} · {({ support: "支持", refute: "反証", background: "背景" })[e.stance]}</div>
       {s?.content.bibliography && <KnowledgeSourceBibliography value={s.content.bibliography} className={css.meta}/>}
-      {e.excerpt && <blockquote lang={e.textLanguages?.excerpt?.tag}>{e.excerpt}</blockquote>}
+      {e.excerpt && (e.excerptKind==="quotation"
+        ? <blockquote lang={e.textLanguages?.excerpt?.tag}>{e.excerpt}</blockquote>
+        : <p lang={e.textLanguages?.excerpt?.tag}><small>{e.excerptKind==="summary"?"要約":"資料メモ"}</small> {e.excerpt}</p>)}
     </div>; })}
   </article>;
 }

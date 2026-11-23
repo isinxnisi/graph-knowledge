@@ -8,9 +8,10 @@ const key = z.string().regex(/^[a-z][a-z0-9-]{0,63}$/);
 const markdown = z.string().min(1).max(60000).refine(value => value.trim().length > 0);
 const profiles = z.array(key).max(16);
 
+export const themeEvidenceExtraScreens = ['image','timeline-source','story-source','timeline-image'] as const;
 export const evidenceRequirementsSchema = z.strictObject({
  requiredLocales: z.array(z.enum(['ja','en'])).max(2),
- requiredScreens: z.array(z.enum(['image','timeline-source','story-source'])).max(3),
+ requiredScreens: z.array(z.enum(themeEvidenceExtraScreens)).max(themeEvidenceExtraScreens.length),
 });
 export type EvidenceRequirements = z.infer<typeof evidenceRequirementsSchema>;
 
