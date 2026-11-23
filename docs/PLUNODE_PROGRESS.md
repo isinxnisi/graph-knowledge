@@ -1,3 +1,5 @@
+2026-11-23 Issue #80の採否判断まで完了。黒澤の非公開1ペアを同条件で比較し、Webbと合わせて動的ガイドを採用。黒澤の英訳・根拠導線は作品側の残件。正式反映は別承認。 [黒澤比較と採否](verification/THEME_WORK_GUIDES_EVIDENCE_20261123.md#黒澤の同条件比較)
+
 2026-11-23 Issue #80のβ修正・日英20枚のChatGPT Web視認・同条件Webb 1ペアの独立比較まで完了。全体は動的ガイドの本番採否まで。両案とも要修正で、黒澤の翻訳・出典補正と別題材の同条件比較が残る。 [原因・証拠・比較結果](verification/THEME_WORK_GUIDES_EVIDENCE_20261123.md)
 
 2026-11-23 Issue #79 のβ比較準備A完了。2題材・4ペアと再開試験2ペアを非公開で用意し、開始データと受付を照合。全体の残りはBのChatGPT Web独立起動による作品品質・作業量・再開の比較。 [案件IDと比較手順](verification/THEME_WORK_GUIDES_COMPARISON_20261123.md)
