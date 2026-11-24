@@ -4,6 +4,8 @@
 
 [Watch in English](walkman-pilot.en.mp4) · [English subtitles](walkman.en.srt)
 
+次の企画と見比べるときは、出典・各言語の素材・改稿した場面をまとめた[比較用の案件データ](reference.json)から同じ場面をたどれる。[動画制作の運用設計](../../../docs/design/THEME_VIDEO_OPERATIONS.md)
+
 2026年11月24日の横長試作。日本語版は89.79秒。両版とも1280×720、24fpsで、初代機の展示写真と自作の模式図を使った。自宅で二組のヘッドホンを考えた場面と、後日、友人と車に乗って会話の不便を感じた場面を、盛田昭夫の回想に沿って描く。
 
 ## Why the First Walkman Had a Talk Button

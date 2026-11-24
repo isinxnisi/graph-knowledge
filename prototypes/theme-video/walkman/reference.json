@@ -1,0 +1,71 @@
+{
+  "episodeId": "walkman-hot-line",
+  "question": "一台で同じ曲を聴いているとき、隣の人の声はどう届くのか。",
+  "format": {"name": "landscape", "aspectRatio": "16:9", "width": 1280, "height": 720, "fps": 24},
+  "theme": {
+    "id": "theme:a3acb7b93cfc83a866442cd238fa8949db3a07a7bc33c008",
+    "revision": 17,
+    "url": "https://plunode.net/?ktheme=theme%3Aa3acb7b93cfc83a866442cd238fa8949db3a07a7bc33c008&krev=17",
+    "record": {
+      "id": "import:web.368c47b78745a261803bd035786fe70cfe1e70c793bc88d7:record:4bc05aa75bbf2de417965054dfbd19ed",
+      "revision": 1,
+      "title": "一人で聴く機械に、なぜ端子が二つ？",
+      "sourceUrl": "https://www.suruga-ya.jp/product/detail/701103787"
+    }
+  },
+  "sources": [
+    {"use": "盛田昭夫の回想。自宅での試聴と、後日、友人と車でピアノを聴いた場面。", "url": "https://bunshun.jp/articles/-/5676"},
+    {"use": "初代ウォークマンの発売年、製品の外観と仕様。", "url": "https://www.sony.com/ja/SonyInfo/CorporateInfo/History/sonyhistory-e.html"},
+    {"use": "ソニーの発売20周年資料。軽量ヘッドホンと再生専用機の開発。", "url": "https://www.sony.com/en/SonyInfo/News/Press/199907/99-059/"}
+  ],
+  "photograph": {
+    "file": "figures/first-walkman-1979.jpg",
+    "title": "First Walkman 1979",
+    "creator": "Yoshikazu TAKADA",
+    "url": "https://www.flickr.com/photos/34530295@N06/31011124386",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+    "edit": "2016年の展示写真を画面に合わせてトリミング。端子の接続は別の説明図に描いた。"
+  },
+  "production": {
+    "scriptModel": null,
+    "reasoningEffort": null,
+    "conditions": "脚本生成時のモデルと推論設定は未記録。題材と回想資料は企画段階で選定済み。両版で展示写真と説明図を共有し、語り・画面内文字・字幕・表示時間を各言語で編集した。",
+    "operatorFeedback": "依頼者は日本語版の試作の品質を評価し、題材がショートにも向いていると述べた。",
+    "reviewConditions": "初見のAIレビューは完成前の画面と字幕が対象。一般視聴者の反応、端末スピーカーでの聞こえ方、英語話者による発音・抑揚の試聴は未確認。"
+  },
+  "editions": {
+    "ja": {
+      "title": "初代ウォークマンには、隣の声を聴くボタンがあった",
+      "video": "walkman-pilot.mp4",
+      "sha256": "2c62393582115dd2f601097f97dfd9f747d87e423b23787e16dff91fd75901bf",
+      "durationSeconds": 89.791667,
+      "subtitles": "walkman.ja.srt",
+      "edit": "edit.json",
+      "narration": "narration.flac",
+      "boards": "boards.ja.json",
+      "voice": "VOICEVOX:青山龍星（0.24.1、ノーマル）",
+      "observations": [
+        {"cues": [6, 7, 8], "basis": "制作上の判断", "note": "盛田の回想と明示した上で、二組目の着想を得た自宅と、友人と乗車した別の日を言い分けた。"},
+        {"cues": [8, 9], "basis": "初見のAIレビュー後に改稿", "note": "固有名詞が続いて冒頭の問いを忘れたとの指摘から曲名を省き、友人に妻のピアノを聴かせる関係を残した。"},
+        {"cues": [14], "basis": "初見のAIレビュー後に改稿", "note": "視線が本体で止まったため、声を表す線をマイクからつないだコードに沿って相手の耳まで動かした。"}
+      ]
+    },
+    "en": {
+      "title": "Why the First Walkman Had a Talk Button",
+      "video": "walkman-pilot.en.mp4",
+      "sha256": "e4f0d9a00ad9e3d9917cb3474c559e4050f48a2568cd5f98077ae53290a19006",
+      "durationSeconds": 78.791667,
+      "subtitles": "walkman.en.srt",
+      "edit": "edit.en.json",
+      "narration": "narration.en.flac",
+      "boards": "boards.en.json",
+      "voice": "Kokoro-82M v1.0 / af_heart（米国英語）",
+      "observations": [
+        {"cues": [7, 8], "basis": "制作上の判断", "note": "Listening at home と Later で、自宅の試聴と後のドライブを区別した。"},
+        {"cues": [10, 11], "basis": "制作上の判断", "note": "side by side と言い終えたところで耳に手を添える絵を出し、1.75秒後に会話の不便を語り始める。"},
+        {"cues": [13, 14], "basis": "初見のAIレビュー後に改稿", "note": "カセット自体の制約と読めた一文を The player couldn’t record. に改めて再合成し、次の場面で声が相手の耳に届く様子を示した。"}
+      ]
+    }
+  }
+}
