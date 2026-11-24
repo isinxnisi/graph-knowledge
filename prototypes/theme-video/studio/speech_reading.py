@@ -2,6 +2,7 @@
 import re
 import unicodedata
 
+_KATAKANA = {i: i + 0x60 for i in range(ord("ぁ"), ord("ゖ") + 1)}
 
 def _normalized_space(value):
     return " ".join(value.split())
@@ -64,6 +65,8 @@ def apply_readings(caption, readings):
     """Apply to the original visible text in one pass; inserted kana never triggers a second rule."""
     if not readings:
         return caption
-    terms = {row["text"]: row["kana"] for row in readings}
+    # VOICEVOX can parse the は inside じゅうはち as a particle. Supply the
+    # explicit pronunciation as katakana, leaving surrounding Japanese intact.
+    terms = {row["text"]: row["kana"].translate(_KATAKANA) for row in readings}
     pattern = "|".join(re.escape(term) for term in terms)
     return re.sub(pattern, lambda match: terms[match.group()], caption)

@@ -2,13 +2,14 @@
 
 const $ = (id) => document.getElementById(id);
 const languageName = { ja: "日本語", en: "English" };
+const productionLanguage = { ja: "日本語", en: "英語", both: "日英" };
 const jobName = { queued: "待機中", running: "生成中", done: "完了", failed: "失敗", interrupted: "中断", script_ready: "台本確認" };
 const pending = (run) => ["queued", "running"].includes(run.status);
 const state = {
   models: [], cases: [], detail: null, lang: "ja", chosen: null, results: [],
   selected: { ja: "", en: "" }, sceneId: "", compare: false, compareKey: "",
   poll: null, routeVersion: 0, searchVersion: 0, resumeAfter: null, editTarget: null, reviewTarget: null,
-  readingRequest: null, readingUrl: null,
+  readingRequest: null, readingUrl: null, adaptTarget: null, awaitingEnglishFor: "",
 };
 
 function node(tag, value, className) {
@@ -110,7 +111,7 @@ function modelLabel(value) {
   return state.models.find((m) => m.id === id)?.label || id || "記録なし";
 }
 function renderModels() {
-  for (const id of ["new-model", "rerun-model"]) {
+  for (const id of ["new-model", "rerun-model", "adapt-model"]) {
     const select = $(id);
     const previous = select.value;
     const items = state.models.map((model) => {
@@ -131,9 +132,13 @@ function disableSubmitButtons(form, disabled) {
   for (const button of form.querySelectorAll('button[type="submit"]')) button.disabled = disabled;
 }
 function refreshGenerationButtons() {
-  const create = $("new-form"), rerun = $("rerun-form");
-  disableSubmitButtons(create, !state.chosen || !$("new-model").value || create.dataset.busy === "1");
-  disableSubmitButtons(rerun, !$("rerun-model").value || rerun.dataset.busy === "1");
+  for (const name of ["new", "rerun"]) {
+    const form = $(name + "-form"), language = $(name + "-language").value;
+    form.querySelector('[value="video"]').textContent = productionLanguage[language] + "の動画を生成";
+    disableSubmitButtons(form, (name === "new" && !state.chosen) || !$(name + "-model").value || form.dataset.busy === "1");
+  }
+  const adapt = $("adapt-form");
+  disableSubmitButtons(adapt, !state.adaptTarget || !$("adapt-model").value || adapt.dataset.busy === "1");
 }
 
 async function refreshCases() {
@@ -158,6 +163,10 @@ function closeReview() {
   state.reviewTarget = null;
   $("adopt-form").hidden = true;
 }
+function closeAdapt() {
+  state.adaptTarget = null;
+  $("adapt-form").hidden = true;
+}
 function clearPlayer(video) {
   if (!video.hasAttribute("src")) return;
   video.pause(); video.removeAttribute("src"); video.load();
@@ -172,9 +181,12 @@ function setPlayer(video, src) {
 }
 function resetCase() {
   state.detail = null; state.selected = { ja: "", en: "" }; state.lang = "ja";
+  state.awaitingEnglishFor = "";
   state.sceneId = ""; state.compare = false; state.compareKey = ""; state.resumeAfter = null;
   for (const id of ["scene-panel", "history-panel", "rerun-panel"]) $(id).open = false;
-  closeEdit(); closeReview();
+  closeEdit(); closeReview(); closeAdapt();
+  $("rerun-language").value = "ja";
+  refreshGenerationButtons();
   clearPlayer($("player")); clearPlayer($("compare-player"));
 }
 async function route() {
@@ -183,6 +195,7 @@ async function route() {
   resetCase();
   const hash = location.hash;
   if (hash === "#new") {
+    $("new-language").value = "ja"; refreshGenerationButtons();
     view("new"); document.title = "新しい案件 | Plunode 映像制作室";
     if (!state.results.length) searchThemes();
     return;
@@ -199,7 +212,14 @@ async function route() {
     }
     const data = await api("/api/cases/" + encodeURIComponent(id));
     if (version !== state.routeVersion) return;
-    state.detail = data; view("case"); drawCase(); schedule();
+    state.detail = data;
+    const latest = orderedRuns()[0];
+    if (latest?.plan?.japaneseMasterRunId && hasEdition(latest, "en")) {
+      state.selected.ja = latest.plan.japaneseMasterRunId;
+      state.selected.en = latest.id;
+      state.lang = "en";
+    }
+    view("case"); drawCase(); schedule();
     if (chosenRun()?.status === "script_ready") $("scene-panel").open = true;
   } catch (err) {
     if (version !== state.routeVersion) return;
@@ -215,17 +235,35 @@ function playable(lang) { return orderedRuns().filter((r) => r.editions?.[lang]?
 function hasEdition(run, lang) {
   return Boolean(run.editions?.[lang]?.video || (run.langs?.includes(lang) && run.plan?.scenes?.length));
 }
+function japaneseMaster(run) { return Boolean(run?.plan?.titles?.ja && !run.plan.titles.en); }
+function sameSceneSequence(left, leftLang, right, rightLang) {
+  if (leftLang === rightLang) return true;
+  const [ja, en] = leftLang === "ja" ? [left, right] : [right, left];
+  if (japaneseMaster(ja) || en?.plan?.japaneseMasterRunId) return Boolean(ja && en?.plan?.japaneseMasterRunId === ja.id);
+  return true;
+}
+function runLanguage(run) {
+  return productionLanguage[run.langs.length === 1 ? run.langs[0] : "both"];
+}
+function runNumber(runId) {
+  return orderedRuns().reverse().findIndex((r) => r.id === runId) + 1;
+}
 function chosenRun(lang = state.lang) {
   return currentRuns().find((r) => r.id === state.selected[lang] && hasEdition(r, lang));
 }
 function ensureSelection(lang) {
   if (chosenRun(lang)) return;
   const available = orderedRuns().filter((r) => hasEdition(r, lang));
+  if (lang === "en" && state.awaitingEnglishFor) {
+    const match = available.find((r) => r.plan?.japaneseMasterRunId === state.awaitingEnglishFor);
+    if (match) { state.selected.en = match.id; state.awaitingEnglishFor = ""; }
+    return;
+  }
   state.selected[lang] = available.find((r) => r.id === state.detail.accepted?.[lang])?.id || available[0]?.id || "";
 }
 function editionLabel(run, lang) {
   if (state.detail.reference) return "品質の見本";
-  const order = [...orderedRuns()].reverse().findIndex((r) => r.id === run.id) + 1;
+  const order = runNumber(run.id);
   if (!run.editions?.[lang]?.video) return "試行 " + order + " · " + (jobName[run.status] || "台本");
   const adopted = state.detail.accepted?.[lang] === run.id || run.editions?.[lang]?.accepted;
   const needsWork = run.editions?.[lang]?.reviewStatus === "rework";
@@ -254,20 +292,38 @@ function drawWatch() {
   const runs = orderedRuns().filter((r) => hasEdition(r, lang));
   const run = chosenRun();
   const ed = run?.editions[lang];
-  for (const key of Object.keys(languageName)) $("lang-" + key).setAttribute("aria-pressed", String(key === lang));
+  for (const key of Object.keys(languageName)) {
+    const tab = $("lang-" + key);
+    tab.disabled = !currentRuns().some((r) => r.langs.includes(key));
+    tab.setAttribute("aria-pressed", String(key === lang));
+  }
   const select = $("edition-select");
-  select.replaceChildren(...(runs.length ? runs.map((r) => option(r.id, editionLabel(r, lang))) : [option("", "制作中の版")]));
+  const gap = lang === "en" && state.awaitingEnglishFor && !run;
+  const versions = runs.map((r) => option(r.id, editionLabel(r, lang)));
+  if (gap || !runs.length) versions.unshift(option("", gap ? "この日本語版に対応する英語版" : "制作中の版"));
+  select.replaceChildren(...versions);
   select.disabled = !runs.length; select.value = run?.id || "";
   setPlayer($("player"), ed?.video);
-  $("player").closest(".screen").classList.toggle("script-preview", run?.status === "script_ready");
+  $("player").closest(".screen").classList.toggle("script-preview", Boolean(gap) || run?.status === "script_ready");
   $("empty-video").hidden = Boolean(ed?.video);
-  $("empty-video").textContent = run?.status === "script_ready" ? "台本の確認後、日英の映像を生成できます。" : "映像の完成後、ここで試写できます。";
+  $("empty-video").textContent = run?.status === "script_ready" ? "台本の確認後、" + runLanguage(run) + "の映像を生成できます。" : "映像の完成後、ここで試写できます。";
   const subtitle = safeUrl(ed?.subtitles, true);
   $("subtitle-link").hidden = !subtitle;
   if (subtitle) $("subtitle-link").href = subtitle;
   $("preview-status").textContent = languageName[lang] + "　/　" + (run?.plan?.titles?.[lang] || state.detail.states?.[lang] || "待機中");
+  const selectedJapanese = chosenRun("ja");
+  if (lang === "en" && run && selectedJapanese && !sameSceneSequence(selectedJapanese, "ja", run, "en")) {
+    $("preview-status").textContent += "　·　日本語の試行 " + runNumber(selectedJapanese.id) + " とは別の制作版";
+  }
+  if (gap) {
+    const source = "日本語の試行 " + runNumber(state.awaitingEnglishFor);
+    $("empty-video").textContent = source + " から作った英語版はまだ試写できません。";
+    $("preview-status").textContent = "English　/　" + source;
+  }
   const approved = state.detail.accepted?.[lang] === run?.id || ed?.accepted;
   $("approval-row").hidden = !ed?.video || state.detail.reference;
+  $("adapt-open").hidden = $("approval-row").hidden || lang !== "ja";
+  if ($("adapt-open").hidden || state.adaptTarget?.parent !== run?.id) closeAdapt();
   $("adopt-toggle").hidden = Boolean(approved);
   $("rework-toggle").hidden = ed?.reviewStatus === "rework";
   if ($("approval-row").hidden) closeReview();
@@ -328,7 +384,7 @@ function drawSceneText() {
   if ($("edit-toggle").hidden) closeEdit();
 }
 function drawEvidence(run) {
-  const plan = run?.plan || orderedRuns().find((r) => r.plan)?.plan;
+  const plan = run?.plan || (!state.awaitingEnglishFor && orderedRuns().find((r) => r.plan)?.plan);
   const sources = plan?.sources || [];
   const links = node("div", null, "source-list");
   links.append(...sources.map((s) => externalLink(s.url, s.title || s.url)));
@@ -336,6 +392,7 @@ function drawEvidence(run) {
   const themeLabel = state.detail.themeTitle ? state.detail.themeTitle + "　/　" : "";
   const nodes = [node("p", themeLabel + "テーマ公開第" + state.detail.revision + "版" + (state.detail.reference ? " · 試作の比較用保存版" : ""), "subtle")];
   if (run && !state.detail.reference) {
+    if (plan?.japaneseMasterRunId) nodes.push(node("p", "英語版の元にした日本語版　試行 " + runNumber(plan.japaneseMasterRunId), "subtle"));
     nodes.push(node("p", "指定モデル　" + modelLabel(run.model), "subtle"));
     const actual = plan?.model?.actual;
     const effort = plan?.model?.effort;
@@ -350,8 +407,12 @@ function drawEvidence(run) {
 
 function compareCandidates() {
   const list = [];
+  const current = chosenRun();
   for (const lang of [state.lang === "ja" ? "en" : "ja", state.lang]) {
-    for (const run of playable(lang)) {
+    const candidates = playable(lang);
+    if (lang !== state.lang) candidates.sort((a, b) => Number(sameSceneSequence(current, state.lang, b, lang))
+      - Number(sameSceneSequence(current, state.lang, a, lang)));
+    for (const run of candidates) {
       if (lang === state.lang && run.id === state.selected[lang]) continue;
       list.push({ key: JSON.stringify([run.id, lang]), lang, run });
     }
@@ -374,9 +435,12 @@ function drawComparison() {
   select.replaceChildren(...choices.map((c) => option(c.key, languageName[c.lang] + "　" + editionLabel(c.run, c.lang))));
   select.value = selected.key;
   setPlayer($("compare-player"), selected.run.editions[selected.lang].video);
-  $("compare-label").textContent = selected.run.plan?.titles?.[selected.lang] || languageName[selected.lang];
+  const related = sameSceneSequence(chosenRun(), state.lang, selected.run, selected.lang);
+  $("align-compare").disabled = !related;
+  $("compare-label").textContent = (selected.run.plan?.titles?.[selected.lang] || languageName[selected.lang]) + (related ? "" : "　·　別の制作版");
 }
 function alignCompare() {
+  if ($("align-compare").disabled) return;
   const key = currentSceneFromPlayer();
   const target = compareCandidates().find((c) => c.key === state.compareKey);
   const at = target && timings(target.run, target.lang).find((t) => t.id === key);
@@ -384,14 +448,27 @@ function alignCompare() {
   else notify("比較する版に、この場面はありません。");
 }
 function switchPreview(lang, id) {
-  const priorRun = chosenRun();
+  const priorRun = chosenRun(), priorLang = state.lang;
   const anchor = currentSceneFromPlayer();
-  const preserveTime = $("player").currentTime > 0.05;
   state.lang = lang;
+  state.awaitingEnglishFor = "";
   if (id) state.selected[lang] = id;
+  else if (lang === "ja" && priorRun?.plan?.japaneseMasterRunId) state.selected.ja = priorRun.plan.japaneseMasterRunId;
+  else if (lang === "en" && priorRun) {
+    const previous = chosenRun("en");
+    const derived = previous?.plan?.japaneseMasterRunId === priorRun.id ? previous
+      : orderedRuns().find((r) => r.plan?.japaneseMasterRunId === priorRun.id && hasEdition(r, "en"));
+    if (derived) state.selected.en = derived.id;
+    else if (japaneseMaster(priorRun)) {
+      state.selected.en = ""; state.awaitingEnglishFor = priorRun.id; state.resumeAfter = null;
+    }
+    else if (priorRun.status === "script_ready" && hasEdition(priorRun, "en")) state.selected.en = priorRun.id;
+  }
   else if (priorRun?.status === "script_ready" && hasEdition(priorRun, lang)) state.selected[lang] = priorRun.id;
+  ensureSelection(lang);
+  const preserveTime = $("player").currentTime > 0.05 && sameSceneSequence(priorRun, priorLang, chosenRun(), lang);
   state.sceneId = preserveTime ? anchor : priorRun?.id === chosenRun()?.id ? state.sceneId : "";
-  closeEdit(); closeReview();
+  closeEdit(); closeReview(); closeAdapt();
   drawWatch(); drawProgress();
   if (chosenRun()?.status === "script_ready") $("scene-panel").open = true;
   if (preserveTime && state.sceneId === anchor) seekScene(anchor);
@@ -401,7 +478,7 @@ function inspectScript(run) {
   const button = node("button", "この台本を確認", "quiet small");
   button.type = "button";
   button.onclick = () => {
-    switchPreview(state.lang, run.id);
+    switchPreview(run.langs.includes(state.lang) ? state.lang : run.langs[0], run.id);
     $("scene-select").focus();
   };
   return button;
@@ -410,7 +487,7 @@ function statusButton(run) {
   if (state.detail.reference || !["running", "queued", "failed", "interrupted", "script_ready"].includes(run.status)) return null;
   const startVideo = run.status === "script_ready";
   const resume = !pending(run);
-  const button = node("button", startVideo ? "この台本で日英の映像を生成" : resume ? "再開" : "中断", "secondary small");
+  const button = node("button", startVideo ? "この台本で" + runLanguage(run) + "の映像を生成" : resume ? "再開" : "中断", "secondary small");
   button.type = "button";
   button.onclick = async () => {
     const edit = state.editTarget;
@@ -431,7 +508,7 @@ function statusButton(run) {
       if (state.detail?.id !== active) return;
       if (resume) state.resumeAfter = run.id;
       await reloadDetail();
-      notify(startVideo ? "この台本から日英の映像生成を開始しました。" : resume ? "再開を受け付けました。" : "中断を受け付けました。処理の区切りで停止します。");
+      notify(startVideo ? "この台本から" + runLanguage(run) + "の映像生成を開始しました。" : resume ? "再開を受け付けました。" : "中断を受け付けました。処理の区切りで停止します。");
     } catch (err) { if (state.detail?.id === active) notify(err.message, true); }
     finally { button.disabled = false; }
   };
@@ -462,6 +539,7 @@ function drawHistory() {
     row.append(node("strong", heading + "　" + (jobName[run.status] || run.status)));
     const langs = (run.langs || []).map((l) => languageName[l] || l).join(" / ");
     row.append(node("p", [when(run.created), langs, state.detail.reference ? null : modelLabel(run.model)].filter(Boolean).join("　·　"), "subtle"));
+    if (run.plan?.japaneseMasterRunId) row.append(node("p", "元の日本語版　試行 " + runNumber(run.plan.japaneseMasterRunId), "subtle"));
     if (run.reason) row.append(node("p", run.reason));
     if (run.error || ((pending(run) || run.status === "script_ready") && run.progress)) row.append(node("p", run.error || run.progress));
     if (run.status === "script_ready") row.append(inspectScript(run));
@@ -492,15 +570,21 @@ async function reloadDetail() {
   if (state.routeVersion !== version || state.detail?.id !== id) return;
   state.detail = data;
   const target = currentRuns().find((r) => r.id === state.resumeAfter);
+  let switched = false;
   if (target && ["done", "script_ready"].includes(target.status)) {
     for (const lang of target.langs || []) {
-      if (!hasEdition(target, lang) || lang === state.editTarget?.lang || lang === state.reviewTarget?.lang) continue;
+      if (!hasEdition(target, lang) || lang === state.editTarget?.lang || lang === state.reviewTarget?.lang || (lang === "ja" && state.adaptTarget)) continue;
       state.selected[lang] = target.id;
+    }
+    if (target.langs.length === 1 && !state.editTarget && !state.reviewTarget && !state.adaptTarget) {
+      state.lang = target.langs[0];
+      if (target.plan?.japaneseMasterRunId) state.selected.ja = target.plan.japaneseMasterRunId;
+      state.sceneId = ""; switched = true;
     }
     state.resumeAfter = null;
   }
   const outputs = (item) => JSON.stringify([item.accepted, (item.runs || []).map((r) => [r.id, r.status, Boolean(r.plan), r.editions])]);
-  if (previous.title !== data.title || outputs(previous) !== outputs(data)) {
+  if (switched || previous.title !== data.title || outputs(previous) !== outputs(data)) {
     drawCase();
     const selected = chosenRun();
     if (selected?.status === "script_ready" && !previous.runs.some((r) => r.id === selected.id && r.status === "script_ready")) $("scene-panel").open = true;
@@ -570,7 +654,7 @@ function formAction(formId, handler) {
     catch (err) { if (state.routeVersion === version) notify(err.message, true); }
     finally {
       delete form.dataset.busy;
-      if (formId === "new-form" || formId === "rerun-form") refreshGenerationButtons();
+      if (["new-form", "rerun-form", "adapt-form"].includes(formId)) refreshGenerationButtons();
       else disableSubmitButtons(form, false);
     }
   });
@@ -585,13 +669,12 @@ $("search-themes").onclick = searchThemes;
 $("theme-query").onkeydown = (e) => {
   if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); searchThemes(); }
 };
-$("new-model").onchange = refreshGenerationButtons;
-$("rerun-model").onchange = refreshGenerationButtons;
+for (const id of ["new-model", "rerun-model", "adapt-model", "new-language", "rerun-language"]) $(id).onchange = refreshGenerationButtons;
 formAction("new-form", async (version, action) => {
   if (!state.chosen || !$("new-model").value) return;
   const result = await submitRun("new", "/api/cases", {
     themeId: state.chosen.id, revision: Number($("theme-revision").value), brief: trim($("brief").value), model: $("new-model").value,
-    scriptFirst: action !== "video",
+    language: $("new-language").value, scriptFirst: action !== "video",
   });
   await refreshCases();
   if (state.routeVersion !== version) return;
@@ -608,7 +691,7 @@ $("scene-select").onchange = () => {
   state.sceneId = $("scene-select").value; closeEdit();
   $("player").pause();
   drawSceneText(); seekScene(state.sceneId);
-  if (state.compare) {
+  if (state.compare && !$("align-compare").disabled) {
     const target = compareCandidates().find((c) => c.key === state.compareKey);
     const t = target && timings(target.run, target.lang).find((item) => item.id === state.sceneId);
     if (t) seek($("compare-player"), t.start);
@@ -751,11 +834,32 @@ formAction("edit-form", async (version) => {
 });
 formAction("rerun-form", async (version, action) => {
   const payload = { model: $("rerun-model").value, parent: chosenRun()?.id || orderedRuns()[0]?.id,
-    reason: trim($("rerun-reason").value), scriptFirst: action !== "video" };
+    reason: trim($("rerun-reason").value), language: $("rerun-language").value, scriptFirst: action !== "video" };
   const result = await submitRun("rerun." + state.detail.id, detailPath("/runs"), payload);
   if (state.routeVersion !== version) return;
   state.resumeAfter = result.runId; $("rerun-reason").value = ""; $("rerun-panel").open = false;
-  await reloadDetail(); notify(payload.scriptFirst ? "新しい日英の台本の生成を受け付けました。" : "新しい日英版の生成を受け付けました。");
+  await reloadDetail(); notify(productionLanguage[payload.language] + (payload.scriptFirst ? "の台本" : "の動画") + "の生成を受け付けました。");
+});
+$("adapt-open").onclick = () => {
+  const run = chosenRun();
+  if (state.lang !== "ja" || !run?.editions?.ja?.video || state.detail.reference) return;
+  state.adaptTarget = Object.freeze({ caseId: state.detail.id, parent: run.id });
+  $("adapt-target").textContent = "元の日本語版　" + editionLabel(run, "ja") + "　" + run.plan.titles.ja;
+  if (state.models.some((m) => m.id === run.model && m.available)) $("adapt-model").value = run.model;
+  $("adapt-form").hidden = false; refreshGenerationButtons(); $("adapt-model").focus();
+};
+$("adapt-cancel").onclick = closeAdapt;
+formAction("adapt-form", async (version, action) => {
+  const target = state.adaptTarget;
+  if (!target || target.caseId !== state.detail?.id || !$("adapt-model").value) return;
+  const payload = { parent: target.parent, language: "en", model: $("adapt-model").value, scriptFirst: action !== "video" };
+  const result = await submitRun("adapt." + target.caseId, detailPath("/runs"), payload);
+  if (state.routeVersion !== version) return;
+  if (state.adaptTarget === target) {
+    state.resumeAfter = result.runId;
+    closeAdapt();
+  }
+  await reloadDetail(); notify("選んだ日本語版から英語の" + (payload.scriptFirst ? "台本" : "動画") + "の制作を開始しました。");
 });
 async function loadModels() {
   try {

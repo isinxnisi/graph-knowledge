@@ -145,6 +145,13 @@ class Ledger:
             return existing
         lang = data.get("lang")
         parent = data.get("parent")
+        language = data.get("language", "both")
+        if language not in ("both", *LANGS) or (lang and "language" in data):
+            raise ValueError("制作する言語と場面の修正を分けて指定してください。")
+        if parent is not None and not isinstance(parent, str):
+            raise ValueError("元の試行を選んでください。")
+        if language == "en" and not (case_id and parent):
+            raise ValueError("英語版の元にする日本語の映像を選んでください。")
         script_first = data.get("scriptFirst", False)
         if type(script_first) is not bool or (lang and script_first):
             raise ValueError("台本確認の指定を確認してください。")
@@ -179,14 +186,23 @@ class Ledger:
                 raise KeyError(case_id)
             plan = None
             draft_edit = False
+            langs = list(LANGS) if language == "both" else [language]
             if parent:
-                row = db.execute("SELECT plan,model,editions,status FROM runs WHERE id=? AND case_id=?", (parent, case_id)).fetchone()
+                row = db.execute("SELECT plan,model,langs,editions,status FROM runs WHERE id=? AND case_id=?",
+                                 (parent, case_id)).fetchone()
                 if not row:
                     raise ValueError("元の試行が見つかりません。")
+                editions = json.loads(row["editions"])
+                if language == "en":
+                    video = self.folder / "cases" / case_id / parent / "ja" / "video.mp4"
+                    if not row["plan"] or "ja" not in editions or not video.is_file() or not video.stat().st_size:
+                        raise ValueError("英語版の元にする、再生できる日本語の映像を選んでください。")
                 if lang:
                     draft_edit = row["status"] == "script_ready"
-                    if not row["plan"] or (not draft_edit and lang not in json.loads(row["editions"])):
-                        raise ValueError("修正する言語の映像がまだありません。")
+                    parent_langs = json.loads(row["langs"])
+                    if not row["plan"] or lang not in parent_langs or (not draft_edit and lang not in editions):
+                        raise ValueError("修正できる言語の台本または映像を選んでください。")
+                    langs = parent_langs if draft_edit else [lang]
                     plan = json.loads(row["plan"])
                     scene_id = required(data, "sceneId", 100)
                     scene = next((s for s in plan["scenes"] if s["id"] == scene_id), None)
@@ -201,7 +217,6 @@ class Ledger:
                         raise ValueError("読み指定は日本語の場面で編集できます。")
                     model = row["model"]
             run_id = uuid.uuid4().hex
-            langs = [lang] if lang and not draft_edit else list(LANGS)
             status, progress = ("script_ready", "修正版の台本を保存しました") if draft_edit else ("queued", "順番待ち")
             db.execute("""INSERT INTO runs(id,case_id,parent,model,langs,reason,status,progress,created,plan,script_first)
                         VALUES(?,?,?,?,?,?,?,?,?,?,?)""",
@@ -291,6 +306,8 @@ class Ledger:
                                 langs=langs, error=run["error"], editions=editions,
                                 plan=json.loads(run["plan"]) if run["plan"] else None))
         title = next((r["plan"]["titles"]["ja"] for r in reversed(history) if r["plan"]), row["title"])
+        for lang in LANGS:
+            states.setdefault(lang, "未生成")
         return dict(id=case_id, title=title, themeTitle=snap["title"], brief=row["brief"], themeId=snap["themeId"], revision=snap["revision"],
                     themeUrl=theme_url(snap["themeId"], snap["revision"]), updated=row["updated"], reference=False,
                     states=states, accepted=accepted, reviews=[dict(s) for s in reviews], runs=history)
@@ -316,6 +333,9 @@ class Ledger:
                 for lang in json.loads(r["langs"]):
                     rework = verdicts.get((r["id"], lang)) == "rework"
                     item["states"].setdefault(lang, edition_state(r["status"], bool(r[lang]), item["accepted"].get(lang) == r["id"], rework))
+            for item in items.values():
+                for lang in LANGS:
+                    item["states"].setdefault(lang, "未生成")
         return [*items.values(), {k: v for k, v in self.reference.items() if k != "runs"}]
 
     def progress(self, run, message):
@@ -338,23 +358,38 @@ class Ledger:
             folder = self.folder / "cases" / case_id / run
             folder.mkdir(parents=True, exist_ok=True)
             snap = json.loads(row["snapshot"])
+            langs = json.loads(row["langs"])
             if row["plan"]:
                 plan = json.loads(row["plan"])
             else:
-                self.progress(run, "固定資料から日英の脚本を生成中")
                 brief = row["brief"]
                 if row["reason"]:
                     brief += "\n今回の試行で重視する点\n" + row["reason"]
-                plan = generate(snap, brief, row["model"], folder)
+                options = {}
+                message = "固定資料から日英の脚本を生成中"
+                if langs == ["ja"]:
+                    options["language"] = "ja"
+                    message = "固定資料から日本語の脚本を生成中"
+                elif langs == ["en"]:
+                    with self.db() as db:
+                        master = db.execute("SELECT plan FROM runs WHERE id=? AND case_id=?",
+                                            (row["parent"], case_id)).fetchone()
+                    options.update(language="en", master_plan=json.loads(master["plan"]))
+                    message = "選んだ日本語版をもとに英語の脚本を生成中"
+                self.progress(run, message)
+                plan = generate(snap, brief, row["model"], folder, **options)
+                if langs == ["en"]:
+                    plan["japaneseMasterRunId"] = row["parent"]
                 with self.db() as db:
                     if row["script_first"]:
-                        db.execute("""UPDATE runs SET plan=?,status='script_ready',progress='台本と日本語の読みを確認できます',
-                                    pause_requested=0 WHERE id=?""", (packed(plan), run))
+                        note = "英語の台本を確認できます" if langs == ["en"] else "台本と日本語の読みを確認できます"
+                        db.execute("""UPDATE runs SET plan=?,status='script_ready',progress=?,pause_requested=0
+                                   WHERE id=?""", (packed(plan), note, run))
                         db.execute("UPDATE cases SET updated=? WHERE id=?", (clock(), case_id))
                         return True
                     db.execute("UPDATE runs SET plan=? WHERE id=?", (packed(plan), run))
             editions = json.loads(row["editions"])
-            for lang in json.loads(row["langs"]):
+            for lang in langs:
                 if lang in editions:
                     continue
                 self.progress(run, "日本語版を準備中" if lang == "ja" else "英語版を準備中")

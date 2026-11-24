@@ -88,7 +88,8 @@ h1 { font: 650 clamp(26px, 2.5vw, 42px)/1.45 "Yu Mincho", YuMincho, "Hiragino Mi
 .screen.script-preview { min-height: 64px; background: #f0f2eb; }
 .screen.script-preview video { display: none; }
 .screen.script-preview #empty-video { position: static; margin: 0; padding: 12px; color: var(--muted); }
-.approval-row { display: flex; justify-content: flex-end; gap: 8px; margin: 10px 0; }
+.approval-row { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin: 10px 0; }
+#adapt-open { margin-right: auto; }
 .form-target { font-weight: 650; font-size: 14px; color: var(--teal); }
 .generation-actions, .reading-actions { display: flex; gap: 9px; align-items: center; flex-wrap: wrap; }
 #story-intent { margin: 8px 0 20px; max-width: 75ch; }
@@ -103,7 +104,7 @@ h1 { font: 650 clamp(26px, 2.5vw, 42px)/1.45 "Yu Mincho", YuMincho, "Hiragino Mi
 #reference-link { margin-right: 10px; }
 #scene-from-playback { margin-top: 5px; }
 .panel { border-bottom: 1px solid var(--line); }
-.watch-grid + .approval-row[hidden] + form[hidden] + .panel { margin-top: 14px; }
+.watch-grid + .approval-row[hidden] + form[hidden] + form[hidden] + .panel { margin-top: 14px; }
 .panel summary { list-style: none; position: relative; padding: 15px 26px 15px 0; font-size: 15px; font-weight: 650; }
 .panel summary::-webkit-details-marker { display: none; }
 .panel summary::after { content: "＋"; position: absolute; right: 6px; top: 14px; font-size: 16px; color: var(--teal); font-weight: 400; }

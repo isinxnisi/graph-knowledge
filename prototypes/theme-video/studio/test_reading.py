@@ -21,14 +21,16 @@ class SceneReadingTest(unittest.TestCase):
             {"text": "一日", "kana": "ﾂｲﾀﾁ"},
         ])
         self.assertEqual(len(words), 2)
-        self.assertEqual(apply_readings(sentence, words), "ツイタチとツイタチ、そしておもわず。")
+        self.assertEqual(apply_readings(sentence, words), "ツイタチとツイタチ、そしてオモワズ。")
         self.assertEqual(apply_readings("一日とつい", [{"text": "一日", "kana": "ついたち"}, words[1]]),
-                         "ついたちとおもわず")
+                         "ツイタチとオモワズ")
         self.assertEqual(validate_readings(sentence, None), [])
         spaced = "HD  84406を観測した。"
         entry = {"text": "HD  84406", "kana": "ほし"}
         self.assertEqual(media._utterances({"narration": spaced, "readings": [entry]}, "ja"),
-                         [("HD 84406を観測した。", "ほしを観測した。")])
+                         [("HD 84406を観測した。", "ホシを観測した。")])
+        self.assertEqual(media._utterances({"narration": "鏡は十八枚。", "readings": [
+            {"text": "十八枚", "kana": "じゅうはちまい"}]}, "ja"), [("鏡は十八枚。", "鏡はジュウハチマイ。")])
 
     def test_problematic_entries_are_rejected_before_synthesis(self):
         for bad in [
@@ -76,7 +78,7 @@ class SceneReadingTest(unittest.TestCase):
             first = previews[0]
             self.assertEqual(media.preview_reading("一日。", date), first)
             media.preview_reading("一日。", duration)
-            self.assertEqual(queries, ["ついたち。", "いちにち。"])
+            self.assertEqual(queries, ["ツイタチ。", "イチニチ。"])
             with wave.open(io.BytesIO(first), "rb") as audio:
                 self.assertEqual((audio.getnchannels(), audio.getframerate(), audio.getsampwidth()), (1, 24000, 2))
                 self.assertGreater(audio.getnframes(), 0)

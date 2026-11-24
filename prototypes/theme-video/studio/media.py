@@ -1,6 +1,7 @@
 """Render a local edition from the selected plan, measured speech and cited boards."""
 
 from functools import lru_cache
+from itertools import groupby
 import hashlib
 import io
 import json
@@ -363,6 +364,43 @@ def _stamp(frame):
     return f"{ms//3600000:02}:{ms//60000%60:02}:{ms//1000%60:02},{ms%1000:03}"
 
 
+def _scene_cues(scene, lang, voice, engine, first):
+    shot = scene["asset"]
+    lead = 26 if first else 5
+    if shot in ("webb-identify", "webb-map", "webb-return"):
+        lead = 20  # Let the viewer find the mark before explaining it.
+    cues = [(lead, "", None)]
+    for text, spoken in _utterances(scene[lang], lang):
+        speech = _speech(spoken, lang, voice, engine)
+        cues.append((math.ceil(len(speech) / (RATE // FPS)), text, speech))
+        cues.append((5, "", None))
+    if len(cues) == 1:
+        raise ValueError("読み上げる文がありません。")
+    hold = 16 if shot == "comparison" else 9
+    if shot.startswith("webb-"):
+        hold = 26 if shot == "webb-return" else 18
+    if scene[lang]["narration"].rstrip().endswith(("?", "？")):
+        hold = round(1.6 * FPS)
+    cues[-1] = (cues[-1][0] + hold, "", None)
+    return cues
+
+
+def _timed_scenes(scenes, lang, voice, engine, progress):
+    """Keep the camera moving across adjacent narration scenes on the same board."""
+    ordered = enumerate(scenes)
+    for shot, group in groupby(ordered, key=lambda item: item[1]["asset"]):
+        prepared = []
+        for index, scene in group:
+            progress(f"{'日本語' if lang == 'ja' else '英語'}の音声・図版 {index+1}/{len(scenes)}")
+            cues = _scene_cues(scene, lang, voice, engine, index == 0)
+            prepared.append((scene, cues, sum(frames for frames, _, _ in cues)))
+        duration = sum(length for _, _, length in prepared)
+        offset = 0
+        for scene, cues, length in prepared:
+            yield scene, cues, offset, duration
+            offset += length
+
+
 def render_edition(plan, lang, out_dir, progress=lambda message: None):
     """Write video.mp4, subtitles.srt, timings.json and media.json when an edition is complete."""
     if lang not in ("ja", "en") or not plan.get("scenes"):
@@ -375,44 +413,55 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
         work = Path(tmp)
         slides, pcm, frame = [], [], 0
         seen_mosaic = False
+        motion_boards = None
+        style = _style(lang)
 
-        def add(board, frames, speech=None):
-            nonlocal frame
+        def save_board(board, frames):
             name = f"board{len(slides):03}.png"
             board.save(work / name, compress_level=2)
             slides.append((name, frames))
-            count = frames * (RATE//FPS)
-            if speech is None:
-                pcm.append(np.zeros(count, dtype="<i2"))
-            else:
-                pcm.append(np.pad(speech, (0, count-len(speech))))
-            frame += frames
 
-        for index, scene in enumerate(plan["scenes"]):
-            progress(f"{'日本語' if lang=='ja' else '英語'}の音声・図版 {index+1}/{len(plan['scenes'])}")
+        for scene, cues, shot_offset, duration in _timed_scenes(plan["scenes"], lang, voice, engine, progress):
             start = frame
-            board = _board(plan, scene, lang, used, seen_mosaic)
-            seen_mosaic |= scene["asset"] == "mosaic"
-            add(board, 26 if index == 0 else 5)
-            phrases = _utterances(scene[lang], lang)
-            if not phrases:
-                raise ValueError("読み上げる文がありません。")
-            for text, spoken in phrases:
-                speech = _speech(spoken, lang, voice, engine)
-                count = math.ceil(len(speech)/(RATE//FPS))
-                slide = board.copy()
-                style = _style(lang)
-                style.subtitle(slide, style.caption_breaks(text, wrap_japanese=True))
-                subtitles.append(f"{len(subtitles)+1}\n{_stamp(frame)} --> {_stamp(frame+count)}\n{text}\n")
-                add(slide, count, speech)
-                add(board, 5)
-            # Hold a question or paired images long enough to look before the next explanation.
-            hold = 16 if scene["asset"] == "comparison" else 9
-            if scene[lang]["narration"].rstrip().endswith(("?", "？")):
-                hold = round(1.6 * FPS)
-            add(board, hold)
+            shot = scene["asset"]
+            animated = shot.startswith("webb-")
+            if animated:
+                if plan.get("themeId") != WEBB["themeId"]:
+                    raise ValueError("ウェッブの演出素材は対応するテーマで使用してください。")
+                if motion_boards is None:
+                    from webb.boards import Boards
+                    motion_boards = Boards(lang=lang)
+                if shot != "webb-mirror":
+                    used.add("aligned" if shot == "webb-map" else "mosaic")
+            else:
+                board = _board(plan, scene, lang, used, seen_mosaic)
+                seen_mosaic |= shot == "mosaic"
+            for frames, text, speech in cues:
+                samples = frames * (RATE // FPS)
+                pcm.append(np.zeros(samples, dtype="<i2") if speech is None else
+                           np.pad(speech, (0, samples - len(speech))))
+                caption_band = None
+                if text:
+                    subtitles.append(f"{len(subtitles)+1}\n{_stamp(frame)} --> {_stamp(frame+frames)}\n{text}\n")
+                    caption = Image.new("RGB", (W, H), INK)
+                    style.subtitle(caption, style.caption_breaks(text, wrap_japanese=True))
+                    caption_band = caption.crop((0, FOOT, W, H))
+                # Animate at twelve poses per second on the same 24 fps voice clock.
+                step = 2 if animated else frames
+                for offset in range(0, frames, step):
+                    if animated:
+                        position = (shot_offset + frame - start + offset) / max(1, duration - 1)
+                        board = motion_boards.frame(shot.removeprefix("webb-"), position)
+                    slide = board
+                    if caption_band is not None:
+                        slide = board.copy()
+                        slide.paste(caption_band, (0, FOOT))
+                    save_board(slide, min(step, frames - offset))
+                frame += frames
             timing.append({"id":scene["id"], "start":start/FPS, "end":frame/FPS})
-        add(_credit(plan, lang, used, voice), 7*FPS)
+        save_board(_credit(plan, lang, used, voice), 7 * FPS)
+        pcm.append(np.zeros(7 * RATE, dtype="<i2"))
+        frame += 7 * FPS
         _save_wav(work / "mix.wav", np.concatenate(pcm))
         lines = ["ffconcat version 1.0"]
         for name, count in slides:

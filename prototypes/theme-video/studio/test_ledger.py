@@ -140,6 +140,84 @@ class LedgerTest(unittest.TestCase):
         self.assertEqual(self.desk.case(result["id"])["runs"][0]["status"], "script_ready")
         render.assert_not_called()
 
+    def test_japanese_draft_then_english_adaptation_from_the_selected_cut(self):
+        self.request.update(language="ja", scriptFirst=True)
+        master = deepcopy(self.plan)
+        del master["titles"]["en"]
+        del master["scenes"][0]["en"]
+        result = self.create()
+        case, draft = result["id"], result["runId"]
+        generate = Mock(return_value=master)
+        render = Mock(wraps=self.render)
+        self.desk.process_next(generate, render)
+        self.assertEqual(generate.call_args.kwargs, {"language": "ja"})
+        self.assertEqual(self.desk.list_cases()[0]["states"], {"ja": "台本確認", "en": "未生成"})
+        self.assertEqual(self.desk.case(case)["runs"][0]["langs"], ["ja"])
+        render.assert_not_called()
+
+        def submit(key, **fields):
+            return self.desk.submit("runs", dict(requestId=key, model="test", **fields),
+                                    self.snapshot, self.models, case)["runId"]
+
+        with self.assertRaises(ValueError):
+            submit("adapt-too-early", language="en", parent=draft)
+        with self.assertRaises(ValueError):
+            submit("en-not-written", lang="en", sceneId="s1", narration="One.", reason="語りを修正", parent=draft)
+        revised = submit("edit-ja", lang="ja", sceneId="s1", narration="星がひとつ。", reason="対象を明示", parent=draft)
+        self.desk.resume(case, revised)
+        self.desk = Ledger(self.data)
+        self.desk.process_next(generate, render)
+        self.assertEqual((generate.call_count, render.call_count), (1, 1))
+        self.assertEqual(render.call_args.args[1], "ja")
+        before = self.desk.case(case)
+        source = next(r for r in before["runs"] if r["id"] == revised)
+        self.assertEqual(source["langs"], ["ja"])
+        self.assertEqual(source["plan"]["scenes"][0]["ja"]["narration"], "星がひとつ。")
+        self.assertEqual(before["accepted"], {})
+
+        english = submit("adapt", language="en", parent=revised, scriptFirst=True)
+        translated = deepcopy(source["plan"])
+        translated["scenes"][0]["en"] = {"narration": "A single star."}
+        translated["titles"]["en"] = "One star"
+        generate.return_value = translated
+        self.desk.process_next(generate, render)
+        self.assertEqual(generate.call_args.kwargs, {"language": "en", "master_plan": source["plan"]})
+        self.assertEqual(render.call_count, 1)
+        draft_en = self.desk.case(case)["runs"][0]
+        self.assertEqual((draft_en["id"], draft_en["parent"], draft_en["status"], draft_en["langs"]),
+                         (english, revised, "script_ready", ["en"]))
+        self.assertEqual(draft_en["plan"]["japaneseMasterRunId"], revised)
+        with self.assertRaises(ValueError):
+            submit("wrong-language", lang="ja", parent=english, sceneId="s1", narration="ふたつ", reason="語順")
+        revised_en = submit("edit-en", lang="en", parent=english, sceneId="s1", narration="That is one star.",
+                            reason="導入の語順")
+        self.desk.resume(case, revised_en)
+        self.desk.process_next(generate, render)
+        self.assertEqual((generate.call_count, render.call_count), (2, 2))
+        self.assertEqual(render.call_args.args[1], "en")
+        after = self.desk.case(case)
+        self.assertEqual(after["states"], {"ja": "確認待ち", "en": "確認待ち"})
+        self.assertEqual(after["accepted"], {})
+        self.assertEqual(next(r for r in after["runs"] if r["id"] == revised), source)
+        self.assertEqual(after["runs"][0]["plan"]["japaneseMasterRunId"], revised)
+        self.assertEqual(set(after["runs"][0]["editions"]), {"en"})
+
+    def test_adaptation_requires_a_playable_japanese_edition_in_the_same_case(self):
+        request = dict(requestId="english", model="test", language="en")
+        with self.assertRaises(ValueError):
+            self.desk.submit("/api/cases", {**self.request, **request}, self.snapshot, self.models)
+        first = self.create()
+        case, source = first["id"], first["runId"]
+        self.desk.process_next(lambda *args: self.plan, self.render)
+        other = self.desk.submit("/api/cases", {**self.request, "requestId": "other"}, self.snapshot, self.models)
+        for fields, case_id in [({}, case), ({"parent": source}, other["id"]),
+                                ({"parent": source, "lang": "en"}, case)]:
+            with self.subTest(fields=fields, case_id=case_id), self.assertRaises(ValueError):
+                self.desk.submit("runs", {**request, **fields}, self.snapshot, self.models, case_id)
+        self.desk.media(case, source, "ja", "video.mp4").unlink()
+        with self.assertRaises(ValueError):
+            self.desk.submit("runs", {**request, "parent": source}, self.snapshot, self.models, case)
+
     def test_invalid_reading_rolls_back_and_finished_correction_only_renders_japanese(self):
         self.plan["scenes"][0]["ja"]["narration"] = "一日が始まります。"
         result = self.create()
