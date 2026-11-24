@@ -1,0 +1,22 @@
+{
+  "themeId": "theme:915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1",
+  "mosaic": {
+    "sourceId": "nasa-mosaic",
+    "date": "2022.02.11",
+    "credit": "NASA",
+    "url": "https://science.nasa.gov/blogs/webb/2022/02/11/photons-received-webb-sees-its-first-star-18-times/",
+    "files": {
+      "mosaic.jpg": "https://science.nasa.gov/wp-content/uploads/2022/02/alignment_mosaic_compressed.png",
+      "mosaic-labels.jpg": "https://science.nasa.gov/wp-content/uploads/2022/02/Webb_alignment_segment-ID-mosaic_annotated-1024x694-1.png"
+    }
+  },
+  "aligned": {
+    "sourceId": "nasa-aligned",
+    "date": "2022.02.18",
+    "credit": "NASA/STScI/J. DePasquale",
+    "url": "https://science.nasa.gov/blogs/webb/2022/02/18/webb-team-brings-18-dots-of-starlight-into-hexagonal-formation/",
+    "files": {
+      "aligned.jpg": "https://science.nasa.gov/wp-content/uploads/2022/02/Webb_alignment_image-array_annotated.jpeg"
+    }
+  }
+}

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>映像制作室 | Plunode</title>
+  <link rel="stylesheet" href="/studio.css">
+  <script src="/studio.js" defer></script>
+</head>
+<body>
+  <header class="masthead">
+    <a href="#home" class="brand" aria-label="Plunode 映像制作室 ホーム"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>Plunode</a>
+    <span class="mast-title">映像制作室</span>
+    <span class="environment"><i></i>ローカル制作環境</span>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" aria-label="案件の選択">
+      <div class="side-head"><h2>制作案件 <span id="case-count" class="count"></span></h2><button id="toggle-list" class="mobile-show" type="button" aria-expanded="false" aria-controls="case-list">一覧を開く</button></div>
+      <a class="new-link" href="#new"><span aria-hidden="true">＋</span>新しい案件</a>
+      <nav id="case-list" aria-label="案件一覧"><p class="aside-empty">読み込み中…</p></nav>
+    </aside>
+    <main id="main" tabindex="-1">
+      <div id="notice" role="status" aria-live="polite" hidden></div>
+      <section id="loading-view"><h1>案件を読み込み中…</h1></section>
+      <section id="new-view" hidden>
+        <p class="overline">制作案件 / 新規</p><h1>テーマから動画をつくる</h1>
+        <form id="new-form" class="form-card">
+          <fieldset><legend>公開テーマ</legend>
+            <label for="theme-query">テーマを検索</label>
+            <div class="inline stretch"><input id="theme-query" type="search" placeholder="例　Webb、ウォークマン" autocomplete="off"><button id="search-themes" class="secondary" type="button">検索</button></div>
+            <p id="search-status" class="subtle" aria-live="polite"></p>
+            <div id="theme-results" aria-label="検索結果"></div>
+            <div id="theme-selection" class="selected-theme" hidden><div><span class="field-tag">選択中のテーマ</span><strong id="chosen-theme"></strong></div><label for="theme-revision">使用する公開版<input id="theme-revision" type="number" min="1" step="1"></label></div>
+          </fieldset>
+          <fieldset><legend>動画の企画</legend><label for="brief">取り上げる切り口</label><textarea id="brief" rows="3" maxlength="1500" placeholder="この題材の何に気づいてほしいですか"></textarea>
+            <label for="new-model">脚本・編集モデル</label><select id="new-model"></select><p id="model-note" class="subtle"></p>
+          </fieldset>
+          <div class="form-footer"><span>横長 16:9 · 日本語 / English</span><button id="create-case" class="primary" type="submit">日英版の生成を開始</button></div>
+        </form>
+      </section>
+      <section id="case-view" hidden>
+        <div class="case-kicker"><p id="case-channel" class="overline">制作案件</p><a id="theme-link" class="text-link" target="_blank" rel="noopener noreferrer" hidden>公開テーマを開く ↗</a></div>
+        <h1 id="case-title"></h1><p id="case-brief" class="case-brief"></p>
+        <div id="run-progress" aria-live="polite"></div>
+        <div class="preview-heading"><h2>試写</h2><button id="compare-toggle" class="quiet" type="button" aria-expanded="false" aria-controls="comparison">別の版と比較</button></div>
+        <div class="watch-grid" id="watch-grid">
+          <section class="monitor" aria-label="選択中の映像">
+            <div class="monitor-tools"><div class="segmented" aria-label="試写する言語"><button id="lang-ja" type="button" aria-pressed="true">日本語</button><button id="lang-en" type="button" aria-pressed="false">English</button></div><select id="edition-select" aria-label="試写する制作版"></select></div>
+            <div class="screen"><video id="player" controls preload="metadata" playsinline></video><p id="empty-video">映像の完成後、ここで試写できます。</p></div>
+            <div class="monitor-caption"><span id="preview-status"></span><a id="subtitle-link" download class="text-link" hidden>字幕を保存</a></div>
+          </section>
+          <section class="monitor" id="comparison" aria-label="比較する映像" hidden>
+            <div class="monitor-tools"><label for="compare-select">比較する版</label><select id="compare-select"></select></div>
+            <div class="screen"><video id="compare-player" controls preload="metadata" playsinline></video></div>
+            <div class="monitor-caption"><span id="compare-label"></span><button type="button" class="text-link" id="align-compare">同じ場面に移動</button></div>
+          </section>
+        </div>
+        <div id="approval-row" class="approval-row" hidden><button type="button" id="rework-toggle" class="secondary small">要修正</button><button type="button" id="adopt-toggle" class="primary small">この版を採用</button></div>
+        <form id="adopt-form" class="action-form" hidden>
+          <p id="review-target" class="form-target"></p><label id="review-reason-label" for="adopt-reason">採用理由</label><input id="adopt-reason" required maxlength="1000" placeholder="確認した場面と、その判断の理由"><div class="actions"><button type="button" id="adopt-cancel" class="quiet">閉じる</button><button id="review-submit" type="submit" class="primary small">採用を記録</button></div>
+        </form>
+        <details id="scene-panel" class="panel"><summary>場面と台本 <span id="scene-count" class="count"></span></summary>
+          <div class="panel-body"><label for="scene-select">場面を選んで映像へ移動</label><select id="scene-select"></select><button id="scene-from-playback" class="text-link" type="button">今の再生位置の台本を見る</button><p id="scene-narration" class="quotation"></p><div id="scene-notes"></div><div id="scene-sources" class="source-list"></div>
+            <button id="edit-toggle" class="secondary small" type="button">この場面の語りを修正</button>
+            <form id="edit-form" class="action-form" hidden>
+              <p id="edit-target" class="form-target"></p>
+              <label for="edit-narration">修正後のナレーション</label><textarea id="edit-narration" rows="3" maxlength="800" required></textarea>
+              <label for="edit-reason">修正理由</label><input id="edit-reason" maxlength="1000" required placeholder="どこで、何が伝わりにくかったか">
+              <div class="actions"><button id="edit-cancel" type="button" class="quiet">閉じる</button><button id="edit-submit" class="primary small" type="submit">この言語だけ再生成</button></div>
+            </form>
+          </div>
+        </details>
+        <details class="panel"><summary>出典と制作記録</summary><div class="panel-body" id="evidence"></div></details>
+        <details id="history-panel" class="panel"><summary>生成履歴 <span id="history-count" class="count"></span></summary><div class="panel-body" id="history"></div></details>
+        <details id="rerun-panel" class="panel"><summary>別の試行を作成</summary>
+          <form id="rerun-form" class="panel-body"><label for="rerun-model">脚本・編集モデル</label><select id="rerun-model"></select><label for="rerun-reason">今回試したいこと</label><input id="rerun-reason" maxlength="1000" required><div class="actions"><button type="submit" class="secondary">日英版を新しく生成</button></div></form>
+        </details>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
