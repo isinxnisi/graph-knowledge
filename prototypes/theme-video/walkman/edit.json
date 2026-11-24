@@ -1,0 +1,17 @@
+[
+  {"shot":"opening","caption":"いま、ふたりが、同じ曲を聴いています。","after":0.35,"samples":75776},
+  {"shot":"question","caption":"ここで、隣の人にひと言。\nヘッドホンをしたまま、どうやって話しましょう。","after":1.55,"samples":129536},
+  {"shot":"product","caption":"これは、1979年に発売された、\nソニーの初代ウォークマンです。","after":0.25,"samples":131328},
+  {"shot":"product","caption":"カセットを聴くための再生専用機に、\n軽いヘッドホンが付いていました。","after":0.45,"samples":110848},
+  {"shot":"pair","caption":"そして、ヘッドホンをつなぐ端子は、二つありました。","after":1.15,"samples":90112},
+  {"shot":"memoir","caption":"ソニーの盛田昭夫は、開発中の出来事を、\nあとでこう振り返っています。","after":0.25,"samples":132352},
+  {"shot":"home","caption":"自宅で試作機を聴いていたとき、もう一組のヘッドホンを\nつなげれば、ふたりで楽しめると考えました。","after":0.65,"samples":156416},
+  {"shot":"tape","caption":"別の日、盛田は、友人の庄司薫と車に乗りました。","after":0.35,"samples":111104},
+  {"shot":"pianist","caption":"盛田が用意したのは、庄司の妻、\n中村紘子が弾くピアノのテープです。","after":1.15,"samples":120064},
+  {"shot":"car","caption":"すぐ隣に座って、同じ曲を聴いているふたり。","after":1.75,"samples":81408},
+  {"shot":"ear","caption":"けれども、何か話したくなるたび、ヘッドホンを外すのは\n不便だった、と盛田は書いています。","after":0.9,"samples":152064},
+  {"shot":"switch","caption":"そこで、ボタンを押すと、\n本体のマイクが働くようにしました。","after":0.45,"samples":105472},
+  {"shot":"switch","caption":"声をテープに録音するわけではありません。","after":0.3,"samples":62464},
+  {"shot":"voice","caption":"いま隣で話す声が、つないだヘッドホンから、\nそのまま聞こえます。","after":1.65,"samples":111616},
+  {"shot":"ending","caption":"初代ウォークマンの、ホットラインです。","after":2.1,"samples":61184}
+]

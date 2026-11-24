@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="900" height="540" viewBox="0 0 900 540" role="img" aria-labelledby="title">
+  <title id="title">無地の紙ラベルを貼ったカセットテープの模式図</title>
+  <defs>
+    <linearGradient id="shell" x2=".7" y2="1">
+      <stop stop-color="#364c56"/>
+      <stop offset=".48" stop-color="#203642"/>
+      <stop offset="1" stop-color="#172b35"/>
+    </linearGradient>
+    <linearGradient id="paper" x2=".45" y2="1">
+      <stop stop-color="#f4ead4"/>
+      <stop offset=".7" stop-color="#eaddc3"/>
+      <stop offset="1" stop-color="#d8cbaf"/>
+    </linearGradient>
+    <linearGradient id="plate" x2="0" y2="1">
+      <stop stop-color="#405660"/>
+      <stop offset=".18" stop-color="#344b56"/>
+      <stop offset="1" stop-color="#233943"/>
+    </linearGradient>
+    <pattern id="ribs" width="6" height="8" patternUnits="userSpaceOnUse">
+      <path d="M0 2h6" stroke="#71828a" stroke-opacity=".48" stroke-width="1.5"/>
+      <path d="M0 4h6" stroke="#122632" stroke-width="2"/>
+    </pattern>
+    <pattern id="grain" width="59" height="47" patternUnits="userSpaceOnUse">
+      <path d="M3 13l3 1m12 26h3m14-31h2m14 19 3-1" fill="none"
+            stroke="#8d7556" opacity=".17" stroke-width=".8" stroke-linecap="round"/>
+      <circle cx="23" cy="20" r=".6" fill="#826a49" opacity=".21"/>
+    </pattern>
+    <clipPath id="window"><rect x="353" y="222" width="194" height="60" rx="12"/></clipPath>
+    <g id="screw">
+      <circle r="11" fill="#12242d"/>
+      <circle cy="-.8" r="8.4" fill="#a7aaa0" stroke="#5a6869" stroke-width="1.4"/>
+      <path d="M-6-3a7 7 0 0 1 8-3" fill="none" stroke="#e2ddc8" stroke-width="1.3"/>
+      <path d="M-4.8 0h9.6M0-4.8v9.6" stroke="#354246" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+    <g id="ribbed-grip">
+      <rect x="-10" y="-75" width="20" height="150" rx="3" fill="#233741"/>
+      <rect x="-8" y="-72" width="16" height="144" fill="url(#ribs)"/>
+    </g>
+    <g id="tooth">
+      <path d="M-4.8-26l1.2 9.4q3.6 1.8 7.2 0l1.2-9.4" fill="#e6dfc9" stroke="#a9a995" stroke-width="1"/>
+    </g>
+    <g id="reel">
+      <circle r="52" fill="#172a33" stroke="#76817c" stroke-width="1.5"/>
+      <circle r="46" fill="#717971" stroke="#10222b" stroke-width="2.5"/>
+      <circle r="40" fill="#d6d1ba" stroke="#abb2a3" stroke-width="2.3"/>
+      <circle r="33.5" fill="none" stroke="#a5ac9c" stroke-width="1.2"/>
+      <circle r="25" fill="#20323a" stroke="#858f84" stroke-width="2"/>
+      <use xlink:href="#tooth"/>
+      <use xlink:href="#tooth" transform="rotate(60)"/>
+      <use xlink:href="#tooth" transform="rotate(120)"/>
+      <use xlink:href="#tooth" transform="rotate(180)"/>
+      <use xlink:href="#tooth" transform="rotate(240)"/>
+      <use xlink:href="#tooth" transform="rotate(300)"/>
+      <path d="M-39-14a42 42 0 0 1 27-25" fill="none" stroke="#eee6cf" stroke-width="2"/>
+    </g>
+    <g id="guide">
+      <circle r="13" fill="#82908d"/>
+      <circle cy=".6" r="11" fill="#10252e"/>
+      <path d="M-8 5a10 10 0 0 0 13 3" fill="none" stroke="#445963" stroke-width="1.5"/>
+    </g>
+  </defs>
+
+  <!-- The outer lip and the inset front shell have separate edge highlights. -->
+  <rect x="57" y="28" width="786" height="478" rx="27" fill="#12232b" stroke="#101e25" stroke-width="4"/>
+  <rect x="61" y="30" width="778" height="468" rx="24" fill="url(#shell)" stroke="#65767a" stroke-width="2"/>
+  <rect x="68" y="37" width="764" height="454" rx="19" fill="none" stroke="#899590" stroke-opacity=".48" stroke-width="1.5"/>
+  <rect x="72" y="41" width="756" height="446" rx="16" fill="none" stroke="#152b35" stroke-width="1.5"/>
+  <use xlink:href="#ribbed-grip" transform="translate(89 260)"/>
+  <use xlink:href="#ribbed-grip" transform="translate(811 260)"/>
+  <g stroke-linecap="round">
+    <path d="M137 48h626" stroke="#172d38" stroke-width="2"/>
+    <path d="M138 50h624" stroke="#61747a" stroke-width="1"/>
+  </g>
+
+  <!-- The upper area of the paper label is reserved for the two editorial overlays. -->
+  <rect x="109" y="66" width="682" height="278" rx="16" fill="#142a34"/>
+  <rect x="113" y="68" width="674" height="271" rx="13" fill="url(#paper)" stroke="#a9a58f" stroke-width="1.5"/>
+  <rect x="113" y="68" width="674" height="271" rx="13" fill="url(#grain)"/>
+  <path d="M124 82h4v85h-4z" fill="#b96742"/>
+  <path d="M137 182h626" fill="none" stroke="#aeaa94" stroke-width="1.1"/>
+  <path d="M137 188h626" fill="none" stroke="#c7bea7" stroke-width="1"/>
+
+  <rect x="197" y="195" width="506" height="114" rx="54" fill="#394a4c" stroke="#b8b6a1" stroke-width="2"/>
+  <rect x="202" y="199" width="496" height="106" rx="51" fill="#273b43" stroke="#152a33" stroke-width="2"/>
+  <rect x="349" y="218" width="202" height="68" rx="15" fill="#122831" stroke="#75827d" stroke-width="1"/>
+  <g clip-path="url(#window)">
+    <rect x="353" y="222" width="194" height="60" fill="#a7b4a9"/>
+    <path d="M353 223h194v8H353z" fill="#84958e"/>
+    <g fill="#584b40" stroke="#342f2a" stroke-width="2">
+      <circle cx="269" cy="252" r="119"/>
+      <circle cx="631" cy="252" r="99"/>
+    </g>
+    <g fill="none" stroke="#99826a" stroke-width="1.2" opacity=".8">
+      <circle cx="269" cy="252" r="114"/>
+      <circle cx="269" cy="252" r="108"/>
+      <circle cx="269" cy="252" r="102"/>
+      <circle cx="631" cy="252" r="94"/>
+      <circle cx="631" cy="252" r="88"/>
+    </g>
+    <path d="M427 222h16l-26 60h-16zm47 0h5l-26 60h-5z" fill="#e8e4ce" opacity=".22"/>
+  </g>
+  <rect x="353" y="222" width="194" height="60" rx="12" fill="none" stroke="#142a32" stroke-width="2"/>
+  <path d="M371 288h158" stroke="#687b7b" stroke-width="1"/>
+  <use xlink:href="#reel" transform="translate(263 252) rotate(13)"/>
+  <use xlink:href="#reel" transform="translate(637 252) rotate(-9)"/>
+  <g fill="none" stroke="#768176" stroke-width="1">
+    <path d="M140 321h280m60 0h280"/>
+    <path d="M430 320h40" stroke="#b16a48" stroke-width="3"/>
+  </g>
+
+  <!-- The head opening, transport holes, and molded shoulder form the lower face. -->
+  <path d="M76 371h748" fill="none" stroke="#102630" stroke-width="2"/>
+  <path d="M77 374h746" fill="none" stroke="#576a70" stroke-width="1"/>
+  <path d="M159 491l43-98q5-11 17-11h462q12 0 17 11l43 98" fill="none" stroke="#152a34" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M163 492l42-97q3-8 15-8h460q11 0 15 8l42 97z" fill="url(#plate)" stroke="#6a7c7e" stroke-width="2"/>
+  <path d="M177 484l37-85q2-4 8-4h456q6 0 8 4l37 85" fill="none" stroke="#263c47" stroke-width="1.6"/>
+  <path d="M211 492h478" stroke="#192b35" stroke-width="2"/>
+  <use xlink:href="#guide" transform="translate(255 461)"/>
+  <use xlink:href="#guide" transform="translate(645 461)"/>
+  <g fill="#132b35" stroke="#718383" stroke-width="1.5">
+    <rect x="299" y="437" width="31" height="20" rx="8"/>
+    <rect x="570" y="437" width="31" height="20" rx="8"/>
+  </g>
+  <path d="M364 499v-18q0-5 6-5h160q6 0 6 5v18" fill="#11252f" stroke="#6b7a7b" stroke-width="1.8"/>
+  <path d="M376 484h148" stroke="#916c50" stroke-width="4"/>
+  <path d="M419 493h62" stroke="#aaa38d" stroke-width="5" stroke-linecap="round"/>
+  <path d="M380 497h140" stroke="#253943" stroke-width="2"/>
+  <g>
+    <use xlink:href="#screw" transform="translate(92 59) rotate(16)"/>
+    <use xlink:href="#screw" transform="translate(808 59) rotate(-29)"/>
+    <use xlink:href="#screw" transform="translate(92 468) rotate(31)"/>
+    <use xlink:href="#screw" transform="translate(808 468) rotate(8)"/>
+    <use xlink:href="#screw" transform="translate(450 419) rotate(-11) scale(.86)"/>
+  </g>
+</svg>

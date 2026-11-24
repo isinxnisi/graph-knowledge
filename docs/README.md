@@ -1,6 +1,6 @@
 [通常の本番公開手順](runbooks/PRODUCTION_RELEASE.md)。Web・Worker・migrationの計画、切替、確認と復旧。
 
-テーマ動画の[チャンネル戦略と視聴体験の構想案](design/THEME_VIDEO_CHANNEL.md)、[初代ウォークマンを題材にした初回の企画・試作手順](design/THEME_VIDEO_FIRST_PILOT.md)。脚本・映像の制作前に検討するための資料。
+テーマ動画の[チャンネル戦略と視聴体験](design/THEME_VIDEO_CHANNEL.md)、[初回の企画・試作手順](design/THEME_VIDEO_FIRST_PILOT.md)、[初代ウォークマンの試作動画・脚本・改稿記録](../prototypes/theme-video/walkman/README.md)。
 
 知識DBの公開投影・巡回台帳の世代管理。[現行設計](design/KNOWLEDGE_PUBLICATION_STORAGE.md)・[隔離比較とβ確認](verification/KNOWLEDGE_PUBLICATION_STORAGE_20261119.md)・[移行と復帰](runbooks/KNOWLEDGE_PUBLICATION_STORAGE.md)。
 
