@@ -13,21 +13,25 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urlsplit
 from urllib.request import Request, urlopen
 
+from speech_reading import validate_readings
+
 
 ORIGIN = "https://plunode.net"
 WEBB_ID = "theme:915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1"
-INSTRUCTIONS_VERSION = "plunode-video-editor-2"
+INSTRUCTIONS_VERSION = "plunode-video-editor-3"
 NASA_SOURCES = [
     {"id": "nasa-mosaic", "title": "Photons Received: Webb Sees Its First Star – 18 Times",
      "url": "https://science.nasa.gov/blogs/webb/2022/02/11/photons-received-webb-sees-its-first-star-18-times/",
      "locator": "2022-02-11 · initial mosaic, figure caption",
      "note": "NASAの2月11日公表図。調整前の18枚の主鏡片が同じ一つの星の光をそれぞれ反射し、"
-             "近赤外線カメラに別々の像が届いた。複数の撮影をつないだモザイク。点と鏡片が一対一で対応する。"},
+             "近赤外線カメラに別々の像が届いた。複数の撮影をつないだモザイク。点と鏡片が一対一で対応する。"
+             "チームは各鏡片に写った同じ星を見分けられるよう、周囲に似た明るさの星が少ない星を選んだ。"},
     {"id": "nasa-aligned", "title": "Webb Team Brings 18 Dots of Starlight Into Hexagonal Formation",
      "url": "https://science.nasa.gov/blogs/webb/2022/02/18/webb-team-brings-18-dots-of-starlight-into-hexagonal-formation/",
-     "locator": "2022-02-18 · image array, figure caption",
+     "locator": "2022-02-18 · image array, figure caption and Matthew Lallo on the arrangement",
      "note": "NASAの2月18日公表図。チームが鏡片の向きを変え、鏡片の配置に対応する六角形のパターンに"
-             "18の光点を並べた。この図でも光点は別々で、次の調整で像を重ねるための途中段階。"},
+             "18の光点を並べた。同じ配置にすると、チームは鏡全体のどの部分の像が変わったかを追いやすい。"
+             "この図でも光点は別々。各像をさらにくっきりさせる調整を経て、のちに十八の像を重ねる。"},
 ]
 
 
@@ -151,25 +155,49 @@ def _object(properties):
 
 def _schema(source_ids, assets):
     string = {"type": "string"}
-    script = _object({"heading": string, "narration": string})
-    shot = _object({"asset": {"type": "string", "enum": assets}, "ja": script, "en": script,
+    story = _object({"question": string, "explanation": string, "visualCheck": string})
+    script = {"heading": string, "narration": string}
+    readings = {"type": "array", "items": _object({"text": string, "kana": string})}
+    shot = _object({"asset": {"type": "string", "enum": assets},
+                    "ja": _object({**script, "readings": readings}), "en": _object(script),
                     "sourceIds": {"type": "array", "items": {"type": "string", "enum": source_ids}}})
-    return _object({"materialRequest": string, "titles": _object({"ja": string, "en": string}),
+    return _object({"materialRequest": string, "story": story, "titles": _object({"ja": string, "en": string}),
                     "scenes": {"type": "array", "items": shot}})
 
 
 _PROMPT = """You are editing a brief landscape episode for Plunode, in Japanese and US English.
-The viewer should discover a relationship by looking. Use an inviting question, a specific observation
-the viewer can check, and an ending that lets them see the opening differently. Keep each edition
-natural to say out loud. Introduce names gently. Choose the number of scenes to suit the observation;
+A curious viewer knows none of the subject's terms and sees each image for the first time.
+Imagine sitting beside that person. What familiar situation, visible detail or action gives them a way in?
+An earlier episode let two people listen to one tape: when one tried to speak, the viewer could see
+why a talk button mattered. Find the equivalent intelligible relationship for this particular subject.
+Let the evidence determine the order and tone. A new episode need not ask a riddle or copy those beats.
+
+First write a short editorial note in Japanese in story. question is a specific question a newcomer could ask.
+explanation is one or two plain sentences answering it: name the objects or people, connect what happened
+to what we observe, and say why that detail mattered to someone or what it lets us understand.
+visualCheck describes exactly what a viewer can point to or compare in the available pictures or text.
+Carry the essential explanation into the narration in BOTH languages. The audience will not see your note.
+Give an object its everyday meaning before its specialist name. When comparing pictures tell the viewer
+what stays the same, what to watch change, and what they can now infer. Read each draft once from the
+beginning: replace any missing "why", unexplained shorthand, vague pronoun or repeated conclusion.
+If you point at a feature, give viewers a moment to see it before asking them to look elsewhere.
+
+Keep each edition natural to say out loud. Introduce names gently. Choose the number of scenes to suit the observation;
 5–7 is often enough for a short pilot. Usually one breath for each scene
 (roughly 20–65 Japanese characters and 9–24 English words); use a compact, distinct visible heading
 in each language. Each scene's two lines of narration must make equivalent factual claims.
 Write headings and titles for viewers, not production staff. No markdown or citations in spoken lines.
+The Japanese narration is also the displayed subtitle. Keep its ordinary written spelling.
+In each Japanese scene separately, suggest readings for names, counters, specialist terms and other words
+whose pronunciation the voice needs help with. Each readings entry has text copied exactly from that
+scene's narration and kana giving its spoken Japanese reading. Use kana and the long-vowel mark,
+without sentence punctuation. Avoid overlapping terms. Use [] when no particular reading needs help.
+If a name's reading is uncertain and not needed, use a natural, unambiguous wording supported by the source.
 
 You may use ONLY the supplied source facts and the visuals listed in the input. If the selected angle
 depends on an unavailable visual or unsupported claim, put the specific missing material and the reason
-in Japanese in materialRequest and return no scenes. For a supported plan set materialRequest to "".
+in Japanese in materialRequest and return no scenes, leaving the editorial note and titles empty.
+For a supported plan set materialRequest to "".
 A 'source' frame
 displays the published reference title and your localized heading as a typeset source card; do not
 tell viewers they can see an object there. Some themes also include two real NASA image assets.
@@ -193,7 +221,7 @@ def _draft_input(snapshot, brief):
         records.append({"text": rec["text"], "evidence": [
             {"id": e["id"], "locator": e["locator"], "excerpt": e["excerpt"][:320]}
             for e in rec["evidence"]]})
-    source_cards = [{k: s[k] for k in ("id", "title", "note") if k in s} for s in snapshot["sources"]]
+    source_cards = [{k: s[k] for k in ("id", "title", "locator", "note") if k in s} for s in snapshot["sources"]]
     return {"theme": snapshot["title"], "description": snapshot["description"], "angle": brief,
             "records": records, "sources": source_cards}
 
@@ -208,6 +236,15 @@ def _check_draft(draft, snapshot, assets):
     sources = {s["id"]: s for s in snapshot["sources"]}
     if draft.get("materialRequest"):
         raise ValueError("追加資料が必要です。" + _text(draft["materialRequest"], 600, "素材依頼"))
+    note = draft.get("story")
+    if not isinstance(note, dict):
+        raise ValueError("脚本に初見の人に伝える問い・説明・画面の見どころがありません。")
+    story = {}
+    for key, label in (("question", "初見の問い"), ("explanation", "問いへの説明"), ("visualCheck", "画面で確かめること")):
+        value = _text(note.get(key), 320, label)
+        if not re.search(r"[ぁ-んァ-ヶ一-龯]", value):
+            raise ValueError(f"脚本の「{label}」を日本語で用意してください。")
+        story[key] = value
     titles = {lang: _text(draft["titles"][lang], 160, "題名") for lang in ("ja", "en")}
     if not isinstance(draft["scenes"], list) or not 3 <= len(draft["scenes"]) <= 12:
         raise ValueError("生成された脚本に3～12場面が必要です。")
@@ -226,13 +263,18 @@ def _check_draft(draft, snapshot, assets):
             line = scene[lang]
             shot[lang] = {"heading": _text(line["heading"], 110, "見出し"),
                           "narration": _text(line["narration"], 450, "ナレーション")}
+        readings = scene["ja"].get("readings")
+        if not isinstance(readings, list):
+            raise ValueError(f"場面{i}の日本語の読み指定を確認してください。")
+        shot["ja"]["readings"] = validate_readings(shot["ja"]["narration"], readings)
         scenes.append(shot)
         used.update((key, sources[key]) for key in ids)
     ja = " ".join(s["ja"]["narration"] for s in scenes)
     en = " ".join(s["en"]["narration"] for s in scenes)
     if not re.search(r"[ぁ-んァ-ヶ]", ja) or not re.search(r"[A-Za-z]{2,}\s+[A-Za-z]", en) or ja == en:
         raise ValueError("日英それぞれのナレーションを確認できません。")
-    return {"themeId": snapshot["themeId"], "titles": titles, "sources": list(used.values()), "scenes": scenes}
+    return {"themeId": snapshot["themeId"], "titles": titles, "story": story,
+            "sources": list(used.values()), "scenes": scenes}
 
 
 def generate_plan(snapshot, brief, model_id, work_dir):

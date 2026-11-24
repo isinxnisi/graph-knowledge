@@ -12,7 +12,7 @@ from urllib.parse import urlencode
 
 
 LANGS = ("ja", "en")
-JOB_LABELS = {"queued": "待機中", "running": "生成中", "failed": "失敗", "interrupted": "中断"}
+JOB_LABELS = {"queued": "待機中", "running": "生成中", "failed": "失敗", "interrupted": "中断", "script_ready": "台本確認"}
 REFERENCE = "walkman-hot-line"
 ROOT = Path(__file__).resolve().parent
 PILOT = ROOT.parent / "walkman"
@@ -116,6 +116,8 @@ class Ledger:
             """)
             if "kind" not in {r["name"] for r in db.execute("PRAGMA table_info(reviews)")}:
                 db.execute("ALTER TABLE reviews ADD COLUMN kind TEXT NOT NULL DEFAULT 'adopted'")
+            if "script_first" not in {r["name"] for r in db.execute("PRAGMA table_info(runs)")}:
+                db.execute("ALTER TABLE runs ADD COLUMN script_first INTEGER NOT NULL DEFAULT 0")
             db.execute("UPDATE runs SET status='interrupted',progress='停止した工程から再開できます' WHERE status='running'")
 
     @contextmanager
@@ -143,6 +145,9 @@ class Ledger:
             return existing
         lang = data.get("lang")
         parent = data.get("parent")
+        script_first = data.get("scriptFirst", False)
+        if type(script_first) is not bool or (lang and script_first):
+            raise ValueError("台本確認の指定を確認してください。")
         model = required(data, "model", 100)
         if lang not in (*LANGS, None) or (lang and not parent):
             raise ValueError("修正する言語と元の版を確認してください。")
@@ -173,12 +178,14 @@ class Ledger:
             elif not db.execute("SELECT 1 FROM cases WHERE id=?", (case_id,)).fetchone():
                 raise KeyError(case_id)
             plan = None
+            draft_edit = False
             if parent:
-                row = db.execute("SELECT plan,model,editions FROM runs WHERE id=? AND case_id=?", (parent, case_id)).fetchone()
+                row = db.execute("SELECT plan,model,editions,status FROM runs WHERE id=? AND case_id=?", (parent, case_id)).fetchone()
                 if not row:
                     raise ValueError("元の試行が見つかりません。")
                 if lang:
-                    if not row["plan"] or lang not in json.loads(row["editions"]):
+                    draft_edit = row["status"] == "script_ready"
+                    if not row["plan"] or (not draft_edit and lang not in json.loads(row["editions"])):
                         raise ValueError("修正する言語の映像がまだありません。")
                     plan = json.loads(row["plan"])
                     scene_id = required(data, "sceneId", 100)
@@ -186,12 +193,20 @@ class Ledger:
                     if scene is None:
                         raise ValueError("場面が見つかりません。")
                     scene[lang]["narration"] = required(data, "narration", 800)
+                    if lang == "ja":
+                        from speech_reading import validate_readings
+                        entries = data.get("readings", scene[lang].get("readings", []))
+                        scene[lang]["readings"] = validate_readings(scene[lang]["narration"], entries)
+                    elif data.get("readings"):
+                        raise ValueError("読み指定は日本語の場面で編集できます。")
                     model = row["model"]
             run_id = uuid.uuid4().hex
-            db.execute("""INSERT INTO runs(id,case_id,parent,model,langs,reason,status,progress,created,plan)
-                        VALUES(?,?,?,?,?,?,'queued','順番待ち',?,?)""",
-                       (run_id, case_id, parent, model, packed([lang] if lang else list(LANGS)), reason,
-                        now, packed(plan) if plan else None))
+            langs = [lang] if lang and not draft_edit else list(LANGS)
+            status, progress = ("script_ready", "修正版の台本を保存しました") if draft_edit else ("queued", "順番待ち")
+            db.execute("""INSERT INTO runs(id,case_id,parent,model,langs,reason,status,progress,created,plan,script_first)
+                        VALUES(?,?,?,?,?,?,?,?,?,?,?)""",
+                       (run_id, case_id, parent, model, packed(langs), reason, status, progress,
+                        now, packed(plan) if plan else None, int(script_first)))
             result = {"id": case_id, "runId": run_id}
             db.execute("INSERT INTO requests VALUES(?,?,?)", (key, digest, packed(result)))
             db.execute("UPDATE cases SET updated=? WHERE id=?", (now, case_id))
@@ -205,8 +220,9 @@ class Ledger:
                 raise KeyError(run_id)
             if row["status"] == "done":
                 raise ValueError("この試行は完了しています。")
-            db.execute("""UPDATE runs SET status='queued',progress='再開待ち',error=NULL,pause_requested=0
-                        WHERE id=? AND status IN ('failed','interrupted')""", (run_id,))
+            db.execute("""UPDATE runs SET status='queued',progress='再開待ち',error=NULL,pause_requested=0,
+                        script_first=CASE WHEN status='script_ready' THEN 0 ELSE script_first END
+                        WHERE id=? AND status IN ('failed','interrupted','script_ready')""", (run_id,))
         self.wake.set()
 
     def pause(self, case_id, run):
@@ -331,6 +347,11 @@ class Ledger:
                     brief += "\n今回の試行で重視する点\n" + row["reason"]
                 plan = generate(snap, brief, row["model"], folder)
                 with self.db() as db:
+                    if row["script_first"]:
+                        db.execute("""UPDATE runs SET plan=?,status='script_ready',progress='台本と日本語の読みを確認できます',
+                                    pause_requested=0 WHERE id=?""", (packed(plan), run))
+                        db.execute("UPDATE cases SET updated=? WHERE id=?", (clock(), case_id))
+                        return True
                     db.execute("UPDATE runs SET plan=? WHERE id=?", (packed(plan), run))
             editions = json.loads(row["editions"])
             for lang in json.loads(row["langs"]):

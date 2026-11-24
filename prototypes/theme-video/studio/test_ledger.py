@@ -1,9 +1,11 @@
 """Regression coverage for revisions and interrupted bilingual runs (no model calls)."""
 from concurrent.futures import ThreadPoolExecutor
+from copy import deepcopy
 import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import Mock
 
 from ledger import Ledger
 
@@ -82,6 +84,92 @@ class LedgerTest(unittest.TestCase):
         self.desk.process_next(lambda *args: self.fail("script was already saved"), render)
         self.assertEqual(calls, ["ja", "en", "en"])
         self.assertEqual(self.desk.case(result["id"])["runs"][0]["status"], "done")
+
+    def test_script_first_survives_restart_and_renders_reviewed_bilingual_plan(self):
+        self.request["scriptFirst"] = True
+        self.plan["scenes"][0]["ja"]["narration"] = "一日が始まります。"
+        self.plan["scenes"].append({"id": "s2", "ja": {"narration": "日付が変わりました。"},
+                                    "en": {"narration": "The date has changed."}})
+        result = self.create()
+        case, first = result["id"], result["runId"]
+        generate = Mock(return_value=self.plan)
+        render = Mock(wraps=self.render)
+        self.desk.process_next(generate, render)
+        self.desk = Ledger(self.data)
+        parent = self.desk.case(case)["runs"][0]
+        self.assertEqual((parent["status"], parent["editions"], parent["plan"]), ("script_ready", {}, self.plan))
+        self.assertFalse(self.desk.process_next(generate, render))
+        render.assert_not_called()
+        with self.assertRaises(ValueError):
+            self.desk.review(case, dict(runId=first, lang="ja", reason="台本確認"), "adopted")
+
+        readings = [{"text": "一日", "kana": "ついたち"}]
+        edit = dict(requestId="reading", parent=first, lang="ja", sceneId="s1", model="test",
+                    narration=self.plan["scenes"][0]["ja"]["narration"], readings=readings, reason="日付の読み")
+        revised = self.desk.submit("runs", edit, self.snapshot, self.models, case)["runId"]
+        expected = deepcopy(self.plan)
+        expected["scenes"][0]["ja"]["readings"] = readings
+        child, original = self.desk.case(case)["runs"]
+        self.assertEqual(original, parent)
+        self.assertEqual((child["parent"], child["status"], child["editions"]), (first, "script_ready", {}))
+        self.assertEqual(child["plan"], expected)
+        self.assertFalse(self.desk.process_next(generate, render))
+
+        self.desk.resume(case, revised)
+        self.desk = Ledger(self.data)
+        self.assertTrue(self.desk.process_next(generate, render))
+        generate.assert_called_once()
+        self.assertEqual([(c.args[1], c.args[0]) for c in render.call_args_list], [("ja", expected), ("en", expected)])
+        detail = self.desk.case(case)
+        child, original = detail["runs"]
+        self.assertEqual(original, parent)
+        self.assertEqual(child["status"], "done")
+        self.assertEqual(set(child["editions"]), {"ja", "en"})
+        self.assertEqual(detail["accepted"], {})
+
+    def test_interrupted_first_generation_restores_script_review_before_render(self):
+        self.request["scriptFirst"] = True
+        result = self.create()
+        render = Mock(wraps=self.render)
+        with self.assertRaises(KeyboardInterrupt):
+            self.desk.process_next(Mock(side_effect=KeyboardInterrupt), render)
+        self.desk = Ledger(self.data)
+        self.assertEqual(self.desk.case(result["id"])["runs"][0]["status"], "interrupted")
+        self.desk.resume(result["id"], result["runId"])
+        self.desk.process_next(lambda *args: self.plan, render)
+        self.assertEqual(self.desk.case(result["id"])["runs"][0]["status"], "script_ready")
+        render.assert_not_called()
+
+    def test_invalid_reading_rolls_back_and_finished_correction_only_renders_japanese(self):
+        self.plan["scenes"][0]["ja"]["narration"] = "一日が始まります。"
+        result = self.create()
+        case, first = result["id"], result["runId"]
+        self.desk.process_next(lambda *args: self.plan, self.render)
+        for lang in ("ja", "en"):
+            self.desk.review(case, dict(lang=lang, runId=first, reason="初稿を採用"), "adopted")
+        parent = self.desk.case(case)
+        edit = dict(requestId="reading", parent=first, lang="ja", sceneId="s1", model="test",
+                    narration="一日が始まります。", reason="日付の読み")
+        for invalid in ([{"text": "二日", "kana": "ふつか"}], [{"text": "一日", "kana": "first"}]):
+            with self.subTest(readings=invalid), self.assertRaises(ValueError):
+                self.desk.submit("runs", {**edit, "readings": invalid}, self.snapshot, self.models, case)
+            self.assertEqual(self.desk.case(case), parent)
+
+        readings = [{"text": "一日", "kana": "ついたち"}]
+        child = self.desk.submit("runs", {**edit, "readings": readings}, self.snapshot, self.models, case)["runId"]
+        render = Mock(wraps=self.render)
+        generate = Mock()
+        self.desk.process_next(generate, render)
+        generate.assert_not_called()
+        render.assert_called_once()
+        revised_plan, lang = render.call_args.args[:2]
+        self.assertEqual((lang, revised_plan["scenes"][0]["ja"]["readings"]), ("ja", readings))
+        detail = self.desk.case(case)
+        self.assertEqual(detail["accepted"], {"ja": first, "en": first})
+        self.assertEqual(detail["runs"][1], parent["runs"][0])
+        self.assertEqual(set(detail["runs"][0]["editions"]), {"ja"})
+        self.desk.review(case, dict(lang="ja", runId=child, reason="読みを確認"), "adopted")
+        self.assertEqual(self.desk.case(case)["accepted"], {"ja": child, "en": first})
 
     def test_one_theme_can_have_two_episodes_and_distinct_rerun_briefs(self):
         first = self.create()

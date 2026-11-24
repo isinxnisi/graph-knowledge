@@ -35,6 +35,7 @@
           </fieldset>
           <fieldset><legend>動画の企画</legend><label for="brief">取り上げる切り口</label><textarea id="brief" rows="3" maxlength="1500" placeholder="この題材の何に気づいてほしいですか"></textarea>
             <label for="new-model">脚本・編集モデル</label><select id="new-model"></select><p id="model-note" class="subtle"></p>
+            <label class="check-line"><input id="script-first" type="checkbox" checked>映像にする前に台本と日本語の読みを確認する</label>
           </fieldset>
           <div class="form-footer"><span>横長 16:9 · 日本語 / English</span><button id="create-case" class="primary" type="submit">日英版の生成を開始</button></div>
         </form>
@@ -43,7 +44,7 @@
         <div class="case-kicker"><p id="case-channel" class="overline">制作案件</p><a id="theme-link" class="text-link" target="_blank" rel="noopener noreferrer" hidden>公開テーマを開く ↗</a></div>
         <h1 id="case-title"></h1><p id="case-brief" class="case-brief"></p>
         <div id="run-progress" aria-live="polite"></div>
-        <div class="preview-heading"><h2>試写</h2><button id="compare-toggle" class="quiet" type="button" aria-expanded="false" aria-controls="comparison">別の版と比較</button></div>
+        <div class="preview-heading"><h2>試写</h2><div><a id="reference-link" class="text-link" href="#case/walkman-hot-line" target="_blank" rel="noopener">ウォークマンの品質見本 ↗</a> <button id="compare-toggle" class="quiet" type="button" aria-expanded="false" aria-controls="comparison">別の版と比較</button></div></div>
         <div class="watch-grid" id="watch-grid">
           <section class="monitor" aria-label="選択中の映像">
             <div class="monitor-tools"><div class="segmented" aria-label="試写する言語"><button id="lang-ja" type="button" aria-pressed="true">日本語</button><button id="lang-en" type="button" aria-pressed="false">English</button></div><select id="edition-select" aria-label="試写する制作版"></select></div>
@@ -61,11 +62,17 @@
           <p id="review-target" class="form-target"></p><label id="review-reason-label" for="adopt-reason">採用理由</label><input id="adopt-reason" required maxlength="1000" placeholder="確認した場面と、その判断の理由"><div class="actions"><button type="button" id="adopt-cancel" class="quiet">閉じる</button><button id="review-submit" type="submit" class="primary small">採用を記録</button></div>
         </form>
         <details id="scene-panel" class="panel"><summary>場面と台本 <span id="scene-count" class="count"></span></summary>
-          <div class="panel-body"><label for="scene-select">場面を選んで映像へ移動</label><select id="scene-select"></select><button id="scene-from-playback" class="text-link" type="button">今の再生位置の台本を見る</button><p id="scene-narration" class="quotation"></p><div id="scene-notes"></div><div id="scene-sources" class="source-list"></div>
-            <button id="edit-toggle" class="secondary small" type="button">この場面の語りを修正</button>
+          <div class="panel-body"><dl id="story-intent" hidden></dl><label for="scene-select">確認する場面</label><select id="scene-select"></select><button id="scene-from-playback" class="text-link" type="button">今の再生位置の台本を見る</button><p id="scene-narration" class="quotation"></p><div id="scene-notes"></div><div id="scene-sources" class="source-list"></div>
+            <button id="edit-toggle" class="secondary small" type="button">この場面の語りを編集</button>
             <form id="edit-form" class="action-form" hidden>
               <p id="edit-target" class="form-target"></p>
               <label for="edit-narration">修正後のナレーション</label><textarea id="edit-narration" rows="3" maxlength="800" required></textarea>
+              <fieldset id="pronunciation" hidden><legend>日本語の読み</legend>
+                <p class="subtle">字幕の表記を保ったまま、この場面での読み方を指定できます。</p>
+                <div id="reading-rows"></div>
+                <div class="reading-actions"><button type="button" id="add-reading" class="quiet">読みを追加</button><button type="button" id="listen-reading" class="secondary">この場面を試聴</button></div>
+                <span id="reading-status" role="status"></span><audio id="reading-player" controls hidden></audio>
+              </fieldset>
               <label for="edit-reason">修正理由</label><input id="edit-reason" maxlength="1000" required placeholder="どこで、何が伝わりにくかったか">
               <div class="actions"><button id="edit-cancel" type="button" class="quiet">閉じる</button><button id="edit-submit" class="primary small" type="submit">この言語だけ再生成</button></div>
             </form>
@@ -74,7 +81,7 @@
         <details class="panel"><summary>出典と制作記録</summary><div class="panel-body" id="evidence"></div></details>
         <details id="history-panel" class="panel"><summary>生成履歴 <span id="history-count" class="count"></span></summary><div class="panel-body" id="history"></div></details>
         <details id="rerun-panel" class="panel"><summary>別の試行を作成</summary>
-          <form id="rerun-form" class="panel-body"><label for="rerun-model">脚本・編集モデル</label><select id="rerun-model"></select><label for="rerun-reason">今回試したいこと</label><input id="rerun-reason" maxlength="1000" required><div class="actions"><button type="submit" class="secondary">日英版を新しく生成</button></div></form>
+          <form id="rerun-form" class="panel-body"><label for="rerun-model">脚本・編集モデル</label><select id="rerun-model"></select><label for="rerun-reason">今回試したいこと</label><input id="rerun-reason" maxlength="1000" required><label class="check-line"><input type="checkbox" id="rerun-script-first" checked>映像にする前に台本と日本語の読みを確認する</label><div class="actions"><button type="submit" class="secondary">日英版を新しく生成</button></div></form>
         </details>
       </section>
     </main>

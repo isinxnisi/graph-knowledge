@@ -85,8 +85,23 @@ h1 { font: 650 clamp(26px, 2.5vw, 42px)/1.45 "Yu Mincho", YuMincho, "Hiragino Mi
 .screen video { display: block; width: 100%; aspect-ratio: 16/9; background: #1e282b; }
 .screen video:not([src]) { visibility: hidden; }
 #empty-video { position: absolute; padding: 20px; color: #d5dbd7; text-align: center; }
+.screen.script-preview { min-height: 64px; background: #f0f2eb; }
+.screen.script-preview video { display: none; }
+.screen.script-preview #empty-video { position: static; margin: 0; padding: 12px; color: var(--muted); }
 .approval-row { display: flex; justify-content: flex-end; gap: 8px; margin: 10px 0; }
 .form-target { font-weight: 650; font-size: 14px; color: var(--teal); }
+.check-line, .reading-actions { display: flex; gap: 9px; align-items: center; flex-wrap: wrap; }
+.check-line input { width: 17px; min-height: 17px; margin: 0; }
+#story-intent { margin: 8px 0 20px; max-width: 75ch; }
+#story-intent dt { margin-top: 10px; font-weight: 650; color: var(--teal); }
+#story-intent dd { margin: 1px 0 0; }
+#pronunciation { margin: 15px 0; }
+#pronunciation legend { font-size: 15px; }
+.reading-row { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr) auto; align-items: end; gap: 7px; margin-bottom: 8px; }
+.reading-row label { margin: 0; font-weight: 500; }
+.reading-row input { display: block; }
+#reading-player { width: min(100%, 440px); display: block; margin-top: 8px; }
+#reference-link { margin-right: 10px; }
 #scene-from-playback { margin-top: 5px; }
 .panel { border-bottom: 1px solid var(--line); }
 .watch-grid + .approval-row[hidden] + form[hidden] + .panel { margin-top: 14px; }

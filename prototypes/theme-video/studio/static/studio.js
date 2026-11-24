@@ -2,12 +2,13 @@
 
 const $ = (id) => document.getElementById(id);
 const languageName = { ja: "日本語", en: "English" };
-const jobName = { queued: "待機中", running: "生成中", done: "完了", failed: "失敗", interrupted: "中断" };
+const jobName = { queued: "待機中", running: "生成中", done: "完了", failed: "失敗", interrupted: "中断", script_ready: "台本確認" };
 const pending = (run) => ["queued", "running"].includes(run.status);
 const state = {
   models: [], cases: [], detail: null, lang: "ja", chosen: null, results: [],
   selected: { ja: "", en: "" }, sceneId: "", compare: false, compareKey: "",
   poll: null, routeVersion: 0, searchVersion: 0, resumeAfter: null, editTarget: null, reviewTarget: null,
+  readingRequest: null, readingUrl: null,
 };
 
 function node(tag, value, className) {
@@ -128,6 +129,8 @@ function renderModels() {
 }
 function refreshCreate() {
   $("create-case").disabled = !state.chosen || !$("new-model").value || $("new-form").dataset.busy === "1";
+  $("create-case").textContent = $("script-first").checked ? "日英の台本を生成" : "日英版の生成を開始";
+  $("rerun-form").querySelector('[type="submit"]').textContent = $("rerun-script-first").checked ? "日英の台本を新しく生成" : "日英版を新しく生成";
 }
 
 async function refreshCases() {
@@ -144,6 +147,7 @@ function closeList() {
   $("toggle-list").textContent = "一覧を開く"; $("toggle-list").setAttribute("aria-expanded", "false");
 }
 function closeEdit() {
+  clearReadingPreview();
   state.editTarget = null;
   $("edit-form").hidden = true;
 }
@@ -193,6 +197,7 @@ async function route() {
     const data = await api("/api/cases/" + encodeURIComponent(id));
     if (version !== state.routeVersion) return;
     state.detail = data; view("case"); drawCase(); schedule();
+    if (chosenRun()?.status === "script_ready") $("scene-panel").open = true;
   } catch (err) {
     if (version !== state.routeVersion) return;
     $("loading-view").hidden = true; notify(err.message, true, route);
@@ -204,17 +209,21 @@ function orderedRuns() {
   return [...currentRuns()].sort((a, b) => millis(b.created) - millis(a.created));
 }
 function playable(lang) { return orderedRuns().filter((r) => r.editions?.[lang]?.video); }
+function hasEdition(run, lang) {
+  return Boolean(run.editions?.[lang]?.video || (run.langs?.includes(lang) && run.plan?.scenes?.length));
+}
 function chosenRun(lang = state.lang) {
-  return currentRuns().find((r) => r.id === state.selected[lang] && r.editions?.[lang]?.video);
+  return currentRuns().find((r) => r.id === state.selected[lang] && hasEdition(r, lang));
 }
 function ensureSelection(lang) {
   if (chosenRun(lang)) return;
-  const completed = playable(lang);
-  state.selected[lang] = completed.find((r) => r.id === state.detail.accepted?.[lang])?.id || completed[0]?.id || "";
+  const available = orderedRuns().filter((r) => hasEdition(r, lang));
+  state.selected[lang] = available.find((r) => r.id === state.detail.accepted?.[lang])?.id || available[0]?.id || "";
 }
 function editionLabel(run, lang) {
   if (state.detail.reference) return "品質の見本";
   const order = [...orderedRuns()].reverse().findIndex((r) => r.id === run.id) + 1;
+  if (!run.editions?.[lang]?.video) return "試行 " + order + " · " + (jobName[run.status] || "台本");
   const adopted = state.detail.accepted?.[lang] === run.id || run.editions?.[lang]?.accepted;
   const needsWork = run.editions?.[lang]?.reviewStatus === "rework";
   return "試行 " + order + (needsWork ? " · 要修正" : adopted ? " · 採用版" : " · 試写版");
@@ -232,6 +241,7 @@ function drawCase() {
     $("theme-link").title = data.themeTitle || data.title;
   }
   $("rerun-panel").hidden = Boolean(data.reference);
+  $("reference-link").hidden = Boolean(data.reference);
   $("rerun-form").querySelector('[type="submit"]').disabled = !$("rerun-model").value;
   for (const lang of Object.keys(languageName)) ensureSelection(lang);
   drawProgress(); drawWatch(); drawHistory();
@@ -239,7 +249,7 @@ function drawCase() {
 
 function drawWatch() {
   const lang = state.lang;
-  const runs = playable(lang);
+  const runs = orderedRuns().filter((r) => hasEdition(r, lang));
   const run = chosenRun();
   const ed = run?.editions[lang];
   for (const key of Object.keys(languageName)) $("lang-" + key).setAttribute("aria-pressed", String(key === lang));
@@ -247,13 +257,15 @@ function drawWatch() {
   select.replaceChildren(...(runs.length ? runs.map((r) => option(r.id, editionLabel(r, lang))) : [option("", "制作中の版")]));
   select.disabled = !runs.length; select.value = run?.id || "";
   setPlayer($("player"), ed?.video);
-  $("empty-video").hidden = Boolean(ed);
+  $("player").closest(".screen").classList.toggle("script-preview", run?.status === "script_ready");
+  $("empty-video").hidden = Boolean(ed?.video);
+  $("empty-video").textContent = run?.status === "script_ready" ? "台本の確認後、日英の映像を生成できます。" : "映像の完成後、ここで試写できます。";
   const subtitle = safeUrl(ed?.subtitles, true);
   $("subtitle-link").hidden = !subtitle;
   if (subtitle) $("subtitle-link").href = subtitle;
-  $("preview-status").textContent = ed ? languageName[lang] + "　/　" + (run.plan?.titles?.[lang] || editionLabel(run, lang)) : languageName[lang] + "　/　" + (state.detail.states?.[lang] || "待機中");
+  $("preview-status").textContent = languageName[lang] + "　/　" + (run?.plan?.titles?.[lang] || state.detail.states?.[lang] || "待機中");
   const approved = state.detail.accepted?.[lang] === run?.id || ed?.accepted;
-  $("approval-row").hidden = !ed || state.detail.reference;
+  $("approval-row").hidden = !ed?.video || state.detail.reference;
   $("adopt-toggle").hidden = Boolean(approved);
   $("rework-toggle").hidden = ed?.reviewStatus === "rework";
   if ($("approval-row").hidden) closeReview();
@@ -281,6 +293,12 @@ function seekScene(id) {
 
 function drawScenes(run) {
   const scenes = run?.plan?.scenes || [];
+  const intent = $("story-intent"), story = run?.plan?.story;
+  intent.replaceChildren();
+  for (const [key, label] of [["question", "初めて見る人の問い"], ["explanation", "この動画で伝えること"], ["visualCheck", "画面で確かめること"]]) {
+    if (story?.[key]) intent.append(node("dt", label), node("dd", story[key]));
+  }
+  intent.hidden = !intent.childElementCount;
   $("scene-count").textContent = String(scenes.length);
   const select = $("scene-select");
   const ts = new Map(timings(run, state.lang).map((t) => [t.id, t.start]));
@@ -301,9 +319,11 @@ function drawSceneText() {
   }));
   const sources = (run?.plan?.sources || []).filter((s) => scene?.sourceIds?.includes(s.id));
   $("scene-sources").replaceChildren(...sources.map((s) => externalLink(s.url, s.title || s.url)));
-  $("edit-toggle").hidden = state.detail.reference || !scene;
-  $("scene-from-playback").hidden = !scene;
-  if (!scene) closeEdit();
+  const hasVideo = Boolean(run?.editions?.[state.lang]?.video);
+  $("edit-toggle").hidden = state.detail.reference || !scene || (!hasVideo && run.status !== "script_ready");
+  $("edit-toggle").textContent = state.lang === "ja" ? "語りと日本語の読みを確認・編集" : "この場面の語りを編集";
+  $("scene-from-playback").hidden = !scene || !hasVideo;
+  if ($("edit-toggle").hidden) closeEdit();
 }
 function drawEvidence(run) {
   const plan = run?.plan || orderedRuns().find((r) => r.plan)?.plan;
@@ -318,10 +338,8 @@ function drawEvidence(run) {
     const actual = plan?.model?.actual;
     const effort = plan?.model?.effort;
     nodes.push(node("p", "実行モデル　" + (actual || "不明") + (effort ? "　/　推論 " + effort : ""), "subtle"));
-    const adopted = state.detail.reviews?.find((review) => review.lang === state.lang && review.run_id === run.id);
-    if (adopted) nodes.push(node("p", "採用理由　" + adopted.reason, "review-note"));
     const ed = run.editions?.[state.lang];
-    if (ed?.reviewStatus === "rework") nodes.push(node("p", "要修正　" + (ed.reviewReason || ""), "review-note"));
+    if (ed?.reviewReason) nodes.push(node("p", (ed.reviewStatus === "rework" ? "要修正　" : "採用理由　") + ed.reviewReason, "review-note"));
   }
   if (state.detail.reference) nodes.push(node("p", "脚本モデル・推論設定は未記録。英語話者による発音と抑揚の試聴は未実施です。", "subtle"));
   nodes.push(sources.length ? links : node("p", "生成した台本の出典はここに表示されます。", "subtle"));
@@ -341,7 +359,7 @@ function compareCandidates() {
 function drawComparison() {
   const choices = compareCandidates();
   const toggle = $("compare-toggle");
-  toggle.disabled = !chosenRun() || !choices.length;
+  toggle.disabled = !chosenRun()?.editions?.[state.lang]?.video || !choices.length;
   if (toggle.disabled) state.compare = false;
   toggle.setAttribute("aria-expanded", String(state.compare));
   toggle.textContent = state.compare ? "比較を閉じる" : "別の版と比較";
@@ -364,43 +382,70 @@ function alignCompare() {
   else notify("比較する版に、この場面はありません。");
 }
 function switchPreview(lang, id) {
+  const priorRun = chosenRun();
   const anchor = currentSceneFromPlayer();
   const preserveTime = $("player").currentTime > 0.05;
   state.lang = lang;
   if (id) state.selected[lang] = id;
-  state.sceneId = preserveTime ? anchor : "";
+  else if (priorRun?.status === "script_ready" && hasEdition(priorRun, lang)) state.selected[lang] = priorRun.id;
+  state.sceneId = preserveTime ? anchor : priorRun?.id === chosenRun()?.id ? state.sceneId : "";
   closeEdit(); closeReview();
-  drawWatch();
+  drawWatch(); drawProgress();
+  if (chosenRun()?.status === "script_ready") $("scene-panel").open = true;
   if (preserveTime && state.sceneId === anchor) seekScene(anchor);
 }
 
+function inspectScript(run) {
+  const button = node("button", "この台本を確認", "quiet small");
+  button.type = "button";
+  button.onclick = () => {
+    switchPreview(state.lang, run.id);
+    $("scene-select").focus();
+  };
+  return button;
+}
 function statusButton(run) {
-  if (state.detail.reference || !["running", "queued", "failed", "interrupted"].includes(run.status)) return null;
+  if (state.detail.reference || !["running", "queued", "failed", "interrupted", "script_ready"].includes(run.status)) return null;
+  const startVideo = run.status === "script_ready";
   const resume = !pending(run);
-  const button = node("button", resume ? "再開" : "中断", "secondary small");
+  const button = node("button", startVideo ? "この台本で日英の映像を生成" : resume ? "再開" : "中断", "secondary small");
   button.type = "button";
   button.onclick = async () => {
+    const edit = state.editTarget;
+    if (startVideo && edit?.parent === run.id) {
+      const line = run.plan.scenes.find((scene) => scene.id === edit.sceneId)[edit.lang];
+      const readingChanged = edit.lang === "ja" && JSON.stringify(currentReadings()) !==
+        JSON.stringify((line.readings || []).map(({ text, kana }) => ({ text, kana })));
+      if (trim($("edit-narration").value) !== line.narration || readingChanged || trim($("edit-reason").value)) {
+        notify("編集中の変更があります。修正した台本を保存すると、その版から映像を生成できます。");
+        $("edit-submit").focus();
+        return;
+      }
+    }
     const active = state.detail.id;
     button.disabled = true;
     try {
       await api(detailPath(resume ? "/resume" : "/pause"), { runId: run.id });
       if (state.detail?.id !== active) return;
+      if (resume) state.resumeAfter = run.id;
       await reloadDetail();
-      notify(resume ? "再開を受け付けました。" : "中断を受け付けました。処理の区切りで停止します。");
+      notify(startVideo ? "この台本から日英の映像生成を開始しました。" : resume ? "再開を受け付けました。" : "中断を受け付けました。処理の区切りで停止します。");
     } catch (err) { if (state.detail?.id === active) notify(err.message, true); }
     finally { button.disabled = false; }
   };
   return button;
 }
 function drawProgress() {
-  const active = orderedRuns().filter((r) => pending(r) || r.status === "interrupted" || r.status === "failed");
-  const latest = orderedRuns()[0];
-  const relevant = active.filter((r) => pending(r) || r === latest);
+  const ordered = orderedRuns(), latest = ordered[0];
+  const selected = chosenRun();
+  const relevant = ordered.filter((r) => pending(r)
+    || (r === latest && ["interrupted", "failed"].includes(r.status))
+    || ((r === selected || r === latest) && r.status === "script_ready"));
   const boxes = relevant.map((run) => {
     const bad = run.status === "failed";
     const box = node("div", null, "status-box" + (bad ? " bad" : ""));
-    box.append(node("strong", (jobName[run.status] || run.status) + "　"), node("span", run.error || run.progress || ""));
-    const button = statusButton(run);
+    box.append(node("strong", "試行 " + (ordered.length - ordered.indexOf(run)) + " · " + (jobName[run.status] || run.status) + "　"), node("span", run.error || run.progress || ""));
+    const button = run.status === "script_ready" && run !== selected ? inspectScript(run) : statusButton(run);
     if (button) box.append(button);
     return box;
   });
@@ -416,7 +461,8 @@ function drawHistory() {
     const langs = (run.langs || []).map((l) => languageName[l] || l).join(" / ");
     row.append(node("p", [when(run.created), langs, state.detail.reference ? null : modelLabel(run.model)].filter(Boolean).join("　·　"), "subtle"));
     if (run.reason) row.append(node("p", run.reason));
-    if (run.error || (pending(run) && run.progress)) row.append(node("p", run.error || run.progress));
+    if (run.error || ((pending(run) || run.status === "script_ready") && run.progress)) row.append(node("p", run.error || run.progress));
+    if (run.status === "script_ready") row.append(inspectScript(run));
     const button = statusButton(run);
     if (button) row.append(button);
     return row;
@@ -444,15 +490,19 @@ async function reloadDetail() {
   if (state.routeVersion !== version || state.detail?.id !== id) return;
   state.detail = data;
   const target = currentRuns().find((r) => r.id === state.resumeAfter);
-  if (target?.status === "done") {
+  if (target && ["done", "script_ready"].includes(target.status)) {
     for (const lang of target.langs || []) {
-      if (!target.editions?.[lang] || lang === state.editTarget?.lang || lang === state.reviewTarget?.lang) continue;
+      if (!hasEdition(target, lang) || lang === state.editTarget?.lang || lang === state.reviewTarget?.lang) continue;
       state.selected[lang] = target.id;
     }
     state.resumeAfter = null;
   }
-  const outputs = (item) => JSON.stringify([item.accepted, (item.runs || []).map((r) => [r.id, r.editions])]);
-  if (previous.title !== data.title || outputs(previous) !== outputs(data)) drawCase();
+  const outputs = (item) => JSON.stringify([item.accepted, (item.runs || []).map((r) => [r.id, r.status, Boolean(r.plan), r.editions])]);
+  if (previous.title !== data.title || outputs(previous) !== outputs(data)) {
+    drawCase();
+    const selected = chosenRun();
+    if (selected?.status === "script_ready" && !previous.runs.some((r) => r.id === selected.id && r.status === "script_ready")) $("scene-panel").open = true;
+  }
   else { drawProgress(); drawHistory(); }
   const summary = state.cases.find((c) => c.id === id);
   if (summary) { summary.states = data.states; summary.title = data.title; renderNav(); }
@@ -534,10 +584,13 @@ $("theme-query").onkeydown = (e) => {
   if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); searchThemes(); }
 };
 $("new-model").onchange = refreshCreate;
+$("script-first").onchange = refreshCreate;
+$("rerun-script-first").onchange = refreshCreate;
 formAction("new-form", async (version) => {
   if (!state.chosen || !$("new-model").value) return;
   const result = await submitRun("new", "/api/cases", {
     themeId: state.chosen.id, revision: Number($("theme-revision").value), brief: trim($("brief").value), model: $("new-model").value,
+    scriptFirst: $("script-first").checked,
   });
   await refreshCases();
   if (state.routeVersion !== version) return;
@@ -566,12 +619,14 @@ $("scene-from-playback").onclick = () => {
   closeEdit();
   state.sceneId = id; $("scene-select").value = id; drawSceneText();
 };
-// Keep one soundtrack audible when a reviewer swaps between players.
-$("player").addEventListener("play", () => $("compare-player").pause());
-$("compare-player").addEventListener("play", () => $("player").pause());
+// Keep one soundtrack audible when a reviewer swaps between previews.
+const players = [$("player"), $("compare-player"), $("reading-player")];
+for (const player of players) {
+  player.addEventListener("play", () => { for (const other of players) if (other !== player) other.pause(); });
+}
 function openReview(action) {
   const run = chosenRun();
-  if (!run) return;
+  if (!run?.editions?.[state.lang]?.video) return;
   const isRework = action === "rework";
   state.reviewTarget = Object.freeze({ caseId: state.detail.id, runId: run.id, lang: state.lang, action });
   $("review-target").textContent = languageName[state.lang] + "　/　" + editionLabel(run, state.lang);
@@ -590,6 +645,76 @@ formAction("adopt-form", async (version) => {
   if (state.reviewTarget === target) closeReview();
   await reloadDetail(); notify(target.action === "rework" ? "この版を要修正として記録しました。" : "この言語の採用版を記録しました。");
 });
+function clearReadingPreview() {
+  state.readingRequest?.abort();
+  state.readingRequest = null;
+  const player = $("reading-player");
+  clearPlayer(player);
+  if (state.readingUrl) URL.revokeObjectURL(state.readingUrl);
+  state.readingUrl = null;
+  player.hidden = true;
+  $("listen-reading").disabled = false;
+  $("reading-status").textContent = "";
+}
+function addReading(term = "", kana = "") {
+  const row = node("div", null, "reading-row");
+  for (const [name, text] of [["字幕の表記", term], ["読み（かな）", kana]]) {
+    const label = node("label", name), field = node("input");
+    field.type = "text"; field.value = text; field.required = true;
+    field.addEventListener("input", clearReadingPreview);
+    label.append(field); row.append(label);
+  }
+  const remove = node("button", "削除", "quiet small");
+  remove.type = "button";
+  remove.onclick = () => { clearReadingPreview(); row.remove(); $("add-reading").focus(); };
+  row.append(remove); $("reading-rows").append(row);
+  return row;
+}
+function currentReadings() {
+  return Array.from($("reading-rows").children, (row) => {
+    const [term, kana] = row.querySelectorAll("input");
+    return { text: trim(term.value), kana: trim(kana.value) };
+  });
+}
+$("add-reading").onclick = () => {
+  clearReadingPreview();
+  addReading().querySelector("input").focus();
+};
+$("edit-narration").addEventListener("input", clearReadingPreview);
+$("listen-reading").onclick = async () => {
+  const target = state.editTarget;
+  if (target?.lang !== "ja") return;
+  clearReadingPreview();
+  const request = new AbortController();
+  state.readingRequest = request;
+  const current = () => state.readingRequest === request && state.editTarget === target;
+  const status = $("reading-status"), player = $("reading-player");
+  $("listen-reading").disabled = true; status.textContent = "音声を生成中…";
+  try {
+    const response = await fetch("/api/reading-preview", {
+      method: "POST", credentials: "same-origin", cache: "no-store", signal: request.signal,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ narration: trim($("edit-narration").value), readings: currentReadings() }),
+    });
+    if (!response.ok) {
+      const value = await response.json().catch(() => ({}));
+      throw new Error(value.error || "試聴用の音声を生成できませんでした。");
+    }
+    const audio = await response.blob();
+    if (!current()) return;
+    state.readingUrl = URL.createObjectURL(audio);
+    player.src = state.readingUrl; player.hidden = false;
+    status.textContent = "試聴用の音声";
+    try { await player.play(); }
+    catch { if (current()) status.textContent = "再生ボタンで試聴できます。"; }
+  } catch (err) {
+    if (current()) status.textContent = err.message;
+  } finally {
+    if (current()) {
+      state.readingRequest = null; $("listen-reading").disabled = false;
+    }
+  }
+};
 $("edit-toggle").onclick = () => {
   const run = chosenRun(), lang = state.lang;
   const scene = run?.plan?.scenes?.find((s) => s.id === $("scene-select").value);
@@ -597,11 +722,17 @@ $("edit-toggle").onclick = () => {
   state.sceneId = scene.id;
   $("player").pause(); seekScene(scene.id);
   const model = typeof run.model === "string" ? run.model : run.model?.requested;
-  state.editTarget = Object.freeze({ caseId: state.detail.id, parent: run.id, lang, model, sceneId: scene.id });
+  clearReadingPreview();
+  const draft = run.status === "script_ready";
+  state.editTarget = Object.freeze({ caseId: state.detail.id, parent: run.id, lang, model, sceneId: scene.id, draft });
   $("edit-target").textContent = [languageName[lang], editionLabel(run, lang), $("scene-select").selectedOptions[0].textContent].join("　/　");
   $("edit-narration").value = scene[lang]?.narration || "";
+  const pronunciation = $("pronunciation");
+  pronunciation.hidden = pronunciation.disabled = lang !== "ja";
+  $("reading-rows").replaceChildren();
+  if (lang === "ja") for (const row of scene.ja.readings || []) addReading(row.text, row.kana);
   $("edit-reason").value = ""; $("edit-form").hidden = false;
-  $("edit-submit").textContent = languageName[lang] + "版だけ再生成";
+  $("edit-submit").textContent = draft ? "修正した台本を新しい試行に保存" : languageName[lang] + "版だけ再生成";
   $("edit-narration").focus();
 };
 $("edit-cancel").onclick = closeEdit;
@@ -610,18 +741,20 @@ formAction("edit-form", async (version) => {
   if (!target || target.caseId !== state.detail?.id) return;
   const { parent, model, lang, sceneId } = target;
   const payload = { parent, model, lang, sceneId, narration: trim($("edit-narration").value), reason: trim($("edit-reason").value) };
+  if (lang === "ja") payload.readings = currentReadings();
   const result = await submitRun("edit." + target.caseId, detailPath("/runs"), payload);
   if (state.routeVersion !== version) return;
   state.resumeAfter = result.runId;
   if (state.editTarget === target) closeEdit();
-  await reloadDetail(); notify("修正した言語の再生成を受け付けました。");
+  await reloadDetail(); notify(target.draft ? "修正した台本を新しい試行に保存しました。" : "修正した言語の再生成を受け付けました。");
 });
 formAction("rerun-form", async (version) => {
-  const payload = { model: $("rerun-model").value, parent: chosenRun()?.id || orderedRuns()[0]?.id, reason: trim($("rerun-reason").value) };
+  const payload = { model: $("rerun-model").value, parent: chosenRun()?.id || orderedRuns()[0]?.id,
+    reason: trim($("rerun-reason").value), scriptFirst: $("rerun-script-first").checked };
   const result = await submitRun("rerun." + state.detail.id, detailPath("/runs"), payload);
   if (state.routeVersion !== version) return;
   state.resumeAfter = result.runId; $("rerun-reason").value = ""; $("rerun-panel").open = false;
-  await reloadDetail(); notify("新しい日英版の生成を受け付けました。");
+  await reloadDetail(); notify(payload.scriptFirst ? "新しい日英の台本の生成を受け付けました。" : "新しい日英版の生成を受け付けました。");
 });
 async function loadModels() {
   try {
@@ -637,4 +770,5 @@ if (location.hash && location.hash !== "#home") {
   refreshCases().catch((e) => notify(e.message, true, () => refreshCases().catch((err) => notify(err.message, true))));
 }
 loadModels();
+refreshCreate();
 route();

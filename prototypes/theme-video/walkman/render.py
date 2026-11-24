@@ -6,49 +6,29 @@ import json
 import math
 from pathlib import Path
 import subprocess
+import sys
 import wave
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont, ImageOps
+from PIL import Image, ImageDraw, ImageOps
 
 
 ROOT = Path(__file__).resolve().parent
-W, H, FOOT = 1280, 720, 562
+sys.path.insert(0, str(ROOT.parent))
+from channel_style import BLUE, BOLD, ChannelFrame, FOOT, H, INK, LATIN, ORANGE, PAPER, SERIF, W
+
 FPS, RATE = 24, 24000
-PAPER, INK, BLUE, ORANGE = "#f5f1e7", "#172936", "#235c85", "#d57532"
-SANS, BOLD, SERIF, LATIN = "YuGothM.ttc", "YuGothB.ttc", "yumindb.ttf", "georgia.ttf"
 
 
-class Boards:
+class Boards(ChannelFrame):
     def __init__(self, art, fonts, lang="ja"):
-        self.fonts = fonts
-        self.lang = lang
+        super().__init__(fonts, lang)
         self.copy = json.loads((ROOT / f"boards.{lang}.json").read_text(encoding="utf-8"))
         self.drawings = {
             key: Image.open(art / (key + ".png")).convert("RGBA")
             for key in ("listen", "lift", "conversation", "tape")
         }
         self.photo = Image.open(ROOT / "figures/first-walkman-1979.jpg").convert("RGB")
-
-    @lru_cache(maxsize=64)
-    def font(self, family, size):
-        if self.lang == "en":
-            family = {SANS: "segoeui.ttf", BOLD: "segoeuib.ttf", SERIF: LATIN}.get(family, family)
-        return ImageFont.truetype(str(self.fonts / family), size)
-
-    def text(self, draw, x, y, value, size, *, family=SANS, color=INK, anchor="lt", max_width=None):
-        font = self.font(family, size)
-        if max_width is not None and font.getlength(value) > max_width:
-            size = max(1, int(size * max_width / font.getlength(value)))
-            font = self.font(family, size)
-        draw.text((x, y), value, font=font, fill=color, anchor=anchor)
-
-    def brand(self, draw, light=False):
-        color = PAPER if light else INK
-        draw.line((55, 32, 74, 22), fill=ORANGE, width=3)
-        for x, y in ((55, 32), (74, 22)):
-            draw.ellipse((x-4, y-4, x+4, y+4), fill=ORANGE)
-        self.text(draw, 88, 17, "Plunode", 27, family=LATIN, color=color)
 
     def art(self, canvas, key, box, crop=None):
         source = self.drawings[key]
@@ -66,9 +46,7 @@ class Boards:
         copy = self.copy
         if shot == "credits":
             canvas.paste(INK, (0, 0, W, H))
-            self.brand(d, light=True)
-            self.text(d, 66, 99, copy["creditsHeading"], 52, family=SERIF, color=PAPER)
-            d.line((68, 178, 1207, 178), fill="#78868a", width=1)
+            self.credits_header(d, copy["creditsHeading"])
             for i, (label, title, detail) in enumerate(copy["credits"]):
                 y = 211 + 107*i
                 self.text(d, 70, y+4, label, 20, color="#f0ab72", family=BOLD)
@@ -92,7 +70,7 @@ class Boards:
         elif shot in ("tape", "pianist"):
             canvas.paste("#e5e6df", (0, 0, W, FOOT))
             self.brand(d)
-            self.text(d, 1218, 24, copy["memoirDiagram"], 19, anchor="rt", family=BOLD, color=BLUE)
+            self.evidence_label(d, copy["memoirDiagram"])
             self.text(d, 62, 130, copy["tape"][0], 61, family=SERIF, max_width=340)
             self.text(d, 65, 227, copy["tape"][1], 31, max_width=320)
             self.text(d, 65, 274, copy["tape"][2], 31, max_width=320)
@@ -107,7 +85,7 @@ class Boards:
             self.text(d, 71, 362, copy["memoir"][2], 27)
             self.text(d, 72, 409, copy["memoir"][3], 22, color=BLUE)
             self.art(canvas, "listen", (650, 105, 510, 414), crop=(399, 284, 602, 481))
-            self.text(d, 1218, 24, copy["diagram"], 19, anchor="rt", family=BOLD, color=BLUE)
+            self.evidence_label(d, copy["diagram"])
         elif shot == "switch":
             self.brand(d)
             self.text(d, 68, 129, copy["switch"][0], 54, family=SERIF, max_width=505)
@@ -115,7 +93,7 @@ class Boards:
             self.text(d, 71, 309, copy["switch"][1], 26)
             self.text(d, 71, 355, copy["switch"][2], 26)
             self.art(canvas, "conversation", (595, 77, 585, 461), crop=(383, 265, 623, 470))
-            self.text(d, 1218, 24, copy["diagram"], 19, anchor="rt", family=BOLD, color=BLUE)
+            self.evidence_label(d, copy["diagram"])
         else:
             key = {"ear":"lift", "voice":"conversation", "ending":"conversation"}.get(shot, "listen")
             self.brand(d)
@@ -124,10 +102,10 @@ class Boards:
                 label = copy["diagramWithSound"]
             elif shot in ("car", "ear", "home"):
                 label = copy["reconstructedScene"]
-            self.text(d, 1218, 24, label, 19, anchor="rt", family=BOLD, color=BLUE)
+            self.evidence_label(d, label)
             self.text(d, 640, 78, copy["headings"][shot], 47, anchor="mt", family=SERIF)
             self.art(canvas, key, (139, 124, 1002, 437))
-        d.rectangle((0, FOOT, W, H), fill=INK)
+        self.caption_rail(d)
         return canvas
 
     def sound_to_listener(self, img, progress):
@@ -153,19 +131,6 @@ class Boards:
         if progress == 1:
             draw.ellipse((886,250,935,309),outline="#ad542c",width=3)
 
-    def caption_breaks(self, caption):
-        if self.lang != "en" or "\n" in caption:
-            return caption
-        font = self.font(BOLD, 39)
-        if font.getlength(caption) <= 1174:
-            return caption
-        words = caption.split()
-        if len(words) < 2:
-            return caption
-        breaks = [(" ".join(words[:i]), " ".join(words[i:])) for i in range(1, len(words))]
-        first, second = min(breaks, key=lambda pair: max(font.getlength(s) for s in pair))
-        return first + "\n" + second
-
     def frame(self, shot, caption, progress=None):
         img = self.board(shot)
         if progress is not None:
@@ -174,16 +139,7 @@ class Boards:
         if not caption:
             return img
         img = img.copy()
-        draw = ImageDraw.Draw(img)
-        lines = caption.splitlines()
-        if self.lang == "ja":
-            size = min(39, 1174 // max(len(line) for line in lines))
-        else:
-            widest = max(self.font(BOLD, 39).getlength(line) for line in lines)
-            size = min(39, int(39 * 1174 / widest))
-        for i, line in enumerate(lines):
-            y = 639 + (i-(len(lines)-1)/2)*55
-            self.text(draw, W//2, y, line, size, anchor="mm", color="#fdfbf5", family=BOLD)
+        self.subtitle(img, caption)
         return img
 
 

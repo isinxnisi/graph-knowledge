@@ -19,18 +19,20 @@ from urllib.request import Request, urlopen
 import wave
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
 from setup_media import media_home
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from channel_style import BLUE, BOLD, ChannelFrame, FOOT, H, INK, ORANGE, PAPER, SANS, SERIF, STYLE, W
+from speech_reading import apply_readings, protected_breaks, validate_readings
 
 
 ASSETS = Path(__file__).resolve().parent / "assets"
 WEBB = json.loads((ASSETS / "webb.json").read_text(encoding="utf-8"))
-RATE, FPS, W, H = 24000, 24, 1280, 720
-INK, PAPER, MUTED, ACCENT = "#14232D", "#F6F3EB", "#577078", "#BC592C"
+RATE, FPS = 24000, 24
 ENGINE = "http://127.0.0.1:13769"
 _engine_lock = threading.Lock()
-_voice_lock = threading.Lock()
+_synthesis_locks = {"ja": threading.Lock(), "en": threading.Lock()}
 
 
 def _request(base, path, params=None, data=None, timeout=60):
@@ -105,23 +107,36 @@ def _read_pcm(data):
         return np.frombuffer(wav.readframes(wav.getnframes()), dtype="<i2")
 
 
-def _save_wav(path, pcm):
-    with wave.open(str(path), "wb") as out:
+def _save_wav(path_or_stream, pcm):
+    target = str(path_or_stream) if isinstance(path_or_stream, Path) else path_or_stream
+    with wave.open(target, "wb") as out:
         out.setparams((1, 2, RATE, 0, "NONE", ""))
         out.writeframes(np.asarray(pcm, dtype="<i2").tobytes())
 
 
 def _speech(text, lang, voice, engine):
-    key = hashlib.sha256(json.dumps([3, voice, text], ensure_ascii=False).encode()).hexdigest()
+    if lang == "ja":
+        spoken = re.sub(r"HD\s*84[,]?406", "エイチディー、はちまんよんせんよんひゃくろく", text, flags=re.I)
+        spoken = re.sub(r"NIRCam", "ニアカム", spoken, flags=re.I)
+    else:
+        spoken = re.sub(r"HD\s*84[,]?406", "H D eighty-four four oh six", text, flags=re.I)
+        spoken = re.sub(r"NIRCam", "near cam", spoken, flags=re.I)
+    key = hashlib.sha256(json.dumps([3, voice, spoken], ensure_ascii=False).encode()).hexdigest()
     cache = media_home() / "speech-cache" / key[:2]
     cache.mkdir(parents=True, exist_ok=True)
     target = cache / (key + ".wav")
     if target.is_file():
         return _read_pcm(target.read_bytes())
+    # Preview and background rendering may request the same newly edited phrase simultaneously.
+    with _synthesis_locks[lang]:
+        if target.is_file():
+            return _read_pcm(target.read_bytes())
+        return _synthesize_phrase(spoken, lang, engine, target)
+
+
+def _synthesize_phrase(spoken, lang, engine, target):
     if lang == "ja":
         base, speaker, _ = engine
-        spoken = re.sub(r"HD\s*84[,]?406", "エイチディー、はちまんよんせんよんひゃくろく", text, flags=re.I)
-        spoken = re.sub(r"NIRCam", "ニアカム", spoken, flags=re.I)
         params = {"speaker": speaker}
         query = json.loads(_request(base, "/audio_query", {**params, "text": spoken}, b""))
         query.update(outputSamplingRate=RATE, outputStereo=False, speedScale=1.02,
@@ -129,10 +144,7 @@ def _speech(text, lang, voice, engine):
         data = _request(base, "/synthesis", params, json.dumps(query).encode())
         signal = _read_pcm(data).astype(np.float32) / 32768
     else:
-        spoken = re.sub(r"HD\s*84[,]?406", "H D eighty-four four oh six", text, flags=re.I)
-        spoken = re.sub(r"NIRCam", "near cam", spoken, flags=re.I)
-        with _voice_lock:
-            signal, rate = _kokoro().create(spoken, voice="af_heart", speed=0.98, lang="en-us")
+        signal, rate = _kokoro().create(spoken, voice="af_heart", speed=0.98, lang="en-us")
         if rate != RATE:
             raise ValueError("Kokoroの出力サンプルレートが異なります。")
     signal = np.asarray(signal, dtype=np.float32)
@@ -146,7 +158,7 @@ def _speech(text, lang, voice, engine):
         signal[-fade:] *= np.linspace(1, 0, fade)
     gain = min(0.80 / np.abs(signal).max(), 0.115 / np.sqrt(np.mean(signal**2)))
     pcm = np.round(signal * gain * 32767).astype("<i2")
-    with tempfile.NamedTemporaryFile(dir=cache, suffix=".wav", delete=False) as f:
+    with tempfile.NamedTemporaryFile(dir=target.parent, suffix=".wav", delete=False) as f:
         tmp = Path(f.name)
     try:
         _save_wav(tmp, pcm)
@@ -156,12 +168,10 @@ def _speech(text, lang, voice, engine):
     return pcm
 
 
-@lru_cache(maxsize=100)
-def _font(size, family):
+@lru_cache(maxsize=2)
+def _style(lang):
     root = Path(os.environ.get("PLUNODE_STUDIO_FONTS", Path(os.environ.get("WINDIR", "C:/Windows")) / "Fonts"))
-    names = {"ja": "YuGothM.ttc", "ja-bold": "YuGothB.ttc", "ja-title": "yumindb.ttf",
-             "en": "segoeui.ttf", "en-bold": "segoeuib.ttf", "en-title": "georgia.ttf"}
-    return ImageFont.truetype(str(root / names[family]), size)
+    return ChannelFrame(root, lang)
 
 
 def _lines(text, font, width):
@@ -179,11 +189,11 @@ def _lines(text, font, width):
     return lines
 
 
-def _block(draw, text, lang, box, *, family="", size=45, color=INK, center=False):
+def _block(draw, text, lang, box, *, family=SANS, size=45, color=INK, center=False):
     x, y, width, height = box
-    target = lang + ("-" + family if family else "")
+    style = _style(lang)
     for actual in range(size, 13, -1):
-        font = _font(actual, target)
+        font = style.font(family, actual)
         lines = _lines(text, font, width)
         line_height = math.ceil(actual * 1.32)
         if len(lines) * line_height <= height and all(font.getlength(s) <= width+10 for s in lines):
@@ -194,7 +204,7 @@ def _block(draw, text, lang, box, *, family="", size=45, color=INK, center=False
                   font=font, fill=color, anchor="mt" if center else "lt")
 
 
-def _phrases(text, lang):
+def _phrases(text, lang, readings=()):
     text = " ".join(text.split())
     # A subtitle covers the exact audio synthesized for it. Preserve the sentence when it fits.
     if lang == "ja":
@@ -210,15 +220,51 @@ def _phrases(text, lang):
             # don't leave one word to be voiced and captioned on its own.
             target = len(phrase) / math.ceil(len(phrase) / limit)
             longest = min(limit, len(phrase) - limit // 4)
-            positions = range(limit // 4, longest + 1)
+            blocked = protected_breaks(phrase, readings)
+            positions = [i for i in range(limit // 4, longest + 1) if i not in blocked]
             punctuation = [i for i in positions if phrase[i-1] in "、，,;:—"]
             words = [i for i in positions if phrase[i-1].isspace()]
-            cut = min(punctuation or words or [round(target)], key=lambda i: abs(i - target))
+            midpoint = round(target)
+            candidates = punctuation or words or ([midpoint] if midpoint not in blocked else positions)
+            if not candidates:
+                candidates = [i for i in range(1, len(phrase)) if i not in blocked]
+            if not candidates:
+                break
+            cut = min(candidates, key=lambda i: abs(i - target))
             result.append(phrase[:cut].strip())
             phrase = phrase[cut:].strip()
         if phrase:
             result.append(phrase)
     return result
+
+
+def _utterances(line, lang):
+    caption = line["narration"]
+    readings = validate_readings(caption, line.get("readings")) if lang == "ja" else []
+    return [(phrase, apply_readings(phrase, readings)) for phrase in _phrases(caption, lang, readings)]
+
+
+def _voice(lang):
+    if lang == "ja":
+        engine = _voicevox()
+        return f"VOICEVOX:青山龍星（ノーマル） {engine[2]}", engine
+    return "Kokoro-82M v1.0 / af_heart", None
+
+
+def preview_reading(narration, readings=None):
+    """Return a WAV for the edited Japanese scene with the same measured phrases as its movie."""
+    phrases = _utterances({"narration": narration, "readings": readings}, "ja")
+    voice, engine = _voice("ja")
+    pieces = []
+    for _, spoken in phrases:
+        speech = _speech(spoken, "ja", voice, engine)
+        frame_size = RATE // FPS
+        padded_length = math.ceil(len(speech) / frame_size) * frame_size
+        pieces.append(np.pad(speech, (0, padded_length - len(speech))))
+        pieces.append(np.zeros(5 * frame_size, dtype="<i2"))
+    wav = io.BytesIO()
+    _save_wav(wav, np.concatenate(pieces))
+    return wav.getvalue()
 
 
 def _paste_fit(canvas, image, box):
@@ -237,59 +283,63 @@ def _image(name):
 def _board(plan, scene, lang, used, labeled=False):
     canvas = Image.new("RGB", (W, H), PAPER)
     d = ImageDraw.Draw(canvas)
+    style = _style(lang)
     is_ja = lang == "ja"
-    def label(x, y, text, size=20, ink=MUTED):
-        d.text((x, y), text, font=_font(size, lang), fill=ink, anchor="lt")
-
-    label(43, 25, "Plunode", 25, INK)
-    d.line((43, 68, 1237, 68), fill="#BAC4BE", width=1)
     heading = scene[lang]["heading"]
     kind = scene["asset"]
     if kind in ("mosaic", "aligned", "comparison") and plan.get("themeId") != WEBB["themeId"]:
         raise ValueError("別テーマではWebbの画像を使用できません。資料または専用の図版を選んでください。")
     if kind == "comparison":
-        _block(d, heading, lang, (42, 85, 1190, 80), family="title", size=43)
+        style.brand(d)
+        style.evidence_label(d, "二枚の観測画像" if is_ja else "Two observation images")
+        style.text(d, W//2, 75, heading, 47, anchor="mt", family=SERIF, max_width=1144)
+        labels = ({"mosaic": "最初のモザイク", "aligned": "鏡片の向きを変えた後"} if is_ja else
+                  {"mosaic": "The first mosaic", "aligned": "After tilting the mirrors"})
         for key, x in (("mosaic", 44), ("aligned", 656)):
-            d.rectangle((x, 168, x+580, 535), fill="#080A0C")
-            _paste_fit(canvas, _image("mosaic-labels" if key=="mosaic" else "aligned"), (x+5, 173, 570, 357))
-            label(x, 551, WEBB[key]["date"] + "    " + WEBB[key]["credit"], 17)
+            style.text(d, x, 143, labels[key], 23, color=BLUE, family=BOLD)
+            d.rectangle((x, 178, x+580, 519), fill="#080a0c")
+            _paste_fit(canvas, _image("mosaic-labels" if key=="mosaic" else "aligned"), (x, 178, 580, 341))
+            style.text(d, x, 526, WEBB[key]["date"] + "    " + WEBB[key]["credit"], 17, max_width=580)
             used.add(key)
     elif kind in ("mosaic", "aligned"):
         used.add(kind)
-        label(45, 115, "観測画像" if is_ja else "Observation", 21, ACCENT)
-        _block(d, heading, lang, (43, 177, 350, 251), family="title", size=56)
-        d.line((46, 460, 135, 460), fill=ACCENT, width=3)
-        label(46, 483, WEBB[kind]["date"] + (" 公表" if is_ja else "   Released"), 19)
-        label(46, 529, WEBB[kind]["credit"], 19, INK)
-        d.rectangle((422, 90, 1237, 562), fill="#07090B")
-        _paste_fit(canvas, _image("mosaic-labels" if kind == "mosaic" and labeled else kind), (433, 97, 793, 458))
+        canvas.paste(INK, (0, 0, W, FOOT))
+        style.brand(d, light=True)
+        style.evidence_label(d, "観測画像" if is_ja else "Observation image", light=True)
+        style.text(d, 60, 132, WEBB[kind]["date"], 43, family=SERIF, color="#eda870")
+        _block(d, heading, lang, (58, 230, 368, 221), family=SERIF, size=61, color=PAPER)
+        style.text(d, 62, 490, "NASA 公表資料" if is_ja else "Released by NASA", 20, color="#cfdbdd", family=BOLD)
+        d.rectangle((468, 64, W, 518), fill="#080a0c")
+        _paste_fit(canvas, _image("mosaic-labels" if kind == "mosaic" and labeled else kind), (468, 64, W-468, 454))
+        style.text(d, 1218, 531, WEBB[kind]["credit"], 17, anchor="rt", color=PAPER)
     elif kind == "source":
         by_id = {row["id"]: row for row in plan["sources"]}
         sources = [by_id[k] for k in scene["sourceIds"] if k in by_id]
         if not sources:
             raise ValueError("資料の場面に根拠がありません。")
-        label(46, 120, "資料を読む" if is_ja else "Reading the source", 23, ACCENT)
-        _block(d, heading, lang, (44, 177, 635, 350), family="title", size=65)
-        d.line((733, 138, 733, 497), fill="#AABBB6", width=2)
+        style.brand(d)
+        style.evidence_label(d, "出典資料" if is_ja else "Source material")
+        _block(d, heading, lang, (66, 130, 600, 226), family=SERIF, size=60)
+        d.line((68, 401, 389, 401), fill=ORANGE, width=3)
         for i, source in enumerate(sources[:2]):
-            top = 153 + i * 176
-            label(775, top, urlsplit(source["url"]).hostname or "Plunode", 21)
+            top = 128 + i * 190
+            style.text(d, 730, top, urlsplit(source["url"]).hostname or "Plunode", 21,
+                       family=BOLD, color=BLUE, max_width=482)
             name = source["title"]
             # Primary-source titles keep their original spelling, including Japanese in English editions.
             face = "ja" if re.search(r"[ぁ-ヿ一-鿿]", name) else "en"
-            _block(d, name, face, (774, top+43, 435, 112), size=28)
+            _block(d, name, face, (730, top+41, 480, 130), size=30)
     else:
         raise ValueError("未対応の図版です。必要な写真や図を確認してください。")
-    d.rectangle((0, 591, W, H), fill=INK)
+    style.caption_rail(d)
     return canvas
 
 
 def _credit(plan, lang, used, voice):
     im = Image.new("RGB", (W,H), INK)
     d = ImageDraw.Draw(im)
-    title = "資料と制作" if lang == "ja" else "Sources and credits"
-    _block(d, title, lang, (58, 48, 1150, 98), family="title", size=64, color=PAPER)
-    d.line((60, 152, 1215, 152), fill="#587078", width=1)
+    title = "出典と制作" if lang == "ja" else "Sources and credits"
+    _style(lang).credits_header(d, title)
     rows = []
     for key in ("mosaic", "aligned"):
         if key in used:
@@ -299,12 +349,12 @@ def _credit(plan, lang, used, voice):
     # For Webb, image captions carry attribution. The edition's metadata keeps all original URLs.
     rows.extend(((urlsplit(s["url"]).hostname or "Plunode"), s["title"]) for s in sources[:3])
     rows.append(("ナレーション" if lang == "ja" else "Narration", voice))
-    step = min(95, 493//len(rows))
+    step = min(107, 478//len(rows))
     for i, (name, val) in enumerate(rows):
-        y = 183 + i*step
-        _block(d, name, lang, (58,y,262,step-5), size=23, color="#F0A77E")
+        y = 211 + i*step
+        _block(d, name, lang, (70,y+4,196,step-8), family=BOLD, size=20, color="#f0ab72")
         face = "ja" if re.search(r"[ぁ-ヿ一-鿿]", val) else "en"
-        _block(d, val, face, (342,y,862,step-6), size=30, color=PAPER)
+        _block(d, val, face, (289,y,908,step-6), size=30, color=PAPER)
     return im
 
 
@@ -319,8 +369,7 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
         raise ValueError("場面を持つ日英の企画が必要です。")
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    engine = _voicevox() if lang == "ja" else None
-    voice = f"VOICEVOX:青山龍星（ノーマル） {engine[2]}" if engine else "Kokoro-82M v1.0 / af_heart"
+    voice, engine = _voice(lang)
     timing, subtitles, used = [], [], set()
     with tempfile.TemporaryDirectory(prefix="studio-edition-") as tmp:
         work = Path(tmp)
@@ -344,22 +393,26 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
             start = frame
             board = _board(plan, scene, lang, used, seen_mosaic)
             seen_mosaic |= scene["asset"] == "mosaic"
-            add(board, 16 if index == 0 else 5)
-            phrases = _phrases(scene[lang]["narration"], lang)
+            add(board, 26 if index == 0 else 5)
+            phrases = _utterances(scene[lang], lang)
             if not phrases:
                 raise ValueError("読み上げる文がありません。")
-            for text in phrases:
-                speech = _speech(text, lang, voice, engine)
+            for text, spoken in phrases:
+                speech = _speech(spoken, lang, voice, engine)
                 count = math.ceil(len(speech)/(RATE//FPS))
                 slide = board.copy()
-                _block(ImageDraw.Draw(slide), text, lang, (38,608,1204,99), family="bold",
-                       size=37, center=True, color=PAPER)
+                style = _style(lang)
+                style.subtitle(slide, style.caption_breaks(text, wrap_japanese=True))
                 subtitles.append(f"{len(subtitles)+1}\n{_stamp(frame)} --> {_stamp(frame+count)}\n{text}\n")
                 add(slide, count, speech)
                 add(board, 5)
-            add(board, 16 if scene["asset"] == "comparison" else 9)
+            # Hold a question or paired images long enough to look before the next explanation.
+            hold = 16 if scene["asset"] == "comparison" else 9
+            if scene[lang]["narration"].rstrip().endswith(("?", "？")):
+                hold = round(1.6 * FPS)
+            add(board, hold)
             timing.append({"id":scene["id"], "start":start/FPS, "end":frame/FPS})
-        add(_credit(plan, lang, used, voice), 5*FPS)
+        add(_credit(plan, lang, used, voice), 7*FPS)
         _save_wav(work / "mix.wav", np.concatenate(pcm))
         lines = ["ffconcat version 1.0"]
         for name, count in slides:
@@ -375,7 +428,7 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
                         "language="+("jpn" if lang=="ja" else "eng"),"video.mp4"],cwd=work,check=True,timeout=900)
         (work/"subtitles.srt").write_text("\n".join(subtitles),encoding="utf-8",newline="\n")
         (work/"timings.json").write_text(json.dumps(timing,ensure_ascii=False,indent=2),encoding="utf-8")
-        meta = {"voice":voice, "fps":FPS, "duration":frame/FPS, "themeId":plan.get("themeId"),
+        meta = {"voice":voice, "fps":FPS, "duration":frame/FPS, "themeId":plan.get("themeId"), "visualStyle":STYLE,
                 "sources":plan["sources"], "images":{key:WEBB[key] for key in sorted(used)}}
         (work/"media.json").write_text(json.dumps(meta,ensure_ascii=False,indent=2),encoding="utf-8")
         for name in ("timings.json","subtitles.srt","media.json","video.mp4"):

@@ -60,7 +60,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Referrer-Policy", "no-referrer")
         self.send_header("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline'; "
-                         "img-src 'self' data:; media-src 'self'; frame-ancestors 'none'; form-action 'self'; "
+                         "img-src 'self' data:; media-src 'self' blob:; frame-ancestors 'none'; form-action 'self'; "
                          "base-uri 'none'; object-src 'none'")
         super().end_headers()
 
@@ -153,6 +153,11 @@ class Handler(BaseHTTPRequestHandler):
             data = json.loads(self.rfile.read(size))
             if not isinstance(data, dict):
                 raise ValueError("操作の内容を読み取れません。")
+            if path == "/api/reading-preview":
+                from media import preview_reading
+                with self.server.preview_slot:
+                    audio = preview_reading(required(data, "narration", 800), data.get("readings", []))
+                return self.respond(200, audio, "audio/wav")
             if path == "/api/cases":
                 from editor import get_snapshot, list_models
                 return self.respond(201, ledger.submit(path, data, get_snapshot, list_models))
@@ -202,6 +207,7 @@ def main():
     args = parser.parse_args()
     with exclusive(args.data), ThreadingHTTPServer(("127.0.0.1", args.port), Handler) as server:
         server.ledger = Ledger(args.data)
+        server.preview_slot = threading.Lock()
         threading.Thread(target=run_worker, args=(server.ledger,), daemon=True).start()
         print(f"http://127.0.0.1:{server.server_port}/", flush=True)
         server.serve_forever()
