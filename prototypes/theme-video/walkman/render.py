@@ -20,8 +20,10 @@ SANS, BOLD, SERIF, LATIN = "YuGothM.ttc", "YuGothB.ttc", "yumindb.ttf", "georgia
 
 
 class Boards:
-    def __init__(self, art, fonts):
+    def __init__(self, art, fonts, lang="ja"):
         self.fonts = fonts
+        self.lang = lang
+        self.copy = json.loads((ROOT / f"boards.{lang}.json").read_text(encoding="utf-8"))
         self.drawings = {
             key: Image.open(art / (key + ".png")).convert("RGBA")
             for key in ("listen", "lift", "conversation", "tape")
@@ -30,10 +32,16 @@ class Boards:
 
     @lru_cache(maxsize=64)
     def font(self, family, size):
+        if self.lang == "en":
+            family = {SANS: "segoeui.ttf", BOLD: "segoeuib.ttf", SERIF: LATIN}.get(family, family)
         return ImageFont.truetype(str(self.fonts / family), size)
 
-    def text(self, draw, x, y, value, size, *, family=SANS, color=INK, anchor="lt"):
-        draw.text((x, y), value, font=self.font(family, size), fill=color, anchor=anchor)
+    def text(self, draw, x, y, value, size, *, family=SANS, color=INK, anchor="lt", max_width=None):
+        font = self.font(family, size)
+        if max_width is not None and font.getlength(value) > max_width:
+            size = max(1, int(size * max_width / font.getlength(value)))
+            font = self.font(family, size)
+        draw.text((x, y), value, font=font, fill=color, anchor=anchor)
 
     def brand(self, draw, light=False):
         color = PAPER if light else INK
@@ -55,18 +63,13 @@ class Boards:
     def board(self, shot):
         canvas = Image.new("RGB", (W, H), PAPER)
         d = ImageDraw.Draw(canvas)
+        copy = self.copy
         if shot == "credits":
             canvas.paste(INK, (0, 0, W, H))
             self.brand(d, light=True)
-            self.text(d, 66, 99, "出典と制作", 52, family=SERIF, color=PAPER)
+            self.text(d, 66, 99, copy["creditsHeading"], 52, family=SERIF, color=PAPER)
             d.line((68, 178, 1207, 178), fill="#78868a", width=1)
-            entries = [
-                ("資料", "盛田昭夫「ウォークマン考」", "『文藝春秋』1981年4月号 ／ 文春オンライン再掲"),
-                ("製品・テーマ", "ソニー「商品のあゆみ」／ Plunode 公開第17版", "「ウォークマンは、どうやって音楽を外へ連れ出したのか」"),
-                ("展示写真", "First Walkman 1979  ·  Yoshikazu TAKADA", "CC BY 2.0  ·  flickr.com/photos/34530295@N06/31011124386  ·  トリミング"),
-                ("音声・図", "VOICEVOX:青山龍星", "模式図・冒頭の説明用の音  Plunode"),
-            ]
-            for i, (label, title, detail) in enumerate(entries):
+            for i, (label, title, detail) in enumerate(copy["credits"]):
                 y = 211 + 107*i
                 self.text(d, 70, y+4, label, 20, color="#f0ab72", family=BOLD)
                 self.text(d, 240, y, title, 30, color=PAPER)
@@ -80,53 +83,49 @@ class Boards:
             canvas.paste(photo, (468, 0))
             self.brand(d, light=True)
             self.text(d, 60, 118, "1979", 88, family=LATIN, color="#eda870")
-            self.text(d, 58, 249, "初代", 51, family=SERIF, color=PAPER)
-            self.text(d, 54, 322, "ウォークマン", 62, family=SERIF, color=PAPER)
+            self.text(d, 58, 249, copy["product"][0], 51, family=SERIF, color=PAPER, max_width=375)
+            self.text(d, 54, 322, copy["product"][1], 62, family=SERIF, color=PAPER, max_width=390)
             self.text(d, 63, 465, "SONY   /   TPS-L2", 23, family=BOLD, color="#cfdbdd")
             d.rectangle((866, 519, 1280, FOOT), fill=INK)
-            self.text(d, 1073, 541, "2016年の展示　撮影  Yoshikazu TAKADA", 16,
-                      color=PAPER, anchor="mm")
+            self.text(d, 1073, 541, copy["photoCredit"], 16,
+                      color=PAPER, anchor="mm", max_width=394)
         elif shot in ("tape", "pianist"):
             canvas.paste("#e5e6df", (0, 0, W, FOOT))
             self.brand(d)
-            self.text(d, 1218, 24, "回想をもとにした図", 19, anchor="rt", family=BOLD, color=BLUE)
-            self.text(d, 62, 130, "車の中で", 61, family=SERIF)
-            self.text(d, 65, 227, "盛田昭夫と", 31)
-            self.text(d, 65, 274, "友人・庄司薫", 31)
+            self.text(d, 1218, 24, copy["memoirDiagram"], 19, anchor="rt", family=BOLD, color=BLUE)
+            self.text(d, 62, 130, copy["tape"][0], 61, family=SERIF, max_width=340)
+            self.text(d, 65, 227, copy["tape"][1], 31, max_width=320)
+            self.text(d, 65, 274, copy["tape"][2], 31, max_width=320)
             self.art(canvas, "tape", (385, 75, 835, 461))
             if shot == "pianist":
-                self.text(d, 802, 185, "ピアノ  中村紘子", 35, anchor="mm", family=SERIF)
+                self.text(d, 802, 185, copy["tapeLabel"], 35, anchor="mm", family=SERIF, max_width=500)
         elif shot == "memoir":
             self.brand(d)
-            self.text(d, 68, 130, "開発中の記憶", 64, family=SERIF)
+            self.text(d, 68, 130, copy["memoir"][0], 64, family=SERIF, max_width=555)
             d.line((69, 242, 480, 242), fill=ORANGE, width=3)
-            self.text(d, 70, 286, "盛田昭夫", 46, family=SERIF)
-            self.text(d, 71, 362, "「ウォークマン考」", 27)
-            self.text(d, 72, 409, "1981年、『文藝春秋』に寄稿", 22, color=BLUE)
+            self.text(d, 70, 286, copy["memoir"][1], 46, family=SERIF)
+            self.text(d, 71, 362, copy["memoir"][2], 27)
+            self.text(d, 72, 409, copy["memoir"][3], 22, color=BLUE)
             self.art(canvas, "listen", (650, 105, 510, 414), crop=(399, 284, 602, 481))
-            self.text(d, 1218, 24, "しくみの図", 19, anchor="rt", family=BOLD, color=BLUE)
+            self.text(d, 1218, 24, copy["diagram"], 19, anchor="rt", family=BOLD, color=BLUE)
         elif shot == "switch":
             self.brand(d)
-            self.text(d, 68, 129, "本体のマイクへ", 54, family=SERIF)
+            self.text(d, 68, 129, copy["switch"][0], 54, family=SERIF, max_width=505)
             self.text(d, 71, 241, "HOT LINE", 39, family=LATIN, color=BLUE)
-            self.text(d, 71, 309, "ボタンを押すと、", 26)
-            self.text(d, 71, 355, "まわりの声を拾う。", 26)
+            self.text(d, 71, 309, copy["switch"][1], 26)
+            self.text(d, 71, 355, copy["switch"][2], 26)
             self.art(canvas, "conversation", (595, 77, 585, 461), crop=(383, 265, 623, 470))
-            self.text(d, 1218, 24, "しくみの図", 19, anchor="rt", family=BOLD, color=BLUE)
+            self.text(d, 1218, 24, copy["diagram"], 19, anchor="rt", family=BOLD, color=BLUE)
         else:
-            titles = {"opening":"同じ曲を、ふたりで。", "question":"隣の声は、どう届く？",
-                      "pair":"ひとつの本体に、二組。", "home":"もう一組、つないでみる。",
-                      "car":"すぐ隣にいる、ふたり。", "ear":"すぐ隣にいる、ふたり。",
-                      "voice":"声が届く道", "ending":"初代ウォークマンのホットライン"}
             key = {"ear":"lift", "voice":"conversation", "ending":"conversation"}.get(shot, "listen")
             self.brand(d)
-            label = "しくみの図"
+            label = copy["diagram"]
             if shot == "opening":
-                label = "しくみの図・説明用の音"
+                label = copy["diagramWithSound"]
             elif shot in ("car", "ear", "home"):
-                label = "回想をもとにした模式図"
+                label = copy["reconstructedScene"]
             self.text(d, 1218, 24, label, 19, anchor="rt", family=BOLD, color=BLUE)
-            self.text(d, 640, 78, titles[shot], 47, anchor="mt", family=SERIF)
+            self.text(d, 640, 78, copy["headings"][shot], 47, anchor="mt", family=SERIF)
             self.art(canvas, key, (139, 124, 1002, 437))
         d.rectangle((0, FOOT, W, H), fill=INK)
         return canvas
@@ -154,6 +153,19 @@ class Boards:
         if progress == 1:
             draw.ellipse((886,250,935,309),outline="#ad542c",width=3)
 
+    def caption_breaks(self, caption):
+        if self.lang != "en" or "\n" in caption:
+            return caption
+        font = self.font(BOLD, 39)
+        if font.getlength(caption) <= 1174:
+            return caption
+        words = caption.split()
+        if len(words) < 2:
+            return caption
+        breaks = [(" ".join(words[:i]), " ".join(words[i:])) for i in range(1, len(words))]
+        first, second = min(breaks, key=lambda pair: max(font.getlength(s) for s in pair))
+        return first + "\n" + second
+
     def frame(self, shot, caption, progress=None):
         img = self.board(shot)
         if progress is not None:
@@ -164,8 +176,11 @@ class Boards:
         img = img.copy()
         draw = ImageDraw.Draw(img)
         lines = caption.splitlines()
-        widest = max(len(line) for line in lines)
-        size = min(39, 1174 // widest)
+        if self.lang == "ja":
+            size = min(39, 1174 // max(len(line) for line in lines))
+        else:
+            widest = max(self.font(BOLD, 39).getlength(line) for line in lines)
+            size = min(39, int(39 * 1174 / widest))
         for i, line in enumerate(lines):
             y = 639 + (i-(len(lines)-1)/2)*55
             self.text(draw, W//2, y, line, size, anchor="mm", color="#fdfbf5", family=BOLD)
@@ -177,9 +192,11 @@ def timestamp(frame):
     return f"{ms//3600000:02}:{ms//60000%60:02}:{ms//1000%60:02},{ms%1000:03}"
 
 
-def render(art, fonts, work):
-    edit = json.loads((ROOT / "edit.json").read_text(encoding="utf-8"))
-    raw = subprocess.check_output(["ffmpeg", "-v", "error", "-i", str(ROOT/"narration.flac"),
+def render(art, fonts, work, lang="ja"):
+    suffix = "" if lang == "ja" else f".{lang}"
+    boards = Boards(art, fonts, lang)
+    edit = json.loads((ROOT / f"edit{suffix}.json").read_text(encoding="utf-8"))
+    raw = subprocess.check_output(["ffmpeg", "-v", "error", "-i", str(ROOT/f"narration{suffix}.flac"),
                                    "-f", "s16le", "-ar", str(RATE), "-ac", "1", "-"])
     voice = np.frombuffer(raw, dtype="<i2").astype(np.float32)/32768
     assert sum(cue["samples"] for cue in edit) == len(voice)
@@ -197,19 +214,23 @@ def render(art, fonts, work):
     offset = 0
     for n, cue in enumerate(edit, 1):
         shot, count = cue["shot"], cue["samples"]
+        caption = boards.caption_breaks(cue["caption"])
         voices.append((frame*(RATE//FPS), voice[offset:offset+count]))
         offset += count
         start = frame
         spoken_frames = math.ceil(count*FPS/RATE)
         if shot == "voice":
             # Keep the microphone in view, then carry its signal to the listener.
-            add(shot, 12, cue["caption"])
+            lead = min(12, spoken_frames//5)
+            trace = min(48, spoken_frames-lead)
+            add(shot, lead, caption)
             for step in range(1,17):
-                add(shot, 3, cue["caption"], step/16)
-            add(shot, spoken_frames-60, cue["caption"], 1)
+                frames = round(step*trace/16) - round((step-1)*trace/16)
+                add(shot, frames, caption, step/16)
+            add(shot, spoken_frames-lead-trace, caption, 1)
         else:
-            add(shot, spoken_frames, cue["caption"], 1 if shot == "ending" else None)
-        subtitles.append(f"{n}\n{timestamp(start)} --> {timestamp(frame)}\n{cue['caption']}\n")
+            add(shot, spoken_frames, caption, 1 if shot == "ending" else None)
+        subtitles.append(f"{n}\n{timestamp(start)} --> {timestamp(frame)}\n{caption}\n")
         # Show the hand reaching the ear before the narrator explains the discomfort.
         add("ear" if shot == "car" else shot, round(cue["after"]*FPS),
             progress=1 if shot in ("ending","voice") else None)
@@ -230,9 +251,8 @@ def render(art, fonts, work):
     with wave.open(str(wav), "wb") as out:
         out.setparams((1, 2, RATE, 0, "NONE", ""))
         out.writeframes((audio*32767).astype("<i2").tobytes())
-    (ROOT/"walkman.ja.srt").write_text("\n".join(subtitles), encoding="utf-8", newline="\n")
+    (ROOT/f"walkman.{lang}.srt").write_text("\n".join(subtitles), encoding="utf-8", newline="\n")
 
-    boards = Boards(art, fonts)
     # Encode a 24 fps still sequence without writing thousands of identical frames.
     inputs = ["ffconcat version 1.0"]
     for i,(shot,count,caption,progress) in enumerate(scenes):
@@ -246,15 +266,18 @@ def render(art, fonts, work):
                     "-vf",f"fps={FPS},format=yuv420p","-t",f"{frame/FPS:.9f}",
                     "-c:v","libx264","-preset","medium","-crf","18","-c:a","aac",
                     "-ar","48000","-b:a","128k","-movflags","+faststart",
-                    "-metadata","title=初代ウォークマンには、隣の声を聴くボタンがあった",
-                    str(ROOT/"walkman-pilot.mp4")],check=True)
+                    "-metadata",f"title={boards.copy['title']}",
+                    *(["-metadata:s:a:0","language=eng","-metadata:s:v:0","language=eng"]
+                      if lang == "en" else []),
+                    str(ROOT/f"walkman-pilot{suffix}.mp4")],check=True)
     print(f"{frame} frames, {frame/FPS:.3f} seconds")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--lang", choices=("ja", "en"), default="ja")
     parser.add_argument("--art", type=Path, required=True, help="PNG renders of the four SVGs")
     parser.add_argument("--fonts", type=Path, required=True, help="Windows fonts directory")
     parser.add_argument("--work", type=Path, required=True, help="Temporary boards and mix")
     args = parser.parse_args()
-    render(args.art, args.fonts, args.work)
+    render(args.art, args.fonts, args.work, args.lang)

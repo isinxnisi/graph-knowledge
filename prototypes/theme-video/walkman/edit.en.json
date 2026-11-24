@@ -1,0 +1,17 @@
+[
+  {"shot":"opening","caption":"Two people, one tape.\nBoth are listening to the same music.","after":0.4,"samples":87552},
+  {"shot":"question","caption":"Now one of them wants to say something.\nHow do you talk with your headphones still on?","after":1.6,"samples":102912},
+  {"shot":"product","caption":"Sony released its first Walkman in 1979.","after":0.3,"samples":82944},
+  {"shot":"product","caption":"It was a portable cassette player\nwith a pair of lightweight headphones.","after":0.5,"samples":86016},
+  {"shot":"pair","caption":"Look at the two cords.\nEach pair of headphones had its own jack.","after":1.25,"samples":87552},
+  {"shot":"memoir","caption":"In 1981, Sony’s Akio Morita\nwrote about testing an early model.","after":0.3,"samples":121344},
+  {"shot":"home","caption":"Listening at home, he had an idea.\nA second pair of headphones would let someone listen along.","after":0.65,"samples":133632},
+  {"shot":"tape","caption":"Later, he took the player on a drive\nwith his friend Kaoru Shoji.","after":0.45,"samples":89088},
+  {"shot":"pianist","caption":"Morita had brought a tape of Shoji’s wife,\nHiroko Nakamura, playing the piano.","after":1.1,"samples":117760},
+  {"shot":"car","caption":"There they were, side by side,\nlistening to her play.","after":1.75,"samples":70144},
+  {"shot":"ear","caption":"Whenever they wanted to talk, Morita recalled,\nthe headphones had to come off.","after":0.85,"samples":105472},
+  {"shot":"switch","caption":"So he asked for a button that would switch on\na microphone inside the player.","after":0.4,"samples":98304},
+  {"shot":"switch","caption":"The player couldn’t record.","after":0.35,"samples":35189},
+  {"shot":"voice","caption":"With the button down, the person beside you\ncould hear your voice through their headphones.","after":1.65,"samples":104448},
+  {"shot":"ending","caption":"Sony called it the Hot Line.","after":2.1,"samples":39936}
+]

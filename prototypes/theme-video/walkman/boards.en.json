@@ -1,0 +1,30 @@
+{
+  "title": "Why the First Walkman Had a Talk Button",
+  "creditsHeading": "Sources and credits",
+  "credits": [
+    ["Account", "Akio Morita on the Walkman", "Bungeishunju, April 1981 · Reprinted by Bunshun Online"],
+    ["Product history", "Sony product history · Plunode theme, edition 17", "How the Walkman took music outdoors"],
+    ["Photograph", "First Walkman 1979 · Yoshikazu TAKADA", "CC BY 2.0 · flickr.com/photos/34530295@N06/31011124386 · Cropped"],
+    ["Voice and art", "English narration · Kokoro-82M / af_heart", "Illustrations and opening sound by Plunode"]
+  ],
+  "product": ["The original", "Walkman"],
+  "photoCredit": "2016 exhibition · Photo by Yoshikazu TAKADA",
+  "diagram": "Diagram",
+  "diagramWithSound": "Diagram · illustrative sound",
+  "memoirDiagram": "Illustration based on Morita’s account",
+  "reconstructedScene": "Illustration based on Morita’s account",
+  "tape": ["In the car", "Akio Morita and", "his friend Kaoru Shoji"],
+  "tapeLabel": "Hiroko Nakamura, piano",
+  "memoir": ["Testing the prototype", "Akio Morita", "An essay on the Walkman", "Bungeishunju, April 1981"],
+  "switch": ["The built-in mic", "Press the button", "to pick up a voice."],
+  "headings": {
+    "opening": "One tape. Two listeners.",
+    "question": "How does your voice get through?",
+    "pair": "Two headphone jacks",
+    "home": "Plug in a second pair",
+    "car": "Side by side",
+    "ear": "Side by side",
+    "voice": "Follow the voice",
+    "ending": "The Walkman’s Hot Line"
+  }
+}

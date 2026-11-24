@@ -1,15 +1,24 @@
 # 初代ウォークマンには、隣の声を聴くボタンがあった
 
-[試作動画を開く](walkman-pilot.mp4) ／ [日本語字幕・確定した語り](walkman.ja.srt)
+[日本語で観る](walkman-pilot.mp4) ／ [日本語字幕](walkman.ja.srt)
 
-2026年11月24日の横長試作。89.79秒、1280×720、24fps。初代機の展示写真と自作の模式図を使い、日本語の仮ナレーションと字幕を付けた。自宅で二組のヘッドホンを考えた場面と、後日、友人と車に乗って会話の不便を感じた場面を、盛田昭夫の回想に沿って描く。
+[Watch in English](walkman-pilot.en.mp4) · [English subtitles](walkman.en.srt)
+
+2026年11月24日の横長試作。日本語版は89.79秒。両版とも1280×720、24fpsで、初代機の展示写真と自作の模式図を使った。自宅で二組のヘッドホンを考えた場面と、後日、友人と車に乗って会話の不便を感じた場面を、盛田昭夫の回想に沿って描く。
+
+## Why the First Walkman Had a Talk Button
+
+Two people could plug their headphones into Sony’s first Walkman and listen to the same tape. But how could they talk to each other? The English edition follows the two cords and draws on Akio Morita’s account of a car ride with a friend. The opening notes illustrate the diagram. The tape in Morita’s story featured pianist Hiroko Nakamura. [Morita’s 1981 essay (in Japanese)](https://bunshun.jp/articles/-/5676) · [Sony’s history of the first Walkman](https://www.sony.com/en/SonyInfo/News/Press/199907/99-059/)
+
+英語版は78.79秒。車の場面では “side by side” と語った後、耳へ手を伸ばす図を先に見せる。話すたびにヘッドホンを外す不便を、説明の前に感じられる間を取った。初見レビューで録音できないのがカセット自体だと読める箇所が見つかり、“The player couldn’t record.” に書き換えて音声を再合成した。
 
 ## 素材と出典
 
 - ウォークマンのテーマ公開第17版、記録「一人で聴く機械に、なぜ端子が二つ？」第1版。二つの端子とHOT LINEが企画の出発点。[Plunodeの固定版](https://plunode.net/?ktheme=theme%3Aa3acb7b93cfc83a866442cd238fa8949db3a07a7bc33c008&krev=17)
 - 車中の話は盛田昭夫の寄稿に基づく。庄司薫に、妻の中村紘子が演奏したテープを聴かせたという本人の記述を使った。発売年、型番、再生専用機、付属ヘッドホンはソニーの製品史で確認できる。[「ウォークマン考」1981年4月号・再掲](https://bunshun.jp/articles/-/5676) ／ [ソニー「商品のあゆみ」](https://www.sony.com/ja/SonyInfo/CorporateInfo/History/sonyhistory-e.html)
 - 展示写真は Yoshikazu TAKADA 撮影 *First Walkman 1979*（2016年、CC BY 2.0）。動画では画面に合わせてトリミングした。端子の配置を見せる場面は自作図で表現した。[撮影者による掲載](https://www.flickr.com/photos/34530295@N06/31011124386) ／ [撮影情報・ライセンス](https://commons.wikimedia.org/wiki/File:First_Walkman_1979_%2831011124386%29.jpg) ／ [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/)
-- ナレーションは **VOICEVOX:青山龍星**（0.24.1、ノーマル）。冒頭の短い音は模式図用に合成したもの。車中のくだりは語りのみで、当時の演奏・音声は使用していない。[音声ライブラリ](https://voicevox.hiroshiba.jp/product/aoyama_ryusei/) ／ [VOICEVOX利用規約](https://voicevox.hiroshiba.jp/term/)
+- 日本語ナレーションは **VOICEVOX:青山龍星**（0.24.1、ノーマル）。冒頭の短い音は模式図用に合成したもの。車中のくだりは語りのみで、当時の演奏・音声は使用していない。[音声ライブラリ](https://voicevox.hiroshiba.jp/product/aoyama_ryusei/) ／ [VOICEVOX利用規約](https://voicevox.hiroshiba.jp/term/)
+- 英語ナレーションは Kokoro-82M v1.0 の米国英語音声 `af_heart` で合成した。人名の発音を指定し、年代は英語で読み上げた。[音声モデル](https://huggingface.co/hexgrad/Kokoro-82M) ／ [音声一覧](https://huggingface.co/hexgrad/Kokoro-82M/blob/main/VOICES.md)
 
 ## 脚本の初稿と改稿
 
@@ -33,13 +42,18 @@
 
 ## この版を再編集するには
 
-[編集表](edit.json)に発話・画面・発話後の間・元音声のサンプル数、[音声マスター](narration.flac)に15発話を発話順で保存した。[図版](figures/)には独立した四つのSVGと展示写真がある。音声エンジンを起動し直さずに、間・図・字幕を変更して書き出せる。
+編集表には発話・画面・発話後の間・元音声のサンプル数があり、音声マスターに各版の15発話を順に保存した。語りや間を確かめるには各版の編集表を、図中の文字を直すには各版の図版テキストを使う。[日本語の編集表](edit.json)・[音声](narration.flac)・[図版テキスト](boards.ja.json) ／ [英語の編集表](edit.en.json)・[音声](narration.en.flac)・[図版テキスト](boards.en.json)
+
+[共通図版](figures/)には四つのSVGと展示写真がある。合成済みの音声を使って各版を再編集できる。
 
 1. `figures` の四つのSVGを同名の透明PNGに変換し、一時フォルダに置く。この版では既存のsharpを使い、density 168で縦横比を保った。
 2. FFmpeg、Python 3、Pillow、NumPyとWindowsのフォントを使い、このディレクトリで下記を実行する。`art-png` と `render-work` は作業用ディレクトリの例。出力はこのディレクトリのMP4とSRTに書き込まれる。
 
 ```powershell
 python render.py --art art-png --fonts C:\Windows\Fonts --work render-work
+python render.py --lang en --art art-png --fonts C:\Windows\Fonts --work render-work-en
 ```
 
-H.264の全2,155フレームとAAC音声をデコードし、字幕15区間と音声を照合した。Microsoft Edgeで最終MP4を等速で自動再生し、89.79秒の終端到達とドロップフレーム0を確認した。音量測定は全体 −20.8 LUFS、トゥルーピーク −2.2 dBTP。既存サイトから独立したローカルの試作品である。
+日本語版はH.264の全2,155フレームとAAC音声をデコードし、字幕15区間と音声を照合した。Microsoft Edgeで最終MP4を等速で自動再生し、89.79秒の終端到達とドロップフレーム0を確認した。音量測定は全体 −20.8 LUFS、トゥルーピーク −2.2 dBTP。
+
+英語版は15発話、元音声の合計56.76秒。書き出した音声と字幕を15区間すべてで照合し、Microsoft Edgeで全1,891フレームを等速再生して終端到達とドロップフレーム0を確認した。音量は全体 −19.6 LUFS、トゥルーピーク −1.8 dBTP。人名は読みを指定し、発話内容を別の音声認識モデルで確認した。英語話者による試聴は今後の確認項目に残る。
