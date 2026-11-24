@@ -76,8 +76,9 @@
       "checkedAt": "2026-11-03T17:10:51+00:00"
     },
     "collection-control/issue-sources/49.json": {
-      "status": "registered: issue-49-dot-hara-souten-20261027",
-      "checkedAt": "2026-11-03T17:24:07+00:00"
+      "status": "held",
+      "reason": "Remote end closed connection without response",
+      "checkedAt": "2026-11-24T22:07:41+00:00"
     },
     "collection-control/issue-sources/50.json": {
       "status": "registered: issue-50-dot-endo-tista-20261027",
@@ -191,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-24T22:00:51.219464+00:00"
+  "checkedAt": "2026-11-24T22:08:49.421065+00:00"
 }
