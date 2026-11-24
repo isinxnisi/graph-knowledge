@@ -125,12 +125,15 @@ function renderModels() {
     select.disabled = !available.length;
   }
   $("model-note").textContent = state.models.filter((m) => !m.available).map((m) => m.label + "　" + (m.reason || "利用できません")).join(" ／ ");
-  refreshCreate();
+  refreshGenerationButtons();
 }
-function refreshCreate() {
-  $("create-case").disabled = !state.chosen || !$("new-model").value || $("new-form").dataset.busy === "1";
-  $("create-case").textContent = $("script-first").checked ? "日英の台本を生成" : "日英版の生成を開始";
-  $("rerun-form").querySelector('[type="submit"]').textContent = $("rerun-script-first").checked ? "日英の台本を新しく生成" : "日英版を新しく生成";
+function disableSubmitButtons(form, disabled) {
+  for (const button of form.querySelectorAll('button[type="submit"]')) button.disabled = disabled;
+}
+function refreshGenerationButtons() {
+  const create = $("new-form"), rerun = $("rerun-form");
+  disableSubmitButtons(create, !state.chosen || !$("new-model").value || create.dataset.busy === "1");
+  disableSubmitButtons(rerun, !$("rerun-model").value || rerun.dataset.busy === "1");
 }
 
 async function refreshCases() {
@@ -242,7 +245,6 @@ function drawCase() {
   }
   $("rerun-panel").hidden = Boolean(data.reference);
   $("reference-link").hidden = Boolean(data.reference);
-  $("rerun-form").querySelector('[type="submit"]').disabled = !$("rerun-model").value;
   for (const lang of Object.keys(languageName)) ensureSelection(lang);
   drawProgress(); drawWatch(); drawHistory();
 }
@@ -535,7 +537,7 @@ function drawThemeResults() {
       $("theme-selection").hidden = false;
       $("chosen-theme").textContent = item.title;
       $("theme-revision").value = item.revision; $("theme-revision").max = item.revision;
-      drawThemeResults(); refreshCreate();
+      drawThemeResults(); refreshGenerationButtons();
     };
     return button;
   });
@@ -561,15 +563,15 @@ function formAction(formId, handler) {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (form.dataset.busy === "1") return;
-    const button = form.querySelector('[type="submit"]');
+    const action = event.submitter?.value;
     const version = state.routeVersion;
-    form.dataset.busy = "1"; button.disabled = true; notify();
-    try { await handler(version); }
+    form.dataset.busy = "1"; disableSubmitButtons(form, true); notify();
+    try { await handler(version, action); }
     catch (err) { if (state.routeVersion === version) notify(err.message, true); }
     finally {
       delete form.dataset.busy;
-      if (formId === "new-form") refreshCreate();
-      else button.disabled = false;
+      if (formId === "new-form" || formId === "rerun-form") refreshGenerationButtons();
+      else disableSubmitButtons(form, false);
     }
   });
 }
@@ -583,14 +585,13 @@ $("search-themes").onclick = searchThemes;
 $("theme-query").onkeydown = (e) => {
   if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); searchThemes(); }
 };
-$("new-model").onchange = refreshCreate;
-$("script-first").onchange = refreshCreate;
-$("rerun-script-first").onchange = refreshCreate;
-formAction("new-form", async (version) => {
+$("new-model").onchange = refreshGenerationButtons;
+$("rerun-model").onchange = refreshGenerationButtons;
+formAction("new-form", async (version, action) => {
   if (!state.chosen || !$("new-model").value) return;
   const result = await submitRun("new", "/api/cases", {
     themeId: state.chosen.id, revision: Number($("theme-revision").value), brief: trim($("brief").value), model: $("new-model").value,
-    scriptFirst: $("script-first").checked,
+    scriptFirst: action !== "video",
   });
   await refreshCases();
   if (state.routeVersion !== version) return;
@@ -748,9 +749,9 @@ formAction("edit-form", async (version) => {
   if (state.editTarget === target) closeEdit();
   await reloadDetail(); notify(target.draft ? "修正した台本を新しい試行に保存しました。" : "修正した言語の再生成を受け付けました。");
 });
-formAction("rerun-form", async (version) => {
+formAction("rerun-form", async (version, action) => {
   const payload = { model: $("rerun-model").value, parent: chosenRun()?.id || orderedRuns()[0]?.id,
-    reason: trim($("rerun-reason").value), scriptFirst: $("rerun-script-first").checked };
+    reason: trim($("rerun-reason").value), scriptFirst: action !== "video" };
   const result = await submitRun("rerun." + state.detail.id, detailPath("/runs"), payload);
   if (state.routeVersion !== version) return;
   state.resumeAfter = result.runId; $("rerun-reason").value = ""; $("rerun-panel").open = false;
@@ -759,7 +760,6 @@ formAction("rerun-form", async (version) => {
 async function loadModels() {
   try {
     const data = await api("/api/models"); state.models = data.items || []; renderModels();
-    if (state.detail) $("rerun-form").querySelector('[type="submit"]').disabled = !$("rerun-model").value;
   } catch (err) {
     renderModels(); $("model-note").textContent = err.message;
     notify("モデル設定を取得できませんでした。 " + err.message, true, loadModels);
@@ -770,5 +770,5 @@ if (location.hash && location.hash !== "#home") {
   refreshCases().catch((e) => notify(e.message, true, () => refreshCases().catch((err) => notify(err.message, true))));
 }
 loadModels();
-refreshCreate();
+refreshGenerationButtons();
 route();
