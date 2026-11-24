@@ -91,6 +91,7 @@ h1 { font: 650 clamp(26px, 2.5vw, 42px)/1.45 "Yu Mincho", YuMincho, "Hiragino Mi
 .approval-row { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin: 10px 0; }
 #adapt-open { margin-right: auto; }
 .form-target { font-weight: 650; font-size: 14px; color: var(--teal); }
+.model-settings { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: end; gap: 12px; }
 .generation-actions, .reading-actions { display: flex; gap: 9px; align-items: center; flex-wrap: wrap; }
 #story-intent { margin: 8px 0 20px; max-width: 75ch; }
 #story-intent dt { margin-top: 10px; font-weight: 650; color: var(--teal); }

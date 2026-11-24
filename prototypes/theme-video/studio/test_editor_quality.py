@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 from subprocess import CompletedProcess
 
-from editor import WEBB_BOARDS, WEBB_ID, _check_draft, _schema, generate_plan
+from editor import WEBB_BOARDS, WEBB_ID, _check_draft, _schema, generate_plan, list_models
 
 
 class EditorialNoteTest(unittest.TestCase):
@@ -49,11 +49,37 @@ class EditorialNoteTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.check()
 
+    def test_multiscene_visual_note_survives_without_changing_the_narration(self):
+        detail = "一枚だけ鏡を傾けてから視線を写真に移す。" * 24
+        self.draft["story"]["visualCheck"] = detail
+        plan = self.check()
+        self.assertEqual(plan["story"]["visualCheck"], detail)
+        self.assertEqual(plan["scenes"][0]["ja"]["narration"], "主鏡に光が届きます。")
+
     def test_missing_material_retains_the_recoverable_reason(self):
         # A missing image is reported even though no narrative or reading could be generated.
         self.draft.update(materialRequest="どちらの鏡かを確かめるため、出所の分かる図が必要。", story={}, scenes=[])
         with self.assertRaisesRegex(ValueError, "追加資料が必要.*出所"):
             self.check()
+
+    def test_model_menu_uses_each_visible_model_supported_levels(self):
+        def model(slug, levels, visibility="list"):
+            return {"slug": slug, "visibility": visibility,
+                    "supported_reasoning_levels": [{"effort": effort} for effort in levels]}
+
+        models = [model("hidden-astra", ["ultra"], "hide"), model("gpt-6-astra", ["high", "xhigh", "ultra"]),
+                  model("gpt-6-sol", ["high", "medium"]), model("previous-astra", ["max"])]
+        responses = [CompletedProcess([], 0), CompletedProcess([], 0, stdout=json.dumps({"models": models}))]
+        with patch("editor._catalog", None), patch("editor.shutil.which", return_value="codex"), \
+                patch("editor._run", side_effect=responses):
+            choices = list_models()
+            self.assertEqual([c["id"] for c in choices], ["gpt-6-astra", "gpt-6-astra@xhigh", "gpt-6-astra@ultra",
+                                                         "gpt-6-sol", "gpt-6-sol@medium"])
+            self.assertEqual([(c["modelId"], c["effort"]) for c in choices[:3]],
+                             [("gpt-6-astra", e) for e in ("high", "xhigh", "ultra")])
+            self.assertTrue(all(c["available"] for c in choices))
+            with self.assertRaisesRegex(ValueError, "選択したモデル"):
+                generate_plan(self.snapshot, "", "gpt-6-sol@ultra", ".")
 
     def test_japanese_first_then_localization_of_immutable_master(self):
         snapshot = {**self.snapshot, "themeId": WEBB_ID, "title": "テスト", "description": "", "records": [],
@@ -70,27 +96,36 @@ class EditorialNoteTest(unittest.TestCase):
             for i in range(1, 4)]}
         response = japanese
 
+        commands = []
         def run(args, **kwargs):
+            commands.append(args)
             return CompletedProcess(args, 0, stdout="\n".join(map(json.dumps, [
                 {"type": "item.completed", "item": {"type": "agent_message", "text": json.dumps(response)}},
                 {"type": "turn.completed", "usage": {"input_tokens": 10}}])))
 
+        choices = [{"id": "model", "modelId": "model", "effort": "high", "available": True},
+                   {"id": "model@ultra", "modelId": "model", "effort": "ultra", "available": True}]
         with tempfile.TemporaryDirectory() as temp, patch("editor._run", side_effect=run), \
-                patch("editor.list_models", return_value=[{"id": "model", "available": True}]):
+                patch("editor.list_models", return_value=choices):
             root = Path(temp)
             def generate(language, master=None):
-                return generate_plan(snapshot, "", "model", root / language, language=language, master_plan=master)
+                selection = "model@ultra" if language == "ja" else "model"
+                return generate_plan(snapshot, "", selection, root / language, language=language, master_plan=master)
 
             original_snapshot = copy.deepcopy(snapshot)
             master = generate("ja")
             self.assertEqual(set(master["titles"]), {"ja"})
             self.assertTrue(all("en" not in s for s in master["scenes"]))
             ja_input = json.loads((root / "ja/editor-input.json").read_text(encoding="utf-8"))
+            self.assertEqual((ja_input["model"], ja_input["effort"]), ("model", "ultra"))
+            self.assertEqual((master["model"]["requested"], master["model"]["effort"]), ("model", "ultra"))
+            self.assertEqual(commands[-1][commands[-1].index("-m") + 1], "model")
+            self.assertIn('model_reasoning_effort="ultra"', commands[-1])
             fields = ja_input["outputSchema"]["properties"]
             self.assertEqual(fields["titles"]["required"], ["ja"])
             self.assertNotIn("en", fields["scenes"]["items"]["properties"])
             materials = json.loads(ja_input["prompt"].rsplit("\n\n", 1)[1])
-            self.assertEqual(set(materials["boardMaterials"]), set(WEBB_BOARDS))
+            self.assertEqual(set(materials["boardMaterials"]), set(WEBB_BOARDS) - {"webb-tilt"})
             self.assertEqual(materials["productionSourceNote"]["sourceId"], "nasa-aligned")
 
             frozen = copy.deepcopy(master)
@@ -104,6 +139,9 @@ class EditorialNoteTest(unittest.TestCase):
             self.assertEqual(adaptation["sources"], master["sources"])
             self.assertEqual(adaptation["story"], master["story"])
             en_input = json.loads((root / "en/editor-input.json").read_text(encoding="utf-8"))
+            self.assertEqual((en_input["model"], en_input["effort"]), ("model", "high"))
+            self.assertEqual((adaptation["model"]["requested"], adaptation["model"]["effort"]), ("model", "high"))
+            self.assertIn('model_reasoning_effort="high"', commands[-1])
             en_fields = en_input["outputSchema"]["properties"]
             self.assertEqual(set(en_fields["scenes"]["items"]["required"]), {"id", "heading", "narration"})
             self.assertEqual(adaptation["adaptation"]["masterPlanSha256"], en_input["masterPlanSha256"])

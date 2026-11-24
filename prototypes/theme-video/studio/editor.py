@@ -20,7 +20,7 @@ from speech_reading import validate_readings
 ORIGIN = "https://plunode.net"
 WEBB_ID = "theme:915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1"
 INSTRUCTIONS_VERSION = "plunode-video-editor-3"
-JAPANESE_VERSION = "plunode-video-ja-1"
+JAPANESE_VERSION = "plunode-video-ja-2"
 ADAPTATION_VERSION = "plunode-video-en-adaptation-1"
 NASA_SOURCES = [
     {"id": "nasa-mosaic", "title": "Photons Received: Webb Sees Its First Star – 18 Times",
@@ -35,10 +35,16 @@ NASA_SOURCES = [
      "note": "NASAの2月18日公表図。チームが鏡片の向きを変え、鏡片の配置に対応する六角形のパターンに"
              "18の光点を並べた。同じ配置にすると、チームは鏡全体のどの部分の像が変わったかを追いやすい。"
              "この図でも光点は別々。各像をさらにくっきりさせる調整を経て、のちに十八の像を重ねる。"},
+    {"id": "nasa-identification", "title": "Photons Incoming: Webb Team Begins Aligning the Telescope",
+     "url": "https://science.nasa.gov/blogs/webb/2022/02/03/photons-incoming-webb-team-begins-aligning-the-telescope/",
+     "locator": "2022-02-03 · 1. Segment Image Identification",
+     "note": "チームは主鏡の鏡片を一枚ずつ動かし、それぞれが作る星の像を識別する。対応を確かめてから鏡の向きを調整し、像を並べる。"
+             "模式図で描く移動の向きや距離は説明用。個々の鏡の実測軌跡ではない。"},
 ]
 WEBB_BOARDS = {
     "webb-sky": ("nasa-mosaic", "ウェッブの初期観測モザイクを大きく見せ、散らばった光点を見渡す。"),
     "webb-mirror": ("nasa-aligned", "十八枚の六角形の鏡と中央の空所を示す、制作した主鏡の模式図。"),
+    "webb-tilt": ("nasa-identification", "模式図。複数の光点を見せ、一枚の鏡を少し傾けると、対応する一点だけが動く。観る人は動きから鏡と点の組を見分けられる。この図にNASAの写真は出ない。"),
     "webb-identify": ("nasa-mosaic", "初期写真の右下の光点に寄り、その光を届けた鏡の符号 B3 に印を付ける。"),
     "webb-map": ("nasa-aligned", "主鏡の模式図と整列後の観測画像を並べる。右上の鏡 B3 と、対応する像 B3 を同じ色で結ぶ。"),
     "webb-return": ("nasa-mosaic", "冒頭と同じ初期写真に戻る。集光や像の重なりが完了した図は出ない。"),
@@ -120,6 +126,8 @@ def get_snapshot(theme_id, revision):
 
 _catalog = None
 _catalog_lock = threading.Lock()
+EFFORT_LABELS = {"high": "高", "xhigh": "XHigh", "max": "Max", "ultra": "Ultra",
+                 "medium": "中", "low": "低"}
 
 
 def _run(args, **kwargs):
@@ -145,16 +153,25 @@ def list_models():
                     catalog = _run([executable, "debug", "models"], timeout=25)
                     if catalog.returncode == 0:
                         models = json.loads(catalog.stdout)["models"]
-                    reason = "このCLIのモデル一覧に high 対応の設定がありません。"
+                    reason = "このCLIの一覧に利用できるモデル・推論設定がありません。"
             except (OSError, subprocess.TimeoutExpired, KeyError, ValueError):
                 reason = "Codex CLI のモデル一覧を取得できませんでした。"
         options = []
         for family in ("Astra", "Sol"):
-            selected = next((model["slug"] for model in models
-                             if model["slug"].endswith("-" + family.lower()) and model.get("visibility") == "list"
-                             and any(level.get("effort") == "high" for level in model.get("supported_reasoning_levels", []))), None)
-            options.append({"id": selected or family.lower(), "label": f"{family} ／ 高",
-                            "available": bool(selected), "reason": "" if selected else reason})
+            model = next((m for m in models if m.get("slug", "").endswith("-" + family.lower())
+                          and m.get("visibility") == "list" and m.get("supported_reasoning_levels")), None)
+            model_id = model["slug"] if model else family.lower()
+            levels = {level["effort"] for level in model["supported_reasoning_levels"]} if model else set()
+            if not levels:
+                options.append({"id": model_id, "modelId": model_id, "family": family, "effort": None, "label": family,
+                                "available": False, "reason": reason})
+            ordered_levels = [level for level in EFFORT_LABELS if level in levels]
+            for effort in ordered_levels + sorted(levels.difference(EFFORT_LABELS)):
+                # Queued runs from the original high-only studio still use the plain model slug.
+                selection_id = model_id if effort == "high" else f"{model_id}@{effort}"
+                options.append({"id": selection_id, "modelId": model_id, "family": family, "effort": effort,
+                                "label": f"{family} ／ {EFFORT_LABELS.get(effort, effort)}",
+                                "available": True, "reason": ""})
         _catalog = (time.monotonic() + (300 if models else 20), options)
         return [dict(item) for item in options]
 
@@ -231,7 +248,8 @@ _JAPANESE_PROMPT = """Plunodeの横長動画を日本語一本で編集してく
 
 最初に、冒頭で視聴者が自分の言葉で持てる問いをstory.questionに、その答えと誰にどう役立ったかを
 story.explanationに、画面のどこでその意味を確かめられるかをstory.visualCheckに日本語で記入します。
-編集メモは視聴者に見えません。人や物を主語に、絵を見た人の理解が一歩ずつ進むように語りを組み立てます。
+編集メモは視聴者に見えません。素材がそろったらこの三項目をすべて埋め、それぞれ一、二文で具体的に書いてください。
+人や物を主語に、絵を見た人の理解が一歩ずつ進むように語りを組み立てます。
 最初に答えを教える前に、何を見つければよいか手掛かりをひとつ置いてください。
 初めて見る専門語は、身近な動きや観察から入ります。視聴者が絵を見比べる時間を取り、
 最後に冒頭の物や動作をもう一度見る意味を作ってください。図で見えない動きを語りだけで保証してはいけません。
@@ -288,7 +306,8 @@ def _check_draft(draft, snapshot, assets, language="both"):
         raise ValueError("脚本に初見の人に伝える問い・説明・画面の見どころがありません。")
     story = {}
     for key, label in (("question", "初見の問い"), ("explanation", "問いへの説明"), ("visualCheck", "画面で確かめること")):
-        value = _text(note.get(key), 320, label)
+        # These are private production notes. A detailed shot description still accompanies a usable script.
+        value = _text(note.get(key), 6000, label)
         if not re.search(r"[ぁ-んァ-ヶ一-龯]", value):
             raise ValueError(f"脚本の「{label}」を日本語で用意してください。")
         story[key] = value
@@ -382,6 +401,7 @@ def generate_plan(snapshot, brief, model_id, work_dir, *, language="both", maste
     choice = next((m for m in list_models() if m["id"] == model_id and m["available"]), None)
     if not choice:
         raise ValueError("選択したモデルを利用できません。モデル一覧を確認してください。")
+    model_id, effort = choice["modelId"], choice["effort"]
     if not isinstance(brief, str) or len(brief) > 3200:
         raise ValueError("企画の切り口と試行の指示は合わせて3200文字以内で指定してください。")
     if not snapshot["sources"]:
@@ -398,7 +418,7 @@ def generate_plan(snapshot, brief, model_id, work_dir, *, language="both", maste
             if language == "both":
                 assets += ["mosaic", "aligned", "comparison"]
             elif {"nasa-mosaic", "nasa-aligned"}.issubset(source_ids):
-                assets.extend(WEBB_BOARDS)
+                assets.extend(name for name, (source, _) in WEBB_BOARDS.items() if source in source_ids)
         payload = _draft_input(snapshot, brief)
         payload["assets"] = assets
         _attach_boards(payload, assets)
@@ -410,7 +430,7 @@ def generate_plan(snapshot, brief, model_id, work_dir, *, language="both", maste
         raise ValueError("固定版の資料がモデル入力の上限を超えました。")
     # Save exactly what the writer received, including its source lookup and the
     # instructions used at the time. The CLI itself runs in a separate empty directory.
-    input_artifact = {"model": model_id, "effort": "high", "instructionVersion": version,
+    input_artifact = {"model": model_id, "effort": effort, "instructionVersion": version,
                       "prompt": prompt, "outputSchema": schema}
     if language == "en":
         canonical = json.dumps(master_plan, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
@@ -424,13 +444,13 @@ def generate_plan(snapshot, brief, model_id, work_dir, *, language="both", maste
         (folder / "shape.json").write_text(json.dumps(schema, ensure_ascii=False), encoding="utf-8")
         args = [shutil.which("codex"), "--no-daemon", "-a", "never", "exec", "--ignore-user-config",
                 "--ignore-rules", "--ephemeral", "--skip-git-repo-check", "--sandbox", "read-only",
-                "-m", model_id, "-c", 'model_reasoning_effort="high"', "-c", 'web_search="disabled"',
+                "-m", model_id, "-c", f"model_reasoning_effort={json.dumps(effort)}", "-c", 'web_search="disabled"',
                 "-c", "project_doc_max_bytes=0", "--output-schema", "shape.json", "--json"]
         for feature in ("shell_tool", "unified_exec", "code_mode", "multi_agent", "multi_agent_v2", "plugins",
                         "apps", "hooks", "image_generation", "view_image", "shell_snapshot"):
             args.extend(["--disable", feature])
         try:
-            result = _run(args + ["-"], cwd=folder, input=prompt, timeout=420)
+            result = _run(args + ["-"], cwd=folder, input=prompt, timeout=1200 if effort in ("xhigh", "max", "ultra") else 420)
         except subprocess.TimeoutExpired as exc:
             raise RuntimeError("脚本生成が制限時間を超えました。案件は残っています。") from exc
     events = [json.loads(line) for line in result.stdout.splitlines() if line.startswith("{")]
@@ -460,7 +480,7 @@ def generate_plan(snapshot, brief, model_id, work_dir, *, language="both", maste
                               "masterModel": deepcopy(master_plan.get("model"))}
     else:
         plan = _check_draft(draft, snapshot, assets, language)
-    plan["model"] = {"requested": model_id, "actual": None, "effort": "high", "provider": "codex-cli",
+    plan["model"] = {"requested": model_id, "actual": None, "effort": effort, "provider": "codex-cli",
                      "instructionVersion": version,
                      "inputSha256": hashlib.sha256(artifact_bytes).hexdigest(), "usage": completed.get("usage")}
     return plan

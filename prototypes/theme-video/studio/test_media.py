@@ -1,10 +1,17 @@
 import unittest
 from unittest.mock import patch
 
-from media import _phrases, _timed_scenes
+from media import FPS, _phrases, _scene_cues, _timed_scenes
 
 
 class SubtitleTest(unittest.TestCase):
+    def test_leading_ellipsis_gives_the_viewer_time_before_the_answer(self):
+        scene = {"asset": "webb-tilt", "ja": {"narration": "鏡を動かします。……一点が動きました。"}}
+        with patch("media._speech", return_value=[0] * 1000):
+            cues = _scene_cues(scene, "ja", "test", None, False)
+        self.assertEqual(cues[2], (5 + FPS, "", None))
+        self.assertEqual(cues[3][1], "……一点が動きました。")
+
     def test_shared_phrase_boundary_for_speech_and_captions(self):
         sentence = ("These eighteen spots show the same star, each formed by light reflected "
                     "from a different primary mirror segment.")

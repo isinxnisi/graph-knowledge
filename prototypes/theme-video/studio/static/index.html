@@ -34,7 +34,11 @@
             <div id="theme-selection" class="selected-theme" hidden><div><span class="field-tag">選択中のテーマ</span><strong id="chosen-theme"></strong></div><label for="theme-revision">使用する公開版<input id="theme-revision" type="number" min="1" step="1"></label></div>
           </fieldset>
           <fieldset><legend>動画の企画</legend><label for="brief">取り上げる切り口（任意）</label><textarea id="brief" rows="3" maxlength="1500" placeholder="空欄なら、選んだテーマから切り口を決めます"></textarea>
-            <label for="new-model">脚本・編集モデル</label><select id="new-model"></select><p id="model-note" class="subtle"></p>
+            <div class="model-settings">
+              <div><label for="new-model">脚本・編集モデル</label><select id="new-model"></select></div>
+              <div><label for="new-effort">推論の強さ</label><select id="new-effort"></select></div>
+            </div>
+            <p id="new-model-note" class="subtle" hidden></p>
             <label for="new-language">制作する言語</label><select id="new-language"><option value="ja">日本語を先に制作</option><option value="both">日本語と英語を同時に制作</option></select>
           </fieldset>
           <div class="form-footer"><span>横長 16:9</span>
@@ -51,7 +55,11 @@
         <div id="run-progress" aria-live="polite"></div>
         <details id="rerun-panel" class="panel"><summary>このテーマで作り直す</summary>
           <form id="rerun-form" class="panel-body">
-            <label for="rerun-model">脚本・編集モデル</label><select id="rerun-model"></select>
+            <div class="model-settings">
+              <div><label for="rerun-model">脚本・編集モデル</label><select id="rerun-model"></select></div>
+              <div><label for="rerun-effort">推論の強さ</label><select id="rerun-effort"></select></div>
+            </div>
+            <p id="rerun-model-note" class="subtle" hidden></p>
             <label for="rerun-language">制作する言語</label><select id="rerun-language"><option value="ja">日本語を先に制作</option><option value="both">日本語と英語を同時に制作</option></select>
             <label for="rerun-reason">台本への追加指示（任意）</label>
             <input id="rerun-reason" maxlength="1000" placeholder="空欄なら元の企画で生成します">
@@ -77,7 +85,11 @@
         <div id="approval-row" class="approval-row" hidden><button type="button" id="adapt-open" class="secondary small" hidden>この日本語版から英語版を作る</button><button type="button" id="rework-toggle" class="secondary small">要修正</button><button type="button" id="adopt-toggle" class="primary small">この版を採用</button></div>
         <form id="adapt-form" class="action-form" hidden>
           <p id="adapt-target" class="form-target"></p>
-          <label for="adapt-model">英語の脚本・編集モデル</label><select id="adapt-model"></select>
+          <div class="model-settings">
+            <div><label for="adapt-model">英語の脚本・編集モデル</label><select id="adapt-model"></select></div>
+            <div><label for="adapt-effort">推論の強さ</label><select id="adapt-effort"></select></div>
+          </div>
+          <p id="adapt-model-note" class="subtle" hidden></p>
           <div class="actions"><button type="button" id="adapt-cancel" class="quiet">閉じる</button>
             <button type="submit" class="secondary" value="script" disabled>英語の台本を先に確認</button>
             <button type="submit" class="primary" value="video" disabled>英語の動画を生成</button>

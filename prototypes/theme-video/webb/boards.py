@@ -1,4 +1,4 @@
-"""Five cuts for the Webb alignment film. Coordinates refer to the NASA plates in studio/assets."""
+"""Cuts for the Webb alignment film. Observational coordinates refer to the NASA plates in studio/assets."""
 from functools import lru_cache
 import math
 import os
@@ -101,11 +101,12 @@ def gilded_segment(q, r, radius):
 
 
 class Boards(ChannelFrame):
-    def __init__(self, lang="ja"):
+    def __init__(self, lang="ja", *, identifying_segments=False):
         if lang not in ("ja", "en"):
             raise ValueError(f"Unknown language: {lang}")
         fonts = Path(os.environ.get("PLUNODE_STUDIO_FONTS", Path(os.environ.get("WINDIR", "C:/Windows")) / "Fonts"))
         super().__init__(fonts, lang)
+        self.identifying_segments = identifying_segments
         self.images = {}
         for name in ("mosaic", "mosaic-labels", "aligned"):
             with Image.open(ASSETS / (name + ".jpg")) as image:
@@ -151,6 +152,8 @@ class Boards(ChannelFrame):
             return self.sky(p, ending=shot == "return")
         if shot == "mirror":
             return self.mirror_shot(p)
+        if shot == "tilt":
+            return self.tilt_shot(p)
         if shot == "identify":
             return self.identify(p)
         if shot == "map":
@@ -178,7 +181,11 @@ class Boards(ChannelFrame):
         self.brand(draw, light=True)
         self.text(draw, 61, 139, self.copy_for("ウェッブ宇宙望遠鏡", "Webb Space Telescope"),
                   21, color="#c3cfd0", family=BOLD)
-        if ending:
+        if self.identifying_segments and ending:
+            lines = self.copy_for(("ひとつの点に、", "一枚の鏡。"), ("One spot,", "one mirror."))
+        elif self.identifying_segments:
+            lines = self.copy_for(("どの鏡が", "映した光？"), ("Which mirror", "made this spot?"))
+        elif ending:
             lines = self.copy_for(("見ていた星は、", "ひとつ。"), ("One star,", "all along."))
         else:
             lines = self.copy_for(("星は、", "いくつ？"), ("How many", "stars?"))
@@ -214,13 +221,84 @@ class Boards(ChannelFrame):
         return canvas
 
     @lru_cache(maxsize=1)
+    def tilt_plate(self):
+        canvas = self.paper(self.copy_for("鏡と像を見分ける模式図", "Mirror identification diagram")).copy()
+        draw = ImageDraw.Draw(canvas)
+        self.text(draw, 76, 91, self.copy_for("一枚の鏡", "One mirror segment"), 43, family=SERIF)
+        self.text(draw, 658, 91, self.copy_for("同じ星の像", "Images of one star"), 43, family=SERIF)
+        draw.rectangle((656, 160, 1217, 513), fill="#20343e")
+        # An illustrative field, including one moving image in the lower right. Its
+        # placement and displacement must not be read as a measured observation.
+        for x, y in ((736, 216), (853, 228), (930, 197), (1041, 245), (1161, 210),
+                     (777, 289), (875, 266), (974, 294), (1103, 319), (717, 365),
+                     (813, 386), (897, 334), (936, 407), (1014, 364), (731, 463),
+                     (861, 458), (1036, 476)):
+            self.draw_spot(draw, x, y)
+        return canvas
+
+    @staticmethod
+    def draw_spot(draw, x, y):
+        draw.ellipse((x-7, y-7, x+7, y+7), fill="#41545a")
+        draw.ellipse((x-4, y-4, x+4, y+4), fill="#f5f1e5")
+
+    @staticmethod
+    @lru_cache(maxsize=1)
+    def facet_reflection():
+        yy, xx = np.mgrid[0:270, 0:450]
+        across = xx+.55*yy
+        glint = np.exp(-((across-245)/59)**2) + .30*np.exp(-((across-368)/18)**2)
+        gold, light = np.array([217, 177, 111]), np.array([254, 236, 180])
+        return Image.fromarray((gold + np.minimum(glint, 1)[:, :, None]*(light-gold)).astype("uint8"))
+
+    def tilt_shot(self, p):
+        canvas = self.tilt_plate().copy()
+        draw = ImageDraw.Draw(canvas)
+        move = ease(.22, .59, p)
+        # A perspective sketch of a single facet. Keep the centre in place, so
+        # the change in slope reads as a tilt rather than a piece sliding out.
+        cx, cy, radius = 314, 331, 153
+        corners = [(radius*math.cos(i*math.pi/3), radius*math.sin(i*math.pi/3)) for i in range(6)]
+        def face_at(angle):
+            return [(cx + x+.24*y, cy + .11*x + math.sin(angle)*y) for x, y in corners]
+        rest, face = face_at(.81), face_at(mix(.81, .46, move))
+        if move:
+            # Leave a thin outline of the previous inclination in the paper.
+            draw.line([*rest, rest[0]], fill=tint(PAPER, "#afaa99", move), width=2)
+        depth = 10
+        for i in (0, 1, 2):
+            (x1, y1), (x2, y2) = face[i:i+2]
+            draw.polygon([(x1,y1), (x2,y2), (x2,y2+depth), (x1,y1+depth)], fill="#977342")
+        mask = Image.new("L", (360, 270))
+        ImageDraw.Draw(mask).polygon([(x-134,y-196) for x,y in face], fill=255)
+        shift = round(70*(1-move))
+        reflection = self.facet_reflection().crop((shift, 0, shift+360, 270))
+        canvas.paste(reflection, (134, 196), mask)
+        draw.line([*face,face[0]], fill="#9b7546", width=3)
+        draw.line(face[3:6], fill="#fff4cd", width=3)
+        self.text(draw, cx, cy, "B3", 37, family=LATIN, anchor="mm", color="#4b4130")
+        # Keep all star images equally bright until the audience has had a chance
+        # to notice which one shifts. Then trace just its small displacement.
+        x0, y0 = 1070, 421
+        x, y = mix(x0, 1135, move), mix(y0, 393, move)
+        found = ease(.65, .81, p)
+        if found:
+            color = tint("#20343e", AMBER, found)
+            ring(draw, (x0,y0), 6, color, width=2)
+            trace(draw, [(x0+8, y0-3), (x-20, y+8)], found, color, width=2)
+            ring(draw, (x,y), 17, color, width=2)
+            self.text(draw, x+24, y-1, "B3", 23, family=BOLD, anchor="lm", color=color)
+        self.draw_spot(draw, x, y)
+        return canvas
+
+    @lru_cache(maxsize=1)
     def identification_plate(self):
         canvas = self.paper(self.copy_for("最初のモザイク", "First alignment mosaic")).copy()
         self.plate(canvas, "mosaic", SEARCH_SOURCE, SEARCH_BOX)
         draw = ImageDraw.Draw(canvas)
         self.text(draw, 57, 533, "NASA", 15, family=BOLD, color=MUTED)
-        self.heading(draw, 802, 98, self.copy_for(("この鏡の光は、", "どこに？"), ("Which spot", "belongs to B3?")),
-                     size=44, width=419)
+        lines = (self.copy_for(("光のそばの", "小さな文字"), ("A label", "beside the spot")) if self.identifying_segments
+                 else self.copy_for(("この鏡の光は、", "どこに？"), ("Which spot", "belongs to B3?")))
+        self.heading(draw, 802, 98, lines, size=44, width=419)
         return canvas
 
     def identify(self, p):

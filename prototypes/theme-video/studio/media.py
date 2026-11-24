@@ -371,6 +371,10 @@ def _scene_cues(scene, lang, voice, engine, first):
         lead = 20  # Let the viewer find the mark before explaining it.
     cues = [(lead, "", None)]
     for text, spoken in _utterances(scene[lang], lang):
+        if text.startswith(("……", "…")):
+            # A leading ellipsis is a look or a breath before the next line. TTS drops it.
+            frames, _, _ = cues[-1]
+            cues[-1] = (frames + FPS, "", None)
         speech = _speech(spoken, lang, voice, engine)
         cues.append((math.ceil(len(speech) / (RATE // FPS)), text, speech))
         cues.append((5, "", None))
@@ -430,8 +434,9 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
                     raise ValueError("ウェッブの演出素材は対応するテーマで使用してください。")
                 if motion_boards is None:
                     from webb.boards import Boards
-                    motion_boards = Boards(lang=lang)
-                if shot != "webb-mirror":
+                    motion_boards = Boards(lang=lang, identifying_segments=any(
+                        s["asset"] == "webb-tilt" for s in plan["scenes"]))
+                if shot not in ("webb-mirror", "webb-tilt"):
                     used.add("aligned" if shot == "webb-map" else "mosaic")
             else:
                 board = _board(plan, scene, lang, used, seen_mosaic)

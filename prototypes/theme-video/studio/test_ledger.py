@@ -31,6 +31,27 @@ class LedgerTest(unittest.TestCase):
         (out / "subtitles.srt").write_text(plan["scenes"][0][lang]["narration"], encoding="utf-8")
         (out / "timings.json").write_text(json.dumps([{"id": "s1", "start": 0, "end": 1}]))
 
+    def test_retry_and_adaptation_keep_their_own_model_and_effort(self):
+        high, ultra = "gpt-6-astra", "gpt-6-astra@ultra"
+        self.models = lambda: [{"id": key, "available": True} for key in (high, ultra)]
+        self.request.update(model=ultra, language="ja")
+        case = self.create()
+        generate = Mock(side_effect=[RuntimeError("中断"), self.plan])
+        self.desk.process_next(generate, self.render)
+        failed = self.desk.case(case["id"])["runs"][0]
+        self.assertEqual((failed["model"], failed["status"]), (ultra, "failed"))
+        self.desk = Ledger(self.data)
+        self.desk.resume(case["id"], case["runId"])
+        self.desk.process_next(generate, self.render)
+        self.assertEqual([call.args[2] for call in generate.call_args_list], [ultra, ultra])
+
+        self.desk.submit("runs", dict(requestId="translate", parent=case["runId"], model=high, language="en"),
+                         self.snapshot, self.models, case["id"])
+        self.desk.process_next(Mock(return_value=deepcopy(self.plan)), self.render)
+        english, japanese = self.desk.case(case["id"])["runs"]
+        self.assertEqual((english["model"], english["plan"]["japaneseMasterRunId"]), (high, japanese["id"]))
+        self.assertEqual(japanese["model"], ultra)
+
     def test_double_submit_and_revision_after_restart(self):
         with ThreadPoolExecutor(2) as pool:
             results = list(pool.map(lambda _: self.create(), range(2)))
