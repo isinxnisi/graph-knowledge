@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-25T20:29:01.768611+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-25T19:34:11.905046+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-25T20:29:01.768611+00:00",
+    "eligibleAt": "2026-11-25T19:34:11.905046+00:00",
     "windowEndAt": "2026-11-25T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-48-dot-toriyama-three-20261027",
-    "startedAt": "2026-11-25T19:24:01.768622+00:00",
-    "limitAt": "2026-11-25T20:19:01.768611+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1",
-    "endedAt": "2026-11-25T19:14:00.297982+00:00"
+    "requestId": "issue-48-dot-toriyama-three-20261027",
+    "endedAt": "2026-11-25T19:24:11.905049+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
-    "waiting-control": 52,
+    "waiting-control": 51,
     "blocked": 2,
-    "completed": 7,
+    "completed": 8,
     "awaiting-recovery": 1
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-25T19:24:03.068059+00:00"
+  "checkedAt": "2026-11-25T19:24:53.645230+00:00"
 }
