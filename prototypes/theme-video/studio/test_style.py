@@ -48,6 +48,20 @@ class ChannelStyleTest(unittest.TestCase):
                 self.assertLess(box[3], H)
                 self.assertAlmostEqual((box[0] + box[2]) / 2, W / 2, delta=14)
 
+    def test_wipe_reveals_two_stationary_pictures_and_keeps_the_caption_rail_clear(self):
+        from wipe_board import PANEL, render
+
+        for lang in ("ja", "en"):
+            with self.subTest(lang=lang):
+                start, middle, held, end = [render(lang, t) for t in (0, .49, .54, 1)]
+                left, top, right, bottom = PANEL
+                self.assertEqual(ImageChops.difference(start, end).getbbox(), PANEL)
+                self.assertEqual(middle.tobytes(), held.tobytes())
+                for box, original in [((left, top, W//2, bottom), end),
+                                      ((W//2+60, top, right, bottom), start)]:
+                    self.assertIsNone(ImageChops.difference(middle.crop(box), original.crop(box)).getbbox())
+                self.assertEqual(middle.getpixel((W//2, FOOT)), ImageColor.getrgb(INK))
+
     def test_generated_japanese_captions_wrap_without_changing_the_words(self):
         caption = "望遠鏡を一つの星に向けていますが、鏡の向きがそろうまでは同じ星が別々の場所に映ります。"
         style = _style("ja")

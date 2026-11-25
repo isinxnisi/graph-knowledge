@@ -6,6 +6,7 @@ from urllib.parse import urlsplit
 from editor import (JAPANESE_VERSION, _JAPANESE_PROMPT, _call_writer, _check_draft, _object,
                     _save_json, _text, _writer_request)
 from writer_feedback import RevisionNeeded, request_digest, validated_output
+from wipe_board import ASSET as WIPE_DEMO, DESCRIPTION as WIPE_PICTURE
 
 
 STRING = {"type": "string"}
@@ -80,6 +81,7 @@ def _audience_cut(plan):
     scenes = []
     identified = any(s["asset"] == "webb-tilt" for s in plan["scenes"])
     pictures = {
+        WIPE_DEMO: WIPE_PICTURE,
         "webb-sky": ("「どの鏡が映した光？」" if identified else "「星は、いくつ？」") + " 大きな黒い写真に光点が散らばる。",
         "webb-mirror": "「ウェッブの主鏡」「18枚」「どれも、同じ星を見る。」金色の六角形の鏡が並ぶ。中央は空いている。",
         "webb-tilt": "「鏡と像を見分ける模式図」。左のB3という鏡が傾くと、右の多数の点のうち一点が動く。最後にその点にB3と出る。",
@@ -142,6 +144,12 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
 
     facts = {key: materials[key] for key in ("theme", "description", "angle", "records", "sources")}
     scope_instructions = SCOPE_PROMPT
+    if "productionResearch" in materials:
+        facts["productionResearch"] = materials["productionResearch"]
+        facts["illustrations"] = materials.get("illustrations", {})
+        scope_instructions += ("\n追加調査後の再企画です。採用した案の導入と発見に焦点を戻し、そこに不要な別の逸話は省いてください。"
+                               "追加資料の言える範囲、未確認の点、使える作図を照合します。説明の作例と特定の実例を区別し、"
+                               "調べていない版・時刻・方向や利用許諾を補わないでください。")
     if "previousJapanese" in materials:
         facts["previousJapanese"] = materials["previousJapanese"]
         scope_instructions += ("\n前稿の語りと試写コメントから何が届き、何が足りなかったかを考えます。"

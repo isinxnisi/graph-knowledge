@@ -7,6 +7,7 @@ import tempfile
 import unittest
 from unittest.mock import Mock
 
+from editor import MaterialRequired
 from ledger import Ledger
 from writer_feedback import RevisionNeeded
 
@@ -68,6 +69,52 @@ class LedgerTest(unittest.TestCase):
         current, = self.desk.case(case["id"])["runs"]
         self.assertEqual((current["id"], current["status"], current["error"]), (case["runId"], "script_ready", None))
         render.assert_not_called()
+
+    def test_material_wait_and_verified_sources_remain_with_the_same_run(self):
+        self.request.update(language="ja", scriptFirst=True)
+        case = self.create()
+        message = "追加資料が必要です。場面転換の方向を確認してください。"
+        run_dir = self.data / "cases" / case["id"] / case["runId"]
+        record = run_dir / "material-research.json"
+        round_one = {"status": "done", "need": "作中の場面転換の例", "sources": [
+            {"title": "記録", "url": "https://example.org/film", "locator": "第3章", "excerpt": "a wipe",
+             "note": "切り替えが始まる位置を確認できる"}], "remaining": "移動方向を調べる"}
+        generation = Mock(side_effect=[MaterialRequired(message), self.plan])
+        render = Mock()
+        self.desk.process_next(generation, render)
+        record.write_text(json.dumps({"rounds": [round_one]}), encoding="utf-8")
+        self.desk = Ledger(self.data)
+        detail = self.desk.case(case["id"])
+        saved, = detail["runs"]
+        self.assertEqual((saved["status"], saved["error"], detail["states"]["ja"]), ("needs_material", message, "資料待ち"))
+        self.assertEqual(saved["materialResearch"], {"rounds": [round_one]})
+        self.assertEqual(self.desk.list_cases()[0]["states"]["ja"], "資料待ち")
+        self.desk.resume(case["id"], case["runId"])
+        self.desk.process_next(generation, render)
+        revised, = self.desk.case(case["id"])["runs"]
+        self.assertEqual((revised["id"], revised["status"], revised["error"]), (case["runId"], "script_ready", None))
+        self.assertEqual(revised["materialResearch"]["rounds"], [round_one])
+        render.assert_not_called()
+        for damaged in ("{", '{"rounds":[null]}'):
+            record.write_text(damaged, encoding="utf-8")
+            report = self.desk.case(case["id"])["runs"][0]["materialResearch"]
+            self.assertEqual(report["rounds"], [])
+            self.assertIn("読み込めません", report["error"])
+
+    def test_only_legacy_material_errors_display_as_waiting_and_can_resume(self):
+        self.request.update(language="ja", scriptFirst=True)
+        case = self.create()
+        for reason, status in (("追加資料が必要です。初出誌の出典", "needs_material"),
+                               ("別のエラーに含まれた「追加資料が必要です。」", "failed")):
+            with self.desk.db() as db:
+                db.execute("UPDATE runs SET status='failed',error=? WHERE id=?", (reason, case["runId"]))
+            self.desk = Ledger(self.data)
+            saved, = self.desk.case(case["id"])["runs"]
+            self.assertEqual((saved["status"], saved["error"], saved["materialResearch"]), (status, reason, None))
+            with self.desk.db() as db:
+                self.assertEqual(db.execute("SELECT status FROM runs WHERE id=?", (case["runId"],)).fetchone()[0], "failed")
+            self.desk.resume(case["id"], case["runId"])
+            self.assertEqual(self.desk.case(case["id"])["runs"][0]["status"], "queued")
 
     def test_double_submit_and_revision_after_restart(self):
         with ThreadPoolExecutor(2) as pool:

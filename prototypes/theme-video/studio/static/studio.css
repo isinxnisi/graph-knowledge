@@ -137,6 +137,13 @@ h1 { font: 650 clamp(26px, 2.5vw, 42px)/1.45 "Yu Mincho", YuMincho, "Hiragino Mi
 .run-row:first-child { border-top: 0; }
 .run-row p { margin-top: 3px; font-size: 13px; overflow-wrap: anywhere; }
 .run-row button { margin-top: 7px; }
+.material-research { margin: 8px 0; }
+.material-research > summary { width: fit-content; color: var(--teal); font-size: 14px; }
+.material-research section { margin: 10px 0; padding-left: 12px; border-left: 2px solid var(--line); }
+.material-research h4, .material-research h5 { margin: 8px 0 2px; font-size: 14px; }
+.material-research ul { margin: 4px 0; padding-left: 20px; }
+.material-research li { margin: 6px 0; overflow-wrap: anywhere; }
+.material-research blockquote { margin: 4px 0; padding-left: 9px; border-left: 2px solid var(--line); font-size: 13px; }
 .status-box, #notice { background: #e7eee7; border-left: 3px solid var(--teal); padding: 10px 14px; margin-top: 14px; border-radius: 3px; overflow-wrap: anywhere; }
 .status-box.bad, #notice.error { background: #fff0e4; border-color: var(--warm); }
 #notice { margin: 0 0 16px; }

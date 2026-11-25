@@ -23,6 +23,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from setup_media import media_home
+from wipe_board import ASSET as WIPE_DEMO, REVEAL_START, mix_paper_swish, render as render_wipe
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from channel_style import BLUE, BOLD, ChannelFrame, FOOT, H, INK, ORANGE, PAPER, SANS, SERIF, STYLE, W
 from speech_reading import apply_readings, protected_breaks, validate_readings
@@ -438,6 +439,7 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
         slides, pcm, frame = [], [], 0
         seen_mosaic = False
         motion_boards = None
+        first_wipe_sound = None
         style = _style(lang)
 
         def save_board(board, frames):
@@ -448,8 +450,9 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
         for scene, cues, shot_offset, duration in _timed_scenes(plan["scenes"], lang, voice, engine, progress):
             start = frame
             shot = scene["asset"]
-            animated = shot.startswith("webb-")
-            if animated:
+            webb_shot = shot.startswith("webb-")
+            animated = webb_shot or shot == WIPE_DEMO
+            if webb_shot:
                 if shot_offset == 0:
                     voice_starts_at = None
                     if (lang == "ja" and (scene.get("visualTiming") or {}).get("beforeVoice")
@@ -463,6 +466,10 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
                         s["asset"] == "webb-tilt" for s in plan["scenes"]))
                 if shot not in ("webb-mirror", "webb-tilt", "webb-focus"):
                     used.add("aligned" if shot in ("webb-array", "webb-layout", "webb-map") else "mosaic")
+            elif shot == WIPE_DEMO:
+                if first_wipe_sound is None:
+                    edge_frame = round(REVEAL_START * (duration - 1))
+                    first_wipe_sound = (frame + edge_frame, frame + duration)
             else:
                 board = _board(plan, scene, lang, used, seen_mosaic)
                 seen_mosaic |= shot == "mosaic"
@@ -477,13 +484,16 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
                     style.subtitle(caption, style.caption_breaks(text, wrap_japanese=True))
                     caption_band = caption.crop((0, FOOT, W, H))
                 # The original array photograph stays still, including during long authored holds.
-                # Other Webb boards animate at twelve poses per second on the 24 fps voice clock.
+                # Moving illustrations use twelve poses per second on the 24 fps voice clock.
                 step = 2 if animated and shot != "webb-array" else frames
                 for offset in range(0, frames, step):
                     if animated:
                         position = (shot_offset + frame - start + offset) / max(1, duration - 1)
-                        board = motion_boards.frame(shot.removeprefix("webb-"), position,
-                                                    voice_starts_at=voice_starts_at)
+                        if webb_shot:
+                            board = motion_boards.frame(shot.removeprefix("webb-"), position,
+                                                        voice_starts_at=voice_starts_at)
+                        else:
+                            board = render_wipe(lang, position)
                     slide = board
                     if caption_band is not None:
                         slide = board.copy()
@@ -494,7 +504,12 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
         save_board(_credit(plan, lang, used, voice), 7 * FPS)
         pcm.append(np.zeros(7 * RATE, dtype="<i2"))
         frame += 7 * FPS
-        _save_wav(work / "mix.wav", np.concatenate(pcm))
+        mix = np.concatenate(pcm)
+        if first_wipe_sound is not None:
+            begin, end = first_wipe_sound
+            samples_per_frame = RATE // FPS
+            mix_paper_swish(mix[begin * samples_per_frame:end * samples_per_frame], RATE)
+        _save_wav(work / "mix.wav", mix)
         lines = ["ffconcat version 1.0"]
         for name, count in slides:
             lines.extend([f"file '{name}'", f"option framerate {FPS}", f"duration {count/FPS:.9f}"])

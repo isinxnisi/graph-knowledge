@@ -15,6 +15,7 @@ from urllib.parse import urlencode, urlsplit
 from urllib.request import Request, urlopen
 
 from speech_reading import validate_readings
+from wipe_board import ASSET as WIPE_DEMO, DESCRIPTION as WIPE_PICTURE
 
 
 ORIGIN = "https://plunode.net"
@@ -377,7 +378,7 @@ def _check_draft(draft, snapshot, assets, language="both"):
         shot = {"id": f"s{i}", "asset": asset, "sourceIds": list(dict.fromkeys(ids))}
         if language == "ja" and "visualTiming" in scene:
             shot["visualTiming"] = validate_visual_timing(scene["visualTiming"])
-        optional_heading = asset == "source" or asset in WEBB_BOARDS
+        optional_heading = asset in ("source", WIPE_DEMO) or asset in WEBB_BOARDS
         for lang in languages:
             line = scene[lang]
             label = f"場面{i}の" + ("日本語" if lang == "ja" else "英語")
@@ -443,7 +444,7 @@ def _apply_adaptation(draft, master):
     for i, (scene, line) in enumerate(zip(plan["scenes"], lines), 1):
         source_card = scene["asset"] == "source"
         heading = _text(line.get("heading"), 110, f"場面{i}の英語の見出し",
-                        allow_empty=source_card or scene["asset"] in WEBB_BOARDS)
+                        allow_empty=source_card or scene["asset"] == WIPE_DEMO or scene["asset"] in WEBB_BOARDS)
         if source_card and bool(heading) != bool(scene["ja"]["heading"]):
             raise ValueError(f"場面{scene['id']}の出典の見出しを載せるか、元の日本語版に合わせてください。")
         narration = _text(line.get("narration"), 450, f"場面{i}の英語のナレーション")
@@ -518,10 +519,17 @@ def generate_plan(snapshot, brief, model_id, work_dir, *, language="both", maste
     model_id, effort = _selected_model(model_id)
     if not isinstance(brief, str) or len(brief) > 3200:
         raise ValueError("企画の切り口と試行の指示は合わせて3200文字以内で指定してください。")
-    if not snapshot["sources"]:
-        raise ValueError("この版には映像の根拠として参照できる公開資料がありません。")
     work_dir = Path(work_dir)
     work_dir.mkdir(parents=True, exist_ok=True)
+    def write(materials):
+        return _write_plan(materials, brief, model_id, effort, work_dir, language, master_plan, progress, previous_japanese)
+    if language == "en":
+        return write(snapshot)
+    from research_workflow import write_with_research
+    return write_with_research(snapshot, brief, model_id, effort, work_dir, progress, write)
+
+
+def _write_plan(snapshot, brief, model_id, effort, work_dir, language, master_plan, progress, previous_japanese):
     if language == "en":
         payload, schema = _adaptation_request(master_plan, snapshot, brief)
         instructions, version = _ADAPTATION_PROMPT, ADAPTATION_VERSION
@@ -534,6 +542,14 @@ def generate_plan(snapshot, brief, model_id, work_dir, *, language="both", maste
             elif {"nasa-mosaic", "nasa-aligned"}.issubset(source_ids):
                 assets.extend(name for name, (source, _) in WEBB_BOARDS.items() if source in source_ids)
         payload = _draft_input(snapshot, brief)
+        if snapshot.get("productionResearch"):
+            payload["productionResearch"] = snapshot["productionResearch"]
+            # This is an original demonstration of an editing technique, never a clip from a film.
+            terms = r"ワイプ|\bwipes?\b"
+            excerpts = (item["excerpt"] for record in payload["records"] for item in record["evidence"])
+            if re.search(terms, brief, re.I) and any(re.search(terms, quote, re.I) for quote in excerpts):
+                assets.append(WIPE_DEMO)
+                payload["illustrations"] = {WIPE_DEMO: WIPE_PICTURE}
         if language == "ja" and previous_japanese is not None:
             payload["previousJapanese"] = previous_japanese
         payload["assets"] = assets
@@ -587,7 +603,7 @@ def _save_json(path, value):
     return hashlib.sha256(data).hexdigest()
 
 
-def _call_writer(request):
+def _call_writer(request, *, research=False):
     model_id, effort = request["model"], request["effort"]
     schema, prompt = request["outputSchema"], request["prompt"]
     with tempfile.TemporaryDirectory(prefix="plunode-editor-") as fresh:
@@ -595,7 +611,8 @@ def _call_writer(request):
         (folder / "shape.json").write_text(json.dumps(schema, ensure_ascii=False), encoding="utf-8")
         args = [shutil.which("codex"), "--no-daemon", "-a", "never", "exec", "--ignore-user-config",
                 "--ignore-rules", "--ephemeral", "--skip-git-repo-check", "--sandbox", "read-only",
-                "-m", model_id, "-c", f"model_reasoning_effort={json.dumps(effort)}", "-c", 'web_search="disabled"',
+                "-m", model_id, "-c", f"model_reasoning_effort={json.dumps(effort)}",
+                "-c", 'web_search="live"' if research else 'web_search="disabled"',
                 "-c", "project_doc_max_bytes=0", "--output-schema", "shape.json", "--json"]
         for feature in ("shell_tool", "unified_exec", "code_mode", "multi_agent", "multi_agent_v2", "plugins",
                         "apps", "hooks", "image_generation", "view_image", "shell_snapshot"):
@@ -615,13 +632,18 @@ def _call_writer(request):
             raise RuntimeError("このアカウントでは指定モデルを利用できません。モデルを選び直してください。")
         raise RuntimeError("Codex の脚本生成が完了しませんでした。接続・ログイン状態を確認してください。")
     messages = []
+    searched = False
     for event in events:
         if event.get("type") == "item.completed":
             item = event["item"]
             if item["type"] == "agent_message":
                 messages.append(item["text"])
+            elif research and item["type"] == "web_search":
+                searched = True
             elif item["type"] not in ("reasoning", "error"):
                 raise RuntimeError("指定した文章生成以外の処理が検出されたため、結果を採用できません。")
+    if research and not searched:
+        raise RuntimeError("資料調査でウェブにアクセスした記録がありません。調査を再試行してください。")
     if not messages:
         raise RuntimeError("モデルから脚本本文が返りませんでした。")
     return json.loads(messages[-1]), completed.get("usage")

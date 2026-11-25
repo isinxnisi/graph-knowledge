@@ -57,7 +57,7 @@ def list_batches(db, theme):
         """, (theme, theme))]
 
 
-def list_items(db, theme, reference):
+def list_items(db, theme, reference, display_status):
     items = {}
     for row in db.execute("""
             SELECT i.id,b.theme_id themeId,b.revision,b.theme_title themeTitle,i.title,i.opening,i.payoff,
@@ -85,13 +85,14 @@ def list_items(db, theme, reference):
             SELECT m.idea_id,m.case_id id,m.number,
                    coalesce((SELECT json_extract(r.plan,'$.titles.ja') FROM runs r WHERE r.case_id=c.id
                              AND r.plan IS NOT NULL ORDER BY r.created,r.rowid LIMIT 1),m.idea_title,c.title) title,
-                   first.created,first.model,latest.status
+                   first.created,first.model,latest.status,latest.error
             FROM idea_case_members m JOIN cases c ON c.id=m.case_id
             JOIN runs first ON first.id=(SELECT id FROM runs WHERE case_id=c.id ORDER BY created,rowid LIMIT 1)
             JOIN runs latest ON latest.id=(SELECT id FROM runs WHERE case_id=c.id ORDER BY created DESC,rowid DESC LIMIT 1)
             WHERE (? IS NULL OR json_extract(c.snapshot,'$.themeId')=?) ORDER BY m.number DESC
             """, (theme, theme)):
         item = dict(row)
+        item["status"] = display_status(item["status"], item.pop("error"))
         items[item.pop("idea_id")]["cases"].append(item)
     if theme is None or theme == reference["themeId"]:
         key = "previous-" + reference["id"]

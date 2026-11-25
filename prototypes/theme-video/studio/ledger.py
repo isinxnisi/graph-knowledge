@@ -11,11 +11,12 @@ import uuid
 from urllib.parse import urlencode
 
 import idea_store
+from editor import MaterialRequired
 from writer_feedback import RevisionNeeded
 
 LANGS = ("ja", "en")
 JOB_LABELS = {"queued": "待機中", "running": "生成中", "failed": "失敗", "interrupted": "中断",
-              "needs_revision": "要改稿", "script_ready": "台本確認"}
+              "needs_revision": "要改稿", "needs_material": "資料待ち", "script_ready": "台本確認"}
 REFERENCE = "walkman-hot-line"
 ROOT = Path(__file__).resolve().parent
 PILOT = ROOT.parent / "walkman"
@@ -50,6 +51,29 @@ def edition_state(status, ready, adopted, rework=False):
             return "要修正"
         return "採用済み" if adopted else "確認待ち"
     return JOB_LABELS.get(status, "未生成")
+
+
+def display_status(status, error):
+    # Older runs recorded MaterialRequired under 'failed'. Preserve their original ledger entry.
+    if status == "failed" and (error or "").startswith("追加資料が必要です。"):
+        return "needs_material"
+    return status
+
+
+def material_research(run_folder):
+    try:
+        report = json.loads((run_folder / "material-research.json").read_text(encoding="utf-8"))
+        if not isinstance(report, dict) or not isinstance(report.get("rounds"), list):
+            raise ValueError("invalid research history")
+        for entry in report["rounds"]:
+            if (not isinstance(entry, dict) or not isinstance(entry.get("sources", []), list)
+                    or not all(isinstance(source, dict) for source in entry.get("sources", []))):
+                raise ValueError("invalid research round")
+        return {"rounds": report["rounds"]}
+    except FileNotFoundError:
+        return None
+    except (OSError, ValueError):
+        return {"rounds": [], "error": "この試行の追加調査記録を読み込めませんでした。"}
 
 
 def reference_case():
@@ -147,7 +171,7 @@ class Ledger:
     def list_ideas(self, theme_id=None):
         with self.db() as db:
             db.execute("BEGIN")
-            return {"items": idea_store.list_items(db, theme_id, self.reference),
+            return {"items": idea_store.list_items(db, theme_id, self.reference, display_status),
                     "batches": idea_store.list_batches(db, theme_id)}
 
     def submit_ideas(self, data, snapshot_fn, models_fn):
@@ -362,7 +386,7 @@ class Ledger:
                 raise ValueError("この試行は完了しています。")
             db.execute("""UPDATE runs SET status='queued',progress='再開待ち',error=NULL,pause_requested=0,
                         script_first=CASE WHEN status='script_ready' THEN 0 ELSE script_first END
-                        WHERE id=? AND status IN ('failed','interrupted','needs_revision','script_ready')""", (run_id,))
+                        WHERE id=? AND status IN ('failed','interrupted','needs_revision','needs_material','script_ready')""", (run_id,))
         self.wake.set()
 
     def pause(self, case_id, run):
@@ -415,6 +439,7 @@ class Ledger:
         judgments = {(s["run_id"], s["lang"]): s for s in reversed(reviews)}
         states, history = {}, []
         for run in runs:
+            status = display_status(run["status"], run["error"])
             editions = json.loads(run["editions"])
             for lang, edition in editions.items():
                 prefix = f"/media/{case_id}/{run['id']}/{lang}/"
@@ -426,10 +451,11 @@ class Ledger:
             langs = json.loads(run["langs"])
             for lang in langs:
                 rework = editions.get(lang, {}).get("reviewStatus") == "rework"
-                states.setdefault(lang, edition_state(run["status"], lang in editions, accepted.get(lang) == run["id"], rework))
-            history.append(dict(id=run["id"], parent=run["parent"], status=run["status"], model=run["model"],
+                states.setdefault(lang, edition_state(status, lang in editions, accepted.get(lang) == run["id"], rework))
+            history.append(dict(id=run["id"], parent=run["parent"], status=status, model=run["model"],
                                 reason=run["reason"], progress=run["progress"], created=run["created"],
                                 langs=langs, error=run["error"], editions=editions,
+                                materialResearch=material_research(self.folder / "cases" / case_id / run["id"]),
                                 plan=json.loads(run["plan"]) if run["plan"] else None))
         title = next((r["plan"]["titles"]["ja"] for r in reversed(history) if r["plan"]),
                      row["idea_title"] or row["title"])
@@ -455,13 +481,14 @@ class Ledger:
             verdicts = {(r["run_id"], r["lang"]): r["kind"]
                         for r in db.execute("SELECT run_id,lang,kind FROM reviews ORDER BY rowid")}
             # Listing cases should not deserialize every plan, timing table and fixed source package.
-            runs = db.execute("""SELECT id,case_id,status,langs,json_type(editions,'$.ja') ja,
+            runs = db.execute("""SELECT id,case_id,status,error,langs,json_type(editions,'$.ja') ja,
                                  json_type(editions,'$.en') en FROM runs ORDER BY created DESC,rowid DESC""")
             for r in runs:
                 item = items[r["case_id"]]
                 for lang in json.loads(r["langs"]):
                     rework = verdicts.get((r["id"], lang)) == "rework"
-                    item["states"].setdefault(lang, edition_state(r["status"], bool(r[lang]), item["accepted"].get(lang) == r["id"], rework))
+                    status = display_status(r["status"], r["error"])
+                    item["states"].setdefault(lang, edition_state(status, bool(r[lang]), item["accepted"].get(lang) == r["id"], rework))
             for item in items.values():
                 for lang in LANGS:
                     item["states"].setdefault(lang, "未生成")
@@ -538,6 +565,8 @@ class Ledger:
             status, msg, error = "interrupted", "保存した工程から再開できます", None
         except RevisionNeeded as exc:
             status, msg, error = "needs_revision", "直近の稿と指摘から改稿を再開できます", str(exc)[:1200]
+        except MaterialRequired as exc:
+            status, msg, error = "needs_material", "追加調査して同じ試行を再開できます", str(exc)[:1200]
         except Exception as exc:
             status, msg, error = "failed", "工程を確認して再開できます", str(exc)[:1200] or type(exc).__name__
         with self.db() as db:
