@@ -17,6 +17,17 @@ ILLUSTRATION_BEAT = ("番組が描いた作例の中で起きる動きや、そ�
                      "illustrationIdだけの要点として返せます。制作室がその図の内容と見どころを補います。"
                      "映画本編で起きること、実際の作者の行動、技法の来歴などを語る要点は、"
                      "meaning、visibleTestと、その主張を確かめられるsourceIdsを返してください。")
+SELECTED_ANGLE = ("requestは今回選んだ動画案です。そこにある冒頭、観終わったときの発見、要確認事項を"
+                  "この一本の範囲として扱います。themeBackgroundは資料庫にあるテーマの紹介です。"
+                  "紹介文や前稿に別の逸話があっても、選んだ発見に至るために必要な分だけを採用します。"
+                  "依頼が特定の作品の比較を求める場合、それぞれの実例を資料がどこまで特定するかを確かめます。"
+                  "一般的な共通点や番組の作例だけで具体例の確認を済ませないでください。"
+                  "実際の版・場面・再生時刻、素材利用の許諾は資料で確認できた範囲を扱います。"
+                  "許諾の申請窓口は、許諾が得られたことを示しません。")
+CHECK_MATERIAL = ("依頼を満たすために必須の根拠や実物が資料に欠けていれば、materialRequestに"
+                  "何を確かめるどの資料・映像が必要かを具体的に記し、readyをfalseにしてください。"
+                  "このときchecksは空配列にできます。既存資料だけで直せる構成・説明の問題は"
+                  "blockingIssueに記し、materialRequestを空文字列にしてください。")
 
 SCOPE_PROMPT = """あなたはPlunodeの企画編集者です。制作依頼と使える根拠を読み、見終わった人の記憶に
 残したい瞬間や発見を考えます。questionには、その瞬間を見つけるために編集者が持つ問いを記します。
@@ -211,12 +222,22 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
     feedback = None
     round_no = 0
     fresh_failures = 0
+    angle = materials["angle"].strip()
+    revision_materials = materials
+    audit_request = {"request": materials}
+    if angle:
+        references = {key: value for key, value in materials.items() if key not in ("angle", "theme", "description")}
+        references["themeBackground"] = {"title": materials["theme"], "description": materials["description"]}
+        revision_materials = {"request": angle, **references}
+        audit_request = {"request": angle, "referenceMaterials": references}
     while fresh_failures < 2:
         round_no += 1
-        inputs = {**materials, "initialScope": scope, "initialDraft": initial, "initialAudience": audience}
+        inputs = {**revision_materials, "initialScope": scope, "initialDraft": initial, "initialAudience": audience}
         if feedback is not None:
             inputs.update(previousScript=previous, previousScope=revised_scope, finalReview=feedback)
         revision_instructions = _JAPANESE_PROMPT + "\n\n" + REVISION_PROMPT + "\nrevisedScopeについて。" + SCOPE_MATERIAL
+        if angle:
+            revision_instructions += "\n" + SELECTED_ANGLE
         if illustrations:
             revision_instructions += "\nrevisedScopeについて。" + ILLUSTRATION_BEAT
         revised, script_request, _ = stage(f"04-revision-{round_no}", f"4/5 要点を見直して改稿中（{round_no}稿）",
@@ -230,8 +251,14 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
         check_item = _object({"beatId": {"type": "string", "enum": list(beats)},
                              "sceneIds": _array({"type": "string", "enum": list(scenes)}),
                              "supported": {"type": "boolean"}, "quote": STRING, "evidence": STRING})
-        check_schema = _object({"ready": {"type": "boolean"}, "blockingIssue": STRING, "checks": _array(check_item)})
+        check_schema = _object({"ready": {"type": "boolean"}, "blockingIssue": STRING,
+                                "materialRequest": STRING, "checks": _array(check_item)})
         def audit(raw):
+            need = raw.get("materialRequest", "")
+            if not isinstance(need, str):
+                raise ValueError("最終確認の素材依頼には必要な資料を書き、不要なら空文字列を指定してください。")
+            if need.strip():
+                raise MaterialRequired("追加資料が必要です。" + " ".join(need.split()))
             checks = raw["checks"]
             if sorted(c["beatId"] for c in checks) != sorted(beats):
                 raise ValueError("最終確認に全要点の照合結果がそろっていません。")
@@ -255,9 +282,11 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
                             c["evidence"] += " この事実を語る場面に公開資料を指定してください。"
             raw["ready"] = raw["ready"] and not raw["blockingIssue"].strip() and all(c["supported"] for c in checks)
             return raw
-        audit_inputs = {"request": materials, "initialScope": scope, "revisedScope": revised_scope,
+        audit_inputs = {**audit_request, "initialScope": scope, "revisedScope": revised_scope,
                         "cut": cut}
-        check_instructions = CHECK_PROMPT
+        check_instructions = CHECK_PROMPT + "\n" + CHECK_MATERIAL
+        if angle:
+            check_instructions += "\n" + SELECTED_ANGLE
         if illustrations:
             audit_inputs["sceneSourceIds"] = {sid: shot["sourceIds"] for sid, shot in shots.items()}
             check_instructions += ("\nsceneSourceIdsは各場面が使った公開資料です。出典が空の自作図の場面は、"

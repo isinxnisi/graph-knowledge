@@ -186,6 +186,23 @@ class ScriptReviewTest(unittest.TestCase):
                 _scope({**self.scope, "beats": [invalid]}, {"ref"})
             self.assertNotIsInstance(error.exception, MaterialRequired)
 
+    def test_final_review_uses_selected_angle_and_can_route_missing_evidence_to_research(self):
+        self.materials["description"] = "映画のつながりを年表と関係図で読む。"
+        self.materials["angle"] = "ワイプの境目に気づき、選んだ二作品の実例を比較する。"
+        gap = {"ready": False, "blockingIssue": "", "checks": [],
+               "materialRequest": "二作目のどの場面にこの技法が使われたかを特定する原資料が必要。"}
+        outputs = [self.scope, self.draft, self.reader, self.revision, gap]
+        with patch("script_review._call_writer", side_effect=[(v, {}) for v in outputs]) as writer:
+            with self.assertRaisesRegex(MaterialRequired, "二作目のどの場面"):
+                self.produce()
+        inputs = [json.loads(c.args[0]["prompt"].rsplit("\n\n", 1)[1]) for c in writer.call_args_list]
+        self.assertEqual(len(inputs), 5)
+        self.assertEqual(inputs[3]["request"], self.materials["angle"])
+        self.assertEqual(inputs[4]["request"], self.materials["angle"])
+        self.assertNotIn("description", inputs[3])
+        self.assertEqual(inputs[4]["referenceMaterials"]["themeBackground"]["description"], self.materials["description"])
+        self.assertEqual(set(inputs[2]), {"scenes"})
+
     def test_scope_revision_and_final_check_distinguish_a_demonstration_from_a_film_claim(self):
         self.materials.update(assets=["source", WIPE_DEMO], illustrations={WIPE_DEMO: WIPE_PICTURE})
         self.scope["beats"].insert(0, {"illustrationId": WIPE_DEMO})
