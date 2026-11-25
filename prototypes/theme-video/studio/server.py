@@ -119,6 +119,8 @@ class Handler(BaseHTTPRequestHandler):
         path = url.path
         ledger = self.server.ledger
         if self.command in ("GET", "HEAD"):
+            if path == "/samples/baird-opening.ja.mp4":
+                return self.file(ROOT.parent / "baird" / "opening.ja.mp4")
             static = {"/": ("index.html", "text/html"), "/studio.css": ("studio.css", "text/css"),
                       "/studio.js": ("studio.js", "text/javascript")}
             if path in static:

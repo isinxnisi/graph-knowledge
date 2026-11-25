@@ -15,6 +15,7 @@ from PIL import Image, ImageDraw, ImageOps
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT.parent))
+from channel_sound import opening_notes
 from channel_style import BLUE, BOLD, ChannelFrame, FOOT, H, INK, LATIN, ORANGE, PAPER, SERIF, W
 
 FPS, RATE = 24, 24000
@@ -194,12 +195,7 @@ def render(art, fonts, work, lang="ja"):
     audio = np.zeros(frame*(RATE//FPS), dtype=np.float32)
     for start, samples in voices:
         audio[start:start+len(samples)] += samples
-    # A newly composed, short identification sound for the opening diagram.
-    for start, hz in [(0.08, 349.23), (.34, 440), (.64, 392), (1.03, 523.25)]:
-        t = np.arange(round(.49*RATE))/RATE
-        env = np.minimum(t/.018, 1)*np.exp(-t*8)*np.minimum((.49-t)/.04, 1)
-        tone = .12*env*(np.sin(2*np.pi*hz*t)+.22*np.sin(4*np.pi*hz*t))
-        p = round(start*RATE)
+    for p, tone in opening_notes(RATE):
         audio[p:p+len(tone)] += tone
     audio *= 1.6  # Raise the quiet narration master while retaining headroom for AAC.
     assert abs(audio).max() < 1, "Clipping in master"

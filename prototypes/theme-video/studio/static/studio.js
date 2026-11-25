@@ -321,6 +321,7 @@ function drawCase() {
   }
   $("rerun-panel").hidden = Boolean(data.reference);
   $("reference-link").hidden = Boolean(data.reference);
+  $("opening-study-link").hidden = !data.reference;
   for (const lang of Object.keys(languageName)) ensureSelection(lang);
   drawProgress(); drawWatch(); drawHistory();
 }
