@@ -42,9 +42,9 @@
   },
   "controlError": null,
   "requestsByPhase": {
-    "waiting-control": 53,
+    "waiting-control": 54,
     "completed": 2,
-    "retry-wait": 7
+    "retry-wait": 6
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -191,5 +191,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-25T16:35:28.327252+00:00"
+  "checkedAt": "2026-11-25T16:43:33.277830+00:00"
 }
