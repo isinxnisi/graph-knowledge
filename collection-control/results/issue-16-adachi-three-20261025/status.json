@@ -70,12 +70,12 @@
   },
   "requestSha256": "5c15cdf5d521ca7bb54c94cb6471fb129263d9cd25987a548b0fd50b56aab288",
   "kind": "issue-prepare",
-  "phase": "retry-wait",
-  "generation": 10529,
+  "phase": "waiting-control",
+  "generation": 10530,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-25T14:39:31+00:00",
+  "updatedAt": "2026-11-25T14:42:11+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -442,5 +442,5 @@
   },
   "executionComplete": true,
   "retryAt": 1795617694.3085299,
-  "message": "GitHub Issue read failed: HTTP 503"
+  "message": "Execution gate: outside-window"
 }
