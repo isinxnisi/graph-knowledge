@@ -120,7 +120,8 @@ h1 { font: 650 clamp(26px, 2.5vw, 42px)/1.45 "Yu Mincho", YuMincho, "Hiragino Mi
 #reference-link { margin-right: 10px; }
 #scene-from-playback { margin-top: 5px; }
 .panel { border-bottom: 1px solid var(--line); }
-.watch-grid + .approval-row[hidden] + form[hidden] + form[hidden] + .panel { margin-top: 14px; }
+.case-panels { margin-top: 14px; }
+#brief-panel:has(#case-brief:empty) { display: none; }
 .panel > summary { list-style: none; position: relative; padding: 15px 26px 15px 0; font-size: 15px; font-weight: 650; }
 .panel > summary::-webkit-details-marker { display: none; }
 .panel > summary::after { content: "＋"; position: absolute; right: 6px; top: 14px; font-size: 16px; color: var(--teal); font-weight: 400; }
@@ -180,6 +181,69 @@ textarea { resize: vertical; }
 .action-form { margin: 10px 0; padding: 15px 18px; background: var(--tint); border-radius: 5px; }
 .action-form label:first-child { margin-top: 0; }
 .actions { justify-content: flex-end; flex-wrap: wrap; margin-top: 14px; }
+.idea-productions { margin-top: 9px; overflow-wrap: anywhere; }
+.idea-productions h3 { margin: 0 0 3px; font-size: 13px; }
+.idea-productions ol { margin: 0; padding-left: 1.7em; }
+.idea-productions li { padding-block: 2px; font-size: 13px; }
+@media (min-width: 901px) {
+  :root { font-size: 14px; line-height: 1.55; }
+  .masthead { min-height: 48px; padding: 7px 22px; gap: 15px; }
+  .brand { font-size: 26px; }
+  .layout { min-height: calc(100vh - 48px); grid-template-columns: clamp(196px, 15.5vw, 256px) minmax(0, 1fr); background: #f1f0e8; }
+  .sidebar { position: sticky; top: 0; align-self: start; max-height: 100dvh; overflow-y: auto; padding: 16px 12px; border-right: 0; }
+  main { padding: 18px clamp(18px, 1.8vw, 34px) 40px; max-width: none; background: var(--paper); border-left: 1px solid var(--line); }
+  .side-head { margin: 0 6px 9px; }
+  .library-link { margin-top: 3px; padding: 5px 8px; }
+  #case-list { margin-top: 12px; gap: 2px; }
+  .case-nav { padding: 6px 9px; gap: 2px; }
+  .case-nav strong { line-height: 1.4; }
+  .side-label { margin: 10px 5px 2px; }
+  h1 { font-size: clamp(25px, 2vw, 32px); line-height: 1.35; }
+  .case-kicker { margin-bottom: 3px; }
+  .preview-heading { margin: 0 0 7px; }
+  .preview-heading h2 { font-size: 17px; }
+  .case-workspace { margin-top: 14px; }
+  .monitor-tools, .monitor-caption { min-height: 0; padding: 5px 9px; }
+  .monitor-caption { padding-block: 6px; }
+  .new-link, .primary, .secondary, .quiet { padding: 5px 11px; min-height: 32px; }
+  .small { min-height: 29px; padding: 4px 9px; }
+  .status-box, #notice { margin-top: 8px; padding: 7px 10px; }
+  .panel > summary { font-size: 14px; padding: 9px 23px 9px 0; }
+  .panel > summary::after { top: 8px; right: 2px; }
+  .panel-body { padding-bottom: 12px; }
+  .run-row { padding: 7px 0; }
+  .run-row p { margin: 2px 0 0; }
+  .run-row button { margin-top: 4px; }
+  .form-card { margin-top: 12px; padding: 18px; }
+  fieldset { margin-bottom: 14px; }
+  label { margin: 8px 0 3px; }
+  input, select, textarea { min-height: 34px; padding: 5px 8px; }
+  .form-footer { padding-top: 12px; }
+  .action-form { padding: 10px 12px; }
+  .idea-filters { margin: 8px 0 10px; }
+  .idea-card { padding: 10px 0 13px; }
+  .idea-card h2 { font-size: 19px; margin: 3px 0 6px; }
+  .idea-actions { margin-top: 8px; }
+  #generate-ideas { margin: 0; }
+}
+@media (min-width: 1100px) {
+  #new-form { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 14px 22px; max-width: 1250px; }
+  #new-form > fieldset, #chosen-idea { margin-bottom: 0; }
+  #new-form > fieldset + fieldset { padding-top: 0; }
+  #new-form > .form-footer { grid-column: 1 / -1; }
+  #idea-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; max-width: 1580px; }
+  #idea-list .idea-card { border-top: 1px solid var(--line); border-bottom: 0; }
+  #idea-list .idea-card dl { display: block; margin: 7px 0; }
+  #idea-list .idea-card dt { margin: 7px 0 1px; }
+  #idea-batches:not(:empty) { margin-bottom: 8px; }
+}
+@media (min-width: 1160px) {
+  .case-workspace { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(300px, 1fr); gap: 18px; align-items: start; max-width: 1900px; }
+  .case-panels { margin: 0; border-top: 1px solid var(--line); padding-inline: 12px; background: var(--surface); }
+  #history { max-height: clamp(240px, 37vh, 460px); overflow-y: auto; scrollbar-gutter: stable; }
+  .case-workspace:has(.watch-grid.compare) { grid-template-columns: minmax(0, 1fr); }
+  .case-workspace:has(.watch-grid.compare) .case-panels { width: min(100%, 900px); }
+}
 @media (max-width: 900px) {
   .watch-grid.compare { grid-template-columns: 1fr; }
   .layout { grid-template-columns: 211px minmax(0,1fr); }

@@ -29,7 +29,7 @@
         <h1>保存した動画案</h1>
         <div class="idea-filters">
           <label>テーマ<select id="ideas-theme"><option value="">すべてのテーマ</option></select></label>
-          <label>状態<select id="ideas-status"><option value="">すべての状態</option><option value="candidate">制作候補</option><option value="later">あとで作る</option><option value="used">制作に使用</option></select></label>
+          <label>状態<select id="ideas-status"><option value="">すべての状態</option><option value="candidate">制作候補</option><option value="later">あとで作る</option><option value="used">制作あり</option></select></label>
         </div>
         <div id="idea-batches" aria-live="polite"></div>
         <div id="idea-list"></div>
@@ -65,80 +65,87 @@
       </section>
       <section id="case-view" hidden>
         <div class="case-kicker"><p id="case-channel" class="overline">制作案件</p><a id="theme-link" class="text-link" target="_blank" rel="noopener noreferrer" hidden>公開テーマを開く ↗</a></div>
-        <h1 id="case-title"></h1><p id="case-brief" class="case-brief"></p>
+        <h1 id="case-title"></h1>
         <div id="run-progress" aria-live="polite"></div>
-        <details id="rerun-panel" class="panel"><summary>このテーマで作り直す</summary>
-          <form id="rerun-form" class="panel-body">
-            <div class="model-settings">
-              <div><label for="rerun-model">脚本・編集モデル</label><select id="rerun-model"></select></div>
-              <div><label for="rerun-effort">推論の強さ</label><select id="rerun-effort"></select></div>
+        <div class="case-workspace">
+          <div class="preview-column">
+            <div class="preview-heading"><h2>試写</h2><div><a id="reference-link" class="text-link" href="#case/walkman-hot-line" target="_blank" rel="noopener">ウォークマンの品質見本 ↗</a> <a id="opening-study-link" class="text-link" href="/samples/baird-opening.ja.mp4" target="_blank" rel="noopener" hidden>テレビ回の冒頭試作 ↗</a> <button id="compare-toggle" class="quiet" type="button" aria-expanded="false" aria-controls="comparison">別の版と比較</button></div></div>
+            <div class="watch-grid" id="watch-grid">
+              <section class="monitor" aria-label="選択中の映像">
+                <div class="monitor-tools"><div class="segmented" aria-label="試写する言語"><button id="lang-ja" type="button" aria-pressed="true">日本語</button><button id="lang-en" type="button" aria-pressed="false">English</button></div><select id="edition-select" aria-label="試写する制作版"></select></div>
+                <div class="screen"><video id="player" controls preload="metadata" playsinline></video><p id="empty-video">映像の完成後、ここで試写できます。</p></div>
+                <div class="monitor-caption"><span id="preview-status"></span><a id="subtitle-link" download class="text-link" hidden>字幕を保存</a></div>
+              </section>
+              <section class="monitor" id="comparison" aria-label="比較する映像" hidden>
+                <div class="monitor-tools"><label for="compare-select">比較する版</label><select id="compare-select"></select></div>
+                <div class="screen"><video id="compare-player" controls preload="metadata" playsinline></video></div>
+                <div class="monitor-caption"><span id="compare-label"></span><button type="button" class="text-link" id="align-compare">同じ場面に移動</button></div>
+              </section>
             </div>
-            <p id="rerun-model-note" class="subtle" hidden></p>
-            <label for="rerun-language">制作する言語</label><select id="rerun-language"><option value="ja">日本語を先に制作</option><option value="both">日本語と英語を同時に制作</option></select>
-            <label for="rerun-reason">台本への追加指示（任意）</label>
-            <input id="rerun-reason" maxlength="1000" placeholder="空欄なら元の企画で生成します">
-            <div class="actions">
-              <button type="submit" class="secondary" value="script" disabled>台本を先に確認</button>
-              <button type="submit" class="primary" value="video" disabled>日本語の動画を生成</button>
-            </div>
-          </form>
-        </details>
-        <div class="preview-heading"><h2>試写</h2><div><a id="reference-link" class="text-link" href="#case/walkman-hot-line" target="_blank" rel="noopener">ウォークマンの品質見本 ↗</a> <a id="opening-study-link" class="text-link" href="/samples/baird-opening.ja.mp4" target="_blank" rel="noopener" hidden>テレビ回の冒頭試作 ↗</a> <button id="compare-toggle" class="quiet" type="button" aria-expanded="false" aria-controls="comparison">別の版と比較</button></div></div>
-        <div class="watch-grid" id="watch-grid">
-          <section class="monitor" aria-label="選択中の映像">
-            <div class="monitor-tools"><div class="segmented" aria-label="試写する言語"><button id="lang-ja" type="button" aria-pressed="true">日本語</button><button id="lang-en" type="button" aria-pressed="false">English</button></div><select id="edition-select" aria-label="試写する制作版"></select></div>
-            <div class="screen"><video id="player" controls preload="metadata" playsinline></video><p id="empty-video">映像の完成後、ここで試写できます。</p></div>
-            <div class="monitor-caption"><span id="preview-status"></span><a id="subtitle-link" download class="text-link" hidden>字幕を保存</a></div>
-          </section>
-          <section class="monitor" id="comparison" aria-label="比較する映像" hidden>
-            <div class="monitor-tools"><label for="compare-select">比較する版</label><select id="compare-select"></select></div>
-            <div class="screen"><video id="compare-player" controls preload="metadata" playsinline></video></div>
-            <div class="monitor-caption"><span id="compare-label"></span><button type="button" class="text-link" id="align-compare">同じ場面に移動</button></div>
-          </section>
-        </div>
-        <div id="approval-row" class="approval-row" hidden><button type="button" id="adapt-open" class="secondary small" hidden>この日本語版から英語版を作る</button><button type="button" id="rework-toggle" class="secondary small">要修正</button><button type="button" id="adopt-toggle" class="primary small">この版を採用</button></div>
-        <form id="adapt-form" class="action-form" hidden>
-          <p id="adapt-target" class="form-target"></p>
-          <div class="model-settings">
-            <div><label for="adapt-model">英語の脚本・編集モデル</label><select id="adapt-model"></select></div>
-            <div><label for="adapt-effort">推論の強さ</label><select id="adapt-effort"></select></div>
-          </div>
-          <p id="adapt-model-note" class="subtle" hidden></p>
-          <div class="actions"><button type="button" id="adapt-cancel" class="quiet">閉じる</button>
-            <button type="submit" class="secondary" value="script" disabled>英語の台本を先に確認</button>
-            <button type="submit" class="primary" value="video" disabled>英語の動画を生成</button>
-          </div>
-        </form>
-        <form id="adopt-form" class="action-form" hidden>
-          <p id="review-target" class="form-target"></p><label id="review-reason-label" for="adopt-reason">採用理由</label><input id="adopt-reason" required maxlength="1000" placeholder="確認した場面と、その判断の理由"><div class="actions"><button type="button" id="adopt-cancel" class="quiet">閉じる</button><button id="review-submit" type="submit" class="primary small">採用を記録</button></div>
-        </form>
-        <details id="script-read-panel" class="panel" hidden><summary>台本を通して読む</summary><ol id="script-read" class="panel-body"></ol></details>
-        <details id="script-review-panel" class="panel" hidden><summary>日本語台本の見直し記録</summary><div class="panel-body" id="script-review"></div></details>
-        <details id="scene-panel" class="panel"><summary>場面と台本 <span id="scene-count" class="count"></span></summary>
-          <div class="panel-body"><dl id="story-intent" hidden></dl><label for="scene-select">確認する場面</label><select id="scene-select"></select><button id="scene-from-playback" class="text-link" type="button">今の再生位置の台本を見る</button><p id="scene-narration" class="quotation"></p><div id="scene-notes"></div><div id="scene-sources" class="source-list"></div>
-            <button id="edit-toggle" class="secondary small" type="button">この場面の語りを編集</button>
-            <form id="edit-form" class="action-form" hidden>
-              <p id="edit-target" class="form-target"></p>
-              <label for="edit-narration">修正後のナレーション</label><textarea id="edit-narration" rows="3" maxlength="800" required></textarea>
-              <fieldset id="pronunciation" hidden><legend>日本語の読み</legend>
-                <p class="subtle">字幕の表記を保ったまま、この場面での読み方を指定できます。</p>
-                <div id="reading-rows"></div>
-                <div class="reading-actions"><button type="button" id="add-reading" class="quiet">読みを追加</button><button type="button" id="listen-reading" class="secondary">この場面を試聴</button></div>
-                <span id="reading-status" role="status"></span><audio id="reading-player" controls hidden></audio>
-              </fieldset>
-              <fieldset id="edit-timing" hidden><legend>語りの前後に絵を見せる時間</legend>
-                <div class="timing-fields">
-                  <label>語りの前（秒）<input id="edit-before-voice" type="number" min="0" max="60" step="any" placeholder="自動"></label>
-                  <label>語りの後（秒）<input id="edit-after-voice" type="number" min="0" max="60" step="any" placeholder="自動"></label>
-                </div>
-              </fieldset>
-              <label for="edit-reason">修正理由</label><input id="edit-reason" maxlength="1000" required placeholder="どこで、何が伝わりにくかったか">
-              <div class="actions"><button id="edit-cancel" type="button" class="quiet">閉じる</button><button id="edit-submit" class="primary small" type="submit">この言語だけ再生成</button><button id="edit-draft" class="secondary small" type="submit" value="draft" hidden>台本に保存して編集を続ける</button></div>
+            <div id="approval-row" class="approval-row" hidden><button type="button" id="adapt-open" class="secondary small" hidden>この日本語版から英語版を作る</button><button type="button" id="rework-toggle" class="secondary small">要修正</button><button type="button" id="adopt-toggle" class="primary small">この版を採用</button></div>
+            <form id="adapt-form" class="action-form" hidden>
+              <p id="adapt-target" class="form-target"></p>
+              <div class="model-settings">
+                <div><label for="adapt-model">英語の脚本・編集モデル</label><select id="adapt-model"></select></div>
+                <div><label for="adapt-effort">推論の強さ</label><select id="adapt-effort"></select></div>
+              </div>
+              <p id="adapt-model-note" class="subtle" hidden></p>
+              <div class="actions"><button type="button" id="adapt-cancel" class="quiet">閉じる</button>
+                <button type="submit" class="secondary" value="script" disabled>英語の台本を先に確認</button>
+                <button type="submit" class="primary" value="video" disabled>英語の動画を生成</button>
+              </div>
+            </form>
+            <form id="adopt-form" class="action-form" hidden>
+              <p id="review-target" class="form-target"></p><label id="review-reason-label" for="adopt-reason">採用理由</label><input id="adopt-reason" required maxlength="1000" placeholder="確認した場面と、その判断の理由"><div class="actions"><button type="button" id="adopt-cancel" class="quiet">閉じる</button><button id="review-submit" type="submit" class="primary small">採用を記録</button></div>
             </form>
           </div>
-        </details>
-        <details class="panel"><summary>出典と制作記録</summary><div class="panel-body" id="evidence"></div></details>
-        <details id="history-panel" class="panel"><summary>生成履歴 <span id="history-count" class="count"></span></summary><div class="panel-body" id="history"></div></details>
+          <div class="case-panels">
+            <details id="brief-panel" class="panel"><summary>案件の企画</summary><p id="case-brief" class="case-brief panel-body"></p></details>
+            <details id="rerun-panel" class="panel"><summary>この案件に試行を追加</summary>
+              <form id="rerun-form" class="panel-body">
+                <div class="model-settings">
+                  <div><label for="rerun-model">脚本・編集モデル</label><select id="rerun-model"></select></div>
+                  <div><label for="rerun-effort">推論の強さ</label><select id="rerun-effort"></select></div>
+                </div>
+                <p id="rerun-model-note" class="subtle" hidden></p>
+                <label for="rerun-language">制作する言語</label><select id="rerun-language"><option value="ja">日本語を先に制作</option><option value="both">日本語と英語を同時に制作</option></select>
+                <label for="rerun-reason">台本への追加指示（任意）</label>
+                <input id="rerun-reason" maxlength="1000" placeholder="空欄なら元の企画で生成します">
+                <div class="actions">
+                  <button type="submit" class="secondary" value="script" disabled>台本を先に確認</button>
+                  <button type="submit" class="primary" value="video" disabled>日本語の動画を生成</button>
+                </div>
+              </form>
+            </details>
+            <details id="script-read-panel" class="panel" hidden><summary>台本を通して読む</summary><ol id="script-read" class="panel-body"></ol></details>
+            <details id="script-review-panel" class="panel" hidden><summary>日本語台本の見直し記録</summary><div class="panel-body" id="script-review"></div></details>
+            <details id="scene-panel" class="panel"><summary>場面と台本 <span id="scene-count" class="count"></span></summary>
+              <div class="panel-body"><dl id="story-intent" hidden></dl><label for="scene-select">確認する場面</label><select id="scene-select"></select><button id="scene-from-playback" class="text-link" type="button">今の再生位置の台本を見る</button><p id="scene-narration" class="quotation"></p><div id="scene-notes"></div><div id="scene-sources" class="source-list"></div>
+                <button id="edit-toggle" class="secondary small" type="button">この場面の語りを編集</button>
+                <form id="edit-form" class="action-form" hidden>
+                  <p id="edit-target" class="form-target"></p>
+                  <label for="edit-narration">修正後のナレーション</label><textarea id="edit-narration" rows="3" maxlength="800" required></textarea>
+                  <fieldset id="pronunciation" hidden><legend>日本語の読み</legend>
+                    <p class="subtle">字幕の表記を保ったまま、この場面での読み方を指定できます。</p>
+                    <div id="reading-rows"></div>
+                    <div class="reading-actions"><button type="button" id="add-reading" class="quiet">読みを追加</button><button type="button" id="listen-reading" class="secondary">この場面を試聴</button></div>
+                    <span id="reading-status" role="status"></span><audio id="reading-player" controls hidden></audio>
+                  </fieldset>
+                  <fieldset id="edit-timing" hidden><legend>語りの前後に絵を見せる時間</legend>
+                    <div class="timing-fields">
+                      <label>語りの前（秒）<input id="edit-before-voice" type="number" min="0" max="60" step="any" placeholder="自動"></label>
+                      <label>語りの後（秒）<input id="edit-after-voice" type="number" min="0" max="60" step="any" placeholder="自動"></label>
+                    </div>
+                  </fieldset>
+                  <label for="edit-reason">修正理由</label><input id="edit-reason" maxlength="1000" required placeholder="どこで、何が伝わりにくかったか">
+                  <div class="actions"><button id="edit-cancel" type="button" class="quiet">閉じる</button><button id="edit-submit" class="primary small" type="submit">この言語だけ再生成</button><button id="edit-draft" class="secondary small" type="submit" value="draft" hidden>台本に保存して編集を続ける</button></div>
+                </form>
+              </div>
+            </details>
+            <details class="panel"><summary>出典と制作記録</summary><div class="panel-body" id="evidence"></div></details>
+            <details id="history-panel" class="panel"><summary>生成履歴 <span id="history-count" class="count"></span></summary><div class="panel-body" id="history"></div></details>
+          </div>
+        </div>
       </section>
     </main>
   </div>

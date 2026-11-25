@@ -11,9 +11,11 @@ import uuid
 from urllib.parse import urlencode
 
 import idea_store
+from writer_feedback import RevisionNeeded
 
 LANGS = ("ja", "en")
-JOB_LABELS = {"queued": "待機中", "running": "生成中", "failed": "失敗", "interrupted": "中断", "script_ready": "台本確認"}
+JOB_LABELS = {"queued": "待機中", "running": "生成中", "failed": "失敗", "interrupted": "中断",
+              "needs_revision": "要改稿", "script_ready": "台本確認"}
 REFERENCE = "walkman-hot-line"
 ROOT = Path(__file__).resolve().parent
 PILOT = ROOT.parent / "walkman"
@@ -240,6 +242,9 @@ class Ledger:
             raise ValueError("語りの前後の秒数は日本語の場面で編集できます。")
         model = required(data, "model", 100)
         idea_id = required(data, "ideaId", 128) if "ideaId" in data else None
+        new_idea_case = data.get("newIdeaCase", False)
+        if type(new_idea_case) is not bool or (new_idea_case and not idea_id):
+            raise ValueError("別案件を制作する動画案を選んでください。")
         if idea_id and case_id:
             raise ValueError("動画案は新しい制作案件で選択してください。")
         if lang not in (*LANGS, None) or (lang and not parent):
@@ -267,22 +272,20 @@ class Ledger:
             now = clock()
             if not case_id:
                 if idea_id:
-                    idea = idea_store.selected(db, idea_id)
-                    if (idea["theme_id"], idea["revision"]) != (theme, revision):
+                    snapshot, brief, initial_case = idea_store.production_input(db, idea_id)
+                    if (snapshot["themeId"], snapshot["revision"]) != (theme, revision):
                         raise ValueError("動画案を保存したテーマと公開版を選んでください。")
-                    if idea["case_id"]:
+                    if initial_case and not new_idea_case:
                         run = db.execute("SELECT id FROM runs WHERE case_id=? ORDER BY created,rowid LIMIT 1",
-                                         (idea["case_id"],)).fetchone()
-                        result = {"id": idea["case_id"], "runId": run["id"]}
+                                         (initial_case,)).fetchone()
+                        result = {"id": initial_case, "runId": run["id"]}
                         db.execute("INSERT INTO requests VALUES(?,?,?)", (key, digest, packed(result)))
                         return result
-                    snapshot = json.loads(idea["snapshot"])
-                    brief = idea_store.production_brief(idea)
                 case_id = uuid.uuid4().hex
                 db.execute("INSERT INTO cases VALUES(?,?,?,?,?)",
                            (case_id, snapshot["title"], brief.strip(), packed(snapshot), now))
                 if idea_id:
-                    db.execute("UPDATE ideas SET status='used',case_id=? WHERE id=?", (case_id, idea_id))
+                    idea_store.link_case(db, idea_id, case_id)
             elif not db.execute("SELECT 1 FROM cases WHERE id=?", (case_id,)).fetchone():
                 raise KeyError(case_id)
             plan = None
@@ -359,7 +362,7 @@ class Ledger:
                 raise ValueError("この試行は完了しています。")
             db.execute("""UPDATE runs SET status='queued',progress='再開待ち',error=NULL,pause_requested=0,
                         script_first=CASE WHEN status='script_ready' THEN 0 ELSE script_first END
-                        WHERE id=? AND status IN ('failed','interrupted','script_ready')""", (run_id,))
+                        WHERE id=? AND status IN ('failed','interrupted','needs_revision','script_ready')""", (run_id,))
         self.wake.set()
 
     def pause(self, case_id, run):
@@ -400,8 +403,8 @@ class Ledger:
             return self.reference
         with self.db() as db:
             db.execute("BEGIN")
-            row = db.execute("""SELECT c.*,i.id idea_id,i.title idea_title FROM cases c
-                                LEFT JOIN ideas i ON i.case_id=c.id WHERE c.id=?""", (case_id,)).fetchone()
+            row = db.execute("""SELECT c.*,m.idea_id,m.idea_title,m.number,m.total FROM cases c
+                                LEFT JOIN idea_case_members m ON m.case_id=c.id WHERE c.id=?""", (case_id,)).fetchone()
             if not row:
                 raise KeyError(case_id)
             runs = db.execute("SELECT * FROM runs WHERE case_id=? ORDER BY created DESC,rowid DESC", (case_id,)).fetchall()
@@ -433,7 +436,7 @@ class Ledger:
         for lang in LANGS:
             states.setdefault(lang, "未生成")
         return dict(id=case_id, title=title, themeTitle=snap["title"], brief=row["brief"], themeId=snap["themeId"],
-                    revision=snap["revision"], ideaId=row["idea_id"],
+                    revision=snap["revision"], ideaId=row["idea_id"], ideaCaseNumber=row["number"], ideaCaseCount=row["total"],
                     themeUrl=theme_url(snap["themeId"], snap["revision"]), updated=row["updated"], reference=False,
                     states=states, accepted=accepted, reviews=[dict(s) for s in reviews], runs=history)
 
@@ -443,8 +446,9 @@ class Ledger:
             rows = db.execute("""SELECT c.id,c.brief,c.updated,
                 json_extract(c.snapshot,'$.themeId') themeId,json_extract(c.snapshot,'$.revision') revision,
                 c.title themeTitle,coalesce((SELECT json_extract(r.plan,'$.titles.ja') FROM runs r
-                WHERE r.case_id=c.id AND r.plan IS NOT NULL ORDER BY r.created,r.rowid LIMIT 1),i.title,c.title) title,
-                i.id ideaId FROM cases c LEFT JOIN ideas i ON i.case_id=c.id ORDER BY c.updated DESC""").fetchall()
+                WHERE r.case_id=c.id AND r.plan IS NOT NULL ORDER BY r.created,r.rowid LIMIT 1),m.idea_title,c.title) title,
+                m.idea_id ideaId,m.number ideaCaseNumber,m.total ideaCaseCount FROM cases c
+                LEFT JOIN idea_case_members m ON m.case_id=c.id ORDER BY c.updated DESC,c.rowid DESC""").fetchall()
             items = {r["id"]: {**dict(r), "reference": False, "states": {}, "accepted": {}} for r in rows}
             for s in db.execute("SELECT case_id,lang,run_id FROM selections"):
                 items[s["case_id"]]["accepted"][s["lang"]] = s["run_id"]
@@ -490,11 +494,10 @@ class Ledger:
                 brief = row["brief"]
                 if row["reason"]:
                     brief += "\n今回の試行で重視する点\n" + row["reason"]
-                options = {}
+                options = {"progress": lambda message: self.progress(run, message)}
                 message = "固定資料から日英の脚本を生成中"
                 if langs == ["ja"]:
                     options["language"] = "ja"
-                    options["progress"] = lambda message: self.progress(run, message)
                     if row["previous_japanese"]:
                         options["previous_japanese"] = json.loads(row["previous_japanese"])
                     message = "固定資料から日本語の脚本を生成中"
@@ -533,6 +536,8 @@ class Ledger:
             status, msg, error = "done", "書き出し完了", None
         except Paused:
             status, msg, error = "interrupted", "保存した工程から再開できます", None
+        except RevisionNeeded as exc:
+            status, msg, error = "needs_revision", "直近の稿と指摘から改稿を再開できます", str(exc)[:1200]
         except Exception as exc:
             status, msg, error = "failed", "工程を確認して再開できます", str(exc)[:1200] or type(exc).__name__
         with self.db() as db:

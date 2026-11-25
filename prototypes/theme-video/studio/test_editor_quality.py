@@ -6,7 +6,8 @@ import unittest
 from unittest.mock import patch
 from subprocess import CompletedProcess
 
-from editor import WEBB_BOARDS, WEBB_ID, _apply_adaptation, _check_draft, _schema, generate_ideas, generate_plan, list_models
+from editor import (MaterialRequired, WEBB_BOARDS, WEBB_ID, _apply_adaptation, _check_draft, _schema,
+                    generate_ideas, generate_plan, list_models)
 from script_review import _audience_cut
 
 
@@ -56,6 +57,48 @@ class EditorialNoteTest(unittest.TestCase):
         self.assertIn("readings", localized["ja"]["required"])
         self.assertNotIn("readings", localized["en"]["properties"])
 
+    def test_webb_board_without_authored_heading_passes_japanese_and_english(self):
+        scene = self.draft["scenes"][0]
+        scene["ja"]["heading"] = ""
+        scene["en"]["heading"] = ""
+        self.snapshot["sources"].extend({"id": sid} for sid in {sid for sid, _ in WEBB_BOARDS.values()})
+        for board, (sid, _) in WEBB_BOARDS.items():
+            with self.subTest(board=board):
+                scene.update(asset=board, sourceIds=[sid])
+                master = _check_draft(self.draft, self.snapshot, [board, "source"], language="ja")
+                english = {"title": "Light", "scenes": [{"id": f"s{i}", **s["en"]}
+                           for i, s in enumerate(self.draft["scenes"], 1)]}
+                self.assertEqual(_apply_adaptation(english, master)["scenes"][0]["en"]["heading"], "")
+
+    def test_visible_heading_reports_scene_language_and_length(self):
+        self.snapshot["sources"].append({"id": "nasa-aligned"})
+        scene = self.draft["scenes"][1]
+        scene.update(asset="aligned", sourceIds=["nasa-aligned"])
+        assets = ["source", "aligned"]
+        master = _check_draft(self.draft, self.snapshot, assets)
+        for lang, label in [("ja", "日本語"), ("en", "英語")]:
+            for invalid, reason in [("", "空欄"), ("a" * 111, "111字")]:
+                with self.subTest(language=lang, reason=reason):
+                    scene[lang]["heading"] = invalid
+                    expected = f"場面2の{label}の見出し.*{reason}.*110字"
+                    with self.assertRaisesRegex(ValueError, expected):
+                        _check_draft(self.draft, self.snapshot, assets)
+                    if lang == "en":
+                        english = {"title": "Light", "scenes": [{"id": f"s{i}", **s["en"]}
+                                   for i, s in enumerate(self.draft["scenes"], 1)]}
+                        with self.assertRaisesRegex(ValueError, expected):
+                            _apply_adaptation(english, master)
+                scene[lang]["heading"] = master["scenes"][1][lang]["heading"]
+
+    def test_overlapping_readings_report_the_scene_and_both_terms(self):
+        line = self.draft["scenes"][1]["ja"]
+        line["narration"] = "十八の像は、十八枚の鏡から届きました。"
+        line["readings"] = [{"text": "十八", "kana": "じゅうはち"}, {"text": "十八枚", "kana": "じゅうはちまい"}]
+        with self.assertRaisesRegex(ValueError, "場面2の日本語の読み指定.*「十八」と「十八枚」.*重なって"):
+            self.check()
+        line["readings"][0] = {"text": "十八の像", "kana": "じゅうはちのぞう"}
+        self.assertEqual(self.check()["scenes"][1]["ja"]["readings"], line["readings"])
+
     def test_new_script_reports_missing_story_or_invalid_reading(self):
         self.draft["story"]["visualCheck"] = " "
         with self.assertRaisesRegex(ValueError, "画面で確かめること"):
@@ -75,7 +118,7 @@ class EditorialNoteTest(unittest.TestCase):
     def test_missing_material_retains_the_recoverable_reason(self):
         # A missing image is reported even though no narrative or reading could be generated.
         self.draft.update(materialRequest="どちらの鏡かを確かめるため、出所の分かる図が必要。", story={}, scenes=[])
-        with self.assertRaisesRegex(ValueError, "追加資料が必要.*出所"):
+        with self.assertRaisesRegex(MaterialRequired, "追加資料が必要.*出所"):
             self.check()
 
     def test_model_menu_uses_each_visible_model_supported_levels(self):
@@ -219,7 +262,16 @@ class EditorialNoteTest(unittest.TestCase):
 
             response = {**english, "scenes": english["scenes"][::-1]}
             with self.assertRaisesRegex(ValueError, "順序"):
-                generate("en", master)
+                generate_plan(snapshot, "", "model", root / "en-revision", language="en", master_plan=master)
+            self.assertEqual(inputs[-1]["previousOutput"], response)
+            self.assertIn("順序", inputs[-1]["validationFeedback"])
+            response = english
+            recovered = generate_plan(snapshot, "", "model", root / "en-revision", language="en", master_plan=master)
+            self.assertEqual(recovered["adaptation"], adaptation["adaptation"])
+            self.assertEqual(recovered["model"]["usage"]["input_tokens"], 40)
+            accepted = json.loads((root / "en-revision/editor-input.json").read_text(encoding="utf-8"))
+            self.assertEqual(accepted["masterPlanSha256"], en_input["masterPlanSha256"])
+            self.assertEqual(accepted["prompt"].rsplit("\n\n", 1)[-1], json.dumps(inputs[-1], ensure_ascii=False))
             with self.assertRaises(ValueError):
                 generate("en")
             self.assertEqual(master, frozen)

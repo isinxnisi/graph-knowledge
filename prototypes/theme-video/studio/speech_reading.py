@@ -46,7 +46,8 @@ def validate_readings(narration, value):
     spoken_length = len(caption)
     for start, end, term in _matches(caption, entries):
         if start < previous_end:
-            raise ValueError(f"「{previous_term}」と「{term}」の読みの範囲が重なっています。")
+            raise ValueError(f"「{previous_term}」と「{term}」の読みの範囲が重なっています。"
+                             "指定は場面内の同じ表記すべてに適用されます。前後の語を含めて適用範囲を分けてください。")
         previous_end, previous_term = end, term
         spoken_length += len(entries[term]) - len(term)
     # One caption can contain many occurrences of a short surface form. Bound its expanded audio request.

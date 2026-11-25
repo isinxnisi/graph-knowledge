@@ -1,13 +1,11 @@
 """Independent editorial passes for a Japanese-first film, before audio or rendering."""
 
-from copy import deepcopy
-import hashlib
 from itertools import groupby
-import json
 from urllib.parse import urlsplit
 
 from editor import (JAPANESE_VERSION, _JAPANESE_PROMPT, _call_writer, _check_draft, _object,
                     _save_json, _text, _writer_request)
+from writer_feedback import RevisionNeeded, request_digest, validated_output
 
 
 STRING = {"type": "string"}
@@ -124,44 +122,20 @@ def _audience_cut(plan):
     return {"scenes": scenes}
 
 
-def _digest(value):
-    return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True,
-                                     separators=(",", ":")).encode()).hexdigest()
-
-
 def produce_japanese(snapshot, materials, script_schema, model, effort, folder, progress):
     source_ids = {s["id"] for s in snapshot["sources"]}
     scope_schema = _scope_schema(sorted(source_ids))
     records = folder / "editor-stages"
-    records.mkdir(exist_ok=True)
     usage = {}
 
     def stage(name, label, instructions, inputs, schema, validate):
-        if progress:
-            progress(label)
         request = _writer_request(model, effort, JAPANESE_VERSION, instructions, inputs, schema)
-        digest = _digest(request)
-        path = records / f"{name}-{digest}.json"
-        entry = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
-        cached = entry.get("status") == "done" and entry.get("request") == request
-        if not cached:
-            entry = {"stage": name, "request": request, "status": "running", "inputSha256": digest}
-            _save_json(path, entry)
-            try:
-                entry["result"], entry["usage"] = _call_writer(request)
-                value = validate(deepcopy(entry["result"]))
-            except Exception as exc:
-                entry.update(status="failed", error=str(exc))
-                _save_json(path, entry)
-                raise
-            entry["status"] = "done"
-            _save_json(path, entry)
-        else:
-            value = validate(entry["result"])
-        for key, count in (entry.get("usage") or {}).items():
-            if isinstance(count, int):
-                usage[key] = usage.get(key, 0) + count
-        return value, request, cached
+        value, accepted, cached, stage_usage = validated_output(
+            name=name, label=label, records=records, request=request, instructions=instructions, inputs=inputs,
+            validate=validate, writer=_call_writer, progress=progress)
+        for key, count in stage_usage.items():
+            usage[key] = usage.get(key, 0) + count
+        return value, accepted, cached
 
     def draft(raw):
         return _check_draft(raw, snapshot, materials["assets"], "ja")
@@ -235,11 +209,11 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
                              for s in initial["scenes"]]
             previous["editorialReview"] = {"initialScript": initial_lines, "initialScope": scope, "scope": revised_scope,
                                            "audience": audience, "revisionReason": reason, "checks": feedback["checks"],
-                                           "rounds": round_no, "reviewedCutSha256": _digest(cut)}
+                                           "rounds": round_no, "reviewedCutSha256": request_digest(cut)}
             previous["model"] = {"requested": model, "actual": None, "effort": effort, "provider": "codex-cli",
                                  "instructionVersion": JAPANESE_VERSION, "inputSha256": input_sha, "usage": usage}
             return previous
         if not cached:
             fresh_failures += 1
     unresolved = feedback["blockingIssue"] or " ".join(c["evidence"] for c in feedback["checks"] if not c["supported"])
-    raise ValueError("清書稿の再確認で改稿が必要です。再開すると指摘を引き継ぎます。" + unresolved)
+    raise RevisionNeeded("清書稿の再確認で改稿が必要です。再開すると指摘を引き継ぎます。" + unresolved)

@@ -316,9 +316,17 @@ def _draft_input(snapshot, brief):
             "records": records, "sources": source_cards}
 
 
+class MaterialRequired(ValueError):
+    """The writer needs additional evidence or visual material to continue."""
+
+
 def _text(value, max_length, label, *, allow_empty=False):
-    if not isinstance(value, str) or len(value) > max_length or (not allow_empty and not value.strip()):
-        raise ValueError(f"脚本の{label}が空欄または長過ぎます。")
+    if not isinstance(value, str):
+        raise ValueError(f"{label}には{max_length}字以内の文字列を指定してください。")
+    if len(value) > max_length:
+        raise ValueError(f"{label}は{len(value)}字です。{max_length}字以内にしてください。")
+    if not allow_empty and not value.strip():
+        raise ValueError(f"{label}が空欄です。{max_length}字以内で記入してください。")
     return " ".join(value.split())
 
 
@@ -333,8 +341,11 @@ def validate_visual_timing(timing):
 
 def _check_draft(draft, snapshot, assets, language="both"):
     sources = {s["id"]: s for s in snapshot["sources"]}
-    if draft.get("materialRequest"):
-        raise ValueError("追加資料が必要です。" + _text(draft["materialRequest"], 600, "素材依頼"))
+    material = draft.get("materialRequest")
+    if isinstance(material, str) and material.strip():
+        raise MaterialRequired("追加資料が必要です。" + " ".join(material.split()))
+    if material is not None and not isinstance(material, str):
+        raise ValueError("素材依頼には追加で必要な資料を書き、不要なら空文字列を指定してください。")
     note = draft.get("story")
     if not isinstance(note, dict):
         raise ValueError("脚本に初見の人に伝える問い・説明・画面の見どころがありません。")
@@ -366,14 +377,19 @@ def _check_draft(draft, snapshot, assets, language="both"):
         shot = {"id": f"s{i}", "asset": asset, "sourceIds": list(dict.fromkeys(ids))}
         if language == "ja" and "visualTiming" in scene:
             shot["visualTiming"] = validate_visual_timing(scene["visualTiming"])
+        optional_heading = asset == "source" or asset in WEBB_BOARDS
         for lang in languages:
             line = scene[lang]
-            shot[lang] = {"heading": _text(line["heading"], 110, "見出し", allow_empty=asset == "source"),
-                          "narration": _text(line["narration"], 450, "ナレーション")}
+            label = f"場面{i}の" + ("日本語" if lang == "ja" else "英語")
+            shot[lang] = {"heading": _text(line["heading"], 110, label + "の見出し", allow_empty=optional_heading),
+                          "narration": _text(line["narration"], 450, label + "のナレーション")}
         readings = scene["ja"].get("readings")
         if not isinstance(readings, list):
             raise ValueError(f"場面{i}の日本語の読み指定を確認してください。")
-        shot["ja"]["readings"] = validate_readings(shot["ja"]["narration"], readings)
+        try:
+            shot["ja"]["readings"] = validate_readings(shot["ja"]["narration"], readings)
+        except ValueError as exc:
+            raise ValueError(f"場面{i}の日本語の読み指定を確認してください。{exc}") from exc
         scenes.append(shot)
         used.update((key, sources[key]) for key in ids)
     ja = " ".join(s["ja"]["narration"] for s in scenes)
@@ -424,12 +440,13 @@ def _apply_adaptation(draft, master):
         raise ValueError("英語版の場面数・順序が元の日本語版と一致しません。")
     plan = deepcopy(master)
     plan["titles"]["en"] = _text(draft.get("title"), 160, "英語の題名")
-    for scene, line in zip(plan["scenes"], lines):
+    for i, (scene, line) in enumerate(zip(plan["scenes"], lines), 1):
         source_card = scene["asset"] == "source"
-        heading = _text(line.get("heading"), 110, "英語の見出し", allow_empty=source_card)
+        heading = _text(line.get("heading"), 110, f"場面{i}の英語の見出し",
+                        allow_empty=source_card or scene["asset"] in WEBB_BOARDS)
         if source_card and bool(heading) != bool(scene["ja"]["heading"]):
             raise ValueError(f"場面{scene['id']}の出典の見出しを載せるか、元の日本語版に合わせてください。")
-        narration = _text(line.get("narration"), 450, "英語のナレーション")
+        narration = _text(line.get("narration"), 450, f"場面{i}の英語のナレーション")
         if not re.search(r"[A-Za-z]{2,}", narration) or narration == scene["ja"]["narration"]:
             raise ValueError(f"場面{scene['id']}の英語ナレーションを確認できません。")
         scene["en"] = {"heading": heading, "narration": narration}
@@ -531,14 +548,25 @@ def generate_plan(snapshot, brief, model_id, work_dir, *, language="both", maste
     if language == "en":
         canonical = json.dumps(master_plan, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
         input_artifact["masterPlanSha256"] = hashlib.sha256(canonical).hexdigest()
-    input_sha = _save_json(work_dir / "editor-input.json", input_artifact)
-    draft, usage = _call_writer(input_artifact)
+    input_path = work_dir / "editor-input.json"
+    input_sha = _save_json(input_path, input_artifact)
     if language == "en":
-        plan = _apply_adaptation(draft, master_plan)
+        name, label = "english-adaptation", "英語の台本を翻案中"
+        def validate(draft):
+            return _apply_adaptation(draft, master_plan)
+    else:
+        name, label = "bilingual-draft", "日英の台本を執筆中"
+        def validate(draft):
+            return _check_draft(draft, snapshot, assets, language)
+    from writer_feedback import validated_output
+    plan, accepted, _, usage = validated_output(
+        name=name, label=label, records=work_dir / "editor-stages", request=input_artifact,
+        instructions=instructions, inputs=payload, validate=validate, writer=_call_writer, progress=progress)
+    if accepted != input_artifact:
+        input_sha = _save_json(input_path, accepted)
+    if language == "en":
         plan["adaptation"] = {"masterPlanSha256": input_artifact["masterPlanSha256"],
                               "masterModel": deepcopy(master_plan.get("model"))}
-    else:
-        plan = _check_draft(draft, snapshot, assets, language)
     plan["model"] = {"requested": model_id, "actual": None, "effort": effort, "provider": "codex-cli",
                      "instructionVersion": version, "inputSha256": input_sha, "usage": usage}
     return plan

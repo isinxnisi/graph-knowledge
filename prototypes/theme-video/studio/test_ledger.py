@@ -8,6 +8,7 @@ import unittest
 from unittest.mock import Mock
 
 from ledger import Ledger
+from writer_feedback import RevisionNeeded
 
 
 class LedgerTest(unittest.TestCase):
@@ -52,12 +53,28 @@ class LedgerTest(unittest.TestCase):
         self.assertEqual((english["model"], english["plan"]["japaneseMasterRunId"]), (high, japanese["id"]))
         self.assertEqual(japanese["model"], ultra)
 
+    def test_revision_can_resume_same_run_after_restart(self):
+        self.request.update(language="ja", scriptFirst=True)
+        case = self.create()
+        generate = Mock(side_effect=[RevisionNeeded("第8場面の読みを確認してください。"), self.plan])
+        render = Mock()
+        self.desk.process_next(generate, render)
+        self.desk = Ledger(self.data)
+        saved = self.desk.case(case["id"])["runs"][0]
+        self.assertEqual((saved["status"], saved["error"]), ("needs_revision", "第8場面の読みを確認してください。"))
+        self.assertEqual(self.desk.list_cases()[0]["states"]["ja"], "要改稿")
+        self.desk.resume(case["id"], case["runId"])
+        self.desk.process_next(generate, render)
+        current, = self.desk.case(case["id"])["runs"]
+        self.assertEqual((current["id"], current["status"], current["error"]), (case["runId"], "script_ready", None))
+        render.assert_not_called()
+
     def test_double_submit_and_revision_after_restart(self):
         with ThreadPoolExecutor(2) as pool:
             results = list(pool.map(lambda _: self.create(), range(2)))
         self.assertEqual(results[0], results[1])
         case, first = results[0]["id"], results[0]["runId"]
-        self.assertTrue(self.desk.process_next(lambda *args: self.plan, self.render))
+        self.assertTrue(self.desk.process_next(lambda *args, **kwargs: self.plan, self.render))
         self.desk.review(case, {"runId": first, "lang": "ja", "reason": "画面で対応が分かる"}, "adopted")
         edit = dict(requestId="b", parent=first, lang="en", sceneId="s1", narration="One star.",
                     model="test", reason="主語を明示")
@@ -67,7 +84,7 @@ class LedgerTest(unittest.TestCase):
             self.desk.pause(case, second)
             progress("最初の発話")
 
-        def no_model(*args):
+        def no_model(*args, **kwargs):
             self.fail("An edited or checkpointed plan must not call the model")
 
         self.desk.process_next(no_model, interrupt)
@@ -90,7 +107,7 @@ class LedgerTest(unittest.TestCase):
     def test_japanese_recommission_freezes_the_selected_versions_words_and_feedback(self):
         result = self.create()
         case, parent = result["id"], result["runId"]
-        self.desk.process_next(lambda *args: self.plan, self.render)
+        self.desk.process_next(lambda *args, **kwargs: self.plan, self.render)
         self.desk.review(case, {"runId": parent, "lang": "ja", "reason": "なぜ並べるのかが残った。"}, "rework")
         self.desk.review(case, {"runId": parent, "lang": "en", "reason": "English only."}, "rework")
         self.desk.submit("runs", {"requestId": "rewrite", "parent": parent, "language": "ja", "model": "test",
@@ -116,12 +133,12 @@ class LedgerTest(unittest.TestCase):
                 raise RuntimeError("音声エンジンが停止")
             self.render(plan, lang, out, progress)
 
-        self.desk.process_next(lambda *args: self.plan, render)
+        self.desk.process_next(lambda *args, **kwargs: self.plan, render)
         detail = self.desk.case(result["id"])["runs"][0]
         self.assertEqual(detail["status"], "failed")
         self.assertEqual(set(detail["editions"]), {"ja"})
         self.desk.resume(result["id"], result["runId"])
-        self.desk.process_next(lambda *args: self.fail("script was already saved"), render)
+        self.desk.process_next(lambda *args, **kwargs: self.fail("script was already saved"), render)
         self.assertEqual(calls, ["ja", "en", "en"])
         self.assertEqual(self.desk.case(result["id"])["runs"][0]["status"], "done")
 
@@ -176,7 +193,7 @@ class LedgerTest(unittest.TestCase):
         self.desk = Ledger(self.data)
         self.assertEqual(self.desk.case(result["id"])["runs"][0]["status"], "interrupted")
         self.desk.resume(result["id"], result["runId"])
-        self.desk.process_next(lambda *args: self.plan, render)
+        self.desk.process_next(lambda *args, **kwargs: self.plan, render)
         self.assertEqual(self.desk.case(result["id"])["runs"][0]["status"], "script_ready")
         render.assert_not_called()
 
@@ -226,7 +243,9 @@ class LedgerTest(unittest.TestCase):
         translated["titles"]["en"] = "One star"
         generate.return_value = translated
         self.desk.process_next(generate, render)
-        self.assertEqual(generate.call_args.kwargs, {"language": "en", "master_plan": source["plan"]})
+        self.assertEqual(generate.call_args.kwargs["language"], "en")
+        self.assertEqual(generate.call_args.kwargs["master_plan"], source["plan"])
+        self.assertTrue(callable(generate.call_args.kwargs["progress"]))
         self.assertEqual(render.call_count, 1)
         draft_en = self.desk.case(case)["runs"][0]
         self.assertEqual((draft_en["id"], draft_en["parent"], draft_en["status"], draft_en["langs"]),
@@ -253,7 +272,7 @@ class LedgerTest(unittest.TestCase):
             self.desk.submit("/api/cases", {**self.request, **request}, self.snapshot, self.models)
         first = self.create()
         case, source = first["id"], first["runId"]
-        self.desk.process_next(lambda *args: self.plan, self.render)
+        self.desk.process_next(lambda *args, **kwargs: self.plan, self.render)
         other = self.desk.submit("/api/cases", {**self.request, "requestId": "other"}, self.snapshot, self.models)
         for fields, case_id in [({}, case), ({"parent": source}, other["id"]),
                                 ({"parent": source, "lang": "en"}, case)]:
@@ -269,7 +288,7 @@ class LedgerTest(unittest.TestCase):
         self.plan["scenes"][0]["ja"]["narration"] = "一日が始まります。"
         result = self.create()
         case, first = result["id"], result["runId"]
-        self.desk.process_next(lambda *args: self.plan, self.render)
+        self.desk.process_next(lambda *args, **kwargs: self.plan, self.render)
         for lang in ("ja", "en"):
             self.desk.review(case, dict(lang=lang, runId=first, reason="初稿を採用"), "adopted")
         parent = self.desk.case(case)
@@ -304,7 +323,7 @@ class LedgerTest(unittest.TestCase):
                                    "en": {"narration": "Look."}})
         result = self.create()
         case, original = result["id"], result["runId"]
-        self.desk.process_next(lambda *args: self.plan, self.render)
+        self.desk.process_next(lambda *args, **kwargs: self.plan, self.render)
         edit = dict(parent=original, lang="ja", sceneId="s1", model="test", narration="ひとつ", reason="間の調整")
         def submit(key, **fields):
             return self.desk.submit("runs", {**edit, **fields, "requestId": key},
@@ -345,7 +364,7 @@ class LedgerTest(unittest.TestCase):
                                  self.snapshot, self.models)
         self.assertNotEqual(first["id"], other["id"])
         inputs = []
-        def generate(snapshot, brief, model, folder):
+        def generate(snapshot, brief, model, folder, *, progress):
             inputs.append(brief)
             return self.plan
         self.desk.process_next(generate, self.render)

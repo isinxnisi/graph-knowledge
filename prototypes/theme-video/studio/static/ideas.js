@@ -1,6 +1,6 @@
 "use strict";
 
-const ideaStatusLabels = { candidate: "制作候補", later: "あとで作る", used: "制作に使用" };
+const ideaStatusLabels = { candidate: "制作候補", later: "あとで作る", used: "制作あり" };
 
 function ideaLibraryHash(themeId) {
   return themeId ? "#ideas/theme/" + encodeURIComponent(themeId) : "#ideas";
@@ -24,6 +24,25 @@ function describeIdea(idea) {
     sources.append(links);
     card.append(sources);
   }
+  if (idea.origin !== "reference" && idea.cases?.length) {
+    const productions = node("section", null, "idea-productions");
+    productions.append(node("h3", "この案の制作案件（" + idea.cases.length + "件）"));
+    const list = node("ol");
+    list.reversed = true;
+    for (const item of idea.cases) {
+      const label = idea.origin === "previous" && item.id === idea.caseId ? "元の制作" : "制作 " + item.number;
+      const title = item.title && item.title !== idea.title ? "　" + item.title : "";
+      const link = node("a", label + title, "text-link");
+      link.href = caseHash(item.id);
+      const row = node("li");
+      row.append(link);
+      const info = [when(item.created), item.model && modelLabel(item), jobName[item.status] || item.status].filter(Boolean);
+      if (info.length) row.append(node("span", info.join(" ／ ")));
+      list.append(row);
+    }
+    productions.append(list);
+    card.append(productions);
+  }
   return card;
 }
 
@@ -33,8 +52,8 @@ function drawNewIdeaSelection() {
   $("new-brief-field").hidden = $("brief").disabled = Boolean(idea);
   $("generate-ideas").hidden = Boolean(idea);
   $("new-video").className = idea ? "primary" : "secondary";
-  $("new-title").textContent = idea ? "選んだ動画案から制作する" : "テーマから動画をつくる";
-  $("new-settings-label").textContent = idea ? "制作設定" : "動画の企画";
+  $("new-title").textContent = idea ? "この案で新しい制作を始める" : "テーマから動画をつくる";
+  $("new-settings-label").textContent = idea ? "新しい案件の制作設定" : "動画の企画";
   const chosen = $("chosen-idea");
   chosen.hidden = !idea;
   chosen.replaceChildren();
@@ -42,6 +61,7 @@ function drawNewIdeaSelection() {
     const back = node("a", "このテーマの案を選び直す", "text-link");
     back.href = ideaLibraryHash(idea.themeId);
     chosen.append(describeIdea(idea), back);
+    if (idea.cases?.length) chosen.append(node("p", "新しく生成する台本と映像は、別の制作案件に保存されます。", "subtle"));
   }
 }
 
@@ -90,13 +110,16 @@ function drawIdeaLibrary() {
   for (const idea of shown) {
     const card = describeIdea(idea);
     const actions = node("div", null, "idea-actions");
-    if (idea.caseId) {
-      const link = node("a", idea.origin === "reference" ? "品質見本を開く" : "制作案件を開く", "secondary small");
+    if (idea.origin === "reference") {
+      const link = node("a", "品質見本を開く", "secondary small");
       link.href = caseHash(idea.caseId);
       actions.append(link);
     } else {
-      const select = node("a", "この案で制作", "primary small");
+      const select = node("a", "この案で新しく制作", "primary small");
       select.href = "#new/idea/" + encodeURIComponent(idea.id);
+      actions.append(select);
+    }
+    if (idea.origin === "generated" && idea.status !== "used") {
       const later = idea.status === "later";
       const defer = node("button", later ? "候補に戻す" : "あとで作る", "quiet small");
       defer.type = "button";
@@ -110,7 +133,7 @@ function drawIdeaLibrary() {
           if (version === state.routeVersion) notify(err.message, true);
         } finally { defer.disabled = false; }
       };
-      actions.append(select, defer);
+      actions.append(defer);
     }
     card.append(actions);
     list.append(card);

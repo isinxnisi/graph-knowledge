@@ -1,3 +1,4 @@
+from copy import deepcopy
 import json
 from pathlib import Path
 import tempfile
@@ -6,6 +7,7 @@ from unittest.mock import patch
 
 from editor import _check_draft, _schema
 from script_review import _audience_cut, produce_japanese
+from writer_feedback import RevisionNeeded
 
 
 class ScriptReviewTest(unittest.TestCase):
@@ -29,9 +31,9 @@ class ScriptReviewTest(unittest.TestCase):
         self.revision = {"revisedScope": self.scope, "revisionReason": "識別した後の使い道まで伝える。", "script": self.draft}
         self.reader = {"retelling": "散らばった点を見た。", "unclear": "次に何をするのか。"}
 
-    def produce(self):
+    def produce(self, progress=None):
         return produce_japanese(self.snapshot, self.materials, _schema(["ref"], ["source"], "ja"),
-                                "model", "high", self.folder, None)
+                                "model", "high", self.folder, progress)
 
     def verdict(self, quote):
         return {"checks": [{"beatId": "b1", "sceneIds": ["s1"], "supported": True, "quote": quote,
@@ -42,7 +44,7 @@ class ScriptReviewTest(unittest.TestCase):
         missing = self.verdict("画面にも語りにもない言葉")
         outputs = (self.scope, self.draft, self.reader, self.revision, missing, self.revision, missing)
         with patch("script_review._call_writer", side_effect=[(v, {}) for v in outputs]) as writer:
-            with self.assertRaisesRegex(ValueError, "再確認で改稿が必要"):
+            with self.assertRaisesRegex(RevisionNeeded, "再確認で改稿が必要"):
                 self.produce()
             self.assertEqual(writer.call_count, 7)
             self.assertFalse((self.folder / "editor-input.json").exists())
@@ -75,11 +77,84 @@ class ScriptReviewTest(unittest.TestCase):
             self.assertEqual(entry["result"], gap)
             self.assertFalse((self.folder / "editor-input.json").exists())
 
-    def test_invalid_or_negative_visual_hold_does_not_reach_rendering(self):
-        self.draft["scenes"][0]["visualTiming"]["afterVoice"] = -1
-        with patch("script_review._call_writer", side_effect=[(self.scope, {}), (self.draft, {})]):
-            with self.assertRaisesRegex(ValueError, "語りの前後の秒数"):
+    def test_negative_visual_hold_returns_to_the_writer_and_keeps_the_reader_blind(self):
+        bad = deepcopy(self.draft)
+        bad["scenes"][0]["visualTiming"]["afterVoice"] = -1
+        outputs = [self.scope, bad, self.draft, self.reader, self.revision, self.verdict("鏡と同じ並び")]
+        progress = []
+        with patch("script_review._call_writer", side_effect=[(v, {"tokens": 10}) for v in outputs]) as writer:
+            plan = self.produce(progress.append)
+            repair = json.loads(writer.call_args_list[2].args[0]["prompt"].rsplit("\n\n", 1)[1])
+            self.assertEqual(repair["previousOutput"], bad)
+            self.assertIn("語りの前後の秒数", repair["validationFeedback"])
+            self.assertEqual(repair["correctionAttempt"], 1)
+            reader = json.loads(writer.call_args_list[3].args[0]["prompt"].rsplit("\n\n", 1)[1])
+            self.assertEqual(set(reader), {"scenes"})
+            self.assertNotIn("afterVoiceSeconds", reader["scenes"][0])
+            self.assertTrue(any("指摘を返して修正中" in message for message in progress))
+            self.assertEqual(plan["model"]["usage"], {"tokens": 60})
+        with patch("script_review._call_writer") as cached:
+            self.assertEqual(self.produce(), plan)
+            cached.assert_not_called()
+
+    def test_exhaustion_and_resume_use_the_last_defective_output_and_count_every_call_once(self):
+        invalid_drafts = []
+        for value in (-1, -2, -3):
+            bad = deepcopy(self.draft)
+            bad["scenes"][0]["visualTiming"]["afterVoice"] = value
+            invalid_drafts.append(bad)
+        outputs = [self.scope, *invalid_drafts]
+        with patch("script_review._call_writer", side_effect=[(v, {"tokens": 1}) for v in outputs]) as writer:
+            with self.assertRaisesRegex(RevisionNeeded, "2回修正"):
                 self.produce()
+            self.assertEqual(writer.call_count, 4)
+        records = list((self.folder / "editor-stages").glob("02-draft-*.json"))
+        self.assertEqual(len(records), 3)
+        self.assertTrue(all(json.loads(p.read_text(encoding="utf-8"))["status"] == "failed" for p in records))
+        outputs = [self.draft, self.reader, self.revision, self.verdict("鏡と同じ並び")]
+        with patch("script_review._call_writer", side_effect=[(v, {"tokens": 1}) for v in outputs]) as writer:
+            plan = self.produce()
+            self.assertEqual(writer.call_count, 4)
+            repair = json.loads(writer.call_args_list[0].args[0]["prompt"].rsplit("\n\n", 1)[1])
+            self.assertEqual(repair["previousOutput"], invalid_drafts[-1])
+            self.assertEqual(repair["correctionAttempt"], 3)
+            self.assertEqual(plan["model"]["usage"], {"tokens": 8})
+
+    def test_reader_repair_is_blind_and_a_usable_legacy_failed_result_is_revalidated(self):
+        bad_reader = {"retelling": "", "unclear": ""}
+        outputs = [self.scope, self.draft, bad_reader, self.reader, self.revision, self.verdict("鏡と同じ並び")]
+        with patch("script_review._call_writer", side_effect=[(v, {}) for v in outputs]) as writer:
+            original = self.produce()
+            repair = json.loads(writer.call_args_list[3].args[0]["prompt"].rsplit("\n\n", 1)[1])
+            self.assertEqual(set(repair), {"previousOutput", "validationFeedback", "correctionAttempt", "scenes"})
+            self.assertEqual(repair["previousOutput"], bad_reader)
+        path = next((self.folder / "editor-stages").glob("02-draft-*.json"))
+        entry = json.loads(path.read_text(encoding="utf-8"))
+        entry.update(status="failed", error="旧検査で失敗")
+        path.write_text(json.dumps(entry, ensure_ascii=False), encoding="utf-8")
+        with patch("script_review._call_writer") as writer:
+            self.assertEqual(self.produce(), original)
+            writer.assert_not_called()
+        entry = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(entry["status"], "done")
+        self.assertEqual(entry["previousValidationError"], "旧検査で失敗")
+
+    def test_pause_before_automatic_repair_and_writer_timeout_do_not_trigger_more_calls(self):
+        bad = deepcopy(self.draft)
+        bad["scenes"][0]["visualTiming"]["afterVoice"] = -1
+
+        def check_pause(message):
+            if "指摘を返して修正中" in message:
+                raise InterruptedError("paused")
+
+        with patch("script_review._call_writer", side_effect=[(self.scope, {}), (bad, {})]) as writer:
+            with self.assertRaises(InterruptedError):
+                self.produce(check_pause)
+            self.assertEqual(writer.call_count, 2)
+        with patch("script_review._call_writer", side_effect=TimeoutError("service timed out")) as writer:
+            with self.assertRaises(TimeoutError):
+                self.produce()
+            self.assertEqual(writer.call_count, 1)
 
     def test_longer_japanese_script_and_continuous_board_reach_the_blind_reader(self):
         shot = {**self.draft["scenes"][0], "asset": "webb-layout", "sourceIds": ["nasa-aligned"]}

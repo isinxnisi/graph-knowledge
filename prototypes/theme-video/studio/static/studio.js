@@ -5,7 +5,7 @@ const languageName = { ja: "日本語", en: "English" };
 const productionLanguage = { ja: "日本語", en: "英語", both: "日英" };
 const effortName = { low: "低", medium: "中", high: "高", xhigh: "XHigh", max: "Max", ultra: "Ultra" };
 const modelForms = ["new", "rerun", "adapt"];
-const jobName = { queued: "待機中", running: "生成中", done: "完了", failed: "失敗", interrupted: "中断", script_ready: "台本確認" };
+const jobName = { queued: "待機中", running: "生成中", done: "完了", failed: "失敗", interrupted: "中断", needs_revision: "要改稿", script_ready: "台本確認" };
 const pending = (run) => ["queued", "running"].includes(run.status);
 const state = {
   models: [], cases: [], detail: null, lang: "ja", chosen: null, results: [],
@@ -86,6 +86,10 @@ function clock(value) {
   return Math.floor(seconds / 60) + ":" + String(seconds % 60).padStart(2, "0");
 }
 
+function productionNumber(data) {
+  return data.ideaCaseCount > 1 ? "制作 " + data.ideaCaseNumber : "";
+}
+
 function renderNav() {
   const list = $("case-list");
   $("case-count").textContent = state.cases.filter((c) => !c.reference).length;
@@ -102,7 +106,8 @@ function renderNav() {
       a.href = caseHash(data.id);
       if (state.detail?.id === data.id && !$("case-view").hidden) a.setAttribute("aria-current", "page");
       a.append(node("strong", data.title || data.brief));
-      a.append(node("small", sample ? "日英の試作映像" : "日 " + (data.states?.ja || "—") + "　/　英 " + (data.states?.en || "—")));
+      const status = sample ? "日英の試作映像" : "日 " + (data.states?.ja || "—") + "　/　英 " + (data.states?.en || "—");
+      a.append(node("small", [productionNumber(data), status].filter(Boolean).join("　·　")));
       nodes.push(a);
     }
   }
@@ -225,7 +230,8 @@ function resetCase() {
   state.detail = null; state.selected = { ja: "", en: "" }; state.lang = "ja";
   state.awaitingEnglishFor = "";
   state.sceneId = ""; state.compare = false; state.compareKey = ""; state.resumeAfter = null;
-  for (const id of ["script-read-panel", "script-review-panel", "scene-panel", "history-panel", "rerun-panel"]) $(id).open = false;
+  for (const id of ["script-read-panel", "script-review-panel", "scene-panel", "brief-panel", "rerun-panel"]) $(id).open = false;
+  $("history-panel").open = window.matchMedia("(min-width: 1160px)").matches;
   closeEdit(); closeReview(); closeAdapt();
   $("rerun-language").value = "ja";
   refreshGenerationButtons();
@@ -250,7 +256,7 @@ async function route() {
         if (version !== state.routeVersion) return;
         const idea = library.items.find((item) => item.id === id);
         if (!idea) throw new Error("指定した動画案が見つかりません。");
-        if (idea.caseId) { location.replace(caseHash(idea.caseId)); return; }
+        if (idea.origin === "reference") { location.replace(caseHash(idea.caseId)); return; }
         state.chosenIdea = idea;
       }
       drawNewIdeaSelection();
@@ -328,7 +334,8 @@ function editionLabel(run, lang) {
 }
 function drawCase() {
   const data = state.detail;
-  $("case-channel").textContent = (data.reference ? "品質の見本" : "制作案件") + "　/　公開第" + data.revision + "版";
+  $("case-channel").textContent = [data.reference ? "品質の見本" : "制作案件", productionNumber(data),
+    "公開第" + data.revision + "版"].filter(Boolean).join("　/　");
   $("case-title").textContent = data.title || data.brief;
   $("case-brief").textContent = data.brief === data.title ? "" : data.brief || "";
   document.title = (data.title || "制作案件") + " | Plunode 映像制作室";
@@ -600,10 +607,13 @@ function inspectScript(run) {
   return button;
 }
 function statusButton(run) {
-  if (state.detail.reference || !["running", "queued", "failed", "interrupted", "script_ready"].includes(run.status)) return null;
+  if (state.detail.reference || !["running", "queued", "failed", "interrupted", "needs_revision", "script_ready"].includes(run.status)) return null;
   const startVideo = run.status === "script_ready";
   const resume = !pending(run);
-  const button = node("button", startVideo ? "この台本で" + runLanguage(run) + "の映像を生成" : resume ? "再開" : "中断", "secondary small");
+  let label = resume ? "再開" : "中断";
+  if (startVideo) label = "この台本で" + runLanguage(run) + "の映像を生成";
+  if (run.status === "needs_revision") label = "改稿を再開";
+  const button = node("button", label, "secondary small");
   button.type = "button";
   button.onclick = async () => {
     const edit = state.editTarget;
@@ -637,7 +647,7 @@ function drawProgress() {
   const ordered = orderedRuns(), latest = ordered[0];
   const selected = chosenRun();
   const relevant = ordered.filter((r) => pending(r)
-    || (r === latest && ["interrupted", "failed"].includes(r.status))
+    || (r === latest && ["interrupted", "failed", "needs_revision"].includes(r.status))
     || ((r === selected || r === latest) && r.status === "script_ready"));
   const boxes = relevant.map((run) => {
     const bad = run.status === "failed";
@@ -801,7 +811,7 @@ formAction("new-form", async (version, action) => {
   const profile = selectedProfile("new");
   const idea = state.chosenIdea;
   if ((!state.chosen && !idea) || !profile) return;
-  const selection = idea ? { themeId: idea.themeId, revision: idea.revision, ideaId: idea.id }
+  const selection = idea ? { themeId: idea.themeId, revision: idea.revision, ideaId: idea.id, newIdeaCase: true }
     : { themeId: state.chosen.id, revision: Number($("theme-revision").value), brief: trim($("brief").value) };
   if (action === "ideas" && !idea) {
     await submitRun("ideas", "/api/ideas/generate", { ...selection, model: profile.id });
