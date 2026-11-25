@@ -42,9 +42,8 @@
   },
   "controlError": null,
   "requestsByPhase": {
-    "waiting-control": 59,
-    "completed": 2,
-    "retry-wait": 1
+    "waiting-control": 60,
+    "completed": 2
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -136,9 +135,8 @@
       "checkedAt": "2026-11-25T15:54:14+00:00"
     },
     "collection-control/issue-sources/69.json": {
-      "status": "held",
-      "reason": "<3>WSL (252983 - ) ERROR: UtilAcceptVsock:273: accept4 failed 110\n<3>WSL (252985 - ) ERROR: UtilAcceptVsock:273: accept4 failed 110\nfatal: unable to get password from user\n",
-      "checkedAt": "2026-11-25T16:45:37+00:00"
+      "status": "registered: issue-69-dot-ishinomori-three-20261029",
+      "checkedAt": "2026-11-25T16:49:11+00:00"
     },
     "collection-control/issue-sources/70.json": {
       "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
@@ -192,5 +190,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-25T16:47:28.990127+00:00"
+  "checkedAt": "2026-11-25T16:50:10.493366+00:00"
 }
