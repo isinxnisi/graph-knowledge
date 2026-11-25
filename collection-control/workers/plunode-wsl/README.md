@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-26 01:43:33 JST。
+確認: 2026-11-26 01:47:28 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -111,8 +111,9 @@ Issue確認結果:
     "checkedAt": "2026-11-25T15:54:14+00:00"
   },
   "collection-control/issue-sources/69.json": {
-    "status": "registered: issue-69-dot-ishinomori-three-20261029",
-    "checkedAt": "2026-11-25T15:54:15+00:00"
+    "status": "held",
+    "reason": "<3>WSL (252983 - ) ERROR: UtilAcceptVsock:273: accept4 failed 110\n<3>WSL (252985 - ) ERROR: UtilAcceptVsock:273: accept4 failed 110\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T16:45:37+00:00"
   },
   "collection-control/issue-sources/70.json": {
     "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
