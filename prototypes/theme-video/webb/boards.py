@@ -26,6 +26,10 @@ SEARCH_SOURCE = (0, 72, 1240, 838)
 SEARCH_BOX = (55, 87, 757, 521)
 ARRAY_SOURCE = (0, 0, 920, 920)
 ARRAY_BOX = (694, 142, 1082, 530)
+# The official, unlabelled image is the same observation at 1024 square.
+# Crop the "IMAGE ARRAY" title at the top while retaining all eighteen spots.
+UNLABELLED_SOURCE = (0, 85, 1024, 1003)
+LAYOUT_BOX = (678, 113, 1146, 533)
 
 
 def ease(start, end, position):
@@ -108,7 +112,7 @@ class Boards(ChannelFrame):
         super().__init__(fonts, lang)
         self.identifying_segments = identifying_segments
         self.images = {}
-        for name in ("mosaic", "mosaic-labels", "aligned"):
+        for name in ("mosaic", "mosaic-labels", "aligned", "aligned-unlabelled"):
             with Image.open(ASSETS / (name + ".jpg")) as image:
                 self.images[name] = image.convert("RGB")
         self.b3_detail = self.images["mosaic-labels"].crop((815, 472, 973, 608)).resize(
@@ -127,7 +131,7 @@ class Boards(ChannelFrame):
             self.text(draw, x, y+n*(size+17), line, size, family=SERIF, color=PAPER if light else INK,
                       max_width=width)
 
-    def mirror(self, canvas, center, radius, light=0, sweep=None):
+    def mirror(self, canvas, center, radius, light=0, sweep=None, *, label=True):
         """The traveling glint separates the physical pieces without simulating deployment."""
         selected = None
         for (q, r), (x, y) in mirror_cells(center, radius):
@@ -141,13 +145,26 @@ class Boards(ChannelFrame):
                 if light:
                     tile = Image.blend(tile, Image.new("RGB", tile.size, ORANGE), light*.88)
             canvas.paste(tile, (round(x-radius), round(y-radius)), mask)
-        if light > 0:
+        if light > 0 and label:
             self.text(ImageDraw.Draw(canvas), *selected, "B3", round(radius*.55), family=BOLD,
                       anchor="mm", color=tint(ORANGE, INK, light))
         return selected
 
-    def frame(self, shot, progress):
+    def frame(self, shot, progress, *, voice_starts_at=None):
         p = min(1, max(0, progress))
+        if shot == "array":
+            return self.array_plate()
+        if shot == "layout":
+            return self.layout_shot(p)
+        if shot == "focus":
+            # An authored silent lead shows the optical change before the first line
+            # names its location. The mirror reveal stays in the second half.
+            if voice_starts_at is not None and 0 < voice_starts_at < 1:
+                if p <= voice_starts_at:
+                    p = .5 * p / voice_starts_at
+                else:
+                    p = .5 + .5 * (p - voice_starts_at) / (1 - voice_starts_at)
+            return self.focus_shot(p)
         if shot in ("sky", "return"):
             return self.sky(p, ending=shot == "return")
         if shot == "mirror":
@@ -167,6 +184,100 @@ class Boards(ChannelFrame):
         self.brand(draw)
         self.evidence_label(draw, label)
         self.caption_rail(draw)
+        return canvas
+
+    @lru_cache(maxsize=1)
+    def array_plate(self):
+        canvas = Image.new("RGB", (W, H), INK)
+        draw = ImageDraw.Draw(canvas)
+        draw.rectangle((443, 0, W, FOOT-1), fill="#050505")
+        self.plate(canvas, "aligned-unlabelled", UNLABELLED_SOURCE, (561, 12, 1162, 551))
+        self.brand(draw, light=True)
+        self.text(draw, 61, 142, self.copy_for("ウェッブ宇宙望遠鏡", "Webb Space Telescope"),
+                  21, color="#c3cfd0", family=BOLD)
+        self.heading(draw, 59, 207, self.copy_for(("なぜ、", "六角形に？"), ("Why a", "hexagon?")),
+                     light=True, size=61, width=357)
+        draw.line((62, 408, 124, 408), fill=ORANGE, width=3)
+        self.text(draw, 62, 448, self.copy_for("観測画像", "Observation"), 22, color=PAPER, family=BOLD)
+        self.text(draw, 62, 483, "2022.02.18", 20, color="#bfccce", family=LATIN)
+        self.text(draw, 62, 517, "NASA/STScI/J. DePasquale", 17, color="#bfccce", family=LATIN)
+        return canvas
+
+    @lru_cache(maxsize=1)
+    def layout_plate(self):
+        canvas = self.paper(self.copy_for("模式図と観測画像", "Mirror diagram and observation")).copy()
+        draw = ImageDraw.Draw(canvas)
+        self.text(draw, 76, 60, self.copy_for("主鏡の並び", "Mirror layout"), 38, family=SERIF)
+        self.text(draw, 677, 60, self.copy_for("星の像の並び", "Images of the star"), 38, family=SERIF)
+        self.plate(canvas, "aligned-unlabelled", UNLABELLED_SOURCE, LAYOUT_BOX)
+        self.text(draw, 678, 539, "NASA/STScI/J. DePasquale   /   2022.02.18", 16, family=LATIN, color=MUTED)
+        return canvas
+
+    def layout_shot(self, p):
+        canvas = self.layout_plate().copy()
+        draw = ImageDraw.Draw(canvas)
+        match = ease(.28, .50, p)
+        label = ease(.56, .72, p)
+        # Align the two hexagons in orientation and scale. B3 is the upper-right
+        # outer facet in both; its actual spot stays fixed on the photograph.
+        mirror = self.mirror(canvas, (321, 318), 50, light=match, label=False)
+        point = project(tuple(v*1024/920 for v in B3_AFTER), UNLABELLED_SOURCE, LAYOUT_BOX)
+        if match:
+            ring(draw, point, mix(29, 23, match), tint("#181818", AMBER, match), width=3)
+        if label:
+            self.text(draw, *mirror, "B3", 29, anchor="mm", family=BOLD, color=tint(ORANGE, INK, label))
+            self.text(draw, point[0]+33, point[1], "B3", 27, family=BOLD, anchor="lm",
+                      color=tint("#181818", AMBER, label))
+        return canvas
+
+    @staticmethod
+    def spot_in_focus(sharpness):
+        # An illustrative spot of light. Concentrate its halo at a fixed centre.
+        # No observed pixel values or measured changes in spot size are shown.
+        yy, xx = np.mgrid[-34:35, -34:35]
+        u, v = .92*xx + .39*yy, -.39*xx + .92*yy
+        core = np.exp(-.5*((u/12)**2 + (v/9)**2))
+        halo = np.exp(-.5*((u/16)**2 + (v/13)**2))
+        blurred = .58*core + .14*halo
+        # Gather the same illustrated light into a brighter core with a legible
+        # edge. A tiny Gaussian alone reads as a star that is fading away.
+        radius = np.sqrt((u/14)**2 + (v/11)**2)
+        focused = .88*np.clip((1.14-radius)/.25, 0, 1) + .1*halo
+        focused *= blurred.sum()/focused.sum()
+        intensity = np.clip((1-sharpness)*blurred + sharpness*focused, 0, 1)
+        dark, light = np.array([32, 52, 62]), np.array([255, 249, 224])
+        return Image.fromarray((dark + intensity[:, :, None]*(light-dark)).astype("uint8"))
+
+    @lru_cache(maxsize=1)
+    def focus_plate(self):
+        canvas = self.paper(self.copy_for("像の変化の模式図", "Illustrated change in focus")).copy()
+        draw = ImageDraw.Draw(canvas)
+        self.text(draw, 76, 60, self.copy_for("主鏡の並び", "Mirror layout"), 38, family=SERIF)
+        self.text(draw, 677, 60, self.copy_for("星の像の並び", "Images of the star"), 38, family=SERIF)
+        draw.rectangle((678, 109, 1146, 533), fill="#20343e")
+        blurred = self.spot_in_focus(0)
+        for cell, (x, y) in mirror_cells((912, 318), 50):
+            if cell == (2, -2):
+                subject = (round(x), round(y))
+            else:
+                canvas.paste(blurred, (round(x)-34, round(y)-34))
+        return canvas, subject
+
+    def focus_shot(self, p):
+        plate, target = self.focus_plate()
+        canvas = plate.copy()
+        draw = ImageDraw.Draw(canvas)
+        # Let the viewer notice the change, then look for the matching mirror
+        # unaided. Only the answer at the end marks the physical segment.
+        focus = ease(.18, .42, p)
+        answer = ease(.68, .85, p)
+        mirror = self.mirror(canvas, (321, 318), 50, light=answer, label=False)
+        x, y = target
+        canvas.paste(self.spot_in_focus(focus), (x-34, y-34))
+        if answer:
+            ring(draw, target, 21, tint("#20343e", AMBER, answer), width=3)
+            self.text(draw, x+28, y, "B3", 26, family=BOLD, anchor="lm", color=tint("#20343e", AMBER, answer))
+            self.text(draw, *mirror, "B3", 29, family=BOLD, anchor="mm", color=tint(ORANGE, INK, answer))
         return canvas
 
     def sky(self, p, *, ending):

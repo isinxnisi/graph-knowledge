@@ -221,7 +221,7 @@ function resetCase() {
   state.detail = null; state.selected = { ja: "", en: "" }; state.lang = "ja";
   state.awaitingEnglishFor = "";
   state.sceneId = ""; state.compare = false; state.compareKey = ""; state.resumeAfter = null;
-  for (const id of ["scene-panel", "history-panel", "rerun-panel"]) $(id).open = false;
+  for (const id of ["script-read-panel", "script-review-panel", "scene-panel", "history-panel", "rerun-panel"]) $(id).open = false;
   closeEdit(); closeReview(); closeAdapt();
   $("rerun-language").value = "ja";
   refreshGenerationButtons();
@@ -258,7 +258,7 @@ async function route() {
       state.lang = "en";
     }
     view("case"); drawCase(); schedule();
-    if (chosenRun()?.status === "script_ready") $("scene-panel").open = true;
+    if (chosenRun()?.status === "script_ready") openDraft(chosenRun());
   } catch (err) {
     if (version !== state.routeVersion) return;
     $("loading-view").hidden = true; notify(err.message, true, route);
@@ -387,8 +387,68 @@ function seekScene(id) {
   if (time) seek($("player"), time.start);
 }
 
+function openDraft(run) {
+  const reviewed = state.lang === "ja" && run.plan?.editorialReview;
+  $(reviewed ? "script-read-panel" : "scene-panel").open = true;
+}
+
+function scriptItems(lines) {
+  return lines.map((line) => {
+    const item = node("li");
+    if (line.heading) item.append(node("strong", line.heading));
+    item.append(node("p", line.narration));
+    return item;
+  });
+}
+
+function drawScriptReview(run) {
+  const plan = run?.plan;
+  const review = state.lang === "ja" && plan?.editorialReview;
+  const panel = $("script-review-panel"), body = $("script-review");
+  const draftOpen = body.dataset.run === run?.id && body.querySelector("details")?.open;
+  body.dataset.run = run?.id || "";
+  panel.hidden = !review;
+  body.replaceChildren();
+  if (!review) return;
+  if (review.initialScript?.length) {
+    const details = node("details"), text = node("ol");
+    details.open = Boolean(draftOpen);
+    text.append(...scriptItems(review.initialScript));
+    details.append(node("summary", "初稿の語りを読む"), text);
+    body.append(details);
+  }
+  const notes = node("dl");
+  for (const [label, value] of [
+    ["初稿で立てた問い", review.initialScope?.question],
+    ["初稿の大筋", review.initialScope?.outline],
+    ["初稿の台本と絵からAIが読み取ったこと", review.audience.retelling],
+    ["初稿で伝わりにくかったこと", review.audience.unclear],
+    ["改稿した理由", review.revisionReason],
+    ["清書で軸にした問い", review.scope.question !== review.initialScope?.question && review.scope.question],
+    ["清書に使った大筋", review.scope.outline !== review.initialScope?.outline && review.scope.outline],
+  ]) {
+    if (value) notes.append(node("dt", label), node("dd", value));
+  }
+  const checks = node("ul");
+  for (const check of review.checks) {
+    const beat = review.scope.beats.find((b) => b.id === check.beatId);
+    const numbers = plan.scenes.map((s, i) => check.sceneIds.includes(s.id) ? i + 1 : null).filter(Boolean);
+    const item = node("li");
+    if (beat) item.append(node("strong", beat.meaning));
+    if (numbers.length) item.append(node("span", "場面 " + numbers.join("・"), "subtle"));
+    item.append(node("p", check.evidence));
+    checks.append(item);
+  }
+  const rounds = review.rounds > 1 ? "（改稿" + review.rounds + "回）" : "";
+  body.append(notes, node("h3", "清書した台本と企画の照合" + rounds), checks);
+}
+
 function drawScenes(run) {
   const scenes = run?.plan?.scenes || [];
+  const lines = scenes.map((scene) => scene[state.lang]).filter((line) => line?.narration);
+  $("script-read-panel").hidden = !lines.length;
+  $("script-read").replaceChildren(...scriptItems(lines));
+  drawScriptReview(run);
   const intent = $("story-intent"), story = run?.plan?.story;
   intent.replaceChildren();
   for (const [key, label] of [["question", "初めて見る人の問い"], ["explanation", "この動画で伝えること"], ["visualCheck", "画面で確かめること"]]) {
@@ -506,7 +566,7 @@ function switchPreview(lang, id) {
   state.sceneId = preserveTime ? anchor : priorRun?.id === chosenRun()?.id ? state.sceneId : "";
   closeEdit(); closeReview(); closeAdapt();
   drawWatch(); drawProgress();
-  if (chosenRun()?.status === "script_ready") $("scene-panel").open = true;
+  if (chosenRun()?.status === "script_ready") openDraft(chosenRun());
   if (preserveTime && state.sceneId === anchor) seekScene(anchor);
 }
 
@@ -623,7 +683,7 @@ async function reloadDetail() {
   if (switched || previous.title !== data.title || outputs(previous) !== outputs(data)) {
     drawCase();
     const selected = chosenRun();
-    if (selected?.status === "script_ready" && !previous.runs.some((r) => r.id === selected.id && r.status === "script_ready")) $("scene-panel").open = true;
+    if (selected?.status === "script_ready" && !previous.runs.some((r) => r.id === selected.id && r.status === "script_ready")) openDraft(selected);
   }
   else { drawProgress(); drawHistory(); }
   const summary = state.cases.find((c) => c.id === id);

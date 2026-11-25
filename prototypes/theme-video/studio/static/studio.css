@@ -96,6 +96,18 @@ h1 { font: 650 clamp(26px, 2.5vw, 42px)/1.45 "Yu Mincho", YuMincho, "Hiragino Mi
 #story-intent { margin: 8px 0 20px; max-width: 75ch; }
 #story-intent dt { margin-top: 10px; font-weight: 650; color: var(--teal); }
 #story-intent dd { margin: 1px 0 0; }
+#script-read, #script-review { max-width: 75ch; overflow-wrap: anywhere; }
+#script-read { margin: 0; padding-left: 1.8em; }
+#script-read li, #script-review li { margin-bottom: 12px; }
+#script-read li p, #script-review li p { margin: 3px 0; }
+#script-review dl { margin: 0; }
+#script-review dt { margin-top: 10px; font-weight: 650; color: var(--teal); }
+#script-review dd { margin: 1px 0 0; white-space: pre-line; }
+#script-review h3 { margin: 18px 0 8px; font-size: 15px; }
+#script-review ul { margin: 0; padding-left: 1.3em; }
+#script-review li span { display: block; }
+#script-review details summary { cursor: pointer; color: var(--teal); font-size: 14px; font-weight: 650; }
+#script-review details ol { padding-left: 1.8em; }
 #pronunciation { margin: 15px 0; }
 #pronunciation legend { font-size: 15px; }
 .reading-row { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr) auto; align-items: end; gap: 7px; margin-bottom: 8px; }
@@ -106,10 +118,10 @@ h1 { font: 650 clamp(26px, 2.5vw, 42px)/1.45 "Yu Mincho", YuMincho, "Hiragino Mi
 #scene-from-playback { margin-top: 5px; }
 .panel { border-bottom: 1px solid var(--line); }
 .watch-grid + .approval-row[hidden] + form[hidden] + form[hidden] + .panel { margin-top: 14px; }
-.panel summary { list-style: none; position: relative; padding: 15px 26px 15px 0; font-size: 15px; font-weight: 650; }
-.panel summary::-webkit-details-marker { display: none; }
-.panel summary::after { content: "＋"; position: absolute; right: 6px; top: 14px; font-size: 16px; color: var(--teal); font-weight: 400; }
-.panel[open] summary::after { content: "−"; }
+.panel > summary { list-style: none; position: relative; padding: 15px 26px 15px 0; font-size: 15px; font-weight: 650; }
+.panel > summary::-webkit-details-marker { display: none; }
+.panel > summary::after { content: "＋"; position: absolute; right: 6px; top: 14px; font-size: 16px; color: var(--teal); font-weight: 400; }
+.panel[open] > summary::after { content: "−"; }
 .panel-body { padding: 0 0 19px; }
 .panel-body > :first-child { margin-top: 0; }
 .quotation { margin: 12px 0; padding: 13px 17px; border-left: 3px solid #c68a5d; background: var(--tint); white-space: pre-line; line-height: 1.85; }

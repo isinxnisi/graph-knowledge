@@ -87,6 +87,25 @@ class LedgerTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.desk.submit("runs", {**edit, "narration": "Another."}, self.snapshot, self.models, case)
 
+    def test_japanese_recommission_freezes_the_selected_versions_words_and_feedback(self):
+        result = self.create()
+        case, parent = result["id"], result["runId"]
+        self.desk.process_next(lambda *args: self.plan, self.render)
+        self.desk.review(case, {"runId": parent, "lang": "ja", "reason": "なぜ並べるのかが残った。"}, "rework")
+        self.desk.review(case, {"runId": parent, "lang": "en", "reason": "English only."}, "rework")
+        self.desk.submit("runs", {"requestId": "rewrite", "parent": parent, "language": "ja", "model": "test",
+                                 "scriptFirst": True}, self.snapshot, self.models, case)
+        self.desk.review(case, {"runId": parent, "lang": "ja", "reason": "依頼を送った後の感想。"}, "rework")
+        self.desk = Ledger(self.data)
+        generate = Mock(return_value=self.plan)
+        self.desk.process_next(generate, self.render)
+        previous = generate.call_args.kwargs["previous_japanese"]
+        self.assertEqual(previous["runId"], parent)
+        self.assertEqual(previous["narrations"], [s["ja"]["narration"] for s in self.plan["scenes"]])
+        self.assertNotIn("asset", str(previous))
+        self.assertEqual([(r["kind"], r["reason"]) for r in previous["reviews"]],
+                         [("rework", "なぜ並べるのかが残った。")])
+
     def test_retry_keeps_finished_edition_and_script(self):
         result = self.create()
         calls = []
@@ -164,6 +183,7 @@ class LedgerTest(unittest.TestCase):
     def test_japanese_draft_then_english_adaptation_from_the_selected_cut(self):
         self.request.update(language="ja", scriptFirst=True)
         master = deepcopy(self.plan)
+        master["editorialReview"] = {"reviewedCutSha256": "hash-of-original-script"}
         del master["titles"]["en"]
         del master["scenes"][0]["en"]
         result = self.create()
@@ -171,7 +191,8 @@ class LedgerTest(unittest.TestCase):
         generate = Mock(return_value=master)
         render = Mock(wraps=self.render)
         self.desk.process_next(generate, render)
-        self.assertEqual(generate.call_args.kwargs, {"language": "ja"})
+        self.assertEqual(generate.call_args.kwargs["language"], "ja")
+        self.assertTrue(callable(generate.call_args.kwargs["progress"]))
         self.assertEqual(self.desk.list_cases()[0]["states"], {"ja": "台本確認", "en": "未生成"})
         self.assertEqual(self.desk.case(case)["runs"][0]["langs"], ["ja"])
         render.assert_not_called()
@@ -194,6 +215,9 @@ class LedgerTest(unittest.TestCase):
         source = next(r for r in before["runs"] if r["id"] == revised)
         self.assertEqual(source["langs"], ["ja"])
         self.assertEqual(source["plan"]["scenes"][0]["ja"]["narration"], "星がひとつ。")
+        self.assertNotIn("editorialReview", source["plan"])
+        self.assertEqual(next(r for r in before["runs"] if r["id"] == draft)["plan"]["editorialReview"],
+                         master["editorialReview"])
         self.assertEqual(before["accepted"], {})
 
         english = submit("adapt", language="en", parent=revised, scriptFirst=True)
@@ -240,6 +264,8 @@ class LedgerTest(unittest.TestCase):
             self.desk.submit("runs", {**request, "parent": source}, self.snapshot, self.models, case)
 
     def test_invalid_reading_rolls_back_and_finished_correction_only_renders_japanese(self):
+        review = {"reviewedCutSha256": "hash-of-visible-cut", "checks": [{"sceneIds": ["s1"]}]}
+        self.plan["editorialReview"] = review
         self.plan["scenes"][0]["ja"]["narration"] = "一日が始まります。"
         result = self.create()
         case, first = result["id"], result["runId"]
@@ -263,7 +289,9 @@ class LedgerTest(unittest.TestCase):
         render.assert_called_once()
         revised_plan, lang = render.call_args.args[:2]
         self.assertEqual((lang, revised_plan["scenes"][0]["ja"]["readings"]), ("ja", readings))
+        self.assertEqual(revised_plan["editorialReview"], review)
         detail = self.desk.case(case)
+        self.assertEqual(detail["runs"][0]["plan"]["editorialReview"], review)
         self.assertEqual(detail["accepted"], {"ja": first, "en": first})
         self.assertEqual(detail["runs"][1], parent["runs"][0])
         self.assertEqual(set(detail["runs"][0]["editions"]), {"ja"})

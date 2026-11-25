@@ -95,12 +95,28 @@ class EditorialNoteTest(unittest.TestCase):
             {"id": f"s{i}", "heading": "Follow the light", "narration": "Here is the same star."}
             for i in range(1, 4)]}
         response = japanese
+        scope = {"question": "どの鏡でしょう？", "outline": "光を確かめる。",
+                 "beats": [{"meaning": "光が届く。", "visibleTest": "写真の光を見る。", "sourceIds": ["nasa-mosaic"]}]}
 
         commands = []
+        inputs = []
         def run(args, **kwargs):
             commands.append(args)
+            inputs.append(json.loads(kwargs["input"].rsplit("\n\n", 1)[1]))
+            fields = json.loads((kwargs["cwd"] / "shape.json").read_text(encoding="utf-8"))["properties"]
+            stage = response
+            if "beats" in fields:
+                stage = scope
+            elif "retelling" in fields:
+                stage = {"retelling": "光が届きました。", "unclear": "どの鏡でしょう？"}
+            elif "revisedScope" in fields:
+                stage = {"revisedScope": scope, "revisionReason": "光の行き先を示す。", "script": japanese}
+            elif "checks" in fields:
+                stage = {"ready": True, "blockingIssue": "", "checks": [
+                    {"beatId": "b1", "sceneIds": ["s1"], "quote": "主鏡に光が届きます。",
+                     "supported": True, "evidence": "光が届く語りがある。"}]}
             return CompletedProcess(args, 0, stdout="\n".join(map(json.dumps, [
-                {"type": "item.completed", "item": {"type": "agent_message", "text": json.dumps(response)}},
+                {"type": "item.completed", "item": {"type": "agent_message", "text": json.dumps(stage)}},
                 {"type": "turn.completed", "usage": {"input_tokens": 10}}])))
 
         choices = [{"id": "model", "modelId": "model", "effort": "high", "available": True},
@@ -121,7 +137,20 @@ class EditorialNoteTest(unittest.TestCase):
             self.assertEqual((master["model"]["requested"], master["model"]["effort"]), ("model", "ultra"))
             self.assertEqual(commands[-1][commands[-1].index("-m") + 1], "model")
             self.assertIn('model_reasoning_effort="ultra"', commands[-1])
-            fields = ja_input["outputSchema"]["properties"]
+            self.assertEqual(len(commands), 5)
+            self.assertNotIn("assets", inputs[0])
+            self.assertNotIn("boardMaterials", inputs[0])
+            self.assertEqual(set(inputs[2]), {"scenes"})
+            self.assertEqual(set(inputs[2]["scenes"][0]), {"id", "narration", "picture"})
+            self.assertNotIn("webb-", str(inputs[2]))
+            self.assertNotIn("鏡からの光", inputs[2]["scenes"][0]["picture"])
+            self.assertEqual(master["editorialReview"]["checks"][0]["sceneIds"], ["s1"])
+            self.assertEqual(master["editorialReview"]["initialScript"],
+                             [{k: s["ja"][k] for k in ("heading", "narration")} for s in japanese["scenes"]])
+            self.assertEqual(master["model"]["usage"]["input_tokens"], 50)
+            self.assertEqual(generate("ja"), master)
+            self.assertEqual(len(commands), 5)
+            fields = ja_input["outputSchema"]["properties"]["script"]["properties"]
             self.assertEqual(fields["titles"]["required"], ["ja"])
             self.assertNotIn("en", fields["scenes"]["items"]["properties"])
             materials = json.loads(ja_input["prompt"].rsplit("\n\n", 1)[1])

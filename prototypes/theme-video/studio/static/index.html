@@ -98,6 +98,8 @@
         <form id="adopt-form" class="action-form" hidden>
           <p id="review-target" class="form-target"></p><label id="review-reason-label" for="adopt-reason">採用理由</label><input id="adopt-reason" required maxlength="1000" placeholder="確認した場面と、その判断の理由"><div class="actions"><button type="button" id="adopt-cancel" class="quiet">閉じる</button><button id="review-submit" type="submit" class="primary small">採用を記録</button></div>
         </form>
+        <details id="script-read-panel" class="panel" hidden><summary>台本を通して読む</summary><ol id="script-read" class="panel-body"></ol></details>
+        <details id="script-review-panel" class="panel" hidden><summary>日本語台本の見直し記録</summary><div class="panel-body" id="script-review"></div></details>
         <details id="scene-panel" class="panel"><summary>場面と台本 <span id="scene-count" class="count"></span></summary>
           <div class="panel-body"><dl id="story-intent" hidden></dl><label for="scene-select">確認する場面</label><select id="scene-select"></select><button id="scene-from-playback" class="text-link" type="button">今の再生位置の台本を見る</button><p id="scene-narration" class="quotation"></p><div id="scene-notes"></div><div id="scene-sources" class="source-list"></div>
             <button id="edit-toggle" class="secondary small" type="button">この場面の語りを編集</button>

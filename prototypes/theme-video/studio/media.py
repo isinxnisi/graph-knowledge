@@ -367,8 +367,11 @@ def _stamp(frame):
 def _scene_cues(scene, lang, voice, engine, first):
     shot = scene["asset"]
     lead = 26 if first else 5
-    if shot in ("webb-identify", "webb-map", "webb-return"):
+    if shot in ("webb-identify", "webb-map", "webb-return", "webb-layout", "webb-focus"):
         lead = 20  # Let the viewer find the mark before explaining it.
+    timing = (scene.get("visualTiming") or {}) if lang == "ja" else {}
+    if timing.get("beforeVoice") is not None:
+        lead = round(timing["beforeVoice"] * FPS)
     cues = [(lead, "", None)]
     for text, spoken in _utterances(scene[lang], lang):
         if text.startswith(("……", "…")):
@@ -385,8 +388,11 @@ def _scene_cues(scene, lang, voice, engine, first):
         hold = 26 if shot == "webb-return" else 18
     if scene[lang]["narration"].rstrip().endswith(("?", "？")):
         hold = round(1.6 * FPS)
-    cues[-1] = (cues[-1][0] + hold, "", None)
-    return cues
+    tail = cues[-1][0] + hold
+    if timing.get("afterVoice") is not None:
+        tail = round(timing["afterVoice"] * FPS)
+    cues[-1] = (tail, "", None)
+    return [cue for cue in cues if cue[0] > 0]
 
 
 def _timed_scenes(scenes, lang, voice, engine, progress):
@@ -430,14 +436,19 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
             shot = scene["asset"]
             animated = shot.startswith("webb-")
             if animated:
+                if shot_offset == 0:
+                    voice_starts_at = None
+                    if (lang == "ja" and (scene.get("visualTiming") or {}).get("beforeVoice")
+                            and cues[0][2] is None):
+                        voice_starts_at = cues[0][0] / max(1, duration - 1)
                 if plan.get("themeId") != WEBB["themeId"]:
                     raise ValueError("ウェッブの演出素材は対応するテーマで使用してください。")
                 if motion_boards is None:
                     from webb.boards import Boards
                     motion_boards = Boards(lang=lang, identifying_segments=any(
                         s["asset"] == "webb-tilt" for s in plan["scenes"]))
-                if shot not in ("webb-mirror", "webb-tilt"):
-                    used.add("aligned" if shot == "webb-map" else "mosaic")
+                if shot not in ("webb-mirror", "webb-tilt", "webb-focus"):
+                    used.add("aligned" if shot in ("webb-array", "webb-layout", "webb-map") else "mosaic")
             else:
                 board = _board(plan, scene, lang, used, seen_mosaic)
                 seen_mosaic |= shot == "mosaic"
@@ -451,12 +462,14 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
                     caption = Image.new("RGB", (W, H), INK)
                     style.subtitle(caption, style.caption_breaks(text, wrap_japanese=True))
                     caption_band = caption.crop((0, FOOT, W, H))
-                # Animate at twelve poses per second on the same 24 fps voice clock.
-                step = 2 if animated else frames
+                # The original array photograph stays still, including during long authored holds.
+                # Other Webb boards animate at twelve poses per second on the 24 fps voice clock.
+                step = 2 if animated and shot != "webb-array" else frames
                 for offset in range(0, frames, step):
                     if animated:
                         position = (shot_offset + frame - start + offset) / max(1, duration - 1)
-                        board = motion_boards.frame(shot.removeprefix("webb-"), position)
+                        board = motion_boards.frame(shot.removeprefix("webb-"), position,
+                                                    voice_starts_at=voice_starts_at)
                     slide = board
                     if caption_band is not None:
                         slide = board.copy()
