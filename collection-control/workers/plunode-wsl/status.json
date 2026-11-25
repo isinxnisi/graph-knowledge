@@ -26,8 +26,8 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-25T22:20:00+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-25T21:48:40.625153+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
@@ -35,20 +35,16 @@
     "eligibleAt": "2026-11-26T00:00:00+00:00",
     "windowEndAt": "2026-11-26T03:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-49-dot-hara-souten-20261027-batch-01",
-    "startedAt": "2026-11-25T21:38:29.955177+00:00",
-    "limitAt": "2026-11-25T22:10:00+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1-batch-09",
-    "endedAt": "2026-11-25T21:28:27.943338+00:00"
+    "requestId": "issue-49-dot-hara-souten-20261027-batch-01",
+    "endedAt": "2026-11-25T21:38:40.625154+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 8,
-    "waiting-control": 39,
-    "completed": 14,
+    "waiting-control": 38,
+    "completed": 15,
     "awaiting-recovery": 1
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-25T21:38:31.202398+00:00"
+  "checkedAt": "2026-11-25T21:38:47.460413+00:00"
 }
