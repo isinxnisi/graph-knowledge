@@ -47,6 +47,8 @@ python3 -Es "$root_stage/production_release.py" apply --stage "$root_stage" --se
 
 ## 3. 結果を確認する
 
+開発PCには封印済みステージと切替記録を保持する。準備で作った隔離ビルドと配送用tarは、転送先の封印照合と復帰資材の確認後に片付ける。後続版の受入後、退役したローカルDockerイメージは個別に照合して整理できる。[開発PCの容量管理](DEV_STORAGE.md)
+
 - 切替前後の内部確認は正式Hostを指定し、dataset・検索の1／2ページ・隣接Graph・出典付き固定Record版を読み取る。Webのbuild ID、対象サービスのimage、両台帳、環境ハッシュを再照合する。`activated` はこの内部確認が成功した状態。
 - 開発側または運用端末から `python3 scripts/production_release.py verify-https --build "$released_build"` を実行し、正式HTTPSのTOP、dataset、公開世代、検索の2ページと互換性APIのbuildを確認する。変更に応じて固定テーマ・共有URL・会員の代表経路なども個別に確認し、書込みを含むテストは隔離またはβの専用データで行う。
 - 承認したSHA、βと正式build、対象migration、切替サービス、バックアップ場所、代表経路の結果を記録する。運用手順や文書だけの更新なら、通常のWeb／Worker imageは再buildしない。

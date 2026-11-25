@@ -29,6 +29,8 @@ main側などの手動作業では、最初に `make autopilot-review` と必要
 
 設定された自動開発専用branch上でrunnerから動く無人ターンは、runner自身が同じロックを保持しているため再取得しない。自動実行から手動側へmerge／pushせず、runner・設定・ロックを変更しない。設定がない別環境では、その状態を報告し、当該自動実行が存在しないことを確認して通常作業へ進む。
 
+開発PCでの隔離ビルド・配備準備では、終了時に一時ビルドと配送用tarを片付け、復帰に必要な封印済みステージ・固有の検証結果を残す。未完了・稼働中の作業は引継ぎ後に整理する。対象と照合手順は[開発PCの容量管理](docs/runbooks/DEV_STORAGE.md)を参照する。
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know

@@ -1,5 +1,7 @@
 [通常の本番公開手順](runbooks/PRODUCTION_RELEASE.md)。Web・Worker・migrationの計画、切替、確認と復旧。
 
+[開発PCのWSL・Docker容量管理](runbooks/DEV_STORAGE.md)。隔離ビルドの後片付け、コンパイラキャッシュの定期整理、復元可能な旧リリースのローカルコピーを扱う。
+
 テーマ動画の[ローカル制作室と起動方法](../prototypes/theme-video/studio/README.md)、[チャンネル戦略と視聴体験](design/THEME_VIDEO_CHANNEL.md)、[初回の企画・試作手順](design/THEME_VIDEO_FIRST_PILOT.md)、[初代ウォークマンの日英試作動画・字幕・改稿記録](../prototypes/theme-video/walkman/README.md)、[制作運用と着手順](design/THEME_VIDEO_OPERATIONS.md)。
 
 知識DBの公開投影・巡回台帳の世代管理。[現行設計](design/KNOWLEDGE_PUBLICATION_STORAGE.md)・[隔離比較とβ確認](verification/KNOWLEDGE_PUBLICATION_STORAGE_20261119.md)・[移行と復帰](runbooks/KNOWLEDGE_PUBLICATION_STORAGE.md)。

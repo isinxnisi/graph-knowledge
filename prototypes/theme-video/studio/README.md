@@ -6,7 +6,13 @@
 
 今回動作を確認した環境はWindows、Python 3.11、FFmpeg、Pillow、NumPy、Windows標準フォント、日本語のVOICEVOXとローカルのCodex CLI。CLIはこの端末でログイン済みのアカウントを使う。制作画面で「脚本・編集モデル」を選ぶと、「推論の強さ」にそのモデルが対応する設定が出る。このPCではAstraとSolがともにUltraに対応している。新規案件と作り直しは「高」で開き、英語への翻案は元の日本語版の設定で開く。いずれも実行前に変更できる。
 
-リポジトリのルートで実行する。英語音声の初回準備はKokoro-82Mと音声ライブラリのダウンロードを含む。このPCでは準備済み。
+このPCではWindowsにサインインすると制作室がバックグラウンドで起動する。[制作室を開く](http://127.0.0.1:3269/)。既存案件の保存先は `%LOCALAPPDATA%\Plunode\video-studio`。起動を担当するタスクは `Plunode-VideoStudio` で、WSLの準備中などで失敗したときは1分間隔で最大5回再試行する。Windowsやリポジトリの移設後は、Windows PowerShellでリポジトリのルートから次のコマンドで再登録できる。
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\prototypes\theme-video\studio\install-logon-task.ps1
+```
+
+手動で起動する場合もリポジトリのルートで実行する。英語音声の初回準備はKokoro-82Mと音声ライブラリのダウンロードを含む。このPCでは準備済み。
 
 ```powershell
 python -B prototypes/theme-video/studio/setup_media.py
