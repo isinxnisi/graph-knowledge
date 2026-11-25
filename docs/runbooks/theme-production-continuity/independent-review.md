@@ -28,7 +28,7 @@ brief、scope、保存成果、実際の版と根拠から、読者の価値を�
 
 読者体験と表現を主目的とする独立見直し専用ターンを案件ごとに第10節に従い最低1回実施する。初回が十分なら実績になる。executionId・対象版・通読で得た具体的な所見・比較した改善案・判断理由を保存する。既知の指摘解消と、読者の視点での現行作品評価を区別する。年表が約束した変化を最後まで伝えるか、題名・導入・Story・詳細・関係図・根拠導線、画像が効果を増すかを確かめる。表紙と出来事画像は別々に見る。導入の改行・空行、参照・必要な翻訳、素材の権利と実物表示を確認する。重要で具体的な改善があれば続け、任意の磨き込み・素材の点数・経過時間で合否を決めない。
 
-同一digest・画面build・現行の画面要件に合う既存受付を読み、必要時だけ `capture_theme_review_preview` で日英（requiredLocales ja/en）を依頼する。 `read_theme_automation` で対象言語と受付を照合し、求められるPC1440px・スマホ390pxの全対象PNGを同じreview起動で `read_theme_review_evidence` から実画像として視認する。対象言語不足は訳文の範囲・版を修正する。視認できない場合は `EVIDENCE_VIEW_UNAVAILABLE` を報告し、重要な不足の回復または退避を判断する。共通機能は必須証拠の代表画面、テーマ固有の内容は実際のデータと表示から確認する。同じ機能を通る全Record・全画像の追加採取や共通表示実装の修正は、作品と必須条件が成立する場合は後日対応に記録する。対象版・言語・幅・build・読者への影響を残す。
+先に `read_theme_automation` で同一digest・画面build・現行の画面要件に合う既存受付を確認する。readyなら同じ受付から実画像の視認へ進み、採取を重ねない。該当受付がない場合に `capture_theme_review_preview` で日英（requiredLocales ja/en）を依頼する。処理中は同じ受付を追い、並行して通読・根拠の確認を進める。依頼後に起動を区切る場合は見直し所見・受付ID・次の視認作業を保存してleaseをreleaseする。対象言語と受付を照合し、求められるPC1440px・スマホ390pxの全対象PNGを同じreview起動で `read_theme_review_evidence` から実画像として視認する。対象言語不足は訳文の範囲・版を修正する。視認できない場合は `EVIDENCE_VIEW_UNAVAILABLE` を報告し、重要な不足の回復または退避を判断する。共通機能は必須証拠の代表画面、テーマ固有の内容は実際のデータと表示から確認する。同じ機能を通る全Record・全画像の追加採取や共通表示実装の修正は、作品と必須条件が成立する場合は後日対応に記録する。対象版・言語・幅・build・読者への影響を残す。
 
 最新 `evaluationTarget.digest` とガイド版（契約2は criteriaRevision、evidenceRevision を含む）、現行の対象を実視認した reviewEvidenceId で `scope:"whole-theme"` を評価する。実際の著作権・事実・翻訳・版・必須証拠・公開条件の不足は理由付き needs-changes。改善可能な間は調査・修正を続ける。手段のない重大な不足は非公開で退避する。後日対応キーと作品が成立する判断を評価の要旨に残し、失敗受付は契約に従い `assessment.exceptions` に submissionId と issue/reason を記す。現行pass・未決受付なし・公開に必要な残件なしで、同じreview leaseと最新versionから complete する。制作原稿に通常の publish_theme は使わない。
 
