@@ -21,7 +21,10 @@ export function sourceURL(raw:string){
   throw new SourceCheckError("原資料には認証不要の公開HTTPS URLを指定してください。");
  url.hash="";return url;
 }
-export async function publicSourceDocument(raw:string,options:{allowedHosts?:string[]}={}):Promise<SourceDocument>{
+export async function publicSourceDocument(raw:string,options:{allowedHosts?:string[];allowPdf?:boolean}={}):Promise<SourceDocument>{
+ const accept=options.allowPdf?'text/html, application/pdf, text/plain;q=0.9':'text/html, text/plain;q=0.9';
+ const supported=(type:string)=>/^(text\/html|text\/plain|application\/xhtml\+xml)(;|$)/.test(type)||
+  (options.allowPdf===true&&/^application\/pdf(;|$)/.test(type));
  let url=sourceURL(raw);const deadline=Date.now()+20000;
  for(let redirect=0;redirect<=3;redirect++){
   if(options.allowedHosts&&!options.allowedHosts.includes(url.hostname))throw new SourceCheckError("計画で指定したサイト以外への転送は取得しません。");
@@ -30,20 +33,20 @@ export async function publicSourceDocument(raw:string,options:{allowedHosts?:str
   if(!addresses.length||addresses.some(a=>!publicSourceAddress(a.address)))throw new SourceCheckError("内部ネットワークの資料は取得できません。公開資料を指定してください。");
   const address=addresses[0],remaining=deadline-Date.now();if(remaining<=0)throw new SourceCheckError("資料の取得に時間がかかっています。再試行します。",true);
   const result=windowsBetaHttpsEnabled()?await (async()=>{
-   const response=await windowsBetaHttps(url,address.address,'source',AbortSignal.timeout(Math.min(10000,remaining)),'GET',{Accept:'text/html, text/plain;q=0.9','Accept-Encoding':'identity'}).catch(e=>{
+   const response=await windowsBetaHttps(url,address.address,'source',AbortSignal.timeout(Math.min(10000,remaining)),'GET',{Accept:accept,'Accept-Encoding':'identity'}).catch(e=>{
     if(e instanceof Error&&e.message==='BETA_HTTPS_TOO_LARGE')throw new SourceCheckError('資料が大きすぎます。該当箇所のある別ページを指定してください。');throw e;
    });
    const status=response.status,type=(response.headers.get('content-type')??'').toLowerCase();
-   if(status===200&&(!/^(text\/html|text\/plain|application\/xhtml\+xml)(;|$)/.test(type)||response.headers.get('content-encoding')&&response.headers.get('content-encoding')!=='identity'))throw new SourceCheckError('この資料形式はまだ自動照合できません。本文を読めるHTMLやテキストの別資料を指定してください。');
+   if(status===200&&(!supported(type)||response.headers.get('content-encoding')&&response.headers.get('content-encoding')!=='identity'))throw new SourceCheckError('この資料形式はまだ自動照合できません。本文を読めるHTMLやテキストの別資料を指定してください。');
    return {status,type,body:status===200?Buffer.from(await response.arrayBuffer()):Buffer.alloc(0),location:response.headers.get('location')??undefined,retryAfter:response.headers.get('retry-after')??undefined,challenge:response.headers.get('cf-mitigated')==='challenge'};
   })():await new Promise<{status:number;location?:string;type:string;body:Buffer;retryAfter?:string;challenge?:boolean}>((resolve,reject)=>{
    const req=request(url,{method:"GET",family:address.family,agent:false,
     lookup:(_host,_options,callback)=>callback(null,address.address,address.family),
-    headers:{"User-Agent":"Plunode-SourceCheck/1.0 (+https://plunode.net/privacy)",Accept:"text/html, text/plain;q=0.9","Accept-Encoding":"identity"},signal:AbortSignal.timeout(Math.min(10000,remaining))},res=>{
+    headers:{"User-Agent":"Plunode-SourceCheck/1.0 (+https://plunode.net/privacy)",Accept:accept,"Accept-Encoding":"identity"},signal:AbortSignal.timeout(Math.min(10000,remaining))},res=>{
     const status=res.statusCode??0,type=String(res.headers['content-type']??'').toLowerCase();
     if(status>=300&&status<400){res.destroy();resolve({status,location:res.headers.location,type,body:Buffer.alloc(0)});return;}
     if(status!==200){res.destroy();resolve({status,type,body:Buffer.alloc(0),retryAfter:String(res.headers['retry-after']??''),challenge:res.headers['cf-mitigated']==='challenge'});return;}
-    if(!/^(text\/html|text\/plain|application\/xhtml\+xml)(;|$)/.test(type)||res.headers['content-encoding']&&res.headers['content-encoding']!=='identity'){
+    if(!supported(type)||res.headers['content-encoding']&&res.headers['content-encoding']!=='identity'){
      res.destroy();reject(new SourceCheckError("この資料形式はまだ自動照合できません。本文を読めるHTMLやテキストの別資料を指定してください。"));return;
     }
     const chunks:Buffer[]=[];let bytes=0;

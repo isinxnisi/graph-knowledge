@@ -185,7 +185,7 @@ class Handler(BaseHTTPRequestHandler):
                 if action in ("adopt", "rework"):
                     ledger.review(cid, data, "adopted" if action == "adopt" else "rework")
                 elif action == "resume":
-                    ledger.resume(cid, required(data, "runId"))
+                    ledger.resume(cid, required(data, "runId"), data.get("materialLeads"))
                 else:
                     ledger.pause(cid, required(data, "runId"))
                 return self.respond(200, {"ok": True})

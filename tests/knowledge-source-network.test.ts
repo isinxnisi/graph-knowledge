@@ -14,6 +14,14 @@ beforeEach(()=>{
  });
 });
 describe('source network boundary',()=>{
+ it('returns PDF bytes only for a caller using its own PDF extractor',async()=>{
+  const response={status:200,headers:{'content-type':'application/pdf'},body:'%PDF-test'};
+  mock.responses.push(response,response);
+  await expect(publicSourceDocument('https://example.org/paper')).rejects.toThrow('形式');
+  const pdf=await publicSourceDocument('https://example.org/paper',{allowPdf:true});
+  expect(pdf.type).toBe('application/pdf');
+  expect(pdf.body.toString()).toBe('%PDF-test');
+ });
  it('retains requested and final URLs only after a safe redirect and exact quote match',async()=>{
   mock.responses.push({status:302,headers:{location:'https://publisher.example.org/final'},body:''},{status:200,headers:{'content-type':'text/plain'},body:'A verified quote.'});
   expect(await verifySourceExcerpt('https://example.org/start#quote','verified quote')).toMatchObject({requestedUrl:'https://example.org/start',url:'https://publisher.example.org/final',textSha256:expect.stringMatching(/^[a-f0-9]{64}$/)});

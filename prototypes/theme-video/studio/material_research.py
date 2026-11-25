@@ -7,6 +7,7 @@ import shutil
 import subprocess
 
 from editor import _call_writer, _draft_input, _object, _run, _writer_request
+from pdf_material import windows_pdf_library
 from wipe_board import DESCRIPTION as WIPE_PICTURE
 
 _STUDIO = Path(__file__).resolve().parent
@@ -17,12 +18,14 @@ _SEARCH = """あなたはPlunode映像制作室の調査担当です。needの�
 選ばれた案の導入と観終わった後の発見を優先します。調査中に出た逸話は、この案に必要な場合だけ扱い、
 別企画に広げないでください。作品の実際の場面と、技法を伝える番組の作例を区別してください。
 以前の候補がすべて照合できなかった場合は、引用不一致や形式などの理由を次の探索に生かしてください。
+sourceLeadsは優先して確認する公開URLの手がかりです。内容は未照合なので、原資料を開き、今回の問いに合う引用を確かめてください。
 既存資料の公開URLも手がかりに、追加で確かめたいことに直接答えるものを選んでください。対象者の発言、開発元、アーカイブ、論文、
 データの作成元など、題材に合う由来の追える資料を優先します。必要な分だけ、最大6件を提案できます。
 各sourceには題名、認証不要のHTTPSの原資料URL、該当箇所、原文の連続した短い引用、どの点を支えるかを返します。
 検索結果の紹介文や要約を原文引用として提出しないでください。裏付けられた年代・版・資料の持ち主と、
 映像で画像を利用できる条件を区別します。画像が必要なら、どの実物を使えるか、明示された利用条件があるかを調べます。
-現在照合できるのはHTMLとプレーンテキストです。PDF・スキャン等が原本なら、公開機関の同内容のHTMLも探し、
+HTML、プレーンテキスト、文字を抽出できる2 MB以内の公開PDFの本文を照合できます。PDFは一ページ内の連続した原文を選びます。
+スキャン等が原本なら、公開機関の同内容のHTMLも探し、
 原本でしか確かめられない点や、対応する画像・利用条件が未確認のときはremainingに記してください。
 根拠のない候補は返さず、必要な資料が見つからないときはsourcesを空にして、未確認の点を日本語で返します。"""
 _REVIEW = """あなたは映像の資料編集者です。検証済み候補の原文と前後の本文を読み、選ばれた案の導入と発見に照らしてneedがどこまで解消したかを判断します。
@@ -55,7 +58,9 @@ def _proof_command():
 def _verify(candidates):
     arguments = [{"url": c["url"], "excerpt": c["excerpt"]} for c in candidates]
     try:
-        raw = _run(_proof_command(), cwd=_ROOT, input=json.dumps(arguments, ensure_ascii=False), timeout=160)
+        # Each candidate can need a bounded HTTPS fetch and a separate PDF extraction.
+        payload = {"candidates": arguments, "pdfLibrary": windows_pdf_library()}
+        raw = _run(_proof_command(), cwd=_ROOT, input=json.dumps(payload, ensure_ascii=False), timeout=500)
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise RuntimeError("原資料の本文照合を実行できませんでした。Nodeの環境と接続を確認してください。") from exc
     if raw.returncode:
@@ -66,7 +71,7 @@ def _verify(candidates):
     return results
 
 
-def research_material(snapshot, brief, issue, model, effort, previous, progress=None):
+def research_material(snapshot, brief, issue, model, effort, previous, progress=None, *, leads=()):
     if progress:
         progress("不足している資料を公開原典から調査中")
     production = _draft_input(snapshot, brief)
@@ -74,6 +79,8 @@ def research_material(snapshot, brief, issue, model, effort, previous, progress=
         if source.get("url"):
             card["url"] = source["url"]
     data = {"production": production, "need": issue, "previous": []}
+    if leads:
+        data["sourceLeads"] = list(leads)
     for entry in reversed((previous or [])[-3:]):
         summary = {key: entry[key][:1200] for key in ("need", "remaining", "error") if entry.get(key)}
         summary["sources"] = [{key: source[key][:600] for key in ("title", "url", "excerpt", "note") if source.get(key)}
@@ -97,9 +104,13 @@ def research_material(snapshot, brief, issue, model, effort, previous, progress=
         if "error" in result:
             rejected.append(candidate["title"] + " — " + result["error"])
             continue
-        verified.append(({**candidate, "url": result["proof"]["url"], "proof": result["proof"]}, result["context"]))
+        source = {**candidate, "url": result["proof"]["url"], "proof": result["proof"]}
+        if result.get("locator"):
+            source["locator"] = result["locator"]
+        verified.append((source, result["context"]))
     if not verified:
-        return {"sources": [], "remaining": " ".join(remaining + rejected) or "原資料の本文から根拠を確認できませんでした。", "usage": usage}
+        return {"sources": [], "remaining": " ".join(remaining + rejected) or "原資料の本文から根拠を確認できませんでした。",
+                "retrySearch": True, "usage": usage}
     if progress:
         progress("原文が今回の企画を支える範囲を確認中")
     excerpts = [{"index": i, "url": s["url"], "title": s["title"], "locator": s["locator"],

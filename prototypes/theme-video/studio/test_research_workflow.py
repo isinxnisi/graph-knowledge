@@ -56,6 +56,30 @@ class ResearchWorkflowTest(unittest.TestCase):
                          [("方向が必要", "error"), ("方向が必要", "done")])
         self.assertEqual(missing.call_count, 2)
 
+    def test_unreadable_candidates_trigger_a_different_search_before_waiting(self):
+        missing = {"sources": [], "remaining": "映画館の候補では引用が一致しません。",
+                   "retrySearch": True, "usage": {}}
+        found = {"sources": [self.source], "remaining": "", "usage": {}}
+        leads = ["https://example.org/paper"]
+        (self.folder / "material-leads.json").write_text(json.dumps({"urls": leads}), encoding="utf-8")
+        write = Mock(side_effect=[MaterialRequired("方向が必要"), "改稿"])
+        with patch("research_workflow.research_material", side_effect=[missing, found]) as research:
+            self.assertEqual(self.run_writer(write), "改稿")
+        self.assertEqual(write.call_count, 2)
+        previous, = research.call_args_list[1].args[5]
+        self.assertEqual(previous["remaining"], missing["remaining"])
+        self.assertEqual(research.call_args_list[1].kwargs["leads"], leads)
+        self.assertEqual(self.history()[1]["sourceLeads"], leads)
+        self.assertNotIn(leads[0], [s["url"] for s in write.call_args.args[0]["sources"]])
+        self.assertEqual([entry["need"] for entry in self.history()], ["方向が必要", "方向が必要"])
+
+    def test_unreadable_candidates_do_not_trigger_an_unbounded_search(self):
+        missing = {"sources": [], "remaining": "原典の引用を照合できません。", "retrySearch": True}
+        with patch("research_workflow.research_material", return_value=missing) as research:
+            with self.assertRaisesRegex(MaterialRequired, "引用を照合"):
+                self.run_writer(Mock(side_effect=MaterialRequired("方向が必要")))
+        self.assertEqual(research.call_count, 2)
+
     def test_live_search_is_scoped_to_research_and_requires_tool_activity(self):
         from subprocess import CompletedProcess
         from editor import _call_writer, _object, _writer_request

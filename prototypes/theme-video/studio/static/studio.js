@@ -613,7 +613,7 @@ function statusButton(run) {
   let label = resume ? "再開" : "中断";
   if (startVideo) label = "この台本で" + runLanguage(run) + "の映像を生成";
   if (run.status === "needs_revision") label = "改稿を再開";
-  if (run.status === "needs_material") label = "追加調査して再開";
+  if (run.canAddMaterialLeads) label = "追加調査して再開";
   const button = node("button", label, "secondary small");
   button.type = "button";
   button.onclick = async () => {
@@ -634,7 +634,12 @@ function statusButton(run) {
     const active = state.detail.id;
     button.disabled = true;
     try {
-      await api(detailPath(resume ? "/resume" : "/pause"), { runId: run.id });
+      const payload = { runId: run.id };
+      if (run.canAddMaterialLeads) {
+        const leads = $("material-leads-" + run.id)?.value.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+        if (leads?.length) payload.materialLeads = leads;
+      }
+      await api(detailPath(resume ? "/resume" : "/pause"), payload);
       if (state.detail?.id !== active) return;
       if (resume) state.resumeAfter = run.id;
       await reloadDetail();
@@ -656,8 +661,8 @@ function drawProgress() {
     box.append(node("strong", "試行 " + (ordered.length - ordered.indexOf(run)) + " · " + (jobName[run.status] || run.status) + "　"), node("span", run.error || run.progress || ""));
     const button = run.status === "script_ready" && run !== selected ? inspectScript(run) : statusButton(run);
     if (button) box.append(button);
-    if (run.materialResearch) {
-      const show = node("button", "調査記録を見る", "quiet small");
+    if (run.materialResearch || run.status === "needs_material") {
+      const show = node("button", run.materialResearch ? "調査記録を見る" : "調査するURLを追加", "quiet small");
       show.type = "button";
       show.onclick = () => {
         $("history-panel").open = true;
@@ -673,12 +678,13 @@ function drawProgress() {
   $("run-progress").replaceChildren(...boxes);
 }
 function researchDetails(run) {
-  const report = run.materialResearch;
+  const report = run.materialResearch || {};
   const rounds = report.rounds || [];
   const details = node("details", null, "material-research");
   details.id = "research-" + run.id;
   details.open = Boolean($(details.id)?.open);
-  details.append(node("summary", "追加調査の記録" + (rounds.length ? "（" + rounds.length + "回）" : "")));
+  const label = run.materialResearch ? "追加調査の記録" : "追加調査";
+  details.append(node("summary", label + (rounds.length ? "（" + rounds.length + "回）" : "")));
   if (report.error) details.append(node("p", report.error));
   for (const [i, round] of rounds.entries()) {
     const section = node("section");
@@ -705,10 +711,26 @@ function researchDetails(run) {
     if (round.error) section.append(node("p", "調査エラー　" + round.error));
     details.append(section);
   }
+  if (run.canAddMaterialLeads) {
+    const input = node("textarea");
+    input.id = "material-leads-" + run.id;
+    input.rows = 2;
+    input.inputMode = "url";
+    input.spellcheck = false;
+    input.value = $(input.id)?.value || "";
+    const caption = node("label", "調べてほしい公開HTTPS URL（任意）");
+    caption.htmlFor = input.id;
+    const hint = node("p", "1行に1件、6件まで。再開すると本文を照合します。", "subtle");
+    hint.id = input.id + "-hint";
+    input.setAttribute("aria-describedby", hint.id);
+    details.append(caption, hint, input);
+  }
   return details;
 }
 function drawHistory() {
   const ordered = orderedRuns();
+  const active = document.activeElement;
+  const editingLead = active?.id?.startsWith("material-leads-") && active;
   $("history-count").textContent = String(ordered.length);
   const rows = ordered.map((run, i) => {
     const row = node("div", null, "run-row");
@@ -719,13 +741,18 @@ function drawHistory() {
     if (run.plan?.japaneseMasterRunId) row.append(node("p", "元の日本語版　試行 " + runNumber(run.plan.japaneseMasterRunId), "subtle"));
     if (run.reason) row.append(node("p", run.reason));
     if (run.error || ((pending(run) || run.status === "script_ready") && run.progress)) row.append(node("p", run.error || run.progress));
-    if (run.materialResearch) row.append(researchDetails(run));
+    if (run.materialResearch || run.status === "needs_material") row.append(researchDetails(run));
     if (run.status === "script_ready") row.append(inspectScript(run));
     const button = statusButton(run);
     if (button) row.append(button);
     return row;
   });
   $("history").replaceChildren(...rows);
+  if (editingLead) {
+    const input = $(editingLead.id);
+    input?.focus({ preventScroll: true });
+    input?.setSelectionRange(editingLead.selectionStart, editingLead.selectionEnd);
+  }
 }
 function schedule() {
   clearTimeout(state.poll);

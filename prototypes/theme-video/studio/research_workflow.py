@@ -47,14 +47,16 @@ def write_with_research(snapshot, brief, model, effort, folder, progress, write)
         if progress:
             progress(message)
     searches = 0
+    need = None
     while True:
         enriched = _supplement(snapshot, rounds)
-        try:
-            if not enriched["sources"]:
-                raise MaterialRequired("この企画を裏づける公開原資料を探してください。")
-            return write(enriched)
-        except MaterialRequired as exc:
-            need = str(exc)
+        if need is None:
+            try:
+                if not enriched["sources"]:
+                    raise MaterialRequired("この企画を裏づける公開原資料を探してください。")
+                return write(enriched)
+            except MaterialRequired as exc:
+                need = str(exc)
         if searches >= 2:
             raise MaterialRequired(need)
         # A retry after a process exit replaces only the unfinished search.
@@ -64,10 +66,14 @@ def write_with_research(snapshot, brief, model, effort, folder, progress, write)
             rounds.append(entry)
         entry["need"] = need
         report(f"資料を追加調査中（{len(rounds)}回目）　" + need)
-        save()
         prior = [{k: r.get(k) for k in ("need", "sources", "remaining", "error")} for r in rounds[:-1]]
+        leads_path = folder / "material-leads.json"
+        leads = json.loads(leads_path.read_text(encoding="utf-8"))["urls"] if leads_path.exists() else []
+        if leads:
+            entry["sourceLeads"] = leads
+        save()
         try:
-            result = research_material(snapshot, brief, need, model, effort, prior, progress)
+            result = research_material(snapshot, brief, need, model, effort, prior, progress, leads=leads)
         except Exception as exc:
             from ledger import Paused
             if not isinstance(exc, Paused):
@@ -79,5 +85,9 @@ def write_with_research(snapshot, brief, model, effort, folder, progress, write)
         searches += 1
         before = {s["id"] for s in enriched["sources"]}
         if not any(_source_id(s) not in before for s in entry["sources"]):
+            if entry.get("retrySearch") and searches < 2:
+                report("候補の本文を照合できなかったため、別の資料を探します。")
+                continue
             raise MaterialRequired(entry["remaining"] or need)
+        need = None
         report("追加資料を保存しました。出典を加えて企画と台本を見直します。")

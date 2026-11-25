@@ -116,6 +116,56 @@ class LedgerTest(unittest.TestCase):
             self.desk.resume(case["id"], case["runId"])
             self.assertEqual(self.desk.case(case["id"])["runs"][0]["status"], "queued")
 
+    def test_optional_research_urls_are_atomic_deduplicated_and_scoped_to_waiting_run(self):
+        self.request.update(language="ja", scriptFirst=True)
+        case = self.create()
+        case_id, run_id = case["id"], case["runId"]
+        path = self.data / "cases" / case_id / run_id / "material-leads.json"
+        wait = Mock(side_effect=MaterialRequired("追加資料が必要です。ワイプの具体例"))
+        render = Mock()
+        self.desk.process_next(wait, render)
+        first, second = "https://archive.org/edition", "https://research.example.org/film.pdf"
+        for invalid in ("http://archive.org/", "https://user:pass@archive.org/", "https://localhost/",
+                        "https://127.0.0.1/", "https://127.1/", "https://[::1]/", "https://example.org:8443/",
+                        "https://example.org/" + "x" * 2048, "https://host.local/", "https://archive.org/\nnext"):
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                self.desk.resume(case_id, run_id, [first, invalid])
+        with self.assertRaises(ValueError):
+            self.desk.resume(case_id, run_id, [first] * 7)
+        self.assertFalse(path.exists())
+        self.assertEqual(self.desk.case(case_id)["runs"][0]["status"], "needs_material")
+        with ThreadPoolExecutor(2) as pool:
+            list(pool.map(lambda _: self.desk.resume(case_id, run_id, [first, first]), range(2)))
+        self.assertEqual(json.loads(path.read_text(encoding="utf-8")), {"urls": [first]})
+        self.desk.process_next(wait, render)
+        self.desk.resume(case_id, run_id, [first, second])
+        self.desk.process_next(Mock(return_value=self.plan), render)
+        self.assertEqual(json.loads(path.read_text(encoding="utf-8")), {"urls": [first, second]})
+        with self.assertRaisesRegex(ValueError, "資料待ち"):
+            self.desk.resume(case_id, run_id, [first])
+        run, = self.desk.case(case_id)["runs"]
+        self.assertEqual((run["status"], run["materialResearch"], run["plan"]["sources"]), ("script_ready", None, []))
+        render.assert_not_called()
+
+    def test_attaching_urls_after_a_search_error_requires_its_latest_matching_failure(self):
+        case = self.create()
+        case_id, run_id = case["id"], case["runId"]
+        folder = self.data / "cases" / case_id / run_id
+        error = "原資料の本文照合を実行できませんでした。"
+        self.desk.process_next(Mock(side_effect=RuntimeError(error)), Mock())
+        failed = {"status": "error", "error": error}
+        for rounds in ([], [failed, {"status": "done"}], [{"status": "error", "error": "別の調査エラー"}], [failed]):
+            with self.subTest(rounds=rounds):
+                (folder / "material-research.json").write_text(json.dumps({"rounds": rounds}), encoding="utf-8")
+                run, = self.desk.case(case_id)["runs"]
+                self.assertEqual((run["status"], run["error"], run["canAddMaterialLeads"]), ("failed", error, rounds == [failed]))
+                if rounds != [failed]:
+                    with self.assertRaisesRegex(ValueError, "追加調査で停止"):
+                        self.desk.resume(case_id, run_id, ["https://example.org/film"])
+        self.desk.resume(case_id, run_id, ["https://example.org/film"])
+        self.assertEqual(json.loads((folder / "material-leads.json").read_text(encoding="utf-8")), {"urls": ["https://example.org/film"]})
+        self.assertEqual(self.desk.case(case_id)["runs"][0]["status"], "queued")
+
     def test_double_submit_and_revision_after_restart(self):
         with ThreadPoolExecutor(2) as pool:
             results = list(pool.map(lambda _: self.create(), range(2)))

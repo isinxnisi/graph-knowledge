@@ -3,15 +3,16 @@ from contextlib import closing, contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 import hashlib
+import ipaddress
 import json
 import re
 import sqlite3
 import threading
 import uuid
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit, urlunsplit
 
 import idea_store
-from editor import MaterialRequired
+from editor import MaterialRequired, _save_json
 from writer_feedback import RevisionNeeded
 
 LANGS = ("ja", "en")
@@ -58,6 +59,43 @@ def display_status(status, error):
     if status == "failed" and (error or "").startswith("追加資料が必要です。"):
         return "needs_material"
     return status
+
+
+def accepts_material_leads(status, error, research):
+    if status == "needs_material":
+        return True
+    rounds = (research or {}).get("rounds", [])
+    # An older search failure can coexist with a later failure in an unrelated stage.
+    return bool(status == "failed" and error and rounds and rounds[-1].get("status") == "error"
+                and rounds[-1].get("error") == error)
+
+
+def material_lead_url(value):
+    message = "調査の手がかりには、認証不要の公開HTTPS URLを1件2048文字以内で指定してください。"
+    if (not isinstance(value, str) or not 1 <= len(value) <= 2048
+            or re.search(r"[\s\\\x00-\x1f\x7f-\x9f\u202a-\u202e\u2066-\u2069]", value)):
+        raise ValueError(message)
+    try:
+        url = urlsplit(value)
+        host = (url.hostname or "").encode("idna").decode("ascii").lower()
+        if url.scheme != "https" or url.username is not None or url.port not in (None, 443) or "%" in host:
+            raise ValueError(message)
+        try:
+            address = ipaddress.ip_address(host)
+        except ValueError:
+            labels = host.split(".")
+            if (len(host) > 253 or len(labels) < 2 or host == "home.arpa" or host.endswith(".home.arpa")
+                    or labels[-1] in ("local", "localhost", "internal", "home", "lan")
+                    or re.fullmatch(r"\d+|0x[0-9a-f]+", labels[-1])
+                    or any(not re.fullmatch(r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?", label) for label in labels)):
+                raise ValueError(message)
+        else:
+            if not address.is_global or address.is_multicast or address.is_reserved:
+                raise ValueError(message)
+            host = f"[{address}]" if address.version == 6 else str(address)
+        return urlunsplit(("https", host, url.path or "/", url.query, url.fragment))
+    except (ValueError, UnicodeError) as exc:
+        raise ValueError(message) from exc
 
 
 def material_research(run_folder):
@@ -377,13 +415,39 @@ class Ledger:
         self.wake.set()
         return result
 
-    def resume(self, case_id, run_id):
+    def resume(self, case_id, run_id, material_leads=None):
+        if material_leads is None:
+            material_leads = []
+        if not isinstance(material_leads, list) or len(material_leads) > 6:
+            raise ValueError("調査の手がかりは1回につきURLを6件まで指定できます。")
+        urls = [material_lead_url(value) for value in material_leads]
         with self.db() as db:
-            row = db.execute("SELECT status FROM runs WHERE id=? AND case_id=?", (run_id, case_id)).fetchone()
+            db.execute("BEGIN IMMEDIATE")
+            row = db.execute("SELECT status,error FROM runs WHERE id=? AND case_id=?", (run_id, case_id)).fetchone()
             if not row:
                 raise KeyError(run_id)
             if row["status"] == "done":
                 raise ValueError("この試行は完了しています。")
+            if urls:
+                folder = self.folder / "cases" / case_id / run_id
+                path = folder / "material-leads.json"
+                saved = []
+                if path.is_file():
+                    stored = json.loads(path.read_text(encoding="utf-8"))
+                    if (not isinstance(stored, dict) or not isinstance(stored.get("urls"), list)
+                            or not all(isinstance(url, str) for url in stored["urls"])):
+                        raise ValueError("この試行に保存された調査の手がかりを読み込めませんでした。")
+                    saved = stored["urls"]
+                merged = list(dict.fromkeys([*saved, *urls]))
+                status = display_status(row["status"], row["error"])
+                research = material_research(folder) if status == "failed" else None
+                if not accepts_material_leads(status, row["error"], research):
+                    if merged == saved and row["status"] in ("queued", "running"):
+                        return
+                    raise ValueError("調査の手がかりは資料待ち、または追加調査で停止した試行に添えられます。")
+                if merged != saved:
+                    folder.mkdir(parents=True, exist_ok=True)
+                    _save_json(path, {"urls": merged})
             db.execute("""UPDATE runs SET status='queued',progress='再開待ち',error=NULL,pause_requested=0,
                         script_first=CASE WHEN status='script_ready' THEN 0 ELSE script_first END
                         WHERE id=? AND status IN ('failed','interrupted','needs_revision','needs_material','script_ready')""", (run_id,))
@@ -452,10 +516,11 @@ class Ledger:
             for lang in langs:
                 rework = editions.get(lang, {}).get("reviewStatus") == "rework"
                 states.setdefault(lang, edition_state(status, lang in editions, accepted.get(lang) == run["id"], rework))
+            research = material_research(self.folder / "cases" / case_id / run["id"])
             history.append(dict(id=run["id"], parent=run["parent"], status=status, model=run["model"],
                                 reason=run["reason"], progress=run["progress"], created=run["created"],
                                 langs=langs, error=run["error"], editions=editions,
-                                materialResearch=material_research(self.folder / "cases" / case_id / run["id"]),
+                                materialResearch=research, canAddMaterialLeads=accepts_material_leads(status, run["error"], research),
                                 plan=json.loads(run["plan"]) if run["plan"] else None))
         title = next((r["plan"]["titles"]["ja"] for r in reversed(history) if r["plan"]),
                      row["idea_title"] or row["title"])
