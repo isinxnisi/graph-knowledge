@@ -19,8 +19,8 @@ from speech_reading import validate_readings
 
 ORIGIN = "https://plunode.net"
 WEBB_ID = "theme:915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1"
-INSTRUCTIONS_VERSION = "plunode-video-editor-4"
-JAPANESE_VERSION = "plunode-video-ja-5"
+INSTRUCTIONS_VERSION = "plunode-video-editor-5"
+JAPANESE_VERSION = "plunode-video-ja-6"
 ADAPTATION_VERSION = "plunode-video-en-adaptation-2"
 NASA_SOURCES = [
     {"id": "nasa-mosaic", "title": "Photons Received: Webb Sees Its First Star – 18 Times",
@@ -217,7 +217,7 @@ Give an object its everyday meaning before its specialist name. When comparing p
 what stays the same, what to watch change, and what they can now infer. Read each draft once from the
 beginning: replace any missing "why", unexplained shorthand, vague pronoun or repeated conclusion.
 If you point at a feature, give viewers a moment to see it before asking them to look elsewhere.
-Choose where the eye lands first and where it can wander next. Leave room for that discovery.
+Choose what picture or sound will make this episode's first impression. Give viewers room to explore it.
 
 Keep each edition natural to say out loud. Introduce names gently. Choose the number of scenes to suit the observation;
 5–7 is often enough for a short pilot. Usually one breath for each scene
@@ -237,7 +237,11 @@ depends on an unavailable visual or unsupported claim, put the specific missing 
 in Japanese in materialRequest and return no scenes, leaving the editorial note and titles empty.
 For a supported plan set materialRequest to "".
 A 'source' frame
-displays the first one or two published reference titles, with an optional localized heading; do not
+displays the first one or two published reference titles. When introducing a witness or publication,
+a short heading on the left places the references on the right. Use this change of composition where
+the audience has a reason to ask who recorded the event. With an empty heading only the references appear.
+Read adjacent scenes together. If the same split carries every scene, reconsider what the viewer should be looking at.
+Request missing artwork when the story depends on seeing it. Do not
 tell viewers they can see an object there. Some themes also include two real NASA image assets.
 The first is called 'mosaic', the second 'aligned' (a hexagonal arrangement, still eighteen spots),
 and 'comparison' shows both. For an episode about these observations, let viewers look at each before
@@ -271,10 +275,11 @@ story.questionには、この題材をどんな角度から見るかを、編集
 固有名・助数詞・多義語などは同じ場面の表記をそのままtextに写し、意図した発音を全角カタカナでkanaに記します。
 たとえば数量の「十八」は「ジュウハチ」、画面の位置を指す「右上」は「ミギウエ」です。読み指定が不要なら空配列です。重複・引用・出典番号を語りに入れません。
 
-assetsにある素材を選んで、根拠となる資料IDをsourceIdsに入れます。sourceは先頭の一、二件の出典名を見せる画面です。資料名だけで視線が定まるときはheadingを空文字列にし、短い言葉が見どころを伝える場合だけ添えます。
+assetsにある素材を選んで、根拠となる資料IDをsourceIdsに入れます。導入はこの回の第一印象になる一枚と音から考えます。途中で「誰がこのことを書き残したか」に視点を移すなら、sourceの左に短い見出し、右に一、二件の出典名を並べて画面に変化をつけられます。資料名だけを見せるときはheadingを空文字列にします。
 boardMaterialsがある場合は、各ショットで実際に見えるものと使う場面のsourceIdを確認します。
 カメラや観測の記録と、番組で加えた模式図・線・色を区別します。公開日を撮影日としたり、模式図の移動を実測の軌跡とする表現は避けます。
 同じショットを繰り返すなら、その都度新しく観察できる理由があるか確認します。用意した全ショットを使い切る義務はありません。
+通して同じ左右割りが続くときは、場面ごとに観てほしい対象を見直します。動作や実物の絵が要るなら、その素材を求めます。
 素材が足りないときはmaterialRequestに理由と必要な素材を記し、scenesは空配列、メモと題名の各文字列は空にします。
 根拠がそろっているときはmaterialRequestを空文字列にします。"""
 

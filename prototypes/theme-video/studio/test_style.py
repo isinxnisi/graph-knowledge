@@ -29,6 +29,14 @@ class ChannelStyleTest(unittest.TestCase):
                         self.assertEqual(image.getpixel(point), ImageColor.getrgb(ORANGE))
                 self.assertEqual(board.getpixel((2, 561)), ImageColor.getrgb(PAPER))
                 self.assertEqual(board.getpixel((2, 562)), ImageColor.getrgb(INK))
+                # A source introduction puts its heading and publication side by side.
+                bare = _board(plan, {**scene, lang: {"heading": ""}}, lang, set())
+                self.assertEqual(board.getpixel((180, 401)), ImageColor.getrgb(ORANGE))
+                self.assertEqual(bare.getpixel((180, 401)), ImageColor.getrgb(PAPER))
+                paper = Image.new("RGB", board.size, PAPER)
+                ink = ImageChops.difference(board, paper)
+                for area in ((66, 130, 666, 357), (730, 128, 1210, 300)):
+                    self.assertIsNotNone(ink.crop(area).getbbox())
                 self.assertEqual(credits.getpixel((68, 178)), ImageColor.getrgb("#78868a"))
 
                 captioned = board.copy()
