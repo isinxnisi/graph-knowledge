@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-25T22:20:00+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-25T21:28:19.813966+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-26T00:00:00+00:00",
-    "windowEndAt": "2026-11-26T03:00:00+00:00"
+    "eligibleAt": "2026-11-25T21:28:19.813966+00:00",
+    "windowEndAt": "2026-11-25T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-59-dot-kubo-two-20261028",
-    "startedAt": "2026-11-25T21:18:09.643800+00:00",
-    "limitAt": "2026-11-25T22:10:00+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-42-dot-matsumoto-three-20261026",
-    "endedAt": "2026-11-25T21:08:06.848898+00:00"
+    "requestId": "issue-59-dot-kubo-two-20261028",
+    "endedAt": "2026-11-25T21:18:19.813969+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 7,
-    "waiting-control": 41,
-    "completed": 13,
+    "waiting-control": 40,
+    "completed": 14,
     "awaiting-recovery": 1
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-25T21:18:10.999884+00:00"
+  "checkedAt": "2026-11-25T21:18:56.027549+00:00"
 }
