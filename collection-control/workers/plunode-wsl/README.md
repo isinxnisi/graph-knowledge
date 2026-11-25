@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-26 00:30:41 JST。
+確認: 2026-11-26 00:52:29 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -23,108 +23,134 @@ Issue確認結果:
 ```json
 {
   "collection-control/issue-sources/25.json": {
-    "status": "registered: issue-25-manga23-20261019",
-    "checkedAt": "2026-11-03T17:28:45+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:41+00:00"
   },
   "collection-control/issue-sources/16.json": {
-    "status": "registered: issue-16-adachi-three-20261025",
-    "checkedAt": "2026-11-03T17:37:45+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:41+00:00"
   },
   "collection-control/issue-sources/5.json": {
-    "status": "registered: issue-5-dot-tezuka-adolf-20261025",
-    "checkedAt": "2026-11-11T15:27:56+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:41+00:00"
   },
   "collection-control/issue-sources/42.json": {
-    "status": "registered: issue-42-dot-matsumoto-three-20261026",
-    "checkedAt": "2026-11-03T16:21:14+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:41+00:00"
   },
   "collection-control/issue-sources/46.json": {
-    "status": "registered: issue-46-dot-aoyama-three-20261027",
-    "checkedAt": "2026-11-03T17:28:47+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:41+00:00"
   },
   "collection-control/issue-sources/47.json": {
-    "status": "registered: issue-47-dot-yukimura-two-20261027",
-    "checkedAt": "2026-11-03T15:47:48+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:41+00:00"
   },
   "collection-control/issue-sources/48.json": {
-    "status": "registered: issue-48-dot-toriyama-three-20261027",
-    "checkedAt": "2026-11-03T17:10:51+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:41+00:00"
   },
   "collection-control/issue-sources/49.json": {
-    "status": "registered: issue-49-dot-hara-souten-20261027",
-    "checkedAt": "2026-11-24T22:09:41+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:41+00:00"
   },
   "collection-control/issue-sources/50.json": {
-    "status": "registered: issue-50-dot-endo-tista-20261027",
-    "checkedAt": "2026-11-03T16:01:50+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:41+00:00"
   },
   "collection-control/issue-sources/51.json": {
-    "status": "registered: issue-51-dot-araki-rohan-20261027",
-    "checkedAt": "2026-11-03T17:28:54+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:41+00:00"
   },
   "collection-control/issue-sources/56.json": {
-    "status": "registered: issue-56-dot-urushibara-two-20261028",
-    "checkedAt": "2026-11-11T12:03:31+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:41+00:00"
   },
   "collection-control/issue-sources/57.json": {
-    "status": "registered: issue-57-dot-oshima-two-20261028",
-    "checkedAt": "2026-11-20T15:56:42+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:41+00:00"
   },
   "collection-control/issue-sources/58.json": {
-    "status": "registered: issue-58-dot-takeuchi-two-20261028",
-    "checkedAt": "2026-11-03T17:28:57+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:41+00:00"
   },
   "collection-control/issue-sources/59.json": {
-    "status": "registered: issue-59-dot-kubo-two-20261028",
-    "checkedAt": "2026-11-03T17:28:58+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:41+00:00"
   },
   "collection-control/issue-sources/60.json": {
-    "status": "registered: issue-60-dot-ichikawa-houseki-20261028",
-    "checkedAt": "2026-11-11T10:04:56+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:42+00:00"
   },
   "collection-control/issue-sources/61.json": {
-    "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
-    "checkedAt": "2026-11-11T16:33:19+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:42+00:00"
   },
   "collection-control/issue-sources/62.json": {
-    "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
-    "checkedAt": "2026-11-11T10:04:58+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:42+00:00"
   },
   "collection-control/issue-sources/64.json": {
-    "status": "registered: issue-64-dot-oda-onepiece-20261029",
-    "checkedAt": "2026-11-11T23:42:58+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:42+00:00"
   },
   "collection-control/issue-sources/65.json": {
-    "status": "registered: issue-65-dot-inoue-three-20261029",
-    "checkedAt": "2026-11-03T16:33:05+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:42+00:00"
   },
   "collection-control/issue-sources/66.json": {
-    "status": "registered: issue-66-dot-togashi-two-20261029",
-    "checkedAt": "2026-11-03T17:25:54+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:42+00:00"
   },
   "collection-control/issue-sources/67.json": {
-    "status": "registered: issue-67-dot-mizuki-two-20261029",
-    "checkedAt": "2026-11-25T14:42:02+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:42+00:00"
   },
   "collection-control/issue-sources/68.json": {
-    "status": "registered: issue-68-dot-fujikoa-two-20261029",
-    "checkedAt": "2026-11-25T14:42:04+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:42+00:00"
   },
   "collection-control/issue-sources/69.json": {
-    "status": "registered: issue-69-dot-ishinomori-three-20261029",
-    "checkedAt": "2026-11-25T14:42:05+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:42+00:00"
   },
   "collection-control/issue-sources/70.json": {
-    "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
-    "checkedAt": "2026-11-25T14:42:06+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:42+00:00"
   },
   "collection-control/issue-sources/71.json": {
-    "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
-    "checkedAt": "2026-11-25T14:42:08+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:42+00:00"
   },
   "collection-control/issue-sources/73.json": {
-    "status": "registered: issue-73-dot-murata-onepunch-20261030",
-    "checkedAt": "2026-11-25T14:42:09+00:00"
+    "status": "held",
+    "reason": "/mnt/c/Users/nishr/AppData/Local/Programs/Git\\ Credential\\ Manager/git-credential-manager.exe get: 1: /mnt/c/Users/nishr/AppData/Local/Programs/Git Credential Manager/git-credential-manager.exe: Exec format error\n\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\" get: 1: /mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe: Exec format error\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-11-25T15:42:42+00:00"
   }
 }
 ```
@@ -135,12 +161,12 @@ Issue確認結果:
 
 旧blockedは変更しない失敗履歴。下記の新規依頼の状態を現在の復旧進捗として確認する。
 
-- [issue-25-utc-recovery-01](../../results/issue-25-utc-recovery-01/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-03）
-- [issue-25-utc-recovery-02](../../results/issue-25-utc-recovery-02/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-01）
-- [issue-25-utc-recovery-03](../../results/issue-25-utc-recovery-03/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-04）
-- [issue-25-utc-recovery-04](../../results/issue-25-utc-recovery-04/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-05）
-- [issue-25-utc-recovery-05](../../results/issue-25-utc-recovery-05/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-06）
-- [issue-25-utc-recovery-06](../../results/issue-25-utc-recovery-06/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-07）
-- [issue-25-utc-recovery-07](../../results/issue-25-utc-recovery-07/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-08）
-- [issue-25-utc-recovery-08](../../results/issue-25-utc-recovery-08/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-09）
-- [issue-25-utc-recovery-09](../../results/issue-25-utc-recovery-09/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-10）
+- [issue-25-utc-recovery-01](../../results/issue-25-utc-recovery-01/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-03）
+- [issue-25-utc-recovery-02](../../results/issue-25-utc-recovery-02/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-01）
+- [issue-25-utc-recovery-03](../../results/issue-25-utc-recovery-03/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-04）
+- [issue-25-utc-recovery-04](../../results/issue-25-utc-recovery-04/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-05）
+- [issue-25-utc-recovery-05](../../results/issue-25-utc-recovery-05/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-06）
+- [issue-25-utc-recovery-06](../../results/issue-25-utc-recovery-06/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-07）
+- [issue-25-utc-recovery-07](../../results/issue-25-utc-recovery-07/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-08）
+- [issue-25-utc-recovery-08](../../results/issue-25-utc-recovery-08/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-09）
+- [issue-25-utc-recovery-09](../../results/issue-25-utc-recovery-09/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-10）
