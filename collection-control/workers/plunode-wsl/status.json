@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-25T19:02:30.221458+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-25T20:07:33.011724+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-25T19:02:30.221458+00:00",
+    "eligibleAt": "2026-11-25T20:07:33.011724+00:00",
     "windowEndAt": "2026-11-25T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-48-dot-toriyama-three-20261027-batch-01",
+    "startedAt": "2026-11-25T19:02:33.011726+00:00",
+    "limitAt": "2026-11-25T19:57:33.011724+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-61-dot-gotouge-kimetsu-20261028",
     "endedAt": "2026-11-25T18:52:30.221460+00:00"
@@ -192,5 +196,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-25T18:53:00.741688+00:00"
+  "checkedAt": "2026-11-25T19:02:34.269174+00:00"
 }
