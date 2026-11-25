@@ -43,7 +43,8 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 13,
-    "completed": 42,
+    "completed": 41,
+    "retry-wait": 1,
     "awaiting-recovery": 5,
     "waiting-control": 2
   },
@@ -129,28 +130,34 @@
       "checkedAt": "2026-11-03T17:25:54+00:00"
     },
     "collection-control/issue-sources/67.json": {
-      "status": "registered: issue-67-dot-mizuki-two-20261029",
-      "checkedAt": "2026-11-03T14:59:04+00:00"
+      "status": "held",
+      "reason": "GitHub Issue read failed: HTTP 503",
+      "checkedAt": "2026-11-25T14:39:15+00:00"
     },
     "collection-control/issue-sources/68.json": {
-      "status": "registered: issue-68-dot-fujikoa-two-20261029",
-      "checkedAt": "2026-11-03T16:33:08+00:00"
+      "status": "held",
+      "reason": "GitHub Issue read failed: HTTP 503",
+      "checkedAt": "2026-11-25T14:39:19+00:00"
     },
     "collection-control/issue-sources/69.json": {
-      "status": "registered: issue-69-dot-ishinomori-three-20261029",
-      "checkedAt": "2026-11-23T08:26:56+00:00"
+      "status": "held",
+      "reason": "GitHub Issue read failed: HTTP 503",
+      "checkedAt": "2026-11-25T14:39:21+00:00"
     },
     "collection-control/issue-sources/70.json": {
-      "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
-      "checkedAt": "2026-11-03T17:25:58+00:00"
+      "status": "held",
+      "reason": "GitHub Issue read failed: HTTP 503",
+      "checkedAt": "2026-11-25T14:39:24+00:00"
     },
     "collection-control/issue-sources/71.json": {
-      "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
-      "checkedAt": "2026-11-03T17:25:59+00:00"
+      "status": "held",
+      "reason": "GitHub Issue read failed: HTTP 503",
+      "checkedAt": "2026-11-25T14:39:27+00:00"
     },
     "collection-control/issue-sources/73.json": {
-      "status": "registered: issue-73-dot-murata-onepunch-20261030",
-      "checkedAt": "2026-11-03T16:23:50+00:00"
+      "status": "held",
+      "reason": "GitHub Issue read failed: HTTP 503",
+      "checkedAt": "2026-11-25T14:39:30+00:00"
     }
   },
   "publicApply": false,
@@ -192,5 +199,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-25T14:33:57.865737+00:00"
+  "checkedAt": "2026-11-25T14:40:49.252723+00:00"
 }

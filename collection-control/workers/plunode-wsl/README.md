@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-25 23:33:57 JST。
+確認: 2026-11-25 23:40:49 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -103,28 +103,34 @@ Issue確認結果:
     "checkedAt": "2026-11-03T17:25:54+00:00"
   },
   "collection-control/issue-sources/67.json": {
-    "status": "registered: issue-67-dot-mizuki-two-20261029",
-    "checkedAt": "2026-11-03T14:59:04+00:00"
+    "status": "held",
+    "reason": "GitHub Issue read failed: HTTP 503",
+    "checkedAt": "2026-11-25T14:39:15+00:00"
   },
   "collection-control/issue-sources/68.json": {
-    "status": "registered: issue-68-dot-fujikoa-two-20261029",
-    "checkedAt": "2026-11-03T16:33:08+00:00"
+    "status": "held",
+    "reason": "GitHub Issue read failed: HTTP 503",
+    "checkedAt": "2026-11-25T14:39:19+00:00"
   },
   "collection-control/issue-sources/69.json": {
-    "status": "registered: issue-69-dot-ishinomori-three-20261029",
-    "checkedAt": "2026-11-23T08:26:56+00:00"
+    "status": "held",
+    "reason": "GitHub Issue read failed: HTTP 503",
+    "checkedAt": "2026-11-25T14:39:21+00:00"
   },
   "collection-control/issue-sources/70.json": {
-    "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
-    "checkedAt": "2026-11-03T17:25:58+00:00"
+    "status": "held",
+    "reason": "GitHub Issue read failed: HTTP 503",
+    "checkedAt": "2026-11-25T14:39:24+00:00"
   },
   "collection-control/issue-sources/71.json": {
-    "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
-    "checkedAt": "2026-11-03T17:25:59+00:00"
+    "status": "held",
+    "reason": "GitHub Issue read failed: HTTP 503",
+    "checkedAt": "2026-11-25T14:39:27+00:00"
   },
   "collection-control/issue-sources/73.json": {
-    "status": "registered: issue-73-dot-murata-onepunch-20261030",
-    "checkedAt": "2026-11-03T16:23:50+00:00"
+    "status": "held",
+    "reason": "GitHub Issue read failed: HTTP 503",
+    "checkedAt": "2026-11-25T14:39:30+00:00"
   }
 }
 ```
