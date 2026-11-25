@@ -3,7 +3,6 @@
 from copy import deepcopy
 import hashlib
 import json
-import math
 import re
 import shutil
 import subprocess
@@ -21,7 +20,7 @@ from speech_reading import validate_readings
 ORIGIN = "https://plunode.net"
 WEBB_ID = "theme:915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1"
 INSTRUCTIONS_VERSION = "plunode-video-editor-3"
-JAPANESE_VERSION = "plunode-video-ja-3"
+JAPANESE_VERSION = "plunode-video-ja-4"
 ADAPTATION_VERSION = "plunode-video-en-adaptation-1"
 NASA_SOURCES = [
     {"id": "nasa-mosaic", "title": "Photons Received: Webb Sees Its First Star – 18 Times",
@@ -307,6 +306,15 @@ def _text(value, max_length, label):
     return " ".join(value.split())
 
 
+def validate_visual_timing(timing):
+    if not isinstance(timing, dict) or set(timing) != {"beforeVoice", "afterVoice"} or any(
+        value is not None and (type(value) not in (int, float) or not 0 <= value <= 60)
+        for value in timing.values()
+    ):
+        raise ValueError("場面の語りの前後の秒数を確認してください。")
+    return timing
+
+
 def _check_draft(draft, snapshot, assets, language="both"):
     sources = {s["id"]: s for s in snapshot["sources"]}
     if draft.get("materialRequest"):
@@ -341,13 +349,7 @@ def _check_draft(draft, snapshot, assets, language="both"):
             raise ValueError(f"場面{i}の図版と根拠が一致しません。")
         shot = {"id": f"s{i}", "asset": asset, "sourceIds": list(dict.fromkeys(ids))}
         if language == "ja" and "visualTiming" in scene:
-            timing = scene["visualTiming"]
-            if not isinstance(timing, dict) or set(timing) != {"beforeVoice", "afterVoice"} or any(
-                s is not None and (type(s) not in (int, float) or not math.isfinite(s) or not 0 <= s <= 60)
-                for s in timing.values()
-            ):
-                raise ValueError(f"場面{i}の語りの前後の秒数を確認してください。")
-            shot["visualTiming"] = timing
+            shot["visualTiming"] = validate_visual_timing(scene["visualTiming"])
         for lang in languages:
             line = scene[lang]
             shot[lang] = {"heading": _text(line["heading"], 110, "見出し"),

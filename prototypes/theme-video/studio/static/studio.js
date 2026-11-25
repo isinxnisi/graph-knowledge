@@ -477,7 +477,7 @@ function drawSceneText() {
   $("scene-sources").replaceChildren(...sources.map((s) => externalLink(s.url, s.title || s.url)));
   const hasVideo = Boolean(run?.editions?.[state.lang]?.video);
   $("edit-toggle").hidden = state.detail.reference || !scene || (!hasVideo && run.status !== "script_ready");
-  $("edit-toggle").textContent = state.lang === "ja" ? "語りと日本語の読みを確認・編集" : "この場面の語りを編集";
+  $("edit-toggle").textContent = state.lang === "ja" ? "語り・読み方・間を編集" : "この場面の語りを編集";
   $("scene-from-playback").hidden = !scene || !hasVideo;
   if ($("edit-toggle").hidden) closeEdit();
 }
@@ -588,10 +588,13 @@ function statusButton(run) {
   button.onclick = async () => {
     const edit = state.editTarget;
     if (startVideo && edit?.parent === run.id) {
-      const line = run.plan.scenes.find((scene) => scene.id === edit.sceneId)[edit.lang];
+      const scene = run.plan.scenes.find((scene) => scene.id === edit.sceneId);
+      const line = scene[edit.lang];
       const readingChanged = edit.lang === "ja" && JSON.stringify(currentReadings()) !==
         JSON.stringify((line.readings || []).map(({ text, kana }) => ({ text, kana })));
-      if (trim($("edit-narration").value) !== line.narration || readingChanged || trim($("edit-reason").value)) {
+      const timingChanged = edit.lang === "ja" && Object.entries(currentTiming()).some(
+        ([key, value]) => value !== (scene.visualTiming?.[key] ?? null));
+      if (trim($("edit-narration").value) !== line.narration || readingChanged || timingChanged || trim($("edit-reason").value)) {
         notify("編集中の変更があります。修正した台本を保存すると、その版から映像を生成できます。");
         $("edit-submit").focus();
         return;
@@ -900,6 +903,10 @@ $("listen-reading").onclick = async () => {
     }
   }
 };
+function currentTiming() {
+  const seconds = (input) => input.value === "" && !input.validity.badInput ? null : input.valueAsNumber;
+  return { beforeVoice: seconds($("edit-before-voice")), afterVoice: seconds($("edit-after-voice")) };
+}
 $("edit-toggle").onclick = () => {
   const run = chosenRun(), lang = state.lang;
   const scene = run?.plan?.scenes?.find((s) => s.id === $("scene-select").value);
@@ -912,26 +919,35 @@ $("edit-toggle").onclick = () => {
   state.editTarget = Object.freeze({ caseId: state.detail.id, parent: run.id, lang, model, sceneId: scene.id, draft });
   $("edit-target").textContent = [languageName[lang], editionLabel(run, lang), $("scene-select").selectedOptions[0].textContent].join("　/　");
   $("edit-narration").value = scene[lang]?.narration || "";
+  const timing = $("edit-timing");
+  timing.hidden = timing.disabled = lang !== "ja";
+  $("edit-before-voice").value = scene.visualTiming?.beforeVoice ?? "";
+  $("edit-after-voice").value = scene.visualTiming?.afterVoice ?? "";
   const pronunciation = $("pronunciation");
   pronunciation.hidden = pronunciation.disabled = lang !== "ja";
   $("reading-rows").replaceChildren();
   if (lang === "ja") for (const row of scene.ja.readings || []) addReading(row.text, row.kana);
   $("edit-reason").value = ""; $("edit-form").hidden = false;
   $("edit-submit").textContent = draft ? "修正した台本を新しい試行に保存" : languageName[lang] + "版だけ再生成";
+  $("edit-draft").hidden = draft;
   $("edit-narration").focus();
 };
 $("edit-cancel").onclick = closeEdit;
-formAction("edit-form", async (version) => {
+formAction("edit-form", async (version, action) => {
   const target = state.editTarget;
   if (!target || target.caseId !== state.detail?.id) return;
   const { parent, model, lang, sceneId } = target;
   const payload = { parent, model, lang, sceneId, narration: trim($("edit-narration").value), reason: trim($("edit-reason").value) };
-  if (lang === "ja") payload.readings = currentReadings();
+  if (lang === "ja") {
+    payload.readings = currentReadings();
+    payload.visualTiming = currentTiming();
+  }
+  if (action === "draft") payload.scriptFirst = true;
   const result = await submitRun("edit." + target.caseId, detailPath("/runs"), payload);
   if (state.routeVersion !== version) return;
   state.resumeAfter = result.runId;
   if (state.editTarget === target) closeEdit();
-  await reloadDetail(); notify(target.draft ? "修正した台本を新しい試行に保存しました。" : "修正した言語の再生成を受け付けました。");
+  await reloadDetail(); notify(target.draft || payload.scriptFirst ? "修正した台本を新しい試行に保存しました。" : "修正した言語の再生成を受け付けました。");
 });
 formAction("rerun-form", async (version, action) => {
   const profile = selectedProfile("rerun");

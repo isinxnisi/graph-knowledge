@@ -112,8 +112,14 @@
                 <div class="reading-actions"><button type="button" id="add-reading" class="quiet">読みを追加</button><button type="button" id="listen-reading" class="secondary">この場面を試聴</button></div>
                 <span id="reading-status" role="status"></span><audio id="reading-player" controls hidden></audio>
               </fieldset>
+              <fieldset id="edit-timing" hidden><legend>語りの前後に絵を見せる時間</legend>
+                <div class="timing-fields">
+                  <label>語りの前（秒）<input id="edit-before-voice" type="number" min="0" max="60" step="any" placeholder="自動"></label>
+                  <label>語りの後（秒）<input id="edit-after-voice" type="number" min="0" max="60" step="any" placeholder="自動"></label>
+                </div>
+              </fieldset>
               <label for="edit-reason">修正理由</label><input id="edit-reason" maxlength="1000" required placeholder="どこで、何が伝わりにくかったか">
-              <div class="actions"><button id="edit-cancel" type="button" class="quiet">閉じる</button><button id="edit-submit" class="primary small" type="submit">この言語だけ再生成</button></div>
+              <div class="actions"><button id="edit-cancel" type="button" class="quiet">閉じる</button><button id="edit-submit" class="primary small" type="submit">この言語だけ再生成</button><button id="edit-draft" class="secondary small" type="submit" value="draft" hidden>台本に保存して編集を続ける</button></div>
             </form>
           </div>
         </details>

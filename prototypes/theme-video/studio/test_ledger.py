@@ -298,6 +298,47 @@ class LedgerTest(unittest.TestCase):
         self.desk.review(case, dict(lang="ja", runId=child, reason="読みを確認"), "adopted")
         self.assertEqual(self.desk.case(case)["accepted"], {"ja": child, "en": first})
 
+    def test_stage_timing_and_narration_from_finished_cut_before_rendering_once(self):
+        self.plan["editorialReview"] = {"reviewedCutSha256": "original"}
+        self.plan["scenes"].append({"id": "s2", "ja": {"narration": "見えます。"},
+                                   "en": {"narration": "Look."}})
+        result = self.create()
+        case, original = result["id"], result["runId"]
+        self.desk.process_next(lambda *args: self.plan, self.render)
+        edit = dict(parent=original, lang="ja", sceneId="s1", model="test", narration="ひとつ", reason="間の調整")
+        def submit(key, **fields):
+            return self.desk.submit("runs", {**edit, **fields, "requestId": key},
+                                    self.snapshot, self.models, case)["runId"]
+        auto = {"beforeVoice": None, "afterVoice": None}
+        for invalid in ({}, {"beforeVoice": -1, "afterVoice": None}, {**auto, "afterVoice": False}):
+            with self.subTest(timing=invalid), self.assertRaises(ValueError):
+                submit("invalid", visualTiming=invalid)
+        with self.assertRaises(ValueError):
+            submit("invalid-en", lang="en", visualTiming=auto)
+        self.assertEqual(len(self.desk.case(case)["runs"]), 1)
+        saved = submit("preserve", visualTiming=auto, scriptFirst=True)
+        preserved = self.desk.case(case)["runs"][0]
+        self.assertEqual(preserved["langs"], ["ja"])
+        self.assertEqual(preserved["status"], "script_ready")
+        self.assertEqual(preserved["plan"]["editorialReview"], self.plan["editorialReview"])
+        self.assertNotIn("visualTiming", preserved["plan"]["scenes"][0])
+        timing = {"beforeVoice": 0, "afterVoice": 1.25}
+        timed = submit("timing", parent=saved, visualTiming=timing)
+        last = submit("line", parent=timed, sceneId="s2", narration="右上に見えます。")
+        generate, render = Mock(), Mock(wraps=self.render)
+        self.assertFalse(self.desk.process_next(generate, render))
+        self.desk.resume(case, last)
+        self.desk.process_next(generate, render)
+        generate.assert_not_called()
+        render.assert_called_once()
+        final, prior, _, master = self.desk.case(case)["runs"]
+        self.assertEqual((final["status"], prior["status"]), ("done", "script_ready"))
+        self.assertEqual(final["plan"]["scenes"][0]["visualTiming"], timing)
+        self.assertEqual(final["plan"]["scenes"][1]["ja"]["narration"], "右上に見えます。")
+        self.assertEqual(master["plan"], self.plan)
+        self.assertNotIn("editorialReview", prior["plan"])
+        self.assertEqual(set(final["editions"]), {"ja"})
+
     def test_one_theme_can_have_two_episodes_and_distinct_rerun_briefs(self):
         first = self.create()
         other = self.desk.submit("/api/cases", {**self.request, "requestId": "2", "brief": "別の切り口"},

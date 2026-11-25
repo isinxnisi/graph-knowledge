@@ -110,6 +110,7 @@ h1 { font: 650 clamp(26px, 2.5vw, 42px)/1.45 "Yu Mincho", YuMincho, "Hiragino Mi
 #script-review details ol { padding-left: 1.8em; }
 #pronunciation { margin: 15px 0; }
 #pronunciation legend { font-size: 15px; }
+.timing-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .reading-row { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr) auto; align-items: end; gap: 7px; margin-bottom: 8px; }
 .reading-row label { margin: 0; font-weight: 500; }
 .reading-row input { display: block; }

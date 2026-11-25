@@ -156,8 +156,10 @@ class Ledger:
         if language == "en" and not (case_id and parent):
             raise ValueError("英語版の元にする日本語の映像を選んでください。")
         script_first = data.get("scriptFirst", False)
-        if type(script_first) is not bool or (lang and script_first):
+        if type(script_first) is not bool:
             raise ValueError("台本確認の指定を確認してください。")
+        if "visualTiming" in data and lang != "ja":
+            raise ValueError("語りの前後の秒数は日本語の場面で編集できます。")
         model = required(data, "model", 100)
         if lang not in (*LANGS, None) or (lang and not parent):
             raise ValueError("修正する言語と元の版を確認してください。")
@@ -215,6 +217,7 @@ class Ledger:
                     if not row["plan"] or lang not in parent_langs or (not draft_edit and lang not in editions):
                         raise ValueError("修正できる言語の台本または映像を選んでください。")
                     langs = parent_langs if draft_edit else [lang]
+                    draft_edit = draft_edit or script_first
                     plan = json.loads(row["plan"])
                     scene_id = required(data, "sceneId", 100)
                     scene = next((s for s in plan["scenes"] if s["id"] == scene_id), None)
@@ -223,6 +226,13 @@ class Ledger:
                     narration = required(data, "narration", 800)
                     if lang == "ja":
                         from speech_reading import validate_readings
+                        if "visualTiming" in data:
+                            from editor import validate_visual_timing
+                            timing = validate_visual_timing(data["visualTiming"])
+                            old_timing = scene.get("visualTiming") or {}
+                            if any(value != old_timing.get(key) for key, value in timing.items()):
+                                scene["visualTiming"] = timing
+                                plan.pop("editorialReview", None)
                         if narration != scene[lang]["narration"]:
                             plan.pop("editorialReview", None)
                         entries = data.get("readings", scene[lang].get("readings", []))
