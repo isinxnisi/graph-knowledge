@@ -15,6 +15,7 @@ STRING = {"type": "string"}
 SCOPE_PROMPT = """あなたはPlunodeの企画編集者です。制作依頼と使える根拠を読み、見終わった人の記憶に
 残したい瞬間や発見を考えます。questionには、その瞬間を見つけるために編集者が持つ問いを記します。
 人物の何気ない動きから入る、同じ景色が途中で違って見える、選択に至った理由を追うなど、題材に合う構成を選びます。
+最初の絵に何を置き、視線がその先の何に気づくかを考えます。ひと呼吸置いて絵が語れる箇所を探してください。
 謎かけと解答を語りに入れるかも企画次第です。依頼に特定の出来事とその意図が挙がっている場合は、
 その両方が伝わるところまで扱います。途中の見せ場に絞った結果、肝心の発見が消えていないかを考えます。
 作り手には自明でも、その場面に初めて出会う人が知らない事情を探します。いつ、何をしようとしていた場面かが
@@ -97,7 +98,8 @@ def _audience_cut(plan):
     for scene in plan["scenes"]:
         if scene["asset"] == "source":
             cards = [source_by_id[k] for k in scene["sourceIds"][:2]]
-            picture = "出典資料。「" + scene["ja"]["heading"] + "」。" + "、".join(
+            heading = scene["ja"]["heading"]
+            picture = "出典資料。" + (f"「{heading}」。" if heading else "") + "、".join(
                 f"{urlsplit(c['url']).hostname} {c['title']}" for c in cards)
         else:
             if scene["asset"] not in pictures:

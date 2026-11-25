@@ -6,7 +6,8 @@ import unittest
 from unittest.mock import patch
 from subprocess import CompletedProcess
 
-from editor import WEBB_BOARDS, WEBB_ID, _check_draft, _schema, generate_plan, list_models
+from editor import WEBB_BOARDS, WEBB_ID, _apply_adaptation, _check_draft, _schema, generate_plan, list_models
+from script_review import _audience_cut
 
 
 class EditorialNoteTest(unittest.TestCase):
@@ -26,6 +27,21 @@ class EditorialNoteTest(unittest.TestCase):
 
     def check(self):
         return _check_draft(self.draft, self.snapshot, ["source"])
+
+    def test_unheaded_source_passes_draft_review_and_english_adaptation(self):
+        line = self.draft["scenes"][0]
+        line["ja"]["heading"] = ""
+        self.assertEqual(self.check()["scenes"][0]["en"]["heading"], line["en"]["heading"])
+        line["en"]["heading"] = ""
+        master = self.check()
+        picture = _audience_cut(master)["scenes"][0]["picture"]
+        self.assertNotIn("「」", picture)
+        self.assertIn("example.org 資料", picture)
+        english = {"title": "Light", "scenes": [{"id": s["id"], **s["en"]} for s in master["scenes"]]}
+        self.assertEqual(_apply_adaptation(english, master)["scenes"][0]["en"]["heading"], "")
+        english["scenes"][0]["heading"] = "An extra heading"
+        with self.assertRaisesRegex(ValueError, "日本語版"):
+            _apply_adaptation(english, master)
 
     def test_editorial_note_and_pronunciation_survive_projection(self):
         scene = self.draft["scenes"][0]

@@ -1,6 +1,6 @@
 import unittest
 
-from PIL import ImageChops, ImageColor
+from PIL import Image, ImageChops, ImageColor
 
 from media import _board, _credit, _style
 from channel_style import FOOT, H, INK, ORANGE, PAPER, W
@@ -48,6 +48,23 @@ class ChannelStyleTest(unittest.TestCase):
         self.assertEqual(len(lines), 2)
         self.assertEqual("".join(lines), caption)
         self.assertFalse(lines[1].startswith("、"))
+
+    def test_single_and_paired_titles_take_the_stage_without_section_labels(self):
+        sources = [{"id": "en", "title": "A record of the star", "url": "https://example.org/"},
+                   {"id": "ja", "title": "星の記録", "url": "https://example.jp/"}]
+        scene = {"asset": "source", "ja": {"heading": ""}, "en": {"heading": ""}}
+        for lang in ("ja", "en"):
+            for ids, centers in ((["en"], [640]), (["en", "ja"], [334, 946])):
+                with self.subTest(lang=lang, sources=ids):
+                    board = _board({"sources": sources}, {**scene, "sourceIds": ids}, lang, set())
+                    paper = Image.new("RGB", board.size, PAPER)
+                    ink = ImageChops.difference(board, paper)
+                    self.assertIsNone(ink.crop((0, 64, W, 128)).getbbox())
+                    for center in centers:
+                        half = (W // len(centers)) // 2
+                        box = ink.crop((center-half, 128, center+half, 306)).getbbox()
+                        self.assertIsNotNone(box)
+                        self.assertAlmostEqual((box[0] + box[2])/2, half, delta=10)
 
 
 if __name__ == "__main__":

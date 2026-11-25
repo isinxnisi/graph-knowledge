@@ -19,9 +19,9 @@ from speech_reading import validate_readings
 
 ORIGIN = "https://plunode.net"
 WEBB_ID = "theme:915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1"
-INSTRUCTIONS_VERSION = "plunode-video-editor-3"
-JAPANESE_VERSION = "plunode-video-ja-4"
-ADAPTATION_VERSION = "plunode-video-en-adaptation-1"
+INSTRUCTIONS_VERSION = "plunode-video-editor-4"
+JAPANESE_VERSION = "plunode-video-ja-5"
+ADAPTATION_VERSION = "plunode-video-en-adaptation-2"
 NASA_SOURCES = [
     {"id": "nasa-mosaic", "title": "Photons Received: Webb Sees Its First Star – 18 Times",
      "url": "https://science.nasa.gov/blogs/webb/2022/02/11/photons-received-webb-sees-its-first-star-18-times/",
@@ -217,11 +217,13 @@ Give an object its everyday meaning before its specialist name. When comparing p
 what stays the same, what to watch change, and what they can now infer. Read each draft once from the
 beginning: replace any missing "why", unexplained shorthand, vague pronoun or repeated conclusion.
 If you point at a feature, give viewers a moment to see it before asking them to look elsewhere.
+Choose where the eye lands first and where it can wander next. Leave room for that discovery.
 
 Keep each edition natural to say out loud. Introduce names gently. Choose the number of scenes to suit the observation;
 5–7 is often enough for a short pilot. Usually one breath for each scene
-(roughly 20–65 Japanese characters and 9–24 English words); use a compact, distinct visible heading
-in each language. Each scene's two lines of narration must make equivalent factual claims.
+(roughly 20–65 Japanese characters and 9–24 English words). Keep headings short. On a source card,
+use an empty heading when the publication titles alone focus the viewer's attention in that edition.
+Each scene's two lines of narration must make equivalent factual claims.
 Write headings and titles for viewers, not production staff. No markdown or citations in spoken lines.
 The Japanese narration is also the displayed subtitle. Keep its ordinary written spelling.
 In each Japanese scene separately, suggest readings for names, counters, specialist terms and other words
@@ -235,7 +237,7 @@ depends on an unavailable visual or unsupported claim, put the specific missing 
 in Japanese in materialRequest and return no scenes, leaving the editorial note and titles empty.
 For a supported plan set materialRequest to "".
 A 'source' frame
-displays the published reference title and your localized heading as a typeset source card; do not
+displays the first one or two published reference titles, with an optional localized heading; do not
 tell viewers they can see an object there. Some themes also include two real NASA image assets.
 The first is called 'mosaic', the second 'aligned' (a hexagonal arrangement, still eighteen spots),
 and 'comparison' shows both. For an episode about these observations, let viewers look at each before
@@ -263,13 +265,13 @@ story.questionには、この題材をどんな角度から見るかを、編集
 図で見えない動きを語りだけで保証してはいけません。
 資料や図に支えられない演出が企画の中心なら、必要な素材と理由をmaterialRequestに書いて止められます。
 
-尺は仕上がった語りと観察の間から決まります。短縮のために出来事の意図や結果を落とさず、必要な数の場面を使います。必要に応じてvisualTimingのbeforeVoiceに語りに先立って絵だけを見る秒数、afterVoiceに語りの後に絵を見渡す秒数を書けます。既定の間でよい値はnullです。各場面では聞き取れる自然な語りと短い見出しを作ります。日付や資料名の繰り返しで画面を埋めず、
+尺は仕上がった語りと観察の間から決まります。短縮のために出来事の意図や結果を落とさず、必要な数の場面を使います。必要に応じてvisualTimingのbeforeVoiceに語りに先立って絵だけを見る秒数、afterVoiceに語りの後に絵を見渡す秒数を書けます。既定の間でよい値はnullです。どこに最初に目が行き、その先で何を見つけられるかを考え、眺める余白を残します。見出しを添えるときは短く、日付や資料名の繰り返しで画面を埋めず、
 写真と模式図の区別が画面で読める箇所では、そのたびに作画上の注記を読み上げる必要はありません。
 どこを見れば何に気づけるのかを考え、絵だけで分かる瞬間は語りを休ませます。字幕用のnarrationは自然な日本語表記です。
 固有名・助数詞・多義語などは同じ場面の表記をそのままtextに写し、意図した発音を全角カタカナでkanaに記します。
 たとえば数量の「十八」は「ジュウハチ」、画面の位置を指す「右上」は「ミギウエ」です。読み指定が不要なら空配列です。重複・引用・出典番号を語りに入れません。
 
-assetsにある素材を選んで、根拠となる資料IDをsourceIdsに入れます。sourceは出典名と見出しの文字を見せる画面です。
+assetsにある素材を選んで、根拠となる資料IDをsourceIdsに入れます。sourceは先頭の一、二件の出典名を見せる画面です。資料名だけで視線が定まるときはheadingを空文字列にし、短い言葉が見どころを伝える場合だけ添えます。
 boardMaterialsがある場合は、各ショットで実際に見えるものと使う場面のsourceIdを確認します。
 カメラや観測の記録と、番組で加えた模式図・線・色を区別します。公開日を撮影日としたり、模式図の移動を実測の軌跡とする表現は避けます。
 同じショットを繰り返すなら、その都度新しく観察できる理由があるか確認します。用意した全ショットを使い切る義務はありません。
@@ -277,7 +279,8 @@ boardMaterialsがある場合は、各ショットで実際に見えるものと
 根拠がそろっているときはmaterialRequestを空文字列にします。"""
 
 _ADAPTATION_PROMPT = """Localize a finished Japanese Plunode cut for an English-speaking viewer.
-Write only the English title and each scene's spoken English and short on-screen heading.
+Write only the English title and each scene's spoken English and heading. On a source card,
+preserve the Japanese choice to show or omit the heading: return "" for an unheaded card.
 The Japanese title, scene sequence, picture, source references and editorial choices are fixed.
 Return one entry for every supplied scene ID in its original order. Keep each scene's factual claim
 and the order of its reveals. Let the viewer notice the object or action before your words give away its
@@ -300,8 +303,8 @@ def _draft_input(snapshot, brief):
             "records": records, "sources": source_cards}
 
 
-def _text(value, max_length, label):
-    if not isinstance(value, str) or not value.strip() or len(value) > max_length:
+def _text(value, max_length, label, *, allow_empty=False):
+    if not isinstance(value, str) or len(value) > max_length or (not allow_empty and not value.strip()):
         raise ValueError(f"脚本の{label}が空欄または長過ぎます。")
     return " ".join(value.split())
 
@@ -352,7 +355,7 @@ def _check_draft(draft, snapshot, assets, language="both"):
             shot["visualTiming"] = validate_visual_timing(scene["visualTiming"])
         for lang in languages:
             line = scene[lang]
-            shot[lang] = {"heading": _text(line["heading"], 110, "見出し"),
+            shot[lang] = {"heading": _text(line["heading"], 110, "見出し", allow_empty=asset == "source"),
                           "narration": _text(line["narration"], 450, "ナレーション")}
         readings = scene["ja"].get("readings")
         if not isinstance(readings, list):
@@ -409,7 +412,10 @@ def _apply_adaptation(draft, master):
     plan = deepcopy(master)
     plan["titles"]["en"] = _text(draft.get("title"), 160, "英語の題名")
     for scene, line in zip(plan["scenes"], lines):
-        heading = _text(line.get("heading"), 110, "英語の見出し")
+        source_card = scene["asset"] == "source"
+        heading = _text(line.get("heading"), 110, "英語の見出し", allow_empty=source_card)
+        if source_card and bool(heading) != bool(scene["ja"]["heading"]):
+            raise ValueError(f"場面{scene['id']}の出典の見出しを載せるか、元の日本語版に合わせてください。")
         narration = _text(line.get("narration"), 450, "英語のナレーション")
         if not re.search(r"[A-Za-z]{2,}", narration) or narration == scene["ja"]["narration"]:
             raise ValueError(f"場面{scene['id']}の英語ナレーションを確認できません。")

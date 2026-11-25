@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT.parent / "studio"))
 from media import FPS, RATE, _save_wav, _speech, _style, _voice
 from speech_reading import apply_readings
 from channel_sound import opening_notes
-from channel_style import BLUE, BOLD, FOOT, H, INK, ORANGE, PAPER, SERIF, W
+from channel_style import FOOT, H, PAPER, SERIF, W
 
 
 # English Heritage records the change from a dummy to Taynton on 2 October
@@ -34,26 +34,27 @@ def make_board(frame, shot):
     canvas = Image.new("RGB", (W, H), PAPER)
     with Image.open(ROOT / ("dummy.png" if shot == "dummy" else "stairs.png")) as art:
         picture = art.convert("RGB")
-    if shot == "slippers":
-        # The witness recalled the bare ankles in slippers. Keep both ankles
-        # and the steps, so this closer view still belongs to the previous shot.
-        picture = picture.crop((276, 230, 1506, 1024))
-    panel_width = 843
-    canvas.paste(ImageOps.fit(picture, (panel_width, FOOT), method=Image.Resampling.LANCZOS),
-                 (W - panel_width, 0))
     draw = ImageDraw.Draw(canvas)
-    frame.brand(draw)
-    frame.text(draw, 61, 124, "1925年、ロンドン", 23, family=BOLD, color=BLUE)
-    headings = {"dummy": ("テレビの", "実験相手"), "stairs": ("人を呼びに、", "階下へ。"),
-                "slippers": ("青年が語った", "その足元。")}
-    for y, line in zip((193, 281), headings[shot]):
-        frame.text(draw, 58, y, line, 63, family=SERIF, max_width=349)
-    draw.line((63, 402, 136, 402), fill=ORANGE, width=3)
-    frame.text(draw, 62, 440, "史料に基づく演出図", 21, family=BOLD, color=BLUE)
-    frame.text(draw, 62, 478, "回想　W. テイントン", 19)
-    if shot == "slippers":
-        frame.text(draw, 61, 522, "声　VOICEVOX：青山龍星", 16, color=INK)
+    if shot == "dummy":
+        # Give the two faces a shared field of paper. The location sits above
+        # their line of sight, leaving the look between them uninterrupted.
+        paper = picture.getpixel((1, picture.height // 2))
+        draw.rectangle((0, 0, W, FOOT), fill=paper)
+        picture.thumbnail((748, 482), Image.Resampling.LANCZOS)
+        canvas.paste(picture, ((W - picture.width) // 2, FOOT - picture.height))
+        frame.brand(draw)
+        frame.evidence_label(draw, "史料に基づく演出図")
+        frame.text(draw, W // 2 - 24, 50, "1925年、ロンドン。", 42, family=SERIF, anchor="mt")
+    else:
+        # Follow the diagonal first, then cut back to the raised bare heel
+        # as the witness names the detail that stayed in his memory.
+        crop = (25, 174, 1515, 908) if shot == "stairs" else (0, 210, 963, 653)
+        canvas.paste(ImageOps.fit(picture.crop(crop), (W, FOOT),
+                                 method=Image.Resampling.LANCZOS), (0, 0))
     frame.caption_rail(draw)
+    if shot == "slippers":
+        frame.text(draw, W - 42, H - 15, "W. テイントンの回想　　声　VOICEVOX：青山龍星",
+                   18, color="#cfdbdd", anchor="rb")
     return canvas
 
 

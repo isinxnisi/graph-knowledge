@@ -24,7 +24,7 @@ from PIL import Image, ImageDraw
 
 from setup_media import media_home
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from channel_style import BLUE, BOLD, ChannelFrame, FOOT, H, INK, ORANGE, PAPER, SANS, SERIF, STYLE, W
+from channel_style import BLUE, BOLD, ChannelFrame, FOOT, H, INK, PAPER, SANS, SERIF, STYLE, W
 from speech_reading import apply_readings, protected_breaks, validate_readings
 
 
@@ -320,16 +320,23 @@ def _board(plan, scene, lang, used, labeled=False):
             raise ValueError("資料の場面に根拠がありません。")
         style.brand(d)
         style.evidence_label(d, "出典資料" if is_ja else "Source material")
-        _block(d, heading, lang, (66, 130, 600, 226), family=SERIF, size=60)
-        d.line((68, 401, 389, 401), fill=ORANGE, width=3)
-        for i, source in enumerate(sources[:2]):
-            top = 128 + i * 190
-            style.text(d, 730, top, urlsplit(source["url"]).hostname or "Plunode", 21,
-                       family=BOLD, color=BLUE, max_width=482)
+        if heading:
+            _block(d, heading, lang, (94, 64, 1092, 110), family=SERIF, size=32, center=True)
+        single = len(sources) == 1
+        columns = [(162, 956)] if single else [(70, 528), (682, 528)]
+        top = 184 if heading else 128
+        for source, (x, width) in zip(sources, columns):
             name = source["title"]
             # Primary-source titles keep their original spelling, including Japanese in English editions.
             face = "ja" if re.search(r"[ぁ-ヿ一-鿿]", name) else "en"
-            _block(d, name, face, (730, top+41, 480, 130), size=30)
+            size = 52 if single else 40
+            line_width = _style(face).font(SERIF, size).getlength(name)
+            if width < line_width <= width * 1.15:
+                # Keep a nearly fitting title together instead of stranding its last word or kanji.
+                size = int(size * width / line_width)
+            _block(d, name, face, (x, top, width, 178), family=SERIF, size=size, center=True)
+            style.text(d, x + width//2, top + 207, urlsplit(source["url"]).hostname or "Plunode", 23,
+                       anchor="mt", family=BOLD, color=BLUE, max_width=width)
     else:
         raise ValueError("未対応の図版です。必要な写真や図を確認してください。")
     style.caption_rail(d)
