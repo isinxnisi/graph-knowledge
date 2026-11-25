@@ -26,30 +26,26 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-25T19:57:06.861513+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-25T19:02:30.221458+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-25T19:57:06.861513+00:00",
+    "eligibleAt": "2026-11-25T19:02:30.221458+00:00",
     "windowEndAt": "2026-11-25T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-61-dot-gotouge-kimetsu-20261028",
-    "startedAt": "2026-11-25T18:52:06.861515+00:00",
-    "limitAt": "2026-11-25T19:47:06.861513+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-16-adachi-three-20261025",
-    "endedAt": "2026-11-25T18:42:05.305354+00:00"
+    "requestId": "issue-61-dot-gotouge-kimetsu-20261028",
+    "endedAt": "2026-11-25T18:52:30.221460+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "waiting-control": 54,
     "blocked": 1,
     "completed": 6,
-    "running": 1
+    "awaiting-recovery": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -196,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-25T18:52:17.239032+00:00"
+  "checkedAt": "2026-11-25T18:53:00.741688+00:00"
 }
