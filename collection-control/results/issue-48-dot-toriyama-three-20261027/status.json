@@ -71,11 +71,11 @@
   "requestSha256": "5b9b942bc0bce702658f19be34503c58facd1a72f12bb45e79f6ca63d9491c62",
   "kind": "issue-prepare",
   "phase": "waiting-control",
-  "generation": 8223,
+  "generation": 8274,
   "attempts": 2,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-11-25T15:55:20+00:00",
+  "updatedAt": "2026-11-25T18:00:23+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -205,5 +205,5 @@
   },
   "executionComplete": true,
   "retryAt": 1795621658.3664675,
-  "message": "Execution gate: outside-window"
+  "message": "Execution gate: interval"
 }
