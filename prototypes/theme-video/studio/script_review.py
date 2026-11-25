@@ -3,13 +3,20 @@
 from itertools import groupby
 from urllib.parse import urlsplit
 
-from editor import (JAPANESE_VERSION, _JAPANESE_PROMPT, _call_writer, _check_draft, _object,
+from editor import (JAPANESE_VERSION, MaterialRequired, _JAPANESE_PROMPT, _call_writer, _check_draft, _object,
                     _save_json, _text, _writer_request)
 from writer_feedback import RevisionNeeded, request_digest, validated_output
 from wipe_board import ASSET as WIPE_DEMO, DESCRIPTION as WIPE_PICTURE
 
 
 STRING = {"type": "string"}
+SCOPE_MATERIAL = ("選んだ案の理解に欠かせない要点を支える資料が見つからない場合、その要点にはmaterialRequestだけを返し、"
+                  "何を確かめるためにどんな原典・図版が必要かを日本語で具体的に書いてください。"
+                  "既存の資料で言える範囲に整えられる点や、案に不要な寄り道には追加調査を求めません。")
+ILLUSTRATION_BEAT = ("番組が描いた作例の中で起きる動きや、そこから観客が見つけることは、"
+                     "illustrationIdだけの要点として返せます。制作室がその図の内容と見どころを補います。"
+                     "映画本編で起きること、実際の作者の行動、技法の来歴などを語る要点は、"
+                     "meaning、visibleTestと、その主張を確かめられるsourceIdsを返してください。")
 
 SCOPE_PROMPT = """あなたはPlunodeの企画編集者です。制作依頼と使える根拠を読み、見終わった人の記憶に
 残したい瞬間や発見を考えます。questionには、その瞬間を見つけるために編集者が持つ問いを記します。
@@ -58,18 +65,37 @@ def _array(items):
     return {"type": "array", "items": items}
 
 
-def _scope_schema(sources):
+def _scope_schema(sources, illustrations=()):
     ids = {"type": "string", "enum": list(sources)}
     beat = _object({"meaning": STRING, "sourceIds": _array(ids), "visibleTest": STRING})
-    return _object({"question": STRING, "beats": _array(beat), "outline": STRING})
+    variants = [beat]
+    if illustrations:
+        variants.append(_object({"illustrationId": {"type": "string", "enum": list(illustrations)}}))
+    variants.append(_object({"materialRequest": STRING}))
+    return _object({"question": STRING, "beats": _array({"anyOf": variants}), "outline": STRING})
 
 
-def _scope(raw, sources):
+def _scope(raw, sources, illustrations=()):
     beats = []
     for i, item in enumerate(raw["beats"], 1):
-        ids = item["sourceIds"]
-        if not ids or not set(ids).issubset(sources):
-            raise ValueError("企画の要点に対応する資料がありません。")
+        if "materialRequest" in item:
+            need = item["materialRequest"]
+            if set(item) != {"materialRequest"} or not isinstance(need, str) or not need.strip():
+                raise ValueError(f"要点{i}の素材依頼には、確かめたいことと不足する資料だけを具体的に記してください。")
+            raise MaterialRequired("追加資料が必要です。" + " ".join(need.split()))
+        illustration = item.get("illustrationId")
+        if "illustrationId" in item:
+            if set(item) != {"illustrationId"} or illustration not in illustrations:
+                raise ValueError(f"要点{i}の作例には使用できるillustrationIdだけを指定してください。実作品の説明には出典が必要です。")
+            beats.append({"id": f"b{i}", "illustrationId": illustration, "sourceIds": [],
+                          "meaning": "番組の作例で、動く境目の左右に道と星空が同時に見えることに気づく。",
+                          "visibleTest": WIPE_PICTURE})
+            continue
+        ids = item.get("sourceIds")
+        if not isinstance(ids, list) or not ids or any(not isinstance(sid, str) or sid not in sources for sid in ids):
+            hint = " 自作図だけで確かめる要点なら、illustrationIdだけを返してください。" if illustrations else ""
+            raise ValueError(f"企画の要点{i}に対応する公開資料のIDを確認してください。" + hint +
+                             " 不可欠な資料が見つからない場合は、その要点にmaterialRequestだけを返してください。")
         beats.append({"id": f"b{i}", "meaning": _text(item["meaning"], 6000, "要点"),
                       "sourceIds": ids, "visibleTest": _text(item["visibleTest"], 6000, "見聞きする手掛かり")})
     if not beats:
@@ -128,7 +154,10 @@ def _audience_cut(plan):
 
 def produce_japanese(snapshot, materials, script_schema, model, effort, folder, progress):
     source_ids = {s["id"] for s in snapshot["sources"]}
-    scope_schema = _scope_schema(sorted(source_ids))
+    # Only a board the renderer can draw supplies a source-free observation.
+    has_demo = WIPE_DEMO in materials["assets"] and WIPE_DEMO in materials.get("illustrations", {})
+    illustrations = [WIPE_DEMO] if has_demo else []
+    scope_schema = _scope_schema(sorted(source_ids), illustrations)
     records = folder / "editor-stages"
     usage = {}
 
@@ -145,7 +174,7 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
         return _check_draft(raw, snapshot, materials["assets"], "ja")
 
     facts = {key: materials[key] for key in ("theme", "description", "angle", "records", "sources")}
-    scope_instructions = SCOPE_PROMPT
+    scope_instructions = SCOPE_PROMPT + "\n" + SCOPE_MATERIAL
     if "productionResearch" in materials:
         facts["productionResearch"] = materials["productionResearch"]
         facts["illustrations"] = materials.get("illustrations", {})
@@ -156,8 +185,11 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
         facts["previousJapanese"] = materials["previousJapanese"]
         scope_instructions += ("\n前稿の語りと試写コメントから何が届き、何が足りなかったかを考えます。"
                                "前の場面順を採用する必要はありません。資料、依頼、試写コメントを役割に応じて読んでください。")
+    if illustrations:
+        facts["illustrations"] = {WIPE_DEMO: WIPE_PICTURE}
+        scope_instructions += "\n" + ILLUSTRATION_BEAT
     scope, _, _ = stage("01-scope", "1/5 企画の問い・要点・大筋を検討中", scope_instructions,
-                        facts, scope_schema, lambda raw: _scope(raw, source_ids))
+                        facts, scope_schema, lambda raw: _scope(raw, source_ids, illustrations))
     initial, _, _ = stage("02-draft", "2/5 大筋から初稿を執筆中", _JAPANESE_PROMPT, {**materials, "scope": scope},
                           script_schema, draft)
     reader_schema = _object({"retelling": STRING, "unclear": STRING})
@@ -168,8 +200,12 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
 
     revision_schema = _object({"revisedScope": scope_schema, "revisionReason": STRING, "script": script_schema})
     def revision(raw):
-        script = draft(raw["script"])
-        return _scope(raw["revisedScope"], source_ids), _text(raw["revisionReason"], 6000, "改稿理由"), script
+        # A writer can report the missing source in either the script or the revised outline.
+        need = raw["script"].get("materialRequest")
+        if isinstance(need, str) and need.strip():
+            draft(raw["script"])
+        revised = _scope(raw["revisedScope"], source_ids, illustrations)
+        return revised, _text(raw["revisionReason"], 6000, "改稿理由"), draft(raw["script"])
 
     previous = initial
     feedback = None
@@ -180,14 +216,18 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
         inputs = {**materials, "initialScope": scope, "initialDraft": initial, "initialAudience": audience}
         if feedback is not None:
             inputs.update(previousScript=previous, previousScope=revised_scope, finalReview=feedback)
+        revision_instructions = _JAPANESE_PROMPT + "\n\n" + REVISION_PROMPT + "\nrevisedScopeについて。" + SCOPE_MATERIAL
+        if illustrations:
+            revision_instructions += "\nrevisedScopeについて。" + ILLUSTRATION_BEAT
         revised, script_request, _ = stage(f"04-revision-{round_no}", f"4/5 要点を見直して改稿中（{round_no}稿）",
-                                            _JAPANESE_PROMPT + "\n\n" + REVISION_PROMPT, inputs,
+                                            revision_instructions, inputs,
                                             revision_schema, revision)
         revised_scope, reason, previous = revised
         cut = _audience_cut(previous)
-        beats = [b["id"] for b in revised_scope["beats"]]
+        beats = {b["id"]: b for b in revised_scope["beats"]}
         scenes = {s["id"]: s for s in cut["scenes"]}
-        check_item = _object({"beatId": {"type": "string", "enum": beats},
+        shots = {s["id"]: s for s in previous["scenes"]}
+        check_item = _object({"beatId": {"type": "string", "enum": list(beats)},
                              "sceneIds": _array({"type": "string", "enum": list(scenes)}),
                              "supported": {"type": "boolean"}, "quote": STRING, "evidence": STRING})
         check_schema = _object({"ready": {"type": "boolean"}, "blockingIssue": STRING, "checks": _array(check_item)})
@@ -205,12 +245,26 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
                     if not quote or not any(quote in scenes[s][k] for s in ids for k in ("narration", "picture")):
                         c["supported"] = False
                         c["evidence"] += " 記載された引用を清書稿の該当場面で確認できませんでした。"
+                    if illustrations:
+                        board = beats[c["beatId"]].get("illustrationId")
+                        if board and not any(shots[s]["asset"] == board for s in ids):
+                            c["supported"] = False
+                            c["evidence"] += " 指定した場面に要点の自作図が登場しません。"
+                        elif not board and not any(shots[s]["sourceIds"] for s in ids):
+                            c["supported"] = False
+                            c["evidence"] += " この事実を語る場面に公開資料を指定してください。"
             raw["ready"] = raw["ready"] and not raw["blockingIssue"].strip() and all(c["supported"] for c in checks)
             return raw
         audit_inputs = {"request": materials, "initialScope": scope, "revisedScope": revised_scope,
                         "cut": cut}
+        check_instructions = CHECK_PROMPT
+        if illustrations:
+            audit_inputs["sceneSourceIds"] = {sid: shot["sourceIds"] for sid, shot in shots.items()}
+            check_instructions += ("\nsceneSourceIdsは各場面が使った公開資料です。出典が空の自作図の場面は、"
+                                   "その図で見える動きだけを示せます。そこで特定の作品や作者の事実を語っていれば、"
+                                   "その場面に裏付けとなる公開資料を付けるよう指摘し、改稿に戻してください。")
         feedback, _, cached = stage(f"05-check-{round_no}", f"5/5 清書稿を依頼・資料と照合中（{round_no}稿）",
-                                    CHECK_PROMPT, audit_inputs, check_schema, audit)
+                                    check_instructions, audit_inputs, check_schema, audit)
         if feedback["ready"]:
             if progress:
                 progress("5/5 清書稿の照合を保存しました")

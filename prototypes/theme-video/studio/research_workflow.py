@@ -48,6 +48,11 @@ def write_with_research(snapshot, brief, model, effort, folder, progress, write)
             progress(message)
     searches = 0
     need = None
+    leads_path = folder / "material-leads.json"
+    leads = json.loads(leads_path.read_text(encoding="utf-8"))["urls"] if leads_path.exists() else []
+    searched_leads = {url for entry in rounds if entry["status"] == "done" for url in entry.get("sourceLeads", [])}
+    if set(leads) - searched_leads:
+        need = rounds[-1]["need"] if rounds else "追加された公開資料から、採用した動画案の要確認事項を調べてください。"
     while True:
         enriched = _supplement(snapshot, rounds)
         if need is None:
@@ -67,8 +72,6 @@ def write_with_research(snapshot, brief, model, effort, folder, progress, write)
         entry["need"] = need
         report(f"資料を追加調査中（{len(rounds)}回目）　" + need)
         prior = [{k: r.get(k) for k in ("need", "sources", "remaining", "error")} for r in rounds[:-1]]
-        leads_path = folder / "material-leads.json"
-        leads = json.loads(leads_path.read_text(encoding="utf-8"))["urls"] if leads_path.exists() else []
         if leads:
             entry["sourceLeads"] = leads
         save()

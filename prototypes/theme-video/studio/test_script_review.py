@@ -5,8 +5,9 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from editor import _check_draft, _schema
-from script_review import _audience_cut, produce_japanese
+from editor import MaterialRequired, _check_draft, _schema
+from script_review import _audience_cut, _scope, _scope_schema, produce_japanese
+from wipe_board import ASSET as WIPE_DEMO, DESCRIPTION as WIPE_PICTURE
 from writer_feedback import RevisionNeeded
 
 
@@ -155,6 +156,61 @@ class ScriptReviewTest(unittest.TestCase):
             with self.assertRaises(TimeoutError):
                 self.produce()
             self.assertEqual(writer.call_count, 1)
+
+    def test_source_free_beat_can_only_point_to_an_available_original_illustration(self):
+        figure = {"illustrationId": WIPE_DEMO}
+        for beat, available in [(figure, []), ({"illustrationId": "unknown"}, [WIPE_DEMO]),
+                                ({**figure, "meaning": "映画に登場した。"}, [WIPE_DEMO]),
+                                ({**self.scope["beats"][0], "sourceIds": []}, [WIPE_DEMO])]:
+            with self.subTest(beat=beat, available=available), self.assertRaises(ValueError):
+                _scope({**self.scope, "beats": [beat]}, {"ref"}, available)
+        schema = _scope_schema(["ref"], [WIPE_DEMO])["properties"]["beats"]["items"]
+        self.assertEqual(schema["anyOf"][1]["properties"]["illustrationId"]["enum"], [WIPE_DEMO])
+        base = _scope_schema(["ref"])["properties"]["beats"]["items"]["anyOf"]
+        self.assertEqual([v["required"] for v in base], [["meaning", "sourceIds", "visibleTest"], ["materialRequest"]])
+
+    def test_missing_essential_evidence_can_be_reported_in_initial_or_revised_scope(self):
+        gap = {"materialRequest": "どの公開版の本編でその編集が使われるか、該当箇所を特定する一次資料が必要です。"}
+        missing = {**self.scope, "beats": [gap]}
+        outputs = [self.scope, self.draft, self.reader, {**self.revision, "revisedScope": missing, "script": {}}]
+        for i, response in enumerate(([missing], outputs)):
+            with self.subTest(stage=i), tempfile.TemporaryDirectory() as folder:
+                self.folder = Path(folder)
+                with patch("script_review._call_writer", side_effect=[(r, {}) for r in response]) as writer:
+                    with self.assertRaisesRegex(MaterialRequired, "該当箇所を特定"):
+                        self.produce()
+                self.assertEqual(writer.call_count, len(response))
+        for invalid in ({"materialRequest": " "}, {**gap, "sourceIds": ["absent"]},
+                        {**self.scope["beats"][0], "sourceIds": ["absent"]}):
+            with self.subTest(beat=invalid), self.assertRaises(ValueError) as error:
+                _scope({**self.scope, "beats": [invalid]}, {"ref"})
+            self.assertNotIsInstance(error.exception, MaterialRequired)
+
+    def test_scope_revision_and_final_check_distinguish_a_demonstration_from_a_film_claim(self):
+        self.materials.update(assets=["source", WIPE_DEMO], illustrations={WIPE_DEMO: WIPE_PICTURE})
+        self.scope["beats"].insert(0, {"illustrationId": WIPE_DEMO})
+        scene = {**self.draft["scenes"][0], "asset": WIPE_DEMO, "sourceIds": [],
+                 "ja": {"heading": "", "narration": "道の左に、星が見えてきます。", "readings": []}}
+        self.draft["scenes"].insert(0, scene)
+        demo = {"beatId": "b1", "sceneIds": ["s1"], "supported": True, "quote": "星が見えて",
+                "evidence": "左から現れる星を見る。"}
+        fact = {**self.verdict("鏡と同じ並び")["checks"][0], "beatId": "b2", "sceneIds": ["s2"]}
+        good = {"checks": [demo, fact], "ready": True, "blockingIssue": ""}
+        # The initial verdict uses a real quote from the illustration as proof of an unrelated fact.
+        bad = {**good, "checks": [demo, {**fact, "sceneIds": ["s1"], "quote": "星が見えて"}]}
+        outputs = [self.scope, self.draft, self.reader, self.revision, bad, self.revision, good]
+        with patch("script_review._call_writer", side_effect=[(v, {}) for v in outputs]) as writer:
+            plan = self.produce()
+        review = plan["editorialReview"]
+        for scope in (review["initialScope"], review["scope"]):
+            self.assertEqual(scope["beats"][0]["sourceIds"], [])
+            self.assertEqual(scope["beats"][0]["visibleTest"], WIPE_PICTURE)
+            self.assertEqual(scope["beats"][1]["sourceIds"], ["ref"])
+        self.assertEqual(review["rounds"], 2)
+        inputs = [json.loads(c.args[0]["prompt"].rsplit("\n\n", 1)[1]) for c in writer.call_args_list]
+        self.assertNotIn("sceneSourceIds", inputs[2])
+        self.assertEqual(inputs[4]["sceneSourceIds"], {"s1": [], "s2": ["ref"]})
+        self.assertIn("公開資料を指定", inputs[5]["finalReview"]["checks"][1]["evidence"])
 
     def test_longer_japanese_script_and_continuous_board_reach_the_blind_reader(self):
         shot = {**self.draft["scenes"][0], "asset": "webb-layout", "sourceIds": ["nasa-aligned"]}

@@ -29,6 +29,23 @@ class EditorialNoteTest(unittest.TestCase):
     def check(self):
         return _check_draft(self.draft, self.snapshot, ["source"])
 
+    def test_original_demo_can_describe_its_own_motion(self):
+        shot = self.draft["scenes"][0]
+        shot.update(asset="wipe-demo", sourceIds=[])
+        shot["ja"] = {"heading": "", "narration": "道の向こうから星が入ってきます。", "readings": []}
+        assets = ["wipe-demo", "source"]
+        result = _check_draft(self.draft, self.snapshot, assets, "ja")
+        self.assertEqual(result["scenes"][0]["sourceIds"], [])
+        self.assertEqual([s["id"] for s in result["sources"]], ["ref"])
+        with self.assertRaisesRegex(ValueError, "図版"):
+            _check_draft(self.draft, self.snapshot, ["source"], "ja")
+        self.draft["scenes"][1]["sourceIds"] = []
+        with self.assertRaisesRegex(ValueError, "場面2"):
+            _check_draft(self.draft, self.snapshot, assets, "ja")
+        self.draft["scenes"] = [shot]
+        with self.assertRaisesRegex(ValueError, "テーマ"):
+            _check_draft(self.draft, self.snapshot, assets, "ja")
+
     def test_unheaded_source_passes_draft_review_and_english_adaptation(self):
         line = self.draft["scenes"][0]
         line["ja"]["heading"] = ""

@@ -245,6 +245,10 @@ _MATERIAL_PROMPT = """You may use ONLY the supplied source facts and the visuals
 depends on an unavailable visual or unsupported claim, put the specific missing material and the reason
 in Japanese in materialRequest and return no scenes, leaving the editorial note and titles empty.
 For a supported plan set materialRequest to "".
+A scene that only shows what the supplied original illustration does may use its asset with an empty
+sourceIds list. Cite sources for claims about a real work, even when they are spoken over an illustration.
+When a source identifies a scene precisely by its shots or figure number, use that locator. Require an
+exact playback time only when the operator requested it or the planned comparison relies on timing.
 A 'source' frame
 displays the first one or two published reference titles. When introducing a witness or publication,
 a short heading on the left places the references on the right. Use this change of composition where
@@ -277,6 +281,8 @@ story.questionには、この題材をどんな角度から見るかを、編集
 初めて見る専門語は、身近な動きや観察から入ります。比較を使う場面では視聴者が絵を見比べる時間を取ります。
 図で見えない動きを語りだけで保証してはいけません。
 資料や図に支えられない演出が企画の中心なら、必要な素材と理由をmaterialRequestに書いて止められます。
+番組の自作図で起きる動きだけを観察する場面では、その図を使いsourceIdsを空にできます。同じ図の上で実際の作品や出来事を語るなら出典を付けます。
+文献の図番号やカットの前後で該当場面を特定できるときは、その目印を使えます。依頼や説明に必要な場合に再生時刻を確かめます。
 
 尺は仕上がった語りと観察の間から決まります。短縮のために出来事の意図や結果を落とさず、必要な数の場面を使います。必要に応じてvisualTimingのbeforeVoiceに語りに先立って絵だけを見る秒数、afterVoiceに語りの後に絵を見渡す秒数を書けます。既定の間でよい値はnullです。どこに最初に目が行き、その先で何を見つけられるかを考え、眺める余白を残します。見出しを添えるときは短く、日付や資料名の繰り返しで画面を埋めず、
 写真と模式図の区別が画面で読める箇所では、そのたびに作画上の注記を読み上げる必要はありません。
@@ -366,9 +372,9 @@ def _check_draft(draft, snapshot, assets, language="both"):
     scenes, used = [], {}
     for i, scene in enumerate(draft["scenes"], 1):
         ids = scene["sourceIds"]
-        if not isinstance(ids, list) or not ids or any(sid not in sources for sid in ids):
-            raise ValueError(f"場面{i}に確認できる出典がありません。")
         asset = scene["asset"]
+        if not isinstance(ids, list) or (not ids and asset != WIPE_DEMO) or any(sid not in sources for sid in ids):
+            raise ValueError(f"場面{i}に確認できる出典がありません。")
         required = {"mosaic": {"nasa-mosaic"}, "aligned": {"nasa-aligned"},
                     "comparison": {"nasa-mosaic", "nasa-aligned"}}.get(asset, set())
         if asset in WEBB_BOARDS:
@@ -393,6 +399,8 @@ def _check_draft(draft, snapshot, assets, language="both"):
             raise ValueError(f"場面{i}の日本語の読み指定を確認してください。{exc}") from exc
         scenes.append(shot)
         used.update((key, sources[key]) for key in ids)
+    if not used:
+        raise ValueError("テーマについて語る場面に、その説明を裏づける出典を付けてください。")
     ja = " ".join(s["ja"]["narration"] for s in scenes)
     if not re.search(r"[ぁ-んァ-ヶ]", ja):
         raise ValueError("日本語のナレーションを確認できません。")
