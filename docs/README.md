@@ -6,6 +6,8 @@
 
 通常編集・公開APIとChatGPT Web定期実行の[移行・引継ぎ記録](verification/THEME_EDITORIAL_PUBLICATION_20261120.md)。
 
+[テーマ制作の継続・後日対応・非公開退避](runbooks/THEME_PRODUCTION_CONTINUITY.md)。運営一覧と定期予定の切替、既存案件の移行。
+
 テーマ制作が添付送出やブラウザ不足で止まった場合の[切分け・画像登録・認証済み画面確認・再開手順](runbooks/THEME_PRODUCTION_EXTERNAL_BLOCKERS.md)。
 
 テーマ自動制作の画像生成・実画面検証・診断の[全体設計と実装計画](design/THEME_PRODUCTION_AUTOMATION_20261120.md)。設計評価待ち。

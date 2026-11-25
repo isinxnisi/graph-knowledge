@@ -1,5 +1,5 @@
 import {z} from 'zod';
-import {claimThemeProductionSchema,dispatchThemeProductionSubmissionSchema,productionAssessmentSchema} from '../domain/theme-production';
+import {abandonThemeProductionSchema,claimThemeProductionSchema,productionFollowUpInputSchema,dispatchThemeProductionSubmissionSchema,productionAssessmentSchema} from '../domain/theme-production';
 import {captureThemePreviewSchema,generateThemeImageSchema,readThemeEvidenceSchema} from '../domain/theme-automation';
 
 export function workGuideTechnical(phase:'production'|'review',focuses:Set<string>){
@@ -8,6 +8,7 @@ export function workGuideTechnical(phase:'production'|'review',focuses:Set<strin
   fullContract:'get_theme_authoring_guide',
   claim:schema(claimThemeProductionSchema),
   checkpoint:'update_theme_production',
+  continuity:{followUps:schema(productionFollowUpInputSchema),list:'list_theme_production_follow_ups',park:schema(abandonThemeProductionSchema),parkedSearch:'list_theme_productions(parkedOnly:true)'},
   ...(phase==='production'?{handoff:'update_theme_production(operation: handoff)'}:{
    assessment:schema(productionAssessmentSchema),
    preview:schema(captureThemePreviewSchema),readEvidence:schema(readThemeEvidenceSchema),

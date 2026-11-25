@@ -8,7 +8,7 @@ export const operatorThemesSchema=z.object({items:z.array(z.object({
 export type OperatorTheme=z.infer<typeof operatorThemesSchema>['items'][number];
 
 export const operatorThemeCaseDetailsSchema=themeProductionCaseSchema.pick({
- id:true,version:true,workflow:true,phase:true,status:true,updatedAt:true,lease:true,abandonReason:true,
+ id:true,version:true,workflow:true,phase:true,status:true,updatedAt:true,lease:true,abandonReason:true,suspension:true,
  pendingSubmissionCount:true,submissions:true,nextSubmissionCursor:true,operationHistory:true,
 }).extend({
  progress:themeProductionCaseSchema.shape.progress.omit({artifacts:true}),

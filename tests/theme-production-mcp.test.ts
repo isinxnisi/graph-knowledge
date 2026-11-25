@@ -115,3 +115,16 @@ it('publishes a management page as MCP structured content with a text fallback',
  const normal=await(await handler.fetch(rpc('tools/call',{name:'read_theme_work_guide',arguments:{phase:'production'}}))).json();
  expect(normal.result.structuredContent).toBeUndefined();
 });
+
+it('exposes continuity inputs and the authenticated cross-case follow-up list',async()=>{
+ const call=vi.fn().mockResolvedValue({items:[],nextCursor:null}),handler=createMissionMcpHandler(vi.fn(),{call});
+ const data=await(await handler.fetch(rpc('tools/list',{}))).json();
+ const tool=(name:string)=>data.result.tools.find((value:{name:string})=>value.name===name);
+ expect(tool('abandon_theme_production').inputSchema.properties.park.properties.resumeWhen.type).toBe('string');
+ expect(tool('claim_theme_production').inputSchema.properties.resume.properties.expectedVersion.type).toBe('integer');
+ expect(tool('update_theme_production').inputSchema.properties.followUps.items.properties.record.properties.status.enum).toEqual(['open','resolved']);
+ expect(tool('list_theme_production_follow_ups')._meta.securitySchemes[0].scopes).toContain('themes:compose');
+ const response=await handler.fetch(rpc('tools/call',{name:'list_theme_production_follow_ups',arguments:{query:'archival image'}}));
+ expect((await response.json()).result.structuredContent).toEqual({items:[],nextCursor:null});
+ expect(call).toHaveBeenCalledWith({action:'list-theme-production-follow-ups',query:'archival image',cursor:0});
+});

@@ -1,4 +1,4 @@
-import {abandonThemeProductionSchema,getThemeProductionSchema,listThemeProductionsSchema,themeProductionCaseSchema,themeProductionListSchema,themeProductionResponseSchema} from '../../../../lib/domain/theme-production';
+import {abandonThemeProductionSchema,getThemeProductionSchema,listThemeProductionsSchema,listThemeProductionFollowUpsSchema,themeProductionFollowUpsSchema,themeProductionCaseSchema,themeProductionListSchema,themeProductionResponseSchema} from '../../../../lib/domain/theme-production';
 import {operatorThemeCaseDetailsSchema} from '../../../../lib/domain/theme-operations';
 import {MemberError,assertMemberOrigin,memberInput} from '../../../../lib/server/member/http';
 import {dispatchThemeRegistration} from '../../../../lib/server/member/knowledge-theme-registration';
@@ -25,6 +25,11 @@ async function handle(request:Request,run:(owner:string)=>Promise<unknown>){
 export function GET(request:Request){
  return handle(request,async owner=>{
   const query=new URL(request.url).searchParams;
+  if(query.get('view')==='follow-ups'){
+   const input=listThemeProductionFollowUpsSchema.safeParse({query:query.get('query')??undefined,cursor:Number(query.get('cursor')??0)});
+   if(!input.success)throw new MemberError(400,'INVALID_ARGUMENT');
+   return themeProductionFollowUpsSchema.parse(await dispatchThemeRegistration(owner,{action:'list-theme-production-follow-ups',...input.data}));
+  }
   const caseId=query.get('caseId');
   if(caseId!==null){
    const input=getThemeProductionSchema.safeParse({
@@ -34,7 +39,7 @@ export function GET(request:Request){
    if(!input.success)throw new MemberError(400,'INVALID_ARGUMENT');
    const result=themeProductionResponseSchema.parse(await dispatchThemeRegistration(owner,{action:'get-theme-production',...input.data}));
    const current=themeProductionCaseSchema.parse(result.case);
-   const {id,version,workflow,phase,status,updatedAt,lease,abandonReason,progress,pendingSubmissionCount,
+   const {id,version,workflow,phase,status,updatedAt,lease,abandonReason,suspension,progress,pendingSubmissionCount,
     submissions,nextSubmissionCursor,operationHistory,lastWholeThemeAssessment}=current;
    const safeProgress={brief:progress.brief,scope:progress.scope,unfinished:progress.unfinished,blockers:progress.blockers};
    const base={id,version,progress:safeProgress,submissions,nextSubmissionCursor,operationHistory};
@@ -44,12 +49,12 @@ export function GET(request:Request){
     evaluatedAt:lastWholeThemeAssessment.evaluatedAt,summary:lastWholeThemeAssessment.summary,
    }:null;
    return operatorThemeCaseDetailsSchema.parse({
-    ...base,workflow,phase,status,updatedAt,lease,abandonReason,pendingSubmissionCount,
+    ...base,workflow,phase,status,updatedAt,lease,abandonReason,suspension,pendingSubmissionCount,
     publicationPending:current.publication?.pending===true,
     publicationConflict:!!current.evaluationTarget?.publicationConflict,assessment,
    });
   }
-  const input=listThemeProductionsSchema.safeParse({themeId:query.get('themeId'),cursor:Number(query.get('cursor')??0)});
+  const input=listThemeProductionsSchema.safeParse({themeId:query.get('themeId')??undefined,query:query.get('query')??undefined,parkedOnly:query.get('parkedOnly')==='1'||undefined,cursor:Number(query.get('cursor')??0)});
   if(!input.success)throw new MemberError(400,'INVALID_ARGUMENT');
   return themeProductionListSchema.parse(await dispatchThemeRegistration(owner,{action:'list-theme-productions',...input.data}));
  });

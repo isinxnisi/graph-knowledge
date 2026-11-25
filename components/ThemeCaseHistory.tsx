@@ -119,6 +119,7 @@ export function ThemeCaseHistory({userId,themeId,currentCaseId,refreshVersion,re
     <p className={css.caseBrief}>{selected.progress.brief}</p>
     {selected.progress.scope.trim()&&selected.progress.scope.trim()!==selected.progress.brief.trim()&&<p className={css.caseScope}>{selected.progress.scope}</p>}
     {selected.status==='abandoned'&&selected.abandonReason&&<p className={css.caseScope}>{selected.abandonReason}</p>}
+    {selected.suspension&&<p className={css.caseScope}>{t('再開条件','Resume when')} · {selected.suspension.resumeWhen}</p>}
     {selected.progress.blockers.length>0&&<section className={css.caseBlockers}>
      <h3>{t('続行に必要なこと','What is blocking progress')}</h3>
      <ul>{selected.progress.blockers.map((note,i)=><li key={i}>{note}</li>)}</ul>
@@ -149,7 +150,7 @@ export function ThemeCaseHistory({userId,themeId,currentCaseId,refreshVersion,re
        <ul>{selected.submissions.map(row=><li key={row.id}>{row.action} · {row.state}{row.reason&&(' · '+row.reason)} · <code>{row.id}</code></li>)}</ul></>}
       {selected.nextSubmissionCursor!==null&&<button className={css.quietButton} onClick={()=>setSubmissionCursor(selected.nextSubmissionCursor!)}>{t('次の登録受付','Next submissions')}</button>}
       {!!selected.operationHistory?.items.length&&<><h3>{t('操作履歴','Operation history')}</h3>
-       <ul>{selected.operationHistory.items.map(row=><li key={row.requestId}>{format(row.at)} · {row.outcome} · <code>{row.requestId}</code></li>)}</ul></>}
+       <ul>{selected.operationHistory.items.map(row=><li key={row.requestId}>{format(row.at)} · {row.outcome}{row.reason&&(' · '+row.reason)} · <code>{row.requestId}</code></li>)}</ul></>}
       {selected.operationHistory?.nextCursor!=null&&<button className={css.quietButton} onClick={()=>setOperationCursor(selected.operationHistory!.nextCursor!)}>{t('次の操作履歴','Next operations')}</button>}
      </div>
     </details>

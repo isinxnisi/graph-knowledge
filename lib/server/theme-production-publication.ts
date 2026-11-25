@@ -1,3 +1,4 @@
+import {productionContinuity} from './theme-production-continuity';
 import type {GuideVersions} from '../domain/theme-work-guide';
 import {lockThemeQualityGuide} from './member/theme-quality-guide';
 import {assertThemeEvidence} from './theme-automation';
@@ -17,7 +18,7 @@ export async function activateReviewedTheme(pool:Pool,knowledge:Pool,owner:strin
   if(!intent)throw new KnowledgeError('公開切替の完了記録がありません。',409,'PUBLICATION_PROOF_REQUIRED');
   await m.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['theme-production:'+intent.case_id]);
   const r=(await m.query('SELECT * FROM theme_production.cases WHERE id=$1 AND owner_id=$2 FOR UPDATE',[intent.case_id,owner])).rows[0];
-  if(!r||r.origin!==deps.origin||r.status!=='completed'||r.phase!=='review'||r.theme_id!==intent.theme_id||r.theme_revision!==intent.theme_revision||knowledgeDigest(r.assessment)!==knowledgeDigest(intent.assessment)||r.assessment?.result!=='pass'||r.progress.unfinished.length||r.progress.blockers.length)throw new KnowledgeError('完了後に制作状態が変わりました。独立した全体見直しへ戻してください。',409,'PUBLICATION_PROOF_STALE');
+  if(!r||r.origin!==deps.origin||r.status!=='completed'||productionContinuity(r.progress).parkedIntentId===intentId||r.phase!=='review'||r.theme_id!==intent.theme_id||r.theme_revision!==intent.theme_revision||knowledgeDigest(r.assessment)!==knowledgeDigest(intent.assessment)||r.assessment?.result!=='pass'||r.progress.unfinished.length||r.progress.blockers.length)throw new KnowledgeError('完了後に制作状態が変わりました。独立した全体見直しへ戻してください。',409,'PUBLICATION_PROOF_STALE');
   const dynamic=r.guide_contract===2;
   if(dynamic)await lockThemeQualityGuide(m,true);
   await m.query('LOCK TABLE product_editorial_version,site_editorial_guide_version IN SHARE MODE');

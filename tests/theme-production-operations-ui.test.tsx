@@ -95,3 +95,29 @@ it('does not show old private progress after access or account changes, includin
  expect(screen.queryByRole('link',{name:'Working theme'})).toBeNull();view.rerender(<ThemeProductionOperations userId="other" authorized={false}/>);resolve({items});
  await waitFor(()=>expect(screen.queryByRole('link',{name:'Working theme'})).toBeNull());
 });
+
+it('searches follow-up and parked case history from the production panel',async()=>{
+ const caseId='a1d5b21e-94fb-4a75-a94b-d160d5335b4c',at='2026-11-25T00:00:00Z';
+ mock.request.mockResolvedValueOnce({items}).mockResolvedValueOnce({items:[{
+  key:'archival-intake',scope:'shared',sourceCaseId:caseId,
+  record:{issue:'Awaiting archival intake',reason:'File not available',attempt:'Checked the collection',resumeWhen:'Authorized copy received',observedAt:at,status:'open'},
+  cases:[{caseId,brief:'Example released theme',impact:'Text source is available',theme:{id:'theme:done',revision:8},recordedAt:at}],
+ }],nextCursor:null}).mockResolvedValueOnce({items:[],nextCursor:null}).mockResolvedValueOnce({
+  items:[{id:caseId,brief:'Example archived draft',abandonReason:'Required source missing',pendingSubmissionCount:1,suspension:{resumeWhen:'First edition available',at}}],nextCursor:null,
+ });
+ render(<ThemeProductionOperations userId="owner" authorized/>);
+ await screen.findByRole('link',{name:'Published theme'});
+ const disclosure=screen.getByText('Follow-ups and parked cases').closest('details')!;
+ disclosure.open=true;
+ const panel=within(disclosure);
+ await panel.findByText('Awaiting archival intake');
+ expect(panel.getByText('Text source is available')).toBeTruthy();
+ fireEvent.change(panel.getByRole('searchbox'),{target:{value:'image rights'}});
+ fireEvent.click(panel.getByRole('button',{name:'Search'}));
+ await panel.findByText('No matching records.');
+ expect(mock.request.mock.calls[2][0]).toContain('query=image+rights');
+ fireEvent.change(panel.getByLabelText('Show'),{target:{value:'parked'}});
+ await panel.findByText('Example archived draft');
+ expect(panel.getByText('First edition available')).toBeTruthy();
+ expect(mock.request.mock.calls[3][0]).toContain('parkedOnly=1');
+});

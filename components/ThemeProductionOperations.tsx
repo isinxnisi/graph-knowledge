@@ -6,6 +6,7 @@ import {useUiLocale} from '../lib/client/ui-locale';
 import {operatorThemesSchema,type OperatorTheme} from '../lib/domain/theme-operations';
 import common from './OperationsPage.module.css';
 import css from './ThemeProductionOperations.module.css';
+import {ThemeProductionContinuity} from './ThemeProductionContinuity';
 import {ThemeCaseHistory} from './ThemeCaseHistory';
 
 export function ThemeProductionOperations({userId,authorized}:{userId:string;authorized:boolean}){
@@ -34,6 +35,7 @@ export function ThemeProductionOperations({userId,authorized}:{userId:string;aut
    <button className={css.refresh} disabled={!authorized||busy} onClick={()=>setAttempt(n=>n+1)}>{t('更新','Refresh')}</button>
    <div className={common.filters}>{(['all','production','review','published'] as const).map(state=><button key={state} aria-pressed={state===filter} onClick={()=>setFilter(state)}>{label[state]} <span>{items.filter(row=>matches(row,state)).length}</span></button>)}</div>
   </div>
+  {authorized&&<ThemeProductionContinuity key={userId} userId={userId} refreshVersion={attempt}/>}
   {authorized&&error&&<p role="alert" className={common.error}>{error}</p>}
   {authorized&&busy&&!loaded&&<p role="status">{t('テーマを確認しています…','Loading themes…')}</p>}
   {authorized&&<ul className={css.rows}>{visible.map(row=><li key={row.id} className={css.themeRow}>

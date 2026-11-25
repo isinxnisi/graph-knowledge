@@ -944,3 +944,107 @@ it('bounds management responses and reads long guide bodies from a pinned histor
  await expect(read({revision:saved.revision,managementBody:{key:'legacy',offset:0}})).rejects.toMatchObject({code:'GUIDE_BODY_NOT_FOUND'});
  await expect(guides.readWork(randomUUID(),origin,{phase:'review',focuses:[],management:true,revision:saved.revision,managementBody:{key:'timeline-and-sources',offset:0}})).rejects.toMatchObject({code:'OPERATOR_REQUIRED'});
 },30_000);
+
+it('moves optional materials out of the blocking queue, publishes after independent review and links shared work from the next case',async()=>{
+ const run=await begin('production',true);
+ const observedAt=new Date().toISOString(),key='licensed-image-intake';
+ const issue={key,scope:'shared',impact:'The timeline and source links stand on their own.',
+  record:{issue:'Licensed archival image could not be imported',reason:'Authorized attachment unavailable',
+   attempt:'Read the archive and confirmed the text source. No image was imported.',resumeWhen:'An authorized attachment is available',observedAt,status:'open'}};
+ const oldWork={...progress,unfinished:['Add optional image and shop links'],blockers:['Waiting for a file'],
+  artifacts:{...progress.artifacts,workLoop:{waitingOn:'file',doneWhen:'Image and shops registered',nextAction:'Check the same file'}}};
+ await fenced(run,{action:'update-theme-production',operation:'save',progress:oldWork,status:'blocked'});
+ await expect(fenced(run,{action:'update-theme-production',operation:'save',progress,followUps:[{key,scope:'shared',impact:'No record exists'}]}))
+  .rejects.toMatchObject({code:'PRODUCTION_FOLLOW_UP_REQUIRED'});
+ expect((await read(run.caseId)).progress).toMatchObject(oldWork);
+ const handoff=await fenced(run,{action:'update-theme-production',operation:'handoff',progress:{...progress,
+  artifacts:{...progress.artifacts,workLoop:{waitingOn:null,doneWhen:'Independent review receives the current edition',nextAction:'Review the full timeline'}}},
+  followUps:[issue]});
+ expect(handoff.case).toMatchObject({phase:'review',progress:{blockers:[],unfinished:[],artifacts:{workLoop:{waitingOn:null}}}});
+ const reviewer=await resume(run,'review');
+ // A later checkpoint omitting the server-owned record cannot erase it.
+ await fenced(reviewer,{action:'update-theme-production',operation:'save',progress});
+ const pass=await complete(reviewer);expect(pass.case?.completed).toBe(true);
+ expect((await publicService().theme({themeId:'theme',language:'ja'})).theme.revision).toBe(1);
+ expect((await execute({action:'get-theme-production'})).outcome).toBe('none');
+ const next=await begin();
+ expect((await execute({action:'get-theme-production'})).case?.id).toBe(next.caseId);
+ await fenced(next,{action:'update-theme-production',operation:'save',followUps:[{key,scope:'shared',impact:'Different draft can also omit this image'}]});
+ const search=()=>cases.execute(owner,{action:'list-theme-production-follow-ups',query:'Authorized attachment',cursor:0});
+ expect(await search()).toMatchObject({items:[{key,scope:'shared',sourceCaseId:run.caseId,record:issue.record,cases:expect.arrayContaining([
+  {caseId:next.caseId,brief:progress.brief,impact:'Different draft can also omit this image',theme:null,recordedAt:expect.any(String)},
+  {caseId:run.caseId,brief:progress.brief,impact:issue.impact,theme:{id:'theme',revision:1},recordedAt:expect.any(String)},
+ ])}],nextCursor:null});
+ expect(await cases.execute(other,{action:'list-theme-production-follow-ups',cursor:0})).toEqual({items:[],nextCursor:null});
+},30_000);
+
+it('parks unresolved receipts, isolates late results, selects another case and resumes the original after a changed condition',async()=>{
+ await migrateMemberDatabase(pool,...Array(37).fill(true));
+ const run=await begin(),payload=productionSubmissionCommandSchema.parse(createCommand()),preparation=await prepare(run,payload),submissionId=preparation.submissionId!;
+ // Normal intake committed, but the response was lost and the worker has not reflected it.
+ lostAck=true;await expect(send(run,submissionId)).rejects.toThrow('Response lost');
+ const automationId=randomUUID();
+ await pool.query(`INSERT INTO theme_production.automation_requests(id,case_id,execution_id,kind,digest,input,state,reason)
+  VALUES($1,$2,$3,'image',$4,'{}','blocked','IMAGE_GENERATION_UNKNOWN')`,[automationId,run.caseId,run.executionId,'a'.repeat(64)]);
+ const end={action:'abandon-theme-production',caseId:run.caseId,requestId:randomUUID(),reason:'Essential source cannot be verified now',
+  expectedVersion:(await read(run.caseId)).version,park:{resumeWhen:'Original source and receipt become verifiable',topicKey:'original-source-angle'}};
+ await expect(execute(end)).rejects.toMatchObject({code:'PRODUCTION_BUSY'});
+ await fenced(run,{action:'update-theme-production',operation:'release'});
+ end.expectedVersion=(await read(run.caseId)).version;
+ const parked=await execute(end);
+ expect(parked.case).toMatchObject({status:'abandoned',pendingSubmissionCount:1,progress:{artifacts:progress.artifacts},
+  suspension:{resumeWhen:end.park.resumeWhen}});
+ expect(await execute(end)).toMatchObject({outcome:'abandoned',replayed:true});
+ expect((await execute({action:'get-theme-production'})).outcome).toBe('none');
+ expect(await cases.execute(owner,{action:'list-theme-productions',parkedOnly:true,query:end.park.topicKey,cursor:0}))
+  .toMatchObject({items:[{id:run.caseId,topicKey:end.park.topicKey,brief:progress.brief}]});
+ const candidate={action:'create-theme-production',requestId:randomUUID(),topicKey:end.park.topicKey,progress};
+ await expect(execute(candidate)).rejects.toMatchObject({code:'PRODUCTION_CASE_PARKED'});
+ const next=await begin('review',true);
+ await registrations.recoverOne();
+ const original=await read(run.caseId);
+ expect(original).toMatchObject({status:'abandoned',pendingSubmissionCount:0,publication:{publishedRevision:null,pending:false}});
+ expect(original.theme?.id).toBeTruthy();
+ expect((await execute({action:'get-theme-production'})).case).toMatchObject({id:next.caseId,theme:{id:'theme',revision:1}});
+ expect((await execute({action:'get-theme-production',caseId:run.caseId,submissionId})).case?.savedSubmission)
+  .toMatchObject({state:'applied',dispatches:1,command:payload});
+ await expect(publicService().theme({themeId:original.theme!.id})).rejects.toMatchObject({status:404});
+ await expect(execute({...candidate,topicKey:'different-label',workflow:'manual',theme:original.theme}))
+  .rejects.toMatchObject({code:'PRODUCTION_CASE_PARKED'});
+ await expect(ordinarySend(owner,payload)).rejects.toMatchObject({code:'PRODUCTION_FENCE_REQUIRED'});
+ expect((await pool.query('SELECT case_id,state,reason FROM theme_production.automation_requests WHERE id=$1',[automationId])).rows)
+  .toEqual([{case_id:run.caseId,state:'blocked',reason:'IMAGE_GENERATION_UNKNOWN'}]);
+ const reopen={action:'claim-theme-production',caseId:run.caseId,requestId:randomUUID(),executionId:randomUUID(),phase:'production',
+  resume:{expectedVersion:original.version,reason:'A new independent source is available and the original receipt was confirmed'}};
+ await expect(execute(reopen,other)).rejects.toMatchObject({code:'NOT_FOUND'});
+ await expect(execute(reopen)).rejects.toMatchObject({code:'PRODUCTION_ACTIVE_CASE'});
+ await complete(next);
+ const reopened=await execute(reopen);
+ expect(reopened).toMatchObject({outcome:'claimed',case:{status:'working',theme:original.theme,progress:{artifacts:progress.artifacts}}});
+ expect(reopened.case).not.toHaveProperty('suspension');
+ expect((await execute({action:'get-theme-production'})).case?.id).toBe(run.caseId);
+ const history=await execute({action:'get-theme-production',caseId:run.caseId,operationCursor:0});
+ expect(history.case).toMatchObject({operationHistory:{items:expect.arrayContaining([
+  expect.objectContaining({outcome:'claimed',reason:reopen.resume.reason}),
+  expect.objectContaining({outcome:'abandoned',reason:end.reason,resumeWhen:end.park.resumeWhen}),
+ ])}});
+ expect((await pool.query('SELECT count(*)::int n FROM knowledge_missions.theme_registrations')).rows[0].n).toBe(1);
+},30_000);
+
+it('parks a proven unapproved activation under its original fence and keeps an older approved revision available',async()=>{
+ await complete(await begin('review',true,'manual'));
+ await ordinaryUpdate();
+ const run=await begin('review',true,'scheduled',2);
+ await assess(run);
+ failActivation=true;
+ const interrupted=await fenced(run,{action:'update-theme-production',operation:'complete'});
+ expect(interrupted).toMatchObject({case:{publication:{pending:true,publishedRevision:1}},publicationError:{code:'PUBLICATION_UNAVAILABLE'}});
+ const intent=(await pool.query('SELECT completion_command FROM theme_production.publication_intents WHERE case_id=$1',[run.caseId])).rows[0].completion_command;
+ const parked=await execute({action:'abandon-theme-production',requestId:randomUUID(),caseId:run.caseId,expectedVersion:interrupted.case!.version,
+  reason:'Can no longer activate this draft on the current conditions',park:{topicKey:'fixture-publication',resumeWhen:'Review conditions change'}});
+ expect(parked.case).toMatchObject({status:'abandoned',completed:false,publication:{pending:false,publishedRevision:1,workingRevision:2}});
+ expect(await execute(intent)).toMatchObject({replayed:true,publicationError:{code:'PUBLICATION_PROOF_STALE'}});
+ expect((await publicService().theme({themeId:'theme',language:'ja'})).theme.revision).toBe(1);
+ expect((await execute({action:'get-theme-production'})).outcome).toBe('none');
+ expect((await begin()).caseId).not.toBe(run.caseId);
+},30_000);
