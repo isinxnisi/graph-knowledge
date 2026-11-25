@@ -6,6 +6,7 @@
   <meta name="color-scheme" content="light">
   <title>映像制作室 | Plunode</title>
   <link rel="stylesheet" href="/studio.css">
+  <script src="/ideas.js" defer></script>
   <script src="/studio.js" defer></script>
 </head>
 <body>
@@ -18,22 +19,34 @@
     <aside class="sidebar" aria-label="案件の選択">
       <div class="side-head"><h2>制作案件 <span id="case-count" class="count"></span></h2><button id="toggle-list" class="mobile-show" type="button" aria-expanded="false" aria-controls="case-list">一覧を開く</button></div>
       <a class="new-link" href="#new"><span aria-hidden="true">＋</span>新しい案件</a>
+      <a class="library-link" href="#ideas">保存した動画案</a>
       <nav id="case-list" aria-label="案件一覧"><p class="aside-empty">読み込み中…</p></nav>
     </aside>
     <main id="main" tabindex="-1">
       <div id="notice" role="status" aria-live="polite" hidden></div>
       <section id="loading-view"><h1>案件を読み込み中…</h1></section>
+      <section id="ideas-view" hidden>
+        <h1>保存した動画案</h1>
+        <div class="idea-filters">
+          <label>テーマ<select id="ideas-theme"><option value="">すべてのテーマ</option></select></label>
+          <label>状態<select id="ideas-status"><option value="">すべての状態</option><option value="candidate">制作候補</option><option value="later">あとで作る</option><option value="used">制作に使用</option></select></label>
+        </div>
+        <div id="idea-batches" aria-live="polite"></div>
+        <div id="idea-list"></div>
+      </section>
       <section id="new-view" hidden>
-        <p class="overline">制作案件 / 新規</p><h1>テーマから動画をつくる</h1>
+        <p class="overline">制作案件 / 新規</p><h1 id="new-title">テーマから動画をつくる</h1>
         <form id="new-form" class="form-card">
-          <fieldset><legend>公開テーマ</legend>
+          <fieldset id="new-theme-fields"><legend>公開テーマ</legend>
             <label for="theme-query">テーマを検索</label>
             <div class="inline stretch"><input id="theme-query" type="search" placeholder="例　Webb、ウォークマン" autocomplete="off"><button id="search-themes" class="secondary" type="button">検索</button></div>
             <p id="search-status" class="subtle" aria-live="polite"></p>
             <div id="theme-results" aria-label="検索結果"></div>
             <div id="theme-selection" class="selected-theme" hidden><div><span class="field-tag">選択中のテーマ</span><strong id="chosen-theme"></strong></div><label for="theme-revision">使用する公開版<input id="theme-revision" type="number" min="1" step="1"></label></div>
+            <a id="theme-ideas-link" class="text-link" href="#ideas" hidden>このテーマの保存案を見る</a>
           </fieldset>
-          <fieldset><legend>動画の企画</legend><label for="brief">取り上げる切り口（任意）</label><textarea id="brief" rows="3" maxlength="1500" placeholder="空欄なら、選んだテーマから切り口を決めます"></textarea>
+          <div id="chosen-idea" hidden></div>
+          <fieldset><legend id="new-settings-label">動画の企画</legend><div id="new-brief-field"><label for="brief">取り上げる切り口（任意）</label><textarea id="brief" rows="3" maxlength="1500" placeholder="空欄なら、選んだテーマから切り口を決めます"></textarea></div>
             <div class="model-settings">
               <div><label for="new-model">脚本・編集モデル</label><select id="new-model"></select></div>
               <div><label for="new-effort">推論の強さ</label><select id="new-effort"></select></div>
@@ -43,8 +56,9 @@
           </fieldset>
           <div class="form-footer"><span>横長 16:9</span>
             <div class="generation-actions">
+              <button id="generate-ideas" class="primary" type="submit" value="ideas" disabled>動画案を生成して保存</button>
               <button class="secondary" type="submit" value="script" disabled>台本を先に確認</button>
-              <button class="primary" type="submit" value="video" disabled>日本語の動画を生成</button>
+              <button id="new-video" class="secondary" type="submit" value="video" disabled>日本語の動画を生成</button>
             </div>
           </div>
         </form>

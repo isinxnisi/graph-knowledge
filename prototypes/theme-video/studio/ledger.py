@@ -10,6 +10,7 @@ import threading
 import uuid
 from urllib.parse import urlencode
 
+import idea_store
 
 LANGS = ("ja", "en")
 JOB_LABELS = {"queued": "待機中", "running": "生成中", "failed": "失敗", "interrupted": "中断", "script_ready": "台本確認"}
@@ -79,7 +80,8 @@ def reference_case():
                           "timings": timings, "accepted": False}
     timestamp = "2026-11-24T00:00:00+09:00"
     return {"id": REFERENCE, "title": plan["titles"]["ja"], "brief": info["question"], "themeId": theme["id"],
-            "themeUrl": theme["url"], "revision": theme["revision"], "updated": timestamp, "reference": True,
+            "themeTitle": theme["title"], "themeUrl": theme["url"], "revision": theme["revision"],
+            "updated": timestamp, "reference": True,
             "states": dict.fromkeys(LANGS, "見本"), "accepted": {}, "runs": [{"id": "reference", "parent": None,
             "status": "done", "model": "制作時の記録なし", "reason": "", "progress": "品質見本",
             "created": timestamp, "langs": list(LANGS), "error": None, "editions": editions, "plan": plan}]}
@@ -122,6 +124,9 @@ class Ledger:
             if "previous_japanese" not in columns:
                 db.execute("ALTER TABLE runs ADD COLUMN previous_japanese TEXT")
             db.execute("UPDATE runs SET status='interrupted',progress='停止した工程から再開できます' WHERE status='running'")
+            db.executescript(idea_store.SCHEMA)
+            # A batch and its ideas commit together, so unfinished generation can be replayed.
+            db.execute("UPDATE idea_batches SET status='queued' WHERE status='running'")
 
     @contextmanager
     def db(self):
@@ -136,6 +141,79 @@ class Ledger:
         if row and row["digest"] != digest:
             raise ValueError("この実行番号は別の内容で使用済みです。")
         return json.loads(row["result"]) if row else None
+
+    def list_ideas(self, theme_id=None):
+        with self.db() as db:
+            db.execute("BEGIN")
+            return {"items": idea_store.list_items(db, theme_id, self.reference),
+                    "batches": idea_store.list_batches(db, theme_id)}
+
+    def submit_ideas(self, data, snapshot_fn, models_fn):
+        key = required(data, "requestId", 128)
+        digest = hashlib.sha256(packed(["/api/ideas", data]).encode()).hexdigest()
+        with self.db() as db:
+            result = self.repeat(db, key, digest)
+        if result:
+            return result
+        theme, model = required(data, "themeId", 300), required(data, "model", 100)
+        revision, brief = data.get("revision"), data.get("brief", "")
+        if type(revision) is not int or revision < 1:
+            raise ValueError("公開テーマの版を選んでください。")
+        if not isinstance(brief, str) or len(brief) > 1800:
+            raise ValueError("切り口は1800字以内で入力してください。")
+        if model not in {m["id"] for m in models_fn() if m["available"]}:
+            raise ValueError("選択したモデルはこの環境で利用できません。")
+        snapshot = snapshot_fn(theme, revision)
+        if (snapshot["themeId"], snapshot["revision"]) != (theme, revision):
+            raise ValueError("取得したテーマの版が選択内容と一致しません。")
+        with self.db() as db:
+            db.execute("BEGIN IMMEDIATE")
+            result = self.repeat(db, key, digest)
+            if result:
+                return result
+            active = db.execute("""SELECT id FROM idea_batches WHERE theme_id=? AND revision=?
+                                   AND model=? AND brief=? AND status IN ('running','queued')""",
+                                (theme, revision, model, brief.strip())).fetchone()
+            batch_id = active["id"] if active else uuid.uuid4().hex
+            if not active:
+                db.execute("""INSERT INTO idea_batches(id,theme_id,revision,theme_title,snapshot,brief,model,created,status)
+                              VALUES(?,?,?,?,?,?,?,?,'queued')""",
+                           (batch_id, theme, revision, snapshot["title"], packed(snapshot), brief.strip(), model, clock()))
+            result = {"batchId": batch_id}
+            db.execute("INSERT INTO requests VALUES(?,?,?)", (key, digest, packed(result)))
+        self.wake.set()
+        return result
+
+    def work_ideas(self, generator):
+        with self.db() as db:
+            db.execute("BEGIN IMMEDIATE")
+            batch = db.execute("""SELECT * FROM idea_batches WHERE status='queued'
+                                  ORDER BY created,rowid LIMIT 1""").fetchone()
+            if not batch:
+                return False
+            db.execute("UPDATE idea_batches SET status='running' WHERE id=?", (batch["id"],))
+        try:
+            existing = self.list_ideas(batch["theme_id"])["items"]
+            cards = generator(json.loads(batch["snapshot"]), batch["brief"], batch["model"], existing)
+            with self.db() as db:
+                db.execute("BEGIN IMMEDIATE")
+                idea_store.save_generated(db, batch, cards, clock())
+                db.execute("UPDATE idea_batches SET status='done' WHERE id=?", (batch["id"],))
+        except Exception as exc:
+            with self.db() as db:
+                db.execute("UPDATE idea_batches SET status='failed',error=? WHERE id=?",
+                           (str(exc)[:1200] or type(exc).__name__, batch["id"]))
+        return True
+
+    def set_idea_status(self, idea_id, status):
+        if status not in ("candidate", "later"):
+            raise ValueError("動画案の状態を確認してください。")
+        with self.db() as db:
+            db.execute("BEGIN IMMEDIATE")
+            idea = idea_store.selected(db, idea_id)
+            if idea["case_id"]:
+                raise ValueError("制作に使った案です。紐づいた案件を開いてください。")
+            db.execute("UPDATE ideas SET status=? WHERE id=?", (status, idea_id))
 
     def submit(self, route, data, snapshot_fn, models_fn, case_id=None):
         if case_id == REFERENCE:
@@ -161,6 +239,9 @@ class Ledger:
         if "visualTiming" in data and lang != "ja":
             raise ValueError("語りの前後の秒数は日本語の場面で編集できます。")
         model = required(data, "model", 100)
+        idea_id = required(data, "ideaId", 128) if "ideaId" in data else None
+        if idea_id and case_id:
+            raise ValueError("動画案は新しい制作案件で選択してください。")
         if lang not in (*LANGS, None) or (lang and not parent):
             raise ValueError("修正する言語と元の版を確認してください。")
         if not lang and model not in {m["id"] for m in models_fn() if m["available"]}:
@@ -173,9 +254,10 @@ class Ledger:
             brief = data.get("brief", "")
             if not isinstance(brief, str) or len(brief) > 1800:
                 raise ValueError("切り口は1800字以内で入力してください。")
-            snapshot = snapshot_fn(theme, revision)
-            if snapshot["themeId"] != theme or snapshot["revision"] != revision:
-                raise ValueError("取得したテーマの版が選択内容と一致しません。")
+            if not idea_id:
+                snapshot = snapshot_fn(theme, revision)
+                if snapshot["themeId"] != theme or snapshot["revision"] != revision:
+                    raise ValueError("取得したテーマの版が選択内容と一致しません。")
         reason = required(data, "reason", 1200) if lang else str(data.get("reason") or "").strip()[:1200]
         with self.db() as db:
             db.execute("BEGIN IMMEDIATE")
@@ -184,9 +266,23 @@ class Ledger:
                 return existing
             now = clock()
             if not case_id:
+                if idea_id:
+                    idea = idea_store.selected(db, idea_id)
+                    if (idea["theme_id"], idea["revision"]) != (theme, revision):
+                        raise ValueError("動画案を保存したテーマと公開版を選んでください。")
+                    if idea["case_id"]:
+                        run = db.execute("SELECT id FROM runs WHERE case_id=? ORDER BY created,rowid LIMIT 1",
+                                         (idea["case_id"],)).fetchone()
+                        result = {"id": idea["case_id"], "runId": run["id"]}
+                        db.execute("INSERT INTO requests VALUES(?,?,?)", (key, digest, packed(result)))
+                        return result
+                    snapshot = json.loads(idea["snapshot"])
+                    brief = idea_store.production_brief(idea)
                 case_id = uuid.uuid4().hex
                 db.execute("INSERT INTO cases VALUES(?,?,?,?,?)",
                            (case_id, snapshot["title"], brief.strip(), packed(snapshot), now))
+                if idea_id:
+                    db.execute("UPDATE ideas SET status='used',case_id=? WHERE id=?", (case_id, idea_id))
             elif not db.execute("SELECT 1 FROM cases WHERE id=?", (case_id,)).fetchone():
                 raise KeyError(case_id)
             plan = None
@@ -304,7 +400,8 @@ class Ledger:
             return self.reference
         with self.db() as db:
             db.execute("BEGIN")
-            row = db.execute("SELECT * FROM cases WHERE id=?", (case_id,)).fetchone()
+            row = db.execute("""SELECT c.*,i.id idea_id,i.title idea_title FROM cases c
+                                LEFT JOIN ideas i ON i.case_id=c.id WHERE c.id=?""", (case_id,)).fetchone()
             if not row:
                 raise KeyError(case_id)
             runs = db.execute("SELECT * FROM runs WHERE case_id=? ORDER BY created DESC,rowid DESC", (case_id,)).fetchall()
@@ -331,10 +428,12 @@ class Ledger:
                                 reason=run["reason"], progress=run["progress"], created=run["created"],
                                 langs=langs, error=run["error"], editions=editions,
                                 plan=json.loads(run["plan"]) if run["plan"] else None))
-        title = next((r["plan"]["titles"]["ja"] for r in reversed(history) if r["plan"]), row["title"])
+        title = next((r["plan"]["titles"]["ja"] for r in reversed(history) if r["plan"]),
+                     row["idea_title"] or row["title"])
         for lang in LANGS:
             states.setdefault(lang, "未生成")
-        return dict(id=case_id, title=title, themeTitle=snap["title"], brief=row["brief"], themeId=snap["themeId"], revision=snap["revision"],
+        return dict(id=case_id, title=title, themeTitle=snap["title"], brief=row["brief"], themeId=snap["themeId"],
+                    revision=snap["revision"], ideaId=row["idea_id"],
                     themeUrl=theme_url(snap["themeId"], snap["revision"]), updated=row["updated"], reference=False,
                     states=states, accepted=accepted, reviews=[dict(s) for s in reviews], runs=history)
 
@@ -344,8 +443,8 @@ class Ledger:
             rows = db.execute("""SELECT c.id,c.brief,c.updated,
                 json_extract(c.snapshot,'$.themeId') themeId,json_extract(c.snapshot,'$.revision') revision,
                 c.title themeTitle,coalesce((SELECT json_extract(r.plan,'$.titles.ja') FROM runs r
-                WHERE r.case_id=c.id AND r.plan IS NOT NULL ORDER BY r.created,r.rowid LIMIT 1),c.title) title
-                FROM cases c ORDER BY c.updated DESC""").fetchall()
+                WHERE r.case_id=c.id AND r.plan IS NOT NULL ORDER BY r.created,r.rowid LIMIT 1),i.title,c.title) title,
+                i.id ideaId FROM cases c LEFT JOIN ideas i ON i.case_id=c.id ORDER BY c.updated DESC""").fetchall()
             items = {r["id"]: {**dict(r), "reference": False, "states": {}, "accepted": {}} for r in rows}
             for s in db.execute("SELECT case_id,lang,run_id FROM selections"):
                 items[s["case_id"]]["accepted"][s["lang"]] = s["run_id"]

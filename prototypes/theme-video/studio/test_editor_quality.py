@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 from subprocess import CompletedProcess
 
-from editor import WEBB_BOARDS, WEBB_ID, _apply_adaptation, _check_draft, _schema, generate_plan, list_models
+from editor import WEBB_BOARDS, WEBB_ID, _apply_adaptation, _check_draft, _schema, generate_ideas, generate_plan, list_models
 from script_review import _audience_cut
 
 
@@ -96,6 +96,31 @@ class EditorialNoteTest(unittest.TestCase):
             self.assertTrue(all(c["available"] for c in choices))
             with self.assertRaisesRegex(ValueError, "選択したモデル"):
                 generate_plan(self.snapshot, "", "gpt-6-sol@ultra", ".")
+
+    def test_idea_generation_compares_prior_choices_and_allows_one_or_no_new_ideas(self):
+        snapshot = {**self.snapshot, "title": "鏡を調整する", "description": "", "records": []}
+        old = {"title": "二枚の鏡", "opening": "二つの点を見渡す。", "payoff": "光が二枚から来たと気づく。",
+               "needs": "", "sourceIds": ["ref"]}
+        new = {"title": "鏡をのぞき込む人", "opening": "鏡に誰かの目が映る。", "payoff": "どこから見たら像が結ぶか。",
+               "needs": "鏡をのぞく人の記録と、視線をたどる図が必要。", "sourceIds": []}
+        existing = [{**old, "status": "later", "sourceIds": ["ref-from-a-different-revision"]}]
+        choice = {"id": "model@ultra", "modelId": "model", "effort": "ultra", "available": True}
+        with patch("editor.list_models", return_value=[choice]), patch("editor._call_writer") as writer:
+            writer.return_value = ({"ideas": [old, new, {**new, "title": "別の仮題"}]}, {})
+            self.assertEqual(generate_ideas(snapshot, "", choice["id"], existing), [new])
+            request = writer.call_args.args[0]
+            self.assertEqual((request["model"], request["effort"]), ("model", "ultra"))
+            payload = json.loads(request["prompt"].rsplit("\n\n", 1)[1])
+            self.assertEqual(payload["existingIdeas"], [{k: existing[0][k] for k in ("title", "opening", "payoff", "status")}])
+            self.assertNotIn("ref-from-a-different-revision", request["prompt"])
+            self.assertEqual(request["outputSchema"]["properties"]["ideas"]["items"]["properties"]
+                             ["sourceIds"]["items"]["enum"], ["ref"])
+            writer.return_value = ({"ideas": []}, {})
+            self.assertEqual(generate_ideas(snapshot, "", choice["id"], existing), [])
+            for ids, needs in ((["ref-from-a-different-revision"], ""), ([], "")):
+                writer.return_value = ({"ideas": [{**new, "sourceIds": ids, "needs": needs}]}, {})
+                with self.assertRaises(ValueError):
+                    generate_ideas(snapshot, "", choice["id"], existing)
 
     def test_japanese_first_then_localization_of_immutable_master(self):
         snapshot = {**self.snapshot, "themeId": WEBB_ID, "title": "テスト", "description": "", "records": [],

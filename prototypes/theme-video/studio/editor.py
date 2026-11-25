@@ -22,6 +22,7 @@ WEBB_ID = "theme:915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1"
 INSTRUCTIONS_VERSION = "plunode-video-editor-5"
 JAPANESE_VERSION = "plunode-video-ja-6"
 ADAPTATION_VERSION = "plunode-video-en-adaptation-2"
+IDEAS_VERSION = "plunode-video-ideas-1"
 NASA_SOURCES = [
     {"id": "nasa-mosaic", "title": "Photons Received: Webb Sees Its First Star – 18 Times",
      "url": "https://science.nasa.gov/blogs/webb/2022/02/11/photons-received-webb-sees-its-first-star-18-times/",
@@ -177,6 +178,13 @@ def list_models():
                                 "available": True, "reason": ""})
         _catalog = (time.monotonic() + (300 if models else 20), options)
         return [dict(item) for item in options]
+
+
+def _selected_model(selection):
+    choice = next((m for m in list_models() if m["id"] == selection and m["available"]), None)
+    if not choice:
+        raise ValueError("選択したモデルを利用できません。モデル一覧を確認してください。")
+    return choice["modelId"], choice["effort"]
 
 
 def _object(properties):
@@ -428,14 +436,69 @@ def _apply_adaptation(draft, master):
     return plan
 
 
+_IDEAS_PROMPT = """Plunodeのテーマから、日本語の横長動画にしたい企画を考えてください。運営者はここで一本を選びます。
+まず記録や原資料にある人の仕草、ものの形、関係、判断に目を向けてください。ウォークマンで二人のヘッドホンの
+コードをたどると同じ一台に行き着くように、観客が絵や音から自分で何かに気づける案を探します。
+openingには冒頭で最初に見せたい一枚と、音や第一声がそこにどう入るかを、目に浮かぶ言葉で書きます。
+payoffには見終えた人が何を覚え、どの細部がそれまでと違って見えるかを具体的に書きます。
+titleは選びやすい短い仮題です。各欄は一、二文で、titleは120字、opening・payoff・needsはそれぞれ450字以内です。
+案の数は決まっていません。一案で十分な場合もあります。候補同士とexistingIdeasの保存済み企画を照らし合わせ、
+同じ題材でも視聴体験が異なる企画を残します。言い換えや同じ内容の再提案を避け、新しい提案がなければideasを空配列にします。
+sourceIdsにはこのテーマ版で案を支えるsourcesのIDだけを挙げます。出典があることと、使える映像があることは別です。
+素材は通常は資料名の出典カード、boardMaterialsに明示されたものは対応する専用の図や写真も使えます。
+needsには必要な追加の裏付け、探す写真・記録、または描き起こす図を具体的に記し、揃っている場合は空文字列にします。
+足りない素材を理由に面白い企画を退ける必要はありません。未確認の事実は問いとして残し、確かめる原資料をneedsに記します。
+使える記録がまだない着想は、調べる対象が具体的な場合にのみsourceIdsを空にして提案します。"""
+
+
+def generate_ideas(snapshot, brief, model, existing):
+    """Propose distinct viewing experiences for one pinned theme, prior to making a production case."""
+    model_id, effort = _selected_model(model)
+    if not isinstance(brief, str) or len(brief) > 1800:
+        raise ValueError("動画案への希望は1800文字以内で入力してください。")
+    payload = _draft_input(snapshot, brief)
+    saved = [{key: idea.get(key, "") for key in ("title", "opening", "payoff", "status")} for idea in existing]
+    payload["existingIdeas"] = saved
+    source_ids = {s["id"] for s in snapshot["sources"]}
+    if snapshot["themeId"] == WEBB_ID:
+        _attach_boards(payload, {name for name, (sid, _) in WEBB_BOARDS.items() if sid in source_ids})
+    string = {"type": "string"}
+    source_id = {"type": "string", "enum": sorted(source_ids)} if source_ids else string
+    fields = dict.fromkeys(("title", "opening", "payoff", "needs"), string)
+    fields["sourceIds"] = {"type": "array", "items": source_id}
+    schema = _object({"ideas": {"type": "array", "items": _object(fields)}})
+    request = _writer_request(model_id, effort, IDEAS_VERSION, _IDEAS_PROMPT, payload, schema)
+    response, _ = _call_writer(request)
+    if not isinstance(response, dict) or not isinstance(response.get("ideas"), list):
+        raise ValueError("モデルから動画案の一覧を読み取れませんでした。")
+
+    seen = {(idea["opening"], idea["payoff"]) for idea in saved}
+    proposals = []
+    for raw in response["ideas"]:
+        if not isinstance(raw, dict):
+            raise ValueError("動画案の内容を読み取れませんでした。")
+        idea = {"title": _text(raw.get("title"), 120, "仮題"),
+                "opening": _text(raw.get("opening"), 450, "冒頭"),
+                "payoff": _text(raw.get("payoff"), 450, "見終えた後の発見"),
+                "needs": _text(raw.get("needs"), 450, "必要な資料", allow_empty=True)}
+        ids = raw.get("sourceIds")
+        if not isinstance(ids, list) or any(not isinstance(sid, str) or sid not in source_ids for sid in ids):
+            raise ValueError("動画案がこの版にない資料を参照しています。")
+        if not ids and not idea["needs"]:
+            raise ValueError("根拠が未確認の動画案には、必要な追加調査を具体的に記してください。")
+        idea["sourceIds"] = list(dict.fromkeys(ids))
+        experience = (idea["opening"], idea["payoff"])
+        if experience not in seen:
+            proposals.append(idea)
+            seen.add(experience)
+    return proposals
+
+
 def generate_plan(snapshot, brief, model_id, work_dir, *, language="both", master_plan=None, progress=None,
                   previous_japanese=None):
     if language not in ("ja", "en", "both") or (language == "en") != (master_plan is not None):
         raise ValueError("制作する言語と英語版の元になる日本語版を確認してください。")
-    choice = next((m for m in list_models() if m["id"] == model_id and m["available"]), None)
-    if not choice:
-        raise ValueError("選択したモデルを利用できません。モデル一覧を確認してください。")
-    model_id, effort = choice["modelId"], choice["effort"]
+    model_id, effort = _selected_model(model_id)
     if not isinstance(brief, str) or len(brief) > 3200:
         raise ValueError("企画の切り口と試行の指示は合わせて3200文字以内で指定してください。")
     if not snapshot["sources"]:

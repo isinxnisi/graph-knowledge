@@ -12,6 +12,7 @@ const state = {
   selected: { ja: "", en: "" }, sceneId: "", compare: false, compareKey: "",
   poll: null, routeVersion: 0, searchVersion: 0, resumeAfter: null, editTarget: null, reviewTarget: null,
   readingRequest: null, readingUrl: null, adaptTarget: null, awaitingEnglishFor: "",
+  chosenIdea: null, ideaLibrary: null, ideaRead: 0,
 };
 
 function node(tag, value, className) {
@@ -167,13 +168,13 @@ function renderModels(error = "") {
   refreshGenerationButtons();
 }
 function disableSubmitButtons(form, disabled) {
-  for (const button of form.querySelectorAll('button[type="submit"]')) button.disabled = disabled;
+  for (const button of form.querySelectorAll('button[type="submit"]')) button.disabled = disabled || button.hidden;
 }
 function refreshGenerationButtons() {
   for (const name of ["new", "rerun"]) {
     const form = $(name + "-form"), language = $(name + "-language").value;
     form.querySelector('[value="video"]').textContent = productionLanguage[language] + "の動画を生成";
-    disableSubmitButtons(form, (name === "new" && !state.chosen) || !selectedProfile(name) || form.dataset.busy === "1");
+    disableSubmitButtons(form, (name === "new" && !state.chosen && !state.chosenIdea) || !selectedProfile(name) || form.dataset.busy === "1");
   }
   const adapt = $("adapt-form");
   disableSubmitButtons(adapt, !state.adaptTarget || !selectedProfile("adapt") || adapt.dataset.busy === "1");
@@ -185,7 +186,10 @@ async function refreshCases() {
   renderNav();
 }
 function view(id) {
-  for (const name of ["loading", "new", "case"]) $(name + "-view").hidden = name !== id;
+  for (const name of ["loading", "new", "case", "ideas"]) $(name + "-view").hidden = name !== id;
+  const libraryLink = document.querySelector(".library-link");
+  if (id === "ideas") libraryLink.setAttribute("aria-current", "page");
+  else libraryLink.removeAttribute("aria-current");
   renderNav();
 }
 function closeList() {
@@ -230,16 +234,31 @@ function resetCase() {
 async function route() {
   const version = ++state.routeVersion;
   clearTimeout(state.poll); notify(); closeList();
+  state.chosenIdea = null;
   resetCase();
   const hash = location.hash;
-  if (hash === "#new") {
-    $("new-language").value = "ja"; refreshGenerationButtons();
-    view("new"); document.title = "新しい案件 | Plunode 映像制作室";
-    if (!state.results.length) searchThemes();
-    return;
-  }
   view("loading");
   try {
+    if (hash === "#ideas" || hash.startsWith("#ideas/theme/")) {
+      await openIdeaLibrary(hash, version);
+      return;
+    }
+    if (hash === "#new" || hash.startsWith("#new/idea/")) {
+      if (hash !== "#new") {
+        const id = decodeURIComponent(hash.slice("#new/idea/".length));
+        const library = await api("/api/ideas");
+        if (version !== state.routeVersion) return;
+        const idea = library.items.find((item) => item.id === id);
+        if (!idea) throw new Error("指定した動画案が見つかりません。");
+        if (idea.caseId) { location.replace(caseHash(idea.caseId)); return; }
+        state.chosenIdea = idea;
+      }
+      drawNewIdeaSelection();
+      $("new-language").value = "ja"; refreshGenerationButtons();
+      view("new"); document.title = "新しい案件 | Plunode 映像制作室";
+      if (!state.chosenIdea && !state.results.length) searchThemes();
+      return;
+    }
     let id = hash.startsWith("#case/") ? decodeURIComponent(hash.slice(6)) : "";
     if (!id) {
       await refreshCases();
@@ -721,6 +740,8 @@ function drawThemeResults() {
       $("theme-selection").hidden = false;
       $("chosen-theme").textContent = item.title;
       $("theme-revision").value = item.revision; $("theme-revision").max = item.revision;
+      $("theme-ideas-link").href = ideaLibraryHash(item.id);
+      $("theme-ideas-link").hidden = false;
       drawThemeResults(); refreshGenerationButtons();
     };
     return button;
@@ -766,6 +787,8 @@ $("toggle-list").onclick = () => {
   $("toggle-list").textContent = expanded ? "一覧を閉じる" : "一覧を開く";
 };
 $("search-themes").onclick = searchThemes;
+$("ideas-theme").onchange = () => { location.hash = ideaLibraryHash($("ideas-theme").value); };
+$("ideas-status").onchange = () => { if (state.ideaLibrary) drawIdeaLibrary(); };
 $("theme-query").onkeydown = (e) => {
   if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); searchThemes(); }
 };
@@ -776,10 +799,19 @@ for (const name of modelForms) {
 for (const id of ["new-language", "rerun-language"]) $(id).onchange = refreshGenerationButtons;
 formAction("new-form", async (version, action) => {
   const profile = selectedProfile("new");
-  if (!state.chosen || !profile) return;
+  const idea = state.chosenIdea;
+  if ((!state.chosen && !idea) || !profile) return;
+  const selection = idea ? { themeId: idea.themeId, revision: idea.revision, ideaId: idea.id }
+    : { themeId: state.chosen.id, revision: Number($("theme-revision").value), brief: trim($("brief").value) };
+  if (action === "ideas" && !idea) {
+    await submitRun("ideas", "/api/ideas/generate", { ...selection, model: profile.id });
+    if (version !== state.routeVersion) return;
+    $("ideas-status").value = "";
+    location.hash = ideaLibraryHash(selection.themeId);
+    return;
+  }
   const result = await submitRun("new", "/api/cases", {
-    themeId: state.chosen.id, revision: Number($("theme-revision").value), brief: trim($("brief").value), model: profile.id,
-    language: $("new-language").value, scriptFirst: action !== "video",
+    ...selection, model: profile.id, language: $("new-language").value, scriptFirst: action !== "video",
   });
   await refreshCases();
   if (state.routeVersion !== version) return;

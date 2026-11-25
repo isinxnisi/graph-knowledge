@@ -48,6 +48,8 @@ h1, h2, p { margin: 0; }
 .new-link { width: 100%; }
 .new-link:hover, .primary:hover { background: #174a46; }
 .new-link span { font-size: 20px; line-height: 1; }
+.library-link { display: block; margin-top: 9px; padding: 7px 10px; text-align: center; font-size: 14px; font-weight: 650; border-radius: 5px; }
+.library-link[aria-current=page] { background: var(--active); }
 .secondary { border: 1px solid #aebbb0; background: var(--surface); color: var(--teal); }
 .secondary:hover, .quiet:hover { background: var(--tint); }
 .quiet { background: transparent; border: 1px solid var(--line); }
@@ -159,6 +161,22 @@ textarea { resize: vertical; }
 .selected-theme input { width: 90px; min-height: 33px; padding: 3px 7px; }
 .form-footer { border-top: 1px solid var(--line); padding-top: 18px; flex-wrap: wrap; }
 .form-footer span { color: var(--muted); font-size: 13px; }
+#theme-ideas-link { display: inline-block; margin-top: 8px; }
+#generate-ideas { margin: 6px 0 12px; }
+.idea-filters { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 12px 0 18px; }
+.idea-filters label { max-width: 100%; }
+.idea-filters select { display: block; margin-top: 4px; }
+#idea-list, #idea-batches { max-width: 830px; }
+.idea-card { min-width: 0; padding: 17px 0 19px; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+.idea-card h2 { margin: 4px 0 8px; font: 650 21px/1.5 "Yu Mincho", YuMincho, Georgia, serif; }
+.idea-meta { color: var(--muted); font-size: 13px; }
+.idea-card dl { display: grid; grid-template-columns: 9em minmax(0, 1fr); gap: 5px 13px; margin: 8px 0 12px; }
+.idea-card dt { color: var(--teal); font-weight: 650; font-size: 13px; }
+.idea-card dd { margin: 0; white-space: pre-line; }
+.idea-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 13px; }
+.idea-sources summary, .idea-history summary { cursor: pointer; font-size: 13px; color: var(--teal); }
+#chosen-idea { margin-bottom: 21px; }
+#chosen-idea .idea-card { border-top: 0; padding-top: 0; }
 .action-form { margin: 10px 0; padding: 15px 18px; background: var(--tint); border-radius: 5px; }
 .action-form label:first-child { margin-top: 0; }
 .actions { justify-content: flex-end; flex-wrap: wrap; margin-top: 14px; }
@@ -178,6 +196,9 @@ textarea { resize: vertical; }
   .side-head { margin: 0; justify-content: flex-start; }
   .side-head h2 { font-size: 14px; }
   .new-link { font-size: 13px; min-height: 35px; padding: 4px 9px; }
+  .library-link { grid-column: 1/-1; justify-self: start; margin-top: 4px; padding: 3px 0; }
+  .idea-card dl { display: block; }
+  .idea-card dt { margin-top: 8px; }
   .mobile-show { display: inline-block; background: none; border: none; text-decoration: underline; text-underline-offset: 3px; color: var(--teal); padding: 5px 0; font-size: 12px; }
   #case-list { display: none; grid-column: 1/-1; margin: 8px 0; }
   #case-list.open { display: grid; }

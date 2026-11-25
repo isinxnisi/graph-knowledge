@@ -31,13 +31,15 @@ def exclusive(folder):
 
 
 def run_worker(ledger):
-    from editor import generate_plan
+    from editor import generate_ideas, generate_plan
     def render(plan, lang, folder, progress):
         from media import render_edition
         return render_edition(plan, lang, folder, progress=progress)
 
     while True:
-        if not ledger.process_next(generate_plan, render):
+        made_video = ledger.process_next(generate_plan, render)
+        made_ideas = ledger.work_ideas(generate_ideas)
+        if not (made_video or made_ideas):
             ledger.wake.wait(timeout=2)
             ledger.wake.clear()
 
@@ -122,6 +124,7 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/samples/baird-opening.ja.mp4":
                 return self.file(ROOT.parent / "baird" / "opening.ja.mp4")
             static = {"/": ("index.html", "text/html"), "/studio.css": ("studio.css", "text/css"),
+                      "/ideas.js": ("ideas.js", "text/javascript"),
                       "/studio.js": ("studio.js", "text/javascript")}
             if path in static:
                 name, mime = static[path]
@@ -140,6 +143,9 @@ class Handler(BaseHTTPRequestHandler):
                 return self.respond(200, {"items": search_themes(q)})
             if path == "/api/cases":
                 return self.respond(200, {"items": ledger.list_cases()})
+            if path == "/api/ideas":
+                theme = parse_qs(url.query).get("themeId", [None])[0]
+                return self.respond(200, ledger.list_ideas(theme))
             match = re.fullmatch(r"/api/cases/([\w-]+)", path)
             if match:
                 return self.respond(200, ledger.case(match[1]))
@@ -163,6 +169,13 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/cases":
                 from editor import get_snapshot, list_models
                 return self.respond(201, ledger.submit(path, data, get_snapshot, list_models))
+            if path == "/api/ideas/generate":
+                from editor import get_snapshot, list_models
+                return self.respond(202, ledger.submit_ideas(data, get_snapshot, list_models))
+            match = re.fullmatch(r"/api/ideas/([\w-]+)/status", path)
+            if match:
+                ledger.set_idea_status(match[1], required(data, "status", 20))
+                return self.respond(200, {"ok": True})
             match = re.fullmatch(r"/api/cases/([\w-]+)/(runs|adopt|rework|resume|pause)", path)
             if match:
                 cid, action = match.groups()
