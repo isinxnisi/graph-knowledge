@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-11-26 11:13:43 JST。
+確認: 2026-11-26 11:15:35 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -103,9 +103,8 @@ Issue確認結果:
     "checkedAt": "2026-11-25T15:54:11+00:00"
   },
   "collection-control/issue-sources/67.json": {
-    "status": "held",
-    "reason": "GitHub Issue read failed: HTTP 502",
-    "checkedAt": "2026-11-26T02:12:57+00:00"
+    "status": "registered: issue-67-dot-mizuki-two-20261029",
+    "checkedAt": "2026-11-26T02:14:47+00:00"
   },
   "collection-control/issue-sources/68.json": {
     "status": "registered: issue-68-dot-fujikoa-two-20261029",
