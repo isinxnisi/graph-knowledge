@@ -57,9 +57,8 @@
       "checkedAt": "2026-11-25T15:53:44+00:00"
     },
     "collection-control/issue-sources/5.json": {
-      "status": "held",
-      "reason": "Remote end closed connection without response",
-      "checkedAt": "2026-11-26T04:21:39+00:00"
+      "status": "registered: issue-5-dot-tezuka-adolf-20261025",
+      "checkedAt": "2026-11-26T04:23:40+00:00"
     },
     "collection-control/issue-sources/42.json": {
       "status": "registered: issue-42-dot-matsumoto-three-20261026",
@@ -193,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-26T04:22:44.887465+00:00"
+  "checkedAt": "2026-11-26T04:24:42.938743+00:00"
 }
