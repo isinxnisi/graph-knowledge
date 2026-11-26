@@ -452,6 +452,8 @@ function drawScriptReview(run) {
     ["初稿の台本と絵からAIが読み取ったこと", review.audience.retelling],
     ["初稿で伝わりにくかったこと", review.audience.unclear],
     ["改稿した理由", review.revisionReason],
+    ["画面でたどれる発見", review.screenMoment?.discovery],
+    ["その場面の描写", review.screenMoment?.pictureQuote],
     ["清書で軸にした問い", review.scope.question !== review.initialScope?.question && review.scope.question],
     ["清書に使った大筋", review.scope.outline !== review.initialScope?.outline && review.scope.outline],
   ]) {

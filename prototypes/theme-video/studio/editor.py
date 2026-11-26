@@ -23,7 +23,16 @@ WEBB_ID = "theme:915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1"
 INSTRUCTIONS_VERSION = "plunode-video-editor-6"
 JAPANESE_VERSION = "plunode-video-ja-7"
 ADAPTATION_VERSION = "plunode-video-en-adaptation-3"
-IDEAS_VERSION = "plunode-video-ideas-2"
+IDEAS_VERSION = "plunode-video-ideas-3"
+EXCHANGE_LABELS = ("left", "right", "toRight", "toLeft")
+EXCHANGE_BOARD = (
+    "exchangeは二者の交換を描く番組の作図です。左右の手に当事者名、二枚の紙片にそれぞれが渡すものを記します。"
+    "左から右へ暖色の紙片、右から左へ青い紙片が渡り、最後に双方の行き先が見えます。"
+    "実際に紙を手渡した記録ではありません。二者と両方向を確認できる出典をsourceIdsに指定し、"
+    "この動きが題材の発見に役立つ場合に選びます。批評・解説の読みなら誰の見方かを語りで伝えます。"
+    "exchange.left/rightに左右の当事者名、toRightに左から右へ、toLeftに右から左へ渡るものを記します。"
+    "各ラベルに言語別の短い表記（日本語16字、英語36字まで）を入れます。見出しは空、他の素材ではexchangeはnullです。"
+)
 NASA_SOURCES = [
     {"id": "nasa-mosaic", "title": "Photons Received: Webb Sees Its First Star – 18 Times",
      "url": "https://science.nasa.gov/blogs/webb/2022/02/11/photons-received-webb-sees-its-first-star-18-times/",
@@ -203,6 +212,9 @@ def _schema(source_ids, assets, language="both"):
     fields = {"asset": {"type": "string", "enum": assets}, **languages,
               "sourceBackground": {"enum": [None, "white"], "type": ["string", "null"]},
               "sourceIds": {"type": "array", "items": {"type": "string", "enum": source_ids}}}
+    if "exchange" in assets:
+        labels = _object({key: _object(dict.fromkeys(languages, string)) for key in EXCHANGE_LABELS})
+        fields["exchange"] = {"anyOf": [labels, {"type": "null"}]}
     if language == "ja":
         seconds = {"type": ["number", "null"]}
         fields["visualTiming"] = _object({"beforeVoice": seconds, "afterVoice": seconds})
@@ -337,6 +349,7 @@ def _draft_input(snapshot, brief):
     source_cards = [{k: s[k] for k in ("id", "title", "locator", "note") if k in s} for s in snapshot["sources"]]
     return {"theme": snapshot["title"], "description": snapshot["description"], "angle": brief,
             "records": records, "sources": source_cards,
+            **({"exchangeBoard": EXCHANGE_BOARD} if snapshot.get("exchangeBoard") == EXCHANGE_BOARD else {}),
             **({"editorialDirection": snapshot["editorialDirection"]} if snapshot.get("editorialDirection") else {})}
 
 
@@ -361,6 +374,21 @@ def validate_visual_timing(timing):
     ):
         raise ValueError("場面の語りの前後の秒数を確認してください。")
     return timing
+
+
+def _exchange_labels(raw, languages, scene_no):
+    if not isinstance(raw, dict) or set(raw) != set(EXCHANGE_LABELS):
+        raise ValueError(f"場面{scene_no}の交換の図に、左右の当事者と、両方向に渡るものを記してください。")
+    result = {}
+    for key in EXCHANGE_LABELS:
+        values = raw[key]
+        if not isinstance(values, dict) or set(values) != set(languages):
+            raise ValueError(f"場面{scene_no}の交換の図で{key}の言語を確認してください。")
+        result[key] = {lang: _text(values[lang], 16 if lang == "ja" else 36, f"場面{scene_no}の{key}（{lang}）")
+                       for lang in languages}
+    if any(result["left"][lang] == result["right"][lang] for lang in languages):
+        raise ValueError(f"場面{scene_no}の交換の図で左右の当事者を区別できる表記を指定してください。")
+    return result
 
 
 def _check_draft(draft, snapshot, assets, language="both"):
@@ -399,18 +427,24 @@ def _check_draft(draft, snapshot, assets, language="both"):
         if asset not in assets or not required.issubset(ids):
             raise ValueError(f"場面{i}の図版と根拠が一致しません。")
         shot = {"id": f"s{i}", "asset": asset, "sourceIds": list(dict.fromkeys(ids))}
+        if asset == "exchange":
+            shot["exchange"] = _exchange_labels(scene.get("exchange"), languages, i)
+        elif scene.get("exchange") is not None:
+            raise ValueError(f"場面{i}で交換の図を使うときはassetをexchangeにしてください。")
         if scene.get("sourceBackground") is not None:
             if asset != "source" or scene["sourceBackground"] != "white":
                 raise ValueError(f"場面{i}の背景は出典カードで白地を指定するときだけwhiteを使い、通常はnullにしてください。")
             shot["sourceBackground"] = "white"
         if language == "ja" and "visualTiming" in scene:
             shot["visualTiming"] = validate_visual_timing(scene["visualTiming"])
-        optional_heading = asset in ("source", WIPE_DEMO) or asset in WEBB_BOARDS
+        optional_heading = asset in ("source", "exchange", WIPE_DEMO) or asset in WEBB_BOARDS
         for lang in languages:
             line = scene[lang]
             label = f"場面{i}の" + ("日本語" if lang == "ja" else "英語")
             shot[lang] = {"heading": _text(line["heading"], 110, label + "の見出し", allow_empty=optional_heading),
                           "narration": _text(line["narration"], 450, label + "のナレーション")}
+            if asset == "exchange" and shot[lang]["heading"]:
+                raise ValueError(f"{label}の交換の図では見出しを空にし、文字はexchangeの4項目に記してください。")
         readings = scene["ja"].get("readings")
         if not isinstance(readings, list):
             raise ValueError(f"場面{i}の日本語の読み指定を確認してください。")
@@ -455,6 +489,8 @@ def _adaptation_request(master, snapshot, brief):
                 "heading": scene["ja"]["heading"], "narration": scene["ja"]["narration"]}
         if "sourceBackground" in scene:
             shot["sourceBackground"] = scene["sourceBackground"]
+        if scene["asset"] == "exchange":
+            shot["exchange"] = {key: scene["exchange"][key]["ja"] for key in EXCHANGE_LABELS}
         scenes.append(shot)
     scene_ids = [s["id"] for s in scenes]
     if len(set(scene_ids)) != len(scenes):
@@ -463,7 +499,10 @@ def _adaptation_request(master, snapshot, brief):
                "story": master.get("story"), "sources": master["sources"], "scenes": scenes}
     _attach_boards(payload, {s["asset"] for s in scenes})
     string = {"type": "string"}
-    line = _object({"id": {"type": "string", "enum": scene_ids}, "heading": string, "narration": string})
+    fields = {"id": {"type": "string", "enum": scene_ids}, "heading": string, "narration": string}
+    if any("exchange" in scene for scene in scenes):
+        fields["exchange"] = {"anyOf": [_object(dict.fromkeys(EXCHANGE_LABELS, string)), {"type": "null"}]}
+    line = _object(fields)
     schema = _object({"title": string, "scenes": {"type": "array", "items": line}})
     return payload, schema
 
@@ -478,13 +517,21 @@ def _apply_adaptation(draft, master):
     for i, (scene, line) in enumerate(zip(plan["scenes"], lines), 1):
         source_card = scene["asset"] == "source"
         heading = _text(line.get("heading"), 110, f"場面{i}の英語の見出し",
-                        allow_empty=source_card or scene["asset"] == WIPE_DEMO or scene["asset"] in WEBB_BOARDS)
+                        allow_empty=source_card or scene["asset"] in ("exchange", WIPE_DEMO) or scene["asset"] in WEBB_BOARDS)
         if source_card and bool(heading) != bool(scene["ja"]["heading"]):
             raise ValueError(f"場面{scene['id']}の出典の見出しを載せるか、元の日本語版に合わせてください。")
         narration = _text(line.get("narration"), 450, f"場面{i}の英語のナレーション")
         if not re.search(r"[A-Za-z]{2,}", narration) or narration == scene["ja"]["narration"]:
             raise ValueError(f"場面{scene['id']}の英語ナレーションを確認できません。")
         scene["en"] = {"heading": heading, "narration": narration}
+        exchange = line.get("exchange")
+        if scene["asset"] == "exchange":
+            if heading or not isinstance(exchange, dict) or set(exchange) != set(EXCHANGE_LABELS):
+                raise ValueError(f"場面{i}の交換の図では、見出しは空のまま左右の当事者と両方向の札を英訳してください。")
+            labels = {key: {"ja": scene["exchange"][key]["ja"], "en": exchange[key]} for key in EXCHANGE_LABELS}
+            scene["exchange"] = _exchange_labels(labels, ("ja", "en"), i)
+        elif exchange is not None:
+            raise ValueError(f"場面{i}の日本語台本には交換の図がありません。")
     return plan
 
 
@@ -499,7 +546,10 @@ titleは選びやすい短い仮題です。各欄は一、二文で、titleは1
 案の数は決まっていません。一案で十分な場合もあります。候補同士とexistingIdeasの保存済み企画を照らし合わせ、
 同じ題材でも視聴体験が異なる企画を残します。言い換えや同じ内容の再提案を避け、新しい提案がなければideasを空配列にします。
 sourceIdsにはこのテーマ版で案を支えるsourcesのIDだけを挙げます。出典があることと、使える映像があることは別です。
-素材は通常は資料名の出典カード、boardMaterialsに明示されたものは対応する専用の図や写真も使えます。
+素材は資料名の出典カード、exchangeBoardで描ける二者間の交換、boardMaterialsにある専用の図や写真です。
+取引や受け渡しの両方向を資料が支える場合は、双方の手元を見比べて何に気づけるかも考えます。
+資料名を表示して内容を読み上げるだけで、見せ場の準備ができたことにはなりません。文字が主役なら、どの文字を観客がどう見比べるかを考えます。
+その体験に専用の絵が必要なら、探す絵・描き起こす動作をneedsに残してください。
 needsには必要な追加の裏付け、探す写真・記録、または描き起こす図を具体的に記し、揃っている場合は空文字列にします。
 足りない素材を理由に面白い企画を退ける必要はありません。未確認の事実は問いとして残し、確かめる原資料をneedsに記します。
 使える記録がまだない着想は、調べる対象が具体的な場合にのみsourceIdsを空にして提案します。"""
@@ -511,6 +561,7 @@ def generate_ideas(snapshot, brief, model, existing):
     if not isinstance(brief, str) or len(brief) > 1800:
         raise ValueError("動画案への希望は1800文字以内で入力してください。")
     payload = _draft_input(snapshot, brief)
+    payload["exchangeBoard"] = EXCHANGE_BOARD
     saved = [{key: idea.get(key, "") for key in ("title", "opening", "payoff", "status")} for idea in existing]
     payload["existingIdeas"] = saved
     source_ids = {s["id"] for s in snapshot["sources"]}
@@ -557,6 +608,8 @@ def generate_plan(snapshot, brief, model_id, work_dir, *, language="both", maste
         raise ValueError("企画の切り口と試行の指示は合わせて3200文字以内で指定してください。")
     work_dir = Path(work_dir)
     work_dir.mkdir(parents=True, exist_ok=True)
+    if language != "en":
+        snapshot = _visual_snapshot(snapshot, work_dir, start=True)
     def write(materials):
         return _write_plan(materials, brief, model_id, effort, work_dir, language, master_plan, progress, previous_japanese)
     if language == "en":
@@ -565,8 +618,31 @@ def generate_plan(snapshot, brief, model_id, work_dir, *, language="both", maste
     return write_with_research(snapshot, brief, model_id, effort, work_dir, progress, write, language=language)
 
 
+def _visual_snapshot(snapshot, folder, *, start=False):
+    """Pin the visual tools for new work; existing trials keep their original stage requests."""
+    path = folder / "visual-contract.json"
+    if path.is_file():
+        if json.loads(path.read_text(encoding="utf-8")) != {"version": 1}:
+            raise ValueError("この試行の作図仕様を確認できません。")
+    elif start:
+        if ((folder / "editor-stages").is_dir() or (folder / "editor-input.json").is_file()
+                or (folder / "editorial-decision.json").is_file()):
+            return snapshot
+        history = folder / "material-research.json"
+        if history.is_file():
+            rounds = json.loads(history.read_text(encoding="utf-8"))["rounds"]
+            if any(not r.get("inheritedFromRun") for r in rounds):
+                return snapshot
+        _save_json(path, {"version": 1})
+    else:
+        return snapshot
+    return {**snapshot, "exchangeBoard": EXCHANGE_BOARD}
+
+
 def _visual_materials(snapshot, brief, language, payload):
     assets = ["source"]
+    if "exchangeBoard" in payload:
+        assets.append("exchange")
     source_ids = {s["id"] for s in snapshot["sources"]}
     if snapshot["themeId"] == WEBB_ID:
         if language == "both":
@@ -590,6 +666,10 @@ def _write_plan(snapshot, brief, model_id, effort, work_dir, language, master_pl
     if language == "en":
         payload, schema = _adaptation_request(master_plan, snapshot, brief)
         instructions, version = _ADAPTATION_PROMPT, ADAPTATION_VERSION
+        if any("exchange" in scene for scene in payload["scenes"]):
+            instructions += ("\nTranslate the four visible exchange labels in their original positions. "
+                             "Keep each within 36 characters. Keep the heading empty and use null for "
+                             "exchange in scenes that have no exchange drawing.")
     else:
         source_ids = [s["id"] for s in snapshot["sources"]]
         payload = _draft_input(snapshot, brief)

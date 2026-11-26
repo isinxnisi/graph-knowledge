@@ -126,6 +126,8 @@ def research_material(snapshot, brief, issue, model, effort, previous, progress=
     schema = _object({"supported": {"type": "array", "items": judgment}, "remaining": _STRING})
     data = {"theme": snapshot["title"], "brief": brief, "need": issue, "candidates": excerpts,
             "searchRemaining": remaining, "unverified": rejected}
+    if "exchangeBoard" in production:
+        data["exchangeBoard"] = production["exchangeBoard"]
     if re.search(r"ワイプ|\bwipes?\b", brief, re.IGNORECASE):
         data["availableIllustration"] = WIPE_PICTURE
     review, extra_usage = _call_writer(_writer_request(model, effort, _VERSION, _REVIEW, data, schema))

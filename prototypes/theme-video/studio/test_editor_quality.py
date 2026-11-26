@@ -6,7 +6,8 @@ import unittest
 from unittest.mock import patch
 from subprocess import CompletedProcess
 
-from editor import (MaterialRequired, WEBB_BOARDS, WEBB_ID, _adaptation_request, _apply_adaptation, _check_draft, _schema, _visual_materials,
+from editor import (MaterialRequired, WEBB_BOARDS, WEBB_ID, _adaptation_request, _apply_adaptation, _check_draft,
+                    _draft_input, _schema, _visual_materials, _visual_snapshot,
                     generate_ideas, generate_plan, list_models)
 from script_review import _audience_cut
 
@@ -28,6 +29,57 @@ class EditorialNoteTest(unittest.TestCase):
 
     def check(self):
         return _check_draft(self.draft, self.snapshot, ["source"])
+
+    def test_exchange_requires_both_directions_and_keeps_labels_in_their_positions_in_english(self):
+        japanese = {"left": "港", "right": "町", "toRight": "魚", "toLeft": "米"}
+        english = {"left": "Port", "right": "Town", "toRight": "Fish", "toLeft": "Rice"}
+        shot = self.draft["scenes"][0]
+        shot.update(asset="exchange", exchange={key: {"ja": text} for key, text in japanese.items()})
+        shot["ja"]["heading"] = ""
+        assets = ["source", "exchange"]
+        master = _check_draft(self.draft, self.snapshot, assets, "ja")
+        payload, schema = _adaptation_request(master, {**self.snapshot, "title": "交換"}, "")
+        self.assertEqual(payload["scenes"][0]["exchange"], japanese)
+        self.assertIn("exchange", schema["properties"]["scenes"]["items"]["required"])
+        lines = [{"id": s["id"], "heading": s["ja"]["heading"], "narration": "Look at both hands."}
+                 for s in master["scenes"]]
+        lines[0]["exchange"] = english
+        localized = _apply_adaptation({"title": "Across the water", "scenes": lines}, master)
+        both = {key: {"ja": japanese[key], "en": english[key]} for key in japanese}
+        self.assertEqual(localized["scenes"][0]["exchange"], both)
+        self.assertNotIn("en", master["scenes"][0]["exchange"]["left"])
+        shot.update(exchange=both)
+        shot["en"]["heading"] = ""
+        self.assertEqual(_check_draft(self.draft, self.snapshot, assets)["scenes"][0]["exchange"], both)
+        del lines[0]["exchange"]["toLeft"]
+        with self.assertRaisesRegex(ValueError, "両方向"):
+            _apply_adaptation({"title": "Across the water", "scenes": lines}, master)
+        del shot["exchange"]["toLeft"]
+        with self.assertRaisesRegex(ValueError, "両方向"):
+            _check_draft(self.draft, self.snapshot, assets)
+        shot.update(exchange=both, sourceIds=[])
+        with self.assertRaisesRegex(ValueError, "出典"):
+            _check_draft(self.draft, self.snapshot, assets)
+        shot.update(asset="source", sourceIds=["ref"])
+        with self.assertRaisesRegex(ValueError, "asset"):
+            _check_draft(self.draft, self.snapshot, assets)
+
+    def test_new_trials_pin_visuals_and_resumed_trials_keep_their_existing_requests(self):
+        snapshot = {**self.snapshot, "title": "港", "description": "", "records": []}
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp)
+            (folder / "editor-stages").mkdir()
+            self.assertIs(_visual_snapshot(snapshot, folder, start=True), snapshot)
+            self.assertFalse((folder / "visual-contract.json").exists())
+            (folder / "editor-stages").rmdir()
+            (folder / "material-research.json").write_text(json.dumps({"rounds": [{"inheritedFromRun": "other"}]}))
+            new = _visual_snapshot(snapshot, folder, start=True)
+            self.assertEqual(_visual_snapshot(snapshot, folder), new)
+            self.assertNotIn("exchangeBoard", snapshot)
+            data = _draft_input(new, "")
+            self.assertIn("両方向", data["exchangeBoard"])
+            self.assertIn("exchange", _visual_materials(new, "", "ja", data))
+            self.assertNotIn("exchange", _schema(["ref"], ["source"])["properties"]["scenes"]["items"]["required"])
 
     def test_original_demo_is_available_from_fixed_theme_evidence_before_additional_research(self):
         for excerpt, available in (("nearly identical wipe transitions", True), ("two films", False)):
@@ -239,7 +291,10 @@ class EditorialNoteTest(unittest.TestCase):
             elif "revisedScope" in fields:
                 stage = {"revisedScope": scope, "revisionReason": "光の行き先を示す。", "script": japanese}
             elif "checks" in fields:
-                stage = {"ready": True, "blockingIssue": "", "checks": [
+                stage = {"ready": True, "blockingIssue": "",
+                         "screenMoment": {"sceneIds": ["s1"], "pictureQuote": "大きな黒い写真に光点が散らばる。",
+                                          "discovery": "同じ星を写した点が一箇所に重ならず、別々に見える。", "revision": ""},
+                         "checks": [
                     {"beatId": "b1", "sceneIds": ["s1"], "quote": "主鏡に光が届きます。",
                      "supported": True, "evidence": "光が届く語りがある。"}]}
             return CompletedProcess(args, 0, stdout="\n".join(map(json.dumps, [

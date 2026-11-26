@@ -329,3 +329,33 @@ class ScriptReviewTest(unittest.TestCase):
         third_repair = json.loads(writer.call_args_list[4].args[0]["prompt"].rsplit("\n\n", 1)[1])
         self.assertEqual(third_repair["correctionAttempt"], 3)
         self.assertEqual(third_repair["previousOutput"], long_heading)
+
+    def test_factual_checks_do_not_approve_a_screen_moment_quoted_only_from_speech(self):
+        self.materials["exchangeBoard"] = "資料にある相互の受け渡しを描ける。"
+        self.materials.update(theme="劇場の改名", description="旧名と新名を比べる。", angle="字と読みの変化を追う。")
+        self.scope["beats"][0].update(meaning="読みは同じで表記だけが変わった。",
+                                      visibleTest="二つの綴りを見比べる。")
+        self.draft["scenes"][0]["ja"]["narration"] = "改名しても、読みはあおいざです。"
+        self.draft["scenes"][0]["ja"]["heading"] = "旧名　あおい座／新名　青井座"
+        heard = self.verdict("読みはあおいざ")
+        heard["screenMoment"] = {"sceneIds": ["s1"], "pictureQuote": "読みはあおいざ",
+                                 "discovery": "名前の変化が分かる。", "revision": ""}
+        seen = dict(heard, screenMoment={"sceneIds": ["s1"], "pictureQuote": "旧名　あおい座／新名　青井座",
+                                         "discovery": "二つの表記で、音が同じまま漢字に変わったと読める。", "revision": ""})
+        outputs = [self.scope, self.draft, self.reader, self.revision, heard, self.revision, seen]
+        with patch("script_review._call_writer", side_effect=[(v, {}) for v in outputs]) as writer:
+            review = self.produce()["editorialReview"]
+        revision_input = json.loads(writer.call_args_list[5].args[0]["prompt"].rsplit("\n\n", 1)[1])
+        self.assertTrue(all(c["supported"] for c in revision_input["finalReview"]["checks"]))
+        self.assertIn("指定した場面の絵", revision_input["finalReview"]["blockingIssue"])
+        self.assertEqual(review["rounds"], 2)
+        self.assertEqual(review["screenMoment"], seen["screenMoment"])
+
+    def test_blind_reader_gets_direction_and_labels_drawn_on_the_exchange_board(self):
+        plan = {"sources": [], "scenes": [{"id": "s1", "asset": "exchange", "ja": {"narration": "手元を見ます。"},
+                 "exchange": {key: {"ja": value} for key, value in
+                              (("left", "花屋"), ("right", "菓子店"), ("toRight", "花束"), ("toLeft", "焼き菓子"))}}]}
+        scene = _audience_cut(plan)["scenes"][0]
+        self.assertIn("「花束」と書かれた紙片が左から右", scene["picture"])
+        self.assertIn("「焼き菓子」と書かれた紙片が右から左", scene["picture"])
+        self.assertNotIn("出典資料", scene["picture"])

@@ -147,6 +147,12 @@ def _audience_cut(plan):
             ground = "白地" if scene.get("sourceBackground") == "white" else "生成りの紙色"
             picture = f"出典資料。字幕帯より上の背景は{ground}。" + placement + "、".join(
                 f"{urlsplit(c['url']).hostname} {c['title']}" for c in cards)
+        elif scene["asset"] == "exchange":
+            labels = scene["exchange"]
+            left, right = labels["left"]["ja"], labels["right"]["ja"]
+            picture = (f"番組の説明図。左の「{left}」と右の「{right}」には紙の手。"
+                       f"「{labels['toRight']['ja']}」と書かれた紙片が左から右の手へ、"
+                       f"「{labels['toLeft']['ja']}」と書かれた紙片が右から左の手へ渡り、受け取った側に残る。")
         else:
             if scene["asset"] not in pictures:
                 raise ValueError("初見で読める画面記述がない素材です。" + scene["asset"])
@@ -201,6 +207,12 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
     if materials.get("editorialDirection"):
         facts["editorialDirection"] = materials["editorialDirection"]
     scope_instructions = "\n".join((SCOPE_PROMPT, SELECTED_ANGLE, VIDEO_EVIDENCE, SCOPE_MATERIAL))
+    review_picture = "exchangeBoard" in materials
+    if review_picture:
+        facts["exchangeBoard"] = materials["exchangeBoard"]
+        scope_instructions += ("\n冒頭で観客は何に目を留め、その後でその見え方がどう変わるのかを、大筋に描いてください。"
+                               "物、記録の文字、人物の間の動きなど、題材に即した瞬間を選びます。"
+                               "互いに何を渡したかが要点なら、両方向を裏づける資料を確認し、exchangeBoardの作例も検討できます。")
     if "productionResearch" in materials:
         facts["productionResearch"] = materials["productionResearch"]
         facts["illustrations"] = materials.get("illustrations", {})
@@ -251,6 +263,10 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
         if feedback is not None:
             inputs.update(previousScript=previous, previousScope=revised_scope, finalReview=feedback)
         revision_instructions = _JAPANESE_PROMPT + "\n\n" + REVISION_PROMPT + "\nrevisedScopeについて。" + SCOPE_MATERIAL
+        if review_picture:
+            revision_instructions += ("\n最初の十数秒を一度観るつもりで、絵や音に観客が目を留める瞬間を探してください。"
+                                      "注意書きの読み上げや資料名の列挙が入口を占めるときは、正確さを保って置き場所を見直します。"
+                                      "見出しで関係を言い切る前に、観客自身の目でその関係を発見できる演出があるかを検討します。")
         if angle:
             revision_instructions += "\n" + SELECTED_ANGLE
         if illustrations:
@@ -272,8 +288,13 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
         check_item = _object({"beatId": {"type": "string", "enum": list(beats)},
                              "sceneIds": _array({"type": "string", "enum": list(scenes)}),
                              "supported": {"type": "boolean"}, "quote": STRING, "evidence": STRING})
-        check_schema = _object({"ready": {"type": "boolean"}, "blockingIssue": STRING,
-                                "materialRequest": STRING, "checks": _array(check_item)})
+        check_fields = {"ready": {"type": "boolean"}, "blockingIssue": STRING,
+                        "materialRequest": STRING, "checks": _array(check_item)}
+        if review_picture:
+            check_fields["screenMoment"] = _object({
+                "sceneIds": _array({"type": "string", "enum": list(scenes)}), "pictureQuote": STRING,
+                "discovery": STRING, "revision": STRING})
+        check_schema = _object(check_fields)
         def audit(raw):
             need = raw.get("materialRequest", "")
             if not isinstance(need, str):
@@ -301,6 +322,21 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
                         elif not board and not any(shots[s]["sourceIds"] for s in ids):
                             c["supported"] = False
                             c["evidence"] += " この事実を語る場面に公開資料を指定してください。"
+            if review_picture:
+                moment = raw.get("screenMoment")
+                if not isinstance(moment, dict):
+                    raise ValueError("独立確認に、画面で気づける見どころの検討がありません。")
+                ids = moment.get("sceneIds")
+                if not isinstance(ids, list) or any(not isinstance(s, str) or s not in scenes for s in ids):
+                    raise ValueError("見どころの確認には清書稿にある場面を指定してください。")
+                quote = _text(moment.get("pictureQuote"), 1600, "画面の描写からの引用", allow_empty=True)
+                discovery = _text(moment.get("discovery"), 1600, "画面でたどれる発見", allow_empty=True)
+                note = _text(moment.get("revision"), 1600, "見せ方の修正", allow_empty=True)
+                if not note and (not discovery or not quote or
+                                 not any(quote in scenes[s]["picture"] for s in ids)):
+                    note = "画面から発見できる見どころを、指定した場面の絵で確認できませんでした。"
+                if note:
+                    raw["blockingIssue"] = " ".join(filter(None, [raw["blockingIssue"].strip(), note]))
             raw["ready"] = raw["ready"] and not raw["blockingIssue"].strip() and all(c["supported"] for c in checks)
             if not raw["ready"] and not raw["blockingIssue"].strip() and all(c["supported"] for c in checks):
                 raise ValueError("改稿を求める場合は、どこを直す必要があるかをblockingIssueに記してください。")
@@ -309,6 +345,15 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
                         "cut": cut}
         check_instructions = "\n".join((CHECK_PROMPT, VIDEO_EVIDENCE, CHECK_MATERIAL,
             "読みや予想では、手掛かりと帰属が妥当で、視聴者が確かさの程度を受け取れるかを確認します。"))
+        if review_picture:
+            audit_inputs["sceneSourceIds"] = {sid: shot["sourceIds"] for sid, shot in shots.items()}
+            check_instructions += ("\nscreenMomentで、この回だからこそ観客が自分の目で気づける瞬間を一本を通して確認します。"
+                                   "sceneIdsにその場面、pictureQuoteにその場面のpictureから見どころの具体的な一節をそのまま抜き、"
+                                   "discoveryに何をたどると何に気づけるかを記します。画面の文字そのものを見比べて発見できる回もあります。"
+                                   "資料名や見出しを表示したことだけでは、そこで語られる出来事を見たことにはなりません。"
+                                   "語りが全部を説明し、絵からはその発見に至れない場合は、まず使える素材でどう見せ直せるかをrevisionに返してください。"
+                                   "相互の受け渡しを描いたときは、左右の当事者・双方の中身・向きがその場面のsceneSourceIdsで支えられるかを照合します。"
+                                   "伝わる場合のrevisionは空文字です。映像全体の好みやカードの枚数を基準にしません。")
         if angle:
             check_instructions += "\n" + SELECTED_ANGLE
         if illustrations:
@@ -327,6 +372,8 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
             previous["editorialReview"] = {"initialScript": initial_lines, "initialScope": scope, "scope": revised_scope,
                                            "audience": audience, "revisionReason": reason, "checks": feedback["checks"],
                                            "rounds": round_no, "reviewedCutSha256": request_digest(cut)}
+            if review_picture:
+                previous["editorialReview"]["screenMoment"] = feedback["screenMoment"]
             previous["model"] = {"requested": model, "actual": None, "effort": effort, "provider": "codex-cli",
                                  "instructionVersion": JAPANESE_VERSION, "inputSha256": input_sha, "usage": usage}
             return previous

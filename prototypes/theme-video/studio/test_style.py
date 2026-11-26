@@ -65,6 +65,29 @@ class ChannelStyleTest(unittest.TestCase):
                     self.assertIsNone(ImageChops.difference(middle.crop(box), original.crop(box)).getbbox())
                 self.assertEqual(middle.getpixel((W//2, FOOT)), ImageColor.getrgb(INK))
 
+    def test_exchange_slips_arrive_on_opposite_sides_with_readable_holds(self):
+        from exchange_board import LEFT, REST_Y, RIGHT, render
+
+        labels = {"left": {"ja": "港の工房", "en": "The workshop"},
+                  "right": {"ja": "丘の書店", "en": "The bookshop"},
+                  "toRight": {"ja": "星のしおり", "en": "A star bookmark"},
+                  "toLeft": {"ja": "青い絵本", "en": "The blue book"}}
+        for lang in ("ja", "en"):
+            with self.subTest(lang=lang):
+                start, middle, end = [render(lang, labels, t) for t in (0, .46, 1)]
+                self.assertEqual(start.tobytes(), render(lang, labels, .12).tobytes())
+                self.assertEqual(end.tobytes(), render(lang, labels, .83).tobytes())
+                def ticket(image, cx):
+                    return image.crop((cx-199, REST_Y-56, cx+200, REST_Y+35)).tobytes()
+                self.assertNotEqual(ticket(start, LEFT), ticket(start, RIGHT))
+                self.assertEqual(ticket(start, LEFT), ticket(end, RIGHT))
+                self.assertEqual(ticket(start, RIGHT), ticket(end, LEFT))
+                # At the crossing both strips occupy different heights between the two hands.
+                for y1, y2 in ((103, 241), (259, 381)):
+                    box = (510, y1, 770, y2)
+                    self.assertIsNotNone(ImageChops.difference(start.crop(box), middle.crop(box)).getbbox())
+                self.assertIsNone(ImageChops.difference(start, end).crop((0, 414, W, H)).getbbox())
+
     def test_generated_japanese_captions_wrap_without_changing_the_words(self):
         caption = "望遠鏡を一つの星に向けていますが、鏡の向きがそろうまでは同じ星が別々の場所に映ります。"
         style = _style("ja")

@@ -1,7 +1,7 @@
 """Reconsider how to deliver the chosen viewing experience with the evidence in this run."""
 import json
 
-from editor import _call_writer, _draft_input, _object, _save_json, _text, _visual_materials, _writer_request
+from editor import _call_writer, _draft_input, _object, _save_json, _text, _visual_materials, _visual_snapshot, _writer_request
 from writer_feedback import request_digest
 
 
@@ -70,11 +70,15 @@ def _decision(raw, materials):
 
 def assess(materials, brief, model, effort, folder, need, remaining, progress, language, *, cached_only=False):
     """Return the recorded decision and whether this exact request had already been assessed."""
-    payload = _draft_input(materials, brief)
+    payload = _draft_input(_visual_snapshot(materials, folder), brief)
     _visual_materials(materials, brief, language, payload)
     payload.update(need=need, researchRemaining=remaining)
-    request = _writer_request(model, effort, "plunode-video-editorial-decision-3",
-                              _INSTRUCTIONS + "\n" + _STOP_REPORT, payload, _REPORT_SCHEMA)
+    instructions = _INSTRUCTIONS + "\n" + _STOP_REPORT
+    if "exchangeBoard" in payload:
+        instructions += ("\n使える絵にはexchangeBoardに示す二者間の交換もあります。資料名を映して解説を読み上げるだけで、"
+                         "映像の見せ場が用意できたとは判断しません。文字を読む企画なら何を見比べて意味が変わるかを、"
+                         "画面でたどれる構成を考えます。不可欠な作画を現時点で用意できなければ、その残件を伝えます。")
+    request = _writer_request(model, effort, "plunode-video-editorial-decision-3", instructions, payload, _REPORT_SCHEMA)
     digest = request_digest(request)
     path = folder / "editorial-decision.json"
     record = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}

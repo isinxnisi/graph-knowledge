@@ -23,8 +23,10 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from setup_media import media_home
+from exchange_board import ASSET as EXCHANGE, render as render_exchange
 from wipe_board import ASSET as WIPE_DEMO, REVEAL_START, mix_paper_swish, render as render_wipe
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from channel_sound import opening_notes
 from channel_style import BLUE, BOLD, ChannelFrame, FOOT, H, INK, ORANGE, PAPER, SANS, SERIF, STYLE, W
 from speech_reading import apply_readings, protected_breaks, validate_readings
 
@@ -414,7 +416,8 @@ def _scene_cues(scene, lang, voice, engine, first):
 def _timed_scenes(scenes, lang, voice, engine, progress):
     """Keep the camera moving across adjacent narration scenes on the same board."""
     ordered = enumerate(scenes)
-    for shot, group in groupby(ordered, key=lambda item: item[1]["asset"]):
+    # Each exchange carries its own pair of participants and a complete journey.
+    for _, group in groupby(ordered, key=lambda item: item[0] if item[1]["asset"] == EXCHANGE else item[1]["asset"]):
         prepared = []
         for index, scene in group:
             progress(f"{'日本語' if lang == 'ja' else '英語'}の音声・図版 {index+1}/{len(scenes)}")
@@ -425,6 +428,19 @@ def _timed_scenes(scenes, lang, voice, engine, progress):
         for scene, cues, length in prepared:
             yield scene, cues, offset, duration
             offset += length
+
+
+def _mix_opening_notes(samples, lead_frames):
+    """Play the familiar four notes, easing them under the first spoken line."""
+    notes = list(opening_notes(RATE))
+    if any(start + len(tone) > len(samples) for start, tone in notes):
+        return  # A scene sound needs the entrance before the four notes can finish.
+    voice_start = lead_frames * RATE // FPS
+    for start, tone in notes:
+        window = samples[start:start + len(tone)]
+        before_voice = np.clip((voice_start - start - np.arange(len(tone))) / (0.06 * RATE), 0, 1)
+        level = 0.28 + 0.72 * before_voice
+        window[:] = np.clip(window.astype(np.int32) + np.rint(tone * level * 32767), -32768, 32767)
 
 
 def render_edition(plan, lang, out_dir, progress=lambda message: None):
@@ -441,6 +457,7 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
         seen_mosaic = False
         motion_boards = None
         first_wipe_sound = None
+        opening_lead = 0
         style = _style(lang)
 
         def save_board(board, frames):
@@ -451,8 +468,10 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
         for scene, cues, shot_offset, duration in _timed_scenes(plan["scenes"], lang, voice, engine, progress):
             start = frame
             shot = scene["asset"]
+            if start == 0 and shot != WIPE_DEMO and cues[0][2] is None:
+                opening_lead = cues[0][0]
             webb_shot = shot.startswith("webb-")
-            animated = webb_shot or shot == WIPE_DEMO
+            animated = webb_shot or shot in (WIPE_DEMO, EXCHANGE)
             if webb_shot:
                 if shot_offset == 0:
                     voice_starts_at = None
@@ -471,7 +490,7 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
                 if first_wipe_sound is None:
                     edge_frame = round(REVEAL_START * (duration - 1))
                     first_wipe_sound = (frame + edge_frame, frame + duration)
-            else:
+            elif not animated:
                 board = _board(plan, scene, lang, used, seen_mosaic)
                 seen_mosaic |= shot == "mosaic"
             for frames, text, speech in cues:
@@ -493,6 +512,8 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
                         if webb_shot:
                             board = motion_boards.frame(shot.removeprefix("webb-"), position,
                                                         voice_starts_at=voice_starts_at)
+                        elif shot == EXCHANGE:
+                            board = render_exchange(lang, scene["exchange"], position)
                         else:
                             board = render_wipe(lang, position)
                     slide = board
@@ -506,6 +527,9 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
         pcm.append(np.zeros(7 * RATE, dtype="<i2"))
         frame += 7 * FPS
         mix = np.concatenate(pcm)
+        if opening_lead:
+            before_wipe = mix if first_wipe_sound is None else mix[:first_wipe_sound[0] * RATE // FPS]
+            _mix_opening_notes(before_wipe, opening_lead)
         if first_wipe_sound is not None:
             begin, end = first_wipe_sound
             samples_per_frame = RATE // FPS
