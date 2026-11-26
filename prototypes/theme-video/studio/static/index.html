@@ -48,11 +48,11 @@
           <div id="chosen-idea" hidden></div>
           <fieldset><legend id="new-settings-label">動画の企画</legend><div id="new-brief-field"><label for="brief">取り上げる切り口（任意）</label><textarea id="brief" rows="3" maxlength="1500" placeholder="空欄なら、テーマの資料から一本の切り口と演出を制作室に任せます"></textarea></div>
             <div class="model-settings">
-              <div><label for="new-model">脚本・編集モデル</label><select id="new-model"></select></div>
+              <div><label for="new-model">制作モデル</label><select id="new-model"></select></div>
               <div><label for="new-effort">推論の強さ</label><select id="new-effort"></select></div>
             </div>
             <p id="new-model-note" class="subtle" hidden></p>
-            <label for="new-mode">映像の作り方</label><select id="new-mode"><option value="directed-film-v1">題材から原画・動き・音を制作</option><option value="boards-v1">既存の資料図版で制作</option></select>
+            <label for="new-mode">映像の作り方</label><select id="new-mode"><option value="codex-film-v1">Codexに一本を直接依頼</option><option value="directed-film-v1">演出・作画・試写に分けて制作</option><option value="boards-v1">既存の資料図版で制作</option></select>
             <label for="new-language">制作する言語</label><select id="new-language"><option value="ja">日本語を先に制作</option><option value="both">日本語・英語の両版を制作</option></select>
           </fieldset>
           <div class="form-footer"><span>横長 16:9</span>
@@ -94,10 +94,12 @@
             <form id="adapt-form" class="action-form" hidden>
               <p id="adapt-target" class="form-target"></p>
               <div class="model-settings">
-                <div><label for="adapt-model">英語の脚本・編集モデル</label><select id="adapt-model"></select></div>
+                <div><label for="adapt-model">英語版の制作モデル</label><select id="adapt-model"></select></div>
                 <div><label for="adapt-effort">推論の強さ</label><select id="adapt-effort"></select></div>
               </div>
               <p id="adapt-model-note" class="subtle" hidden></p>
+              <div id="adapt-mode-field" hidden><label for="adapt-mode">英語版の作り方</label>
+                <select id="adapt-mode"><option value="codex-film-v1">Codexに一本を直接依頼</option><option value="inherit">日本語版と同じ制作方式</option></select></div>
               <div class="actions"><button type="button" id="adapt-cancel" class="quiet">閉じる</button>
                 <button type="submit" class="secondary" value="script" disabled>英語の台本を先に確認</button>
                 <button type="submit" class="primary" value="video" disabled>英語の動画を生成</button>
@@ -113,13 +115,13 @@
               <form id="rerun-form" class="panel-body">
                 <div id="rerun-target" hidden><span id="rerun-target-label"></span> <button id="rerun-target-clear" type="button" class="quiet small">指定を解除</button></div>
                 <div class="model-settings">
-                  <div><label for="rerun-model">脚本・編集モデル</label><select id="rerun-model"></select></div>
+                  <div><label for="rerun-model">制作モデル</label><select id="rerun-model"></select></div>
                   <div><label for="rerun-effort">推論の強さ</label><select id="rerun-effort"></select></div>
                 </div>
                 <p id="rerun-model-note" class="subtle" hidden></p>
-                <label for="rerun-mode">映像の作り方</label><select id="rerun-mode"><option value="directed-film-v1">題材から原画・動き・音を制作</option><option value="boards-v1">既存の資料図版で制作</option></select>
+                <label for="rerun-mode">映像の作り方</label><select id="rerun-mode"><option value="codex-film-v1">Codexに一本を直接依頼</option><option value="directed-film-v1">演出・作画・試写に分けて制作</option><option value="boards-v1">既存の資料図版で制作</option></select>
                 <label for="rerun-language">制作する言語</label><select id="rerun-language"><option value="ja">日本語を先に制作</option><option value="both">日本語・英語の両版を制作</option></select>
-                <label for="rerun-reason">台本への追加指示（任意）</label>
+                <label for="rerun-reason">今回の制作で変えたい点（任意）</label>
                 <input id="rerun-reason" maxlength="1000" placeholder="空欄なら元の企画で生成します">
                 <div class="actions">
                   <button type="submit" class="secondary" value="script" disabled>台本を先に確認</button>
@@ -127,10 +129,17 @@
                 </div>
               </form>
             </details>
-            <details id="script-read-panel" class="panel" hidden><summary>台本を通して読む</summary><ol id="script-read" class="panel-body"></ol></details>
+            <details id="script-read-panel" class="panel" hidden><summary>台本を通して読む</summary>
+              <ol id="script-read" class="panel-body"></ol>
+              <p id="author-text" class="panel-body" hidden></p>
+              <form id="author-draft-form" class="panel-body" hidden>
+                <label for="author-draft">確認用の台本</label><textarea id="author-draft" rows="12" maxlength="24000" required></textarea>
+                <button type="submit" class="secondary small">変更した台本を別の試行に保存</button>
+              </form>
+            </details>
             <details id="script-review-panel" class="panel" hidden><summary>絵コンテと見直し記録</summary><div class="panel-body" id="script-review"></div></details>
-            <details id="scene-panel" class="panel"><summary>場面と台本 <span id="scene-count" class="count"></span></summary>
-              <div class="panel-body"><dl id="story-intent" hidden></dl><label for="scene-select">確認する場面</label><select id="scene-select"></select><button id="scene-from-playback" class="text-link" type="button">今の再生位置の台本を見る</button><p id="scene-narration" class="quotation"></p><div id="scene-notes"></div><div id="scene-sources" class="source-list"></div>
+            <details id="scene-panel" class="panel"><summary><span id="scene-panel-label">場面と台本</span> <span id="scene-count" class="count"></span></summary>
+              <div class="panel-body"><dl id="story-intent" hidden></dl><label for="scene-select" id="scene-select-label">確認する場面</label><select id="scene-select"></select><button id="scene-from-playback" class="text-link" type="button">今の再生位置の台本を見る</button><p id="scene-narration" class="quotation"></p><div id="scene-notes"></div><div id="scene-sources" class="source-list"></div>
                 <button id="edit-toggle" class="secondary small" type="button">この場面の語りを編集</button>
                 <form id="edit-form" class="action-form" hidden>
                   <p id="edit-target" class="form-target"></p>
@@ -153,7 +162,13 @@
                 </form>
               </div>
             </details>
-            <details class="panel"><summary>出典と制作記録</summary><div class="panel-body" id="evidence"></div></details>
+            <details class="panel"><summary>出典と制作記録</summary><div class="panel-body" id="evidence"></div>
+              <details id="author-commission" class="panel-body" hidden><summary>作者に渡した依頼</summary>
+                <label for="commission-select">試行・言語・工程</label><select id="commission-select"></select>
+                <p id="commission-status" class="subtle" role="status"></p>
+                <div id="commission-body"></div>
+              </details>
+            </details>
             <details id="history-panel" class="panel"><summary>生成履歴 <span id="history-count" class="count"></span></summary><div class="panel-body" id="history"></div></details>
           </div>
         </div>

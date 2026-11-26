@@ -100,6 +100,8 @@ h1 { font: 650 clamp(26px, 2.5vw, 42px)/1.45 "Yu Mincho", YuMincho, "Hiragino Mi
 #story-intent dd { margin: 1px 0 0; }
 #script-read, #script-review { max-width: 75ch; overflow-wrap: anywhere; }
 #script-read { margin: 0; padding-left: 1.8em; }
+#author-text { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 75ch; }
+#commission-body pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
 #script-read li, #script-review li { margin-bottom: 12px; }
 #script-read li p, #script-review li p { margin: 3px 0; }
 #script-review dl { margin: 0; }

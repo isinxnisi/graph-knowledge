@@ -163,6 +163,9 @@ class Handler(BaseHTTPRequestHandler):
             match = re.fullmatch(r"/api/cases/([a-f0-9]{32})/runs/([a-f0-9]{32})/cut", path)
             if match:
                 return self.respond(200, ledger.cut_index(*match.groups()))
+            match = re.fullmatch(r"/api/cases/([a-f0-9]{32})/runs/([a-f0-9]{32})/commissions/(ja|en)/(draft|film)", path)
+            if match:
+                return self.respond(200, ledger.author_commission(*match.groups()))
             match = re.fullmatch(r"/media/([a-f0-9]{32})/([a-f0-9]{32})/cut-previews/([a-f0-9]{64}\.mp4)", path)
             if match:
                 return self.file(ledger.cut_media(*match.groups()))
@@ -173,7 +176,8 @@ class Handler(BaseHTTPRequestHandler):
             if self.headers.get_content_type() != "application/json":
                 return self.respond(415, {"error": "JSON形式で送信してください。"})
             size = int(self.headers.get("Content-Length", "0"))
-            if not 0 < size <= 32768:
+            limit = 131072 if re.fullmatch(r"/api/cases/[a-f0-9]{32}/runs", path) else 32768
+            if not 0 < size <= limit:
                 return self.respond(413, {"error": "送信するデータの大きさを確認してください。"})
             data = json.loads(self.rfile.read(size))
             if not isinstance(data, dict):

@@ -20,7 +20,8 @@ class LedgerTest(unittest.TestCase):
         self.addCleanup(tmp.cleanup)
         self.data = Path(tmp.name)
         self.desk = Ledger(self.data)
-        self.request = dict(themeId="theme:test", revision=3, model="test", brief="二つの図を比べる", requestId="a")
+        self.request = dict(themeId="theme:test", revision=3, model="test", brief="二つの図を比べる", requestId="a",
+                            productionMode="directed-film-v1")
         self.models = lambda: [{"id": "test", "available": True}]
         self.snapshot = lambda theme, rev: {"themeId": theme, "revision": rev, "title": "試験用テーマ"}
         self.plan = {"titles": {"ja": "観察", "en": "Look"}, "sources": [], "scenes": [
@@ -398,7 +399,7 @@ class LedgerTest(unittest.TestCase):
         self.desk.review(case, {"runId": parent, "lang": "ja", "reason": "なぜ並べるのかが残った。"}, "rework")
         self.desk.review(case, {"runId": parent, "lang": "en", "reason": "English only."}, "rework")
         self.desk.submit("runs", {"requestId": "rewrite", "parent": parent, "language": "ja", "model": "test",
-                                 "scriptFirst": True}, self.snapshot, self.models, case)
+                                 "scriptFirst": True, "productionMode": "directed-film-v1"}, self.snapshot, self.models, case)
         self.desk.review(case, {"runId": parent, "lang": "ja", "reason": "依頼を送った後の感想。"}, "rework")
         self.desk = Ledger(self.data)
         generate = Mock(return_value=self.plan)
@@ -656,7 +657,8 @@ class LedgerTest(unittest.TestCase):
             return self.plan
         self.desk.process_next(generate, self.render)
         self.desk.process_next(generate, self.render)
-        self.desk.submit("runs", dict(requestId="3", model="test", parent=first["runId"], reason="星の配置を強調"),
+        self.desk.submit("runs", dict(requestId="3", model="test", parent=first["runId"], reason="星の配置を強調",
+                                      productionMode="directed-film-v1"),
                          self.snapshot, self.models, first["id"])
         self.desk.process_next(generate, self.render)
         brief, previous = inputs[-1]

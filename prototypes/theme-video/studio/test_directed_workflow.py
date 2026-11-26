@@ -23,7 +23,7 @@ class DirectedWorkflowTest(unittest.TestCase):
         self.enterContext(patch.object(editor, "_selected_model", return_value=("fixture", "high")))
 
     def submit(self, key, *, case=None, **fields):
-        data = {"requestId": key, "model": "fixture", **fields}
+        data = {"requestId": key, "model": "fixture", "productionMode": editor.DIRECTED_FILM, **fields}
         if "lang" not in data:
             data.setdefault("language", "ja")
         if not case:

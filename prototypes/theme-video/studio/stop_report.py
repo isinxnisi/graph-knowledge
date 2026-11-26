@@ -82,7 +82,9 @@ def _failure(run):
         action = ("「保存資料から再開」で、制作室が照合済みの資料から元の企画の見せ方を再検討します。" if run["resumeWithSavedSources"]
                   else "「追加調査して再開」で、制作室がもう一度調査します。")
         return "追加調査の処理が完了しなかったため、台本の制作が止まっています。", action + " 資料のURLは任意です。"
-    if run["plan"]:
+    if run.get("productionMode") == "codex-film-v1":
+        reason = "Codexへの制作依頼から成果物の受け取りまでの途中で停止しました。"
+    elif run["plan"]:
         reason = "台本を保存したあと、映像を仕上げる工程で処理が止まりました。"
     else:
         reason = "台本を準備する工程で処理が止まりました。"
@@ -131,7 +133,10 @@ def stop_report(run, folder, theme, idea_title, brief):
         reason = reasons.get(run["progress"], "制作が途中で中断しました。")
         next_step = "「再開」で同じ試行の制作を続けられます。"
     elif status == "script_ready" and run["plan"]:
-        if run["plan"].get("productionMode") == "directed-film-v1":
+        if run["plan"].get("productionMode") == "codex-film-v1":
+            reason = "「台本を先に確認」の指定で、執筆した台本を保存しました。"
+            next_step = "「台本を通して読む」で内容を確認できます。「この台本で映像を生成」から制作を続けられます。"
+        elif run["plan"].get("productionMode") == "directed-film-v1":
             reason = "「台本を先に確認」の指定で、書き出し前に止めています。原画と場面順が揃いました。"
             next_step = "絵コンテと台本で、何が見え、どこに語りや無言の間が入るか確認できます。この版を選んで映像を生成します。"
         else:

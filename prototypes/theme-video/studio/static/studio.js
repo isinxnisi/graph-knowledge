@@ -229,6 +229,8 @@ function setPlayer(video, src) {
 }
 function resetCase() {
   closeCut();
+  $("author-commission").open = false;
+  $("commission-select").dataset.signature = "";
   state.detail = null; state.selected = { ja: "", en: "" }; state.lang = "ja";
   state.awaitingEnglishFor = "";
   state.sceneId = ""; state.compare = false; state.compareKey = ""; state.resumeAfter = null;
@@ -299,7 +301,8 @@ function orderedRuns() {
 }
 function playable(lang) { return orderedRuns().filter((r) => r.editions?.[lang]?.video); }
 function hasEdition(run, lang) {
-  return Boolean(run.editions?.[lang]?.video || (run.langs?.includes(lang) && run.plan?.scenes?.length));
+  return Boolean(run.editions?.[lang]?.video || (run.langs?.includes(lang)
+    && (run.plan?.authorDraft?.[lang] || run.plan?.scenes?.some(s => s[lang]))));
 }
 function japaneseMaster(run) { return Boolean(run?.plan?.titles?.ja && !run.plan.titles.en); }
 function sameSceneSequence(left, leftLang, right, rightLang) {
@@ -419,6 +422,10 @@ function seekScene(id) {
 }
 
 function openDraft(run) {
+  if (run.plan?.authorDraft?.[state.lang]) {
+    $("script-read-panel").open = true;
+    return $("script-read-panel");
+  }
   const reviewed = state.lang === "ja" && (run.plan?.filmReview || run.plan?.editorialReview);
   const panel = state.lang === "ja" && run.storyboard ? $("script-review-panel") : $(reviewed ? "script-read-panel" : "scene-panel");
   panel.open = true;
@@ -510,10 +517,27 @@ function drawScriptReview(run) {
 }
 
 function drawScenes(run) {
-  const scenes = run?.plan?.scenes || [];
+  const scenes = (run?.plan?.scenes || []).filter(s => s[state.lang]);
   const lines = scenes.filter((scene) => scene[state.lang] && (scene[state.lang].narration || scene.asset === "authored"))
     .map((scene) => ({ ...scene[state.lang], silentSeconds: scene.silentSeconds }));
-  $("script-read-panel").hidden = !lines.length;
+  const draft = run?.plan?.authorDraft?.[state.lang] || "";
+  const editable = Boolean(draft && run.status === "script_ready");
+  const showDraft = Boolean(draft && (!run.editions?.[state.lang]?.video || !lines.length));
+  $("script-read-panel").hidden = !lines.length && !draft;
+  $("script-read").hidden = showDraft;
+  $("author-draft-form").hidden = !editable;
+  $("author-text").hidden = !showDraft || editable;
+  $("author-text").textContent = showDraft && !editable ? draft : "";
+  const fromCaptions = run?.productionMode === "codex-film-v1";
+  $("scene-panel").hidden = fromCaptions && !scenes.length;
+  $("scene-panel-label").textContent = fromCaptions ? "字幕と再生位置" : "場面と台本";
+  $("scene-select-label").textContent = fromCaptions ? "確認する字幕" : "確認する場面";
+  const input = $("author-draft");
+  const edition = editable ? run.id + "." + state.lang : "";
+  if (input.dataset.edition !== edition) {
+    input.dataset.edition = edition;
+    input.value = editable ? draft : "";
+  }
   $("script-read").replaceChildren(...scriptItems(lines));
   drawScriptReview(run);
   const intent = $("story-intent"), story = run?.plan?.story;
@@ -525,7 +549,8 @@ function drawScenes(run) {
   $("scene-count").textContent = String(scenes.length);
   const select = $("scene-select");
   const ts = new Map(timings(run, state.lang).map((t) => [t.id, t.start]));
-  select.replaceChildren(...scenes.map((s, i) => option(s.id, (ts.has(s.id) ? clock(ts.get(s.id)) + "　" : "") + (s[state.lang]?.heading || "場面 " + (i + 1)))));
+  select.replaceChildren(...scenes.map((s, i) => option(s.id, (ts.has(s.id) ? clock(ts.get(s.id)) + "　" : "") +
+    (s[state.lang]?.heading || (fromCaptions && s[state.lang]?.narration) || "場面 " + (i + 1)))));
   if (!scenes.some((s) => s.id === state.sceneId)) state.sceneId = scenes[0]?.id || "";
   select.value = state.sceneId; select.disabled = !scenes.length;
   drawSceneText();
@@ -546,7 +571,8 @@ function drawSceneText() {
   $("scene-sources").replaceChildren(...sources.map((s) => externalLink(s.url, s.title || s.url)));
   const hasVideo = Boolean(run?.editions?.[state.lang]?.video);
   const silent = scene?.asset === "authored" && !scene[state.lang]?.narration;
-  $("edit-toggle").hidden = state.detail.reference || !scene || (!hasVideo && run.status !== "script_ready") || (silent && state.lang !== "ja");
+  $("edit-toggle").hidden = state.detail.reference || !scene || run.productionMode === "codex-film-v1" ||
+    (!hasVideo && run.status !== "script_ready") || (silent && state.lang !== "ja");
   $("edit-toggle").textContent = silent ? "無言で見せる時間を編集" : state.lang === "ja" ? "語り・読み方・間を編集" : "この場面の語りを編集";
   $("scene-from-playback").hidden = !scene || !hasVideo;
   if ($("edit-toggle").hidden) closeEdit();
@@ -560,8 +586,8 @@ function drawEvidence(run) {
   const themeLabel = state.detail.themeTitle ? state.detail.themeTitle + "　/　" : "";
   const nodes = [node("p", themeLabel + "テーマ公開第" + state.detail.revision + "版" + (state.detail.reference ? " · 試作の比較用保存版" : ""), "subtle")];
   if (run && !state.detail.reference) {
-    const directed = run.productionMode === "directed-film-v1";
-    nodes.push(node("p", "制作方式　" + (directed ? "題材から原画・動き・音を制作" : "既存の資料図版で制作"), "subtle"));
+    const method = {"directed-film-v1": "演出・作画・試写に分けて制作", "codex-film-v1": "Codexに一本を直接依頼"};
+    nodes.push(node("p", "制作方式　" + (method[run.productionMode] || "既存の資料図版で制作"), "subtle"));
     if (plan?.japaneseMasterRunId) nodes.push(node("p", "英語版の元にした日本語版　試行 " + runNumber(plan.japaneseMasterRunId), "subtle"));
     nodes.push(node("p", "指定モデル・推論の強さ　" + modelLabel(run), "subtle"));
     if (run.plan?.model) nodes.push(node("p", "実行モデル　" + (run.plan.model.actual || "不明"), "subtle"));
@@ -569,9 +595,58 @@ function drawEvidence(run) {
     if (ed?.reviewReason) nodes.push(node("p", (ed.reviewStatus === "rework" ? "要修正　" : "採用理由　") + ed.reviewReason, "review-note"));
   }
   if (state.detail.reference) nodes.push(node("p", "脚本モデル・推論設定は未記録。英語話者による発音と抑揚の試聴は未実施です。", "subtle"));
-  nodes.push(sources.length ? links : node("p", "生成した台本の出典はここに表示されます。", "subtle"));
+  const sourceNote = plan?.sourceNotes?.[state.lang];
+  if (sourceNote) nodes.push(node("p", sourceNote, "subtle"));
+  if (sources.length) nodes.push(links);
+  else if (!sourceNote) nodes.push(node("p", "生成した台本の出典はここに表示されます。", "subtle"));
   body.replaceChildren(...nodes);
+  drawCommissions(run);
 }
+
+function drawCommissions(run) {
+  const panel = $("author-commission"), select = $("commission-select");
+  const entries = orderedRuns().flatMap(r => (r.authorCommissions || []).map(c => ({
+    run: r.id, lang: c.lang, stage: c.stage, path: detailPath("/runs/" + r.id + "/commissions/" + c.lang + "/" + c.stage)
+  })));
+  panel.hidden = !entries.length;
+  const signature = JSON.stringify([state.detail.id, run?.id, state.lang, entries.map(e => e.path)]);
+  if (signature === select.dataset.signature) return;
+  const sameEdition = select.dataset.edition === state.detail.id + "/" + run?.id + "/" + state.lang;
+  const chosen = (sameEdition && entries.find(e => e.path === select.value))
+    || entries.find(e => e.run === run?.id && e.lang === state.lang && e.stage === "film")
+    || entries.find(e => e.run === run?.id && e.lang === state.lang) || entries[0];
+  select.dataset.edition = state.detail.id + "/" + run?.id + "/" + state.lang;
+  select.dataset.signature = signature;
+  select.replaceChildren(...entries.map(e => option(e.path, "試行 " + runNumber(e.run) + "　" + languageName[e.lang] +
+    "　" + (e.stage === "draft" ? "台本" : "映像制作"))));
+  select.value = chosen?.path || "";
+  if (panel.open && !panel.hidden) loadCommission();
+}
+async function loadCommission() {
+  const panel = $("author-commission"), url = $("commission-select").value;
+  if (!url || !panel.open || panel.hidden) return;
+  const result = $("commission-body"), status = $("commission-status");
+  result.replaceChildren();
+  status.textContent = "依頼を読み込み中…";
+  try {
+    const record = await api(url);
+    if ($("commission-select").value !== url) return;
+    status.textContent = [record.model, effortName[record.effort] || record.effort].filter(Boolean).join(" ／ ");
+    const requested = node("dl");
+    for (const [key, label] of [["workingTitle", "選んだ案の仮題"], ["intendedDiscovery", "見終えたときの発見"],
+      ["possibleOpening", "案に含まれる導入例"], ["possibleMaterials", "参考素材の提案"],
+      ["suggestedSources", "案の参照資料"], ["operatorRequest", "運営者の依頼"]]) {
+      if (record.request?.[key]) requested.append(node("dt", label), node("dd", record.request[key]));
+    }
+    const identity = record.identity ? [node("h3", "すべての作品に共通する前提"), node("pre", record.identity)] : [];
+    result.replaceChildren(...identity, node("h3", "今回の依頼"), requested, node("h3", "制作依頼書"), node("pre", record.brief),
+                           node("h3", "Codexに送った指示"), node("pre", record.prompt));
+  } catch (err) {
+    if ($("commission-select").value === url) status.textContent = err.message;
+  }
+}
+$("author-commission").ontoggle = loadCommission;
+$("commission-select").onchange = loadCommission;
 
 function compareCandidates() {
   const list = [];
@@ -604,7 +679,7 @@ function drawComparison() {
   select.value = selected.key;
   setPlayer($("compare-player"), selected.run.editions[selected.lang].video);
   const related = sameSceneSequence(chosenRun(), state.lang, selected.run, selected.lang);
-  $("align-compare").disabled = !related;
+  $("align-compare").disabled = !related || [chosenRun(), selected.run].some(r => r?.productionMode === "codex-film-v1");
   $("compare-label").textContent = (selected.run.plan?.titles?.[selected.lang] || languageName[selected.lang]) + (related ? "" : "　·　別の制作版");
 }
 function alignCompare() {
@@ -634,7 +709,8 @@ function switchPreview(lang, id) {
   }
   else if (priorRun?.status === "script_ready" && hasEdition(priorRun, lang)) state.selected[lang] = priorRun.id;
   ensureSelection(lang);
-  const preserveTime = $("player").currentTime > 0.05 && sameSceneSequence(priorRun, priorLang, chosenRun(), lang);
+  const priorCues = [priorRun, chosenRun()].some(r => r?.productionMode === "codex-film-v1");
+  const preserveTime = !priorCues && $("player").currentTime > 0.05 && sameSceneSequence(priorRun, priorLang, chosenRun(), lang);
   state.sceneId = preserveTime ? anchor : priorRun?.id === chosenRun()?.id ? state.sceneId : "";
   closeEdit(); closeReview(); closeAdapt();
   drawWatch(); drawProgress();
@@ -663,6 +739,13 @@ function statusButton(run) {
   const button = node("button", label, "secondary small");
   button.type = "button";
   button.onclick = async () => {
+    const draft = $("author-draft");
+    if (startVideo && draft.dataset.edition === run.id + "." + state.lang &&
+        draft.value !== run.plan?.authorDraft?.[state.lang]) {
+      notify("台本に未保存の変更があります。変更した台本を保存すると、その版で制作できます。");
+      draft.focus();
+      return;
+    }
     const edit = state.editTarget;
     if (startVideo && edit?.parent === run.id) {
       const scene = run.plan.scenes.find((scene) => scene.id === edit.sceneId);
@@ -813,17 +896,18 @@ function runActions(run, inHistory) {
   if (!inHistory && run.editorialAlternative) {
     actions.append(historyLink("alternative-" + run.id, "別案「" + run.editorialAlternative.title + "」を見る"));
   }
+  if (run.langs.includes("ja") && run.plan?.titles?.ja &&
+      (run.status === "done" || (run.stopReport && !scriptReady))) {
+    const reuse = node("button", run.stopReport ? "この台本をもとに新しい試行" : "この版をもとに新しい試行", "quiet small");
+    reuse.type = "button";
+    reuse.onclick = () => {
+      setRerunParent(run);
+      $("rerun-panel").open = true;
+      $("rerun-reason").focus();
+    };
+    actions.append(reuse);
+  }
   if (run.stopReport && !scriptReady) {
-    if (run.langs.includes("ja") && run.plan?.titles?.ja && run.plan.scenes?.length) {
-      const reuse = node("button", "この台本をもとに新しい試行", "quiet small");
-      reuse.type = "button";
-      reuse.onclick = () => {
-        setRerunParent(run);
-        $("rerun-panel").open = true;
-        $("rerun-reason").focus();
-      };
-      actions.append(reuse);
-    }
     if (["needs_material", "needs_revision", "failed"].includes(run.status)) {
       const free = node("button", "このテーマから自由に企画", "quiet small");
       free.type = "button";
@@ -1016,7 +1100,8 @@ async function reloadDetail() {
     }
     state.resumeAfter = null;
   }
-  const outputs = (item) => JSON.stringify([item.accepted, (item.runs || []).map((r) => [r.id, r.status, Boolean(r.plan), r.editions])]);
+  const outputs = (item) => JSON.stringify([item.accepted, (item.runs || []).map((r) =>
+    [r.id, r.status, Boolean(r.plan), r.editions, r.authorCommissions])]);
   if (switched || previous.title !== data.title || outputs(previous) !== outputs(data)) {
     drawCase();
     const selected = chosenRun();
@@ -1304,6 +1389,18 @@ formAction("edit-form", async (version, action) => {
   if (state.editTarget === target) closeEdit();
   await reloadDetail(); notify(target.draft || payload.scriptFirst ? "修正した台本を新しい試行に保存しました。" : "修正した言語の再生成を受け付けました。");
 });
+formAction("author-draft-form", async (version) => {
+  const run = chosenRun(), lang = state.lang;
+  const input = $("author-draft");
+  if (!run || input.dataset.edition !== run.id + "." + lang) return;
+  if (trim(input.value) === run.plan.authorDraft[lang]) { notify("台本は保存済みです。"); return; }
+  const result = await submitRun("draft." + state.detail.id, detailPath("/runs"), {
+    parent: run.id, model: run.model, lang, draftText: input.value, reason: "確認用の台本を手直し"
+  });
+  if (state.routeVersion !== version) return;
+  state.resumeAfter = result.runId;
+  await reloadDetail(); notify("修正した台本を新しい試行に保存しました。");
+});
 formAction("rerun-form", async (version, action) => {
   const profile = selectedProfile("rerun");
   if (!profile) return;
@@ -1318,6 +1415,8 @@ $("adapt-open").onclick = () => {
   const run = chosenRun();
   if (state.lang !== "ja" || !run?.editions?.ja?.video || state.detail.reference) return;
   state.adaptTarget = Object.freeze({ caseId: state.detail.id, parent: run.id });
+  $("adapt-mode-field").hidden = run.productionMode === "codex-film-v1";
+  $("adapt-mode").value = "codex-film-v1";
   $("adapt-target").textContent = "元の日本語版　" + editionLabel(run, "ja") + "　" + run.plan.titles.ja;
   const profile = state.models.find((m) => m.id === run.model && m.available);
   if (profile) {
@@ -1332,6 +1431,7 @@ formAction("adapt-form", async (version, action) => {
   const profile = selectedProfile("adapt");
   if (!target || target.caseId !== state.detail?.id || !profile) return;
   const payload = { parent: target.parent, language: "en", model: profile.id, scriptFirst: action !== "video" };
+  if ($("adapt-mode").value === "codex-film-v1") payload.productionMode = "codex-film-v1";
   const result = await submitRun("adapt." + target.caseId, detailPath("/runs"), payload);
   if (state.routeVersion !== version) return;
   if (state.adaptTarget === target) {
