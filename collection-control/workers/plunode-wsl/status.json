@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-26T07:05:07.384454+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-26T06:10:16.917946+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-26T07:05:07.384454+00:00",
+    "eligibleAt": "2026-11-26T06:10:16.917946+00:00",
     "windowEndAt": "2026-11-26T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-65-dot-inoue-three-20261029",
-    "startedAt": "2026-11-26T06:00:07.384459+00:00",
-    "limitAt": "2026-11-26T06:55:07.384454+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-64-dot-oda-onepiece-20261029",
-    "endedAt": "2026-11-26T02:41:15.672954+00:00"
+    "requestId": "issue-65-dot-inoue-three-20261029",
+    "endedAt": "2026-11-26T06:00:16.917950+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 8,
-    "waiting-control": 23,
-    "completed": 27,
+    "waiting-control": 22,
+    "completed": 28,
     "awaiting-recovery": 4
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-26T06:00:08.667610+00:00"
+  "checkedAt": "2026-11-26T06:02:03.134025+00:00"
 }
