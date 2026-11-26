@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 
-from editor import MaterialRequired, _save_json
+from editor import DIRECTED_FILM, MaterialRequired, _save_json
 from editorial_decision import assess
 from material_research import research_material
 
@@ -101,7 +101,9 @@ def write_with_research(snapshot, brief, model, effort, folder, progress, write,
     searched_leads = {url for entry in own_rounds if entry["status"] == "done" for url in entry.get("sourceLeads", [])}
     if set(leads) - searched_leads:
         need = own_rounds[-1]["need"] if own_rounds else "追加された公開資料から、採用した動画案の要確認事項を調べてください。"
-    check_saved = need is None and bool(own_rounds and own_rounds[-1]["status"] == "done")
+    completed = [r for r in own_rounds if r["status"] == "done"]
+    check_saved = need is None and bool(completed and (
+        own_rounds[-1]["status"] == "done" or snapshot.get("productionMode") == DIRECTED_FILM))
     if check_saved and decision_file.is_file():
         old_need = json.loads(decision_file.read_text(encoding="utf-8"))["need"]
         enriched = _supplement(snapshot, rounds)
@@ -130,7 +132,7 @@ def write_with_research(snapshot, brief, model, effort, folder, progress, write,
         if not unfinished:
             rounds.append(entry)
         entry["need"] = need
-        report(f"資料を追加調査中（{len(rounds)}回目）　" + need)
+        report(f"制作室が原資料を確認中（{len(rounds)}回目）。調べている内容は調査記録に表示します。")
         prior = [{"sources": r["sources"]} if r.get("inheritedFromRun") else
                  {k: r.get(k) for k in ("need", "sources", "remaining", "error")} for r in rounds[:-1]]
         if leads:

@@ -118,13 +118,33 @@ def selected(db, idea_id):
 def production_brief(idea):
     lines = ["仮題　" + idea["title"], "冒頭の演出案　" + idea["opening"], "見終えたときの発見　" + idea["payoff"]]
     if idea["needs"]:
-        lines.append("要確認の根拠・素材　" + idea["needs"])
+        lines.append("演出に応じた調査・作画の候補　" + idea["needs"])
     ids = json.loads(idea["source_ids"])
     sources = "この案の参照資料　" + "、".join(ids)
     brief = "\n".join(lines)
     if ids and len(brief) + len(sources) + 1 <= 1800:
         brief += "\n" + sources
     return brief
+
+
+def film_commission(brief, *, from_idea=None):
+    """Recover separately authored parts of a saved pitch, including the original Studio format."""
+    pitch, _, operator = brief.partition("\n今回の試行で重視する点\n")
+    has_opening = "\n冒頭の演出案　" in pitch or (from_idea is True and "\n冒頭　" in pitch)
+    if from_idea is False or not (pitch.startswith("仮題　") and has_opening and "\n見終えたときの発見　" in pitch):
+        return {"mode": "theme", "operatorRequest": brief}
+    names = {"仮題": "workingTitle", "冒頭": "possibleOpening", "冒頭の演出案": "possibleOpening", "見終えたときの発見": "intendedDiscovery",
+             "要確認の根拠・素材": "possibleMaterials", "演出に応じた調査・作画の候補": "possibleMaterials",
+             "この案の参照資料": "suggestedSources"}
+    parts = {}
+    for line in pitch.splitlines():
+        name, sep, value = line.partition("　")
+        if sep and name in names:
+            field = names[name]
+            parts[field] = value
+        else:
+            parts[field] += "\n" + line
+    return {"mode": "selectedIdea", **parts, "operatorRequest": operator}
 
 
 def production_input(db, idea_id):

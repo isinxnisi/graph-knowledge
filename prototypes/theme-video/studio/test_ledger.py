@@ -9,6 +9,8 @@ from unittest.mock import Mock
 
 from editor import MaterialRequired
 from ledger import Ledger
+from editorial_decision import DIRECTED_DECISION_VERSION
+from research_workflow import _source_id
 from writer_feedback import RevisionNeeded
 
 
@@ -117,7 +119,7 @@ class LedgerTest(unittest.TestCase):
             self.assertEqual(self.desk.case(case["id"])["runs"][0]["status"], "queued")
 
     def test_editorial_alternative_starts_once_with_frozen_brief_and_sources(self):
-        self.request.update(language="ja", scriptFirst=True)
+        self.request.update(language="ja", scriptFirst=True, productionMode="boards-v1")
         case = self.create()
         cid, source = case["id"], case["runId"]
         folder = self.data / "cases" / cid / source
@@ -158,7 +160,7 @@ class LedgerTest(unittest.TestCase):
         self.assertNotIn(self.request["brief"], payload.args[1])
         self.assertEqual(payload.kwargs["language"], "ja")
         self.assertNotIn("previous_japanese", payload.kwargs)
-        research = json.loads((payload.args[3] / "material-research.json").read_text())
+        research = json.loads((payload.args[3] / "material-research.json").read_text(encoding="utf-8"))
         self.assertEqual(research["inheritedFromRun"], source)
         self.assertEqual(research["rounds"], [{**confirmed, "inheritedFromRun": source}])
         self.assertEqual(self.desk.case(cid)["runs"][0]["status"], "script_ready")
@@ -206,7 +208,8 @@ class LedgerTest(unittest.TestCase):
         decision.update(reason="過去の別の停止理由", viewerImpact="過去の影響")
         save_decision()
         self.assertEqual(report()["impact"], "")
-        self.assertIn("向きの記録", report()["reason"])
+        self.assertNotIn("向きの記録", report()["reason"])
+        self.assertEqual(self.desk.case(cid)["runs"][0]["error"], "向きの記録が必要")
         path.write_text("broken", encoding="utf-8")
         self.assertEqual(report()["impact"], "")
         self.desk.resume(cid, run)
@@ -242,7 +245,7 @@ class LedgerTest(unittest.TestCase):
         self.assertIsNone(report())
 
     def test_only_current_proposal_on_waiting_japanese_run_can_start(self):
-        self.request.update(language="ja")
+        self.request.update(language="ja", productionMode="boards-v1")
         case = self.create()
         cid, source = case["id"], case["runId"]
         self.desk.process_next(Mock(side_effect=MaterialRequired("資料待ち")), self.render)
@@ -257,6 +260,51 @@ class LedgerTest(unittest.TestCase):
             self.desk.start_alternative(cid, source, key)
         self.assertIsNone(self.desk.case(cid)["runs"][0]["editorialAlternative"])
         self.assertEqual(len(self.desk.case(cid)["runs"]), 1)
+
+    def test_failed_research_reuses_saved_excerpts_and_offers_only_a_current_reviewed_alternative(self):
+        self.request.update(language="ja", scriptFirst=True)
+        case = self.create()
+        cid, run = case["id"], case["runId"]
+        error = "指定した文章生成以外の処理が検出されたため、結果を採用できません。"
+        self.desk.process_next(Mock(side_effect=RuntimeError(error)), self.render)
+        folder = self.data / "cases" / cid / run
+        source = {"title": "見取り図", "url": "https://example.org/fold", "locator": "1頁", "excerpt": "折る", "note": "紙の向き"}
+        rounds = [{"status": "done", "remaining": "動きは未確認", "sources": [source, source]},
+                  {"status": "error", "need": "別の資料で裏面を照合", "error": error, "sources": []}]
+        (folder / "material-research.json").write_text(json.dumps({"rounds": rounds}), encoding="utf-8")
+        proposal = {"title": "紙の向き", "brief": "模型を回す", "reason": "裏面は記録されていない"}
+        (folder / "editorial-alternative.json").write_text(json.dumps(proposal), encoding="utf-8")
+        record = {"instructionVersion": DIRECTED_DECISION_VERSION, "need": rounds[-1]["need"], "reviewedResearchIds": [_source_id(source)],
+                  "researchRemaining": rounds[0]["remaining"], "decision": {"outcome": "alternative", "reason": proposal["reason"], "alternative": proposal}}
+        def current():
+            return next(r for r in self.desk.case(cid)["runs"] if r["id"] == run)
+        def save(value):
+            (folder / "editorial-decision.json").write_text(json.dumps(value), encoding="utf-8")
+        save(record)
+        view = current()
+        fingerprint = view["editorialAlternative"]["fingerprint"]
+        self.assertTrue(view["resumeWithSavedSources"])
+        self.assertEqual(view["savedExcerptCount"], 1)
+        self.assertIn("実行記録", view["stopReport"]["reason"])
+        self.assertIn("資料の提出は不要", view["stopReport"]["next"])
+        self.assertIn("別の試行", view["stopReport"]["next"])
+        for change in ({"instructionVersion": "plunode-video-editorial-decision-3"}, {"need": "過去の照合"}, {"reviewedResearchIds": []},
+                       {"researchRemaining": "更新前"}, {"decision": {"outcome": "wait"}},
+                       {"decision": {**record["decision"], "alternative": {**proposal, "title": "古い案"}}}):
+            save({**record, **change})
+            self.assertIsNone(current()["editorialAlternative"])
+            with self.assertRaises(ValueError):
+                self.desk.start_alternative(cid, run, fingerprint)
+        save(record)
+        self.assertEqual(len(self.desk.case(cid)["runs"]), 1)
+        new_run = self.desk.start_alternative(cid, run, fingerprint)["runId"]
+        self.assertEqual(current()["editorialAlternative"]["startedRunId"], new_run)
+        self.assertEqual(current()["status"], "failed")
+        write = Mock(return_value=self.plan)
+        self.desk.process_next(write, self.render)
+        self.assertIn(proposal["brief"], write.call_args.args[1])
+        inherited = json.loads((self.data / "cases" / cid / new_run / "material-research.json").read_text(encoding="utf-8"))
+        self.assertEqual(inherited["rounds"], [{**rounds[0], "inheritedFromRun": run}])
 
     def test_optional_research_urls_are_atomic_deduplicated_and_scoped_to_waiting_run(self):
         self.request.update(language="ja", scriptFirst=True)

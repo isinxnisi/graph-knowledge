@@ -24,7 +24,7 @@ WEBB_ID = "theme:915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1"
 INSTRUCTIONS_VERSION = "plunode-video-editor-6"
 JAPANESE_VERSION = "plunode-video-ja-7"
 ADAPTATION_VERSION = "plunode-video-en-adaptation-3"
-IDEAS_VERSION = "plunode-video-ideas-4"
+IDEAS_VERSION = "plunode-video-ideas-5"
 DIRECTED_FILM = "directed-film-v1"
 EXCHANGE_LABELS = ("left", "right", "toRight", "toLeft")
 EXCHANGE_BOARD = (
@@ -563,11 +563,13 @@ titleは選びやすい短い仮題です。各欄は一、二文で、titleは1
 同じ題材でも視聴体験が異なる企画を残します。言い換えや同じ内容の再提案を避け、新しい提案がなければideasを空配列にします。
 sourceIdsにはこのテーマ版で案を支えるsourcesのIDだけを挙げます。出典があることと、使える映像があることは別です。
 制作では題材固有の原画を描き、物や人物の動き、無言で見つける時間、効果音を作れます。
-openingは演出の一案です。選ばれた後も、同じ発見を届ける構図や語りの順序を監督が考え直せるようにします。
+openingは演出の一例です。payoffには観客が何を発見するかを具体的に書きます。
+ある場所での連続操作や発言を正確に再現すること自体が発見なら、その場面の根拠が必要です。
+仕組みや考え方の発見なら、史実を守りつつ、選択後に作例・構図・語りの順序を変えられる言葉にします。
 取引や受け渡しの両方向を資料が支える場合は、双方の手元を見比べて何に気づけるかも考えます。
 資料名を表示して内容を読み上げるだけで、見せ場の準備ができたことにはなりません。文字が主役なら、どの文字を観客がどう見比べるかを考えます。
 その体験に専用の絵が必要なら、探す絵・描き起こす動作をneedsに残してください。
-needsには必要な追加の裏付け、探す写真・記録、または描き起こす図を具体的に記し、揃っている場合は空文字列にします。
+needsには、どの主張なら何の裏付けが要るか、どの見せ方を選んだときにどんな素材が要るかを書きます。揃っている場合は空文字列です。
 足りない素材を理由に面白い企画を退ける必要はありません。未確認の事実は問いとして残し、確かめる原資料をneedsに記します。
 使える記録がまだない着想は、調べる対象が具体的な場合にのみsourceIdsを空にして提案します。"""
 
@@ -757,6 +759,57 @@ def _save_json(path, value):
     return hashlib.sha256(data).hexdigest()
 
 
+def _cli_event_error(research, event, item=None, action=None):
+    # Keep the protocol identifiers in the run's error record. Tool arguments, commands,
+    # URLs, and the model's own messages may contain private data.
+    labels = [name if isinstance(name, str) and re.fullmatch(r"[A-Za-z][A-Za-z0-9_.-]{0,63}", name)
+              else "unknown" for name in (event, item, action) if name is not None]
+    scope = "資料調査で扱えない操作です" if research else "文章生成以外の操作はこの工程で扱えません"
+    return RuntimeError(f"制作室の許可範囲外のCLIイベントを検出しました。{scope}（{' / '.join(labels)}）。")
+
+
+def _writer_events(events, research):
+    messages = []
+    searched = False
+    for event in events:
+        phase = event.get("type")
+        if phase in ("thread.started", "turn.started", "turn.completed", "turn.failed", "error"):
+            continue
+        if phase not in ("item.started", "item.updated", "item.completed"):
+            raise _cli_event_error(research, phase or "unknown")
+        item = event.get("item")
+        kind = item.get("type") if isinstance(item, dict) else None
+        if kind in ("reasoning", "todo_list", "error"):
+            # todo_list reports the agent's progress. It does not access a research source.
+            continue
+        if kind == "agent_message":
+            if phase == "item.completed":
+                messages.append(item["text"])
+            continue
+        if kind != "web_search" or not research:
+            raise _cli_event_error(research, phase, kind or "unknown")
+
+        action = item.get("action")
+        if action is None:
+            # exec can announce a search before it has a query; older CLI items carry
+            # the query directly. Only a completed, identifiable action proves access.
+            if phase != "item.completed":
+                continue
+            if not isinstance(item.get("query"), str) or not item["query"].strip():
+                raise _cli_event_error(research, phase, kind, "unknown")
+        else:
+            operation = action.get("type") if isinstance(action, dict) else None
+            if operation not in ("search", "open_page", "find_in_page", "openPage", "findInPage"):
+                raise _cli_event_error(research, phase, kind, operation or "unknown")
+        if phase == "item.completed":
+            searched = True
+    if research and not searched:
+        raise RuntimeError("資料調査でウェブにアクセスした記録がありません。調査を再試行してください。")
+    if not messages:
+        raise RuntimeError("モデルから脚本本文が返りませんでした。")
+    return json.loads(messages[-1])
+
+
 def _call_writer(request, *, research=False, image_path=None):
     model_id, effort = request["model"], request["effort"]
     schema, prompt = request["outputSchema"], request["prompt"]
@@ -787,19 +840,4 @@ def _call_writer(request, *, research=False, image_path=None):
         if "model_not_found" in failure:
             raise RuntimeError("このアカウントでは指定モデルを利用できません。モデルを選び直してください。")
         raise RuntimeError("Codex の脚本生成が完了しませんでした。接続・ログイン状態を確認してください。")
-    messages = []
-    searched = False
-    for event in events:
-        if event.get("type") == "item.completed":
-            item = event["item"]
-            if item["type"] == "agent_message":
-                messages.append(item["text"])
-            elif research and item["type"] == "web_search":
-                searched = True
-            elif item["type"] not in ("reasoning", "error"):
-                raise RuntimeError("指定した文章生成以外の処理が検出されたため、結果を採用できません。")
-    if research and not searched:
-        raise RuntimeError("資料調査でウェブにアクセスした記録がありません。調査を再試行してください。")
-    if not messages:
-        raise RuntimeError("モデルから脚本本文が返りませんでした。")
-    return json.loads(messages[-1]), completed.get("usage")
+    return _writer_events(events, research), completed.get("usage")

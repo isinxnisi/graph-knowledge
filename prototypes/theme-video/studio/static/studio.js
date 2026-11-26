@@ -178,7 +178,8 @@ function disableSubmitButtons(form, disabled) {
 function refreshGenerationButtons() {
   for (const name of ["new", "rerun"]) {
     const form = $(name + "-form"), language = $(name + "-language").value;
-    form.querySelector('[value="video"]').textContent = productionLanguage[language] + "の動画を生成";
+    const origin = name === "new" ? (state.chosenIdea ? "この案で" : "テーマから") : "";
+    form.querySelector('[value="video"]').textContent = origin + productionLanguage[language] + "の動画を生成";
     disableSubmitButtons(form, (name === "new" && !state.chosen && !state.chosenIdea) || !selectedProfile(name) || form.dataset.busy === "1");
   }
   const adapt = $("adapt-form");
@@ -657,6 +658,7 @@ function statusButton(run) {
   if (startVideo) label = "この台本で" + runLanguage(run) + "の映像を生成";
   if (run.status === "needs_revision") label = "改稿を再開";
   if (run.canAddMaterialLeads) label = "追加調査して再開";
+  if (run.resumeWithSavedSources) label = "保存資料から再開";
   const button = node("button", label, "secondary small");
   button.type = "button";
   button.onclick = async () => {
@@ -712,7 +714,7 @@ function appendStopReport(parent, run) {
   const fields = node("dl", null, "stop-report");
   for (const [label, value] of [
     [run.status === "script_ready" ? "現在の状態" : "停止理由", report.reason],
-    ["視聴者への影響", report.impact],
+    [run.status === "failed" && run.canAddMaterialLeads ? "保存された資料" : "視聴者への影響", report.impact],
     ["次にできること", report.next],
   ]) {
     if (value) fields.append(node("dt", label), node("dd", value));
@@ -754,16 +756,19 @@ function runActions(run, inHistory) {
       };
       actions.append(reuse);
     }
-    if (["needs_material", "needs_revision"].includes(run.status)) {
+    if (["needs_material", "needs_revision", "failed"].includes(run.status)) {
+      const free = node("button", "このテーマから自由に企画", "quiet small");
+      free.type = "button";
+      free.onclick = () => openFreeTheme(state.detail.themeId, state.detail.themeTitle, state.detail.revision);
       const ideas = node("a", "ほかの動画案を見る", "text-link");
       ideas.href = ideaLibraryHash(state.detail.themeId);
-      actions.append(ideas);
+      actions.append(free, ideas);
     }
   }
   if (!inHistory && (run.materialResearch || run.canAddMaterialLeads)) {
     actions.append(historyLink("research-" + run.id, run.materialResearch ? "調査記録を見る" : "調査するURLを追加"));
   }
-  if (!inHistory && run.status === "failed" && run.stopReport && run.error && run.error !== run.stopReport.reason) {
+  if (!inHistory && ["failed", "needs_material"].includes(run.status) && run.stopReport && run.error && run.error !== run.stopReport.reason) {
     actions.append(historyLink("diagnostic-" + run.id, "停止時の記録を見る"));
   }
   return actions;
@@ -780,11 +785,14 @@ function drawProgress() {
     const box = node("div", null, "status-box" + (bad ? " bad" : ""));
     box.append(node("strong", "試行 " + (ordered.length - ordered.indexOf(run)) + " · " + (jobName[run.status] || run.status) + "　"));
     if (run.stopReport) appendStopReport(box, run);
-    else box.append(node("span", run.error || run.progress || ""));
+    else box.append(node("span", run.error || briefProgress(run.progress)));
     box.append(runActions(run, false));
     return box;
   });
   $("run-progress").replaceChildren(...boxes);
+}
+function briefProgress(progress = "") {
+  return (progress || "").replace(/^(資料を追加調査中（\d+回目）)　[\s\S]+$/, "$1");
 }
 function researchDetails(run) {
   const report = run.materialResearch || {};
@@ -830,7 +838,8 @@ function researchDetails(run) {
     input.value = $(input.id)?.value || "";
     const caption = node("label", "調べてほしい公開HTTPS URL（任意）");
     caption.htmlFor = input.id;
-    const hint = node("p", "1行に1件、6件まで。再開すると本文を照合します。", "subtle");
+    const hint = node("p", run.resumeWithSavedSources ? "空欄のまま保存資料から再開できます。新しいURLも調べる場合は1行に1件、6件まで追加してください。" :
+      "1行に1件、6件まで。再開すると本文を照合します。", "subtle");
     hint.id = input.id + "-hint";
     input.setAttribute("aria-describedby", hint.id);
     details.append(caption, hint, input);
@@ -857,11 +866,11 @@ function alternativeDetails(run) {
       if (state.detail?.id !== active) return;
       state.resumeAfter = result.runId;
       await reloadDetail();
-      notify("別案の試行を受け付けました。元の試行は資料待ちのままです。");
+      notify("確認済みの出典を引き継いで、別案の試行を受け付けました。");
     } catch (err) { if (state.detail?.id === active) notify(err.message, true); }
     finally { button.disabled = false; }
   };
-  details.append(node("p", "元の試行を資料待ちに残し、確認済みの出典を引き継ぎます。", "subtle"), button);
+  details.append(node("p", "新しい試行には、これまでに確認した出典を引き継ぎます。", "subtle"), button);
   return details;
 }
 function drawHistory() {
@@ -892,7 +901,7 @@ function drawHistory() {
         report.append(diagnostic);
       }
       row.append(report);
-    } else if (run.error || (pending(run) && run.progress)) row.append(node("p", run.error || run.progress));
+    } else if (run.error || (pending(run) && run.progress)) row.append(node("p", run.error || briefProgress(run.progress)));
     if (run.materialResearch || run.status === "needs_material") row.append(researchDetails(run));
     if (run.editorialAlternative) row.append(alternativeDetails(run));
     row.append(runActions(run, true));

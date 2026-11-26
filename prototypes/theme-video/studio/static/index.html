@@ -46,7 +46,7 @@
             <a id="theme-ideas-link" class="text-link" href="#ideas" hidden>このテーマの保存案を見る</a>
           </fieldset>
           <div id="chosen-idea" hidden></div>
-          <fieldset><legend id="new-settings-label">動画の企画</legend><div id="new-brief-field"><label for="brief">取り上げる切り口（任意）</label><textarea id="brief" rows="3" maxlength="1500" placeholder="空欄なら、選んだテーマから切り口を決めます"></textarea></div>
+          <fieldset><legend id="new-settings-label">動画の企画</legend><div id="new-brief-field"><label for="brief">取り上げる切り口（任意）</label><textarea id="brief" rows="3" maxlength="1500" placeholder="空欄なら、テーマの資料から一本の切り口と演出を制作室に任せます"></textarea></div>
             <div class="model-settings">
               <div><label for="new-model">脚本・編集モデル</label><select id="new-model"></select></div>
               <div><label for="new-effort">推論の強さ</label><select id="new-effort"></select></div>
@@ -57,9 +57,9 @@
           </fieldset>
           <div class="form-footer"><span>横長 16:9</span>
             <div class="generation-actions">
-              <button id="generate-ideas" class="primary" type="submit" value="ideas" disabled>動画案を生成して保存</button>
+              <button id="new-video" class="primary" type="submit" value="video" disabled>テーマから日本語の動画を生成</button>
               <button class="secondary" type="submit" value="script" disabled>台本を先に確認</button>
-              <button id="new-video" class="secondary" type="submit" value="video" disabled>日本語の動画を生成</button>
+              <button id="generate-ideas" class="secondary" type="submit" value="ideas" disabled>動画案を生成して保存</button>
             </div>
           </div>
         </form>

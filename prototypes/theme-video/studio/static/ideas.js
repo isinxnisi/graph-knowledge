@@ -6,13 +6,20 @@ function ideaLibraryHash(themeId) {
   return themeId ? "#ideas/theme/" + encodeURIComponent(themeId) : "#ideas";
 }
 
+function openFreeTheme(themeId, title, revision) {
+  state.chosenIdea = null;
+  selectTheme({id: themeId, title, revision});
+  $("brief").value = "";
+  location.hash = "#new";
+}
+
 function describeIdea(idea) {
   const card = node("article", null, "idea-card");
   const status = idea.origin === "reference" ? "品質見本" : ideaStatusLabels[idea.status];
   card.append(node("p", [idea.themeTitle, "第" + idea.revision + "版", status].join(" ／ "), "idea-meta"));
   card.append(node("h2", idea.title));
   const description = node("dl");
-  for (const [label, value] of [["冒頭", idea.opening], ["観終わったときの発見", idea.payoff], ["必要な資料・素材", idea.needs]]) {
+  for (const [label, value] of [["冒頭の演出例", idea.opening], ["観終わったときの発見", idea.payoff], ["この演出で使いたい資料・素材", idea.needs]]) {
     if (value) description.append(node("dt", label), node("dd", value));
   }
   if (description.childElementCount) card.append(description);
@@ -51,7 +58,6 @@ function drawNewIdeaSelection() {
   $("new-theme-fields").hidden = $("new-theme-fields").disabled = Boolean(idea);
   $("new-brief-field").hidden = $("brief").disabled = Boolean(idea);
   $("generate-ideas").hidden = Boolean(idea);
-  $("new-video").className = idea ? "primary" : "secondary";
   $("new-title").textContent = idea ? "この案で新しい制作を始める" : "テーマから動画をつくる";
   $("new-settings-label").textContent = idea ? "新しい案件の制作設定" : "動画の企画";
   const chosen = $("chosen-idea");
@@ -61,6 +67,10 @@ function drawNewIdeaSelection() {
     const back = node("a", "このテーマの案を選び直す", "text-link");
     back.href = ideaLibraryHash(idea.themeId);
     chosen.append(describeIdea(idea), back);
+    const free = node("button", "このテーマから自由に企画", "secondary small");
+    free.type = "button";
+    free.onclick = () => openFreeTheme(idea.themeId, idea.themeTitle, idea.revision);
+    chosen.append(free);
     if (idea.cases?.length) chosen.append(node("p", "新しく生成する台本と映像は、別の制作案件に保存されます。", "subtle"));
   }
 }

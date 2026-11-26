@@ -40,9 +40,7 @@ def _material_reason(folder, run, brief):
         first_sentences = re.split(r"(?<=。)(?![」』])", proposal["reason"], maxsplit=2)[:2]
         reason = _summary("".join(first_sentences), 150)
     if not reason:
-        detail = re.sub(r"(?<![a-zA-Z0-9])(?:ref-\d+|research-[0-9a-f]{16})(?![a-zA-Z0-9])",
-                        "参照資料", error.removeprefix("追加資料が必要です。"))
-        reason = "この案を今の材料で進められるか、確認が残っています。" + _summary(detail, 150)
+        reason = "予定した場面を今の資料でどこまで裏づけられるか、制作室で確認が残っています。調べる項目は停止時の記録に保存されています。"
     impact = _summary(decision.get("viewerImpact"), 180)
     if "viewerImpact" not in decision and decision and not run["chosenAlternative"]:
         payoff = next((line.removeprefix("見終えたときの発見　").strip() for line in brief.splitlines()
@@ -63,7 +61,7 @@ def _material_reason(folder, run, brief):
 def _failure(run):
     error = run["error"] or ""
     research = run["canAddMaterialLeads"]
-    retry = "追加調査して再開" if research else "再開"
+    retry = "保存資料から再開" if run["resumeWithSavedSources"] else "追加調査して再開" if research else "再開"
     if "モデルの利用上限に達しました" in error:
         return "選んだモデルが利用上限に達したため、処理が止まりました。", f"モデルが再び使えるようになったら「{retry}」で同じ試行を続けられます。"
     if "このアカウントでは指定モデルを利用できません" in error:
@@ -72,8 +70,18 @@ def _failure(run):
         return "選んだモデルをこのアカウントで利用できず、生成が止まりました。", next_step
     if "接続・ログイン状態を確認" in error:
         return "選んだモデルから生成結果を受け取れませんでした。", f"接続・ログイン状態を確認し、「{retry}」で同じ試行を続けてください。"
+    if error.startswith(("指定した文章生成以外の処理が検出", "制作室の許可範囲外のCLIイベント")):
+        stage = "追加調査" if research else "文章生成"
+        reason = f"{stage}の実行記録に、制作室が受け付けない種類のイベントが含まれたため、その回の結果を採用する前に停止しました。"
+        if run["resumeWithSavedSources"]:
+            action = "「保存資料から再開」で、制作室が照合済みの資料から元の企画の見せ方を再検討します。"
+        else:
+            action = f"「{retry}」で同じ試行を続けられます。"
+        return reason, action + " 資料の提出は不要です。同じ停止が続く場合は制作室側で実行記録を確認します。"
     if research:
-        return "追加調査の処理が完了しなかったため、台本の制作が止まっています。", "調査記録のエラーを確認し、「追加調査して再開」を選んでください。資料のURLも添えられます。"
+        action = ("「保存資料から再開」で、制作室が照合済みの資料から元の企画の見せ方を再検討します。" if run["resumeWithSavedSources"]
+                  else "「追加調査して再開」で、制作室がもう一度調査します。")
+        return "追加調査の処理が完了しなかったため、台本の制作が止まっています。", action + " 資料のURLは任意です。"
     if run["plan"]:
         reason = "台本を保存したあと、映像を仕上げる工程で処理が止まりました。"
     else:
@@ -101,6 +109,12 @@ def stop_report(run, folder, theme, idea_title, brief):
         next_step = "「改稿を再開」で直近の出力と指摘を引き継ぎ、同じ試行で修正します。"
     elif status == "failed":
         reason, next_step = _failure(run)
+        if run["canAddMaterialLeads"] and run["savedExcerptCount"]:
+            impact = f"これまでに本文と照合した出典の抜粋{run['savedExcerptCount']}件は、この試行に保存されています。"
+        proposal = run["editorialAlternative"]
+        if proposal:
+            next_step += (" 選択済みの別案は生成履歴から確認できます。" if proposal["startedRunId"] else
+                          " 保存資料を使う別案も提案されています。内容を確認し、別の試行として始められます。")
     elif status == "interrupted":
         reasons = {"待機中に中断しました": "中断の操作により、順番待ちの段階で制作を止めました。",
                    "保存した工程から再開できます": "中断の操作により、工程の区切りで制作を止めました。",

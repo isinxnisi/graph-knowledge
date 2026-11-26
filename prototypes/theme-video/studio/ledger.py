@@ -13,6 +13,8 @@ from urllib.parse import urlencode, urlsplit, urlunsplit
 
 import idea_store
 from editor import DIRECTED_FILM, MaterialRequired, _save_json
+from editorial_decision import DIRECTED_DECISION_VERSION
+from research_workflow import _source_id
 from stop_report import stop_report
 from writer_feedback import RevisionNeeded
 
@@ -124,6 +126,39 @@ def editorial_alternative(folder):
     except (OSError, ValueError):
         return None
     return {**proposal, "fingerprint": hashlib.sha256(packed(proposal).encode()).hexdigest()}
+
+
+def available_alternative(folder, run, research):
+    status = display_status(run["status"], run["error"])
+    if ("ja" not in json.loads(run["langs"]) or (research or {}).get("error")
+            or not accepts_material_leads(status, run["error"], research)):
+        return None
+    proposal = editorial_alternative(folder)
+    if not proposal:
+        return None
+    path = folder / "editorial-decision.json"
+    if status == "needs_material" and run["production_mode"] != DIRECTED_FILM and not path.exists():
+        return proposal  # Older board-based trials saved the approved proposal by itself.
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+        decision = record["decision"]
+        if decision["outcome"] != "alternative" or any(decision["alternative"][key] != proposal[key] for key in ("title", "brief", "reason")):
+            return None
+        if run["production_mode"] == DIRECTED_FILM:
+            if record.get("instructionVersion") != DIRECTED_DECISION_VERSION:
+                return None  # Earlier reviews could treat proposed staging as an operator requirement.
+            current_ids = {_source_id(s) for r in (research or {}).get("rounds", []) if r.get("status") == "done" for s in r.get("sources", [])}
+            if set(record["reviewedResearchIds"]) != current_ids:
+                return None
+        if status == "needs_material":
+            return proposal if decision["reason"] == run["error"] else None
+        rounds = research["rounds"]
+        confirmed = next((r for r in reversed(rounds[:-1]) if r.get("status") == "done" and not r.get("inheritedFromRun")), None)
+        if confirmed and record["need"] == rounds[-1]["need"] and record["researchRemaining"] == confirmed["remaining"]:
+            return proposal
+    except (OSError, ValueError, TypeError, KeyError):
+        pass
+    return None
 
 
 def reference_case():
@@ -483,13 +518,11 @@ class Ledger:
                                (run_id, fingerprint)).fetchone()
             if prior:
                 return {"id": case_id, "runId": prior["run_id"]}
-            if display_status(source["status"], source["error"]) != "needs_material" or "ja" not in json.loads(source["langs"]):
-                raise ValueError("別案を始めるには資料待ちの日本語の試行を選んでください。")
             folder = self.folder / "cases" / case_id / run_id
-            proposal = editorial_alternative(folder)
-            if not proposal or proposal["fingerprint"] != fingerprint:
-                raise ValueError("別案が更新されました。案件を開き直して内容を確認してください。")
             report = material_research(folder) or {"rounds": []}
+            proposal = available_alternative(folder, source, report)
+            if not proposal or proposal["fingerprint"] != fingerprint:
+                raise ValueError("現在の資料と編集判断で選択できる別案を、案件画面で確認してください。")
             if report.get("error"):
                 raise ValueError(report["error"])
             rounds = [dict(r, inheritedFromRun=r.get("inheritedFromRun") or run_id) for r in report["rounds"]
@@ -616,7 +649,11 @@ class Ledger:
                 states.setdefault(lang, edition_state(status, lang in editions, accepted.get(lang) == run["id"], rework))
             folder = self.folder / "cases" / case_id / run["id"]
             research = material_research(folder)
-            proposal = editorial_alternative(folder) if status == "needs_material" and "ja" in langs else None
+            takes_leads = accepts_material_leads(status, run["error"], research)
+            excerpts = {(s["url"], s["excerpt"]) for r in (research or {}).get("rounds", []) if r.get("status") == "done"
+                        for s in r.get("sources", []) if isinstance(s.get("url"), str) and isinstance(s.get("excerpt"), str)}
+            recover_saved = status == "failed" and takes_leads and run["production_mode"] == DIRECTED_FILM and bool(excerpts) and not run["plan"]
+            proposal = available_alternative(folder, run, research)
             if proposal:
                 proposal["startedRunId"] = started.get((run["id"], proposal["fingerprint"]))
             chosen = json.loads(run["proposal"]) if run["proposal"] else None
@@ -624,7 +661,8 @@ class Ledger:
                         productionMode=run["production_mode"],
                         reason=run["reason"], progress=run["progress"], created=run["created"],
                         langs=langs, error=run["error"], editions=editions,
-                        materialResearch=research, canAddMaterialLeads=accepts_material_leads(status, run["error"], research),
+                        materialResearch=research, canAddMaterialLeads=takes_leads, resumeWithSavedSources=recover_saved,
+                        savedExcerptCount=len(excerpts),
                         editorialAlternative=proposal, chosenAlternative={**chosen, "sourceRunId": run["source_run"]} if chosen else None,
                         plan=json.loads(run["plan"]) if run["plan"] else None)
             if item["plan"] and item["plan"].get("productionMode") == DIRECTED_FILM:
@@ -683,7 +721,9 @@ class Ledger:
     def process_next(self, generate, render):
         with self.db() as db:
             db.execute("BEGIN IMMEDIATE")
-            row = db.execute("""SELECT r.*,c.snapshot,c.brief,a.proposal,a.research FROM runs r JOIN cases c ON r.case_id=c.id
+            row = db.execute("""SELECT r.*,c.snapshot,c.brief,a.proposal,a.research,i.idea_id AS selected_idea_id
+                            FROM runs r JOIN cases c ON r.case_id=c.id
+                            LEFT JOIN idea_cases i ON i.case_id=c.id
                             LEFT JOIN run_alternatives a ON r.editorial_origin=a.run_id
                             WHERE r.status='queued' ORDER BY r.created,r.rowid LIMIT 1""").fetchone()
             if not row:
@@ -696,6 +736,7 @@ class Ledger:
             snap = json.loads(row["snapshot"])
             if row["production_mode"] == DIRECTED_FILM:
                 snap["productionMode"] = DIRECTED_FILM
+                snap["selectedVideoIdea"] = bool(row["selected_idea_id"] and not row["proposal"])
             langs = json.loads(row["langs"])
             plan = json.loads(row["plan"]) if row["plan"] else None
             adapt_edit = (plan and plan.get("productionMode") == DIRECTED_FILM and "en" in langs

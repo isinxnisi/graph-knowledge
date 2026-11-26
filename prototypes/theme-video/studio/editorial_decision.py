@@ -3,8 +3,10 @@ import json
 
 from editor import DIRECTED_FILM, _call_writer, _draft_input, _object, _save_json, _text, _visual_materials, _visual_snapshot, _writer_request
 from writer_feedback import request_digest
+from idea_store import film_commission
 
 
+DIRECTED_DECISION_VERSION = "plunode-video-editorial-decision-4"
 _INSTRUCTIONS = """Plunode制作室の編集者として、採用した企画（angle）と資料調査の残件を読み、
 映像の入口から見終えた後の発見まで、視聴者への約束と、そのために考案された個々の手段を見分けてください。
 needとresearchRemainingは前工程が求めたものです。それが企画自体に本当に必要か、自分で検討します。
@@ -73,6 +75,8 @@ def assess(materials, brief, model, effort, folder, need, remaining, progress, l
     payload = _draft_input(materials if directed else _visual_snapshot(materials, folder), brief)
     if not directed:
         _visual_materials(materials, brief, language, payload)
+    else:
+        payload["commission"] = film_commission(payload.pop("angle"), from_idea=materials.get("selectedVideoIdea"))
     payload.update(need=need, researchRemaining=remaining)
     boards = ("assetsのsourceで画面に置けるのは短い見出しと資料名です。任意の図解や人物画、クレジットの再現を約束しません。\n"
               "それ以外の絵はillustrationsとboardMaterialsにある具体的な描写を読み、視聴者に届く音・絵を組み立てます。")
@@ -87,12 +91,19 @@ def assess(materials, brief, model, effort, folder, need, remaining, progress, l
         instructions += ("\n使える絵にはexchangeBoardに示す二者間の交換もあります。資料名を映して解説を読み上げるだけで、"
                          "映像の見せ場が用意できたとは判断しません。文字を読む企画なら何を見比べて意味が変わるかを、"
                          "画面でたどれる構成を考えます。不可欠な作画を現時点で用意できなければ、その残件を伝えます。")
-    request = _writer_request(model, effort, "plunode-video-editorial-decision-3", instructions, payload, _REPORT_SCHEMA)
+    if directed:
+        instructions += ("\ncommission.modeがthemeなら、operatorRequestの範囲内で元のテーマから成立する中心を選び直せます。"
+                         "selectedIdeaで守るのは観客に届く中心の発見とoperatorRequestです。冒頭の仮案possibleOpening、"
+                         "possibleMaterialsや配役・カメラ・作画方法の候補は元案の必須条件にしません。"
+                         "原資料と番組作例の違いを保ち、元の発見が同じなら入口や見せる物を変えるのもreviseです。"
+                         "実際の画面を確かめること自体が依頼の場合は作例への置換で満たしたと判断しません。")
+    version = DIRECTED_DECISION_VERSION if directed else "plunode-video-editorial-decision-3"
+    request = _writer_request(model, effort, version, instructions, payload, _REPORT_SCHEMA)
     digest = request_digest(request)
     path = folder / "editorial-decision.json"
     record = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
     cached = record.get("inputSha256") == digest
-    if record.get("instructionVersion") == "plunode-video-editorial-decision-2":
+    if not directed and record.get("instructionVersion") == "plunode-video-editorial-decision-2":
         # A reporting-only change should not replace a saved proposal or restart the original draft.
         previous = _writer_request(model, effort, record["instructionVersion"], base, payload, _SCHEMA)
         cached = record.get("inputSha256") == request_digest(previous)
@@ -106,6 +117,8 @@ def assess(materials, brief, model, effort, folder, need, remaining, progress, l
         record = {"inputSha256": digest, "instructionVersion": request["instructionVersion"],
                   "model": model, "effort": effort, "need": need, "researchRemaining": remaining,
                   "decision": _decision(raw, materials), "usage": usage}
+        if directed:
+            record["reviewedResearchIds"] = materials.get("productionResearch", {}).get("sourceIds", [])
         _save_json(path, record)
     alternative = record["decision"]["alternative"]
     if alternative:

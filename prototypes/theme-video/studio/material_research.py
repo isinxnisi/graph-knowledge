@@ -7,15 +7,16 @@ import shutil
 import subprocess
 
 from editor import _call_writer, _draft_input, _object, _run, _writer_request
+from idea_store import film_commission
 from pdf_material import windows_pdf_library
 from wipe_board import DESCRIPTION as WIPE_PICTURE
 
 _STUDIO = Path(__file__).resolve().parent
 _ROOT = _STUDIO.parents[2]
-_VERSION = "plunode-video-material-research-2"
+_VERSION = "plunode-video-material-research-3"
 _SEARCH = """あなたはPlunode映像制作室の調査担当です。needの何が分かれば制作を再開できるかを特定し、
 ウェブ検索を実行し、公開されている原資料の本文を開いてください。すでにある根拠とpreviousの調査を踏まえ、
-選ばれた案の導入と観終わった後の発見を優先します。調査中に出た逸話は、この案に必要な場合だけ扱い、
+運営者の明示条件と観終わった後の発見に沿って、今回のneedで特定された主張を確かめます。調査中に出た逸話は、この案に必要な場合だけ扱い、
 別企画に広げないでください。作品の実際の場面と、技法を伝える番組の作例を区別してください。
 以前の候補がすべて照合できなかった場合は、引用不一致や形式などの理由を次の探索に生かしてください。
 sourceLeadsは優先して確認する公開URLの手がかりです。内容は未照合なので、原資料を開き、今回の問いに合う引用を確かめてください。
@@ -30,7 +31,7 @@ HTML、プレーンテキスト、文字を抽出できる2 MB以内の公開PDF
 スキャン等が原本なら、公開機関の同内容のHTMLも探し、
 原本でしか確かめられない点や、対応する画像・利用条件が未確認のときはremainingに記してください。
 根拠のない候補は返さず、必要な資料が見つからないときはsourcesを空にして、未確認の点を日本語で返します。"""
-_REVIEW = """あなたは映像の資料編集者です。検証済み候補の原文と前後の本文を読み、選ばれた案の導入と発見に照らしてneedがどこまで解消したかを判断します。
+_REVIEW = """あなたは映像の資料編集者です。検証済み候補の原文と前後の本文を読み、企画の発見と運営者の明示条件に照らしてneedがどこまで解消したかを判断します。
 quoteは掲載本文との一致を確認した原文です。候補の題名や掲載位置は調査担当の報告です。原文と前後の文脈、
 著者の立場・時点と版に照らし、実際に支えられる箇所に限定してください。
 候補のproposedUseは調査担当の提案です。引用本文で確かめ直し、採用する候補のindexと脚本に渡す日本語のnoteを返してください。
@@ -41,7 +42,7 @@ quoteは掲載本文との一致を確認した原文です。候補の題名や
 写真・実物・音声・模式図の取得や利用条件、実際に描けることは、文献による事実の裏付けとは別々に判断してください。
 この調査は動画素材ファイルを取得しません。availableIllustrationは制作側で用意済みの自作例です。脚本ではその動きをそのまま使えます。
 実際の映画の場面を示すときは場面の確認が、映画の素材を使うときは利用条件の確認がそれぞれ必要です。
-remainingは、その導入と発見を成立させるため、脚本に進む前になお調べる必要がある点です。用意済みの作例を描画する作業や、
+remainingは、今回の作品に不可欠な主張のうち、なお根拠が必要な点です。別の撮り方なら必要になる詳細、用意済みの作例を描画する作業や、
 使わない映像の利用条件を残件に数えません。省ける細部や語り方で守れる限界はnoteに残し、必要な調査が済んだ場合はremainingを空にします。"""
 _STRING = {"type": "string"}
 _CANDIDATE = _object(dict.fromkeys(("title", "url", "locator", "excerpt", "note"), _STRING))
@@ -83,6 +84,7 @@ def research_material(snapshot, brief, issue, model, effort, previous, progress=
         progress("不足している資料を公開原典から調査中")
     production = _draft_input(snapshot, brief)
     if snapshot.get("productionMode") == "directed-film-v1":
+        production["commission"] = film_commission(production.pop("angle"), from_idea=snapshot.get("selectedVideoIdea"))
         production["availableVisuals"] = "番組による原画、模式図、動き、効果音を制作できます。資料には事実や見立ての裏付け、または画面に原物が必要な場合の使用条件を求めます。"
     for card, source in zip(production["sources"], snapshot["sources"]):
         if source.get("url"):
@@ -126,7 +128,8 @@ def research_material(snapshot, brief, issue, model, effort, previous, progress=
                  "quote": s["excerpt"], "context": context, "proposedUse": s["note"]} for i, (s, context) in enumerate(verified)]
     judgment = _object({"index": {"type": "integer", "enum": list(range(len(excerpts)))}, "note": _STRING})
     schema = _object({"supported": {"type": "array", "items": judgment}, "remaining": _STRING})
-    data = {"theme": snapshot["title"], "brief": brief, "need": issue, "candidates": excerpts,
+    scope = {"commission": production["commission"]} if "commission" in production else {"brief": brief}
+    data = {"theme": snapshot["title"], **scope, "need": issue, "candidates": excerpts,
             "searchRemaining": remaining, "unverified": rejected}
     if "exchangeBoard" in production:
         data["exchangeBoard"] = production["exchangeBoard"]

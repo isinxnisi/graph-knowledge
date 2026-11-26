@@ -11,6 +11,7 @@ from authored_media import SOUND_GUIDE, prepare_scene, sound_layers_schema, vali
 from editor import VIDEO_EVIDENCE, MaterialRequired, _call_writer, _draft_input, _object, _save_json, _text, _writer_request
 from film_labels import LABEL_GUIDE, labels_schema, validate_labels
 from film_vision import style_reference, view_cut
+from idea_store import film_commission
 from speech_reading import validate_readings
 from writer_feedback import RevisionNeeded, request_digest, validated_output
 
@@ -25,6 +26,22 @@ SIGNALS = ("travel", "moving-edge", "shape", "appearance", "framing", "arrangeme
 SIGNAL_GUIDE = """観察の種類は、物の位置・向きが変わるtravel、二つの領域を分ける境目が場所を移すmoving-edge、
 輪郭や形が変わるshape、色や濃さ・透明度が変わるappearance、画角や視点が変わるframing、
 静止した物の配置・重なりで分かるarrangement、そのほかの目に見える特徴otherです。"""
+
+COMMISSION = """commission.modeがthemeなら、テーマの記録の中から映像として面白い発見と範囲を自分で選ぶ。
+selectedIdeaならintendedDiscoveryのうち何に視聴者が気づくのかを受け継ぐ。
+possibleOpeningは仮の画と音、possibleMaterialsはその演出を使う場合の手がかり。元案を作った人の調査メモである。
+発見欄に混じる具体的な再現や人物評も資料に照らす。根拠のある別の見せ方で同じ発見が届くなら演出を選び直す。
+operatorRequestは運営者自身の指示。実物で比較すること自体が指定された企画では、作例を実物と同一視しない。
+史実や具体的な見た目を想像で補わず、必要な場合は作例の境界が見えるようにする。
+materialRequestは、こうした判断を経ても中心の主張や明示条件に不可欠な未知の事実が残るときに使う。"""
+
+GAP_EDIT = """この演出稿で求められた追加資料が、観客が受け取る発見に本当に必要かを独立に編集判断する。
+candidateには、資料を求めながら描かれた初稿があれば入っている。台詞・見せ場・原資料を突き合わせ、
+未確認の発言の帰属、実物と作例、因果などを検証する。根拠がある良い場面を生かし、必要な箇所を修正する。
+前稿作者の要望だけで外部調査を開始しない。中心の発見が移る別企画・体験が薄まる妥協は元案の修正に含めない。
+outcomeがproduceなら、どの出典で何が言え、何を編集したかreasonに書き、完成した演出稿をdirectionへ。
+direction.materialRequestとessentialFactは空にする。出典・作例の区別、語りの入りと間、見せ場の実画審査まで通常通り受ける。
+researchならdirectionはnull。essentialFactに調べる事実を絞り、reasonにそれなしでは何を体験できないかを書く。"""
 
 DIRECT = """Plunodeの日本語の一本を任された演出家です。視聴者は題材に初めて出会います。
 採用案で約束した発見と運営者自身の明示条件を読み取り、仮の演出案・仮題・場面順は画と音のために編集してください。
@@ -152,7 +169,9 @@ def require_evidence(shots):
 
 
 def check_direction(raw, ids):
-    material(raw)
+    need = _text(raw.get("materialRequest"), 5000, "追加調査", allow_empty=True)
+    if need:
+        raise DirectionGap(raw, need)
     rows = raw.get("scenes")
     if not isinstance(rows, list) or not 1 <= len(rows) <= 48 or any(not isinstance(s, dict) for s in rows):
         raise ValueError("一本分の場面を1〜48場面で指定してください。")
@@ -176,6 +195,59 @@ def check_direction(raw, ids):
             "scenes": shots}
 
 
+class DirectionGap(MaterialRequired):
+    def __init__(self, draft, need):
+        super().__init__("追加資料が必要です。" + need)
+        self.draft = draft
+
+
+def recorded_gap(records, facts, model, effort, reference):
+    """Bring back an interrupted draft from this exact source/brief/model context for review."""
+    image_hash = hashlib.sha256(reference.read_bytes()).hexdigest() if reference else None
+    for path in sorted(records.glob("direction-*.json"), key=lambda p: p.stat().st_mtime_ns, reverse=True):
+        entry = json.loads(path.read_text(encoding="utf-8"))
+        request = entry.get("request", {})
+        draft = entry.get("result")
+        if (entry.get("status") != "failed" or not isinstance(draft, dict) or not draft.get("materialRequest")
+                or (request.get("model"), request.get("effort")) != (model, effort)
+                or entry.get("inputSha256") != request_digest(request)):
+            continue
+        try:
+            inputs = json.loads(request["prompt"].rsplit("\n\n", 1)[1])
+        except (KeyError, IndexError, ValueError):
+            continue
+        if "angle" in inputs:
+            inputs["commission"] = film_commission(inputs.pop("angle"), from_idea=facts["commission"]["mode"] == "selectedIdea")
+        # A validation-feedback request can contain its previous answer alongside these same inputs.
+        if inputs.get("imageSha256") == image_hash and all(inputs.get(k) == value for k, value in facts.items()):
+            if all(key in facts or key not in inputs for key in ("previousJapanese", "editorialDirection", "productionResearch")):
+                return draft
+    return None
+
+
+def check_gap_decision(raw, ids):
+    reason = _text(raw.get("reason"), 1800, "追加調査が必要かの編集判断")
+    fact = _text(raw.get("essentialFact"), 2000, "不可欠な確認事項", allow_empty=True)
+    direction = raw.get("direction")
+    if raw.get("outcome") == "research" and fact and direction is None:
+        return None, fact + "　元案への影響：" + reason
+    if raw.get("outcome") != "produce" or fact or not isinstance(direction, dict) or direction.get("materialRequest"):
+        raise ValueError("編集判断に合わせて、出典に照らして修正した演出稿か、不可欠な確認事項のどちらかを返してください。")
+    return check_direction(direction, ids), ""
+
+
+def review_candidate(raw):
+    result = {k: raw.get(k) for k in ("title", "style", "story", "visualBeat", "materialRequest")}
+    result["scenes"] = []
+    shots = raw.get("scenes")
+    for shot in (shots[:48] if isinstance(shots, list) else []):
+        if isinstance(shot, dict):
+            row = {k: shot.get(k) for k in ("medium", "sourceIds", "heading", "narration", "labels")}
+            row["picture"] = str(shot.get("picture") or "")[:1200]
+            result["scenes"].append(row)
+    return result
+
+
 def check_observations(raw, ids, focus_id=None):
     rows = raw.get("observations")
     if not isinstance(rows, list) or any(not isinstance(s, dict) for s in rows) or [s.get("sceneId") for s in rows] != ids:
@@ -192,6 +264,8 @@ def check_observations(raw, ids, focus_id=None):
 
 
 def check_review(raw, ids, beat, signals):
+    if raw.get("materialRequest") and raw.get("repairs"):
+        raise ValueError("修正案で発見を保てるならmaterialRequestを空にして該当場面を改稿してください。修正しても核心に不可欠な資料がない場合は、その事実と観客への影響を記し、repairsを空にしてください。")
     material(raw)
     rows = raw.get("repairs")
     if not isinstance(rows, list) or any(not isinstance(r, dict) or r.get("sceneId") not in ids for r in rows):
@@ -304,6 +378,7 @@ def direct_film(snapshot, brief, model_id, effort, work_dir, progress=None, prev
         return value, final_req, cached
 
     facts = _draft_input(snapshot, brief)
+    facts["commission"] = film_commission(facts.pop("angle"), from_idea=snapshot.get("selectedVideoIdea"))
     facts.pop("exchangeBoard", None)
     if snapshot.get("productionResearch"):
         facts["productionResearch"] = snapshot["productionResearch"]
@@ -315,7 +390,7 @@ def direct_film(snapshot, brief, model_id, effort, work_dir, progress=None, prev
                                              "witness": STRING, "sampleAt": array(NUMBER)}),
                       "scenes": array(shot_schema(ids))})
     previous_cut = None
-    direction_prompt = DIRECT + "\n" + SOUND_GUIDE + "\n" + LABEL_GUIDE
+    direction_prompt = DIRECT + "\n" + COMMISSION + "\n" + SOUND_GUIDE + "\n" + LABEL_GUIDE
     if previous_japanese:
         direction_prompt += ("\n今回は元版の見直しです。previousJapanese.reviewsで運営者が実際に作品から"
                              "受け取った印象と直したい点を読み、届いたところを生かし、指摘の該当箇所を改善してください。")
@@ -325,8 +400,22 @@ def direct_film(snapshot, brief, model_id, effort, work_dir, progress=None, prev
             if original.is_file():
                 previous_cut = original
                 direction_prompt += " 添付は元版の完成映像から抽出した実画です。"
-    plan, req, _ = stage("direction", "原資料から演出・画・語りを構成中", direction_prompt, facts, schema,
-                         lambda raw: check_direction(raw, ids), previous_cut)
+    candidate = recorded_gap(records, facts, model_id, effort, previous_cut)
+    if candidate is None:
+        try:
+            plan, req, _ = stage("direction", "原資料から演出・画・語りを構成中", direction_prompt, facts, schema,
+                                 lambda raw: check_direction(raw, ids), previous_cut)
+        except DirectionGap as exc:
+            candidate = exc.draft
+    if candidate is not None:
+        decision_schema = _object({"outcome": choice(("produce", "research")), "reason": STRING,
+                                   "essentialFact": STRING, "direction": {"anyOf": [schema, {"type": "null"}]}})
+        (plan, need), req, _ = stage(
+            "direction-material", "現在の原資料と保存稿で同じ発見を見せられるかを編集判断中",
+            direction_prompt + "\n" + GAP_EDIT, {**facts, "candidate": review_candidate(candidate)},
+            decision_schema, lambda raw: check_gap_decision(raw, ids), previous_cut)
+        if need:
+            raise MaterialRequired("追加資料が必要です。" + need)
     direction_hash = _save_json(folder / "editor-input.json", req)
     scenes = plan["scenes"]
     scene_ids = [s["id"] for s in scenes]
@@ -402,7 +491,7 @@ def direct_film(snapshot, brief, model_id, effort, work_dir, progress=None, prev
 
         directions = [{k: v for k, v in s.items() if k != "art"} for s in scenes]
         used = {sid for s in scenes for sid in s["sourceIds"]}
-        review_inputs = {"pass": len(history) + 1, "brief": brief, "story": plan["story"], "visualBeat": beat,
+        review_inputs = {"pass": len(history) + 1, "commission": facts["commission"], "story": plan["story"], "visualBeat": beat,
                          "cut": directions, "viewer": seen,
                          **evidence_for(facts, used)}
         signals = seen[focus_index]["focusSignals"]
@@ -410,7 +499,7 @@ def direct_film(snapshot, brief, model_id, effort, work_dir, progress=None, prev
             "result": choice(("clear", "missing", "unreadable")), "basis": STRING, "observation": {"type": "integer"}}), "repairs": array(_object({
             "sceneId": choice(scene_ids), "target": choice(("picture", "edit")), "reason": STRING}))})
         review, _, cached = stage("edit-review", "見せ場の実画・初見の観察・語りを照合中",
-                                  DECIDE + "\n" + SIGNAL_GUIDE + "\n" + VIDEO_EVIDENCE, review_inputs, review_schema,
+                                  DECIDE + "\n" + COMMISSION + "\n" + SIGNAL_GUIDE + "\n" + VIDEO_EVIDENCE, review_inputs, review_schema,
                                   lambda raw: check_review(raw, scene_ids, beat, signals), pages[focus_index // 4])
         repairs = review["repairs"]
         if not repairs:
@@ -435,7 +524,7 @@ def direct_film(snapshot, brief, model_id, effort, work_dir, progress=None, prev
                             "作品の発見を保ちます。targetがpictureなら作画者が描き直せる形・動きをpictureに"
                             "明記してください。targetがeditなら原画を再利用し、表記・台詞・間・音を編集します。"
                             "既に観客に届いている箇所と指摘に関係しないlabelsを保ち、絵で見せる約束を台詞の削除で取り下げないでください。")
-            update = {"request": brief, "story": plan["story"], "currentScene": directions[index],
+            update = {"commission": facts["commission"], "story": plan["story"], "currentScene": directions[index],
                       "viewer": seen[index], "repair": repair["reason"], "target": repair["target"], "pass": len(history),
                       "sceneNumber": index + 1, **evidence_for(facts, used)}
             if old["id"] == beat["sceneId"]:
