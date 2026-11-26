@@ -26,31 +26,26 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-26T08:13:11.864883+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-26T07:18:35.420783+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-26T08:13:11.864883+00:00",
+    "eligibleAt": "2026-11-26T07:18:35.420783+00:00",
     "windowEndAt": "2026-11-26T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-69-dot-ishinomori-three-20261029",
-    "startedAt": "2026-11-26T07:08:11.864885+00:00",
-    "limitAt": "2026-11-26T08:03:11.864883+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-utc-recovery-09",
-    "endedAt": "2026-11-26T06:56:36.407238+00:00"
+    "requestId": "issue-69-dot-ishinomori-three-20261029",
+    "endedAt": "2026-11-26T07:08:35.420785+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 8,
     "waiting-control": 17,
     "completed": 32,
-    "awaiting-recovery": 4,
-    "running": 1
+    "awaiting-recovery": 5
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -197,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-11-26T07:08:22.128698+00:00"
+  "checkedAt": "2026-11-26T07:09:01.102272+00:00"
 }
