@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-26T07:51:14.300550+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-26T06:56:24.614865+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-26T07:51:14.300550+00:00",
+    "eligibleAt": "2026-11-26T06:56:24.614865+00:00",
     "windowEndAt": "2026-11-26T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-68-dot-fujikoa-two-20261029",
-    "startedAt": "2026-11-26T06:46:14.300553+00:00",
-    "limitAt": "2026-11-26T07:41:14.300550+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-57-dot-oshima-two-20261028-batch-01",
-    "endedAt": "2026-11-26T06:35:55.065368+00:00"
+    "requestId": "issue-68-dot-fujikoa-two-20261029",
+    "endedAt": "2026-11-26T06:46:24.614866+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 8,
-    "waiting-control": 20,
-    "completed": 30,
+    "waiting-control": 19,
+    "completed": 31,
     "awaiting-recovery": 4
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-26T06:46:15.585726+00:00"
+  "checkedAt": "2026-11-26T06:46:52.510892+00:00"
 }
