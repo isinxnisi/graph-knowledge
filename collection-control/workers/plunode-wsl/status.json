@@ -26,8 +26,8 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-26T03:20:00+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-26T02:51:15.672951+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
@@ -35,20 +35,16 @@
     "eligibleAt": "2026-11-26T06:00:00+00:00",
     "windowEndAt": "2026-11-26T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-64-dot-oda-onepiece-20261029",
-    "startedAt": "2026-11-26T02:41:06.126509+00:00",
-    "limitAt": "2026-11-26T03:10:00+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-56-dot-urushibara-two-20261028-batch-01",
-    "endedAt": "2026-11-26T02:29:46.461090+00:00"
+    "requestId": "issue-64-dot-oda-onepiece-20261029",
+    "endedAt": "2026-11-26T02:41:15.672954+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 8,
-    "waiting-control": 23,
-    "completed": 27,
+    "waiting-control": 22,
+    "completed": 28,
     "awaiting-recovery": 4
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-26T02:41:07.364500+00:00"
+  "checkedAt": "2026-11-26T02:41:43.985223+00:00"
 }
