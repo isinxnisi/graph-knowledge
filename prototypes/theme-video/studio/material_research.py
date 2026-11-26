@@ -82,6 +82,8 @@ def research_material(snapshot, brief, issue, model, effort, previous, progress=
     if progress:
         progress("不足している資料を公開原典から調査中")
     production = _draft_input(snapshot, brief)
+    if snapshot.get("productionMode") == "directed-film-v1":
+        production["availableVisuals"] = "番組による原画、模式図、動き、効果音を制作できます。資料には事実や見立ての裏付け、または画面に原物が必要な場合の使用条件を求めます。"
     for card, source in zip(production["sources"], snapshot["sources"]):
         if source.get("url"):
             card["url"] = source["url"]

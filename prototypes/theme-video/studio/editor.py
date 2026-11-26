@@ -15,6 +15,7 @@ from urllib.parse import urlencode, urlsplit
 from urllib.request import Request, urlopen
 
 from speech_reading import validate_readings
+from film_labels import translated_labels
 from wipe_board import ASSET as WIPE_DEMO, DESCRIPTION as WIPE_PICTURE
 
 
@@ -23,7 +24,8 @@ WEBB_ID = "theme:915ba2bce69de60302801bf691e77ff06beb6a43cb56c0d1"
 INSTRUCTIONS_VERSION = "plunode-video-editor-6"
 JAPANESE_VERSION = "plunode-video-ja-7"
 ADAPTATION_VERSION = "plunode-video-en-adaptation-3"
-IDEAS_VERSION = "plunode-video-ideas-3"
+IDEAS_VERSION = "plunode-video-ideas-4"
+DIRECTED_FILM = "directed-film-v1"
 EXCHANGE_LABELS = ("left", "right", "toRight", "toLeft")
 EXCHANGE_BOARD = (
     "exchangeは二者の交換を描く番組の作図です。左右の手に当事者名、二枚の紙片にそれぞれが渡すものを記します。"
@@ -489,6 +491,11 @@ def _adaptation_request(master, snapshot, brief):
                 "heading": scene["ja"]["heading"], "narration": scene["ja"]["narration"]}
         if "sourceBackground" in scene:
             shot["sourceBackground"] = scene["sourceBackground"]
+        if scene["asset"] == "authored":
+            shot["picture"] = scene.get("picture", "")
+            shot["silentSeconds"] = scene["silentSeconds"]
+            if scene.get("labels"):
+                shot["labels"] = [label["ja"] for label in scene["labels"]]
         if scene["asset"] == "exchange":
             shot["exchange"] = {key: scene["exchange"][key]["ja"] for key in EXCHANGE_LABELS}
         scenes.append(shot)
@@ -502,6 +509,8 @@ def _adaptation_request(master, snapshot, brief):
     fields = {"id": {"type": "string", "enum": scene_ids}, "heading": string, "narration": string}
     if any("exchange" in scene for scene in scenes):
         fields["exchange"] = {"anyOf": [_object(dict.fromkeys(EXCHANGE_LABELS, string)), {"type": "null"}]}
+    if any("labels" in scene for scene in scenes):
+        fields["labels"] = {"type": "array", "items": _object({"ja": string, "en": string})}
     line = _object(fields)
     schema = _object({"title": string, "scenes": {"type": "array", "items": line}})
     return payload, schema
@@ -516,14 +525,21 @@ def _apply_adaptation(draft, master):
     plan["titles"]["en"] = _text(draft.get("title"), 160, "英語の題名")
     for i, (scene, line) in enumerate(zip(plan["scenes"], lines), 1):
         source_card = scene["asset"] == "source"
+        authored = scene["asset"] == "authored"
         heading = _text(line.get("heading"), 110, f"場面{i}の英語の見出し",
-                        allow_empty=source_card or scene["asset"] in ("exchange", WIPE_DEMO) or scene["asset"] in WEBB_BOARDS)
+                        allow_empty=authored or source_card or scene["asset"] in ("exchange", WIPE_DEMO) or scene["asset"] in WEBB_BOARDS)
+        if authored and bool(heading) != bool(scene["ja"]["heading"]):
+            raise ValueError(f"場面{i}の見出しの有無を元の原画に合わせてください。")
         if source_card and bool(heading) != bool(scene["ja"]["heading"]):
             raise ValueError(f"場面{scene['id']}の出典の見出しを載せるか、元の日本語版に合わせてください。")
-        narration = _text(line.get("narration"), 450, f"場面{i}の英語のナレーション")
-        if not re.search(r"[A-Za-z]{2,}", narration) or narration == scene["ja"]["narration"]:
+        silent = authored and not scene["ja"]["narration"]
+        narration = _text(line.get("narration"), 450, f"場面{i}の英語のナレーション", allow_empty=silent)
+        if ((silent and narration) or (not silent and
+                (not re.search(r"[A-Za-z]{2,}", narration) or narration == scene["ja"]["narration"]))):
             raise ValueError(f"場面{scene['id']}の英語ナレーションを確認できません。")
         scene["en"] = {"heading": heading, "narration": narration}
+        if scene.get("labels") or "labels" in line:
+            scene["labels"] = translated_labels(scene.get("labels", []), line.get("labels"))
         exchange = line.get("exchange")
         if scene["asset"] == "exchange":
             if heading or not isinstance(exchange, dict) or set(exchange) != set(EXCHANGE_LABELS):
@@ -546,7 +562,8 @@ titleは選びやすい短い仮題です。各欄は一、二文で、titleは1
 案の数は決まっていません。一案で十分な場合もあります。候補同士とexistingIdeasの保存済み企画を照らし合わせ、
 同じ題材でも視聴体験が異なる企画を残します。言い換えや同じ内容の再提案を避け、新しい提案がなければideasを空配列にします。
 sourceIdsにはこのテーマ版で案を支えるsourcesのIDだけを挙げます。出典があることと、使える映像があることは別です。
-素材は資料名の出典カード、exchangeBoardで描ける二者間の交換、boardMaterialsにある専用の図や写真です。
+制作では題材固有の原画を描き、物や人物の動き、無言で見つける時間、効果音を作れます。
+openingは演出の一案です。選ばれた後も、同じ発見を届ける構図や語りの順序を監督が考え直せるようにします。
 取引や受け渡しの両方向を資料が支える場合は、双方の手元を見比べて何に気づけるかも考えます。
 資料名を表示して内容を読み上げるだけで、見せ場の準備ができたことにはなりません。文字が主役なら、どの文字を観客がどう見比べるかを考えます。
 その体験に専用の絵が必要なら、探す絵・描き起こす動作をneedsに残してください。
@@ -609,8 +626,15 @@ def generate_plan(snapshot, brief, model_id, work_dir, *, language="both", maste
     work_dir = Path(work_dir)
     work_dir.mkdir(parents=True, exist_ok=True)
     if language != "en":
-        snapshot = _visual_snapshot(snapshot, work_dir, start=True)
+        if snapshot.get("productionMode") != DIRECTED_FILM:
+            snapshot = _visual_snapshot(snapshot, work_dir, start=True)
     def write(materials):
+        if language != "en" and snapshot.get("productionMode") == DIRECTED_FILM:
+            from film_direction import direct_film
+            master = direct_film(materials, brief, model_id, effort, work_dir, progress, previous_japanese)
+            if language == "both":
+                return _write_plan(materials, brief, model_id, effort, work_dir, "en", master, progress, None)
+            return master
         return _write_plan(materials, brief, model_id, effort, work_dir, language, master_plan, progress, previous_japanese)
     if language == "en":
         return write(snapshot)
@@ -666,6 +690,14 @@ def _write_plan(snapshot, brief, model_id, effort, work_dir, language, master_pl
     if language == "en":
         payload, schema = _adaptation_request(master_plan, snapshot, brief)
         instructions, version = _ADAPTATION_PROMPT, ADAPTATION_VERSION
+        if master_plan.get("productionMode") == DIRECTED_FILM:
+            instructions += ("\nKeep the artwork, timing of silent action and its place in the cut. "
+                             "A silent Japanese shot has empty English narration. Preserve empty headings. "
+                             "Translate any visible heading and consider the picture before writing the voice.")
+        if any("labels" in scene for scene in payload["scenes"]):
+            instructions += ("\nFor each printed label, copy its Japanese text into ja and put the short English "
+                             "wording in en in the same order. Retain names and historically meaningful wording. "
+                             "Return an empty list in shots without printed labels.")
         if any("exchange" in scene for scene in payload["scenes"]):
             instructions += ("\nTranslate the four visible exchange labels in their original positions. "
                              "Keep each within 36 characters. Keep the heading empty and use null for "
@@ -725,7 +757,7 @@ def _save_json(path, value):
     return hashlib.sha256(data).hexdigest()
 
 
-def _call_writer(request, *, research=False):
+def _call_writer(request, *, research=False, image_path=None):
     model_id, effort = request["model"], request["effort"]
     schema, prompt = request["outputSchema"], request["prompt"]
     with tempfile.TemporaryDirectory(prefix="plunode-editor-") as fresh:
@@ -739,6 +771,8 @@ def _call_writer(request, *, research=False):
         for feature in ("shell_tool", "unified_exec", "code_mode", "multi_agent", "multi_agent_v2", "plugins",
                         "apps", "hooks", "image_generation", "view_image", "shell_snapshot"):
             args.extend(["--disable", feature])
+        if image_path is not None:
+            args.extend(["--image", str(Path(image_path).resolve(strict=True))])
         try:
             result = _run(args + ["-"], cwd=folder, input=prompt, timeout=1200 if effort in ("xhigh", "max", "ultra") else 420)
         except subprocess.TimeoutExpired as exc:

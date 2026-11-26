@@ -82,7 +82,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def file(self, path):
         size = path.stat().st_size
-        mime = "video/mp4" if path.suffix == ".mp4" else "application/x-subrip; charset=utf-8"
+        mime = {".mp4": "video/mp4", ".jpg": "image/jpeg", ".png": "image/png",
+                ".srt": "application/x-subrip; charset=utf-8"}[path.suffix]
         start, end, partial = 0, size - 1, self.headers.get("Range")
         if partial:
             match = re.fullmatch(r"bytes=(\d*)-(\d*)", partial.strip())
@@ -129,6 +130,10 @@ class Handler(BaseHTTPRequestHandler):
         if self.command in ("GET", "HEAD"):
             if path == "/samples/baird-opening.ja.mp4":
                 return self.file(ROOT.parent / "baird" / "opening.ja.mp4")
+            if path == "/samples/goddard.ja.mp4":
+                return self.file(ROOT.parent / "goddard-remotion" / "goddard.ja.mp4")
+            if path == "/samples/paper-fish.ja.mp4":
+                return self.file(ROOT / "assets" / "paper-fish.ja.mp4")
             static = {"/": ("index.html", "text/html"), "/studio.css": ("studio.css", "text/css"),
                       "/ideas.js": ("ideas.js", "text/javascript"),
                       "/studio.js": ("studio.js", "text/javascript")}
@@ -155,7 +160,7 @@ class Handler(BaseHTTPRequestHandler):
             match = re.fullmatch(r"/api/cases/([\w-]+)", path)
             if match:
                 return self.respond(200, ledger.case(match[1]))
-            match = re.fullmatch(r"/media/([\w-]+)/([\w-]+)/(ja|en)/(video\.mp4|subtitles\.srt)", path)
+            match = re.fullmatch(r"/media/([\w-]+)/([\w-]+)/(ja|en)/(video\.mp4|subtitles\.srt|contact-sheet\.png|storyboard\.jpg)", path)
             if match:
                 return self.file(ledger.media(*match.groups()))
         else:

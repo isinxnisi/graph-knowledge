@@ -1,7 +1,7 @@
 """Reconsider how to deliver the chosen viewing experience with the evidence in this run."""
 import json
 
-from editor import _call_writer, _draft_input, _object, _save_json, _text, _visual_materials, _visual_snapshot, _writer_request
+from editor import DIRECTED_FILM, _call_writer, _draft_input, _object, _save_json, _text, _visual_materials, _visual_snapshot, _writer_request
 from writer_feedback import request_digest
 
 
@@ -13,8 +13,7 @@ needとresearchRemainingは前工程が求めたものです。それが企画�
 「かもしれない」を付けただけの未確認の具体的な場面・数値・意図・因果は、実例や事実として使えません。
 番組が作る説明例であることを画面・音で伝える方法も考えます。資料を読めたことと、その画像・映像・音声を使えることは別です。
 資料は入力に含まれる範囲を使い、架空の出典や実装されていない絵を利用可能としないでください。
-assetsのsourceで画面に置けるのは短い見出しと資料名です。任意の図解や人物画、クレジットの再現を約束しません。
-それ以外の絵はillustrationsとboardMaterialsにある具体的な描写を読み、視聴者に届く音・絵を組み立てます。
+{visuals}
 次のうち一つを選びます。特定の結論を優先する決まりはありません。
 revise: 元の導入での体験・中心の問い・最後の発見・明示された条件を満たせる場合。
 directionに、実際に何を見聞きして何を発見するか、使う資料と残る限界、変更する演出を具体的に書きます。
@@ -70,10 +69,20 @@ def _decision(raw, materials):
 
 def assess(materials, brief, model, effort, folder, need, remaining, progress, language, *, cached_only=False):
     """Return the recorded decision and whether this exact request had already been assessed."""
-    payload = _draft_input(_visual_snapshot(materials, folder), brief)
-    _visual_materials(materials, brief, language, payload)
+    directed = materials.get("productionMode") == DIRECTED_FILM
+    payload = _draft_input(materials if directed else _visual_snapshot(materials, folder), brief)
+    if not directed:
+        _visual_materials(materials, brief, language, payload)
     payload.update(need=need, researchRemaining=remaining)
-    instructions = _INSTRUCTIONS + "\n" + _STOP_REPORT
+    boards = ("assetsのsourceで画面に置けるのは短い見出しと資料名です。任意の図解や人物画、クレジットの再現を約束しません。\n"
+              "それ以外の絵はillustrationsとboardMaterialsにある具体的な描写を読み、視聴者に届く音・絵を組み立てます。")
+    visuals = boards
+    if directed:
+        payload["assets"] = ["authored"]
+        visuals = ("題材に合わせた独自の人物画・模式図・動きを描いて撮影でき、無言や効果音で見せられます。"
+                   "原画は番組の表現です。史料そのものが必要な主張は、原画を史料に見立てず根拠を確認します。")
+    base = _INSTRUCTIONS.replace("{visuals}", visuals)
+    instructions = base + "\n" + _STOP_REPORT
     if "exchangeBoard" in payload:
         instructions += ("\n使える絵にはexchangeBoardに示す二者間の交換もあります。資料名を映して解説を読み上げるだけで、"
                          "映像の見せ場が用意できたとは判断しません。文字を読む企画なら何を見比べて意味が変わるかを、"
@@ -85,7 +94,7 @@ def assess(materials, brief, model, effort, folder, need, remaining, progress, l
     cached = record.get("inputSha256") == digest
     if record.get("instructionVersion") == "plunode-video-editorial-decision-2":
         # A reporting-only change should not replace a saved proposal or restart the original draft.
-        previous = _writer_request(model, effort, record["instructionVersion"], _INSTRUCTIONS, payload, _SCHEMA)
+        previous = _writer_request(model, effort, record["instructionVersion"], base, payload, _SCHEMA)
         cached = record.get("inputSha256") == request_digest(previous)
     if cached_only and not cached:
         return None, False

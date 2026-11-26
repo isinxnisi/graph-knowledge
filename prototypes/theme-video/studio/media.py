@@ -367,6 +367,8 @@ def _credit(plan, lang, used, voice):
     sources = [s for s in plan["sources"] if s["id"] in source_ids]
     # For Webb, image captions carry attribution. The edition's metadata keeps all original URLs.
     rows.extend(((urlsplit(s["url"]).hostname or "Plunode"), s["title"]) for s in sources[:3])
+    if plan.get("productionMode") == "directed-film-v1":
+        rows.append(("作画・効果音", "番組制作") if lang == "ja" else ("Illustration and sound", "Created for this film"))
     rows.append(("ナレーション" if lang == "ja" else "Narration", voice))
     step = min(107, 478//len(rows))
     for i, (name, val) in enumerate(rows):
@@ -447,6 +449,9 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
     """Write video.mp4, subtitles.srt, timings.json and media.json when an edition is complete."""
     if lang not in ("ja", "en") or not plan.get("scenes"):
         raise ValueError("場面を持つ日英の企画が必要です。")
+    if plan.get("productionMode") == "directed-film-v1":
+        from authored_media import render
+        return render(plan, lang, Path(out_dir), progress)
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     voice, engine = _voice(lang)

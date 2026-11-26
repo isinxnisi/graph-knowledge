@@ -116,7 +116,7 @@ def selected(db, idea_id):
 
 
 def production_brief(idea):
-    lines = ["仮題　" + idea["title"], "冒頭　" + idea["opening"], "見終えたときの発見　" + idea["payoff"]]
+    lines = ["仮題　" + idea["title"], "冒頭の演出案　" + idea["opening"], "見終えたときの発見　" + idea["payoff"]]
     if idea["needs"]:
         lines.append("要確認の根拠・素材　" + idea["needs"])
     ids = json.loads(idea["source_ids"])

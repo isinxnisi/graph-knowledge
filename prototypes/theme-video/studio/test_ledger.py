@@ -603,15 +603,17 @@ class LedgerTest(unittest.TestCase):
                                  self.snapshot, self.models)
         self.assertNotEqual(first["id"], other["id"])
         inputs = []
-        def generate(snapshot, brief, model, folder, *, progress):
-            inputs.append(brief)
+        def generate(snapshot, brief, model, folder, *, progress, previous_japanese=None):
+            inputs.append((brief, previous_japanese))
             return self.plan
         self.desk.process_next(generate, self.render)
         self.desk.process_next(generate, self.render)
         self.desk.submit("runs", dict(requestId="3", model="test", parent=first["runId"], reason="星の配置を強調"),
                          self.snapshot, self.models, first["id"])
         self.desk.process_next(generate, self.render)
-        self.assertIn("星の配置を強調", inputs[-1])
+        brief, previous = inputs[-1]
+        self.assertIn("星の配置を強調", brief)
+        self.assertEqual(previous["runId"], first["runId"])
 
 
 if __name__ == "__main__":

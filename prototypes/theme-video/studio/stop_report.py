@@ -108,8 +108,12 @@ def stop_report(run, folder, theme, idea_title, brief):
         reason = reasons.get(run["progress"], "制作が途中で中断しました。")
         next_step = "「再開」で同じ試行の制作を続けられます。"
     elif status == "script_ready" and run["plan"]:
-        reason = "台本が用意できました。映像を生成する前に、内容を確認できる状態です。"
-        next_step = "場面ごとの台詞を確認してください。修正した場合は台本を保存し、使う台本を選んで映像を生成します。"
+        if run["plan"].get("productionMode") == "directed-film-v1":
+            reason = "「台本を先に確認」の指定で、書き出し前に止めています。原画と場面順が揃いました。"
+            next_step = "絵コンテと台本で、何が見え、どこに語りや無言の間が入るか確認できます。この版を選んで映像を生成します。"
+        else:
+            reason = "台本が用意できました。映像を生成する前に、内容を確認できる状態です。"
+            next_step = "場面ごとの台詞を確認してください。修正した場合は台本を保存し、使う台本を選んで映像を生成します。"
     else:
         return None
     plan = run["plan"] or {}

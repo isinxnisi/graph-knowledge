@@ -12,7 +12,7 @@ import uuid
 from urllib.parse import urlencode, urlsplit, urlunsplit
 
 import idea_store
-from editor import MaterialRequired, _save_json
+from editor import DIRECTED_FILM, MaterialRequired, _save_json
 from stop_report import stop_report
 from writer_feedback import RevisionNeeded
 
@@ -199,6 +199,8 @@ class Ledger:
             if "kind" not in {r["name"] for r in db.execute("PRAGMA table_info(reviews)")}:
                 db.execute("ALTER TABLE reviews ADD COLUMN kind TEXT NOT NULL DEFAULT 'adopted'")
             columns = {r["name"] for r in db.execute("PRAGMA table_info(runs)")}
+            if "production_mode" not in columns:
+                db.execute("ALTER TABLE runs ADD COLUMN production_mode TEXT NOT NULL DEFAULT 'boards-v1'")
             if "script_first" not in columns:
                 db.execute("ALTER TABLE runs ADD COLUMN script_first INTEGER NOT NULL DEFAULT 0")
             if "previous_japanese" not in columns:
@@ -309,6 +311,9 @@ class Ledger:
         lang = data.get("lang")
         parent = data.get("parent")
         language = data.get("language", "both")
+        production_mode = data.get("productionMode", DIRECTED_FILM)
+        if production_mode not in (DIRECTED_FILM, "boards-v1"):
+            raise ValueError("制作方式を確認してください。")
         if language not in ("both", *LANGS) or (lang and "language" in data):
             raise ValueError("制作する言語と場面の修正を分けて指定してください。")
         if parent is not None and not isinstance(parent, str):
@@ -374,13 +379,16 @@ class Ledger:
             draft_edit = False
             langs = list(LANGS) if language == "both" else [language]
             if parent:
-                row = db.execute("SELECT plan,model,langs,editions,status,editorial_origin FROM runs WHERE id=? AND case_id=?",
+                row = db.execute("SELECT plan,model,langs,editions,status,editorial_origin,production_mode FROM runs WHERE id=? AND case_id=?",
                                  (parent, case_id)).fetchone()
                 if not row:
                     raise ValueError("元の試行が見つかりません。")
                 editorial_origin = row["editorial_origin"]
+                if lang or language == "en":
+                    production_mode = row["production_mode"]
                 editions = json.loads(row["editions"])
-                if language == "ja" and row["plan"] and "ja" in json.loads(row["langs"]):
+                redirect_japanese = language == "ja" or (language == "both" and production_mode == DIRECTED_FILM and not lang)
+                if redirect_japanese and row["plan"] and "ja" in json.loads(row["langs"]):
                     original = json.loads(row["plan"])
                     comments = db.execute("""SELECT kind,reason,updated FROM reviews
                                             WHERE case_id=? AND run_id=? AND lang='ja' ORDER BY rowid""",
@@ -388,6 +396,10 @@ class Ledger:
                     previous_japanese = {"runId": parent, "title": original["titles"]["ja"],
                                          "narrations": [s["ja"]["narration"] for s in original["scenes"]],
                                          "reviews": [dict(comment) for comment in comments]}
+                    if original.get("productionMode") == DIRECTED_FILM:
+                        previous_japanese["direction"] = [{k: s[k] for k in (
+                            "id", "picture", "medium", "sourceIds", "leadSeconds", "tailSeconds", "silentSeconds", "labels") if k in s}
+                            for s in original["scenes"]]
                 if language == "en":
                     video = self.folder / "cases" / case_id / parent / "ja" / "video.mp4"
                     if not row["plan"] or "ja" not in editions or not video.is_file() or not video.stat().st_size:
@@ -400,11 +412,23 @@ class Ledger:
                     langs = parent_langs if draft_edit else [lang]
                     draft_edit = draft_edit or script_first
                     plan = json.loads(row["plan"])
+                    if plan.get("productionMode") == DIRECTED_FILM:
+                        plan.setdefault("storyboardRunId", parent)
                     scene_id = required(data, "sceneId", 100)
                     scene = next((s for s in plan["scenes"] if s["id"] == scene_id), None)
                     if scene is None:
                         raise ValueError("場面が見つかりません。")
-                    narration = required(data, "narration", 800)
+                    silent = scene.get("asset") == "authored" and not scene[lang]["narration"]
+                    if silent:
+                        if data.get("narration") != "" or lang != "ja":
+                            raise ValueError("無言の場面は日本語版から秒数を編集できます。")
+                        seconds = data.get("silentSeconds", scene["silentSeconds"])
+                        if type(seconds) not in (float, int) or not 1 / 24 <= seconds <= 60:
+                            raise ValueError("無言で見せる秒数を1フレームから60秒の間で指定してください。")
+                        scene["silentSeconds"] = seconds
+                        narration = ""
+                    else:
+                        narration = required(data, "narration", 800)
                     if lang == "ja":
                         from speech_reading import validate_readings
                         if "visualTiming" in data:
@@ -416,19 +440,33 @@ class Ledger:
                                 plan.pop("editorialReview", None)
                         if narration != scene[lang]["narration"]:
                             plan.pop("editorialReview", None)
+                            if plan.get("productionMode") == DIRECTED_FILM and "en" in langs:
+                                # The changed line has no English counterpart until it is adapted.
+                                # Keep other English lines, including any operator edits.
+                                scene.pop("en", None)
+                                adaptation = plan.pop("adaptation", {})
+                                if adaptation.get("masterModel"):
+                                    plan["model"] = adaptation["masterModel"]
+                                script_first = True
+                                draft_edit = False
+                        if scene.get("asset") == "authored":
+                            plan.pop("filmReview", None)
+                            if "visualTiming" in data and not silent:
+                                scene["leadSeconds"] = timing.get("beforeVoice") or 0
+                                scene["tailSeconds"] = timing.get("afterVoice") or 0
                         entries = data.get("readings", scene[lang].get("readings", []))
-                        scene[lang]["readings"] = validate_readings(narration, entries)
+                        scene[lang]["readings"] = validate_readings(narration, entries) if not silent else []
                     elif data.get("readings"):
                         raise ValueError("読み指定は日本語の場面で編集できます。")
                     scene[lang]["narration"] = narration
                     model = row["model"]
             run_id = uuid.uuid4().hex
             status, progress = ("script_ready", "修正版の台本を保存しました") if draft_edit else ("queued", "順番待ち")
-            db.execute("""INSERT INTO runs(id,case_id,parent,model,langs,reason,status,progress,created,plan,script_first,previous_japanese,editorial_origin)
-                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+            db.execute("""INSERT INTO runs(id,case_id,parent,model,langs,reason,status,progress,created,plan,script_first,previous_japanese,editorial_origin,production_mode)
+                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                        (run_id, case_id, parent, model, packed(langs), reason, status, progress,
                         now, packed(plan) if plan else None, int(script_first),
-                        packed(previous_japanese) if previous_japanese else None, editorial_origin))
+                        packed(previous_japanese) if previous_japanese else None, editorial_origin, production_mode))
             result = {"id": case_id, "runId": run_id}
             db.execute("INSERT INTO requests VALUES(?,?,?)", (key, digest, packed(result)))
             db.execute("UPDATE cases SET updated=? WHERE id=?", (now, case_id))
@@ -457,9 +495,9 @@ class Ledger:
             rounds = [dict(r, inheritedFromRun=r.get("inheritedFromRun") or run_id) for r in report["rounds"]
                       if r.get("status") == "done" and r.get("sources")]
             new_run, now = uuid.uuid4().hex, clock()
-            db.execute("""INSERT INTO runs(id,case_id,parent,model,langs,reason,status,progress,created,script_first,editorial_origin)
-                          VALUES(?,?,?,?,?,'','queued','別案で生成待ち',?,?,?)""",
-                       (new_run, case_id, run_id, source["model"], source["langs"], now, source["script_first"], new_run))
+            db.execute("""INSERT INTO runs(id,case_id,parent,model,langs,reason,status,progress,created,script_first,editorial_origin,production_mode)
+                          VALUES(?,?,?,?,?,'','queued','別案で生成待ち',?,?,?,?)""",
+                       (new_run, case_id, run_id, source["model"], source["langs"], now, source["script_first"], new_run, DIRECTED_FILM))
             db.execute("INSERT INTO run_alternatives VALUES(?,?,?,?,?)",
                        (new_run, run_id, fingerprint, packed(proposal), packed({"inheritedFromRun": run_id, "rounds": rounds})))
             db.execute("UPDATE cases SET updated=? WHERE id=?", (now, case_id))
@@ -570,6 +608,8 @@ class Ledger:
                                accepted=accepted.get(lang) == run["id"],
                                reviewStatus=judgment["kind"] if judgment else None,
                                reviewReason=judgment["reason"] if judgment else None)
+                if (self.folder / "cases" / case_id / run["id"] / lang / "contact-sheet.png").is_file():
+                    edition["contactSheet"] = prefix + "contact-sheet.png"
             langs = json.loads(run["langs"])
             for lang in langs:
                 rework = editions.get(lang, {}).get("reviewStatus") == "rework"
@@ -581,11 +621,18 @@ class Ledger:
                 proposal["startedRunId"] = started.get((run["id"], proposal["fingerprint"]))
             chosen = json.loads(run["proposal"]) if run["proposal"] else None
             item = dict(id=run["id"], parent=run["parent"], status=status, model=run["model"],
+                        productionMode=run["production_mode"],
                         reason=run["reason"], progress=run["progress"], created=run["created"],
                         langs=langs, error=run["error"], editions=editions,
                         materialResearch=research, canAddMaterialLeads=accepts_material_leads(status, run["error"], research),
                         editorialAlternative=proposal, chosenAlternative={**chosen, "sourceRunId": run["source_run"]} if chosen else None,
                         plan=json.loads(run["plan"]) if run["plan"] else None)
+            if item["plan"] and item["plan"].get("productionMode") == DIRECTED_FILM:
+                for scene in item["plan"]["scenes"]:
+                    scene.pop("art", None)
+                board_run = item["plan"].get("storyboardRunId", run["id"])
+                if (folder.parent / board_run / "storyboard.jpg").is_file():
+                    item["storyboard"] = f"/media/{case_id}/{board_run}/ja/storyboard.jpg"
             item["stopReport"] = stop_report(item, folder, snap["title"], idea_title, row["brief"])
             history.append(item)
         title = next((r["plan"]["titles"]["ja"] for r in reversed(history) if r["plan"] and not r["chosenAlternative"]),
@@ -647,10 +694,13 @@ class Ledger:
             folder = self.folder / "cases" / case_id / run
             folder.mkdir(parents=True, exist_ok=True)
             snap = json.loads(row["snapshot"])
+            if row["production_mode"] == DIRECTED_FILM:
+                snap["productionMode"] = DIRECTED_FILM
             langs = json.loads(row["langs"])
-            if row["plan"]:
-                plan = json.loads(row["plan"])
-            else:
+            plan = json.loads(row["plan"]) if row["plan"] else None
+            adapt_edit = (plan and plan.get("productionMode") == DIRECTED_FILM and "en" in langs
+                          and any("en" not in scene for scene in plan["scenes"]))
+            if not plan or adapt_edit:
                 brief = row["brief"]
                 if row["proposal"]:
                     choice = json.loads(row["proposal"])
@@ -663,10 +713,13 @@ class Ledger:
                     brief += "\n今回の試行で重視する点\n" + row["reason"]
                 options = {"progress": lambda message: self.progress(run, message)}
                 message = "固定資料から日英の脚本を生成中"
-                if langs == ["ja"]:
+                if row["previous_japanese"]:
+                    options["previous_japanese"] = json.loads(row["previous_japanese"])
+                if adapt_edit:
+                    options.update(language="en", master_plan=plan)
+                    message = "修正した日本語の台詞に合わせて英語の台本を更新中"
+                elif langs == ["ja"]:
                     options["language"] = "ja"
-                    if row["previous_japanese"]:
-                        options["previous_japanese"] = json.loads(row["previous_japanese"])
                     message = "固定資料から日本語の脚本を生成中"
                 elif langs == ["en"]:
                     with self.db() as db:
@@ -675,7 +728,15 @@ class Ledger:
                     options.update(language="en", master_plan=json.loads(master["plan"]))
                     message = "選んだ日本語版をもとに英語の脚本を生成中"
                 self.progress(run, message)
-                plan = generate(snap, brief, row["model"], folder, **options)
+                generated = generate(snap, brief, row["model"], folder, **options)
+                if adapt_edit:
+                    generated["titles"]["en"] = plan["titles"]["en"]
+                    for source, target in zip(plan["scenes"], generated["scenes"]):
+                        if "en" in source:
+                            target["en"] = source["en"]
+                        if source.get("labels"):
+                            target["labels"] = source["labels"]
+                plan = generated
                 if langs == ["en"]:
                     plan["japaneseMasterRunId"] = row["parent"]
                 with self.db() as db:
@@ -695,7 +756,11 @@ class Ledger:
                 output.mkdir(exist_ok=True)
                 render(plan, lang, output, progress=lambda message: self.progress(run, message))
                 timings = json.loads((output / "timings.json").read_text(encoding="utf-8"))
-                if not all((output / f).is_file() and (output / f).stat().st_size for f in ("video.mp4", "subtitles.srt")):
+                captions = output / "subtitles.srt"
+                silent = plan.get("productionMode") == DIRECTED_FILM and all(
+                    not scene[lang]["narration"] for scene in plan["scenes"])
+                if (not (output / "video.mp4").is_file() or not (output / "video.mp4").stat().st_size
+                        or not captions.is_file() or (not silent and not captions.stat().st_size)):
                     raise ValueError("映像または字幕の書き出しを確認できませんでした。")
                 editions[lang] = {"timings": timings}
                 with self.db() as db:
@@ -715,16 +780,23 @@ class Ledger:
         return True
 
     def media(self, case_id, run, lang, name):
-        if lang not in LANGS or name not in ("video.mp4", "subtitles.srt"):
+        if lang not in LANGS or name not in ("video.mp4", "subtitles.srt", "contact-sheet.png", "storyboard.jpg"):
             raise KeyError(name)
         if case_id == REFERENCE and run == "reference":
+            if name not in ("video.mp4", "subtitles.srt"):
+                raise KeyError(name)
             if name == "video.mp4":
                 return PILOT / ("walkman-pilot.mp4" if lang == "ja" else "walkman-pilot.en.mp4")
             return PILOT / f"walkman.{lang}.srt"
         if not re.fullmatch("[a-f0-9]{32}", case_id) or not re.fullmatch("[a-f0-9]{32}", run):
             raise KeyError(run)
         with self.db() as db:
-            row = db.execute("SELECT editions FROM runs WHERE case_id=? AND id=?", (case_id, run)).fetchone()
+            row = db.execute("SELECT editions,plan IS NOT NULL AS planned FROM runs WHERE case_id=? AND id=?", (case_id, run)).fetchone()
+        if name == "storyboard.jpg":
+            path = self.folder / "cases" / case_id / run / name
+            if row and row["planned"] and lang == "ja" and path.is_file():
+                return path
+            raise KeyError(name)
         if not row or lang not in json.loads(row["editions"]):
             raise KeyError(lang)
         return self.folder / "cases" / case_id / run / lang / name
