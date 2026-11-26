@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-26T03:12:31.222680+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-26T02:17:41.598761+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-26T06:00:00+00:00",
-    "windowEndAt": "2026-11-26T09:00:00+00:00"
+    "eligibleAt": "2026-11-26T02:17:41.598761+00:00",
+    "windowEndAt": "2026-11-26T03:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-5-dot-tezuka-adolf-20261025-batch-01",
-    "startedAt": "2026-11-26T02:07:31.222683+00:00",
-    "limitAt": "2026-11-26T03:02:31.222680+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-57-dot-oshima-two-20261028",
-    "endedAt": "2026-11-26T01:57:27.444606+00:00"
+    "requestId": "issue-5-dot-tezuka-adolf-20261025-batch-01",
+    "endedAt": "2026-11-26T02:07:41.598765+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 8,
-    "waiting-control": 26,
-    "completed": 25,
+    "waiting-control": 25,
+    "completed": 26,
     "awaiting-recovery": 3
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-26T02:07:32.536562+00:00"
+  "checkedAt": "2026-11-26T02:07:47.718379+00:00"
 }
