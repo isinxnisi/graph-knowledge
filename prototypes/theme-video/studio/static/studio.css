@@ -148,6 +148,19 @@ h1 { font: 650 clamp(26px, 2.5vw, 42px)/1.45 "Yu Mincho", YuMincho, "Hiragino Mi
 .status-box.bad, #notice.error { background: #fff0e4; border-color: var(--warm); }
 #notice { margin: 0 0 16px; }
 .status-box button, #notice button { margin-left: 10px; }
+.stop-context { margin: 4px 0; font-size: 13px; overflow-wrap: anywhere; }
+.stop-report { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 12px; margin: 6px 0; font-size: 14px; line-height: 1.55; }
+.stop-report dt { font-weight: 650; }
+.stop-report dd { margin: 0; overflow-wrap: anywhere; }
+.history-report { margin: 5px 0; }
+.history-report summary { width: fit-content; color: var(--teal); font-size: 13px; }
+.run-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; margin-top: 6px; }
+.run-actions:empty { display: none; }
+.status-box .run-actions button, .run-row .run-actions button { margin: 0; white-space: normal; }
+@media (max-width: 540px) {
+  .stop-report { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .stop-report dt:not(:first-child) { margin-top: 5px; }
+}
 .form-card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: clamp(17px, 3vw, 32px); margin-top: 23px; max-width: 830px; }
 fieldset { padding: 0; margin: 0 0 22px; border: 0; min-width: 0; }
 fieldset + fieldset { padding-top: 14px; }

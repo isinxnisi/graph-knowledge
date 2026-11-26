@@ -143,6 +143,8 @@ class LedgerTest(unittest.TestCase):
         self.assertEqual((retained["id"], retained["status"], retained["editorialAlternative"]["startedRunId"]),
                          (source, "needs_material", new_run))
         self.assertEqual(retained["materialResearch"]["rounds"][0], confirmed)
+        self.assertIn("すでに選択済み", retained["stopReport"]["next"])
+        self.assertIsNone(chosen["stopReport"])
         self.assertEqual(self.desk.case(cid)["brief"], self.request["brief"])
 
         proposal_file.unlink()
@@ -160,6 +162,7 @@ class LedgerTest(unittest.TestCase):
         self.assertEqual(research["inheritedFromRun"], source)
         self.assertEqual(research["rounds"], [{**confirmed, "inheritedFromRun": source}])
         self.assertEqual(self.desk.case(cid)["runs"][0]["status"], "script_ready")
+        self.assertEqual(self.desk.case(cid)["runs"][0]["stopReport"]["concept"], proposal["title"])
         self.assertEqual(self.desk.case(cid)["title"], "試験用テーマ")
         self.assertEqual(self.desk.list_cases()[0]["title"], "試験用テーマ")
         render.assert_not_called()
@@ -174,6 +177,64 @@ class LedgerTest(unittest.TestCase):
         self.assertEqual(english["chosenAlternative"]["sourceRunId"], source)
         self.assertEqual(english["chosenAlternative"]["brief"], proposal["brief"])
         self.assertNotIn(self.request["brief"], write.call_args.args[1])
+
+    def test_material_stop_explains_the_current_decision_and_supports_an_old_report(self):
+        self.request.update(language="ja", brief="仮題　入れ替わる絵\n見終えたときの発見　境目の動きに気づく。")
+        case = self.create()
+        cid, run = case["id"], case["runId"]
+        folder = self.data / "cases" / cid / run
+        self.desk.process_next(Mock(side_effect=MaterialRequired("向きの記録が必要")), self.render)
+        decision = {"outcome": "wait", "reason": "向きの記録が必要", "blockingPoint": "切り替わる方向を確かめられません。",
+                    "viewerImpact": "どこから次の絵が現れたのか、比較できません。"}
+        path = folder / "editorial-decision.json"
+        def report():
+            return self.desk.case(cid)["runs"][0]["stopReport"]
+        def save_decision():
+            path.write_text(json.dumps({"decision": decision}), encoding="utf-8")
+        save_decision()
+        self.assertEqual((report()["theme"], report()["concept"]), ("試験用テーマ", "入れ替わる絵"))
+        self.assertEqual((report()["reason"], report()["impact"]), (decision["blockingPoint"], decision["viewerImpact"]))
+        self.assertIn("追加調査して再開", report()["next"])
+        self.assertNotIn("台本をもとに", report()["next"])
+        decision.update(viewerImpact="")
+        save_decision()
+        self.assertEqual(report()["impact"], "")
+        del decision["viewerImpact"], decision["blockingPoint"]
+        save_decision()
+        self.assertIn("この発見を映像で伝えるには", report()["impact"])
+        self.assertIn("境目の動きに気づく", report()["impact"])
+        decision.update(reason="過去の別の停止理由", viewerImpact="過去の影響")
+        save_decision()
+        self.assertEqual(report()["impact"], "")
+        self.assertIn("向きの記録", report()["reason"])
+        path.write_text("broken", encoding="utf-8")
+        self.assertEqual(report()["impact"], "")
+        self.desk.resume(cid, run)
+        self.assertIsNone(report())
+
+    def test_failure_and_interruptions_ask_for_the_action_that_applies(self):
+        self.request.update(language="ja", scriptFirst=True)
+        case = self.create()
+        cid, run = case["id"], case["runId"]
+        def report():
+            return self.desk.case(cid)["runs"][0]["stopReport"]
+        self.desk.pause(cid, run)
+        self.assertIn("中断の操作", report()["reason"])
+        self.desk.resume(cid, run)
+        self.desk.process_next(Mock(side_effect=RuntimeError("モデルの利用上限に達しました。")), self.render)
+        self.assertIn("上限", report()["reason"])
+        self.assertIn("再び使えるようになったら", report()["next"])
+        self.assertEqual(report()["impact"], "")
+        self.desk.resume(cid, run)
+        self.desk.process_next(Mock(side_effect=RevisionNeeded("第2場面の読みを確かめてください。")), self.render)
+        self.assertIn("第2場面", report()["reason"])
+        self.assertIn("改稿を再開", report()["next"])
+        self.desk.resume(cid, run)
+        self.desk.process_next(Mock(return_value=self.plan), self.render)
+        self.assertIn("台本が用意できました", report()["reason"])
+        self.desk.resume(cid, run)
+        self.desk.process_next(Mock(), self.render)
+        self.assertIsNone(report())
 
     def test_only_current_proposal_on_waiting_japanese_run_can_start(self):
         self.request.update(language="ja")

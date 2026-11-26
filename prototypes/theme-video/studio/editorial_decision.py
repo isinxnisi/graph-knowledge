@@ -27,12 +27,19 @@ reasonには何が変わるか・なぜ元案が保留されるかを明記し�
 wait: 元の約束の核に根拠・使用可能な素材がなく、別案も今ある材料では魅力的に成立しない場合。
 reasonには具体的に何が確かめられれば進めるかを書きます。解消済み・不要と判断した要求を列挙しません。
 reasonは全結果で必須。sourceIdsにはその判断の支えとなった入力のIDを入れます。未使用の文字列は空にします。"""
+_STOP_REPORT = """元案を保留する alternative と wait では、初めて案件を開く人に、次の二点を各一、二文で伝えます。
+blockingPointには、予定した場面や説明のどこが、手元の資料や素材では確かめられない、または描けないのかを書きます。
+viewerImpactには、その部分を省いたり作例に替えたりすると、視聴者が何を自分で見比べられなくなるか、
+何と何を取り違えそうかなど、元案で約束した発見への影響を書きます。単に「品質が落ちる」「根拠不足」で済ませません。
+確認記録がないことを、実際に起きなかったと表現しません。視聴者への影響を資料と元案から特定できないときは
+viewerImpactを空にします。資料のID・技術ログ・操作手順はこの二項目に含めません。各240字以内。reviseでは両方とも空にします。"""
 _STRING = {"type": "string"}
 _SCHEMA = _object({
     "outcome": {"type": "string", "enum": ["revise", "alternative", "wait"]},
     "reason": _STRING, "direction": _STRING, "title": _STRING, "brief": _STRING,
     "sourceIds": {"type": "array", "items": _STRING},
 })
+_REPORT_SCHEMA = _object({**_SCHEMA["properties"], "blockingPoint": _STRING, "viewerImpact": _STRING})
 
 
 def _decision(raw, materials):
@@ -46,12 +53,18 @@ def _decision(raw, materials):
     if outcome != "wait" and not ids:
         raise ValueError("提案で使える根拠が特定されていません。")
     reason = _text(raw.get("reason"), 1200, "編集判断の理由")
+    # Operator-facing copy must not block an otherwise valid editorial decision.
+    report = {}
+    for key in ("blockingPoint", "viewerImpact"):
+        value = raw.get(key)
+        report[key] = " ".join(value.split()) if outcome != "revise" and isinstance(value, str) and len(value) <= 240 else ""
     direction = _text(raw.get("direction"), 1800, "改稿の方針", allow_empty=outcome != "revise")
     title = _text(raw.get("title"), 120, "別案の題名", allow_empty=outcome != "alternative")
     brief = _text(raw.get("brief"), 1800, "別案の切り口", allow_empty=outcome != "alternative")
     if (outcome != "revise" and direction) or (outcome != "alternative" and (title or brief)):
         raise ValueError("元案の改稿と別案の提案を区別できませんでした。")
-    return {"outcome": outcome, "reason": reason, "direction": direction, "sourceIds": ids,
+    return {"outcome": outcome, "reason": reason, **report,
+            "direction": direction, "sourceIds": ids,
             "alternative": {"title": title, "brief": brief, "reason": reason} if outcome == "alternative" else None}
 
 
@@ -60,11 +73,16 @@ def assess(materials, brief, model, effort, folder, need, remaining, progress, l
     payload = _draft_input(materials, brief)
     _visual_materials(materials, brief, language, payload)
     payload.update(need=need, researchRemaining=remaining)
-    request = _writer_request(model, effort, "plunode-video-editorial-decision-2", _INSTRUCTIONS, payload, _SCHEMA)
+    request = _writer_request(model, effort, "plunode-video-editorial-decision-3",
+                              _INSTRUCTIONS + "\n" + _STOP_REPORT, payload, _REPORT_SCHEMA)
     digest = request_digest(request)
     path = folder / "editorial-decision.json"
     record = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
     cached = record.get("inputSha256") == digest
+    if record.get("instructionVersion") == "plunode-video-editorial-decision-2":
+        # A reporting-only change should not replace a saved proposal or restart the original draft.
+        previous = _writer_request(model, effort, record["instructionVersion"], _INSTRUCTIONS, payload, _SCHEMA)
+        cached = record.get("inputSha256") == request_digest(previous)
     if cached_only and not cached:
         return None, False
     proposal = folder / "editorial-alternative.json"

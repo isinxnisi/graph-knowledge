@@ -12,7 +12,7 @@ const state = {
   selected: { ja: "", en: "" }, sceneId: "", compare: false, compareKey: "",
   poll: null, routeVersion: 0, searchVersion: 0, resumeAfter: null, editTarget: null, reviewTarget: null,
   readingRequest: null, readingUrl: null, adaptTarget: null, awaitingEnglishFor: "",
-  chosenIdea: null, ideaLibrary: null, ideaRead: 0,
+  chosenIdea: null, ideaLibrary: null, ideaRead: 0, rerunParent: null,
 };
 
 function node(tag, value, className) {
@@ -233,6 +233,7 @@ function resetCase() {
   for (const id of ["script-read-panel", "script-review-panel", "scene-panel", "brief-panel", "rerun-panel"]) $(id).open = false;
   $("history-panel").open = window.matchMedia("(min-width: 1160px)").matches;
   closeEdit(); closeReview(); closeAdapt();
+  setRerunParent(null);
   $("rerun-language").value = "ja";
   refreshGenerationButtons();
   clearPlayer($("player")); clearPlayer($("compare-player"));
@@ -649,6 +650,82 @@ function statusButton(run) {
   };
   return button;
 }
+function setRerunParent(run) {
+  state.rerunParent = run?.id || null;
+  $("rerun-target").hidden = !run;
+  $("rerun-target-label").textContent = run ? "元の台本　試行 " + runNumber(run.id) + "「" + run.plan.titles.ja + "」" : "";
+  $("rerun-language").disabled = Boolean(run);
+  if (run) $("rerun-language").value = "ja";
+  refreshGenerationButtons();
+}
+$("rerun-target-clear").onclick = () => setRerunParent(null);
+
+function appendStopReport(parent, run) {
+  const report = run.stopReport;
+  const context = report.concept && report.concept !== report.theme
+    ? "テーマ「" + report.theme + "」から、企画「" + report.concept + "」で制作。"
+    : "制作テーマ　" + report.theme;
+  parent.append(node("p", context, "stop-context"));
+  const fields = node("dl", null, "stop-report");
+  for (const [label, value] of [
+    [run.status === "script_ready" ? "現在の状態" : "停止理由", report.reason],
+    ["視聴者への影響", report.impact],
+    ["次にできること", report.next],
+  ]) {
+    if (value) fields.append(node("dt", label), node("dd", value));
+  }
+  parent.append(fields);
+}
+
+function historyLink(id, label) {
+  const button = node("button", label, "quiet small");
+  button.type = "button";
+  button.onclick = () => {
+    const details = $(id);
+    for (let panel = details; panel; panel = panel.parentElement?.closest("details")) panel.open = true;
+    details.querySelector("summary").focus();
+    details.scrollIntoView({ block: "nearest" });
+  };
+  return button;
+}
+
+function runActions(run, inHistory) {
+  const actions = node("div", null, "run-actions");
+  const scriptReady = run.status === "script_ready";
+  if (scriptReady && (inHistory || run !== chosenRun())) actions.append(inspectScript(run));
+  if (!scriptReady || inHistory || run === chosenRun()) {
+    const button = statusButton(run);
+    if (button) actions.append(button);
+  }
+  if (!inHistory && run.editorialAlternative) {
+    actions.append(historyLink("alternative-" + run.id, "別案「" + run.editorialAlternative.title + "」を見る"));
+  }
+  if (run.stopReport && !scriptReady) {
+    if (run.langs.includes("ja") && run.plan?.titles?.ja && run.plan.scenes?.length) {
+      const reuse = node("button", "この台本をもとに新しい試行", "quiet small");
+      reuse.type = "button";
+      reuse.onclick = () => {
+        setRerunParent(run);
+        $("rerun-panel").open = true;
+        $("rerun-reason").focus();
+      };
+      actions.append(reuse);
+    }
+    if (["needs_material", "needs_revision"].includes(run.status)) {
+      const ideas = node("a", "ほかの動画案を見る", "text-link");
+      ideas.href = ideaLibraryHash(state.detail.themeId);
+      actions.append(ideas);
+    }
+  }
+  if (!inHistory && (run.materialResearch || run.canAddMaterialLeads)) {
+    actions.append(historyLink("research-" + run.id, run.materialResearch ? "調査記録を見る" : "調査するURLを追加"));
+  }
+  if (!inHistory && run.status === "failed" && run.stopReport && run.error && run.error !== run.stopReport.reason) {
+    actions.append(historyLink("diagnostic-" + run.id, "停止時の記録を見る"));
+  }
+  return actions;
+}
+
 function drawProgress() {
   const ordered = orderedRuns(), latest = ordered[0];
   const selected = chosenRun();
@@ -658,34 +735,10 @@ function drawProgress() {
   const boxes = relevant.map((run) => {
     const bad = run.status === "failed";
     const box = node("div", null, "status-box" + (bad ? " bad" : ""));
-    const explanation = run.editorialAlternative?.reason || run.error || run.progress || "";
-    box.append(node("strong", "試行 " + (ordered.length - ordered.indexOf(run)) + " · " + (jobName[run.status] || run.status) + "　"), node("span", explanation));
-    const button = run.status === "script_ready" && run !== selected ? inspectScript(run) : statusButton(run);
-    if (button) box.append(button);
-    if (run.materialResearch || run.status === "needs_material") {
-      const show = node("button", run.materialResearch ? "調査記録を見る" : "調査するURLを追加", "quiet small");
-      show.type = "button";
-      show.onclick = () => {
-        $("history-panel").open = true;
-        const report = $("research-" + run.id);
-        report.open = true;
-        report.querySelector("summary").focus();
-        report.scrollIntoView({ block: "nearest" });
-      };
-      box.append(show);
-    }
-    if (run.editorialAlternative) {
-      const show = node("button", "別案「" + run.editorialAlternative.title + "」を見る", "quiet small");
-      show.type = "button";
-      show.onclick = () => {
-        $("history-panel").open = true;
-        const details = $("alternative-" + run.id);
-        details.open = true;
-        details.querySelector("summary").focus();
-        details.scrollIntoView({ block: "nearest" });
-      };
-      box.append(show);
-    }
+    box.append(node("strong", "試行 " + (ordered.length - ordered.indexOf(run)) + " · " + (jobName[run.status] || run.status) + "　"));
+    if (run.stopReport) appendStopReport(box, run);
+    else box.append(node("span", run.error || run.progress || ""));
+    box.append(runActions(run, false));
     return box;
   });
   $("run-progress").replaceChildren(...boxes);
@@ -782,12 +835,24 @@ function drawHistory() {
     if (run.plan?.japaneseMasterRunId) row.append(node("p", "元の日本語版　試行 " + runNumber(run.plan.japaneseMasterRunId), "subtle"));
     if (run.chosenAlternative) row.append(node("p", "試行 " + runNumber(run.chosenAlternative.sourceRunId) + " の別案　" + run.chosenAlternative.title));
     if (run.reason) row.append(node("p", run.reason));
-    if (run.error || ((pending(run) || run.status === "script_ready") && run.progress)) row.append(node("p", run.error || run.progress));
+    if (run.stopReport) {
+      const report = node("details", null, "history-report");
+      report.id = "stop-report-" + run.id;
+      report.open = Boolean($(report.id)?.open);
+      report.append(node("summary", run.status === "script_ready" ? "台本の状態と次の操作" : "停止理由と次の操作"));
+      appendStopReport(report, run);
+      if (run.error && run.error !== run.stopReport.reason) {
+        const diagnostic = node("details");
+        diagnostic.id = "diagnostic-" + run.id;
+        diagnostic.open = Boolean($(diagnostic.id)?.open);
+        diagnostic.append(node("summary", "停止時の記録"), node("p", run.error));
+        report.append(diagnostic);
+      }
+      row.append(report);
+    } else if (run.error || (pending(run) && run.progress)) row.append(node("p", run.error || run.progress));
     if (run.materialResearch || run.status === "needs_material") row.append(researchDetails(run));
     if (run.editorialAlternative) row.append(alternativeDetails(run));
-    if (run.status === "script_ready") row.append(inspectScript(run));
-    const button = statusButton(run);
-    if (button) row.append(button);
+    row.append(runActions(run, true));
     return row;
   });
   $("history").replaceChildren(...rows);
@@ -858,21 +923,24 @@ async function searchThemes() {
     if (version === state.searchVersion) { state.results = []; $("search-status").textContent = err.message; }
   }
 }
+function selectTheme(item) {
+  state.chosen = item;
+  $("theme-selection").hidden = false;
+  $("chosen-theme").textContent = item.title;
+  $("theme-revision").value = item.revision;
+  $("theme-revision").max = item.revision;
+  $("theme-ideas-link").href = ideaLibraryHash(item.id);
+  $("theme-ideas-link").hidden = false;
+  drawThemeResults();
+  refreshGenerationButtons();
+}
 function drawThemeResults() {
   const buttons = state.results.map((item) => {
     const button = node("button", null, "theme-result");
     button.type = "button";
     button.setAttribute("aria-pressed", String(state.chosen?.id === item.id));
     button.append(node("span", item.title), node("small", "第" + item.revision + "版"));
-    button.onclick = () => {
-      state.chosen = item;
-      $("theme-selection").hidden = false;
-      $("chosen-theme").textContent = item.title;
-      $("theme-revision").value = item.revision; $("theme-revision").max = item.revision;
-      $("theme-ideas-link").href = ideaLibraryHash(item.id);
-      $("theme-ideas-link").hidden = false;
-      drawThemeResults(); refreshGenerationButtons();
-    };
+    button.onclick = () => selectTheme(item);
     return button;
   });
   $("theme-results").replaceChildren(...buttons);
@@ -1114,11 +1182,11 @@ formAction("edit-form", async (version, action) => {
 formAction("rerun-form", async (version, action) => {
   const profile = selectedProfile("rerun");
   if (!profile) return;
-  const payload = { model: profile.id, parent: chosenRun()?.id || orderedRuns()[0]?.id,
+  const payload = { model: profile.id, parent: state.rerunParent || chosenRun()?.id || orderedRuns()[0]?.id,
     reason: trim($("rerun-reason").value), language: $("rerun-language").value, scriptFirst: action !== "video" };
   const result = await submitRun("rerun." + state.detail.id, detailPath("/runs"), payload);
   if (state.routeVersion !== version) return;
-  state.resumeAfter = result.runId; $("rerun-reason").value = ""; $("rerun-panel").open = false;
+  state.resumeAfter = result.runId; setRerunParent(null); $("rerun-reason").value = ""; $("rerun-panel").open = false;
   await reloadDetail(); notify(productionLanguage[payload.language] + (payload.scriptFirst ? "の台本" : "の動画") + "の生成を受け付けました。");
 });
 $("adapt-open").onclick = () => {

@@ -29,6 +29,7 @@ class ResearchWorkflowTest(unittest.TestCase):
 
     def verdict(self, outcome, reason, direction="", title="", brief=""):
         return {"outcome": outcome, "reason": reason, "direction": direction, "title": title, "brief": brief,
+                "blockingPoint": reason if outcome != "revise" else "", "viewerImpact": "",
                 "sourceIds": [] if outcome == "wait" else ["ref-1"]}
 
     def seed_round(self, **changes):
@@ -151,6 +152,49 @@ class ResearchWorkflowTest(unittest.TestCase):
                 self.run_writer(Mock(side_effect=MaterialRequired("方向が必要")))
         search.assert_not_called()
         self.judge.assert_called_once()
+
+    def test_stop_report_records_the_gap_and_only_the_impact_the_editor_could_identify(self):
+        self.seed_round()
+        self.judge.side_effect = None
+        words = self.verdict("wait", "本編を照合できれば再開できます。")
+        words.update(blockingPoint="比較に使う場面を特定できていません。",
+                     viewerImpact="二つの映画の画面がどう切り替わるかを見比べられません。")
+        self.judge.return_value = (words, {})
+        report = self.reassess()
+        for key in ("blockingPoint", "viewerImpact"):
+            self.assertEqual(report[key], words[key])
+        self.assertEqual(self.reassess(), report)
+        self.judge.assert_called_once()
+        self.seed_round(remaining="映像の使用条件を照合中。")
+        words["viewerImpact"] = ""
+        self.assertEqual(self.reassess()["viewerImpact"], "")
+
+    def test_reporting_upgrade_keeps_a_previous_alternative_for_the_same_evidence(self):
+        self.seed_round()
+        proposal = {"title": "二枚の風景", "brief": "自作例で見比べる。", "reason": "実例が未確認。"}
+        decision = {"outcome": "alternative", "direction": "", "reason": proposal["reason"],
+                    "sourceIds": ["ref-1"], "alternative": proposal}
+        # Captured from the v2 writer request for seed_round() and this trial's brief.
+        saved = {"inputSha256": "9c145aec13467e03754545cfbe1b590071a896cdcbe3d1bcf5c5a35550386452",
+                 "instructionVersion": "plunode-video-editorial-decision-2", "need": "方向が必要", "decision": decision}
+        path = self.folder / "editorial-decision.json"
+        path.write_text(json.dumps(saved, ensure_ascii=False), encoding="utf-8")
+        self.assertEqual(self.reassess(), decision)
+        self.assertEqual(json.loads(path.read_text(encoding="utf-8")), saved)
+        self.judge.assert_not_called()
+        self.seed_round(remaining="新たに見つけた図の利用条件が未確認。")
+        self.assertIn("blockingPoint", self.reassess())
+        self.judge.assert_called_once()
+
+    def test_a_long_operator_explanation_does_not_block_a_valid_alternative(self):
+        self.seed_round()
+        self.judge.side_effect = None
+        words = self.verdict("alternative", "確かめられる作例で構成する。", title="境目の動き", brief="自作の風景を見比べる。")
+        words["viewerImpact"] = "長い説明" * 120
+        self.judge.return_value = (words, {})
+        decision = self.reassess()
+        self.assertEqual(decision["viewerImpact"], "")
+        self.assertEqual(decision["alternative"]["title"], words["title"])
 
     def test_revision_failures_respect_their_state_and_resume_only_the_revised_plan(self):
         self.seed_round()

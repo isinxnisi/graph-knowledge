@@ -94,7 +94,19 @@ function drawIdeaLibrary() {
     batchBox.append(details);
     const last = visibleBatches[0];
     if (last?.status === "failed" || last?.status === "interrupted") {
-      batchBox.prepend(node("p", last.themeTitle + " の案の生成を完了できませんでした。" + (last.error || ""), "status-box bad"));
+      const box = node("div", null, "status-box bad");
+      box.append(node("strong", "動画案の生成が止まりました"),
+        node("p", "テーマ「" + last.themeTitle + "」の第" + last.revision + "版から候補を作る途中で、今回の案を保存できませんでした。"),
+        node("p", "案の生成履歴で停止時の記録を確認できます。同じテーマでもう一度、制作条件を選んで案を生成できます。"));
+      const retry = node("button", "同じテーマの生成設定を開く", "secondary small");
+      retry.type = "button";
+      retry.onclick = () => {
+        selectTheme({ id: last.themeId, title: last.themeTitle, revision: last.revision });
+        $("brief").value = last.brief || "";
+        location.hash = "#new";
+      };
+      box.append(retry);
+      batchBox.prepend(box);
     } else if (last?.status === "done" && last.count === 0) {
       batchBox.prepend(node("p", last.themeTitle + "で新しく保存された案はありません。", "subtle"));
     }

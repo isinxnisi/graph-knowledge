@@ -13,6 +13,7 @@ from urllib.parse import urlencode, urlsplit, urlunsplit
 
 import idea_store
 from editor import MaterialRequired, _save_json
+from stop_report import stop_report
 from writer_feedback import RevisionNeeded
 
 LANGS = ("ja", "en")
@@ -554,6 +555,9 @@ class Ledger:
         accepted = {s["lang"]: s["run_id"] for s in selections}
         judgments = {(s["run_id"], s["lang"]): s for s in reversed(reviews)}
         states, history = {}, []
+        # Legacy cases also appear in the idea library under their first finished cut.
+        # That generated label wasn't an idea selected for a later trial.
+        idea_title = None if row["idea_id"] == "previous-" + case_id else row["idea_title"]
         started = {(r["source_run"], json.loads(r["proposal"])["fingerprint"]): r["id"]
                    for r in runs if r["editorial_origin"] == r["id"]}
         for run in runs:
@@ -576,12 +580,14 @@ class Ledger:
             if proposal:
                 proposal["startedRunId"] = started.get((run["id"], proposal["fingerprint"]))
             chosen = json.loads(run["proposal"]) if run["proposal"] else None
-            history.append(dict(id=run["id"], parent=run["parent"], status=status, model=run["model"],
-                                reason=run["reason"], progress=run["progress"], created=run["created"],
-                                langs=langs, error=run["error"], editions=editions,
-                                materialResearch=research, canAddMaterialLeads=accepts_material_leads(status, run["error"], research),
-                                editorialAlternative=proposal, chosenAlternative={**chosen, "sourceRunId": run["source_run"]} if chosen else None,
-                                plan=json.loads(run["plan"]) if run["plan"] else None))
+            item = dict(id=run["id"], parent=run["parent"], status=status, model=run["model"],
+                        reason=run["reason"], progress=run["progress"], created=run["created"],
+                        langs=langs, error=run["error"], editions=editions,
+                        materialResearch=research, canAddMaterialLeads=accepts_material_leads(status, run["error"], research),
+                        editorialAlternative=proposal, chosenAlternative={**chosen, "sourceRunId": run["source_run"]} if chosen else None,
+                        plan=json.loads(run["plan"]) if run["plan"] else None)
+            item["stopReport"] = stop_report(item, folder, snap["title"], idea_title, row["brief"])
+            history.append(item)
         title = next((r["plan"]["titles"]["ja"] for r in reversed(history) if r["plan"] and not r["chosenAlternative"]),
                      row["idea_title"] or row["title"])
         for lang in LANGS:

@@ -51,7 +51,7 @@ SCHEMA = """
 
 def list_batches(db, theme):
     return [dict(r) for r in db.execute("""
-        SELECT b.id,b.theme_id themeId,b.revision,b.theme_title themeTitle,b.model,b.created,b.status,b.error,
+        SELECT b.id,b.theme_id themeId,b.revision,b.theme_title themeTitle,b.brief,b.model,b.created,b.status,b.error,
                (SELECT count(*) FROM ideas WHERE batch_id=b.id) count
         FROM idea_batches b WHERE (? IS NULL OR b.theme_id=?) ORDER BY b.created DESC,b.rowid DESC
         """, (theme, theme))]
