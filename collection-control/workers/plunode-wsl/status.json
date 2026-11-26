@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-26T01:03:24.156553+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-26T02:08:31.375310+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-26T01:03:24.156553+00:00",
+    "eligibleAt": "2026-11-26T02:08:31.375310+00:00",
     "windowEndAt": "2026-11-26T03:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-5-dot-tezuka-adolf-20261025",
+    "startedAt": "2026-11-26T01:03:31.375312+00:00",
+    "limitAt": "2026-11-26T01:58:31.375310+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-49-dot-hara-souten-20261027",
     "endedAt": "2026-11-26T00:53:24.156555+00:00"
@@ -192,5 +196,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-26T00:54:03.932710+00:00"
+  "checkedAt": "2026-11-26T01:03:35.998635+00:00"
 }
