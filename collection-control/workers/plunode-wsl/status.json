@@ -26,30 +26,27 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-26T07:40:44.584243+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-26T06:45:55.065366+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-26T07:40:44.584243+00:00",
+    "eligibleAt": "2026-11-26T06:45:55.065366+00:00",
     "windowEndAt": "2026-11-26T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-57-dot-oshima-two-20261028-batch-01",
-    "startedAt": "2026-11-26T06:35:44.584247+00:00",
-    "limitAt": "2026-11-26T07:30:44.584243+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1-batch-06",
-    "endedAt": "2026-11-26T06:21:25.211852+00:00"
+    "requestId": "issue-57-dot-oshima-two-20261028-batch-01",
+    "endedAt": "2026-11-26T06:35:55.065368+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 8,
-    "waiting-lock": 21,
-    "completed": 29,
-    "awaiting-recovery": 4
+    "waiting-lock": 16,
+    "completed": 30,
+    "awaiting-recovery": 4,
+    "waiting-control": 4
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -196,5 +193,5 @@
       "phase": "waiting-lock"
     }
   },
-  "checkedAt": "2026-11-26T06:35:45.964272+00:00"
+  "checkedAt": "2026-11-26T06:36:16.981625+00:00"
 }
