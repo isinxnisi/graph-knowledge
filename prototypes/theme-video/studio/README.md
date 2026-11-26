@@ -21,6 +21,12 @@ python -B prototypes/theme-video/studio/start.py
 
 二回目以降は `start.py` で起動できる。既に起動中なら入口URLを表示する。日本語はVOICEVOXの青山龍星、英語はKokoroの `af_heart`。日本語は標準インストール先のエンジンを必要時に起動する。起動済みのエンジンを使う場合は `PLUNODE_VOICEVOX_URL`、実行ファイルを指定する場合は `PLUNODE_VOICEVOX_EXE` を設定する。
 
+## 外出先から開く
+
+このPCの制作室は [外部用の制作室](https://c-movie.isinxnisi.com/) から開ける。Cloudflare Accessで許可したアカウントでサインインする。トンネルの転送先は `http://127.0.0.1:3269` で、元の公開ホスト名を渡す。Windowsで制作室とトンネルが稼働している間に利用できる。
+
+移設時はWindowsの制作室用Pythonに `python -m pip install --user -r prototypes/theme-video/studio/requirements-access.txt` で認証用ライブラリを入れる。案件台帳と同じ保存先の `access.json` に `host`（外部ホスト名）、`team`（Cloudflare Accessのチーム名）、`audience`（対象アプリのAUDタグ）を文字列で保存し、制作室を再起動する。制作室は画面・API・動画の全リクエストで公開ホスト名とAccessの署名・発行元・対象アプリ・期限を検証する。外部の更新操作では同じHTTPS originも確認する。設定ファイルが無い場合はlocalhostから操作できる。
+
 ## 一件を作る
 
 切り口を見比べたいときは、「新しい案件」でテーマとモデルを選び「動画案を生成して保存」を押す。候補は[保存した動画案](http://127.0.0.1:3269/#ideas)に残る。仮題・冒頭・見終わったときの発見を読み、気に入った案を「あとで作る」に置くか、その案から台本・動画の制作に進む。同じ案から何度でも独立した案件を始められる。それぞれが企画時点のテーマ版を引き継ぎ、台本、映像、採用判断は案件ごとに保管する。案から過去の制作にも戻れる。追加資料や絵が要る場合は、その内容も案と一緒に残る。

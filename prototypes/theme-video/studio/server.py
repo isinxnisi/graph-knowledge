@@ -10,6 +10,7 @@ import sys
 import threading
 from urllib.parse import parse_qs, urlsplit
 
+from access import CloudflareAccess
 from ledger import Ledger, ROOT, required
 
 
@@ -53,12 +54,12 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", mime)
         self.send_header("Content-Length", str(len(content)))
-        self.send_header("Cache-Control", "no-store")
         self.end_headers()
         if self.command != "HEAD":
             self.wfile.write(content)
 
     def end_headers(self):
+        self.send_header("Cache-Control", "no-store")
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Referrer-Policy", "no-referrer")
         self.send_header("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline'; "
@@ -69,10 +70,15 @@ class Handler(BaseHTTPRequestHandler):
     def origin_ok(self):
         port = self.server.server_port
         hosts = {f"localhost:{port}", f"127.0.0.1:{port}"}
-        if self.headers.get("Host", "").lower() not in hosts:
+        requested = self.headers.get_all("Host", [])
+        if len(requested) != 1:
             return False
-        origin = self.headers.get("Origin")
-        return origin is None or origin in {f"http://{host}" for host in hosts}
+        host = requested[0].lower()
+        if host in hosts:
+            origin = self.headers.get("Origin")
+            return origin is None or origin in {f"http://{local}" for local in hosts}
+        access = self.server.access
+        return access is not None and host == access.host and access.allows(self.headers, self.command)
 
     def file(self, path):
         size = path.stat().st_size
@@ -115,7 +121,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def handle_route(self):
         if not self.origin_ok():
-            self.respond(403, {"error": "localhostの制作画面から開いてください。"})
+            self.respond(403, {"error": "この接続は認証されていません。"})
             return
         url = urlsplit(self.path)
         path = url.path
@@ -220,7 +226,9 @@ def main():
     parser.add_argument("--port", type=int, default=3269)
     parser.add_argument("--data", type=Path, default=default_folder())
     args = parser.parse_args()
+    access = CloudflareAccess.load(args.data)
     with exclusive(args.data), ThreadingHTTPServer(("127.0.0.1", args.port), Handler) as server:
+        server.access = access
         server.ledger = Ledger(args.data)
         server.preview_slot = threading.Lock()
         threading.Thread(target=run_worker, args=(server.ledger,), daemon=True).start()
