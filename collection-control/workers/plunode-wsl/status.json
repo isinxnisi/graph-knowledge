@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-26T01:25:26.894753+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-11-26T00:30:41.651843+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-26T01:25:26.894753+00:00",
+    "eligibleAt": "2026-11-26T00:30:41.651843+00:00",
     "windowEndAt": "2026-11-26T03:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-62-dot-akutami-jujutsu-20261028",
-    "startedAt": "2026-11-26T00:20:26.894757+00:00",
-    "limitAt": "2026-11-26T01:15:26.894753+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-68-dot-fujikoa-two-20261029",
-    "endedAt": "2026-11-26T00:10:24.170990+00:00"
+    "requestId": "issue-62-dot-akutami-jujutsu-20261028",
+    "endedAt": "2026-11-26T00:20:41.651845+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 8,
-    "waiting-control": 36,
-    "completed": 17,
+    "waiting-control": 35,
+    "completed": 18,
     "awaiting-recovery": 1
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-26T00:20:28.321645+00:00"
+  "checkedAt": "2026-11-26T00:21:50.733454+00:00"
 }
