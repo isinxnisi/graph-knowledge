@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-11-26T00:41:40.175693+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-11-26T01:46:43.106516+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-26T00:41:40.175693+00:00",
+    "eligibleAt": "2026-11-26T01:46:43.106516+00:00",
     "windowEndAt": "2026-11-26T03:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-25-utc-recovery-01",
+    "startedAt": "2026-11-26T00:41:43.106518+00:00",
+    "limitAt": "2026-11-26T01:36:43.106516+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-47-dot-yukimura-two-20261027",
     "endedAt": "2026-11-26T00:31:40.175694+00:00"
@@ -192,5 +196,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-11-26T00:32:23.972782+00:00"
+  "checkedAt": "2026-11-26T00:41:44.345075+00:00"
 }
