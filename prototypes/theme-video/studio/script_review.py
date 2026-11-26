@@ -3,7 +3,7 @@
 from itertools import groupby
 from urllib.parse import urlsplit
 
-from editor import (JAPANESE_VERSION, MaterialRequired, _JAPANESE_PROMPT, _call_writer, _check_draft, _object,
+from editor import (JAPANESE_VERSION, VIDEO_EVIDENCE, MaterialRequired, _JAPANESE_PROMPT, _call_writer, _check_draft, _object,
                     _save_json, _text, _writer_request)
 from writer_feedback import RevisionNeeded, request_digest, validated_output
 from wipe_board import ASSET as WIPE_DEMO, DESCRIPTION as WIPE_PICTURE
@@ -17,8 +17,9 @@ ILLUSTRATION_BEAT = ("番組が描いた作例の中で起きる動きや、そ�
                      "illustrationIdだけの要点として返せます。制作室がその図の内容と見どころを補います。"
                      "映画本編で起きること、実際の作者の行動、技法の来歴などを語る要点は、"
                      "meaning、visibleTestと、その主張を確かめられるsourceIdsを返してください。")
-SELECTED_ANGLE = ("requestは今回選んだ動画案です。そこにある冒頭、観終わったときの発見、要確認事項を"
-                  "この一本の範囲として扱います。themeBackgroundは資料庫にあるテーマの紹介です。"
+SELECTED_ANGLE = ("採用した案で何を見せると約束したか、観終わったときの発見と明示された条件を守ります。"
+                  "冒頭の演出や要確認事項の各案は、その約束を果たす別の手立てがあるなら見直せます。"
+                  "themeBackgroundは資料庫にあるテーマの紹介です。"
                   "紹介文や前稿に別の逸話があっても、選んだ発見に至るために必要な分だけを採用します。"
                   "依頼が特定の作品の比較を求める場合、それぞれの実例を資料がどこまで特定するかを確かめます。"
                   "一般的な共通点や番組の作例だけで具体例の確認を済ませないでください。"
@@ -32,7 +33,7 @@ CHECK_MATERIAL = ("依頼を満たすために必須の根拠や実物が資料�
 SCOPE_PROMPT = """あなたはPlunodeの企画編集者です。制作依頼と使える根拠を読み、見終わった人の記憶に
 残したい瞬間や発見を考えます。questionには、その瞬間を見つけるために編集者が持つ問いを記します。
 人物の何気ない動きから入る、同じ景色が途中で違って見える、選択に至った理由を追うなど、題材に合う構成を選びます。
-採用済みの動画案があれば、その導入と観終わったときの発見を一本の軸にします。元テーマの別の逸話は、
+採用済みの動画案があれば、観終わったときの発見を一本の軸にします。元テーマの別の逸話は、
 この発見を理解するために必要なものだけを選んでください。演出案を実際に起きた出来事として語るときには、その根拠を確かめます。
 最初の絵と音が、この回の第一印象をつくります。そこに何を置き、視線がその先の何に気づくかを考えます。途中で当事者の回想や資料を明かすと、先ほどの絵がどう見えてくるかも考えてください。
 謎かけと解答を語りに入れるかも企画次第です。依頼に特定の出来事とその意図が挙がっている場合は、
@@ -47,7 +48,7 @@ beatsは、この一本の理解に欠かせない因果・発見を、必要な
 AUDIENCE_PROMPT = """初めてこの動画に出会う人として、日本語で感想を返してください。手元にあるのは
 視聴者に順に届く語り・画面の文字・絵の記述です。一度観たつもりで、何が起き、どこで何に気づいたかを、
 心に残った具体的な場面も含めてretellingに書いてください。誰かの行動の理由が伝わった場合はそれも記します。
-台本にない知識で理由を補わず、迷った箇所や
+実際に起きたことと、誰かの見方や作例の境目で迷ったところがあれば、そのまま記してください。台本にない知識で理由を補わず、迷った箇所や
 置き去りの問いをunclearに示してください。迷いがなければ空文字にできます。作者の意図を推測して採点しません。"""
 
 REVISION_PROMPT = """企画から清書までを任された編集者です。依頼と資料を読み直し、初稿で初見の読み手が
@@ -185,11 +186,13 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
         return _check_draft(raw, snapshot, materials["assets"], "ja")
 
     facts = {key: materials[key] for key in ("theme", "description", "angle", "records", "sources")}
-    scope_instructions = SCOPE_PROMPT + "\n" + SCOPE_MATERIAL
+    if materials.get("editorialDirection"):
+        facts["editorialDirection"] = materials["editorialDirection"]
+    scope_instructions = "\n".join((SCOPE_PROMPT, SELECTED_ANGLE, VIDEO_EVIDENCE, SCOPE_MATERIAL))
     if "productionResearch" in materials:
         facts["productionResearch"] = materials["productionResearch"]
         facts["illustrations"] = materials.get("illustrations", {})
-        scope_instructions += ("\n追加調査後の再企画です。採用した案の導入と発見に焦点を戻し、そこに不要な別の逸話は省いてください。"
+        scope_instructions += ("\n追加調査後の再企画です。採用した案の発見に焦点を戻し、そこに不要な別の逸話は省いてください。"
                                "追加資料の言える範囲、未確認の点、使える作図を照合します。説明の作例と特定の実例を区別し、"
                                "調べていない版・時刻・方向や利用許諾を補わないでください。")
     if "previousJapanese" in materials:
@@ -284,7 +287,8 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
             return raw
         audit_inputs = {**audit_request, "initialScope": scope, "revisedScope": revised_scope,
                         "cut": cut}
-        check_instructions = CHECK_PROMPT + "\n" + CHECK_MATERIAL
+        check_instructions = "\n".join((CHECK_PROMPT, VIDEO_EVIDENCE, CHECK_MATERIAL,
+            "読みや予想では、手掛かりと帰属が妥当で、視聴者が確かさの程度を受け取れるかを確認します。"))
         if angle:
             check_instructions += "\n" + SELECTED_ANGLE
         if illustrations:

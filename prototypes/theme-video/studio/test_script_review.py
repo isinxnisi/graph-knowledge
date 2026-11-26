@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from editor import MaterialRequired, _check_draft, _schema
+from editor import MaterialRequired, _check_draft, _draft_input, _schema
 from script_review import _audience_cut, _scope, _scope_schema, produce_japanese
 from wipe_board import ASSET as WIPE_DEMO, DESCRIPTION as WIPE_PICTURE
 from writer_feedback import RevisionNeeded
@@ -77,6 +77,20 @@ class ScriptReviewTest(unittest.TestCase):
             self.assertEqual(entry["status"], "failed")
             self.assertEqual(entry["result"], gap)
             self.assertFalse((self.folder / "editor-input.json").exists())
+
+    def test_research_direction_reaches_every_editor_but_not_the_blind_reader(self):
+        direction = "回想を当事者自身の読みと分かるように紹介する。"
+        snapshot = {**self.snapshot, "title": "鏡", "description": "", "records": [], "editorialDirection": direction}
+        self.materials.update(_draft_input(snapshot, self.materials["angle"]))
+        outputs = [self.scope, self.draft, self.reader, self.revision, self.verdict("鏡と同じ並び")]
+        with patch("script_review._call_writer", side_effect=[(v, {}) for v in outputs]) as writer:
+            self.produce()
+        inputs = [json.loads(call.args[0]["prompt"].rsplit("\n\n", 1)[1]) for call in writer.call_args_list]
+        for stage in (0, 1, 3):
+            self.assertEqual(inputs[stage]["editorialDirection"], direction)
+        self.assertEqual(inputs[4]["referenceMaterials"]["editorialDirection"], direction)
+        self.assertEqual(set(inputs[2]), {"scenes"})
+        self.assertNotIn(direction, str(inputs[2]))
 
     def test_negative_visual_hold_returns_to_the_writer_and_keeps_the_reader_blind(self):
         bad = deepcopy(self.draft)

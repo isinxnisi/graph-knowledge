@@ -116,6 +116,82 @@ class LedgerTest(unittest.TestCase):
             self.desk.resume(case["id"], case["runId"])
             self.assertEqual(self.desk.case(case["id"])["runs"][0]["status"], "queued")
 
+    def test_editorial_alternative_starts_once_with_frozen_brief_and_sources(self):
+        self.request.update(language="ja", scriptFirst=True)
+        case = self.create()
+        cid, source = case["id"], case["runId"]
+        folder = self.data / "cases" / cid / source
+        self.desk.process_next(Mock(side_effect=MaterialRequired("特定の場面は未確認")), self.render)
+        proposal = {"title": "目の前で切り替える", "brief": "一枚の自作図で仕組みを試す", "reason": "両作の場面の直接比較を外す"}
+        proposal_file = folder / "editorial-alternative.json"
+        proposal_file.write_text(json.dumps(proposal))
+        confirmed = {"status": "done", "need": "元案の調査", "remaining": "向きは未確認", "sources": [
+            {"title": "原文", "url": "https://example.org/film", "locator": "概要", "excerpt": "wipe", "note": "技法の説明"}]}
+        report_file = folder / "material-research.json"
+        report_file.write_text(json.dumps({"rounds": [confirmed, {"status": "error", "sources": []}]}))
+        key = self.desk.case(cid)["runs"][0]["editorialAlternative"]["fingerprint"]
+        with self.assertRaises(ValueError):
+            self.desk.start_alternative(cid, source, "outdated")
+        with self.assertRaises(KeyError):
+            self.desk.start_alternative("another", source, key)
+        with ThreadPoolExecutor(max_workers=3) as threads:
+            results = list(threads.map(lambda _: self.desk.start_alternative(cid, source, key), range(3)))
+        new_run = results[0]["runId"]
+        self.assertEqual(results, [{"id": cid, "runId": new_run}] * 3)
+        chosen, retained = self.desk.case(cid)["runs"]
+        self.assertEqual((chosen["parent"], chosen["model"], chosen["langs"]), (source, self.request["model"], ["ja"]))
+        self.assertEqual((retained["id"], retained["status"], retained["editorialAlternative"]["startedRunId"]),
+                         (source, "needs_material", new_run))
+        self.assertEqual(retained["materialResearch"]["rounds"][0], confirmed)
+        self.assertEqual(self.desk.case(cid)["brief"], self.request["brief"])
+
+        proposal_file.unlink()
+        report_file.unlink()
+        self.desk = Ledger(self.data)
+        self.assertEqual(self.desk.start_alternative(cid, source, key)["runId"], new_run)
+        write, render = Mock(return_value=deepcopy(self.plan)), Mock()
+        self.desk.process_next(write, render)
+        payload = write.call_args
+        self.assertIn(proposal["brief"], payload.args[1])
+        self.assertNotIn(self.request["brief"], payload.args[1])
+        self.assertEqual(payload.kwargs["language"], "ja")
+        self.assertNotIn("previous_japanese", payload.kwargs)
+        research = json.loads((payload.args[3] / "material-research.json").read_text())
+        self.assertEqual(research["inheritedFromRun"], source)
+        self.assertEqual(research["rounds"], [{**confirmed, "inheritedFromRun": source}])
+        self.assertEqual(self.desk.case(cid)["runs"][0]["status"], "script_ready")
+        self.assertEqual(self.desk.case(cid)["title"], "試験用テーマ")
+        self.assertEqual(self.desk.list_cases()[0]["title"], "試験用テーマ")
+        render.assert_not_called()
+
+        self.desk.resume(cid, new_run)
+        self.desk.process_next(write, self.render)
+        self.desk.submit("runs", dict(requestId="english", parent=new_run, model="test", language="en"),
+                         self.snapshot, self.models, cid)
+        self.desk.process_next(write, self.render)
+        english = self.desk.case(cid)["runs"][0]
+        self.assertEqual(english["plan"]["japaneseMasterRunId"], new_run)
+        self.assertEqual(english["chosenAlternative"]["sourceRunId"], source)
+        self.assertEqual(english["chosenAlternative"]["brief"], proposal["brief"])
+        self.assertNotIn(self.request["brief"], write.call_args.args[1])
+
+    def test_only_current_proposal_on_waiting_japanese_run_can_start(self):
+        self.request.update(language="ja")
+        case = self.create()
+        cid, source = case["id"], case["runId"]
+        self.desk.process_next(Mock(side_effect=MaterialRequired("資料待ち")), self.render)
+        path = self.data / "cases" / cid / source / "editorial-alternative.json"
+        for malformed in ("{", "null", '{"title":"title"}'):
+            path.write_text(malformed)
+            self.assertIsNone(self.desk.case(cid)["runs"][0]["editorialAlternative"])
+        path.write_text(json.dumps({"title": "新しい案", "brief": "図解", "reason": "再構成"}))
+        key = self.desk.case(cid)["runs"][0]["editorialAlternative"]["fingerprint"]
+        self.desk.resume(cid, source)
+        with self.assertRaises(ValueError):
+            self.desk.start_alternative(cid, source, key)
+        self.assertIsNone(self.desk.case(cid)["runs"][0]["editorialAlternative"])
+        self.assertEqual(len(self.desk.case(cid)["runs"]), 1)
+
     def test_optional_research_urls_are_atomic_deduplicated_and_scoped_to_waiting_run(self):
         self.request.update(language="ja", scriptFirst=True)
         case = self.create()

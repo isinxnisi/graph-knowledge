@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 from subprocess import CompletedProcess
 
-from editor import (MaterialRequired, WEBB_BOARDS, WEBB_ID, _apply_adaptation, _check_draft, _schema,
+from editor import (MaterialRequired, WEBB_BOARDS, WEBB_ID, _apply_adaptation, _check_draft, _schema, _visual_materials,
                     generate_ideas, generate_plan, list_models)
 from script_review import _audience_cut
 
@@ -28,6 +28,13 @@ class EditorialNoteTest(unittest.TestCase):
 
     def check(self):
         return _check_draft(self.draft, self.snapshot, ["source"])
+
+    def test_original_demo_is_available_from_fixed_theme_evidence_before_additional_research(self):
+        for excerpt, available in (("nearly identical wipe transitions", True), ("two films", False)):
+            payload = {"records": [{"evidence": [{"excerpt": excerpt}]}]}
+            assets = _visual_materials(self.snapshot, "ワイプに注目する", "ja", payload)
+            self.assertEqual("wipe-demo" in assets, available)
+            self.assertEqual("illustrations" in payload, available)
 
     def test_original_demo_can_describe_its_own_motion(self):
         shot = self.draft["scenes"][0]

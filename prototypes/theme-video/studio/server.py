@@ -182,12 +182,14 @@ class Handler(BaseHTTPRequestHandler):
             if match:
                 ledger.set_idea_status(match[1], required(data, "status", 20))
                 return self.respond(200, {"ok": True})
-            match = re.fullmatch(r"/api/cases/([\w-]+)/(runs|adopt|rework|resume|pause)", path)
+            match = re.fullmatch(r"/api/cases/([\w-]+)/(runs|adopt|rework|resume|pause|alternative)", path)
             if match:
                 cid, action = match.groups()
                 if action == "runs":
                     from editor import get_snapshot, list_models
                     return self.respond(201, ledger.submit(path, data, get_snapshot, list_models, cid))
+                if action == "alternative":
+                    return self.respond(200, ledger.start_alternative(cid, required(data, "runId"), required(data, "fingerprint", 64)))
                 if action in ("adopt", "rework"):
                     ledger.review(cid, data, "adopted" if action == "adopt" else "rework")
                 elif action == "resume":

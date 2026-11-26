@@ -114,6 +114,17 @@ def material_research(run_folder):
         return {"rounds": [], "error": "この試行の追加調査記録を読み込めませんでした。"}
 
 
+def editorial_alternative(folder):
+    try:
+        raw = json.loads((folder / "editorial-alternative.json").read_text(encoding="utf-8"))
+        if not isinstance(raw, dict):
+            return None
+        proposal = {key: required(raw, key, limit) for key, limit in (("title", 120), ("brief", 1800), ("reason", 1200))}
+    except (OSError, ValueError):
+        return None
+    return {**proposal, "fingerprint": hashlib.sha256(packed(proposal).encode()).hexdigest()}
+
+
 def reference_case():
     info = json.loads((PILOT / "reference.json").read_text(encoding="utf-8"))
     theme = info["theme"]
@@ -179,6 +190,10 @@ class Ledger:
                 INSERT INTO reviews(case_id,lang,run_id,reason,updated) SELECT s.* FROM selections s WHERE NOT EXISTS
                     (SELECT 1 FROM reviews v WHERE v.case_id=s.case_id AND v.lang=s.lang);
                 CREATE TABLE IF NOT EXISTS requests(key TEXT PRIMARY KEY, digest TEXT NOT NULL, result TEXT NOT NULL);
+                CREATE TABLE IF NOT EXISTS run_alternatives(
+                    run_id TEXT PRIMARY KEY REFERENCES runs(id), source_run TEXT NOT NULL REFERENCES runs(id),
+                    fingerprint TEXT NOT NULL, proposal TEXT NOT NULL, research TEXT NOT NULL,
+                    UNIQUE(source_run,fingerprint));
             """)
             if "kind" not in {r["name"] for r in db.execute("PRAGMA table_info(reviews)")}:
                 db.execute("ALTER TABLE reviews ADD COLUMN kind TEXT NOT NULL DEFAULT 'adopted'")
@@ -187,6 +202,8 @@ class Ledger:
                 db.execute("ALTER TABLE runs ADD COLUMN script_first INTEGER NOT NULL DEFAULT 0")
             if "previous_japanese" not in columns:
                 db.execute("ALTER TABLE runs ADD COLUMN previous_japanese TEXT")
+            if "editorial_origin" not in columns:
+                db.execute("ALTER TABLE runs ADD COLUMN editorial_origin TEXT REFERENCES runs(id)")
             db.execute("UPDATE runs SET status='interrupted',progress='停止した工程から再開できます' WHERE status='running'")
             db.executescript(idea_store.SCHEMA)
             # A batch and its ideas commit together, so unfinished generation can be replayed.
@@ -352,13 +369,15 @@ class Ledger:
                 raise KeyError(case_id)
             plan = None
             previous_japanese = None
+            editorial_origin = None
             draft_edit = False
             langs = list(LANGS) if language == "both" else [language]
             if parent:
-                row = db.execute("SELECT plan,model,langs,editions,status FROM runs WHERE id=? AND case_id=?",
+                row = db.execute("SELECT plan,model,langs,editions,status,editorial_origin FROM runs WHERE id=? AND case_id=?",
                                  (parent, case_id)).fetchone()
                 if not row:
                     raise ValueError("元の試行が見つかりません。")
+                editorial_origin = row["editorial_origin"]
                 editions = json.loads(row["editions"])
                 if language == "ja" and row["plan"] and "ja" in json.loads(row["langs"]):
                     original = json.loads(row["plan"])
@@ -404,16 +423,47 @@ class Ledger:
                     model = row["model"]
             run_id = uuid.uuid4().hex
             status, progress = ("script_ready", "修正版の台本を保存しました") if draft_edit else ("queued", "順番待ち")
-            db.execute("""INSERT INTO runs(id,case_id,parent,model,langs,reason,status,progress,created,plan,script_first,previous_japanese)
-                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?)""",
+            db.execute("""INSERT INTO runs(id,case_id,parent,model,langs,reason,status,progress,created,plan,script_first,previous_japanese,editorial_origin)
+                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                        (run_id, case_id, parent, model, packed(langs), reason, status, progress,
                         now, packed(plan) if plan else None, int(script_first),
-                        packed(previous_japanese) if previous_japanese else None))
+                        packed(previous_japanese) if previous_japanese else None, editorial_origin))
             result = {"id": case_id, "runId": run_id}
             db.execute("INSERT INTO requests VALUES(?,?,?)", (key, digest, packed(result)))
             db.execute("UPDATE cases SET updated=? WHERE id=?", (now, case_id))
         self.wake.set()
         return result
+
+    def start_alternative(self, case_id, run_id, fingerprint):
+        with self.db() as db:
+            db.execute("BEGIN IMMEDIATE")
+            source = db.execute("SELECT * FROM runs WHERE case_id=? AND id=?", (case_id, run_id)).fetchone()
+            if not source:
+                raise KeyError(run_id)
+            prior = db.execute("SELECT run_id FROM run_alternatives WHERE source_run=? AND fingerprint=?",
+                               (run_id, fingerprint)).fetchone()
+            if prior:
+                return {"id": case_id, "runId": prior["run_id"]}
+            if display_status(source["status"], source["error"]) != "needs_material" or "ja" not in json.loads(source["langs"]):
+                raise ValueError("別案を始めるには資料待ちの日本語の試行を選んでください。")
+            folder = self.folder / "cases" / case_id / run_id
+            proposal = editorial_alternative(folder)
+            if not proposal or proposal["fingerprint"] != fingerprint:
+                raise ValueError("別案が更新されました。案件を開き直して内容を確認してください。")
+            report = material_research(folder) or {"rounds": []}
+            if report.get("error"):
+                raise ValueError(report["error"])
+            rounds = [dict(r, inheritedFromRun=r.get("inheritedFromRun") or run_id) for r in report["rounds"]
+                      if r.get("status") == "done" and r.get("sources")]
+            new_run, now = uuid.uuid4().hex, clock()
+            db.execute("""INSERT INTO runs(id,case_id,parent,model,langs,reason,status,progress,created,script_first,editorial_origin)
+                          VALUES(?,?,?,?,?,'','queued','別案で生成待ち',?,?,?)""",
+                       (new_run, case_id, run_id, source["model"], source["langs"], now, source["script_first"], new_run))
+            db.execute("INSERT INTO run_alternatives VALUES(?,?,?,?,?)",
+                       (new_run, run_id, fingerprint, packed(proposal), packed({"inheritedFromRun": run_id, "rounds": rounds})))
+            db.execute("UPDATE cases SET updated=? WHERE id=?", (now, case_id))
+        self.wake.set()
+        return {"id": case_id, "runId": new_run}
 
     def resume(self, case_id, run_id, material_leads=None):
         if material_leads is None:
@@ -495,13 +545,17 @@ class Ledger:
                                 LEFT JOIN idea_case_members m ON m.case_id=c.id WHERE c.id=?""", (case_id,)).fetchone()
             if not row:
                 raise KeyError(case_id)
-            runs = db.execute("SELECT * FROM runs WHERE case_id=? ORDER BY created DESC,rowid DESC", (case_id,)).fetchall()
+            runs = db.execute("""SELECT r.*,a.source_run,a.proposal FROM runs r
+                                 LEFT JOIN run_alternatives a ON r.editorial_origin=a.run_id
+                                 WHERE r.case_id=? ORDER BY r.created DESC,r.rowid DESC""", (case_id,)).fetchall()
             selections = db.execute("SELECT * FROM selections WHERE case_id=?", (case_id,)).fetchall()
             reviews = db.execute("SELECT * FROM reviews WHERE case_id=? ORDER BY rowid DESC", (case_id,)).fetchall()
         snap = json.loads(row["snapshot"])
         accepted = {s["lang"]: s["run_id"] for s in selections}
         judgments = {(s["run_id"], s["lang"]): s for s in reversed(reviews)}
         states, history = {}, []
+        started = {(r["source_run"], json.loads(r["proposal"])["fingerprint"]): r["id"]
+                   for r in runs if r["editorial_origin"] == r["id"]}
         for run in runs:
             status = display_status(run["status"], run["error"])
             editions = json.loads(run["editions"])
@@ -516,13 +570,19 @@ class Ledger:
             for lang in langs:
                 rework = editions.get(lang, {}).get("reviewStatus") == "rework"
                 states.setdefault(lang, edition_state(status, lang in editions, accepted.get(lang) == run["id"], rework))
-            research = material_research(self.folder / "cases" / case_id / run["id"])
+            folder = self.folder / "cases" / case_id / run["id"]
+            research = material_research(folder)
+            proposal = editorial_alternative(folder) if status == "needs_material" and "ja" in langs else None
+            if proposal:
+                proposal["startedRunId"] = started.get((run["id"], proposal["fingerprint"]))
+            chosen = json.loads(run["proposal"]) if run["proposal"] else None
             history.append(dict(id=run["id"], parent=run["parent"], status=status, model=run["model"],
                                 reason=run["reason"], progress=run["progress"], created=run["created"],
                                 langs=langs, error=run["error"], editions=editions,
                                 materialResearch=research, canAddMaterialLeads=accepts_material_leads(status, run["error"], research),
+                                editorialAlternative=proposal, chosenAlternative={**chosen, "sourceRunId": run["source_run"]} if chosen else None,
                                 plan=json.loads(run["plan"]) if run["plan"] else None))
-        title = next((r["plan"]["titles"]["ja"] for r in reversed(history) if r["plan"]),
+        title = next((r["plan"]["titles"]["ja"] for r in reversed(history) if r["plan"] and not r["chosenAlternative"]),
                      row["idea_title"] or row["title"])
         for lang in LANGS:
             states.setdefault(lang, "未生成")
@@ -537,7 +597,8 @@ class Ledger:
             rows = db.execute("""SELECT c.id,c.brief,c.updated,
                 json_extract(c.snapshot,'$.themeId') themeId,json_extract(c.snapshot,'$.revision') revision,
                 c.title themeTitle,coalesce((SELECT json_extract(r.plan,'$.titles.ja') FROM runs r
-                WHERE r.case_id=c.id AND r.plan IS NOT NULL ORDER BY r.created,r.rowid LIMIT 1),m.idea_title,c.title) title,
+                WHERE r.case_id=c.id AND r.plan IS NOT NULL AND r.editorial_origin IS NULL
+                ORDER BY r.created,r.rowid LIMIT 1),m.idea_title,c.title) title,
                 m.idea_id ideaId,m.number ideaCaseNumber,m.total ideaCaseCount FROM cases c
                 LEFT JOIN idea_case_members m ON m.case_id=c.id ORDER BY c.updated DESC,c.rowid DESC""").fetchall()
             items = {r["id"]: {**dict(r), "reference": False, "states": {}, "accepted": {}} for r in rows}
@@ -569,7 +630,8 @@ class Ledger:
     def process_next(self, generate, render):
         with self.db() as db:
             db.execute("BEGIN IMMEDIATE")
-            row = db.execute("""SELECT r.*,c.snapshot,c.brief FROM runs r JOIN cases c ON r.case_id=c.id
+            row = db.execute("""SELECT r.*,c.snapshot,c.brief,a.proposal,a.research FROM runs r JOIN cases c ON r.case_id=c.id
+                            LEFT JOIN run_alternatives a ON r.editorial_origin=a.run_id
                             WHERE r.status='queued' ORDER BY r.created,r.rowid LIMIT 1""").fetchone()
             if not row:
                 return False
@@ -584,6 +646,13 @@ class Ledger:
                 plan = json.loads(row["plan"])
             else:
                 brief = row["brief"]
+                if row["proposal"]:
+                    choice = json.loads(row["proposal"])
+                    brief = "仮題　" + choice["title"] + "\n" + choice["brief"]
+                    report_path = folder / "material-research.json"
+                    inherited = json.loads(row["research"])
+                    if inherited["rounds"] and not report_path.exists():
+                        _save_json(report_path, inherited)
                 if row["reason"]:
                     brief += "\n今回の試行で重視する点\n" + row["reason"]
                 options = {"progress": lambda message: self.progress(run, message)}

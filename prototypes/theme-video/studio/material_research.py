@@ -12,16 +12,18 @@ from wipe_board import DESCRIPTION as WIPE_PICTURE
 
 _STUDIO = Path(__file__).resolve().parent
 _ROOT = _STUDIO.parents[2]
-_VERSION = "plunode-video-material-research-1"
+_VERSION = "plunode-video-material-research-2"
 _SEARCH = """あなたはPlunode映像制作室の調査担当です。needの何が分かれば制作を再開できるかを特定し、
 ウェブ検索を実行し、公開されている原資料の本文を開いてください。すでにある根拠とpreviousの調査を踏まえ、
 選ばれた案の導入と観終わった後の発見を優先します。調査中に出た逸話は、この案に必要な場合だけ扱い、
 別企画に広げないでください。作品の実際の場面と、技法を伝える番組の作例を区別してください。
 以前の候補がすべて照合できなかった場合は、引用不一致や形式などの理由を次の探索に生かしてください。
 sourceLeadsは優先して確認する公開URLの手がかりです。内容は未照合なので、原資料を開き、今回の問いに合う引用を確かめてください。
-既存資料の公開URLも手がかりに、追加で確かめたいことに直接答えるものを選んでください。対象者の発言、開発元、アーカイブ、論文、
-データの作成元など、題材に合う由来の追える資料を優先します。必要な分だけ、最大6件を提案できます。
-各sourceには題名、認証不要のHTTPSの原資料URL、該当箇所、原文の連続した短い引用、どの点を支えるかを返します。
+既存資料の公開URLも手がかりに、問いの全部または一部を照らす、由来の追える資料を探します。
+当事者の証言、研究、具体的な観察を記した批評や記事も対象です。番組の解釈や仮説に使える場合は、その出発点となる観察を探してください。
+資料は今回の映像で扱うために集めます。Plunodeの公開テーマへの登録可否はこの調査の採否条件に含めません。
+必要な分だけ最大6件まで、題名、認証不要のHTTPSの原資料URL、該当箇所、原文の連続した短い引用を返します。
+noteには、確かめられた内容と、誰のどの観察・発言として紹介できるか、または番組のどんな読みの手掛かりになるかを具体的に書きます。
 検索結果の紹介文や要約を原文引用として提出しないでください。裏付けられた年代・版・資料の持ち主と、
 映像で画像を利用できる条件を区別します。画像が必要なら、どの実物を使えるか、明示された利用条件があるかを調べます。
 HTML、プレーンテキスト、文字を抽出できる2 MB以内の公開PDFの本文を照合できます。PDFは一ページ内の連続した原文を選びます。
@@ -31,11 +33,16 @@ HTML、プレーンテキスト、文字を抽出できる2 MB以内の公開PDF
 _REVIEW = """あなたは映像の資料編集者です。検証済み候補の原文と前後の本文を読み、選ばれた案の導入と発見に照らしてneedがどこまで解消したかを判断します。
 quoteは掲載本文との一致を確認した原文です。候補の題名や掲載位置は調査担当の報告です。原文と前後の文脈、
 著者の立場・時点と版に照らし、実際に支えられる箇所に限定してください。
-採用する候補のindexと、何をどのように語れるかを示す日本語のnoteを返してください。推測しかできない項目を採用しないでください。
+候補のproposedUseは調査担当の提案です。引用本文で確かめ直し、採用する候補のindexと脚本に渡す日本語のnoteを返してください。
+事実を支える記述、誰が何を述べたかを紹介できる証言・批評、番組が一つの読みを示す手掛かりは、それぞれ語れる範囲が違います。
+当てはまるものだけをnoteに具体的に残します。証言や批評は発言者や媒体に帰属させ、番組の解釈や仮説は本文にある観察と推論の境目を示します。
+例えば、記事が二作品の編集の似た点を指摘していれば、記事に帰属させて比較を紹介できます。そこから特定場面の時刻や作者の意図まで確定はできません。
+「かもしれない」を添えただけの作り話や未確認の前提は採用しません。本文が一部を支えるなら、使える部分とその限界をnoteに書いてください。
 写真・実物・音声・模式図の取得や利用条件、実際に描けることは、文献による事実の裏付けとは別々に判断してください。
-映像や新しい図が要る場合は制作側で必要な実作業をremainingに残してください。この調査は動画素材ファイルを取得しません。
-availableIllustrationがあれば、番組が描ける技法の作例として使用できます。特定の映画の場面にその技法がある証拠や、映画素材の利用許諾にはなりません。
-未確認の点があればremainingに具体的に書きます。確認済み候補が直接答えられる範囲に限り、残件を空にできます。"""
+この調査は動画素材ファイルを取得しません。availableIllustrationは制作側で用意済みの自作例です。脚本ではその動きをそのまま使えます。
+実際の映画の場面を示すときは場面の確認が、映画の素材を使うときは利用条件の確認がそれぞれ必要です。
+remainingは、その導入と発見を成立させるため、脚本に進む前になお調べる必要がある点です。用意済みの作例を描画する作業や、
+使わない映像の利用条件を残件に数えません。省ける細部や語り方で守れる限界はnoteに残し、必要な調査が済んだ場合はremainingを空にします。"""
 _STRING = {"type": "string"}
 _CANDIDATE = _object(dict.fromkeys(("title", "url", "locator", "excerpt", "note"), _STRING))
 _SEARCH_SCHEMA = _object({"sources": {"type": "array", "items": _CANDIDATE}, "remaining": _STRING})
@@ -83,7 +90,7 @@ def research_material(snapshot, brief, issue, model, effort, previous, progress=
         data["sourceLeads"] = list(leads)
     for entry in reversed((previous or [])[-3:]):
         summary = {key: entry[key][:1200] for key in ("need", "remaining", "error") if entry.get(key)}
-        summary["sources"] = [{key: source[key][:600] for key in ("title", "url", "excerpt", "note") if source.get(key)}
+        summary["sources"] = [{key: source[key][:600] for key in ("title", "url", "locator", "excerpt", "note") if source.get(key)}
                               for source in (entry.get("sources") or [])[:_MAX_CANDIDATES]]
         data["previous"].insert(0, summary)
         if len(json.dumps(data, ensure_ascii=False)) > 195_000:
@@ -114,7 +121,7 @@ def research_material(snapshot, brief, issue, model, effort, previous, progress=
     if progress:
         progress("原文が今回の企画を支える範囲を確認中")
     excerpts = [{"index": i, "url": s["url"], "title": s["title"], "locator": s["locator"],
-                 "quote": s["excerpt"], "context": context} for i, (s, context) in enumerate(verified)]
+                 "quote": s["excerpt"], "context": context, "proposedUse": s["note"]} for i, (s, context) in enumerate(verified)]
     judgment = _object({"index": {"type": "integer", "enum": list(range(len(excerpts)))}, "note": _STRING})
     schema = _object({"supported": {"type": "array", "items": judgment}, "remaining": _STRING})
     data = {"theme": snapshot["title"], "brief": brief, "need": issue, "candidates": excerpts,

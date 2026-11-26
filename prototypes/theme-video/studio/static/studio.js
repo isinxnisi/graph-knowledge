@@ -658,7 +658,8 @@ function drawProgress() {
   const boxes = relevant.map((run) => {
     const bad = run.status === "failed";
     const box = node("div", null, "status-box" + (bad ? " bad" : ""));
-    box.append(node("strong", "試行 " + (ordered.length - ordered.indexOf(run)) + " · " + (jobName[run.status] || run.status) + "　"), node("span", run.error || run.progress || ""));
+    const explanation = run.editorialAlternative?.reason || run.error || run.progress || "";
+    box.append(node("strong", "試行 " + (ordered.length - ordered.indexOf(run)) + " · " + (jobName[run.status] || run.status) + "　"), node("span", explanation));
     const button = run.status === "script_ready" && run !== selected ? inspectScript(run) : statusButton(run);
     if (button) box.append(button);
     if (run.materialResearch || run.status === "needs_material") {
@@ -670,6 +671,18 @@ function drawProgress() {
         report.open = true;
         report.querySelector("summary").focus();
         report.scrollIntoView({ block: "nearest" });
+      };
+      box.append(show);
+    }
+    if (run.editorialAlternative) {
+      const show = node("button", "別案「" + run.editorialAlternative.title + "」を見る", "quiet small");
+      show.type = "button";
+      show.onclick = () => {
+        $("history-panel").open = true;
+        const details = $("alternative-" + run.id);
+        details.open = true;
+        details.querySelector("summary").focus();
+        details.scrollIntoView({ block: "nearest" });
       };
       box.append(show);
     }
@@ -690,7 +703,8 @@ function researchDetails(run) {
     const section = node("section");
     const status = round.status === "searching" ? (run.status === "running" ? "調査中" : "結果未保存")
       : round.status === "error" ? "調査エラー" : "";
-    section.append(node("h4", "調査 " + (i + 1) + (status ? "　" + status : "")));
+    const inherited = round.inheritedFromRun ? "　試行 " + runNumber(round.inheritedFromRun) + " から引き継ぎ" : "";
+    section.append(node("h4", "調査 " + (i + 1) + inherited + (status ? "　" + status : "")));
     if (round.need) section.append(node("p", round.need));
     if (round.sources?.length) {
       section.append(node("h5", "確認できた出典"));
@@ -727,6 +741,33 @@ function researchDetails(run) {
   }
   return details;
 }
+function alternativeDetails(run) {
+  const proposal = run.editorialAlternative;
+  const details = node("details", null, "material-research");
+  details.id = "alternative-" + run.id;
+  details.open = Boolean($(details.id)?.open);
+  details.append(node("summary", "別案　" + proposal.title), node("p", proposal.brief), node("p", proposal.reason, "subtle"));
+  if (proposal.startedRunId) {
+    details.append(node("p", "試行 " + runNumber(proposal.startedRunId) + " で選択済みです。"));
+    return details;
+  }
+  const button = node("button", "この別案で新しい試行を開始", "secondary small");
+  button.type = "button";
+  button.onclick = async () => {
+    const active = state.detail.id;
+    button.disabled = true;
+    try {
+      const result = await api(detailPath("/alternative"), { runId: run.id, fingerprint: proposal.fingerprint });
+      if (state.detail?.id !== active) return;
+      state.resumeAfter = result.runId;
+      await reloadDetail();
+      notify("別案の試行を受け付けました。元の試行は資料待ちのままです。");
+    } catch (err) { if (state.detail?.id === active) notify(err.message, true); }
+    finally { button.disabled = false; }
+  };
+  details.append(node("p", "元の試行を資料待ちに残し、確認済みの出典を引き継ぎます。", "subtle"), button);
+  return details;
+}
 function drawHistory() {
   const ordered = orderedRuns();
   const active = document.activeElement;
@@ -739,9 +780,11 @@ function drawHistory() {
     const langs = (run.langs || []).map((l) => languageName[l] || l).join(" / ");
     row.append(node("p", [when(run.created), langs, state.detail.reference ? null : modelLabel(run)].filter(Boolean).join("　·　"), "subtle"));
     if (run.plan?.japaneseMasterRunId) row.append(node("p", "元の日本語版　試行 " + runNumber(run.plan.japaneseMasterRunId), "subtle"));
+    if (run.chosenAlternative) row.append(node("p", "試行 " + runNumber(run.chosenAlternative.sourceRunId) + " の別案　" + run.chosenAlternative.title));
     if (run.reason) row.append(node("p", run.reason));
     if (run.error || ((pending(run) || run.status === "script_ready") && run.progress)) row.append(node("p", run.error || run.progress));
     if (run.materialResearch || run.status === "needs_material") row.append(researchDetails(run));
+    if (run.editorialAlternative) row.append(alternativeDetails(run));
     if (run.status === "script_ready") row.append(inspectScript(run));
     const button = statusButton(run);
     if (button) row.append(button);

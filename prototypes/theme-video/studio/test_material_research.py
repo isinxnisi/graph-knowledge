@@ -20,8 +20,10 @@ class MaterialResearchTest(unittest.TestCase):
     def test_only_matched_and_supported_evidence_reaches_the_editor(self):
         other = {**self.candidate, "url": "https://example.org/other"}
         proof = {"url": self.candidate["url"], "bodySha256": "aa", "textSha256": "bb", "excerptSha256": "cc"}
-        found = {"sources": [self.candidate, other], "remaining": "写真は未確認。"}
-        review = {"supported": [{"index": 0, "note": "星像と鏡の対応についての記述。"}], "remaining": "写真は未取得。"}
+        proposed = {**self.candidate, "note": "星像を地図に見立てたのが開発者の意図かもしれない。"}
+        found = {"sources": [proposed, other], "remaining": "写真は未確認。"}
+        reviewed_note = "記録は星像と鏡の対応を説明している。『地図のよう』は番組のたとえで、開発者の発言は未確認。"
+        review = {"supported": [{"index": 0, "note": reviewed_note}], "remaining": "写真は未取得。"}
         with patch("material_research._call_writer", side_effect=[(found, {"input_tokens": 2}), (review, {"input_tokens": 3})]) as writer, \
              patch("material_research._verify", return_value=[
                  {"proof": proof, "context": "commissioning context", "locator": "PDFファイルの2ページ"},
@@ -35,7 +37,12 @@ class MaterialResearchTest(unittest.TestCase):
         self.assertEqual(result["usage"], {"input_tokens": 5})
         self.assertIs(writer.call_args_list[0].kwargs["research"], True)
         self.assertFalse(writer.call_args_list[1].kwargs.get("research", False))
-        self.assertIn("commissioning context", writer.call_args_list[1].args[0]["prompt"])
+        review_input = json.loads(writer.call_args_list[1].args[0]["prompt"].rsplit("\n\n", 1)[1])
+        self.assertEqual(len(review_input["candidates"]), 1)
+        candidate = review_input["candidates"][0]
+        self.assertEqual(candidate["context"], "commissioning context")
+        self.assertEqual(candidate["quote"], self.candidate["excerpt"])
+        self.assertEqual(candidate["proposedUse"], proposed["note"])
 
     def test_unverifiable_excerpt_returns_concrete_need_without_claiming_a_source(self):
         with patch("material_research._call_writer", return_value=({"sources": [self.candidate], "remaining": ""}, {})) as writer, \
@@ -66,6 +73,7 @@ class MaterialResearchTest(unittest.TestCase):
         self.assertEqual(data["production"]["sources"][0], self.snapshot["sources"][0])
         self.assertEqual(data["sourceLeads"], ["https://example.org/lead"])
         self.assertEqual([r["need"] for r in data["previous"]], ["3", "4", "5"])
+        self.assertEqual(data["previous"][-1]["sources"][0]["locator"], self.candidate["locator"])
         self.assertNotIn("proof", data["previous"][-1]["sources"][0])
 
     def test_pdf_quotes_stay_on_physical_pages_and_hash_original_bytes(self):
