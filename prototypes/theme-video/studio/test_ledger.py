@@ -230,6 +230,11 @@ class LedgerTest(unittest.TestCase):
         self.assertIn("第2場面", report()["reason"])
         self.assertIn("改稿を再開", report()["next"])
         self.desk.resume(cid, run)
+        old_stop = "清書稿の再確認で改稿が必要です。再開すると指摘を引き継ぎます。最初の場面を白地にしてください。"
+        self.desk.process_next(Mock(side_effect=RevisionNeeded(old_stop)), self.render)
+        self.assertIn("2回", report()["reason"])
+        self.assertIn("白地", report()["reason"])
+        self.desk.resume(cid, run)
         self.desk.process_next(Mock(return_value=self.plan), self.render)
         self.assertIn("台本が用意できました", report()["reason"])
         self.desk.resume(cid, run)

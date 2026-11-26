@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 from subprocess import CompletedProcess
 
-from editor import (MaterialRequired, WEBB_BOARDS, WEBB_ID, _apply_adaptation, _check_draft, _schema, _visual_materials,
+from editor import (MaterialRequired, WEBB_BOARDS, WEBB_ID, _adaptation_request, _apply_adaptation, _check_draft, _schema, _visual_materials,
                     generate_ideas, generate_plan, list_models)
 from script_review import _audience_cut
 
@@ -67,6 +67,25 @@ class EditorialNoteTest(unittest.TestCase):
         english["scenes"][0]["heading"] = "An extra heading"
         with self.assertRaisesRegex(ValueError, "日本語版"):
             _apply_adaptation(english, master)
+
+    def test_white_source_card_is_available_to_the_writer_reader_and_english_adaptation(self):
+        schema = _schema(["ref"], ["source"], "ja")["properties"]["scenes"]["items"]
+        self.assertIn("sourceBackground", schema["required"])
+        self.assertEqual(set(schema["properties"]["sourceBackground"]["enum"]), {None, "white"})
+        first = self.draft["scenes"][0]
+        first["sourceBackground"] = "white"
+        master = self.check()
+        self.assertEqual(master["scenes"][0]["sourceBackground"], "white")
+        viewed = _audience_cut(master)["scenes"]
+        self.assertIn("白地", viewed[0]["picture"])
+        self.assertIn("生成り", viewed[1]["picture"])
+        payload, _ = _adaptation_request(master, {**self.snapshot, "title": "鏡"}, "")
+        self.assertEqual(payload["scenes"][0]["sourceBackground"], "white")
+        english = {"title": "Light", "scenes": [{"id": s["id"], **s["en"]} for s in master["scenes"]]}
+        self.assertEqual(_apply_adaptation(english, master)["scenes"][0]["sourceBackground"], "white")
+        first["asset"] = "wipe-demo"
+        with self.assertRaisesRegex(ValueError, "出典カード"):
+            _check_draft(self.draft, self.snapshot, ["source", "wipe-demo"])
 
     def test_editorial_note_and_pronunciation_survive_projection(self):
         scene = self.draft["scenes"][0]

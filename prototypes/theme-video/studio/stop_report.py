@@ -90,12 +90,14 @@ def stop_report(run, folder, theme, idea_title, brief):
         reason, impact, next_step = _material_reason(folder, run, brief or "")
     elif status == "needs_revision":
         diagnostic = run["error"] or ""
-        for prefix in ("清書稿の再確認で改稿が必要です。再開すると指摘を引き継ぎます。",
-                       "指摘を返して2回修正しました。再開すると直近の稿と指摘を引き継ぎます。"):
-            diagnostic = diagnostic.removeprefix(prefix)
-        reason = "台本の確認で、修正が必要な点が残りました。"
-        if diagnostic:
-            reason += _summary(diagnostic, 160)
+        old_audit = "清書稿の再確認で改稿が必要です。再開すると指摘を引き継ぎます。"
+        field_limit = "指摘を返して2回修正しました。再開すると直近の稿と指摘を引き継ぎます。"
+        if diagnostic.startswith(old_audit):
+            reason = "当時の制作室は、改稿後の確認で2回指摘が残ると自動改稿を止めていました。" + _summary(diagnostic[len(old_audit):], 180)
+        elif diagnostic.startswith(field_limit):
+            reason = "同じ工程の出力を2回自動修正しても、確認を通らなかったため停止しました。" + _summary(diagnostic[len(field_limit):], 180)
+        else:
+            reason = _summary(diagnostic, 240) or "台本の確認で、修正が必要な点が残りました。"
         next_step = "「改稿を再開」で直近の出力と指摘を引き継ぎ、同じ試行で修正します。"
     elif status == "failed":
         reason, next_step = _failure(run)

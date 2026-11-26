@@ -6,10 +6,14 @@ from urllib.parse import urlsplit
 from editor import (JAPANESE_VERSION, VIDEO_EVIDENCE, MaterialRequired, _JAPANESE_PROMPT, _call_writer, _check_draft, _object,
                     _save_json, _text, _writer_request)
 from writer_feedback import RevisionNeeded, request_digest, validated_output
+from paper_stage_recovery import paper_stage
 from wipe_board import ASSET as WIPE_DEMO, DESCRIPTION as WIPE_PICTURE
 
 
 STRING = {"type": "string"}
+MAX_FRESH_FINAL_REVIEWS = 5
+LOCAL_REVISION = ("最終確認の指摘が個別の場面・表示・台詞に限られるときは、その箇所と直接つながる箇所だけを直します。"
+                  "既に確認が通った要点・場面順・語りは残し、前稿全体に必要な修正を反映した完成稿を返してください。")
 SCOPE_MATERIAL = ("選んだ案の理解に欠かせない要点を支える資料が見つからない場合、その要点にはmaterialRequestだけを返し、"
                   "何を確かめるためにどんな原典・図版が必要かを日本語で具体的に書いてください。"
                   "既存の資料で言える範囲に整えられる点や、案に不要な寄り道には追加調査を求めません。")
@@ -140,7 +144,8 @@ def _audience_cut(plan):
             cards = [source_by_id[k] for k in scene["sourceIds"][:2]]
             heading = scene["ja"]["heading"]
             placement = f"左に「{heading}」、右に" if heading else ("中央に" if len(cards) == 1 else "左右に")
-            picture = "出典資料。" + placement + "、".join(
+            ground = "白地" if scene.get("sourceBackground") == "white" else "生成りの紙色"
+            picture = f"出典資料。字幕帯より上の背景は{ground}。" + placement + "、".join(
                 f"{urlsplit(c['url']).hostname} {c['title']}" for c in cards)
         else:
             if scene["asset"] not in pictures:
@@ -172,12 +177,19 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
     scope_schema = _scope_schema(sorted(source_ids), illustrations)
     records = folder / "editor-stages"
     usage = {}
+    has_review_history = any(records.glob("05-check-*.json"))
 
     def stage(name, label, instructions, inputs, schema, validate):
         request = _writer_request(model, effort, JAPANESE_VERSION, instructions, inputs, schema)
-        value, accepted, cached, stage_usage = validated_output(
-            name=name, label=label, records=records, request=request, instructions=instructions, inputs=inputs,
-            validate=validate, writer=_call_writer, progress=progress)
+        saved = paper_stage(records, name, request, instructions, inputs, validate, LOCAL_REVISION) if has_review_history else None
+        if saved:
+            if progress:
+                progress(label + "（保存稿を引き継ぎ）")
+            value, accepted, cached, stage_usage = saved
+        else:
+            value, accepted, cached, stage_usage = validated_output(
+                name=name, label=label, records=records, request=request, instructions=instructions, inputs=inputs,
+                validate=validate, writer=_call_writer, progress=progress)
         for key, count in stage_usage.items():
             usage[key] = usage.get(key, 0) + count
         return value, accepted, cached
@@ -224,7 +236,7 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
     previous = initial
     feedback = None
     round_no = 0
-    fresh_failures = 0
+    fresh_rejections = []
     angle = materials["angle"].strip()
     revision_materials = materials
     audit_request = {"request": materials}
@@ -233,7 +245,7 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
         references["themeBackground"] = {"title": materials["theme"], "description": materials["description"]}
         revision_materials = {"request": angle, **references}
         audit_request = {"request": angle, "referenceMaterials": references}
-    while fresh_failures < 2:
+    while True:
         round_no += 1
         inputs = {**revision_materials, "initialScope": scope, "initialDraft": initial, "initialAudience": audience}
         if feedback is not None:
@@ -243,7 +255,13 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
             revision_instructions += "\n" + SELECTED_ANGLE
         if illustrations:
             revision_instructions += "\nrevisedScopeについて。" + ILLUSTRATION_BEAT
-        revised, script_request, _ = stage(f"04-revision-{round_no}", f"4/5 要点を見直して改稿中（{round_no}稿）",
+        revision_stage = f"04-revision-{round_no}"
+        if feedback is not None:
+            # Replay an already started revision with its original instructions and correction chain.
+            old_request = _writer_request(model, effort, JAPANESE_VERSION, revision_instructions, inputs, revision_schema)
+            if not (records / f"{revision_stage}-{request_digest(old_request)}.json").is_file():
+                revision_instructions += "\n" + LOCAL_REVISION
+        revised, script_request, _ = stage(revision_stage, f"4/5 要点を見直して改稿中（{round_no}稿）",
                                             revision_instructions, inputs,
                                             revision_schema, revision)
         revised_scope, reason, previous = revised
@@ -284,6 +302,8 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
                             c["supported"] = False
                             c["evidence"] += " この事実を語る場面に公開資料を指定してください。"
             raw["ready"] = raw["ready"] and not raw["blockingIssue"].strip() and all(c["supported"] for c in checks)
+            if not raw["ready"] and not raw["blockingIssue"].strip() and all(c["supported"] for c in checks):
+                raise ValueError("改稿を求める場合は、どこを直す必要があるかをblockingIssueに記してください。")
             return raw
         audit_inputs = {**audit_request, "initialScope": scope, "revisedScope": revised_scope,
                         "cut": cut}
@@ -310,7 +330,22 @@ def produce_japanese(snapshot, materials, script_schema, model, effort, folder, 
             previous["model"] = {"requested": model, "actual": None, "effort": effort, "provider": "codex-cli",
                                  "instructionVersion": JAPANESE_VERSION, "inputSha256": input_sha, "usage": usage}
             return previous
-        if not cached:
-            fresh_failures += 1
-    unresolved = feedback["blockingIssue"] or " ".join(c["evidence"] for c in feedback["checks"] if not c["supported"])
-    raise RevisionNeeded("清書稿の再確認で改稿が必要です。再開すると指摘を引き継ぎます。" + unresolved)
+        if cached:
+            continue
+        failed = [c for c in feedback["checks"] if not c["supported"]]
+        unresolved = feedback["blockingIssue"].strip() or " ".join(c["evidence"] for c in failed)
+        # Use what the viewer can see/hear and the supporting references, not the writer's change notes.
+        cut_key = request_digest([cut, [s["sourceIds"] for s in previous["scenes"]]])
+        issue_key = (" ".join(unresolved.split()), tuple(sorted(c["beatId"] for c in failed)))
+        if (cut_key, issue_key) in fresh_rejections:
+            stop = "自動改稿しても画面と語りに改善が見られず、同じ指摘が残りました。"
+        elif len(fresh_rejections) >= 2 and all(key == issue_key for _, key in fresh_rejections[-2:]):
+            stop = "稿を変えても、最終確認で同じ指摘が3回続きました。"
+        elif len(fresh_rejections) + 1 >= MAX_FRESH_FINAL_REVIEWS:
+            stop = f"今回の実行で清書稿を{MAX_FRESH_FINAL_REVIEWS}回照合しましたが、まだ修正が必要です。"
+        else:
+            fresh_rejections.append((cut_key, issue_key))
+            if progress:
+                progress(f"{round_no}稿目の指摘を反映して次の稿を自動で作成します。" + unresolved)
+            continue
+        raise RevisionNeeded(stop + " 残った指摘　" + unresolved)

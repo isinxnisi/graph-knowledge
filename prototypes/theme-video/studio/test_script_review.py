@@ -6,9 +6,9 @@ import unittest
 from unittest.mock import patch
 
 from editor import MaterialRequired, _check_draft, _draft_input, _schema
-from script_review import _audience_cut, _scope, _scope_schema, produce_japanese
+from script_review import LOCAL_REVISION, _audience_cut, _scope, _scope_schema, produce_japanese
 from wipe_board import ASSET as WIPE_DEMO, DESCRIPTION as WIPE_PICTURE
-from writer_feedback import RevisionNeeded
+from writer_feedback import RevisionNeeded, request_digest
 
 
 class ScriptReviewTest(unittest.TestCase):
@@ -45,7 +45,7 @@ class ScriptReviewTest(unittest.TestCase):
         missing = self.verdict("画面にも語りにもない言葉")
         outputs = (self.scope, self.draft, self.reader, self.revision, missing, self.revision, missing)
         with patch("script_review._call_writer", side_effect=[(v, {}) for v in outputs]) as writer:
-            with self.assertRaisesRegex(RevisionNeeded, "再確認で改稿が必要"):
+            with self.assertRaisesRegex(RevisionNeeded, "自動改稿.*同じ指摘"):
                 self.produce()
             self.assertEqual(writer.call_count, 7)
             self.assertFalse((self.folder / "editor-input.json").exists())
@@ -64,6 +64,70 @@ class ScriptReviewTest(unittest.TestCase):
             self.assertFalse(instruction["finalReview"]["checks"][0]["supported"])
             self.assertEqual(plan["editorialReview"]["rounds"], 3)
             self.assertEqual(plan["scenes"][0]["visualTiming"], {"beforeVoice": 2, "afterVoice": None})
+
+    def test_next_fix_is_automatic_after_the_second_review_finds_a_different_problem(self):
+        absent_fact = self.verdict("まだ語っていないこと")
+        second = deepcopy(self.revision)
+        second["script"]["scenes"][0]["ja"]["heading"] = "どの鏡の光か"
+        color_issue = {**self.verdict("鏡と同じ並び"), "ready": False, "blockingIssue": "冒頭の配色を直してください。"}
+        outputs = [self.scope, self.draft, self.reader, self.revision, absent_fact, second, color_issue,
+                   second, self.verdict("鏡と同じ並び")]
+        with patch("script_review._call_writer", side_effect=[(v, {}) for v in outputs]) as writer:
+            plan = self.produce()
+        self.assertEqual(plan["editorialReview"]["rounds"], 3)
+        prompt = writer.call_args_list[7].args[0]["prompt"]
+        inputs = json.loads(prompt.rsplit("\n\n", 1)[1])
+        self.assertEqual(inputs["finalReview"]["blockingIssue"], color_issue["blockingIssue"])
+        self.assertEqual(inputs["previousScript"]["scenes"][0]["ja"]["heading"], "どの鏡の光か")
+        self.assertIn("既に確認が通った要点・場面順・語りは残し", prompt)
+        with patch("script_review._call_writer") as cached:
+            self.assertEqual(self.produce(), plan)
+            cached.assert_not_called()
+
+    def test_bounded_automatic_reviews_keep_each_rejection_and_allow_resume(self):
+        outputs = [self.scope, self.draft, self.reader]
+        for i in range(1, 6):
+            rejection = {**self.verdict("鏡と同じ並び"), "ready": False, "blockingIssue": f"{i}つ目の指摘"}
+            outputs.extend([self.revision, rejection])
+        with patch("script_review._call_writer", side_effect=[(v, {}) for v in outputs]):
+            with self.assertRaisesRegex(RevisionNeeded, "5回照合.*5つ目の指摘"):
+                self.produce()
+        self.assertEqual(len(list((self.folder / "editor-stages").glob("05-check-*.json"))), 5)
+        with patch("script_review._call_writer", side_effect=[(self.revision, {}), (self.verdict("鏡と同じ並び"), {})]) as writer:
+            self.assertEqual(self.produce()["editorialReview"]["rounds"], 6)
+        self.assertEqual(writer.call_count, 2)
+        inputs = json.loads(writer.call_args_list[0].args[0]["prompt"].rsplit("\n\n", 1)[1])
+        self.assertEqual(inputs["finalReview"]["blockingIssue"], "5つ目の指摘")
+
+    def test_already_accepted_revision_keeps_its_cached_instruction_chain_after_guidance_change(self):
+        outputs = [self.scope, self.draft, self.reader, self.revision, self.verdict("実在しない語り"),
+                   self.revision, self.verdict("鏡と同じ並び")]
+        with patch("script_review._call_writer", side_effect=[(v, {}) for v in outputs]):
+            self.produce()
+        stage = next((self.folder / "editor-stages").glob("04-revision-2-*.json"))
+        record = json.loads(stage.read_text(encoding="utf-8"))
+        self.assertIn(LOCAL_REVISION, record["request"]["prompt"])
+        record["request"]["prompt"] = record["request"]["prompt"].replace("\n" + LOCAL_REVISION, "")
+        record["inputSha256"] = request_digest(record["request"])
+        legacy = stage.with_name("04-revision-2-" + record["inputSha256"] + ".json")
+        legacy.write_text(json.dumps(record, ensure_ascii=False), encoding="utf-8")
+        stage.unlink()
+        with patch("script_review._call_writer") as writer:
+            plan = self.produce()
+            writer.assert_not_called()
+        self.assertEqual(plan["editorialReview"]["rounds"], 2)
+        self.assertEqual(json.loads((self.folder / "editor-input.json").read_text(encoding="utf-8")), record["request"])
+
+    def test_incidental_changes_do_not_keep_the_same_blocker_in_an_automatic_loop(self):
+        outputs = [self.scope, self.draft, self.reader]
+        rejection = {**self.verdict("鏡と同じ並び"), "ready": False, "blockingIssue": "冒頭の配色を直してください。"}
+        for heading in ("光の位置", "点の位置", "鏡の位置"):
+            revision = deepcopy(self.revision)
+            revision["script"]["scenes"][0]["ja"]["heading"] = heading
+            outputs.extend([revision, rejection])
+        with patch("script_review._call_writer", side_effect=[(v, {}) for v in outputs]):
+            with self.assertRaisesRegex(RevisionNeeded, "同じ指摘が3回.*冒頭の配色"):
+                self.produce()
 
     def test_a_missing_picture_is_recorded_before_generating_or_reviewing_a_substitute_script(self):
         gap = {"materialRequest": "左右の位置を同じ向きで見比べる模式図が必要です。"}
@@ -252,3 +316,16 @@ class ScriptReviewTest(unittest.TestCase):
         self.assertEqual(len(audience), 13)
         self.assertIn("s13までを通して一度だけ", audience[0]["picture"])
         self.assertNotIn("同じ符号B3が現れる", audience[1]["picture"])
+
+    def test_three_distinct_field_corrections_do_not_require_operator_resume(self):
+        missing_source, bad_timing, long_heading = (deepcopy(self.draft) for _ in range(3))
+        missing_source["scenes"][0]["sourceIds"] = []
+        bad_timing["scenes"][0]["visualTiming"]["afterVoice"] = -1
+        long_heading["scenes"][0]["ja"]["heading"] = "あ" * 120
+        outputs = [self.scope, missing_source, bad_timing, long_heading, self.draft,
+                   self.reader, self.revision, self.verdict("鏡と同じ並び")]
+        with patch("script_review._call_writer", side_effect=[(v, {}) for v in outputs]) as writer:
+            self.assertEqual(self.produce()["editorialReview"]["rounds"], 1)
+        third_repair = json.loads(writer.call_args_list[4].args[0]["prompt"].rsplit("\n\n", 1)[1])
+        self.assertEqual(third_repair["correctionAttempt"], 3)
+        self.assertEqual(third_repair["previousOutput"], long_heading)

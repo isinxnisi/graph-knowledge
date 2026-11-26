@@ -283,7 +283,8 @@ def _image(name):
 
 
 def _board(plan, scene, lang, used, labeled=False):
-    canvas = Image.new("RGB", (W, H), PAPER)
+    background = "white" if scene["asset"] == "source" and scene.get("sourceBackground") == "white" else PAPER
+    canvas = Image.new("RGB", (W, H), background)
     d = ImageDraw.Draw(canvas)
     style = _style(lang)
     is_ja = lang == "ja"

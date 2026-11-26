@@ -29,6 +29,9 @@ class ChannelStyleTest(unittest.TestCase):
                         self.assertEqual(image.getpixel(point), ImageColor.getrgb(ORANGE))
                 self.assertEqual(board.getpixel((2, 561)), ImageColor.getrgb(PAPER))
                 self.assertEqual(board.getpixel((2, 562)), ImageColor.getrgb(INK))
+                white = _board(plan, {**scene, "sourceBackground": "white"}, lang, set())
+                self.assertEqual(white.getpixel((2, 561)), (255, 255, 255))
+                self.assertEqual(white.getpixel((2, 562)), ImageColor.getrgb(INK))
                 # A source introduction puts its heading and publication side by side.
                 bare = _board(plan, {**scene, lang: {"heading": ""}}, lang, set())
                 self.assertEqual(board.getpixel((180, 401)), ImageColor.getrgb(ORANGE))

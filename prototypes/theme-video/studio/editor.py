@@ -201,6 +201,7 @@ def _schema(source_ids, assets, language="both"):
     if language == "both":
         languages["en"] = _object(script)
     fields = {"asset": {"type": "string", "enum": assets}, **languages,
+              "sourceBackground": {"enum": [None, "white"], "type": ["string", "null"]},
               "sourceIds": {"type": "array", "items": {"type": "string", "enum": source_ids}}}
     if language == "ja":
         seconds = {"type": ["number", "null"]}
@@ -252,6 +253,8 @@ A scene that only shows what the supplied original illustration does may use its
 sourceIds list. Cite sources for claims about a real work, even when they are spoken over an illustration.
 When a source identifies a scene precisely by its shots or figure number, use that locator. Require an
 exact playback time only when the operator requested it or the planned comparison relies on timing.
+For a 'source' frame, use sourceBackground="white" when a white field is requested.
+Leave it null to keep the channel's usual warm paper color. Other assets have fixed artwork and use null.
 A 'source' frame
 displays the first one or two published reference titles. When introducing a witness or publication,
 a short heading on the left places the references on the right. Use this change of composition where
@@ -275,6 +278,8 @@ VIDEO_EVIDENCE = """資料は、この動画で何をどこまで言えるかを
 どこからが推測か、初見の人に語りや絵から自然に伝えてください。未確認の場面、人物の内心や許諾を
 推測で埋めません。細部を外す、言葉を改める、自作の例で体験してもらう方法で、選んだ案の約束を守れるか考えます。
 editorialDirectionがあれば、その判断を構成・語り・映像に反映します。"""
+
+SOURCE_BACKGROUND_PROMPT = "sourceで白地の指定があればsourceBackgroundにwhiteを入れます。通常の生成りの紙色や、素材固有の背景を使うときはnullです。"
 
 _JAPANESE_PROMPT = VIDEO_EVIDENCE + "\n" + """Plunodeの横長動画を日本語一本で編集してください。予備知識のない一人が、
 題材の何に目を留め、見終わる頃にどんな発見が手元に残ると面白いかを考えます。
@@ -305,7 +310,7 @@ boardMaterialsがある場合は、各ショットで実際に見えるものと
 同じショットを繰り返すなら、その都度新しく観察できる理由があるか確認します。用意した全ショットを使い切る義務はありません。
 通して同じ左右割りが続くときは、場面ごとに観てほしい対象を見直します。動作や実物の絵が要るなら、その素材を求めます。
 この不可欠な素材を求めるときはscenesを空配列にし、メモと題名の各文字列は空にします。
-根拠がそろっているときはmaterialRequestを空文字列にします。"""
+根拠がそろっているときはmaterialRequestを空文字列にします。""" + "\n" + SOURCE_BACKGROUND_PROMPT
 
 _ADAPTATION_PROMPT = """Localize a finished Japanese Plunode cut for an English-speaking viewer.
 Write only the English title and each scene's spoken English and heading. On a source card,
@@ -394,6 +399,10 @@ def _check_draft(draft, snapshot, assets, language="both"):
         if asset not in assets or not required.issubset(ids):
             raise ValueError(f"場面{i}の図版と根拠が一致しません。")
         shot = {"id": f"s{i}", "asset": asset, "sourceIds": list(dict.fromkeys(ids))}
+        if scene.get("sourceBackground") is not None:
+            if asset != "source" or scene["sourceBackground"] != "white":
+                raise ValueError(f"場面{i}の背景は出典カードで白地を指定するときだけwhiteを使い、通常はnullにしてください。")
+            shot["sourceBackground"] = "white"
         if language == "ja" and "visualTiming" in scene:
             shot["visualTiming"] = validate_visual_timing(scene["visualTiming"])
         optional_heading = asset in ("source", WIPE_DEMO) or asset in WEBB_BOARDS
@@ -440,8 +449,13 @@ def _attach_boards(payload, assets):
 def _adaptation_request(master, snapshot, brief):
     if not isinstance(master, dict) or master.get("themeId") != snapshot["themeId"] or not master.get("scenes"):
         raise ValueError("同じ案件の日本語版を選んでください。")
-    scenes = [{"id": s["id"], "asset": s["asset"], "sourceIds": s["sourceIds"],
-               "heading": s["ja"]["heading"], "narration": s["ja"]["narration"]} for s in master["scenes"]]
+    scenes = []
+    for scene in master["scenes"]:
+        shot = {"id": scene["id"], "asset": scene["asset"], "sourceIds": scene["sourceIds"],
+                "heading": scene["ja"]["heading"], "narration": scene["ja"]["narration"]}
+        if "sourceBackground" in scene:
+            shot["sourceBackground"] = scene["sourceBackground"]
+        scenes.append(shot)
     scene_ids = [s["id"] for s in scenes]
     if len(set(scene_ids)) != len(scenes):
         raise ValueError("元の日本語台本の場面IDが重複しています。")

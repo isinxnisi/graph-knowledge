@@ -28,6 +28,7 @@ def validated_output(*, name, label, records, request, instructions, inputs, val
     attempt = 0
     new_corrections = 0
     issue = ""
+    consecutive = 0
     while True:
         digest = request_digest(request)
         stage = name if attempt == 0 else f"{name}-repair-{attempt}"
@@ -59,11 +60,15 @@ def validated_output(*, name, label, records, request, instructions, inputs, val
             _save_json(path, entry)
             raise
         except ValueError as exc:
-            issue = str(exc)
+            next_issue = str(exc)
+            consecutive = consecutive + 1 if next_issue == issue else 1
+            issue = next_issue
             entry.update(status="failed", error=issue)
             _save_json(path, entry)
-            if new_corrections >= 2:
-                raise RevisionNeeded("指摘を返して2回修正しました。再開すると直近の稿と指摘を引き継ぎます。" + issue) from exc
+            if not cached and new_corrections >= 2 and consecutive >= 3:
+                raise RevisionNeeded("2回修正しても同じ指摘が解消しなかったため、この工程の自動修正を止めました。" + issue) from exc
+            if new_corrections >= 5:
+                raise RevisionNeeded("この工程で5回自動修正しましたが、確認を通らなかったため停止しました。" + issue) from exc
             attempt += 1
             correction = {**inputs, "previousOutput": entry["result"], "validationFeedback": issue,
                           "correctionAttempt": attempt}
