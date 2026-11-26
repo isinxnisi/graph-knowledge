@@ -496,6 +496,8 @@ def _adaptation_request(master, snapshot, brief):
             shot["silentSeconds"] = scene["silentSeconds"]
             if scene.get("labels"):
                 shot["labels"] = [label["ja"] for label in scene["labels"]]
+                if any("track" in label for label in scene["labels"]):
+                    shot["labels"] = [{"ja": label["ja"], **label.get("track", {})} for label in scene["labels"]]
         if scene["asset"] == "exchange":
             shot["exchange"] = {key: scene["exchange"][key]["ja"] for key in EXCHANGE_LABELS}
         scenes.append(shot)
@@ -700,6 +702,9 @@ def _write_plan(snapshot, brief, model_id, effort, work_dir, language, master_pl
             instructions += ("\nFor each printed label, copy its Japanese text into ja and put the short English "
                              "wording in en in the same order. Retain names and historically meaningful wording. "
                              "Return an empty list in shots without printed labels.")
+            if any(isinstance(s["labels"][0], dict) for s in payload["scenes"] if s.get("labels")):
+                instructions += (" A label's layer names the object it is printed on. From and until give its visible "
+                                 "interval as fractions of the shot. Keep the English short enough to read during that action.")
         if any("exchange" in scene for scene in payload["scenes"]):
             instructions += ("\nTranslate the four visible exchange labels in their original positions. "
                              "Keep each within 36 characters. Keep the heading empty and use null for "

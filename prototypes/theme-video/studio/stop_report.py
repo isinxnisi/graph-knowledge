@@ -104,9 +104,18 @@ def stop_report(run, folder, theme, idea_title, brief):
             reason = "当時の制作室は、改稿後の確認で2回指摘が残ると自動改稿を止めていました。" + _summary(diagnostic[len(old_audit):], 180)
         elif diagnostic.startswith(field_limit):
             reason = "同じ工程の出力を2回自動修正しても、確認を通らなかったため停止しました。" + _summary(diagnostic[len(field_limit):], 180)
+        elif diagnostic.startswith("原画を修正して試写しましたが、予定した発見が届いていません。"):
+            notes = re.findall(r"(?:^|\s)s([1-9]\d*)\s+(.+?)(?=\s+s[1-9]\d*\s+|$)",
+                               diagnostic.split("。", 1)[1], re.S)
+            reason = "改稿後の試写で次の指摘が残りました。" if notes else "改稿後の試写で、修正が必要な場面が残りました。"
+            reason += " ".join(f"場面{n}　{_summary(note.split('。', 1)[0] + '。', 110)}" for n, note in notes[:2])
         else:
             reason = _summary(diagnostic, 240) or "台本の確認で、修正が必要な点が残りました。"
         next_step = "「改稿を再開」で直近の出力と指摘を引き継ぎ、同じ試行で修正します。"
+        if run.get("cutAvailable"):
+            next_step = "「保存稿の場面を試写」で各場面の指摘と、前後のつながりを含む映像を確認できます。" + next_step
+        if diagnostic.startswith("過去の試写画像と保存原画を照合できず"):
+            next_step = "保存した原画と試写記録を確認してください。同じテーマで新しい試行も作成できます。"
     elif status == "failed":
         reason, next_step = _failure(run)
         if run["canAddMaterialLeads"] and run["savedExcerptCount"]:

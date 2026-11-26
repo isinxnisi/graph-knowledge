@@ -13,7 +13,7 @@ from PIL import Image, ImageDraw, ImageStat
 import media
 from authored_art import prepare_art
 from channel_style import FOOT, H, INK, PAPER, SERIF, STYLE, W
-from film_labels import same_line
+from film_labels import prepare_lettering, visible_at
 from media import FPS, RATE
 
 
@@ -84,27 +84,14 @@ def _foley_pcm(signal):
 
 def prepare_scene(scene, lang):
     """Return the same painted scene for the director's stills and the final edition."""
-    paint = prepare_art(scene["art"])
     style = media._style(lang)
+    letters = prepare_lettering(scene, lang, style)
+    fixed = letters.pop("", None)
+    paint = prepare_art(scene["art"], letters)
     heading = scene[lang]["heading"].strip()
-    labels = scene.get("labels", [])
-    stamp = None
-    if labels:
-        lettering = Image.new("RGBA", (W, H))
-        pen = ImageDraw.Draw(lettering)
-        for label in labels:
-            x = label["x"]
-            space = min(x, W - x) - 16
-            for other in labels:
-                if other is not label and same_line(label, other):
-                    space = min(space, abs(other["x"] - x) / 2 - 6)
-            style.text(pen, x, label["y"], label[lang], label["size"],
-                       family=SERIF, anchor="mm", max_width=max(1, int(2 * space)), color=label["color"])
-        box = lettering.getbbox()
-        if box:
-            stamp = lettering.crop(box)
 
     def frame(position):
+        position = max(0, min(1, position))
         board = paint(position)
         draw = ImageDraw.Draw(board)
         light_brand = ImageStat.Stat(board.crop((36, 8, 187, 56)).convert("L")).mean[0] < 132
@@ -113,8 +100,8 @@ def prepare_scene(scene, lang):
             light_heading = ImageStat.Stat(board.crop((80, 62, W - 80, 125)).convert("L")).mean[0] < 132
             style.text(draw, W // 2, 66, heading, 48, anchor="mt", family=SERIF, max_width=W - 150,
                        color=PAPER if light_heading else INK)
-        if stamp is not None:
-            board.paste(stamp, box[:2], stamp)
+        if fixed:
+            fixed(board, (0, 0), (0, 0, 1, 0, 1), position, 1)
         return board
 
     return frame
@@ -219,10 +206,14 @@ def _write_soundtrack(plan, lang, work, progress):
     return voice, cuts
 
 
-def _encode(work, plan, lang, voice, cuts, progress):
+def _encode(work, plan, lang, voice, cuts, progress, *, frame_range=None):
+    audio_window = []
+    if frame_range is not None:
+        begin, end = frame_range
+        audio_window = ["-ss", f"{begin / FPS:.9f}", "-t", f"{(end - begin) / FPS:.9f}"]
     command = ["ffmpeg", "-nostdin", "-hide_banner", "-loglevel", "error", "-y",
                "-f", "rawvideo", "-pix_fmt", "rgb24", "-s:v", f"{W}x{H}", "-r", str(FPS), "-i", "pipe:0",
-               "-i", "mix.wav", "-map", "0:v", "-map", "1:a", "-c:v", "libx264", "-threads", "3",
+               *audio_window, "-i", "mix.wav", "-map", "0:v", "-map", "1:a", "-c:v", "libx264", "-threads", "3",
                "-preset", "veryfast", "-crf", "18", "-pix_fmt", "yuv420p", "-c:a", "aac", "-ar", "48000",
                "-b:a", "128k", "-movflags", "+faststart", "-metadata", "title=" + plan["titles"][lang],
                "-metadata:s:a:0", "language=" + ("jpn" if lang == "ja" else "eng"), "video.mp4"]
@@ -232,15 +223,32 @@ def _encode(work, plan, lang, voice, cuts, progress):
         try:
             style = media._style(lang)
             for index, (scene, cut) in enumerate(zip(plan["scenes"], cuts)):
+                first, stop = 0, cut["frames"]
+                if frame_range is not None:
+                    first = max(0, frame_range[0] - cut["start"])
+                    stop = min(stop, frame_range[1] - cut["start"])
+                    if first >= stop:
+                        continue
                 progress(f"原画から映像を書き出し中　{index + 1}/{len(cuts)}")
                 paint = prepare_scene(scene, lang)
                 static = all(len(layer["keys"]) < 2 for layer in scene["art"]["layers"])
-                still = paint(0) if static else None
-                starts = {start: text for start, end, text in cut["cues"]}
+                windows = [label["track"] for label in scene.get("labels", []) if "track" in label and
+                           (label["track"].get("from", 0) > 0 or label["track"].get("until", 1) < 1)] if static else []
+                first_position = first / max(1, cut["frames"] - 1)
+                visible = [visible_at(track, first_position) for track in windows]
+                still = paint(first_position) if static else None
+                starts = {max(first, start): text for start, end, text in cut["cues"] if end > first}
                 ends = {end for start, end, text in cut["cues"]}
                 band = None
                 static_pixels = None
-                for local in range(cut["frames"]):
+                for local in range(first, stop):
+                    position = local / max(1, cut["frames"] - 1)
+                    if windows:
+                        active = [visible_at(track, position) for track in windows]
+                        if active != visible:
+                            visible = active
+                            still = paint(position)
+                            static_pixels = None
                     if local and local % (FPS * 5) == 0:
                         progress(f"場面 {index + 1}/{len(cuts)} を描画中　{local // FPS}秒")
                     if local in ends:
@@ -252,7 +260,7 @@ def _encode(work, plan, lang, voice, cuts, progress):
                         band = rail.crop((0, FOOT, W, H))
                         static_pixels = None
                     if static_pixels is None:
-                        board = still if static else paint(local / max(1, cut["frames"] - 1))
+                        board = still if static else paint(position)
                         if band is not None:
                             board = board.copy()
                             board.paste(band, (0, FOOT))
@@ -262,9 +270,10 @@ def _encode(work, plan, lang, voice, cuts, progress):
                     else:
                         pixels = static_pixels
                     proc.stdin.write(pixels)
-            credit = media._credit(plan, lang, set(), voice).tobytes()
-            for _ in range(CREDIT_FRAMES):
-                proc.stdin.write(credit)
+            if frame_range is None:
+                credit = media._credit(plan, lang, set(), voice).tobytes()
+                for _ in range(CREDIT_FRAMES):
+                    proc.stdin.write(credit)
             proc.stdin.close()
             if proc.wait(timeout=180):
                 raise BrokenPipeError()

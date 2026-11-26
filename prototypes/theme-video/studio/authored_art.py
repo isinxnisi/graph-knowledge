@@ -10,20 +10,22 @@ from PIL import Image, ImageChops, ImageDraw
 SIZE = (1280, 720)
 AA = 2
 SURFACE = tuple(side * AA for side in SIZE)
-ART_GUIDE = """原画は1280×720。声に字幕が付く間は下部（y=562以降）を字幕に譲ります。
+_CANVAS_GUIDE = """原画は1280×720。声に字幕が付く間は下部（y=562以降）を字幕に譲ります。
 backgroundは紙色などの#RRGGBB。layersは奥から手前。各層のnameは制作用、画面には出ません。
 人物のシルエット、指、道具の縁や特徴的な部品、手前の物と奥の景色などを、重なる面や少数の効く線で描きます。
 pathsのdはSVGパスのM L H V Q C Z（小文字の相対座標も可）。曲線、塗り、輪郭、小さな細部を自由に組み合わせます。
-パスごとに fill と stroke は #RRGGBB または none、widthは線の太さ。同じdに輪郭を重ねると内側と外側が交互に塗られ、穴を通して後ろの絵が見えます。
-referenceArtには以前の原画全体または順に並んだ層名が入ります。同じ人物・物・場所を再び描くときは、
+パスごとに fill と stroke は #RRGGBB または none、widthは線の太さ。同じdに輪郭を重ねると内側と外側が交互に塗られ、穴を通して後ろの絵が見えます。"""
+_REFERENCE_GUIDE = """referenceArtには以前の原画全体または順に並んだ層名が入ります。同じ人物・物・場所を再び描くときは、
 その原画の層番号（先頭は0）で色・シルエット・細部を引き継げます。{"reuseLayer":0,"keys":null} は配置と動きも引継ぎ、
-{"reuseLayer":0,"keys":[{"at":0,"x":900,"y":350,"scale":1.4,"rotate":0,"opacity":1}]} は同じ形を別の位置と大きさで見せます。
-静物のkeysは[]で画面座標のまま表示。動かすものはその物の中心を(0,0)として描き、keysで画面内に置きます。
+{"reuseLayer":0,"keys":[{"at":0,"x":900,"y":350,"scale":1.4,"rotate":0,"opacity":1}]} は同じ形を別の位置と大きさで見せます。"""
+_MOTION_GUIDE = """静物のkeysは[]で画面座標のまま表示。動かすものはその物の中心を(0,0)として描き、keysで画面内に置きます。
 キーはat（場面の始め0〜終わり1）、x/y（移動）、scale（1が等倍）、rotate（度、時計回り）、opacity（0〜1）。
 キー間は直線補間。静止・速度・方向の変化は、必要な瞬間だけキーを置きます。同じ物の縁や部品は一層にまとめると一緒に動きます。
 例：層のpathsが [{"d":"M -48 0 Q 0 42 48 0 Z","fill":"#72928b","stroke":"#273b3a","width":3}] なら小舟の形。
 keysを [{"at":0,"x":280,"y":380,"scale":1,"rotate":-3,"opacity":1},{"at":1,"x":610,"y":375,"scale":1,"rotate":2,"opacity":1}] にすると舟が渡ります。
 これは記法例です。実際に描くもの・色・動き・視点は題材から選びます。"""
+DRAWING_GUIDE = "\n".join((_CANVAS_GUIDE, _MOTION_GUIDE))
+ART_GUIDE = "\n".join((_CANVAS_GUIDE, _REFERENCE_GUIDE, _MOTION_GUIDE))
 
 _STRING = {"type": "string"}
 _NUMBER = {"type": "number"}
@@ -37,11 +39,15 @@ def _object(fields):
     return {"type": "object", "properties": fields, "required": list(fields), "additionalProperties": False}
 
 
-def art_schema(reference=None):
+def layer_schema():
     path = _object({"d": _STRING, "fill": _STRING, "stroke": _STRING, "width": _NUMBER})
     key = _object(dict.fromkeys(("at", *_POSE_FIELDS), _NUMBER))
-    layer = _object({"name": _STRING, "paths": {"type": "array", "items": path},
+    return _object({"name": _STRING, "paths": {"type": "array", "items": path},
                      "keys": {"type": "array", "items": key}})
+
+
+def art_schema(reference=None):
+    layer = layer_schema()
     if reference:
         reuse = _object({"reuseLayer": {"type": "integer", "enum": list(range(len(reference["layers"])))},
                          "keys": {"anyOf": [layer["properties"]["keys"], {"type": "null"}]}})
@@ -203,7 +209,13 @@ def validate_art(raw, reference=None):
     return {"background": background, "layers": layers}
 
 
-def _pose(keys, t):
+def layer_x_extent(layer):
+    """Horizontal extent in the object's own coordinates for its printed type."""
+    ranges = [(points[:, 0].min(), points[:, 0].max()) for path in layer["paths"] for points, _ in _contours(path["d"])]
+    return min(low for low, _ in ranges), max(high for _, high in ranges)
+
+
+def layer_pose(keys, t):
     if not keys:
         return _DEFAULT_POSE
     left = keys[0]
@@ -244,7 +256,7 @@ def _union_box(boxes):
 
 
 def _paint(canvas, layer, t):
-    pose = _pose(layer["keys"], t)
+    pose = layer_pose(layer["keys"], t)
     opacity = pose[-1]
     if opacity <= 0:
         return
@@ -252,7 +264,7 @@ def _paint(canvas, layer, t):
     if not visible:
         return
     # Blend a translucent object once in its own box, including overlapping parts.
-    if opacity < 1:
+    if opacity < 1 or layer.get("lettering"):
         x, y, right, bottom = _union_box(v[3] for v in visible)
         surface = Image.new("RGBA", (right - x, bottom - y))
     else:
@@ -282,21 +294,28 @@ def _paint(canvas, layer, t):
                     coords.extend(coords[:2])
                 draw.line(coords, fill=path["stroke"], width=width, joint="curve")
     if surface is not canvas:
-        mask = surface.getchannel("A").point(lambda a: round(a * opacity))
+        mask = surface.getchannel("A")
+        if layer.get("lettering"):
+            # The host's silhouette, holes and opacity also apply to its printed type.
+            layer["lettering"](surface, (x, y), pose, t, AA)
+        if opacity < 1:
+            mask = mask.point(lambda a: round(a * opacity))
         canvas.paste(surface, (x, y), mask)
 
 
-def prepare_art(art):
+def prepare_art(art, layer_lettering=None):
     """Prepare stationary backgrounds once. The returned RGB frames may be painted on by callers."""
     art = validate_art(art)
     for layer in art["layers"]:
+        if layer_lettering:
+            layer["lettering"] = layer_lettering.get(layer["name"])
         for path in layer["paths"]:
             path["geometry"] = _contours(path["d"])
     base = Image.new("RGB", SURFACE, art["background"])
     layers = iter(art["layers"])
     moving = []
     for layer in layers:
-        if len(layer["keys"]) > 1:
+        if len(layer["keys"]) > 1 or layer.get("lettering"):
             moving = [layer, *layers]
             break
         _paint(base, layer, 0)

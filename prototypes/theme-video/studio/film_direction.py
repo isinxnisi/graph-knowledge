@@ -1,4 +1,5 @@
 """Stage an original Japanese film, look at actual illustrations, and revise the cut."""
+from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
@@ -6,23 +7,31 @@ import re
 
 from PIL import Image, ImageDraw
 
-from authored_art import ART_GUIDE, art_schema, prepare_art, validate_art
+from authored_art import ART_GUIDE, art_schema, validate_art
 from authored_media import SOUND_GUIDE, prepare_scene, sound_layers_schema, validate_sound_layers
 from editor import VIDEO_EVIDENCE, MaterialRequired, _call_writer, _draft_input, _object, _save_json, _text, _writer_request
-from film_labels import LABEL_GUIDE, labels_schema, validate_labels
+from film_labels import LABEL_GUIDE, labels_schema, physical_labels, validate_labels, validate_label_targets
 from film_vision import style_reference, view_cut
+from direct_edit import EDIT_GUIDE, MULTI_ART_GUIDE, apply_edit, edit_schema, layer_catalog, multi_art_schema, validate_multi_art
+from film_checkpoint import load_cut, save_cut
+from film_preview import edit_proof
 from idea_store import film_commission
 from speech_reading import validate_readings
 from writer_feedback import RevisionNeeded, request_digest, validated_output
 
 
-VERSION = "plunode-film-direction-2"
+VERSION = "plunode-film-direction-3"
 MODE = "directed-film-v1"
 STRING = {"type": "string"}
 NUMBER = {"type": "number"}
 SOUND = ("none", "paper", "wind", "tap", "chime", "rustle", "whoosh")
 MEDIUM = ("documented", "interpretation", "illustration")
 SIGNALS = ("travel", "moving-edge", "shape", "appearance", "framing", "arrangement", "other")
+INITIAL_ART = ("paint", "reuse", "holdEnd")
+INITIAL_GUIDE = """初稿のinitialArtでは、絵を新しく描くpaintのほか、すでに見せた場面の原画をそのまま使えます。
+reuseはreferenceSceneの原画と動きを最初から再使用、holdEndはその原画の最後に見えた位置・向き・濃さを保って静止します。
+この二つではreferenceSceneに前の場面番号を指定。原画に焼き込まれていない見出し・札の文字、語り・音・間は今回の場面で選びます。
+同じ手元を見ながら意味が変わるところや余韻には、必要に応じて同じ絵を使ってください。"""
 SIGNAL_GUIDE = """観察の種類は、物の位置・向きが変わるtravel、二つの領域を分ける境目が場所を移すmoving-edge、
 輪郭や形が変わるshape、色や濃さ・透明度が変わるappearance、画角や視点が変わるframing、
 静止した物の配置・重なりで分かるarrangement、そのほかの目に見える特徴otherです。"""
@@ -75,6 +84,7 @@ PAINT = """Plunodeの作画を担当します。添付の実画はチャンネ�
 人物や物は全体の形から作り、その関係は距離・重なり・視線と動きで見せてください。
 見出しと字幕、scene.labelsの文字は別に組版されます。ラベルの指定位置に、その文字が読める空間を残します。
 上端のロゴと任意見出し、下端の字幕の空間を空けます。
+labelsの文字が原画層を追う場合、指定のtrack.layerがその物を表す層の名前と完全に一致するようにしてください。
 参照指定のある再登場物は前の姿を保ちます。指摘による描き直しでは問題が現れた形や構図・動きそのものを変えてください。"""
 
 LOOK = """添付した試写用の実画を、初めてこの映像を見る人として左から右、上から下に見てください。
@@ -101,6 +111,27 @@ repairsに対象の場面ID、直すべき絵・時間・台詞を具体的に�
 聴いたように推測せず、台詞と音の配置から確かめられることを扱います。好みだけの微修正は求めません。
 全体が届く場合はrepairsを空配列にします。根拠不足で中心の発見を保てない場合はmaterialRequestを返します。"""
 
+EDIT_CONTEXT = """sequenceは今回の各場面の実画で、focusには主要場面を大きく載せています。
+previousEditsと比較画像があれば、以前の指摘に対して何が変わり、何が続いているかを確かめる。
+前稿にだけ当てはまった不備を繰り返さない。追加修正を要するときは現在も見える問題、場面内の位置や時点、
+それが損ねる体験を短く特定する。演出家が選び直せるよう、targetは手段の提案として返す。
+標本に写っていない中間の動きや聴いていない発話の同時性について、欠落を断定しない。"""
+
+REVISE = """この一本の監督として、手元の場面と前後の試写を見て、自分で必要な編集を決めます。
+currentSceneは維持する原稿。changesには変更する欄だけをfieldとvalueで書き、ほかの台詞・原画・音色・文字を残す。
+art.actionは、構成や間・文字だけならkeep、原画の部品や動きを自分で直す場合direct、
+新しい形や描き込みを作画担当に求める場合artist。その場合はinstructionに、何を生かし何をどう描き直すかを書く。
+currentDrawingに現在の形と動きがある。catalogに現場面と近隣場面の詳細、availableLayersに他の全場面の層名が
+先頭0の番号順にある。どの場面からも部品を転用できる。作画の際に大きく見せたい場面をreferencesに4場面まで指定できる。
+指定しなければ前後を見せる。targetは編集者からの提案です。
+reasonには何を直すか、前回直していればどこで別の結果を期待できるかを書く。
+指摘された状態が既に画や台詞にあり、変更が観客の発見を壊すなら、keep＋空のchangesを選び、
+reasonにどの時点・部位で現状を確かめたかを示す。この選択は編集者への再照合であり、修正完了の報告ではない。
+returnedEditsがあれば、同じ場面が以前の稿に戻り、なお指摘がある。previousChoiceとreturnChoiceの内容を見比べ、
+既に試して戻った時系列・絵・台詞と違う手段を選ぶ。周囲の場面が変わった場合はその違いを考慮する。
+実際に見えない重要な動きは台詞で片付けず原画で直す。
+proofは現在の場面の途中と前後の境界。語りを聴いたとは仮定しない。"""
+
 
 def array(item):
     return {"type": "array", "items": item}
@@ -110,15 +141,18 @@ def choice(values):
     return {"type": "string", "enum": list(values)}
 
 
-def shot_schema(ids):
-    return _object({
+def shot_schema(ids, *, initial=False):
+    fields = {
         "picture": STRING, "medium": choice(MEDIUM), "sourceIds": array(choice(ids) if ids else STRING),
         "referenceScene": {"type": "integer"}, "heading": STRING, "narration": STRING,
         "readings": array(_object({"text": STRING, "kana": STRING})),
         "leadSeconds": NUMBER, "tailSeconds": NUMBER, "silentSeconds": NUMBER,
         "sound": _object({"kind": choice(SOUND), "at": NUMBER, "gain": NUMBER}),
         "soundLayers": sound_layers_schema(), "labels": labels_schema(),
-    })
+    }
+    if initial:
+        fields["initialArt"] = choice(INITIAL_ART)
+    return _object(fields)
 
 
 def number(value, label, maximum):
@@ -168,6 +202,94 @@ def require_evidence(shots):
         raise ValueError("この一本が伝える発見を支える資料を指定してください。")
 
 
+def revision_schema(scene, refs, ids):
+    patch = [_object({"field": choice([field]), "value": spec})
+             for field, spec in shot_schema(ids)["properties"].items()]
+    action = [_object({"action": choice(["keep"])}),
+              _object({"action": choice(["direct"]), "edit": edit_schema(scene["art"], refs)}),
+              _object({"action": choice(["artist"]), "instruction": STRING,
+                       "references": array(choice(refs) if refs else STRING)})]
+    return _object({"changes": array({"anyOf": patch}), "art": {"anyOf": action}, "reason": STRING})
+
+
+def apply_revision(raw, scenes, index, ids, refs, beat, require_visible, returned=()):
+    old = scenes[index]
+    fields = shot_schema(ids)["properties"]
+    shot = {k: old[k] for k in fields if k in old}
+    shot.update(old["ja"])
+    changed = []
+    edits = raw.get("changes")
+    if not isinstance(edits, list):
+        raise ValueError("現場面への変更をchanges配列で返してください。変更がなければ空配列です。")
+    for change in edits:
+        field = change.get("field") if isinstance(change, dict) else None
+        if field not in fields or field in changed or "value" not in change:
+            raise ValueError("各変更欄はfieldとvalueで一度だけ指定してください。")
+        shot[field] = change["value"]
+        changed.append(field)
+    updated = check_shot(shot, index + 1, ids)
+    require_evidence([*scenes[:index], updated, *scenes[index + 1:]])
+    changed = [k for k in changed if updated.get(k, updated["ja"].get(k)) != old.get(k, old["ja"].get(k))]
+    reason = _text(raw.get("reason"), 1600, "監督が選んだ編集の理由")
+    art = raw.get("art")
+    action = art.get("action") if isinstance(art, dict) else None
+    if action not in ("direct", "keep", "artist"):
+        raise ValueError("原画の扱いにdirect、keep、artistのいずれかを指定してください。")
+    note = {"action": action, "changes": changed, "decision": reason,
+            "appliedValues": {key: {"before": old.get(key, old["ja"].get(key)), "after": updated.get(key, updated["ja"].get(key))}
+                              for key in changed if key not in ("labels", "soundLayers")}}
+    if action == "artist":
+        note["instruction"] = _text(art.get("instruction"), 2200, "作画依頼")
+        selected = art.get("references", [])
+        if not isinstance(selected, list) or len(selected) > 4 or any(not isinstance(s, str) or s not in refs for s in selected):
+            raise ValueError("作画担当に大きく見せる参照を他の場面IDから4場面まで選んでください。")
+        note["references"] = list(dict.fromkeys(selected))
+        return updated, note
+    updated["art"] = apply_edit(old["art"], refs, art.get("edit")) if action == "direct" else old["art"]
+    validate_label_targets(updated["labels"], updated["art"])
+    if action == "direct":
+        note["artChanges"] = [item["why"] for item in art["edit"]["changes"]]
+    if (require_visible or action == "direct") and same_picture(old, updated, beat):
+        raise ValueError("監督の編集で見せ場の実画が変わっていません。形や動きの差が画面に出る編集をするか、作画担当に具体的に依頼してください。")
+    check_returned_edit(updated, returned)
+    if action == "keep" and scene_state(updated) == scene_state(old):
+        note["result"] = "retainedForReview"
+    return updated, note
+
+
+def scene_state(scene):
+    """Hash the artwork, spoken/displayed words, timing, sound and credited evidence, ignoring planning notes."""
+    cut = {k: scene[k] for k in ("art", "ja", "leadSeconds", "tailSeconds", "silentSeconds", "sound", "sourceIds")}
+    cut.update(labels=scene.get("labels", []), soundLayers=scene.get("soundLayers", []))
+    return request_digest(cut)
+
+
+def returned_edits(previous, current, context):
+    transitions = [r for r in previous if r.get("beforeState") and r.get("afterState")
+                   and r["beforeState"] != r["afterState"]]
+    results = {}
+    for first, back in zip(transitions, transitions[1:]):
+        if first["beforeState"] == current == back["afterState"] and first["afterState"] == back["beforeState"]:
+            results[first["afterState"]] = {
+                "otherState": first["afterState"], "sameContext": first.get("cutContext") == context == back.get("cutContext"),
+                "previousChoice": {k: first[k] for k in ("action", "decision", "reason", "changes") if k in first},
+                "returnChoice": {k: back[k] for k in ("action", "decision", "reason", "changes") if k in back},
+            }
+    return list(results.values())
+
+
+def check_returned_edit(proposed, returned):
+    if not returned:
+        return
+    key = scene_state(proposed)
+    for record in returned:
+        if record["sameContext"] and record["otherState"] == key:
+            previous = record["previousChoice"]
+            raise ValueError(f"{proposed['id']}はこの編集を実施した後で元の稿に戻っています。"
+                             f"前回の選択「{previous.get('decision', previous.get('reason', ''))}」。"
+                             "同じカットを往復させず、現在の指摘に対する別の編集を指定してください。")
+
+
 def check_direction(raw, ids):
     need = _text(raw.get("materialRequest"), 5000, "追加調査", allow_empty=True)
     if need:
@@ -176,6 +298,14 @@ def check_direction(raw, ids):
     if not isinstance(rows, list) or not 1 <= len(rows) <= 48 or any(not isinstance(s, dict) for s in rows):
         raise ValueError("一本分の場面を1〜48場面で指定してください。")
     shots = [check_shot(s, i, ids) for i, s in enumerate(rows, 1)]
+    for row, shot in zip(rows, shots):
+        action = row.get("initialArt", "paint")
+        if action not in INITIAL_ART:
+            raise ValueError(f"{shot['id']}のinitialArtはpaint・reuse・holdEndから選んでください。")
+        if action != "paint":
+            if not shot["referenceScene"]:
+                raise ValueError(f"{shot['id']}で原画を再使用するにはreferenceSceneに前の場面番号が必要です。")
+            shot["initialArt"] = action
     require_evidence(shots)
     story = raw.get("story")
     if not isinstance(story, dict):
@@ -243,6 +373,8 @@ def review_candidate(raw):
     for shot in (shots[:48] if isinstance(shots, list) else []):
         if isinstance(shot, dict):
             row = {k: shot.get(k) for k in ("medium", "sourceIds", "heading", "narration", "labels")}
+            if "initialArt" in shot:
+                row.update(initialArt=shot["initialArt"], referenceScene=shot.get("referenceScene"))
             row["picture"] = str(shot.get("picture") or "")[:1200]
             result["scenes"].append(row)
     return result
@@ -273,7 +405,7 @@ def check_review(raw, ids, beat, signals):
     if len(set(r["sceneId"] for r in rows)) != len(rows):
         raise ValueError("同じ場面の指摘は一つにまとめてください。")
     if any(r.get("target") not in ("picture", "edit") for r in rows):
-        raise ValueError("指摘の修正先にpictureまたはeditを指定してください。")
+        raise ValueError("問題が見えた箇所をpictureまたはeditで記してください。")
     repairs = [{"sceneId": r["sceneId"], "target": r["target"],
                 "reason": _text(r.get("reason"), 2000, "この場面で直すもの")} for r in rows]
     verdict = raw.get("focusVerdict")
@@ -289,7 +421,7 @@ def check_review(raw, ids, beat, signals):
         raise ValueError("選んだ観察番号は別の種類の変化を指しています。見せ場の判別に使える観察と実画を照合してください。")
     if verdict["result"] != "clear" or not found or (beat["signal"] != "other" and found["kind"] != beat["signal"]):
         traces = "／".join(s["trace"] for s in signals) or "初見で見分けられた特徴はありません。"
-        reason = f"見せ場で観客に見えてほしいこと「{beat['witness']}」。初見の実画観察「{traces}」。編集者の照合「{basis}」。この違いが絵で分かるように描き直してください。"
+        reason = f"見せ場で観客に見えてほしいこと「{beat['witness']}」。初見の実画観察「{traces}」。編集者の照合「{basis}」。狙った変化を観客が画面でたどれる見せ方を選んでください。"
         repair = next((r for r in repairs if r["sceneId"] == beat["sceneId"]), None)
         if repair is None:
             repairs.append({"sceneId": beat["sceneId"], "target": "picture", "reason": reason})
@@ -304,20 +436,47 @@ def evidence_for(facts, ids):
                         for row in facts["records"] if any(e["id"] in ids for e in row["evidence"])]}
 
 
-def picture_signature(scene, beat):
+def picture_signature(scene, beat, extra_times=()):
     # Fixed type can carry a composition. Changing it cannot repair a physical action.
     focus = beat if scene["id"] == beat["sceneId"] else None
-    if focus and focus["signal"] in ("travel", "moving-edge", "shape", "framing"):
-        paint = prepare_art(scene["art"])
-    else:
-        paint = prepare_scene({**scene, "ja": {**scene["ja"], "heading": ""}}, "ja")
+    labels = physical_labels(scene) if focus and focus["signal"] in ("travel", "moving-edge", "shape", "framing") else scene.get("labels", [])
+    paint = prepare_scene({**scene, "ja": {**scene["ja"], "heading": ""}, "labels": labels}, "ja")
     digest = hashlib.sha256()
-    times = {0, .25, .5, .75, 1}
+    times = {0, .25, .5, .75, 1, *extra_times}
     if focus:
         times.update(focus["sampleAt"])
     for pos in sorted(times):
         digest.update(paint(pos).resize((256, 144), Image.Resampling.LANCZOS).tobytes())
     return digest.digest()
+
+
+def same_picture(before, after, beat):
+    # Sample both cuts at the same clock positions, including a brief moving label's visible interval.
+    times = set()
+    for scene in (before, after):
+        for label in physical_labels(scene):
+            track = label["track"]
+            start, end = track.get("from", 0), track.get("until", 1)
+            times.update((start, (start + end) / 2))
+    return picture_signature(before, beat, times) == picture_signature(after, beat, times)
+
+
+def editing_drawing(art):
+    if len(json.dumps(art, ensure_ascii=False)) <= 30000:
+        return art
+    # Retain every path index and its paint; a large curve need not be copied to move its layer.
+    layers = []
+    for layer in art["layers"]:
+        keys = layer["keys"]
+        paths = [{**path, "d": path["d"] if len(path["d"]) <= 180 else path["d"][:90] + " ... " + path["d"][-90:]}
+                 for path in layer["paths"]]
+        layers.append({"name": layer["name"], "paths": paths,
+                       "sampledKeys": keys if len(keys) <= 5 else [keys[i] for i in (0, len(keys) // 2, -1)]})
+    return {"background": art["background"], "layers": layers}
+
+
+def layer_index(refs, detailed):
+    return {sid: [layer["name"][:40] for layer in art["layers"]] for sid, art in refs.items() if sid not in detailed}
 
 
 def proof_sheet(folder, shots, beat):
@@ -342,6 +501,64 @@ def save_sheet(folder, name, sheet):
         sheet.save(pending, format="JPEG", quality=92)
         pending.replace(path)
     return path
+
+
+def review_proof(folder, pages, focus, history):
+    previous = history[-1] if history else []
+    if len(pages) == 1 and not previous:
+        return pages[0]
+    # Give the chosen moment a full-size row and the rest of the film a contact strip.
+    with Image.open(pages[focus // 4]) as page:
+        y = (focus % 4) * 267
+        feature = page.crop((0, y, page.width, y + 267))
+    rows = []
+    for page_path in pages:
+        with Image.open(page_path) as page:
+            for top in range(0, page.height, 267):
+                rows.append(page.crop((0, top, page.width, top + 267)).resize((648, 134), Image.Resampling.LANCZOS))
+    comparisons = []
+    for edit in previous:
+        pair = []
+        for field in ("beforeProof", "afterProof"):
+            name = edit.get(field, "")
+            if re.fullmatch(r"contact-[0-9a-f]{64}\.jpg", name) and (folder / name).is_file():
+                with Image.open(folder / name) as image:
+                    pair.append(image.resize((648, 134), Image.Resampling.LANCZOS))
+        if len(pair) == 2:
+            comparisons.append(pair)
+    grid = (len(rows) + 1) // 2
+    sheet = Image.new("RGB", (1296, 292 + grid * 134 + len(comparisons) * 158 + 24), "white")
+    draw = ImageDraw.Draw(sheet)
+    draw.text((6, 4), "FOCUS / current", fill="black")
+    sheet.paste(feature, (0, 20))
+    draw.text((6, 292), "CURRENT SEQUENCE / left to right, top to bottom", fill="black")
+    for i, strip in enumerate(rows):
+        sheet.paste(strip, ((i % 2) * 648, 316 + (i // 2) * 134))
+    for i, pair in enumerate(comparisons):
+        top = 316 + grid * 134 + i * 158
+        draw.text((6, top), "LAST EDIT  /  before  ------------------------------------>  after", fill="black")
+        for j, strip in enumerate(pair):
+            sheet.paste(strip, (648 * j, top + 24))
+    return save_sheet(folder, "edit-review", sheet)
+
+
+def witnessed(beat, seen, verdict):
+    signals = next((row.get("focusSignals", []) for row in seen if row["sceneId"] == beat["sceneId"]), [])
+    index = verdict["observation"]
+    return (verdict["result"] == "clear" and 0 < index <= len(signals)
+            and (beat["signal"] == "other" or signals[index - 1]["kind"] == beat["signal"]))
+
+
+def previous_edit_proof(records, now, name):
+    if not re.fullmatch(r"contact-[0-9a-f]{64}\.jpg", name) or not (records / name).is_file():
+        return now
+    with Image.open(now) as current, Image.open(records / name) as former:
+        former.thumbnail((current.width, 390))
+        result = Image.new("RGB", (current.width, current.height + former.height + 24), "white")
+        result.paste(current, (0, 0))
+        ImageDraw.Draw(result).text((6, current.height + 4), "BEFORE LAST EDIT / comparison only", fill="black")
+        result.paste(former, (0, current.height + 24))
+    return save_sheet(records, "revision-proof", result)
 
 
 def publish_storyboard(folder, pages):
@@ -388,9 +605,9 @@ def direct_film(snapshot, brief, model_id, effort, work_dir, progress=None, prev
                       "story": _object(dict.fromkeys(("question", "explanation", "visualCheck"), STRING)),
                       "visualBeat": _object({"sceneNumber": {"type": "integer"}, "signal": choice(SIGNALS),
                                              "witness": STRING, "sampleAt": array(NUMBER)}),
-                      "scenes": array(shot_schema(ids))})
+                      "scenes": array(shot_schema(ids, initial=True))})
     previous_cut = None
-    direction_prompt = DIRECT + "\n" + COMMISSION + "\n" + SOUND_GUIDE + "\n" + LABEL_GUIDE
+    direction_prompt = "\n".join((DIRECT, INITIAL_GUIDE, COMMISSION, SOUND_GUIDE, LABEL_GUIDE))
     if previous_japanese:
         direction_prompt += ("\n今回は元版の見直しです。previousJapanese.reviewsで運営者が実際に作品から"
                              "受け取った印象と直したい点を読み、届いたところを生かし、指摘の該当箇所を改善してください。")
@@ -400,8 +617,9 @@ def direct_film(snapshot, brief, model_id, effort, work_dir, progress=None, prev
             if original.is_file():
                 previous_cut = original
                 direction_prompt += " 添付は元版の完成映像から抽出した実画です。"
-    candidate = recorded_gap(records, facts, model_id, effort, previous_cut)
-    if candidate is None:
+    restored = load_cut(folder, facts, model_id, effort, previous_cut)
+    candidate = None if restored else recorded_gap(records, facts, model_id, effort, previous_cut)
+    if not restored and candidate is None:
         try:
             plan, req, _ = stage("direction", "原資料から演出・画・語りを構成中", direction_prompt, facts, schema,
                                  lambda raw: check_direction(raw, ids), previous_cut)
@@ -416,30 +634,41 @@ def direct_film(snapshot, brief, model_id, effort, work_dir, progress=None, prev
             decision_schema, lambda raw: check_gap_decision(raw, ids), previous_cut)
         if need:
             raise MaterialRequired("追加資料が必要です。" + need)
-    direction_hash = _save_json(folder / "editor-input.json", req)
+    if restored:
+        plan, direction_hash = restored["plan"], restored["direction_hash"]
+        usage.update(restored["usage"])
+        if progress:
+            progress("保存した原画と直近の試写を引き継いで編集を再開中")
+    else:
+        direction_hash = _save_json(folder / "editor-input.json", req)
     scenes = plan["scenes"]
     scene_ids = [s["id"] for s in scenes]
     beat = plan["visualBeat"]
     focus_index = scene_ids.index(beat["sceneId"])
-    sample = style_reference()
-
-    def paint(scene, feedback=None, previous=None):
+    def paint(scene, feedback=None, previous=None, refs=None, sequence_proof=None, show=(), returned=()):
+        sample = style_reference()
         inputs = {"style": plan["style"], "scene": {k: v for k, v in scene.items() if k != "art"},
                   **evidence_for(facts, set(scene["sourceIds"]))}
         if scene["id"] == beat["sceneId"]:
             inputs["visualBeat"] = beat
         visual_refs = []
         if scene["referenceScene"]:
-            visual_refs.append(("referenceArt", scenes[scene["referenceScene"] - 1]))
+            referenced = scenes[scene["referenceScene"] - 1]
+            visual_refs.append((referenced["id"] if feedback else "referenceArt", referenced))
         if feedback:
             inputs["revision"] = feedback
             visual_refs.append(("previousArt", previous))
+            if returned:
+                inputs["returnedEdits"] = returned
+        if refs:
+            present = {s["id"] for _, s in visual_refs}
+            visual_refs += [(s["id"], s) for s in scenes if s["id"] in show and s["id"] not in present]
         reference_image = sample
         reference_art = visual_refs[0][1]["art"] if visual_refs else None
         if visual_refs:
-            with Image.open(sample) as guide:
-                guide.thumbnail((1000, 640))
-                sheet = Image.new("RGB", (1000, guide.height + len(visual_refs) * 310), "white")
+            with Image.open(sequence_proof or sample) as guide:
+                guide.thumbnail((1440, 1400) if sequence_proof else (1000, 640))
+                sheet = Image.new("RGB", (max(guide.width, 1000), guide.height + len(visual_refs) * 310), "white")
                 sheet.paste(guide, (0, 0))
                 top = guide.height
             for name, ref in visual_refs:
@@ -451,27 +680,65 @@ def direct_film(snapshot, brief, model_id, effort, work_dir, progress=None, prev
                 art = ref["art"]
                 inputs[name] = art if len(json.dumps(art, ensure_ascii=False)) <= 16000 else [
                     layer["name"] for layer in art["layers"]]
-            # Layer indices always refer to exactly one saved original.
-            inputs["reusableLayers"] = {"from": visual_refs[0][0],
-                                        "artSha256": request_digest(reference_art),
-                                        "names": [layer["name"] for layer in reference_art["layers"]]}
+            if not feedback:
+                inputs["reusableLayers"] = {"from": visual_refs[0][0],
+                                            "artSha256": request_digest(reference_art),
+                                            "names": [layer["name"] for layer in reference_art["layers"]]}
             reference_image = save_sheet(records, "art-reference", sheet)
-        before = picture_signature(previous, beat) if previous is not None else None
+        originals = {**(refs or {}), **{name: ref["art"] for name, ref in visual_refs}}
+        if feedback:
+            inputs["catalog"] = {name: layer_catalog(ref["art"]) for name, ref in visual_refs}
+            inputs["availableLayers"] = layer_index(originals, inputs["catalog"])
+            inputs["artSha256"] = {name: request_digest(art) for name, art in originals.items()}
         def check_art(raw):
-            art = validate_art(raw, reference_art)
-            if before is not None and before == picture_signature({**scene, "art": art}, beat):
+            art = validate_multi_art(raw, originals) if feedback else validate_art(raw, reference_art)
+            validate_label_targets(scene["labels"], art)
+            if previous is not None and same_picture(previous, {**scene, "art": art}, beat):
                 raise ValueError("原画の改稿前後で見える絵と動きが同じです。指摘された箇所を実画に反映してください。")
+            check_returned_edit({**scene, "art": art}, returned)
             return art
         art, _, _ = stage("art-" + scene["id"], scene["id"] + "の原画と動きを制作中",
-                          PAINT + "\n" + ART_GUIDE, inputs, art_schema(reference_art),
+                          PAINT + "\n" + (MULTI_ART_GUIDE if feedback else ART_GUIDE), inputs,
+                          multi_art_schema(originals) if feedback else art_schema(reference_art),
                           check_art, reference_image)
         scene["art"] = art
 
-    for scene in scenes:
-        paint(scene)
-    history = []
-    fresh_rejections = 0
-    while True:
+    if not restored:
+        for scene in scenes:
+            if scene.get("initialArt", "paint") == "paint":
+                paint(scene)
+                continue
+            source = scenes[scene["referenceScene"] - 1]
+            art = deepcopy(source["art"])
+            if scene["initialArt"] == "holdEnd":
+                for layer in art["layers"]:
+                    if layer["keys"]:
+                        layer["keys"] = [{**layer["keys"][-1], "at": 0.0}]
+            scene["art"] = art
+            try:
+                validate_label_targets(scene["labels"], art)
+            except ValueError as exc:
+                # The director picked the lettering before the original drawing existed.
+                # Let typesetting repair just the binding; the selected drawing stays intact.
+                desired = [label["ja"] for label in scene["labels"]]
+                def check_typesetting(raw):
+                    labels = validate_labels(raw.get("labels"))
+                    if [label["ja"] for label in labels] != desired:
+                        raise ValueError("元の文字と順序を保って貼り先と位置を指定してください。")
+                    validate_label_targets(labels, art)
+                    return labels
+                inputs = {"scene": scene["id"], "picture": scene["picture"], "sourceScene": source["id"],
+                          "labels": scene["labels"], "availableLayers": layer_catalog(art), "issue": str(exc)}
+                proof = proof_sheet(records, [{**scene, "labels": []}], beat)
+                scene["labels"], _, _ = stage("reuse-labels-" + scene["id"], "再使用した原画に文字を組版中",
+                    "原画を引き継いだ場面の組版です。文字と順を保ち、試写画像と実在する層名に合わせて貼り先・位置を決めます。"
+                    "余白に置く注記なら画面座標の固定文字を使えます。\n" + LABEL_GUIDE,
+                    inputs, _object({"labels": labels_schema()}), check_typesetting, proof)
+    history = restored["history"] if restored else []
+    pending = restored
+    unresolved = {}
+    fresh_reviews = 0
+    def assess_cut():
         seen, pages = [], []
         for i in range(0, len(scenes), 4):
             group = scenes[i:i + 4]
@@ -494,16 +761,33 @@ def direct_film(snapshot, brief, model_id, effort, work_dir, progress=None, prev
         review_inputs = {"pass": len(history) + 1, "commission": facts["commission"], "story": plan["story"], "visualBeat": beat,
                          "cut": directions, "viewer": seen,
                          **evidence_for(facts, used)}
+        if history:
+            review_inputs["previousEdits"] = history[-2:]
         signals = seen[focus_index]["focusSignals"]
         review_schema = _object({"materialRequest": STRING, "focusVerdict": _object({
             "result": choice(("clear", "missing", "unreadable")), "basis": STRING, "observation": {"type": "integer"}}), "repairs": array(_object({
             "sceneId": choice(scene_ids), "target": choice(("picture", "edit")), "reason": STRING}))})
         review, _, cached = stage("edit-review", "見せ場の実画・初見の観察・語りを照合中",
-                                  DECIDE + "\n" + COMMISSION + "\n" + SIGNAL_GUIDE + "\n" + VIDEO_EVIDENCE, review_inputs, review_schema,
-                                  lambda raw: check_review(raw, scene_ids, beat, signals), pages[focus_index // 4])
+                                  DECIDE + "\n" + EDIT_CONTEXT + "\n" + COMMISSION + "\n" + SIGNAL_GUIDE + "\n" + VIDEO_EVIDENCE,
+                                  review_inputs, review_schema, lambda raw: check_review(raw, scene_ids, beat, signals),
+                                  review_proof(records, pages, focus_index, history))
+        return seen, pages, review, cached
+
+    while True:
+        if pending:
+            seen, review, cached = pending["seen"], pending["review"], True
+            pages = []
+            pending = None
+        else:
+            seen, pages, review, cached = assess_cut()
+        save_cut(folder, facts, model_id, effort, previous_cut, plan=plan, direction_hash=direction_hash,
+                 seen=seen, review=review, history=history, usage=usage)
         repairs = review["repairs"]
         if not repairs:
+            if not pages:
+                pages = [proof_sheet(records, scenes[i:i + 4], beat) for i in range(0, len(scenes), 4)]
             publish_storyboard(folder, pages)
+            used = {sid for s in scenes for sid in s["sourceIds"]}
             plan.update(themeId=snapshot["themeId"], productionMode=MODE,
                         sources=[s for s in snapshot["sources"] if s["id"] in used],
                         filmReview={"rounds": len(history) + 1, "observations": seen, "focusVerdict": review["focusVerdict"],
@@ -511,33 +795,65 @@ def direct_film(snapshot, brief, model_id, effort, work_dir, progress=None, prev
                         model={"requested": model_id, "actual": None, "effort": effort, "provider": "codex-cli",
                                "instructionVersion": VERSION, "inputSha256": direction_hash, "usage": usage})
             return plan
+        focus_clear = witnessed(beat, seen, review["focusVerdict"])
         if not cached:
-            fresh_rejections += 1
-            if fresh_rejections >= 3:
-                raise RevisionNeeded("原画を修正して試写しましたが、予定した発見が届いていません。" +
-                                     " ".join(r["sceneId"] + " " + r["reason"] for r in repairs))
-        history.append(repairs)
+            fresh_reviews += 1
+            for note in repairs:
+                sid = note["sceneId"]
+                unresolved[sid] = unresolved.get(sid, 0) + 1
+            repeated = {r["sceneId"] for r in repairs}
+            for previous_round in history[-2:]:
+                repeated.intersection_update(r["sceneId"] for r in previous_round
+                                             if r.get("result") == "retainedForReview"
+                                             or (r.get("action") == "keep" and not r.get("changes")))
+            if fresh_reviews >= 5 or any(r["sceneId"] in repeated and unresolved[r["sceneId"]] >= 3 for r in repairs):
+                headline = "中心の見せ場は試写で確認できました。" if focus_clear else "中心の見せ場が実画で十分に伝わっていません。"
+                raise RevisionNeeded(headline + f" 今回は新しく{fresh_reviews}回試写しました。残る指摘は{len(repairs)}場面です。"
+                                     + " ".join(r["sceneId"] + " " + r["reason"][:220] for r in repairs))
+        applied = []
+        states = [scene_state(s) for s in scenes]
         for repair in sorted(repairs, key=lambda r: scene_ids.index(r["sceneId"])):
             index = scene_ids.index(repair["sceneId"])
             old = scenes[index]
-            instructions = (DIRECT + "\n" + SOUND_GUIDE + "\n" + LABEL_GUIDE + "\n初見の観察から該当場面を編集します。根拠と"
-                            "作品の発見を保ちます。targetがpictureなら作画者が描き直せる形・動きをpictureに"
-                            "明記してください。targetがeditなら原画を再利用し、表記・台詞・間・音を編集します。"
-                            "既に観客に届いている箇所と指摘に関係しないlabelsを保ち、絵で見せる約束を台詞の削除で取り下げないでください。")
-            update = {"commission": facts["commission"], "story": plan["story"], "currentScene": directions[index],
-                      "viewer": seen[index], "repair": repair["reason"], "target": repair["target"], "pass": len(history),
-                      "sceneNumber": index + 1, **evidence_for(facts, used)}
+            related = {i for i in (index - 1, index + 1, old["referenceScene"] - 1) if 0 <= i < len(scenes) and i != index}
+            refs = {s["id"]: s["art"] for s in scenes if s["id"] != old["id"]}
+            close_refs = {scenes[i]["id"]: scenes[i]["art"] for i in sorted(related)}
+            proof = edit_proof(records, scenes, index, beat)
+            before_proof = proof_sheet(records, [old], beat)
+            previous_edits = [r for batch in history for r in batch if r["sceneId"] == old["id"]]
+            context = request_digest([*states[:index], *states[index + 1:]])
+            previous_state = states[index]
+            returned = returned_edits(previous_edits, previous_state, context)
+            if previous_edits:
+                proof = previous_edit_proof(records, proof, previous_edits[-1].get("beforeProof", ""))
+            used = {sid for s in scenes for sid in s["sourceIds"]}
+            update = {"commission": facts["commission"], "story": plan["story"],
+                      "currentScene": {k: v for k, v in old.items() if k != "art"},
+                      "adjacentCut": [{"id": s["id"], "picture": s["picture"], "narration": s["ja"]["narration"],
+                                       "sound": s["sound"], "soundLayers": s.get("soundLayers", []),
+                                       "leadSeconds": s["leadSeconds"], "tailSeconds": s["tailSeconds"],
+                                       "silentSeconds": s["silentSeconds"]}
+                                      for s in scenes[max(0, index - 1):index + 2] if s["id"] != old["id"]],
+                      "currentDrawing": editing_drawing(old["art"]),
+                      "catalog": {sid: layer_catalog(art) for sid, art in {"current": old["art"], **close_refs}.items()},
+                      "availableLayers": layer_index(refs, close_refs),
+                      "artSha256": {sid: request_digest(art) for sid, art in {"current": old["art"], **refs}.items()},
+                      "viewer": seen[index], "repair": repair["reason"], "target": repair["target"], "pass": len(history) + 1,
+                      "previousEdits": previous_edits[-3:], "sceneNumber": index + 1, **evidence_for(facts, used)}
             if old["id"] == beat["sceneId"]:
                 update["visualBeat"] = beat
-            def check_revision(raw):
-                revised = check_shot(raw, index + 1, ids)
-                require_evidence([*scenes[:index], revised, *scenes[index + 1:]])
-                return revised
-
-            updated, _, _ = stage("revise-" + old["id"], old["id"] + "の演出を修正中", instructions, update,
-                                  shot_schema(ids), check_revision)
-            if repair["target"] == "picture":
-                paint(updated, repair["reason"], old)
-            else:
-                updated.update(art=old["art"], picture=old["picture"], referenceScene=old["referenceScene"])
+            if returned:
+                update["returnedEdits"] = returned
+            must_change = old["id"] == beat["sceneId"] and not focus_clear
+            instructions = "\n".join((REVISE, EDIT_GUIDE, LABEL_GUIDE, SOUND_GUIDE))
+            (updated, note), _, _ = stage("revise-" + old["id"], old["id"] + "の実画を見ながら監督が編集中",
+                                          instructions, update, revision_schema(old, refs, ids),
+                                          lambda raw: apply_revision(raw, scenes, index, ids, refs, beat, must_change, returned), proof)
+            if note["action"] == "artist":
+                paint(updated, note["instruction"], old, refs, proof, note["references"] or close_refs, returned)
             scenes[index] = updated
+            states[index] = scene_state(updated)
+            after_proof = proof_sheet(records, [updated], beat)
+            applied.append({**repair, **note, "beforeProof": before_proof.name, "afterProof": after_proof.name,
+                            "beforeState": previous_state, "afterState": states[index], "cutContext": context})
+        history.append(applied)

@@ -70,6 +70,13 @@
         <div id="run-progress" aria-live="polite"></div>
         <div class="case-workspace">
           <div class="preview-column">
+            <section id="cut-excerpt-panel" class="monitor" hidden aria-labelledby="cut-excerpt-title">
+              <div class="monitor-tools"><h2 id="cut-excerpt-title">保存稿の試写</h2><button id="cut-excerpt-close" type="button" class="quiet small">閉じる</button></div>
+              <div id="cut-excerpt-controls" class="monitor-tools" hidden><label for="cut-scene">場面</label><select id="cut-scene"></select><button id="cut-excerpt-play" type="button" class="primary small">前後を含めて試写</button></div>
+              <div class="monitor-caption" id="cut-issue" hidden></div>
+              <div id="cut-excerpt-screen" class="screen" hidden><video id="cut-excerpt-video" controls playsinline preload="metadata"></video></div>
+              <p class="monitor-caption" id="cut-excerpt-status" role="status"></p>
+            </section>
             <div class="preview-heading"><h2>試写</h2><div><a class="text-link" href="/samples/goddard.ja.mp4" target="_blank" rel="noopener">ゴダードの品質見本 ↗</a> <a id="reference-link" class="text-link" href="#case/walkman-hot-line" target="_blank" rel="noopener">ウォークマンの品質見本 ↗</a> <a id="opening-study-link" class="text-link" href="/samples/baird-opening.ja.mp4" target="_blank" rel="noopener" hidden>テレビ回の冒頭試作 ↗</a> <button id="compare-toggle" class="quiet" type="button" aria-expanded="false" aria-controls="comparison">別の版と比較</button></div></div>
             <div class="watch-grid" id="watch-grid">
               <section class="monitor" aria-label="選択中の映像">

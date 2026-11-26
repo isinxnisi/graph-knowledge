@@ -160,6 +160,12 @@ class Handler(BaseHTTPRequestHandler):
             match = re.fullmatch(r"/api/cases/([\w-]+)", path)
             if match:
                 return self.respond(200, ledger.case(match[1]))
+            match = re.fullmatch(r"/api/cases/([a-f0-9]{32})/runs/([a-f0-9]{32})/cut", path)
+            if match:
+                return self.respond(200, ledger.cut_index(*match.groups()))
+            match = re.fullmatch(r"/media/([a-f0-9]{32})/([a-f0-9]{32})/cut-previews/([a-f0-9]{64}\.mp4)", path)
+            if match:
+                return self.file(ledger.cut_media(*match.groups()))
             match = re.fullmatch(r"/media/([\w-]+)/([\w-]+)/(ja|en)/(video\.mp4|subtitles\.srt|contact-sheet\.png|storyboard\.jpg)", path)
             if match:
                 return self.file(ledger.media(*match.groups()))
@@ -183,6 +189,11 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/ideas/generate":
                 from editor import get_snapshot, list_models
                 return self.respond(202, ledger.submit_ideas(data, get_snapshot, list_models))
+            match = re.fullmatch(r"/api/cases/([a-f0-9]{32})/runs/([a-f0-9]{32})/cut/excerpts", path)
+            if match:
+                with self.server.preview_slot:
+                    excerpt = ledger.cut_excerpt(*match.groups(), data)
+                return self.respond(200, excerpt)
             match = re.fullmatch(r"/api/ideas/([\w-]+)/status", path)
             if match:
                 ledger.set_idea_status(match[1], required(data, "status", 20))

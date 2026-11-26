@@ -24,6 +24,7 @@ JOB_LABELS = {"queued": "待機中", "running": "生成中", "failed": "失敗",
 REFERENCE = "walkman-hot-line"
 ROOT = Path(__file__).resolve().parent
 PILOT = ROOT.parent / "walkman"
+CUT_STATUSES = {"failed", "interrupted", "needs_revision", "needs_material", "script_ready"}
 
 
 class Paused(Exception):
@@ -55,6 +56,11 @@ def edition_state(status, ready, adopted, rework=False):
             return "要修正"
         return "採用済み" if adopted else "確認待ち"
     return JOB_LABELS.get(status, "未生成")
+
+
+def previewable_draft(plan):
+    return bool(plan and plan.get("productionMode") == DIRECTED_FILM and plan.get("scenes") and
+                all(s.get("asset") == "authored" and s.get("art") and s.get("ja") for s in plan["scenes"]))
 
 
 def display_status(status, error):
@@ -204,6 +210,8 @@ class Ledger:
         self.folder.mkdir(parents=True, exist_ok=True)
         self.file = self.folder / "studio.sqlite3"
         self.wake = threading.Event()
+        self.cut_lock = threading.Lock()
+        self.last_cut = None
         self.reference = reference_case()
         with self.db() as db:
             db.executescript("""
@@ -665,6 +673,14 @@ class Ledger:
                         savedExcerptCount=len(excerpts),
                         editorialAlternative=proposal, chosenAlternative={**chosen, "sourceRunId": run["source_run"]} if chosen else None,
                         plan=json.loads(run["plan"]) if run["plan"] else None)
+            if status in CUT_STATUSES and run["production_mode"] == DIRECTED_FILM and "ja" in langs:
+                if status == "script_ready":
+                    available = previewable_draft(item["plan"])
+                else:
+                    available = (folder / "film-cut.json").is_file() or ((folder / "editor-input.json").is_file() and
+                                any((folder / "editor-stages").glob("edit-review-*.json")))
+                if available:
+                    item["cutAvailable"] = True
             if item["plan"] and item["plan"].get("productionMode") == DIRECTED_FILM:
                 for scene in item["plan"]["scenes"]:
                     scene.pop("art", None)
@@ -819,6 +835,80 @@ class Ledger:
             db.execute("UPDATE runs SET status=?,progress=?,error=? WHERE id=?", (status, msg, error, run))
             db.execute("UPDATE cases SET updated=? WHERE id=?", (clock(), case_id))
         return True
+
+    def _cut_run(self, case_id, run, *, paused):
+        if not all(re.fullmatch("[a-f0-9]{32}", value) for value in (case_id, run)):
+            raise KeyError(run)
+        with self.db() as db:
+            row = db.execute("""SELECT status,error,production_mode,langs,CASE WHEN ? AND status='script_ready' THEN plan END AS draft
+                              FROM runs WHERE case_id=? AND id=?""", (paused, case_id, run)).fetchone()
+        if not row or row["production_mode"] != DIRECTED_FILM or "ja" not in json.loads(row["langs"]):
+            raise KeyError(run)
+        if paused and display_status(row["status"], row["error"]) not in CUT_STATUSES:
+            raise ValueError("この試行の状態が変わりました。制作状況を確認してください。")
+        return self.folder / "cases" / case_id / run, row
+
+    def _reviewed_cut(self, folder):
+        from film_checkpoint import FILE, read_saved_cut
+        from writer_feedback import request_digest
+        # Reading a legacy cut verifies the actual drawings for all scenes. Keep the
+        # most recent explicit request so trying several excerpts only verifies it once.
+        native = folder / FILE
+        files = [native] if native.is_file() else [folder / "editor-input.json", folder / "editor-stages"]
+        def signature():
+            return tuple((str(path), path.stat().st_mtime_ns) for path in files)
+        if not all(path.exists() for path in files):
+            raise ValueError("この試行には試写できる保存稿がまだありません。")
+        with self.cut_lock:
+            key = signature()
+            if self.last_cut and self.last_cut[0] == key:
+                return self.last_cut[1:]
+            cut = read_saved_cut(folder)
+            if not cut or not cut["plan"].get("scenes"):
+                raise ValueError("この試行で場面と試写指摘を照合できる保存稿が見つかりません。")
+            if signature() != key or (native not in files and native.is_file()):
+                raise ValueError("保存稿が更新されました。場面一覧を開き直してください。")
+            digest = request_digest([cut["plan"], cut["review"]])
+            self.last_cut = (key, digest, cut)
+            return digest, cut
+
+    def _saved_cut(self, case_id, run):
+        from writer_feedback import request_digest
+        folder, row = self._cut_run(case_id, run, paused=True)
+        if row["status"] == "script_ready":
+            # A manual edit creates an independent run, including the full artwork, before creating its folder.
+            plan = json.loads(row["draft"]) if row["draft"] else None
+            if not previewable_draft(plan):
+                raise ValueError("この版には試写できる原画と台本が揃っていません。")
+            return folder, request_digest([run, plan]), {"plan": plan, "review": {} if plan.get("filmReview") else None}
+        digest, cut = self._reviewed_cut(folder)
+        return folder, digest, cut
+
+    def cut_index(self, case_id, run):
+        _, digest, cut = self._saved_cut(case_id, run)
+        repairs = {r["sceneId"]: r["reason"] for r in (cut["review"] or {}).get("repairs", [])}
+        scenes = [{"id": s["id"], "heading": s["ja"]["heading"], "narration": s["ja"]["narration"],
+                   "issue": repairs.get(s["id"], "")} for s in cut["plan"]["scenes"]]
+        return {"cutId": digest, "reviewed": cut["review"] is not None, "title": cut["plan"]["titles"]["ja"], "scenes": scenes}
+
+    def cut_excerpt(self, case_id, run, data):
+        from film_preview import render_excerpt
+        folder, digest, cut = self._saved_cut(case_id, run)
+        if required(data, "cutId", 64) != digest:
+            raise ValueError("保存稿が更新されました。場面一覧を開き直してください。")
+        scene_id = required(data, "sceneId", 50)
+        scenes = cut["plan"]["scenes"]
+        index = next((i for i, scene in enumerate(scenes) if scene["id"] == scene_id), None)
+        if index is None:
+            raise ValueError("この保存稿にある場面を選んでください。")
+        clip = render_excerpt(folder, cut["plan"], index)
+        return {"sceneId": scene_id, "video": f"/media/{case_id}/{run}/cut-previews/{clip.name}"}
+
+    def cut_media(self, case_id, run, name):
+        if not re.fullmatch(r"[a-f0-9]{64}\.mp4", name):
+            raise KeyError(name)
+        folder, _ = self._cut_run(case_id, run, paused=False)
+        return folder / "cut-previews" / name
 
     def media(self, case_id, run, lang, name):
         if lang not in LANGS or name not in ("video.mp4", "subtitles.srt", "contact-sheet.png", "storyboard.jpg"):

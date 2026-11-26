@@ -228,6 +228,7 @@ function setPlayer(video, src) {
   if (video.getAttribute("src") !== firstFrame.href) { video.pause(); video.src = firstFrame.href; video.load(); }
 }
 function resetCase() {
+  closeCut();
   state.detail = null; state.selected = { ja: "", en: "" }; state.lang = "ja";
   state.awaitingEnglishFor = "";
   state.sceneId = ""; state.compare = false; state.compareKey = ""; state.resumeAfter = null;
@@ -734,9 +735,76 @@ function historyLink(id, label) {
   return button;
 }
 
+function closeCut() {
+  state.openCut = null;
+  clearPlayer($("cut-excerpt-video"));
+  $("cut-excerpt-panel").hidden = true;
+}
+$("cut-excerpt-close").onclick = closeCut;
+
+async function openCut(run) {
+  closeCut();
+  const target = {path: detailPath("/runs/" + encodeURIComponent(run.id) + "/cut")};
+  state.openCut = target;
+  const panel = $("cut-excerpt-panel"), status = $("cut-excerpt-status");
+  const select = $("cut-scene"), play = $("cut-excerpt-play");
+  $("cut-excerpt-title").textContent = "試行 " + runNumber(run.id) + " の保存稿";
+  for (const id of ["cut-excerpt-controls", "cut-excerpt-screen", "cut-issue"]) $(id).hidden = true;
+  status.textContent = "保存された試写稿と指摘を照合しています…";
+  panel.hidden = false;
+  panel.scrollIntoView({block: "nearest"});
+  try {
+    const cut = await api(target.path);
+    if (state.openCut !== target) return;
+    $("cut-excerpt-title").textContent += "　" + cut.title;
+    select.replaceChildren(...cut.scenes.map((s, i) => option(s.id,
+      "場面 " + (i + 1) + (s.heading ? "　" + s.heading : "") + (s.issue ? "（指摘あり）" : ""))));
+    select.value = (cut.scenes.find(s => s.issue) || cut.scenes[0]).id;
+    const showScene = () => {
+      target.request = null;
+      clearPlayer($("cut-excerpt-video")); $("cut-excerpt-screen").hidden = true;
+      const scene = cut.scenes.find(s => s.id === select.value);
+      $("cut-issue").textContent = scene.issue ? "試写時の指摘　" + scene.issue :
+        cut.reviewed === false ? "この版はまだ試写審査を受けていません。" : "この場面への試写指摘はありません。";
+      $("cut-issue").hidden = false;
+      status.textContent = "";
+      play.disabled = false;
+    };
+    select.onchange = showScene;
+    showScene();
+    $("cut-excerpt-controls").hidden = false;
+    play.onclick = async () => {
+      const request = {};
+      target.request = request;
+      const sceneId = select.value;
+      play.disabled = true;
+      status.textContent = "保存済みの原画・台詞・音から試写用の抜粋を準備しています…";
+      try {
+        const result = await api(target.path + "/excerpts", {cutId: cut.cutId, sceneId});
+        if (state.openCut !== target || target.request !== request) return;
+        setPlayer($("cut-excerpt-video"), result.video);
+        $("cut-excerpt-screen").hidden = false;
+        status.textContent = "再生ボタンで、この場面と前後のつながりを確認できます。";
+      } catch (err) {
+        if (state.openCut === target && target.request === request) status.textContent = err.message;
+      } finally {
+        if (state.openCut === target && target.request === request) play.disabled = false;
+      }
+    };
+  } catch (err) {
+    if (state.openCut === target) status.textContent = err.message;
+  }
+}
+
 function runActions(run, inHistory) {
   const actions = node("div", null, "run-actions");
   const scriptReady = run.status === "script_ready";
+  if (run.cutAvailable) {
+    const inspect = node("button", "保存稿の場面を試写", "secondary small");
+    inspect.type = "button";
+    inspect.onclick = () => openCut(run);
+    actions.append(inspect);
+  }
   if (scriptReady && (inHistory || run !== chosenRun())) actions.append(inspectScript(run));
   if (!scriptReady || inHistory || run === chosenRun()) {
     const button = statusButton(run);
