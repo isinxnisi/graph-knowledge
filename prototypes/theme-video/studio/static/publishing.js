@@ -249,10 +249,18 @@ async function showYoutubeEdition(target) {
   const run = currentRuns().find((item) => item.id === target.runId);
   const channel = settings.channels?.[target.lang];
   const items = history.items.filter((item) => item.runId === target.runId && item.lang === target.lang);
+  const receipts = node("section");
+  const drawReceipts = (jobs) => {
+    receipts.replaceChildren();
+    for (const job of jobs) addYoutubeReceipt(receipts, job, target, channel);
+  };
   panel.replaceChildren(node("h2", languageName[target.lang] + "版のYouTube投稿"),
     node("p", "試行 " + runNumber(target.runId) + " ・ " + run?.plan?.titles?.[target.lang], "form-target"),
-    publishingButton("閉じる", closeYoutubeEdition, "quiet small"));
-  for (const job of items) addYoutubeReceipt(panel, job, target, channel);
+    publishingButton("閉じる", closeYoutubeEdition, "quiet small"), publishingButton("送信履歴を更新", async () => {
+      const current = await api("/api/cases/" + target.caseId + "/youtube");
+      if (youtubeEditionTarget === target) drawReceipts(current.items.filter((job) => job.runId === target.runId && job.lang === target.lang));
+    }, "quiet small"), receipts);
+  drawReceipts(items);
   if (!channel) {
     const link = node("a", languageName[target.lang] + "チャンネルを接続する", "text-link");
     link.href = "#publishing";
@@ -303,8 +311,15 @@ async function showYoutubeEdition(target) {
     if (!form.reportValidity()) return;
     if (!reviewed.checked) throw new Error("投稿する映像の画面内字幕を試写で確認してください。");
     if (!window.confirm(channel.title + " に「" + privacy.selectedOptions[0].textContent + "」で投稿しますか？")) return;
-    await api(path + "/submit", {metadata: formValue(), channelId: channel.id,
+    const result = await api(path + "/submit", {metadata: formValue(), channelId: channel.id,
       mediaVariant: captioned.checked ? "captioned" : "original"});
+    if (result.caseId !== target.caseId || result.runId !== target.runId) {
+      const link = node("a", "同じ映像の送信記録を開く", "text-link");
+      link.href = caseHash(result.caseId) + "/" + result.runId + "/" + result.lang;
+      notify("このチャンネルには同じ映像の送信記録があります。");
+      $("notice").append(link);
+      return;
+    }
     await showYoutubeEdition(target);
     notify("YouTubeへの送信を受け付けました。");
   }, "primary small"));
@@ -417,9 +432,29 @@ function buildPlacementEditor(editor, placement, environment, entries) {
     }));
     buildPlacementEditor(editor, data, environment, entries);
   }, "quiet small"));
-  if (placement.latestRevision !== placement.revision) {
+  if (!current) {
     previous.append(node("small", "以前の公開版に登録された動画や画像を外せます。", "subtle"));
     forms.hidden = true;
+  } else if (versions.length) {
+    const last = Math.max(...versions);
+    previous.append(publishingButton("第" + last + "版の配置を下書きに取り込む", async () => {
+      const before = await api("/api/placement/theme?" + new URLSearchParams({
+        environment:environment.id, themeId:placement.themeId, revision:last
+      }));
+      const targets = new Set(placement.targets.map(placementKey));
+      const images = new Set(placement.imageCandidates.filter((image) => image.eligible).map((image) => image.id));
+      let skipped = 0;
+      for (const slot of before.slots) {
+        if (slots.some((entry) => entry.id === slot.id)) continue;
+        const positions = slot.positions.filter((position) => targets.has(placementKey(position)));
+        if (!positions.length || (slot.kind === "image" && !images.has(slot.imageId))) { skipped++; continue; }
+        skipped += slot.positions.length - positions.length;
+        slots.push({...slot, positions});
+      }
+      drawSlots(); refresh();
+      notify("旧版の配置を下書きに反映しました。新しい公開版での見え方を確認して保存してください。"
+        + (skipped ? " 新しい版で照合できなかった画像・位置 " + skipped + "件は候補に含めていません。" : ""));
+    }, "quiet small"));
   }
   const changePayload = (action, requestId) => ({environment: environment.id, action, requestId,
     themeId: placement.themeId, revision: placement.revision, expectedGeneration: placement.generation, slots});

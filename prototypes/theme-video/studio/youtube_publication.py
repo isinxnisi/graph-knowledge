@@ -171,7 +171,8 @@ class YouTubePublication(ChannelAccounts):
         plan, snap = json.loads(row["plan"] or "{}"), json.loads(row["snapshot"])
         edition = json.loads(row["editions"])[lang]
         prefix = "/en/t/" if lang == "en" else "/t/"
-        description = [row["title"], f"https://plunode.net{prefix}{quote(snap['themeId'],safe='')}?krev={int(snap['revision'])}"]
+        title = plan.get("titles", {}).get(lang) or row["title"]
+        description = [title, f"https://plunode.net{prefix}{quote(snap['themeId'],safe='')}?krev={int(snap['revision'])}"]
         for source in plan.get("sources", []):
             if isinstance(source,dict) and isinstance(source.get("url"), str):
                 description.append(str(source.get("title") or "") + "\n" + source["url"])
@@ -186,7 +187,7 @@ class YouTubePublication(ChannelAccounts):
                 pass
         if isinstance(credits, str) and credits.strip():
             description.append(("音声　" if lang == "ja" else "Voice: ") + credits)
-        return dict(title=plan.get("titles", {}).get(lang) or row["title"],description="\n\n".join(description),
+        return dict(title=title,description="\n\n".join(description),
                     tags=[],categoryId="27",defaultLanguage=lang,audioLanguage=lang,privacy=privacy,madeForKids=None,
                     containsSyntheticMedia=False,paidPromotion=False,embeddable=True,notifySubscribers=False)
 

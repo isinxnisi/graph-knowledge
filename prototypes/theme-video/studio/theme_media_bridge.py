@@ -2,17 +2,9 @@
 import json
 import os
 from pathlib import Path
-from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode
-from urllib.request import build_opener, HTTPRedirectHandler, Request
 
 ORIGINS = {"beta": "https://graph-beta.isinxnisi.com", "production": "https://plunode.net"}
 API = "/api/site-operations/theme-media"
-
-
-class NoRedirects(HTTPRedirectHandler):
-    def redirect_request(self, request, fp, code, message, headers, url):
-        return None
 
 
 class ThemePlacement:
@@ -44,30 +36,39 @@ class ThemePlacement:
         token = self.token(env)
         if not token:
             raise ValueError("掲載先の接続設定が必要です。制作室の管理手順を確認してください。")
-        url = ORIGINS[env] + API + ("?" + urlencode(query) if query else "")
+        import requests
+
         headers = {"Authorization": "Bearer " + token, "X-Plunode-Media-Environment": env,
                    "Accept": "application/json"}
-        body = None
-        if command is not None:
-            headers["Content-Type"] = "application/json"
-            body = json.dumps(command, ensure_ascii=False).encode("utf-8")
         try:
-            with build_opener(NoRedirects).open(Request(url, data=body, headers=headers), timeout=25) as response:
-                return json.loads(response.read(2_000_000))
-        except HTTPError as error:
-            try:
-                message = json.loads(error.read(4000)).get("error")
-            except (ValueError, AttributeError):
-                message = None
-            if error.code in (401, 403) or 300 <= error.code < 400:
-                raise ValueError("掲載先に接続できません。環境と掲載権限を確認してください。") from None
-            if error.code == 409:
-                raise ValueError(message or "掲載内容が更新されました。読み直してから保存してください。") from None
-            if 400 <= error.code < 500:
-                raise ValueError(message or "掲載先の公開版と動画の状態を確認してください。") from None
-            raise RuntimeError("掲載先が応答できません。保存結果は再表示して確認してください。") from None
-        except (URLError, TimeoutError, ValueError):
-            raise RuntimeError("掲載先と通信できません。もう一度表示して現在の状態を確認してください。") from None
+            with requests.request("POST" if command is not None else "GET", ORIGINS[env] + API,
+                                  headers=headers, params=query, json=command, timeout=(8, 25),
+                                  allow_redirects=False, stream=True) as response:
+                code = response.status_code
+                if code in (401,403) or 300 <= code < 400:
+                    raise ValueError("掲載先に接続できません。環境と掲載権限を確認してください。")
+                body = bytearray()
+                for chunk in response.iter_content(chunk_size=65_536):
+                    body.extend(chunk)
+                    if len(body) > 2_000_000:
+                        break
+        except (requests.RequestException, OSError) as exc:
+            raise RuntimeError("掲載先と通信できません。もう一度表示して現在の状態を確認してください。") from exc
+        try:
+            if len(body) > 2_000_000:
+                raise ValueError("oversized response")
+            value = json.loads(body)
+            if not isinstance(value, dict):
+                raise ValueError("unexpected response")
+        except (ValueError, UnicodeError):
+            raise RuntimeError("掲載先の応答を読み取れません。もう一度表示して現在の状態を確認してください。") from None
+        if code == 409:
+            raise ValueError(value.get("error") or "掲載内容が更新されました。読み直してから保存してください。")
+        if 400 <= code < 500:
+            raise ValueError(value.get("error") or "掲載先の公開版と動画の状態を確認してください。")
+        if code >= 500:
+            raise RuntimeError("掲載先が応答できません。保存結果は再表示して確認してください。")
+        return value
 
     def remember(self, env, theme, revision, slots):
         # Update the local index only from the version read back from the site.

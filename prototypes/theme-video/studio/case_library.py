@@ -73,9 +73,6 @@ def blockers(db, case_id, *, permanent):
                 # A locally cached listing is positive evidence only. Absence
                 # cannot attest to all theme revisions on both remote sites.
                 reasons.append("YouTube動画との紐付けがあります。全掲載先で参照がないことを確認できるまで、案件はゴミ箱に保持します。")
-    if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='publication_captions'").fetchone():
-        if db.execute("SELECT 1 FROM publication_captions WHERE case_id=? AND status IN ('queued','running')", (case_id,)).fetchone():
-            reasons.append("投稿用字幕を描画中です。書き出しの完了を確認してください。")
     if permanent:
         children = db.execute("""SELECT coalesce((SELECT json_extract(r.plan,'$.titles.' ||
                                       json_extract(c.snapshot,'$.shortSource.language')) FROM runs r WHERE r.case_id=c.id
