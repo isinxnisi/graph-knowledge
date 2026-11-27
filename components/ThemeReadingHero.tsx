@@ -6,8 +6,8 @@ import {knowledgeDisplayText} from "../lib/domain/knowledge-display";
 import Icon from "./Icon";
 import ThemeImageButton from "./ThemeImageButton";
 import css from "./ThemeReadingHero.module.css";
-export default function ThemeReadingHero({theme,snapshot,locale,onAbout,presentation}:{presentation?:ThemeReadingPresentation|null;theme:KnowledgeThemeVersion;snapshot:KnowledgeSnapshot;locale:string;onAbout:()=>void}){
- const en=locale==="en",[brokenSrc,setBrokenSrc]=useState<string|null>(null),image=presentation?.image,broken=image?.src===brokenSrc;
+export default function ThemeReadingHero({theme,snapshot,locale,onAbout,presentation,hideImage=false}:{hideImage?:boolean;presentation?:ThemeReadingPresentation|null;theme:KnowledgeThemeVersion;snapshot:KnowledgeSnapshot;locale:string;onAbout:()=>void}){
+ const en=locale==="en",[brokenSrc,setBrokenSrc]=useState<string|null>(null),image=hideImage?undefined:presentation?.image,broken=image?.src===brokenSrc;
  const description=knowledgeDisplayText(snapshot.translations,{kind:"theme",id:theme.id,revision:theme.revision,field:"description"},locale,theme.content.description);
  if(!description&&!presentation)return <><button onClick={onAbout} className={css.about}><Icon name="book"/>{en?"About this theme":"このテーマについて"}</button></>;
  return <section className={css.hero} data-art={image&&!broken?image.kind:undefined} aria-label={en?"Introduction":"このテーマの導入"}>

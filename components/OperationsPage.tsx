@@ -1,4 +1,5 @@
 "use client";
+import ThemeMediaOperations from "./ThemeMediaOperations";
 import {ThemeProductionOperations} from "./ThemeProductionOperations";
 import {FeaturedThemesOperations} from "./FeaturedThemesOperations";
 import {KnowledgeIdentity} from "./KnowledgeIdentity";
@@ -109,6 +110,7 @@ export function OperationsPage({dataset}:{dataset:DatasetMode}){
  {error&&<p role="alert" className={css.error}>{error} <button onClick={reload}>{t('再取得','Retry')}</button>{cursor&&<button onClick={()=>{setCursor(null);setStack([]);reload();}}>{t('先頭ページから再取得','Reload from first page')}</button>}</p>}
  {paused&&<p role="status">{t('運営権限を再確認しています。入力はこの画面内に保持します。','Rechecking operator access. Inputs stay in this page.')}</p>}
  {busy&&!visible&&<p role="status">{t('運営権限と一覧を確認しています。','Checking operator access and loading…')}</p>}
+ {section==='themes'&&user&&<ThemeMediaOperations key={user.id+"-media"} en={!ja} authorized={visible}/>}
  {section==='themes'&&user&&<ThemeProductionOperations key={user.id} userId={user.id} authorized={visible}/>}
  {section==='featured'&&user&&<FeaturedThemesOperations key={user.id} userId={user.id} authorized={visible} registerGuard={guard=>{knowledgeGuard.current=guard;}}/>}
  {section==='knowledge'&&user&&<KnowledgeOperations key={user.id} userId={user.id} authorized={visible} registerGuard={guard=>{knowledgeGuard.current=guard;}}/>}

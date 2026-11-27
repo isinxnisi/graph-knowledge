@@ -1,0 +1,8 @@
+.editor { display:grid; gap:8px; padding:12px 0; }
+.editor input,.editor select,.editor button { font:inherit; margin:2px 4px; max-width:100%; }
+.themes { display:flex; flex-wrap:wrap; gap:3px; max-height:9rem; overflow:auto; }
+.editor fieldset { min-width:0; padding:10px; }
+.slot { border-bottom:1px solid #d3d9d2; padding:6px 0; }
+.slot label { display:inline-flex; align-items:center; gap:3px; margin-right:8px; }
+.slot details label { display:flex; }
+.add { display:flex; flex-wrap:wrap; margin:8px 0; }
