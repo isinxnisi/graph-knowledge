@@ -217,7 +217,9 @@ def produce(snapshot, brief, model_selection, run_folder, lang, *, draft, plan, 
             with tempfile.NamedTemporaryFile(dir=work, delete=False) as f:
                 f.write(approved.encode("utf-8"))
             Path(f.name).replace(work / "approved-draft.md")
-        prompt = (f"「{snapshot['title']}」から、Plunodeの一本をお願いします。"
+        assignment = (f"『{snapshot['shortSource']['title']}』から、縦画面で初めて観る人のためにショートを新しく演出してください。"
+                      if snapshot.get("shortSource") else f"「{snapshot['title']}」から、Plunodeの一本をお願いします。")
+        prompt = (assignment +
                   "今回の依頼はBRIEF.mdにあります。作り方はお任せします。\n\n"
                   "再編集できるソース・自分の素材はproject/に残してください。"
                   "previous/があれば元の版、japanese-master/があれば完成した日本語版と編集ソース、"

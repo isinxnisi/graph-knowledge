@@ -51,7 +51,10 @@ class DirectProductionTest(unittest.TestCase):
         def author(work, *_):
             self.assertEqual((work / "original/video.mp4").read_bytes(), movie.read_bytes())
             self.assertTrue((work / "original/subtitles.srt").is_file())
-            self.assertIn("180秒以内", (work / "BRIEF.md").read_text(encoding="utf-8"))
+            brief = (work / "BRIEF.md").read_text(encoding="utf-8")
+            self.assertIn("180秒以内", brief)
+            self.assertIn("walkman-short.mp4", brief)
+            self.assertEqual((work / "references/walkman-short.mp4").read_bytes()[4:8], b"ftyp")
             out = work / "output"
             subprocess.run(["ffmpeg", "-v", "error", "-f", "lavfi", "-i", "color=s=90x160:d=0.5",
                             "-c:v", "libx264", str(out / "video.mp4")], check=True)

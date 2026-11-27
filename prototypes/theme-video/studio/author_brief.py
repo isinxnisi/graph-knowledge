@@ -68,16 +68,23 @@ def write_brief(folder, snapshot, brief, *, language="ja", previous_japanese=Non
     _json(inputs / "request.json", commission)
     for name, source in REFERENCE_FILES.items():
         _store(references / name, source.read_bytes())
+    if original:
+        _store(references / "walkman-short.mp4", (FILMS / "walkman-short/hotline.ja.mp4").read_bytes())
 
     _store(folder / "CHANNEL.md", (STUDIO / "channel_identity.md").read_bytes())
     _store(folder / "TOOLS.md", (STUDIO / "author_tools.md").read_bytes())
-    paragraphs = ["# 今回の制作依頼", f"今回のテーマ　{snapshot['title']}", REQUEST]
+    paragraphs = ["# 今回の制作依頼", f"今回のテーマ　{snapshot['title']}"]
+    if not original:
+        paragraphs.append(REQUEST)
     if original:
-        paragraphs.append(f"元の作品『{original['title']}』から、縦9:16・180秒以内のYouTubeショートを一本。"
-                          "original/ に選択版の完成映像・字幕・台本と、利用できる編集素材があります。"
-                          "実際の絵と音を確かめ、その作品を好きになった人がもう一本観たくなる空気を受け継いでください。"
-                          "初めて観る人にも面白さが届き、発見がこの一本で完結する縦の作品にしてください。"
-                          "何を残し、どう作り直すか、必要な尺もお任せします。")
+        paragraphs.append(f"元の作品『{original['title']}』の面白さを、縦画面で初めて出会う人に届ける新作をお願いします。"
+                          "YouTubeショート一本、縦9:16・180秒以内です。")
+        paragraphs.append("original/video.mp4 を観て、この題材の何を視聴者自身に体験してほしいかを選んでください。"
+                          "その体験が一本の中でどう始まり、どう実を結ぶか。そこから台詞、見せる順番、絵と音を組み直してください。"
+                          "元の字幕・台本・編集素材は取材と再利用に使えます。効いている一言やカットをどこに生かすか、尺も含めてお任せします。")
+        paragraphs.append("ひとつの作例が references/walkman-short.mp4 です。横長版（references/walkman.mp4）はボタンの発案をたどります。"
+                          "縦版では、さっき聞き取れなかった隣の声が届き、そのひと言で同じ曲のベースが耳に入る。"
+                          "ふたりの絵と四音を受け継ぎ、観客に起きることを新しく作った例です。今回の題材に似合う演出は自由に選んでください。")
     elif commission["mode"] == "selectedIdea":
         paragraphs.append("選んだ案　" + commission["workingTitle"] + "\n観客に届けたいこと　" + commission["intendedDiscovery"]
                           + "\ninputs/request.json の仮題、導入、素材候補は企画時の案です。")
