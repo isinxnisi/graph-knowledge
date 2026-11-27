@@ -59,12 +59,14 @@ class DirectProductionTest(unittest.TestCase):
             subprocess.run(["ffmpeg", "-v", "error", "-f", "lavfi", "-i", "color=s=90x160:d=0.5",
                             "-c:v", "libx264", str(out / "video.mp4")], check=True)
             (out / "subtitles.srt").write_bytes(b"")
+            (out / "youtube-tags.json").write_text("{broken", encoding="utf-8")
             return {}
         with patch("direct_runtime.run_author", side_effect=author):
             self.assertTrue(desk.process_next(None, None, produce=production.produce))
         child = desk.case(job["id"])
         self.assertEqual(child["shortSource"]["language"], "en")
         self.assertEqual(child["runs"][0]["status"], "done", child["runs"][0]["error"])
+        self.assertNotIn("youtubeTags", child["runs"][0]["editions"]["en"])
         self.assertTrue(desk.media(job["id"], job["runId"], "en", "video.mp4").is_file())
 
     def test_direct_job_checks_its_own_cli_catalog(self):
@@ -88,6 +90,7 @@ class DirectProductionTest(unittest.TestCase):
         def author(work, prompt, model, effort, progress):
             requests.append(prompt)
             self.assertEqual((model, effort), ("fixture", "high"))
+            self.assertIn("任意のoutput/youtube-tags.json", prompt)
             self.assertTrue((work / "references/goddard.mp4").is_file())
             self.assertTrue((work / "inputs/theme.json").is_file())
             (work / "project/animation.txt").write_text("original artwork", encoding="utf-8")
@@ -97,6 +100,8 @@ class DirectProductionTest(unittest.TestCase):
                             "-t", "0.75", "-c:v", "libx264", "-c:a", "aac", str(out / "video.mp4")], check=True)
             (out / "subtitles.srt").write_text("1\n00:00:00,125 --> 00:00:00,650\n紙。\n", encoding="utf-8")
             (out / "sources.json").write_text('["ref-1"]', encoding="utf-8")
+            (out / "youtube-tags.json").write_text(json.dumps([" 紙の実験 ", "紙の実験", " 紙, 折り目 ",
+                                                              None, "a" * 501]), encoding="utf-8")
             return {"output_tokens": 0}
 
         def unexpected(*args, **kwargs):
@@ -111,6 +116,7 @@ class DirectProductionTest(unittest.TestCase):
         self.assertEqual(run["plan"]["scenes"][0]["ja"]["narration"], "紙。")
         self.assertEqual(run["plan"]["sources"], self.snap["sources"])
         self.assertEqual(run["editions"]["ja"]["timings"][0]["start"], .125)
+        self.assertEqual(run["editions"]["ja"]["youtubeTags"], ["紙の実験", "紙 折り目"])
         self.assertTrue(desk.media(job["id"], job["runId"], "ja", "video.mp4").is_file())
 
     def test_failed_delivery_resumes_its_workspace_and_successful_import_is_idempotent(self):

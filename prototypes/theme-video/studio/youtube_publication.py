@@ -20,6 +20,7 @@ from youtube_wire import MANAGE, PRIVACY, RemoteError, YouTubeAPI
 DAY = 86400
 CHUNK = 4 * 1024 * 1024
 STORED_LIMIT = 28 * DAY
+EDUCATION_CATEGORY = "27"
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS youtube_drafts(
  case_id TEXT, run_id TEXT, lang TEXT, metadata TEXT NOT NULL, PRIMARY KEY(case_id,run_id,lang));
@@ -55,16 +56,44 @@ def public_job(row, details=True):
     return view
 
 
+def tag_length(tags):
+    return len(",".join(('"' + tag + '"' if ' ' in tag else tag) for tag in tags))
+
+
+def suggested_tags(title, theme_title=None, prepared=()):
+    tags = ["Plunode"]
+    candidates = [*(prepared if isinstance(prepared, list) else []), theme_title, title]
+    for candidate in candidates:
+        if not isinstance(candidate, str):
+            continue
+        tag = " ".join(re.sub(r"[,<>]", " ", candidate).split())
+        if tag and tag.casefold() not in {item.casefold() for item in tags} and tag_length([*tags, tag]) <= 500:
+            tags.append(tag)
+    return tags
+
+
+def metadata_defaults(values, tags=None):
+    result = dict(values)
+    if "tags" not in result:
+        result["tags"] = tags if tags is not None else suggested_tags(result.get("title"))
+    if result.get("categoryId") in (None, ""):
+        result["categoryId"] = EDUCATION_CATEGORY
+    if result.get("madeForKids") is None:
+        result["madeForKids"] = False
+    return result
+
+
 def metadata(raw, lang):
     if not isinstance(raw, dict):
         raise ValueError("投稿情報を入力してください。")
-    title, description, tags = raw.get("title"), raw.get("description"), raw.get("tags", [])
+    raw = metadata_defaults(raw)
+    title, description, tags = raw.get("title"), raw.get("description"), raw["tags"]
     if not isinstance(title, str) or not title.strip() or len(title) > 100 or any(c in title for c in "<>"):
         raise ValueError("タイトルは1〜100文字、山括弧なしで入力してください。")
     if not isinstance(description, str) or len(description.encode()) > 5000 or any(c in description for c in "<>"):
         raise ValueError("説明はUTF-8で5,000バイト以内、山括弧なしで入力してください。")
     if (not isinstance(tags, list) or any(not isinstance(t,str) or not t.strip() for t in tags)
-            or len(",".join(('"' + t + '"' if ' ' in t else t) for t in tags)) > 500):
+            or tag_length(tags) > 500):
         raise ValueError("タグは区切りと空白を含む語の引用符を合わせて500文字以内にしてください。")
     if raw.get("privacy") not in PRIVACY or not re.fullmatch(r"[1-9][0-9]{0,2}", str(raw.get("categoryId", ""))):
         raise ValueError("公開範囲とYouTubeカテゴリ番号を確認してください。")
@@ -163,15 +192,18 @@ class YouTubePublication(ChannelAccounts):
     def draft(self, case_id, run, lang):
         with self.ledger.db() as db:
             row = self._edition(db,case_id,run,lang)
+            snap = json.loads(row["snapshot"])
+            theme_title = snap.get("title") if lang == "ja" else None
+            plan = json.loads(row["plan"] or "{}")
+            edition = json.loads(row["editions"])[lang]
+            title = plan.get("titles", {}).get(lang) or row["title"]
+            tags = suggested_tags(title, theme_title, edition.get("youtubeTags"))
             saved = db.execute("SELECT metadata FROM youtube_drafts WHERE case_id=? AND run_id=? AND lang=?",
                                (case_id,run,lang)).fetchone()
             if saved:
-                return json.loads(saved["metadata"])
+                return dict(metadata_defaults(json.loads(saved["metadata"]), tags), suggestedTags=tags)
             privacy = db.execute("SELECT privacy FROM youtube_settings").fetchone()[0]
-        plan, snap = json.loads(row["plan"] or "{}"), json.loads(row["snapshot"])
-        edition = json.loads(row["editions"])[lang]
         prefix = "/en/t/" if lang == "en" else "/t/"
-        title = plan.get("titles", {}).get(lang) or row["title"]
         description = [title, f"https://plunode.net{prefix}{quote(snap['themeId'],safe='')}?krev={int(snap['revision'])}"]
         for source in plan.get("sources", []):
             if isinstance(source,dict) and isinstance(source.get("url"), str):
@@ -187,9 +219,10 @@ class YouTubePublication(ChannelAccounts):
                 pass
         if isinstance(credits, str) and credits.strip():
             description.append(("音声　" if lang == "ja" else "Voice: ") + credits)
-        return dict(title=title,description="\n\n".join(description),
-                    tags=[],categoryId="27",defaultLanguage=lang,audioLanguage=lang,privacy=privacy,madeForKids=None,
-                    containsSyntheticMedia=False,paidPromotion=False,embeddable=True,notifySubscribers=False)
+        return metadata_defaults(dict(title=title, description="\n\n".join(description),
+                                      defaultLanguage=lang, audioLanguage=lang, privacy=privacy,
+                                      containsSyntheticMedia=False, paidPromotion=False, embeddable=True,
+                                      notifySubscribers=False, suggestedTags=tags), tags)
 
     def save_draft(self, case_id, run, lang, data):
         value = data.get("metadata", data)
@@ -197,7 +230,11 @@ class YouTubePublication(ChannelAccounts):
             raise ValueError("下書きの内容を確認してください。")
         with self.ledger.db() as db:
             db.execute("BEGIN IMMEDIATE")
-            self._edition(db,case_id,run,lang)
+            row = self._edition(db,case_id,run,lang)
+            theme_title = json.loads(row["snapshot"]).get("title") if lang == "ja" else None
+            edition = json.loads(row["editions"])[lang]
+            value = metadata_defaults(value, suggested_tags(value.get("title"), theme_title, edition.get("youtubeTags")))
+            value.pop("suggestedTags", None)
             db.execute("INSERT OR REPLACE INTO youtube_drafts VALUES(?,?,?,?)", (case_id,run,lang,json.dumps(value)))
         return value
 
@@ -209,7 +246,10 @@ class YouTubePublication(ChannelAccounts):
         return row
 
     def submit(self, case_id, run, lang, data):
-        values = metadata(data.get("metadata"), lang)
+        raw = data.get("metadata")
+        if isinstance(raw, dict) and "tags" not in raw:
+            raw = metadata_defaults(raw, self.draft(case_id, run, lang)["suggestedTags"])
+        values = metadata(raw, lang)
         channel = data.get("channelId")
         variant = data.get("mediaVariant", "original")
         if variant not in ("original","captioned"):

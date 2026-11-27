@@ -127,6 +127,28 @@ def _sources(work, snapshot):
     return list(result.values())
 
 
+def _youtube_tags(work):
+    try:
+        values = json.loads(read_text(work, work / "output" / "youtube-tags.json", 16_384))
+    except (OSError, ValueError, RecursionError):
+        return []
+    if not isinstance(values, list):
+        return []
+
+    tags, seen, length = [], set(), 0
+    for value in values:
+        if not isinstance(value, str):
+            continue
+        tag = " ".join(re.sub(r"[\x00-\x1f\x7f-\x9f\ud800-\udfff,<>]", " ", value).split())
+        key = tag.casefold()
+        added = len(tag) + (2 if " " in tag else 0) + bool(tags)
+        if tag and key not in seen and length + added <= 500:
+            tags.append(tag)
+            seen.add(key)
+            length += added
+    return tags
+
+
 def _parent_material(work, parent_folder, parent_plan, lang, *, japanese_master=False):
     if not parent_folder or not parent_plan:
         return
@@ -229,7 +251,9 @@ def produce(snapshot, brief, model_selection, run_folder, lang, *, draft, plan, 
         else:
             prompt += ("今回は完成映像まで。output/video.mp4（H.264、音声を含める場合はAAC）、output/subtitles.srt"
                        "（語りがなければ空で可）、output/title.txtを納品してください。"
-                       "出典一覧を残すにはoutput/sources.jsonに使った資料IDまたは公開URLを配列で記せます。")
+                       "出典一覧を残すにはoutput/sources.jsonに使った資料IDまたは公開URLを配列で記せます。"
+                       "この作品を探す視聴者が使いそうな固有名や題材があれば、この版の言語で検索語を数個選び、"
+                       "任意のoutput/youtube-tags.jsonに文字列の配列で添えられます。")
         if mark.get("key") == key and mark.get("problem"):
             prompt += "\n前回の納品で読み取れなかった点です。作業中のファイルを開いて仕上げてください。\n" + mark["problem"]
         progress("テーマと番組見本を渡し、" + ("台本を依頼中" if draft else "一本の映像を制作中"))
@@ -268,6 +292,7 @@ def produce(snapshot, brief, model_selection, run_folder, lang, *, draft, plan, 
                 local_plan.setdefault("sourceNotes", {})[lang] = "作者の出典一覧を取り込めませんでした。原記録は制作フォルダにあります。"
             local_plan["scenes"] = [s for s in local_plan["scenes"] if lang not in s] + lines
             local_plan["sources"] = list({s["id"]: s for s in [*local_plan["sources"], *sources]}.values())
+            local_plan["youtubeTags"] = _youtube_tags(work)
             edition = folder / lang
             edition.mkdir(exist_ok=True)
             progress("完成した映像・字幕を制作室へ取り込み中")

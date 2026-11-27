@@ -123,7 +123,11 @@ async function openYoutubeSettings(version = state.routeVersion) {
 function closeYoutubeEdition() {
   youtubeEditionTarget = null;
   clearTimeout(captionTimer);
-  if ($("youtube-edition")) $("youtube-edition").hidden = true;
+  const panel = $("youtube-edition");
+  if (!panel) return;
+  const video = panel.querySelector("video");
+  if (video) clearPlayer(video);
+  panel.hidden = true;
 }
 function drawPublishingActions(run, lang) {
   const detail = state.detail, target = youtubeEditionTarget;
@@ -135,7 +139,11 @@ function drawPublishingActions(run, lang) {
     placementTarget = {id: detail.themeId, title: detail.themeTitle};
   };
   if (target && (target.caseId !== detail?.id || target.runId !== run?.id || target.lang !== lang)) closeYoutubeEdition();
-  if (!open.hidden) open.onclick = () => showYoutubeEdition({caseId: detail.id, runId: run.id, lang}).catch((error) => notify(error.message, true));
+  if (!open.hidden) open.onclick = () => {
+    $("player").pause();
+    $("compare-player").pause();
+    showYoutubeEdition({caseId: detail.id, runId: run.id, lang}).catch((error) => notify(error.message, true));
+  };
 }
 function editionYoutubePath(target) {
   return "/api/cases/" + target.caseId + "/runs/" + target.runId + "/" + target.lang + "/youtube";
@@ -201,39 +209,62 @@ function addYoutubeReceipt(panel, job, target, channel) {
   panel.append(group);
 }
 
-function mountCaptionVariant(panel, target) {
+function mountUploadPreview(panel, target, edition) {
   const url = editionYoutubePath(target).replace(/youtube$/, "upload-captions");
-  const choice = node("details", null, "panel");
-  choice.append(node("summary", "映像内字幕が足りない既存版"));
-  const hint = node("p", "SRTの時刻に合わせて別の投稿用MP4を書き出します。字幕入りの映像に重ねると二重になるので、必要な版だけ試写してください。", "subtle");
+  const preview = node("section", null, "panel");
+  preview.append(node("h3", "投稿する映像の試写"),
+    node("p", "消音で始まります。再生すると、投稿するMP4に入っている文字を確認できます。", "subtle"));
+  const selected = publishSelect(preview, "投稿する映像", "mediaVariant",
+    [["original", "元のMP4"]], "original");
+  const screen = node("video");
+  screen.controls = true; screen.muted = true; screen.playsInline = true; screen.preload = "metadata";
+  screen.setAttribute("aria-label", "投稿する映像");
+  const disableTextTracks = () => {
+    for (const track of screen.textTracks) track.mode = "disabled";
+  };
+  screen.addEventListener("loadedmetadata", disableTextTracks);
+  screen.textTracks.addEventListener("addtrack", disableTextTracks);
   const status = node("p", null, "subtle");
   status.setAttribute("role", "status");
-  const screen = node("video");
-  screen.controls = true; screen.muted = true; screen.playsInline = true; screen.preload = "metadata"; screen.hidden = true;
-  const selected = publishCheck(choice, "この字幕付きMP4を投稿する", "captioned");
-  selected.disabled = true;
-  const run = publishingButton("SRTから投稿用MP4を書き出す", async () => {
+  let captionedVideo;
+  const updatePlayer = () => setPlayer(screen, selected.value === "captioned" ? captionedVideo : edition.video);
+  selected.addEventListener("change", updatePlayer);
+  updatePlayer();
+
+  const run = publishingButton("SRTから字幕を入れたMP4を書き出す", async () => {
     await api(url, {});
-    await poll();
-  });
-  choice.append(hint, run, status, screen);
-  panel.append(choice);
-  async function poll() {
+    await poll(true);
+  }, "secondary small");
+  run.hidden = true;
+  preview.append(screen, run, status);
+  panel.append(preview);
+
+  async function poll(selectCaptioned = false) {
     const result = await api(url);
-    if (youtubeEditionTarget !== target || !choice.isConnected) return;
-    status.textContent = {queued:"書き出し待ち",running:"字幕を描画中",ready:"投稿用MP4を試写できます。"}[result.status] || result.error || "";
-    const inProgress = ["queued","running"].includes(result.status);
-    run.hidden = inProgress || result.status === "ready";
-    selected.disabled = result.status !== "ready";
-    if (result.video) { screen.hidden = false; setPlayer(screen, result.video); }
+    if (youtubeEditionTarget !== target || !preview.isConnected) return;
+    captionedVideo = result.status === "ready" ? result.video : null;
+    if (captionedVideo && !selected.options[1]) selected.add(option("captioned", "字幕を追加したMP4"));
+    if (!captionedVideo) selected.options[1]?.remove();
+    if (captionedVideo && selectCaptioned) selected.value = "captioned";
+    updatePlayer();
+    const inProgress = ["queued", "running"].includes(result.status);
+    run.hidden = !result.hasSubtitles || inProgress || Boolean(captionedVideo);
+    status.textContent = {
+      queued: "字幕入りMP4の書き出し待ち",
+      running: "字幕入りMP4を書き出し中",
+      ready: "字幕を追加したMP4を選んで試写できます。元のMP4と切り替えて確認できます。",
+    }[result.status] || result.error || (result.hasSubtitles
+      ? "元の映像の字幕が足りない場合は、SRTから字幕を入れたMP4を作れます。"
+      : "この版に字幕を書き出すためのSRTはありません。");
     clearTimeout(captionTimer);
-    if (inProgress) {
-      captionTimer = setTimeout(() => poll().catch((error) => { status.textContent = error.message; }), 3000);
-    }
+    if (inProgress) captionTimer = setTimeout(() => {
+      poll(selectCaptioned).catch(showPreviewError);
+    }, 3000);
   }
-  choice.addEventListener("toggle", () => {
-    if (choice.open) poll().catch((error) => { status.textContent = error.message; });
-  });
+  function showPreviewError(error) {
+    status.textContent = error.message;
+  }
+  poll().catch(showPreviewError);
   return selected;
 }
 
@@ -247,6 +278,8 @@ async function showYoutubeEdition(target) {
   ]);
   if (youtubeEditionTarget !== target) return;
   const run = currentRuns().find((item) => item.id === target.runId);
+  const edition = run?.editions?.[target.lang];
+  if (!edition?.video) { closeYoutubeEdition(); return; }
   const channel = settings.channels?.[target.lang];
   const items = history.items.filter((item) => item.runId === target.runId && item.lang === target.lang);
   const receipts = node("section");
@@ -254,6 +287,8 @@ async function showYoutubeEdition(target) {
     receipts.replaceChildren();
     for (const job of jobs) addYoutubeReceipt(receipts, job, target, channel);
   };
+  const previousPlayer = panel.querySelector("video");
+  if (previousPlayer) clearPlayer(previousPlayer);
   panel.replaceChildren(node("h2", languageName[target.lang] + "版のYouTube投稿"),
     node("p", "試行 " + runNumber(target.runId) + " ・ " + run?.plan?.titles?.[target.lang], "form-target"),
     publishingButton("閉じる", closeYoutubeEdition, "quiet small"), publishingButton("送信履歴を更新", async () => {
@@ -266,7 +301,7 @@ async function showYoutubeEdition(target) {
     link.href = "#publishing";
     panel.append(node("p", "投稿先のYouTubeチャンネルが未接続です。"), link);
   }
-  const captioned = mountCaptionVariant(panel, target);
+  const mediaVariant = mountUploadPreview(panel, target, edition);
   const form = node("form", null, "youtube-draft");
   panel.append(form);
   form.onsubmit = (event) => event.preventDefault();
@@ -275,25 +310,33 @@ async function showYoutubeEdition(target) {
   title.maxLength = 100; title.required = true;
   const description = publishField(form, "説明", "description", node("textarea"));
   description.value = draft.description || ""; description.rows = 4;
-  const tags = publishInput(form, "タグ（カンマ区切り）", "tags", (draft.tags || []).join(", "));
-  const category = publishSelect(form, "カテゴリ", "categoryId",
-    [["27", "教育"], ["28", "科学と技術"], ["24", "エンターテインメント"], ["22", "ブログ"], ["1", "映画とアニメ"]], draft.categoryId || "27");
   const privacy = publishSelect(form, "公開範囲", "privacy", privacyChoices, draft.privacy || settings.defaultPrivacy);
+  const extra = node("details", null, "panel");
+  extra.append(node("summary", "投稿の詳細設定（タグ・カテゴリ・視聴者）"));
+  form.append(extra);
+  const tags = publishInput(extra, "タグ（カンマ区切り）", "tags", (draft.tags || []).join(", "));
+  extra.append(publishingButton("作品情報からタグを入力", () => {
+    tags.value = (draft.suggestedTags || []).join(", ");
+    tags.focus();
+  }, "quiet small"));
+  const categories = [["27", "教育"], ["28", "科学と技術"], ["24", "エンターテインメント"], ["22", "ブログ"], ["1", "映画とアニメ"]];
+  const savedCategory = String(draft.categoryId || "27");
+  if (!categories.some(([id]) => id === savedCategory)) categories.push([savedCategory, "カテゴリ " + savedCategory]);
+  const category = publishSelect(extra, "カテゴリ", "categoryId", categories, savedCategory);
+  const audience = publishSelect(extra, "子ども向けの指定", "madeForKids",
+    [["false", "子ども向けではない"], ["true", "子ども向け"]], draft.madeForKids === true ? "true" : "false");
   const checks = node("div", null, "publishing-checks");
   form.append(checks);
-  const audience = publishSelect(checks, "子ども向けの指定", "madeForKids", [["", "選択してください"], ["false", "子ども向けではない"], ["true", "子ども向け"]], typeof draft.madeForKids === "boolean" ? String(draft.madeForKids) : "");
-  audience.required = true;
   const synthetic = publishCheck(checks, "申告が必要な合成・改変コンテンツを含む", "containsSyntheticMedia", draft.containsSyntheticMedia);
   const promotion = publishCheck(checks, "有料プロモーションを含む", "paidPromotion", draft.paidPromotion);
   const embed = publishCheck(checks, "外部サイトでの埋め込みを許可する", "embeddable", draft.embeddable !== false);
   const notifySubscribers = publishCheck(checks, "登録者に通知する", "notifySubscribers", draft.notifySubscribers);
-  const reviewed = publishCheck(form, "上の試写で、音とCCがオフでも映像内の字幕で内容を追えることを確認した", "reviewed");
   const language = target.lang;
   const formValue = () => ({
     title: trim(title.value), description: description.value,
     tags: tags.value.split(",").map(trim).filter(Boolean), categoryId: category.value,
     defaultLanguage: language, audioLanguage: language, privacy: privacy.value,
-    madeForKids: audience.value === "" ? null : audience.value === "true",
+    madeForKids: audience.value === "true",
     containsSyntheticMedia: synthetic.checked, paidPromotion: promotion.checked,
     embeddable: embed.checked, notifySubscribers: notifySubscribers.checked,
   });
@@ -309,10 +352,10 @@ async function showYoutubeEdition(target) {
   actions.append(save);
   if (channel) actions.append(publishingButton("選んだ公開範囲で投稿", async () => {
     if (!form.reportValidity()) return;
-    if (!reviewed.checked) throw new Error("投稿する映像の画面内字幕を試写で確認してください。");
-    if (!window.confirm(channel.title + " に「" + privacy.selectedOptions[0].textContent + "」で投稿しますか？")) return;
+    if (!window.confirm("「" + mediaVariant.selectedOptions[0].textContent + "」を " + channel.title +
+        " に「" + privacy.selectedOptions[0].textContent + "」で投稿しますか？")) return;
     const result = await api(path + "/submit", {metadata: formValue(), channelId: channel.id,
-      mediaVariant: captioned.checked ? "captioned" : "original"});
+      mediaVariant: mediaVariant.value});
     if (result.caseId !== target.caseId || result.runId !== target.runId) {
       const link = node("a", "同じ映像の送信記録を開く", "text-link");
       link.href = caseHash(result.caseId) + "/" + result.runId + "/" + result.lang;

@@ -57,9 +57,12 @@ class PublicationCaptions:
         with self.ledger.db() as db:
             row = db.execute("SELECT status,error FROM publication_captions WHERE case_id=? AND run_id=? AND lang=?",
                              (case, run, lang)).fetchone()
+        has_subtitles = self.ledger.media(case, run, lang, "subtitles.srt").is_file()
         if row and row["status"] == "ready" and path.is_file():
-            return {"status": "ready", "video": f"/media/{case}/{run}/{lang}/captioned.mp4"}
-        return dict(row) if row and row["status"] != "ready" else {"status": "none"}
+            return {"status": "ready", "video": f"/media/{case}/{run}/{lang}/captioned.mp4",
+                    "hasSubtitles": has_subtitles}
+        result = dict(row) if row and row["status"] != "ready" else {"status": "none"}
+        return dict(result, hasSubtitles=has_subtitles)
 
     def submit(self, case, run, lang):
         root = self.ledger.folder
@@ -68,9 +71,10 @@ class PublicationCaptions:
         with self.ledger.db() as db:
             db.execute("BEGIN IMMEDIATE")
             require_active(db, case)
+            output_exists = self.ledger.media(case, run, lang, "captioned.mp4").is_file()
             db.execute("""INSERT INTO publication_captions VALUES (?,?,?,'queued',NULL)
                           ON CONFLICT (case_id,run_id,lang) DO UPDATE SET status='queued',error=NULL
-                          WHERE status='failed'""", (case, run, lang))
+                          WHERE status='failed' OR (status='ready' AND NOT ?)""", (case, run, lang, output_exists))
         self.wake.set()
         return self.item(case, run, lang)
 

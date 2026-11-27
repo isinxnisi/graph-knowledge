@@ -1012,6 +1012,9 @@ class Ledger:
                     raise ValueError("映像または字幕の書き出しを確認できませんでした。")
                 timings = json.loads((output / "timings.json").read_text(encoding="utf-8"))
                 editions[lang] = {"timings": timings}
+                youtube_tags = plan.pop("youtubeTags", None)
+                if youtube_tags:
+                    editions[lang]["youtubeTags"] = youtube_tags
             with self.db() as db:
                 db.execute("UPDATE runs SET plan=?,editions=? WHERE id=?", (packed(plan), packed(editions), run))
         status, note = ("script_ready", "台本を確認できます") if draft else ("done", "書き出し完了")
