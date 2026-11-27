@@ -453,7 +453,7 @@ class Ledger:
                 if not case:
                     raise KeyError(case_id)
                 if case[0] and production_mode != CODEX_FILM:
-                    raise ValueError("ショートはCodexへの直接依頼で制作します。")
+                    raise ValueError("ショートは作者への直接依頼で制作します。")
             plan = None
             previous_japanese = None
             editorial_origin = None
@@ -468,7 +468,7 @@ class Ledger:
                 if lang or (language == "en" and "productionMode" not in data):
                     production_mode = row["production_mode"]
                 if language == "en" and production_mode not in (CODEX_FILM, row["production_mode"]):
-                    raise ValueError("英語版はCodexへの直接依頼か、日本語版と同じ制作方式を選んでください。")
+                    raise ValueError("英語版は作者への直接依頼か、日本語版と同じ制作方式を選んでください。")
                 editions = json.loads(row["editions"])
                 redirect_japanese = not lang and (language == "ja" or
                                    (language == "both" and production_mode in (DIRECTED_FILM, CODEX_FILM)))
@@ -833,7 +833,7 @@ class Ledger:
             if lang in editions or (draft and (plan or {}).get("authorDraft", {}).get(lang)):
                 continue
             label = "日本語" if lang == "ja" else "英語"
-            progress("Codexが" + label + ("の台本を執筆中" if draft else "の映像を制作中"))
+            progress("作者が" + label + ("の台本を執筆中" if draft else "の映像を制作中"))
             source_folder, source_plan = parent_folder, parent_plan
             if lang == "en" and "ja" in langs:
                 source_folder, source_plan = folder, plan

@@ -142,6 +142,7 @@ def get_snapshot(theme_id, revision):
 
 _catalog = None
 _author_catalog = None
+_claude_catalog = None
 _catalog_lock = threading.Lock()
 EFFORT_LABELS = {"high": "高", "xhigh": "XHigh", "max": "Max", "ultra": "Ultra",
                  "medium": "中", "low": "低"}
@@ -200,6 +201,39 @@ def _model_catalog(command, cached):
     return (time.monotonic() + (300 if models else 20), options)
 
 
+def _claude_models():
+    global _claude_catalog
+    if _claude_catalog and time.monotonic() < _claude_catalog[0]:
+        return _claude_catalog[1]
+    from direct_runtime import author_catalog_command
+
+    reason = "WSL の Claude Code のモデル一覧を取得できませんでした。"
+    options = []
+    try:
+        result = _run(author_catalog_command("claude-models"), timeout=30)
+        catalog = json.loads(result.stdout)
+        reason = catalog.get("error") or reason
+        seen = set()
+        for row in catalog.get("models", []):
+            slug = row.get("resolvedModel", "")
+            if not slug.startswith("claude-") or row["value"] == "default" or slug in seen:
+                continue
+            seen.add(slug)
+            name = "Claude " + row["displayName"]
+            levels = row.get("supportedEffortLevels") or [None]
+            for effort in levels:
+                label = name + (" ／ " + EFFORT_LABELS.get(effort, effort) if effort else "")
+                options.append({"id": slug + ("@" + effort if effort else ""), "modelId": slug,
+                                "modelName": name, "family": "Claude", "effort": effort, "label": label,
+                                "available": True, "reason": ""})
+    except (OSError, subprocess.SubprocessError, KeyError, ValueError):
+        pass
+    _claude_catalog = (time.monotonic() + (300 if options else 20), options or [
+        {"id": "claude", "modelId": "claude", "modelName": "Claude", "family": "Claude", "effort": None,
+         "label": "Claude", "available": False, "reason": reason}])
+    return _claude_catalog[1]
+
+
 def list_models(*, author=False):
     """Read the catalog of the CLI that will execute the selected task."""
     global _catalog, _author_catalog
@@ -213,7 +247,7 @@ def list_models(*, author=False):
                 except (OSError, subprocess.SubprocessError):
                     command = []
                 _author_catalog = _model_catalog(command, _author_catalog)
-            return [dict(item) for item in _author_catalog[1]]
+            return [dict(item) for item in (*_author_catalog[1], *_claude_models())]
         executable = shutil.which("codex")
         _catalog = _model_catalog([executable] if executable else [], _catalog)
         return [dict(item) for item in _catalog[1]]

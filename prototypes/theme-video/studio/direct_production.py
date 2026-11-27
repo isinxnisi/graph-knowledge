@@ -236,7 +236,7 @@ def produce(snapshot, brief, model_selection, run_folder, lang, *, draft, plan, 
         phase = "draft" if draft else "film"
         _save_json(author / f"{lang}-{phase}-commission.json",
                    {"identity": channel_context(),
-                    "brief": read_text(work, work / "BRIEF.md", 128_000), "prompt": author_prompt(prompt),
+                    "brief": read_text(work, work / "BRIEF.md", 128_000), "prompt": author_prompt(prompt, model),
                     "request": json.loads(read_text(work, work / "inputs/request.json", 4_000_000)),
                     "model": model, "effort": effort})
         with voice_service(work), source_service(work):

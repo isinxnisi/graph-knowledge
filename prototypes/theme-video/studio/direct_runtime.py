@@ -48,8 +48,44 @@ def codex_path():
     return codex if codex.is_file() else Path(shutil.which("codex") or "/missing/codex").resolve()
 
 
-def author_catalog_command():
-    return [*linux_command(), "/usr/bin/python3", "-I", linux_path(__file__), "codex"]
+def author_catalog_command(provider="codex"):
+    return [*linux_command(), "/usr/bin/python3", "-I", linux_path(__file__), provider]
+
+
+def claude_path():
+    candidate = Path.home() / ".local/bin/claude"
+    return str(candidate if candidate.is_file() else shutil.which("claude") or "/missing/claude")
+
+
+def claude_flags():
+    return ["-p", "--restricted", "--tools", "", "--strict-mcp-config", "--disable-slash-commands",
+            "--no-session-persistence", "--permission-mode", "dontAsk", "--verbose", "--output-format", "stream-json"]
+
+
+def claude_models():
+    # Initialize the SDK protocol without sending a user turn. No generation is necessary.
+    cli = claude_path()
+    with tempfile.TemporaryDirectory() as cwd:
+        login = subprocess.run([cli, "auth", "status"], cwd=cwd, capture_output=True, timeout=8)
+        if login.returncode or not json.loads(login.stdout).get("loggedIn"):
+            raise RuntimeError("WSL の claude auth login を確認してください。")
+        request = {"type": "control_request", "request_id": "catalog", "request": {"subtype": "initialize"}}
+        reply = subprocess.run([cli, *claude_flags(), "--input-format", "stream-json"], cwd=cwd, check=True,
+                               input=json.dumps(request)+"\n", capture_output=True, text=True, timeout=15)
+        for line in reply.stdout.splitlines():
+            response = json.loads(line).get("response", {})
+            if response.get("request_id") == "catalog" and response.get("subtype") == "success":
+                # Return only the model menu, never account or session details.
+                return response["response"]["models"]
+        raise RuntimeError("Claude Code のモデル一覧を取得できませんでした。")
+
+
+def claude_command(workspace, model, effort):
+    config = {"mcpServers": {"film": {"command": "/usr/bin/python3",
+              "args": ["-I", str(Path(__file__).resolve()), "render-server", str(workspace)]}}}
+    return [claude_path(), *claude_flags(), "--mcp-config", json.dumps(config),
+            "--allowedTools", "mcp__film__render,mcp__film__preview", "--model", model,
+            *(["--effort", effort] if effort else []), "--append-system-prompt", channel_context()]
 
 
 def tool_paths():
@@ -240,6 +276,27 @@ def save_image(workspace, paths, arguments):
     return "project/" + name
 
 
+PREVIEW_TOOL = {
+    "name": "preview", "description": "View a frame of a local film or an illustration. Path relative to /work.",
+    "inputSchema": {"type": "object", "properties": {"path": {"type": "string"},
+                    "seconds": {"type": "number", "minimum": 0}}, "required": ["path"], "additionalProperties": False}}
+
+
+def preview_frame(workspace, paths, arguments):
+    source = Path(arguments["path"])
+    if source.is_absolute() or ".." in source.parts:
+        raise ValueError("案件内の相対パスを指定してください。")
+    # Decode inside the same isolated renderer, including for untrusted inputs.
+    cmd = ["ffmpeg", "-nostdin", "-v", "error", "-ss", str(float(arguments.get("seconds", 0))),
+           "-i", "/work/" + str(source), "-frames:v", "1", "-vf",
+           "scale=960:960:force_original_aspect_ratio=decrease", "-c:v", "mjpeg", "-q:v", "3",
+           "-f", "image2pipe", "pipe:1"]
+    result = subprocess.run(render_command(workspace, paths, cmd), capture_output=True, timeout=45)
+    if result.returncode or not result.stdout:
+        raise ValueError("この時刻の画を取得できません。")
+    return {"type": "image", "mimeType": "image/jpeg", "data": base64.b64encode(result.stdout).decode("ascii")}
+
+
 def render_server(workspace):
     paths = tool_paths()
     for line in sys.stdin:
@@ -252,9 +309,15 @@ def render_server(workspace):
             result = {"protocolVersion": message["params"]["protocolVersion"], "capabilities": {"tools": {}},
                       "serverInfo": {"name": "plunode-film", "version": "1"}}
         elif method == "tools/list":
-            result = {"tools": [RENDER_TOOL, IMAGE_TOOL]}
+            result = {"tools": [RENDER_TOOL, IMAGE_TOOL, PREVIEW_TOOL]}
         elif method == "ping":
             result = {}
+        elif method == "tools/call" and message["params"].get("name") == "preview":
+            try:
+                image = preview_frame(workspace, paths, message["params"].get("arguments", {}))
+                result = {"content": [image]}
+            except (KeyError, TypeError, ValueError, OSError, subprocess.TimeoutExpired) as exc:
+                result = {"isError": True, "content": [{"type": "text", "text": str(exc)}]}
         elif method == "tools/call" and message["params"].get("name") == "save_image":
             try:
                 path = save_image(workspace, paths, message["params"].get("arguments"))
@@ -303,7 +366,8 @@ def start_author(workspace, model, effort, token):
     with tempfile.TemporaryDirectory(prefix="session-", dir=control) as temp:
         host_root = Path(temp)
         (host_root / "work").symlink_to(workspace, target_is_directory=True)
-        cmd = author_command(workspace, host_root, paths, model, effort)
+        cmd = (claude_command(workspace, model, effort) if model.startswith("claude-")
+               else author_command(workspace, host_root, paths, model, effort))
         def end_session(_signal, _frame):
             raise SystemExit(130)
         signal.signal(signal.SIGTERM, end_session)
@@ -324,7 +388,12 @@ def stop_author(pid, token):
         pass
 
 
-def author_prompt(prompt):
+def author_prompt(prompt, model=""):
+    if model.startswith("claude-"):
+        return (prompt + "\n\n案件は mcp__film__render の /work にあります。ここでシェルやPythonを使い、"
+                "BRIEF.md・TOOLS.md・資料の読み書き、作画、音声合成、編集ができます。"
+                "mcp__film__preview で画像や映像の指定秒の画を見られます。")
+
     return prompt + "\n\n作業場所は work/ です。サブエージェントの利用は任意です。道具の使い方は必要なときに TOOLS.md で引けます。"
 
 
@@ -354,7 +423,7 @@ def run_author(workspace, prompt, model_id, effort, progress=None):
         status = "作者が資料と制作依頼を読んでいます"
         next_progress = 0
         try:
-            proc.stdin.write(author_prompt(prompt).encode("utf-8"))
+            proc.stdin.write(author_prompt(prompt, model_id).encode("utf-8"))
             proc.stdin.close()
             while True:
                 if job_pid and progress and time.monotonic() >= next_progress:
@@ -373,6 +442,13 @@ def run_author(workspace, prompt, model_id, effort, progress=None):
                 kind = event.get("type")
                 if kind == EVENT:
                     job_pid = int(event["pid"])
+                elif model_id.startswith("claude-") and kind == "result":
+                    if event.get("is_error") or event.get("subtype") != "success":
+                        failure = str(event.get("errors") or event.get("result") or event.get("subtype"))[:300]
+                    else:
+                        usage = event.get("usage") or {}
+                elif model_id.startswith("claude-") and kind == "assistant":
+                    status = "作者が原稿・素材・映像を制作しています"
                 elif kind == "turn.started":
                     status = "作者が原稿・素材・映像を制作しています"
                 elif kind == "turn.completed":
@@ -388,7 +464,7 @@ def run_author(workspace, prompt, model_id, effort, progress=None):
                               "web_search": "作者が資料を照合しています",
                               "command_execution": "作者が原稿・素材・映像を制作しています"}.get(item, status)
             code = proc.wait()
-            if code or usage is None:
+            if code or usage is None or (model_id.startswith("claude-") and failure):
                 errors.seek(max(0, errors.tell() - 900))
                 detail = failure or errors.read().decode("utf-8", "replace").strip()[-450:]
                 raise RuntimeError("自由制作のセッションが完了しませんでした。保存した制作ファイルから再開できます。 " + detail)
@@ -411,6 +487,11 @@ if __name__ == "__main__":
     if action == "codex":
         executable = codex_path()
         os.execv(executable, [str(executable), *arguments])
+    elif action == "claude-models":
+        try:
+            print(json.dumps({"models": claude_models()}))
+        except (ValueError, KeyError, RuntimeError, OSError, subprocess.SubprocessError) as exc:
+            print(json.dumps({"error": str(exc) if isinstance(exc, RuntimeError) else "WSL のClaude Codeを確認してください。"}))
     elif action == "render-server":
         render_server(Path(arguments[0]).resolve(strict=True))
     elif action == "author":

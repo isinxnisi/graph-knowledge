@@ -87,6 +87,20 @@ for event in [{'type':'item.completed', 'item':{'type':'command_execution'}},
                 usage = runtime.run_author(Path(tmp), "brief", "selected", "high")
             self.assertEqual(usage, {"input_tokens": 9, "scope": "parent-only"})
 
+    def test_claude_result_alone_finishes_a_run_and_errors_keep_the_reason(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            for error in (False, True):
+                event = {"type": "result", "subtype": "success", "is_error": error, "usage": {"output_tokens": 5},
+                         "result": "model limit" if error else "done"}
+                code = "import sys; sys.stdin.buffer.read(); print(sys.argv[1])"
+                with patch.object(runtime, "runtime_command", return_value=[sys.executable, "-c", code, json.dumps(event)]):
+                    if error:
+                        with self.assertRaisesRegex(RuntimeError, "model limit"):
+                            runtime.run_author(Path(tmp), "brief", "claude-fixture", "high")
+                    else:
+                        self.assertEqual(runtime.run_author(Path(tmp), "brief", "claude-fixture", "high"),
+                                         {"output_tokens": 5})
+
     def test_permissions_and_model_are_per_session(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

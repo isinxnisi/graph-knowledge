@@ -3,7 +3,7 @@
 const $ = (id) => document.getElementById(id);
 const languageName = { ja: "日本語", en: "English" };
 const productionLanguage = { ja: "日本語", en: "英語", both: "日英" };
-const effortName = { low: "低", medium: "中", high: "高", xhigh: "XHigh", max: "Max", ultra: "Ultra" };
+const effortName = { default: "モデル既定", low: "低", medium: "中", high: "高", xhigh: "XHigh", max: "Max", ultra: "Ultra" };
 const modelForms = ["new", "rerun", "adapt", "short"];
 const authorMode = "codex-film-v1";
 const jobName = { queued: "待機中", running: "生成中", done: "完了", failed: "失敗", interrupted: "中断", needs_revision: "要改稿", needs_material: "資料待ち", script_ready: "台本確認" };
@@ -131,11 +131,11 @@ function formProfiles(name) {
   return modelCatalog(name).filter((m) => m.modelId === $(name + "-model").value && m.available);
 }
 function selectedProfile(name) {
-  return formProfiles(name).find((m) => (m.effort || "high") === $(name + "-effort").value);
+  return formProfiles(name).find((m) => (m.effort || "default") === $(name + "-effort").value);
 }
 function renderEfforts(name, wanted = $(name + "-effort").value) {
   const select = $(name + "-effort"), choices = formProfiles(name);
-  const supported = new Set(choices.map((m) => m.effort || "high"));
+  const supported = new Set(choices.map((m) => m.effort || "default"));
   const levels = Object.keys(effortName).filter((level) => supported.has(level));
   for (const level of supported) if (!levels.includes(level)) levels.push(level);
   select.replaceChildren(...levels.map((level) => option(level, effortName[level] || level)));
@@ -143,7 +143,7 @@ function renderEfforts(name, wanted = $(name + "-effort").value) {
   select.value = levels.includes(wanted) ? wanted : defaultLevel;
   select.disabled = !levels.length;
   const messages = modelCatalog(name).filter((m) => !m.available).map((m) => m.label + "　" + (m.reason || "利用できません"));
-  if (choices[0]?.effort && !levels.includes("ultra")) {
+  if (choices[0]?.family !== "Claude" && choices[0]?.effort && !levels.includes("ultra")) {
     messages.push(choices[0].modelName + " のCLI対応一覧に Ultra はありません。");
   }
   const profile = selectedProfile(name);
@@ -628,7 +628,7 @@ function drawEvidence(run) {
   const themeLabel = state.detail.themeTitle ? state.detail.themeTitle + "　/　" : "";
   const nodes = [node("p", themeLabel + "テーマ公開第" + state.detail.revision + "版" + (state.detail.reference ? " · 試作の比較用保存版" : ""), "subtle")];
   if (run && !state.detail.reference) {
-    const method = {"directed-film-v1": "演出・作画・試写に分けて制作", "codex-film-v1": "Codexに一本を直接依頼"};
+    const method = {"directed-film-v1": "演出・作画・試写に分けて制作", "codex-film-v1": "作者に一本を直接依頼"};
     nodes.push(node("p", "制作方式　" + (method[run.productionMode] || "既存の資料図版で制作"), "subtle"));
     if (plan?.japaneseMasterRunId) nodes.push(node("p", "英語版の元にした日本語版　試行 " + runNumber(plan.japaneseMasterRunId), "subtle"));
     nodes.push(node("p", "指定モデル・推論の強さ　" + modelLabel(run), "subtle"));
@@ -682,7 +682,7 @@ async function loadCommission() {
     }
     const identity = record.identity ? [node("h3", "すべての作品に共通する前提"), node("pre", record.identity)] : [];
     result.replaceChildren(...identity, node("h3", "今回の依頼"), requested, node("h3", "制作依頼書"), node("pre", record.brief),
-                           node("h3", "Codexに送った指示"), node("pre", record.prompt));
+                           node("h3", "作者に送った指示"), node("pre", record.prompt));
   } catch (err) {
     if ($("commission-select").value === url) status.textContent = err.message;
   }
@@ -1491,7 +1491,7 @@ $("adapt-open").onclick = () => {
   const profile = modelCatalog("adapt").find((m) => m.id === run.model && m.available);
   if (profile) {
     $("adapt-model").value = profile.modelId;
-    renderEfforts("adapt", profile.effort || "high");
+    renderEfforts("adapt", profile.effort || "default");
   }
   $("adapt-form").hidden = false; refreshGenerationButtons(); $("adapt-model").focus();
 };

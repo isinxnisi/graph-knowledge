@@ -52,7 +52,7 @@
               <div><label for="new-effort">推論の強さ</label><select id="new-effort"></select></div>
             </div>
             <p id="new-model-note" class="subtle" hidden></p>
-            <label for="new-mode">映像の作り方</label><select id="new-mode"><option value="codex-film-v1">Codexに一本を直接依頼</option><option value="directed-film-v1">演出・作画・試写に分けて制作</option><option value="boards-v1">既存の資料図版で制作</option></select>
+            <label for="new-mode">映像の作り方</label><select id="new-mode"><option value="codex-film-v1">作者に一本を直接依頼</option><option value="directed-film-v1">演出・作画・試写に分けて制作</option><option value="boards-v1">既存の資料図版で制作</option></select>
             <label for="new-language">制作する言語</label><select id="new-language"><option value="ja">日本語を先に制作</option><option value="both">日本語・英語の両版を制作</option></select>
           </fieldset>
           <div class="form-footer"><span>横長 16:9</span>
@@ -111,7 +111,7 @@
               </div>
               <p id="adapt-model-note" class="subtle" hidden></p>
               <div id="adapt-mode-field" hidden><label for="adapt-mode">英語版の作り方</label>
-                <select id="adapt-mode"><option value="codex-film-v1">Codexに一本を直接依頼</option><option value="inherit">日本語版と同じ制作方式</option></select></div>
+                <select id="adapt-mode"><option value="codex-film-v1">作者に一本を直接依頼</option><option value="inherit">日本語版と同じ制作方式</option></select></div>
               <div class="actions"><button type="button" id="adapt-cancel" class="quiet">閉じる</button>
                 <button type="submit" class="secondary" value="script" disabled>英語の台本を先に確認</button>
                 <button type="submit" class="primary" value="video" disabled>英語の動画を生成</button>
@@ -131,7 +131,7 @@
                   <div><label for="rerun-effort">推論の強さ</label><select id="rerun-effort"></select></div>
                 </div>
                 <p id="rerun-model-note" class="subtle" hidden></p>
-                <label for="rerun-mode">映像の作り方</label><select id="rerun-mode"><option value="codex-film-v1">Codexに一本を直接依頼</option><option value="directed-film-v1">演出・作画・試写に分けて制作</option><option value="boards-v1">既存の資料図版で制作</option></select>
+                <label for="rerun-mode">映像の作り方</label><select id="rerun-mode"><option value="codex-film-v1">作者に一本を直接依頼</option><option value="directed-film-v1">演出・作画・試写に分けて制作</option><option value="boards-v1">既存の資料図版で制作</option></select>
                 <label for="rerun-language">制作する言語</label><select id="rerun-language"><option value="ja">日本語を先に制作</option><option value="both">日本語・英語の両版を制作</option></select>
                 <label for="rerun-reason">今回の制作で変えたい点（任意）</label>
                 <input id="rerun-reason" maxlength="1000" placeholder="空欄なら元の企画で生成します">
