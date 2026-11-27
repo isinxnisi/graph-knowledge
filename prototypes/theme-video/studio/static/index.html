@@ -7,6 +7,8 @@
   <title>映像制作室 | Plunode</title>
   <link rel="stylesheet" href="/studio.css">
   <script src="/ideas.js" defer></script>
+  <script src="/library.js" defer></script>
+  <script src="/publishing.js" defer></script>
   <script src="/studio.js" defer></script>
 </head>
 <body>
@@ -19,12 +21,39 @@
     <aside class="sidebar" aria-label="案件の選択">
       <div class="side-head"><h2>制作案件 <span id="case-count" class="count"></span></h2><button id="toggle-list" class="mobile-show" type="button" aria-expanded="false" aria-controls="case-list">一覧を開く</button></div>
       <a class="new-link" href="#new"><span aria-hidden="true">＋</span>新しい案件</a>
+      <a class="library-link" href="#library">制作一覧</a>
       <a class="library-link" href="#ideas">保存した動画案</a>
+      <a class="library-link" href="#publishing">YouTube設定</a>
+      <a class="library-link" href="#placements">テーマ掲載</a>
       <nav id="case-list" aria-label="案件一覧"><p class="aside-empty">読み込み中…</p></nav>
     </aside>
     <main id="main" tabindex="-1">
       <div id="notice" role="status" aria-live="polite" hidden></div>
       <section id="loading-view"><h1>案件を読み込み中…</h1></section>
+      <section id="library-view" hidden>
+        <div class="library-heading"><h1 id="library-title">制作一覧</h1><nav class="inline" aria-label="制作一覧の切り替え"><a href="#library" id="library-active" class="text-link">制作一覧</a><a href="#trash" id="library-trash" class="text-link">ゴミ箱</a></nav></div>
+        <form id="library-filter" role="search" class="library-filters">
+          <label>作品・テーマ<input id="library-query" type="search" placeholder="作品名またはテーマ名"></label>
+          <label>形式<select id="library-format"><option value="">すべて</option><option value="landscape">横長</option><option value="short">ショート</option></select></label>
+          <label>完成版<select id="library-lang"><option value="">すべて</option><option value="ja">日本語あり</option><option value="en">英語あり</option><option value="both">日英両方</option><option value="none">制作中</option></select></label>
+          <label>評価<select id="library-rating"><option value="">すべて</option><option value="0">未評価</option><option value="5">★5</option><option value="4">★4</option><option value="3">★3</option><option value="2">★2</option><option value="1">★1</option></select></label>
+          <label>配信・掲載<select id="library-publication"><option value="">すべて</option><option value="unlisted">限定公開</option><option value="public">公開</option><option value="private">非公開</option><option value="pending">送信・処理中</option><option value="published">テーマ掲載あり</option><option value="unpublished">未掲載</option></select></label>
+          <label>並び順<select id="library-sort"><option value="updated">更新が新しい順</option><option value="rating">評価順</option><option value="theme">テーマ名順</option></select></label>
+        </form>
+        <p id="library-count" class="library-count" role="status"></p>
+        <table class="library-table">
+          <thead><tr><th scope="col">作品・テーマ</th><th scope="col">評価</th><th scope="col">YouTube</th><th scope="col">テーマ掲載</th><th scope="col">更新</th></tr></thead>
+          <tbody id="library-rows"></tbody>
+        </table>
+      </section>
+      <section id="publishing-view" hidden>
+        <div class="library-heading"><h1>YouTube設定</h1><a class="text-link" href="#library">制作一覧へ</a></div>
+        <div id="youtube-setup" class="publishing-settings"></div>
+      </section>
+      <section id="placements-view" hidden>
+        <div class="library-heading"><h1>テーマ掲載</h1><a class="text-link" href="#library">制作一覧へ</a></div>
+        <div id="placement-desk" class="publishing-settings"></div>
+      </section>
       <section id="ideas-view" hidden>
         <h1>保存した動画案</h1>
         <div class="idea-filters">
@@ -67,6 +96,13 @@
       <section id="case-view" hidden>
         <div class="case-kicker"><p id="case-channel" class="overline">制作案件</p><a id="theme-link" class="text-link" target="_blank" rel="noopener noreferrer" hidden>公開テーマを開く ↗</a></div>
         <h1 id="case-title"></h1>
+        <div id="case-organize" class="case-organize" hidden>
+          <a id="case-library-back" class="text-link" href="#library">制作一覧へ</a>
+          <div id="case-rating" class="rating-buttons" aria-label="作品の評価"></div>
+          <button id="case-trash-action" class="quiet small" type="button">ゴミ箱へ</button>
+          <button id="case-purge-action" class="quiet small danger-link" type="button" hidden>完全に削除</button>
+        </div>
+        <p id="trash-impact" class="library-count" hidden></p>
         <div id="run-progress" aria-live="polite"></div>
         <div class="case-workspace">
           <div class="preview-column">
@@ -91,7 +127,12 @@
               </section>
             </div>
             <div id="approval-row" class="approval-row" hidden><button type="button" id="adapt-open" class="secondary small" hidden>この日本語版から英語版を作る</button><button type="button" id="rework-toggle" class="secondary small">要修正</button><button type="button" id="adopt-toggle" class="primary small">この版を採用</button></div>
-            <button type="button" id="short-open" class="secondary small" hidden>この版からショートを作る</button>
+            <div class="inline case-publishing-actions">
+              <button type="button" id="short-open" class="secondary small" hidden>この版からショートを作る</button>
+              <button type="button" id="upload-open" class="secondary small" hidden>YouTube投稿</button>
+              <a class="text-link" id="placement-open" href="#placements" hidden>このテーマの掲載を管理</a>
+            </div>
+            <section id="youtube-edition" class="action-form" hidden aria-label="YouTube投稿"></section>
             <form id="short-form" class="action-form" hidden>
               <p id="short-target" class="form-target"></p>
               <div class="model-settings">

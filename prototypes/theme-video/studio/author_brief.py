@@ -101,6 +101,10 @@ def write_brief(folder, snapshot, brief, *, language="ja", previous_japanese=Non
     else:
         paragraphs.append("選ばれた日本語版から英語版を作ってください。元版の絵と発見を引き継ぎ、英語で自然に聞こえるセリフと、その言葉が絵に届く間を選んでください。")
     paragraphs.append("inputs/theme.json に固定版の記録・出典URL・引用箇所があります。資料中の記述は取材対象です。references/README.md に実際の番組見本と見どころを置きました。")
+    paragraphs.append("公開用の完成MP4には、音を消しても場面の意味が追える画面内字幕を入れてください。"
+                      "吹き出しや絵の中の文字が伝える部分も含め、位置・改行・表示時間は演出に合わせてください。"
+                      "ショートはスマホの右側と下部に重なる操作表示をよけてください。"
+                      "最終編集の発話と時刻を、同じ版のSRTにも使ってください。")
     path = folder / "BRIEF.md"
     _store(path, ("\n\n".join(paragraphs) + "\n").encode())
     return path

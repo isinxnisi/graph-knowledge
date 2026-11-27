@@ -28,17 +28,20 @@ class CloudflareAccess:
             return None
         return cls(**json.loads(config))
 
-    def allows(self, headers, method):
+    def identity(self, headers, method):
         origins = headers.get_all("Origin", [])
         if origins != [self.origin] and (origins or method == "POST"):
-            return False
+            return None
         tokens = headers.get_all("Cf-Access-Jwt-Assertion", [])
         if len(tokens) != 1 or not tokens[0] or len(tokens[0]) > 8192:
-            return False
+            return None
         try:
             signing_key = self.keys.get_signing_key_from_jwt(tokens[0])
-            self.jwt.decode(tokens[0], signing_key.key, algorithms=["RS256"], issuer=self.issuer,
+            claims = self.jwt.decode(tokens[0], signing_key.key, algorithms=["RS256"], issuer=self.issuer,
                             audience=self.audience, options={"require": ["aud", "iss", "exp", "sub"]})
         except self.jwt.PyJWTError:
-            return False
-        return True
+            return None
+        return claims["sub"]
+
+    def allows(self, headers, method):
+        return self.identity(headers, method) is not None

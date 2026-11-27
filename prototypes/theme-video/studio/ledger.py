@@ -11,7 +11,9 @@ import threading
 import uuid
 from urllib.parse import urlencode, urlsplit, urlunsplit
 
+import case_library
 import idea_store
+from author_files import plain_path
 from editor import DIRECTED_FILM, MaterialRequired, _save_json
 from editorial_decision import DIRECTED_DECISION_VERSION
 from research_workflow import _source_id, _supplement
@@ -199,7 +201,8 @@ def reference_case():
     timestamp = "2026-11-24T00:00:00+09:00"
     return {"id": REFERENCE, "title": plan["titles"]["ja"], "brief": info["question"], "themeId": theme["id"],
             "themeTitle": theme["title"], "themeUrl": theme["url"], "revision": theme["revision"],
-            "updated": timestamp, "reference": True,
+            "updated": timestamp, "reference": True, "rating": None, "trashedAt": None, "purgeState": None,
+            "thumbnail": f"/api/cases/{REFERENCE}/thumbnail", "completedLangs": list(LANGS),
             "states": dict.fromkeys(LANGS, "見本"), "accepted": {}, "runs": [{"id": "reference", "parent": None,
             "status": "done", "model": "制作時の記録なし", "reason": "", "progress": "品質見本",
             "created": timestamp, "langs": list(LANGS), "error": None, "editions": editions, "plan": plan}]}
@@ -212,6 +215,7 @@ class Ledger:
         self.file = self.folder / "studio.sqlite3"
         self.wake = threading.Event()
         self.cut_lock = threading.Lock()
+        self.library_file_lock = threading.Lock()
         self.last_cut = None
         self.reference = reference_case()
         with self.db() as db:
@@ -240,6 +244,7 @@ class Ledger:
                     fingerprint TEXT NOT NULL, proposal TEXT NOT NULL, research TEXT NOT NULL,
                     UNIQUE(source_run,fingerprint));
             """)
+            case_library.migrate(db)
             if "kind" not in {r["name"] for r in db.execute("PRAGMA table_info(reviews)")}:
                 db.execute("ALTER TABLE reviews ADD COLUMN kind TEXT NOT NULL DEFAULT 'adopted'")
             columns = {r["name"] for r in db.execute("PRAGMA table_info(runs)")}
@@ -273,8 +278,13 @@ class Ledger:
     def list_ideas(self, theme_id=None):
         with self.db() as db:
             db.execute("BEGIN")
-            return {"items": idea_store.list_items(db, theme_id, self.reference, display_status),
-                    "batches": idea_store.list_batches(db, theme_id)}
+            ideas = idea_store.list_items(db, theme_id, self.reference, display_status)
+            discarded = {r[0] for r in db.execute("SELECT id FROM cases WHERE purge_state='purged'")}
+            for idea in ideas:
+                idea["cases"] = [c for c in idea["cases"] if c["id"] not in discarded]
+                if idea.get("caseId") in discarded:
+                    idea["caseId"] = next((c["id"] for c in reversed(idea["cases"])), None)
+            return {"items": ideas, "batches": idea_store.list_batches(db, theme_id)}
 
     def submit_ideas(self, data, snapshot_fn, models_fn):
         key = required(data, "requestId", 128)
@@ -375,6 +385,8 @@ class Ledger:
         digest = hashlib.sha256(packed([route, data]).encode()).hexdigest()
         with self.db() as db:
             existing = self.repeat(db, key, digest)
+            if existing:
+                case_library.require_active(db, existing["id"])
             inherited_mode = None
             if case_id and isinstance(data.get("parent"), str) and data.get("language") == "en" and "productionMode" not in data:
                 origin = db.execute("SELECT production_mode FROM runs WHERE id=? AND case_id=?",
@@ -426,8 +438,13 @@ class Ledger:
         reason = required(data, "reason", 1200) if lang else str(data.get("reason") or "").strip()[:1200]
         with self.db() as db:
             db.execute("BEGIN IMMEDIATE")
+            if case_id:
+                case_library.require_active(db, case_id)
+            if from_video and snapshot["shortSource"]["caseId"] != REFERENCE:
+                case_library.require_active(db, snapshot["shortSource"]["caseId"])
             existing = self.repeat(db, key, digest)
             if existing:
+                case_library.require_active(db, existing["id"])
                 return existing
             now = clock()
             if not case_id:
@@ -437,13 +454,14 @@ class Ledger:
                     if (snapshot["themeId"], snapshot["revision"]) != (theme, revision):
                         raise ValueError("動画案を保存したテーマと公開版を選んでください。")
                     if initial_case and not new_idea_case:
+                        case_library.require_active(db, initial_case)
                         run = db.execute("SELECT id FROM runs WHERE case_id=? ORDER BY created,rowid LIMIT 1",
                                          (initial_case,)).fetchone()
                         result = {"id": initial_case, "runId": run["id"]}
                         db.execute("INSERT INTO requests VALUES(?,?,?)", (key, digest, packed(result)))
                         return result
                 case_id = uuid.uuid4().hex
-                db.execute("INSERT INTO cases VALUES(?,?,?,?,?)",
+                db.execute("INSERT INTO cases(id,title,brief,snapshot,updated) VALUES(?,?,?,?,?)",
                            (case_id, snapshot["title"], brief.strip(), packed(snapshot), now))
                 if idea_id:
                     idea_store.link_case(db, idea_id, case_id)
@@ -570,6 +588,7 @@ class Ledger:
     def start_alternative(self, case_id, run_id, fingerprint):
         with self.db() as db:
             db.execute("BEGIN IMMEDIATE")
+            case_library.require_active(db, case_id)
             source = db.execute("SELECT * FROM runs WHERE case_id=? AND id=?", (case_id, run_id)).fetchone()
             if not source:
                 raise KeyError(run_id)
@@ -604,6 +623,7 @@ class Ledger:
         urls = [material_lead_url(value) for value in material_leads]
         with self.db() as db:
             db.execute("BEGIN IMMEDIATE")
+            case_library.require_active(db, case_id)
             row = db.execute("SELECT status,error FROM runs WHERE id=? AND case_id=?", (run_id, case_id)).fetchone()
             if not row:
                 raise KeyError(run_id)
@@ -649,6 +669,7 @@ class Ledger:
         lang, run, reason = required(data, "lang"), required(data, "runId"), required(data, "reason", 1200)
         with self.db() as db:
             db.execute("BEGIN IMMEDIATE")
+            case_library.require_active(db, case_id)
             row = db.execute("SELECT editions FROM runs WHERE case_id=? AND id=?", (case_id, run)).fetchone()
             if not row or lang not in json.loads(row["editions"]):
                 raise ValueError("完成した言語版を選んでください。")
@@ -674,8 +695,9 @@ class Ledger:
             db.execute("BEGIN")
             row = db.execute("""SELECT c.*,m.idea_id,m.idea_title,m.number,m.total FROM cases c
                                 LEFT JOIN idea_case_members m ON m.case_id=c.id WHERE c.id=?""", (case_id,)).fetchone()
-            if not row:
+            if not row or row["purge_state"] == "purged":
                 raise KeyError(case_id)
+            purge_impact = case_library.impact(self, db, case_id) if row["trashed_at"] else None
             runs = db.execute("""SELECT r.*,a.source_run,a.proposal FROM runs r
                                  LEFT JOIN run_alternatives a ON r.editorial_origin=a.run_id
                                  WHERE r.case_id=? ORDER BY r.created DESC,r.rowid DESC""", (case_id,)).fetchall()
@@ -753,15 +775,18 @@ class Ledger:
                           if (r["plan"] or {}).get("titles", {}).get(audio)), snap["shortSource"]["title"])
         for lang in LANGS:
             states.setdefault(lang, "未生成")
+        ready = [lang for lang in LANGS if any(lang in run["editions"] for run in history)]
         return dict(id=case_id, title=title, shortSource=snap.get("shortSource"), themeTitle=snap["title"], brief=row["brief"], themeId=snap["themeId"],
                     revision=snap["revision"], ideaId=row["idea_id"], ideaCaseNumber=row["number"], ideaCaseCount=row["total"],
                     themeUrl=theme_url(snap["themeId"], snap["revision"]), updated=row["updated"], reference=False,
+                    rating=row["rating"], trashedAt=row["trashed_at"], purgeState=row["purge_state"], purgeImpact=purge_impact,
+                    thumbnail=f"/api/cases/{case_id}/thumbnail" if ready else None, completedLangs=ready,
                     states=states, accepted=accepted, reviews=[dict(s) for s in reviews], runs=history)
 
-    def list_cases(self):
+    def list_cases(self, *, trashed=False):
         with self.db() as db:
             db.execute("BEGIN")
-            rows = db.execute("""SELECT c.id,c.brief,c.updated,
+            rows = db.execute("""SELECT c.id,c.brief,c.updated,c.rating,c.trashed_at trashedAt,c.purge_state purgeState,
                 json_extract(c.snapshot,'$.shortSource.title') shortSourceTitle,
                 json_extract(c.snapshot,'$.themeId') themeId,json_extract(c.snapshot,'$.revision') revision,
                 c.title themeTitle,coalesce((SELECT json_extract(r.plan,'$.titles.' || coalesce(
@@ -769,25 +794,68 @@ class Ledger:
                 WHERE r.case_id=c.id AND r.plan IS NOT NULL AND r.editorial_origin IS NULL
                 ORDER BY r.created,r.rowid LIMIT 1),json_extract(c.snapshot,'$.shortSource.title'),m.idea_title,c.title) title,
                 m.idea_id ideaId,m.number ideaCaseNumber,m.total ideaCaseCount FROM cases c
-                LEFT JOIN idea_case_members m ON m.case_id=c.id ORDER BY c.updated DESC,c.rowid DESC""").fetchall()
-            items = {r["id"]: {**dict(r), "reference": False, "states": {}, "accepted": {}} for r in rows}
+                LEFT JOIN idea_case_members m ON m.case_id=c.id
+                WHERE (c.trashed_at IS NOT NULL)=? AND coalesce(c.purge_state,'')<>'purged'
+                ORDER BY c.updated DESC,c.rowid DESC""", (trashed,)).fetchall()
+            items = {r["id"]: {**dict(r), "reference": False, "states": {}, "accepted": {}, "completedLangs": []} for r in rows}
             for s in db.execute("SELECT case_id,lang,run_id FROM selections"):
-                items[s["case_id"]]["accepted"][s["lang"]] = s["run_id"]
+                if s["case_id"] in items:
+                    items[s["case_id"]]["accepted"][s["lang"]] = s["run_id"]
             verdicts = {(r["run_id"], r["lang"]): r["kind"]
                         for r in db.execute("SELECT run_id,lang,kind FROM reviews ORDER BY rowid")}
             # Listing cases should not deserialize every plan, timing table and fixed source package.
             runs = db.execute("""SELECT id,case_id,status,error,langs,json_type(editions,'$.ja') ja,
                                  json_type(editions,'$.en') en FROM runs ORDER BY created DESC,rowid DESC""")
             for r in runs:
-                item = items[r["case_id"]]
+                item = items.get(r["case_id"])
+                if item is None:
+                    continue
                 for lang in json.loads(r["langs"]):
+                    if r[lang] and lang not in item["completedLangs"]:
+                        item["completedLangs"].append(lang)
                     rework = verdicts.get((r["id"], lang)) == "rework"
                     status = display_status(r["status"], r["error"])
                     item["states"].setdefault(lang, edition_state(status, bool(r[lang]), item["accepted"].get(lang) == r["id"], rework))
             for item in items.values():
+                item["completedLangs"] = [lang for lang in LANGS if lang in item["completedLangs"]]
+                item["thumbnail"] = f"/api/cases/{item['id']}/thumbnail" if item["completedLangs"] else None
                 for lang in LANGS:
                     item["states"].setdefault(lang, "未生成")
-        return [*items.values(), {k: v for k, v in self.reference.items() if k != "runs"}]
+        result = list(items.values())
+        if not trashed:
+            result.append({k: v for k, v in self.reference.items() if k != "runs"})
+        return result
+
+    def update_case_library(self, case_id, data):
+        with self.library_file_lock:
+            return case_library.update(self, case_id, data, clock())
+
+    def case_thumbnail(self, case_id):
+        with self.library_file_lock:
+            if case_id == REFERENCE:
+                return case_library.poster(self.folder, self.folder, self.media(REFERENCE, "reference", "ja", "video.mp4"))
+            with self.db() as db:
+                item = case_library.state(db, case_id)
+                if item["purgeState"]:
+                    return None
+                rows = db.execute("""SELECT r.id,e.key lang FROM runs r JOIN json_each(r.editions) e
+                                     LEFT JOIN selections s ON s.case_id=r.case_id AND s.run_id=r.id AND s.lang=e.key
+                                     WHERE r.case_id=? AND e.key IN ('ja','en') ORDER BY s.updated IS NULL,
+                                     s.updated DESC,r.created DESC,r.rowid DESC,(e.key='ja') DESC""", (case_id,)).fetchall()
+            for row in rows:
+                if not re.fullmatch("[a-f0-9]{32}", row["id"]):
+                    continue
+                folder = self.folder / "cases" / case_id / row["id"] / row["lang"]
+                if not folder.is_dir():
+                    continue
+                plain_path(self.folder, folder, directory=True)
+                movie = folder / "video.mp4"
+                if movie.is_file():
+                    plain_path(self.folder, movie)
+                image = case_library.poster(self.folder, folder, movie, folder / "contact-sheet.png")
+                if image:
+                    return image
+        return None
 
     def progress(self, run, message):
         with self.db() as db:
@@ -880,7 +948,7 @@ class Ledger:
                             FROM runs r JOIN cases c ON r.case_id=c.id
                             LEFT JOIN idea_cases i ON i.case_id=c.id
                             LEFT JOIN run_alternatives a ON r.editorial_origin=a.run_id
-                            WHERE r.status='queued' ORDER BY r.created,r.rowid LIMIT 1""").fetchone()
+                            WHERE r.status='queued' AND c.trashed_at IS NULL ORDER BY r.created,r.rowid LIMIT 1""").fetchone()
             if not row:
                 return False
             run, case_id = row["id"], row["case_id"]
@@ -985,7 +1053,9 @@ class Ledger:
             raise KeyError(run)
         with self.db() as db:
             row = db.execute("""SELECT status,error,production_mode,langs,CASE WHEN ? AND status='script_ready' THEN plan END AS draft
-                              FROM runs WHERE case_id=? AND id=?""", (paused, case_id, run)).fetchone()
+                              FROM runs WHERE case_id=? AND id=? AND EXISTS
+                              (SELECT 1 FROM cases WHERE id=runs.case_id AND purge_state IS NULL)""",
+                             (paused, case_id, run)).fetchone()
         if not row or row["production_mode"] != DIRECTED_FILM or "ja" not in json.loads(row["langs"]):
             raise KeyError(run)
         if paused and display_status(row["status"], row["error"]) not in CUT_STATUSES:
@@ -1036,6 +1106,12 @@ class Ledger:
         return {"cutId": digest, "reviewed": cut["review"] is not None, "title": cut["plan"]["titles"]["ja"], "scenes": scenes}
 
     def cut_excerpt(self, case_id, run, data):
+        with self.library_file_lock:
+            with self.db() as db:
+                case_library.require_active(db, case_id)
+            return self._cut_excerpt(case_id, run, data)
+
+    def _cut_excerpt(self, case_id, run, data):
         from film_preview import render_excerpt
         folder, digest, cut = self._saved_cut(case_id, run)
         if required(data, "cutId", 64) != digest:
@@ -1060,7 +1136,8 @@ class Ledger:
                 re.fullmatch("[0-9a-f]{32}", key) for key in (case_id, run)):
             raise KeyError(run)
         with self.db() as db:
-            row = db.execute("SELECT langs FROM runs WHERE case_id=? AND id=? AND production_mode=?",
+            row = db.execute("""SELECT langs FROM runs WHERE case_id=? AND id=? AND production_mode=? AND EXISTS
+                                (SELECT 1 FROM cases WHERE id=runs.case_id AND purge_state IS NULL)""",
                              (case_id, run, CODEX_FILM)).fetchone()
         if not row or lang not in json.loads(row["langs"]):
             raise KeyError(run)
@@ -1069,7 +1146,7 @@ class Ledger:
         return {key: record[key] for key in ("model", "effort", "identity", "request", "brief", "prompt") if key in record}
 
     def media(self, case_id, run, lang, name):
-        if lang not in LANGS or name not in ("video.mp4", "subtitles.srt", "contact-sheet.png", "storyboard.jpg"):
+        if lang not in LANGS or name not in ("video.mp4", "subtitles.srt", "contact-sheet.png", "storyboard.jpg", "captioned.mp4"):
             raise KeyError(name)
         if case_id == REFERENCE and run == "reference":
             if name not in ("video.mp4", "subtitles.srt"):
@@ -1080,7 +1157,9 @@ class Ledger:
         if not re.fullmatch("[a-f0-9]{32}", case_id) or not re.fullmatch("[a-f0-9]{32}", run):
             raise KeyError(run)
         with self.db() as db:
-            row = db.execute("SELECT editions,plan IS NOT NULL AS planned FROM runs WHERE case_id=? AND id=?", (case_id, run)).fetchone()
+            row = db.execute("""SELECT editions,plan IS NOT NULL AS planned FROM runs WHERE case_id=? AND id=?
+                                AND EXISTS (SELECT 1 FROM cases WHERE id=runs.case_id AND purge_state IS NULL)""",
+                             (case_id, run)).fetchone()
         if name == "storyboard.jpg":
             path = self.folder / "cases" / case_id / run / name
             if row and row["planned"] and lang == "ja" and path.is_file():

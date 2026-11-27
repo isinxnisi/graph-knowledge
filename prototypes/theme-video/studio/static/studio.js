@@ -102,7 +102,7 @@ function renderNav() {
       continue;
     }
     if (sample) nodes.push(node("p", "品質の見本", "side-label"));
-    for (const data of group) {
+    for (const data of sample ? group : group.slice(0, 8)) {
       const a = node("a", null, "case-nav");
       a.href = caseHash(data.id);
       if (state.detail?.id === data.id && !$("case-view").hidden) a.setAttribute("aria-current", "page");
@@ -206,10 +206,11 @@ async function refreshCases() {
   renderNav();
 }
 function view(id) {
-  for (const name of ["loading", "new", "case", "ideas"]) $(name + "-view").hidden = name !== id;
-  const libraryLink = document.querySelector(".library-link");
-  if (id === "ideas") libraryLink.setAttribute("aria-current", "page");
-  else libraryLink.removeAttribute("aria-current");
+  for (const name of ["loading", "new", "case", "ideas", "library", "publishing", "placements"]) $(name + "-view").hidden = name !== id;
+  for (const link of document.querySelectorAll(".library-link")) {
+    if (link.getAttribute("href") === "#" + id) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  }
   renderNav();
 }
 function closeList() {
@@ -250,7 +251,7 @@ function resetCase() {
   state.sceneId = ""; state.compare = false; state.compareKey = ""; state.resumeAfter = null;
   for (const id of ["script-read-panel", "script-review-panel", "scene-panel", "brief-panel", "rerun-panel"]) $(id).open = false;
   $("history-panel").open = window.matchMedia("(min-width: 1160px)").matches;
-  closeEdit(); closeReview(); closeAdapt();
+  closeEdit(); closeReview(); closeAdapt(); closeYoutubeEdition();
   setRerunParent(null);
   $("rerun-language").value = "ja";
   refreshGenerationButtons();
@@ -284,6 +285,15 @@ async function route() {
       if (!state.chosenIdea && !state.results.length) searchThemes();
       return;
     }
+    if (hash === "#publishing" || hash === "#placements") {
+      if (hash === "#publishing") await openYoutubeSettings(version);
+      else await openPlacementDesk(version);
+      return;
+    }
+    if (hash === "#library" || hash === "#trash" || !hash || hash === "#home") {
+      await openProductionLibrary(hash === "#trash", version);
+      return;
+    }
     const [casePart, sourceRun, sourceLang] = hash.startsWith("#case/") ? hash.slice(6).split("/") : [];
     let id = casePart ? decodeURIComponent(casePart) : "";
     if (!id) {
@@ -308,7 +318,7 @@ async function route() {
       state.lang = sourceLang;
     }
     view("case"); drawCase(); schedule();
-    if (chosenRun()?.status === "script_ready") openDraft(chosenRun());
+    if (!data.trashedAt && chosenRun()?.status === "script_ready") openDraft(chosenRun());
   } catch (err) {
     if (version !== state.routeVersion) return;
     $("loading-view").hidden = true; notify(err.message, true, route);
@@ -389,7 +399,8 @@ function drawCase() {
     $("theme-link").href = url;
     $("theme-link").title = data.themeTitle || data.title;
   }
-  $("rerun-panel").hidden = Boolean(data.reference);
+  drawCaseOrganization(data);
+  $("rerun-panel").hidden = Boolean(data.reference || data.trashedAt);
   $("reference-link").hidden = Boolean(data.reference);
   $("opening-study-link").hidden = !data.reference;
   for (const lang of Object.keys(languageName)) ensureSelection(lang);
@@ -431,9 +442,9 @@ function drawWatch() {
     $("preview-status").textContent = "English　/　" + source;
   }
   const approved = state.detail.accepted?.[lang] === run?.id || ed?.accepted;
-  $("approval-row").hidden = !ed?.video || state.detail.reference;
+  $("approval-row").hidden = !ed?.video || state.detail.reference || Boolean(state.detail.trashedAt);
   $("adapt-open").hidden = $("approval-row").hidden || lang !== "ja";
-  $("short-open").hidden = !ed?.video || Boolean(state.detail.shortSource);
+  $("short-open").hidden = !ed?.video || Boolean(state.detail.shortSource || state.detail.trashedAt);
   const target = $("short-form").dataset;
   if ($("short-open").hidden || target.parent !== run?.id || target.language !== lang ||
       target.caseId !== state.detail.id) $("short-form").hidden = true;
@@ -441,6 +452,7 @@ function drawWatch() {
   $("adopt-toggle").hidden = Boolean(approved);
   $("rework-toggle").hidden = ed?.reviewStatus === "rework";
   if ($("approval-row").hidden) closeReview();
+  drawPublishingActions(run, lang);
   drawScenes(run); drawEvidence(run); drawComparison();
 }
 function timings(run, lang) { return run?.editions?.[lang]?.timings || []; }

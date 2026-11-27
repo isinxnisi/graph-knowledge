@@ -23,6 +23,22 @@ python -B prototypes/theme-video/studio/start.py
 
 二回目以降は `start.py` で起動できる。既に起動中なら入口URLを表示する。日本語はVOICEVOXの青山龍星、英語はKokoroの `af_heart`。日本語は標準インストール先のエンジンを必要時に起動する。起動済みのエンジンを使う場合は `PLUNODE_VOICEVOX_URL`、実行ファイルを指定する場合は `PLUNODE_VOICEVOX_EXE` を設定する。
 
+## 動画を整理し、YouTubeとテーマに出す
+
+「制作一覧」ではタイトル・テーマ・形式・言語・評価・投稿と掲載の状態から探せる。案件の☆は作品全体の評価で、試行ごとの採用・要修正も確認できる。ゴミ箱では作品を復元し、参照や処理が残っていない場合は確認してローカルの制作データを完全削除できる。
+
+1. Google Cloudで配信用プロジェクトのYouTube Data API v3を有効化する。Google Auth PlatformのExternal／Testingでは、チャンネルを管理するGoogleアカウントをテストユーザーに追加する。
+2. Web OAuthクライアントを作り、「YouTube設定」に表示するリダイレクトURIをGoogle側の承認済みURIに登録する。外部用の制作室は `https://c-movie.isinxnisi.com/api/youtube/oauth/callback`。クライアントIDとシークレットは同じ設定画面に入力する。
+3. 日本語・英語それぞれで「Googleに接続」を選び、Google側で該当するチャンネルを認証する。案件で完成版を試写して「YouTube投稿」。初期値は限定公開。機能資格はYouTube Studioの設定から確認し、制作室に登録する。英語チャンネルは、電話認証を行うまでは15分以内とYouTubeの自動サムネイルを使える。
+4. 画面内字幕は通常の制作依頼に含める。以前の作品で字幕が足りないときは、「映像内字幕が足りない既存版」でSRTを使って別のMP4を書き出し、試写して投稿用に指定する。SRTの描画はFFmpegが行う。YouTubeの字幕トラックは、必要な場合に処理完了後の同じ動画IDへ送る。
+5. 公開・限定公開で処理済みの動画は「テーマ掲載」へ。対象環境とテーマの公開版を選び、日英の動画・画像・表示場所・順序を設定する。掲載を外すときは、対象箇所を選び差分を確認して保存する。
+
+### 掲載の接続設定（運営環境）
+
+Plunodeの対象環境に会員DBの `051-theme-media.sql` を `member:migrate -- --theme-media --confirm-origin <対象origin>` で適用する。各環境に `PLUNODE_THEME_MEDIA_ENVIRONMENT`（beta／production）と別々の長い `PLUNODE_THEME_MEDIA_TOKEN` を配備する。YouTube動画の確認には、同じ環境でYouTube Data APIへの制限を付けた `PLUNODE_YOUTUBE_API_KEY` と `PLUNODE_YOUTUBE_CHANNEL_JA`／`PLUNODE_YOUTUBE_CHANNEL_EN` に設定したチャンネルIDを使う。サイトには再生可否を読むためのキーだけを置く。
+
+制作室は同じ掲載専用トークンを `PLUNODE_THEME_MEDIA_TOKEN_BETA`／`PLUNODE_THEME_MEDIA_TOKEN_PRODUCTION`、またはデータフォルダーの `theme-media.json` のキー `beta`／`production` で読み取る。OAuthのクライアントシークレットとYouTubeの更新トークンはWindowsの制作室でDPAPIにより保存する。設定ファイルや値をGit、ログ、チャットには貼り付けない。接続先はローカルのgraph-betaと正式plunode.netを個別管理する。
+
 ## 外出先から開く
 
 このPCの制作室は [外部用の制作室](https://c-movie.isinxnisi.com/) から開ける。Cloudflare Accessで許可したアカウントでサインインする。トンネルの転送先は `http://127.0.0.1:3269` で、元の公開ホスト名を渡す。Windowsで制作室とトンネルが稼働している間に利用できる。
@@ -97,7 +113,7 @@ python -B prototypes/theme-video/studio/start.py
 
 指定モデル・推論設定と使用量を記録する。CLIが返さない内部の実モデルIDは不明と表示する。新しい脚本の試行では実際に送った資料・指示と出力形式も `editor-input.json` に保存する。Webbで初めて制作画面を通した時点の指示は第1版であり、その初稿では入力原文ファイルの保存前だった。前稿から直接直した場合は、親試行と修正理由から変更をたどれる。
 
-この制作室はこのPCのループバックで動く。Plunodeとは公開資料の読取で接続する。YouTube配信とテーマページへの掲載は制作後の工程として設計している。[制作運用と配信の設計](../../../docs/design/THEME_VIDEO_OPERATIONS.md)
+この制作室はこのPCのループバックで動く。Plunodeとは公開資料の読取で接続する。YouTube配信とテーマページへの掲載には各運営環境の接続設定を使う。[配信・掲載の設計](../../../docs/design/THEME_VIDEO_PUBLICATION_PLAN_20261128.md)
 
 ## このPCで通した制作案件
 

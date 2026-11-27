@@ -12,6 +12,8 @@ from urllib.parse import parse_qs, urlsplit
 
 from access import CloudflareAccess
 from ledger import Ledger, ROOT, required
+from theme_media_bridge import ThemePlacement
+from publication_captions import PublicationCaptions
 
 
 @contextmanager
@@ -63,7 +65,8 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Referrer-Policy", "no-referrer")
         self.send_header("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline'; "
-                         "img-src 'self' data:; media-src 'self' blob:; frame-ancestors 'none'; form-action 'self'; "
+                         "img-src 'self' data: https://graph-beta.isinxnisi.com https://plunode.net; media-src 'self' blob:; "
+                         "frame-src https://www.youtube-nocookie.com; frame-ancestors 'none'; form-action 'self'; "
                          "base-uri 'none'; object-src 'none'")
         super().end_headers()
 
@@ -79,6 +82,46 @@ class Handler(BaseHTTPRequestHandler):
             return origin is None or origin in {f"http://{local}" for local in hosts}
         access = self.server.access
         return access is not None and host == access.host and access.allows(self.headers, self.command)
+
+    def oauth_actor(self):
+        access = self.server.access
+        host = self.headers.get("Host", "").lower()
+        if access:
+            if host == access.host:
+                actor = access.identity(self.headers, self.command)
+                if actor:
+                    return actor
+            raise ValueError("YouTubeのGoogle接続は外部用の制作室を開いて操作してください。")
+        if host == f"127.0.0.1:{self.server.server_port}":
+            return "local"
+        raise ValueError("YouTubeの接続先URLを確認してください。")
+
+    def log_request(self, code="-", size="-"):
+        if urlsplit(self.path).path == "/api/youtube/oauth/callback":
+            self.log_message('"%s /api/youtube/oauth/callback" %s %s', self.command, code, size)
+        else:
+            super().log_request(code, size)
+
+    def youtube_return(self, query):
+        if self.command != "GET":
+            return self.respond(405, {"error": "Googleの接続操作をやり直してください。"})
+        actor = self.oauth_actor()
+        status = "connected"
+        try:
+            if query.get("error"):
+                try:
+                    self.server.youtube.callback(query.get("state", [""])[0], "", actor=actor)
+                except ValueError:
+                    pass
+                status = "cancelled"
+            else:
+                self.server.youtube.callback(query.get("state", [""])[0], query.get("code", [""])[0], actor=actor)
+        except (ValueError, RuntimeError):
+            status = "failed"
+        self.send_response(303)
+        self.send_header("Location", "/?youtube=" + status + "#publishing")
+        self.send_header("Content-Length", "0")
+        self.end_headers()
 
     def file(self, path):
         size = path.stat().st_size
@@ -136,11 +179,38 @@ class Handler(BaseHTTPRequestHandler):
                 return self.file(ROOT / "assets" / "paper-fish.ja.mp4")
             static = {"/": ("index.html", "text/html"), "/studio.css": ("studio.css", "text/css"),
                       "/ideas.js": ("ideas.js", "text/javascript"),
+                      "/library.js": ("library.js", "text/javascript"),
+                      "/publishing.js": ("publishing.js", "text/javascript"),
                       "/studio.js": ("studio.js", "text/javascript")}
             if path in static:
                 name, mime = static[path]
                 self.respond(200, (ROOT / "static" / name).read_bytes(), mime + "; charset=utf-8")
                 return
+            query = parse_qs(url.query)
+            if path == "/api/youtube/oauth/callback":
+                return self.youtube_return(query)
+            if path == "/api/youtube/settings":
+                return self.respond(200, self.server.youtube.settings())
+            match = re.fullmatch(r"/api/cases/([a-f0-9]{32})/runs/([a-f0-9]{32})/(ja|en)/upload-captions", path)
+            if match:
+                return self.respond(200, self.server.publication_captions.item(*match.groups()))
+            if path == "/api/publication/status":
+                return self.respond(200, {"youtube": self.server.youtube.summary()["items"],
+                                          "placements": self.server.placements.summary()})
+            if path == "/api/placement/settings":
+                return self.respond(200, self.server.placements.settings())
+            if path == "/api/placement/themes":
+                return self.respond(200, self.server.placements.search(query.get("environment", [""])[0],
+                                                                     query.get("q", [""])[0][:200]))
+            if path == "/api/placement/theme":
+                return self.respond(200, self.server.placements.read(query.get("environment", [""])[0],
+                                        query.get("themeId", [""])[0], int(query.get("revision", ["0"])[0])))
+            match = re.fullmatch(r"/api/cases/([a-f0-9]{32})/youtube", path)
+            if match:
+                return self.respond(200, self.server.youtube.case(match[1]))
+            match = re.fullmatch(r"/api/cases/([a-f0-9]{32})/runs/([a-f0-9]{32})/(ja|en)/youtube", path)
+            if match:
+                return self.respond(200, self.server.youtube.draft(*match.groups()))
             if path == "/api/models":
                 from editor import list_models
                 return self.respond(200, {"items": list_models(), "authorItems": list_models(author=True)})
@@ -153,7 +223,12 @@ class Handler(BaseHTTPRequestHandler):
                     raise ValueError("検索語は200字以内で入力してください。")
                 return self.respond(200, {"items": search_themes(q)})
             if path == "/api/cases":
-                return self.respond(200, {"items": ledger.list_cases()})
+                trashed = parse_qs(url.query).get("trash") == ["1"]
+                return self.respond(200, {"items": ledger.list_cases(trashed=trashed)})
+            match = re.fullmatch(r"/api/cases/([\w-]+)/thumbnail", path)
+            if match:
+                thumbnail = ledger.case_thumbnail(match[1])
+                return self.file(thumbnail) if thumbnail else self.respond(404, {"error": "試写画像はありません。"})
             if path == "/api/ideas":
                 theme = parse_qs(url.query).get("themeId", [None])[0]
                 return self.respond(200, ledger.list_ideas(theme))
@@ -169,7 +244,7 @@ class Handler(BaseHTTPRequestHandler):
             match = re.fullmatch(r"/media/([a-f0-9]{32})/([a-f0-9]{32})/cut-previews/([a-f0-9]{64}\.mp4)", path)
             if match:
                 return self.file(ledger.cut_media(*match.groups()))
-            match = re.fullmatch(r"/media/([\w-]+)/([\w-]+)/(ja|en)/(video\.mp4|subtitles\.srt|contact-sheet\.png|storyboard\.jpg)", path)
+            match = re.fullmatch(r"/media/([\w-]+)/([\w-]+)/(ja|en)/(video\.mp4|subtitles\.srt|contact-sheet\.png|storyboard\.jpg|captioned\.mp4)", path)
             if match:
                 return self.file(ledger.media(*match.groups()))
         else:
@@ -177,11 +252,42 @@ class Handler(BaseHTTPRequestHandler):
                 return self.respond(415, {"error": "JSON形式で送信してください。"})
             size = int(self.headers.get("Content-Length", "0"))
             limit = 131072 if re.fullmatch(r"/api/cases/[a-f0-9]{32}/runs", path) else 32768
+            if re.fullmatch(r"/api/youtube/jobs/[a-f0-9-]+/thumbnail", path):
+                limit = 67_000_000
+            elif path == "/api/placement/theme":
+                limit = 131072
             if not 0 < size <= limit:
                 return self.respond(413, {"error": "送信するデータの大きさを確認してください。"})
             data = json.loads(self.rfile.read(size))
             if not isinstance(data, dict):
                 raise ValueError("操作の内容を読み取れません。")
+            match = re.fullmatch(r"/api/cases/([a-f0-9]{32})/library", path)
+            if match:
+                return self.respond(200, ledger.update_case_library(match[1], data))
+            if path == "/api/youtube/settings":
+                return self.respond(200, self.server.youtube.configure(data))
+            match = re.fullmatch(r"/api/cases/([a-f0-9]{32})/runs/([a-f0-9]{32})/(ja|en)/upload-captions", path)
+            if match:
+                return self.respond(202, self.server.publication_captions.submit(*match.groups()))
+            match = re.fullmatch(r"/api/youtube/channels/(ja|en)/(connect|disconnect)", path)
+            if match:
+                lang, action = match.groups()
+                if action == "connect":
+                    return self.respond(200, self.server.youtube.connect(lang, data, actor=self.oauth_actor()))
+                return self.respond(200, self.server.youtube.disconnect(lang))
+            match = re.fullmatch(r"/api/youtube/jobs/([a-f0-9-]+)/(retry|sync|privacy|captions|thumbnail|reconcile|cancel)", path)
+            if match:
+                return self.respond(200, self.server.youtube.action(*match.groups(), data))
+            match = re.fullmatch(r"/api/cases/([a-f0-9]{32})/runs/([a-f0-9]{32})/(ja|en)/youtube/(draft|submit|register)", path)
+            if match:
+                case_id, run, lang, action = match.groups()
+                operation = {"draft": self.server.youtube.save_draft, "submit": self.server.youtube.submit,
+                             "register": self.server.youtube.register}[action]
+                return self.respond(200, operation(case_id, run, lang, data))
+            if path == "/api/placement/theme":
+                env = required(data, "environment", 30)
+                command = {key: value for key, value in data.items() if key != "environment"}
+                return self.respond(200, self.server.placements.change(env, command))
             if path == "/api/reading-preview":
                 from media import preview_reading
                 with self.server.preview_slot:
@@ -253,11 +359,18 @@ def main():
     parser.add_argument("--port", type=int, default=3269)
     parser.add_argument("--data", type=Path, default=default_folder())
     args = parser.parse_args()
+    from youtube_publication import YouTubePublication
     access = CloudflareAccess.load(args.data)
     with exclusive(args.data), ThreadingHTTPServer(("127.0.0.1", args.port), Handler) as server:
         server.access = access
         server.ledger = Ledger(args.data)
+        server.youtube = YouTubePublication(server.ledger, origin=access.origin if access else
+                                            f"http://127.0.0.1:{server.server_port}")
+        server.placements = ThemePlacement(server.ledger)
+        server.publication_captions = PublicationCaptions(server.ledger)
+        threading.Thread(target=server.publication_captions.run_worker, daemon=True).start()
         server.preview_slot = threading.Lock()
+        threading.Thread(target=server.youtube.run_worker, daemon=True).start()
         threading.Thread(target=run_worker, args=(server.ledger,), daemon=True).start()
         print(f"http://127.0.0.1:{server.server_port}/", flush=True)
         server.serve_forever()
