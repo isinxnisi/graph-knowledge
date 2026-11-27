@@ -563,7 +563,7 @@ function localPlacementPreview(placement, slots, entries) {
 }
 function describePlacementPreview(preview, result, environment, local = false) {
   preview.replaceChildren(node("h2", local ? "制作室での下書きプレビュー" : "テーマ画面での掲載プレビュー"));
-  if (local) preview.append(node("p", "掲載先でYouTubeの確認ができないため、制作室の記録から選んだ作品と並びを表示しています。サイト上での再生や掲載可否は未確認です。", "subtle"));
+  if (local) preview.append(node("p", "掲載先でプレビューを確認できないため、制作室の記録から選んだ作品と並びを表示しています。サイト上での再生や掲載可否は未確認です。", "subtle"));
   let playing = null;
   for (const lang of ["ja", "en"]) {
     preview.append(node("h3", languageName[lang]));
@@ -741,7 +741,7 @@ function buildPlacementEditor(editor, placement, environment, entries) {
       const result = await api("/api/placement/theme", changePayload("preview", placementId()));
       if (version === draftVersion && preview.isConnected) describePlacementPreview(preview, result, environment);
     } catch (error) {
-      if (error.code !== "VIDEO_VERIFICATION_UNAVAILABLE") throw error;
+      if (error.code !== "VIDEO_VERIFICATION_UNAVAILABLE" && error.status !== 503) throw error;
       if (version === draftVersion && preview.isConnected) {
         describePlacementPreview(preview, localPlacementPreview(placement, slots, entries), environment, true);
       }
@@ -762,8 +762,27 @@ function buildPlacementEditor(editor, placement, environment, entries) {
   footer.append(saveButton);
   drawSlots(); refresh();
 }
+async function placementWorks(entries) {
+  // An already running production keeps the previous server process until its render finishes.
+  const needsDetail = entries.filter((item) => item.videoId && !placementVideoName(item));
+  const ids = [...new Set(needsDetail.map((item) => item.caseId))];
+  const details = new Map(await Promise.all(ids.map(async (id) =>
+    [id, await api("/api/cases/" + encodeURIComponent(id)).catch(() => null)])));
+  return entries.map((item) => {
+    const detail = details.get(item.caseId);
+    if (!detail || placementVideoName(item)) return item;
+    const index = detail.runs.findIndex((run) => run.id === item.runId);
+    const run = detail.runs[index];
+    return {...item, title: run?.plan?.titles?.[item.lang] || detail.title, themeTitle:detail.themeTitle,
+      themeId:detail.themeId, format:detail.shortSource ? "short" : "landscape",
+      attempt:index < 0 ? null : detail.runs.length - index, thumbnail:run?.editions?.[item.lang]?.contactSheet};
+  });
+}
 async function openPlacementDesk(version = state.routeVersion) {
-  const [settings, delivery] = await Promise.all([api("/api/placement/settings"), api("/api/publication/status")]);
+  const [settings, works] = await Promise.all([
+    api("/api/placement/settings"),
+    api("/api/publication/status").then((delivery) => placementWorks(delivery.youtube)),
+  ]);
   if (version !== state.routeVersion) return;
   const desk = $("placement-desk"), lookup = node("form", null, "placement-search");
   const results = node("div", null, "placement-results"), editor = node("div");
@@ -786,7 +805,7 @@ async function openPlacementDesk(version = state.routeVersion) {
       results.append(publishingButton(theme.title + " ・ 第" + theme.revision + "版", async () => {
         const read = ++placementVersion;
         const data = await api("/api/placement/theme?" + new URLSearchParams({environment:targetEnv.id, themeId:theme.id, revision:theme.revision}));
-        if (version === state.routeVersion && read === placementVersion) buildPlacementEditor(editor, data, targetEnv, delivery.youtube);
+        if (version === state.routeVersion && read === placementVersion) buildPlacementEditor(editor, data, targetEnv, works);
       }));
     }
     if (!found.themes.length) results.append(node("p", "一致する公開テーマがありません。", "subtle"));

@@ -57,6 +57,7 @@ async function api(path, data) {
   const value = await response.json().catch(() => ({}));
   if (!response.ok) {
     const error = new Error(typeof value.error === "string" ? value.error : "通信に失敗しました（" + response.status + "）");
+    error.status = response.status;
     if (typeof value.code === "string") error.code = value.code;
     throw error;
   }
