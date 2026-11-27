@@ -35,6 +35,17 @@ class DirectProductionTest(unittest.TestCase):
             with wave.open(str(self.root / report["wav"]), "rb") as wav:
                 self.assertEqual(wav.getframerate(), 24000)
 
+    def test_direct_job_checks_its_own_cli_catalog(self):
+        desk = Ledger(self.root)
+        model = "gpt-6.2-sol@ultra"
+        request = {"themeId": self.snap["themeId"], "revision": 4, "model": model, "requestId": "create"}
+        catalogs = {"author_models_fn": lambda: [{"id": model, "available": True}]}
+        snapshot = lambda *_: self.snap
+        with self.assertRaisesRegex(ValueError, "選択したモデル"):
+            desk.submit("cases", {**request, "productionMode": "boards-v1"}, snapshot, list, **catalogs)
+        job = desk.submit("cases", request, snapshot, list, **catalogs)
+        self.assertEqual(desk.case(job["id"])["runs"][0]["model"], model)
+
     @unittest.skipUnless(shutil.which("ffmpeg") and shutil.which("ffprobe"), "FFmpeg is required")
     def test_default_job_imports_authored_movie_without_a_script_or_review_stage(self):
         desk = Ledger(self.root)

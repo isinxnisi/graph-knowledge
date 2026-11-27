@@ -5,10 +5,11 @@ const languageName = { ja: "日本語", en: "English" };
 const productionLanguage = { ja: "日本語", en: "英語", both: "日英" };
 const effortName = { low: "低", medium: "中", high: "高", xhigh: "XHigh", max: "Max", ultra: "Ultra" };
 const modelForms = ["new", "rerun", "adapt"];
+const authorMode = "codex-film-v1";
 const jobName = { queued: "待機中", running: "生成中", done: "完了", failed: "失敗", interrupted: "中断", needs_revision: "要改稿", needs_material: "資料待ち", script_ready: "台本確認" };
 const pending = (run) => ["queued", "running"].includes(run.status);
 const state = {
-  models: [], cases: [], detail: null, lang: "ja", chosen: null, results: [],
+  models: [], authorModels: [], cases: [], detail: null, lang: "ja", chosen: null, results: [],
   selected: { ja: "", en: "" }, sceneId: "", compare: false, compareKey: "",
   poll: null, routeVersion: 0, searchVersion: 0, resumeAfter: null, editTarget: null, reviewTarget: null,
   readingRequest: null, readingUrl: null, adaptTarget: null, awaitingEnglishFor: "",
@@ -115,17 +116,19 @@ function renderNav() {
 }
 
 function modelLabel(run) {
-  const selection = run.model;
-  const listed = state.models.find((m) => m.id === selection);
-  if (listed) return listed.label;
   // Old runs stored a bare CLI slug; high was the studio's only setting then.
-  const [slug, suffix] = String(selection || "").split("@");
   const recorded = run.plan?.model;
-  const effort = recorded?.effort || suffix || (slug.startsWith("gpt-") ? "high" : "");
-  return [recorded?.requested || slug || "記録なし", effortName[effort] || effort].filter(Boolean).join(" ／ ");
+  const [slug, suffix] = String(run.model || recorded?.requested || "").split("@");
+  const name = slug.replace(/^gpt-([0-9.]+)-(sol|astra)$/, (_, version, family) =>
+    "GPT-" + version + "-" + family[0].toUpperCase() + family.slice(1));
+  const effort = suffix || recorded?.effort || (slug.startsWith("gpt-") ? "high" : "");
+  return [name || "記録なし", effortName[effort] || effort].filter(Boolean).join(" ／ ");
+}
+function modelCatalog(name) {
+  return $(name + "-mode").value === authorMode ? state.authorModels : state.models;
 }
 function formProfiles(name) {
-  return state.models.filter((m) => (m.modelId || m.id) === $(name + "-model").value && m.available);
+  return modelCatalog(name).filter((m) => m.modelId === $(name + "-model").value && m.available);
 }
 function selectedProfile(name) {
   return formProfiles(name).find((m) => (m.effort || "high") === $(name + "-effort").value);
@@ -139,41 +142,48 @@ function renderEfforts(name, wanted = $(name + "-effort").value) {
   const defaultLevel = levels.includes("high") ? "high" : levels[0] || "";
   select.value = levels.includes(wanted) ? wanted : defaultLevel;
   select.disabled = !levels.length;
-  const messages = state.models.filter((m) => !m.available).map((m) => m.label + "　" + (m.reason || "利用できません"));
+  const messages = modelCatalog(name).filter((m) => !m.available).map((m) => m.label + "　" + (m.reason || "利用できません"));
   if (choices[0]?.effort && !levels.includes("ultra")) {
-    messages.push((choices[0].family || choices[0].modelId) + " のCLI対応一覧に Ultra はありません。");
+    messages.push(choices[0].modelName + " のCLI対応一覧に Ultra はありません。");
+  }
+  const profile = selectedProfile(name);
+  if (name === "new" && profile && !supportsIdeaModel(profile)) {
+    messages.push("動画案の生成には別の対応モデルを選んでください。");
   }
   const note = $(name + "-model-note");
   note.textContent = messages.join(" ／ ");
   note.hidden = !note.textContent;
 }
+function renderModelForm(name, error = "") {
+  const models = new Map();
+  for (const m of modelCatalog(name)) {
+    if (!models.has(m.modelId)) models.set(m.modelId, m);
+  }
+  const available = [...models.values()].filter((m) => m.available);
+  const select = $(name + "-model"), previous = select.value;
+  select.replaceChildren(...Array.from(models, ([id, m]) => {
+    const opt = option(id, m.modelName + (m.available ? "" : "（利用不可）"));
+    opt.disabled = !m.available;
+    return opt;
+  }));
+  select.value = models.get(previous)?.available ? previous : available[0]?.modelId || "";
+  select.disabled = !available.length;
+  renderEfforts(name);
+  if (error) {
+    const note = $(name + "-model-note");
+    note.textContent = error;
+    note.hidden = false;
+  }
+}
 function renderModels(error = "") {
-  const families = new Map();
-  for (const m of state.models) {
-    const id = m.modelId || m.id;
-    if (!families.has(id) || m.available) families.set(id, m);
-  }
-  const available = [...families.values()].filter((m) => m.available);
-  for (const name of modelForms) {
-    const select = $(name + "-model"), previous = select.value;
-    select.replaceChildren(...Array.from(families, ([id, m]) => {
-      const opt = option(id, (m.family || m.label) + (m.available ? "" : "（利用不可）"));
-      opt.disabled = !m.available;
-      return opt;
-    }));
-    select.value = available.some((m) => (m.modelId || m.id) === previous) ? previous : available[0]?.modelId || available[0]?.id || "";
-    select.disabled = !available.length;
-    renderEfforts(name);
-    if (error) {
-      const note = $(name + "-model-note");
-      note.textContent = error;
-      note.hidden = false;
-    }
-  }
+  for (const name of modelForms) renderModelForm(name, error);
   refreshGenerationButtons();
 }
 function disableSubmitButtons(form, disabled) {
   for (const button of form.querySelectorAll('button[type="submit"]')) button.disabled = disabled || button.hidden;
+}
+function supportsIdeaModel(profile) {
+  return state.models.some((m) => m.id === profile?.id && m.available);
 }
 function refreshGenerationButtons() {
   for (const name of ["new", "rerun"]) {
@@ -181,6 +191,8 @@ function refreshGenerationButtons() {
     const origin = name === "new" ? (state.chosenIdea ? "この案で" : "テーマから") : "";
     form.querySelector('[value="video"]').textContent = origin + productionLanguage[language] + "の動画を生成";
     disableSubmitButtons(form, (name === "new" && !state.chosen && !state.chosenIdea) || !selectedProfile(name) || form.dataset.busy === "1");
+    const ideas = form.querySelector('[value="ideas"]');
+    if (ideas && !supportsIdeaModel(selectedProfile(name))) ideas.disabled = true;
   }
   const adapt = $("adapt-form");
   disableSubmitButtons(adapt, !state.adaptTarget || !selectedProfile("adapt") || adapt.dataset.busy === "1");
@@ -1195,8 +1207,9 @@ $("theme-query").onkeydown = (e) => {
   if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); searchThemes(); }
 };
 for (const name of modelForms) {
+  $(name + "-mode").onchange = () => { renderModelForm(name); refreshGenerationButtons(); };
   $(name + "-model").onchange = () => { renderEfforts(name); refreshGenerationButtons(); };
-  $(name + "-effort").onchange = refreshGenerationButtons;
+  $(name + "-effort").onchange = () => { renderEfforts(name); refreshGenerationButtons(); };
 }
 for (const id of ["new-language", "rerun-language"]) $(id).onchange = refreshGenerationButtons;
 formAction("new-form", async (version, action) => {
@@ -1206,6 +1219,7 @@ formAction("new-form", async (version, action) => {
   const selection = idea ? { themeId: idea.themeId, revision: idea.revision, ideaId: idea.id, newIdeaCase: true }
     : { themeId: state.chosen.id, revision: Number($("theme-revision").value), brief: trim($("brief").value) };
   if (action === "ideas" && !idea) {
+    if (!supportsIdeaModel(profile)) return;
     await submitRun("ideas", "/api/ideas/generate", { ...selection, model: profile.id });
     if (version !== state.routeVersion) return;
     $("ideas-status").value = "";
@@ -1415,12 +1429,13 @@ $("adapt-open").onclick = () => {
   const run = chosenRun();
   if (state.lang !== "ja" || !run?.editions?.ja?.video || state.detail.reference) return;
   state.adaptTarget = Object.freeze({ caseId: state.detail.id, parent: run.id });
-  $("adapt-mode-field").hidden = run.productionMode === "codex-film-v1";
-  $("adapt-mode").value = "codex-film-v1";
+  $("adapt-mode-field").hidden = run.productionMode === authorMode;
+  $("adapt-mode").value = authorMode;
   $("adapt-target").textContent = "元の日本語版　" + editionLabel(run, "ja") + "　" + run.plan.titles.ja;
-  const profile = state.models.find((m) => m.id === run.model && m.available);
+  renderModelForm("adapt");
+  const profile = modelCatalog("adapt").find((m) => m.id === run.model && m.available);
   if (profile) {
-    $("adapt-model").value = profile.modelId || profile.id;
+    $("adapt-model").value = profile.modelId;
     renderEfforts("adapt", profile.effort || "high");
   }
   $("adapt-form").hidden = false; refreshGenerationButtons(); $("adapt-model").focus();
@@ -1431,7 +1446,7 @@ formAction("adapt-form", async (version, action) => {
   const profile = selectedProfile("adapt");
   if (!target || target.caseId !== state.detail?.id || !profile) return;
   const payload = { parent: target.parent, language: "en", model: profile.id, scriptFirst: action !== "video" };
-  if ($("adapt-mode").value === "codex-film-v1") payload.productionMode = "codex-film-v1";
+  if ($("adapt-mode").value === authorMode) payload.productionMode = authorMode;
   const result = await submitRun("adapt." + target.caseId, detailPath("/runs"), payload);
   if (state.routeVersion !== version) return;
   if (state.adaptTarget === target) {
@@ -1442,9 +1457,12 @@ formAction("adapt-form", async (version, action) => {
 });
 async function loadModels() {
   try {
-    const data = await api("/api/models"); state.models = data.items || []; renderModels();
+    const data = await api("/api/models");
+    state.models = data.items || [];
+    state.authorModels = data.authorItems || state.models;
+    renderModels();
   } catch (err) {
-    state.models = []; renderModels(err.message);
+    state.models = []; state.authorModels = []; renderModels(err.message);
     notify("モデル設定を取得できませんでした。 " + err.message, true, loadModels);
   }
 }

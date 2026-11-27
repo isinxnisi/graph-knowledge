@@ -143,7 +143,7 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if path == "/api/models":
                 from editor import list_models
-                return self.respond(200, {"items": list_models()})
+                return self.respond(200, {"items": list_models(), "authorItems": list_models(author=True)})
             if path == "/api/health":
                 return self.respond(200, {"service": "plunode-video-studio", "data": str(ledger.folder)})
             if path == "/api/themes":
@@ -189,7 +189,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self.respond(200, audio, "audio/wav")
             if path == "/api/cases":
                 from editor import get_snapshot, list_models
-                return self.respond(201, ledger.submit(path, data, get_snapshot, list_models))
+                return self.respond(201, ledger.submit(path, data, get_snapshot, list_models,
+                                                       author_models_fn=lambda: list_models(author=True)))
             if path == "/api/ideas/generate":
                 from editor import get_snapshot, list_models
                 return self.respond(202, ledger.submit_ideas(data, get_snapshot, list_models))
@@ -207,7 +208,8 @@ class Handler(BaseHTTPRequestHandler):
                 cid, action = match.groups()
                 if action == "runs":
                     from editor import get_snapshot, list_models
-                    return self.respond(201, ledger.submit(path, data, get_snapshot, list_models, cid))
+                    return self.respond(201, ledger.submit(path, data, get_snapshot, list_models, cid,
+                                                           author_models_fn=lambda: list_models(author=True)))
                 if action == "alternative":
                     return self.respond(200, ledger.start_alternative(cid, required(data, "runId"), required(data, "fingerprint", 64)))
                 if action in ("adopt", "rework"):

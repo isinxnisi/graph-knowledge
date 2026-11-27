@@ -221,19 +221,30 @@ class EditorialNoteTest(unittest.TestCase):
             return {"slug": slug, "visibility": visibility,
                     "supported_reasoning_levels": [{"effort": effort} for effort in levels]}
 
-        models = [model("hidden-astra", ["ultra"], "hide"), model("gpt-6-astra", ["high", "xhigh", "ultra"]),
-                  model("gpt-6-sol", ["high", "medium"]), model("previous-astra", ["max"])]
+        models = [model("gpt-6.2-astra", ["ultra"], "hide"), model("gpt-6-astra", ["high", "xhigh", "ultra"]),
+                  model("gpt-6-sol", ["high", "medium"]), model("gpt-6.2-sol", ["high", "ultra"]),
+                  model("gpt-6.1-sol", ["high", "max"])]
         responses = [CompletedProcess([], 0), CompletedProcess([], 0, stdout=json.dumps({"models": models}))]
         with patch("editor._catalog", None), patch("editor.shutil.which", return_value="codex"), \
                 patch("editor._run", side_effect=responses):
             choices = list_models()
             self.assertEqual([c["id"] for c in choices], ["gpt-6-astra", "gpt-6-astra@xhigh", "gpt-6-astra@ultra",
+                                                         "gpt-6.2-sol", "gpt-6.2-sol@ultra", "gpt-6.1-sol", "gpt-6.1-sol@max",
                                                          "gpt-6-sol", "gpt-6-sol@medium"])
             self.assertEqual([(c["modelId"], c["effort"]) for c in choices[:3]],
                              [("gpt-6-astra", e) for e in ("high", "xhigh", "ultra")])
             self.assertTrue(all(c["available"] for c in choices))
+            self.assertEqual(choices[4]["label"], "GPT-6.2-Sol ／ Ultra")
             with self.assertRaisesRegex(ValueError, "選択したモデル"):
                 generate_plan(self.snapshot, "", "gpt-6-sol@ultra", ".")
+
+    def test_unlisted_sol_does_not_create_a_selectable_profile(self):
+        responses = [CompletedProcess([], 0), CompletedProcess([], 0, stdout='{"models":[]}')]
+        with patch("editor._catalog", None), patch("editor.shutil.which", return_value="codex"), \
+                patch("editor._run", side_effect=responses):
+            sol = next(c for c in list_models() if c["modelId"] == "gpt-6.2-sol")
+            self.assertFalse(sol["available"])
+            self.assertIn("モデル一覧にありません", sol["reason"])
 
     def test_idea_generation_compares_prior_choices_and_allows_one_or_no_new_ideas(self):
         snapshot = {**self.snapshot, "title": "鏡を調整する", "description": "", "records": []}

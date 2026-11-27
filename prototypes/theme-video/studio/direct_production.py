@@ -156,7 +156,7 @@ def produce(snapshot, brief, model_selection, run_folder, lang, *, draft, plan, 
     author.mkdir(exist_ok=True)
     plain_path(folder, author, directory=True)
     work = author / lang
-    model, effort = _selected_model(model_selection)
+    model, effort = _selected_model(model_selection, author=True)
     saved = work.parent / (lang + ("-draft.json" if draft else "-delivery.json"))
     approved = (plan or {}).get("authorDraft", {}).get(lang)
     key = request_digest([snapshot, brief, model, effort, draft, lang, approved, str(parent_folder or "")])

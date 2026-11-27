@@ -43,11 +43,18 @@ def runtime_command(workspace, *args):
     return [*prefix, "/usr/bin/python3", "-I", linux_path(__file__), *args, linux_path(workspace)]
 
 
+def codex_path():
+    codex = (Path.home() / ".local/bin/codex").resolve()
+    return codex if codex.is_file() else Path(shutil.which("codex") or "/missing/codex").resolve()
+
+
+def author_catalog_command():
+    return [*linux_command(), "/usr/bin/python3", "-I", linux_path(__file__), "codex"]
+
+
 def tool_paths():
     home = Path.home()
-    codex = (home / ".local/bin/codex").resolve()
-    if not codex.is_file():
-        codex = Path(shutil.which("codex") or "/missing/codex").resolve()
+    codex = codex_path()
     nodes = sorted((home / ".nvm/versions/node").glob("v*/bin/node"),
                    key=lambda p: tuple(int(n) for n in p.parents[1].name[1:].split(".")), reverse=True)
     if not nodes:
@@ -401,7 +408,10 @@ def run_author(workspace, prompt, model_id, effort, progress=None):
 
 if __name__ == "__main__":
     action, *arguments = sys.argv[1:]
-    if action == "render-server":
+    if action == "codex":
+        executable = codex_path()
+        os.execv(executable, [str(executable), *arguments])
+    elif action == "render-server":
         render_server(Path(arguments[0]).resolve(strict=True))
     elif action == "author":
         model, effort, token, folder = arguments

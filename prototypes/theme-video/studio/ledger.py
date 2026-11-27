@@ -343,13 +343,18 @@ class Ledger:
                 raise ValueError("制作に使った案です。紐づいた案件を開いてください。")
             db.execute("UPDATE ideas SET status=? WHERE id=?", (status, idea_id))
 
-    def submit(self, route, data, snapshot_fn, models_fn, case_id=None):
+    def submit(self, route, data, snapshot_fn, models_fn, case_id=None, *, author_models_fn=None):
         if case_id == REFERENCE:
             raise ValueError("品質見本は閲覧専用です。")
         key = required(data, "requestId", 128)
         digest = hashlib.sha256(packed([route, data]).encode()).hexdigest()
         with self.db() as db:
             existing = self.repeat(db, key, digest)
+            inherited_mode = None
+            if case_id and isinstance(data.get("parent"), str) and data.get("language") == "en" and "productionMode" not in data:
+                origin = db.execute("SELECT production_mode FROM runs WHERE id=? AND case_id=?",
+                                    (data["parent"], case_id)).fetchone()
+                inherited_mode = origin["production_mode"] if origin else None
         if existing:
             return existing
         lang = data.get("lang")
@@ -378,7 +383,8 @@ class Ledger:
             raise ValueError("動画案は新しい制作案件で選択してください。")
         if lang not in (*LANGS, None) or (lang and not parent):
             raise ValueError("修正する言語と元の版を確認してください。")
-        if not lang and model not in {m["id"] for m in models_fn() if m["available"]}:
+        catalog = (author_models_fn or models_fn) if (inherited_mode or production_mode) == CODEX_FILM else models_fn
+        if not lang and model not in {m["id"] for m in catalog() if m["available"]}:
             raise ValueError("選択したモデルはこの環境で利用できません。")
         if not case_id:
             theme = required(data, "themeId", 300)

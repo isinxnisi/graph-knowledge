@@ -141,9 +141,12 @@ def get_snapshot(theme_id, revision):
 
 
 _catalog = None
+_author_catalog = None
 _catalog_lock = threading.Lock()
 EFFORT_LABELS = {"high": "高", "xhigh": "XHigh", "max": "Max", "ultra": "Ultra",
                  "medium": "中", "low": "低"}
+PREFERRED_SOL = "gpt-6.2-sol"
+MODEL_SLUG = re.compile(r"gpt-(\d+(?:\.\d+)*)-(astra|sol)")
 
 
 def _run(args, **kwargs):
@@ -151,49 +154,74 @@ def _run(args, **kwargs):
                           creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0), **kwargs)
 
 
-def list_models():
-    """Use the CLI backend's current catalog, which can differ from the desktop cache."""
-    global _catalog
-    with _catalog_lock:
-        if _catalog and time.monotonic() < _catalog[0]:
-            return [dict(item) for item in _catalog[1]]
-        executable = shutil.which("codex")
-        reason = "Codex CLI が見つかりません。"
-        models = []
-        if executable:
-            try:
-                login = _run([executable, "login", "status"], timeout=15)
-                if login.returncode:
-                    reason = "Codex CLI にログインしてください。"
+def _model_catalog(command, cached):
+    if cached and time.monotonic() < cached[0]:
+        return cached
+    reason = "Codex CLI が見つかりません。"
+    models = []
+    if command:
+        try:
+            login = _run([*command, "login", "status"], timeout=15)
+            if login.returncode:
+                reason = "Codex CLI の起動・ログイン状態を確認してください。"
+            else:
+                catalog = _run([*command, "debug", "models"], timeout=25)
+                if catalog.returncode == 0:
+                    models = json.loads(catalog.stdout)["models"]
+                    reason = "このCLIのモデル一覧にありません。"
                 else:
-                    catalog = _run([executable, "debug", "models"], timeout=25)
-                    if catalog.returncode == 0:
-                        models = json.loads(catalog.stdout)["models"]
-                    reason = "このCLIの一覧に利用できるモデル・推論設定がありません。"
-            except (OSError, subprocess.TimeoutExpired, KeyError, ValueError):
-                reason = "Codex CLI のモデル一覧を取得できませんでした。"
-        options = []
-        for family in ("Astra", "Sol"):
-            model = next((m for m in models if m.get("slug", "").endswith("-" + family.lower())
-                          and m.get("visibility") == "list" and m.get("supported_reasoning_levels")), None)
-            model_id = model["slug"] if model else family.lower()
-            levels = {level["effort"] for level in model["supported_reasoning_levels"]} if model else set()
-            if not levels:
-                options.append({"id": model_id, "modelId": model_id, "family": family, "effort": None, "label": family,
-                                "available": False, "reason": reason})
+                    reason = "Codex CLI のモデル一覧を取得できませんでした。"
+        except (OSError, subprocess.TimeoutExpired, KeyError, ValueError):
+            reason = "Codex CLI のモデル一覧を取得できませんでした。"
+    options = []
+    for family in ("Astra", "Sol"):
+        candidates = {}
+        for model in models:
+            slug = model.get("slug", "")
+            match = MODEL_SLUG.fullmatch(slug)
+            if (match and match[2] == family.lower() and model.get("visibility") == "list"
+                    and model.get("supported_reasoning_levels")):
+                levels = {level["effort"] for level in model["supported_reasoning_levels"]}
+                candidates[slug] = (tuple(map(int, match[1].split("."))), levels)
+        if family == "Sol":
+            candidates.setdefault(PREFERRED_SOL, ((6, 2), set()))
+        if not candidates:
+            candidates[family.lower()] = ((), set())
+        for slug, (version, levels) in sorted(candidates.items(), key=lambda item: item[1][0], reverse=True):
+            name = f"GPT-{'.'.join(map(str, version))}-{family}" if version else family
             ordered_levels = [level for level in EFFORT_LABELS if level in levels]
-            for effort in ordered_levels + sorted(levels.difference(EFFORT_LABELS)):
-                # Queued runs from the original high-only studio still use the plain model slug.
-                selection_id = model_id if effort == "high" else f"{model_id}@{effort}"
-                options.append({"id": selection_id, "modelId": model_id, "family": family, "effort": effort,
-                                "label": f"{family} ／ {EFFORT_LABELS.get(effort, effort)}",
-                                "available": True, "reason": ""})
-        _catalog = (time.monotonic() + (300 if models else 20), options)
-        return [dict(item) for item in options]
+            for effort in (ordered_levels + sorted(levels.difference(EFFORT_LABELS))) or [None]:
+                # Preserve the bare slug used by stored high-effort runs.
+                selection_id = slug if effort in (None, "high") else f"{slug}@{effort}"
+                label = f"{name} ／ {EFFORT_LABELS.get(effort, effort)}" if effort else name
+                options.append({"id": selection_id, "modelId": slug, "family": family, "modelName": name,
+                                "effort": effort, "label": label, "available": bool(effort),
+                                "reason": "" if effort else reason})
+    return (time.monotonic() + (300 if models else 20), options)
 
 
-def _selected_model(selection):
-    choice = next((m for m in list_models() if m["id"] == selection and m["available"]), None)
+def list_models(*, author=False):
+    """Read the catalog of the CLI that will execute the selected task."""
+    global _catalog, _author_catalog
+    with _catalog_lock:
+        if author:
+            from direct_runtime import author_catalog_command
+
+            if not _author_catalog or time.monotonic() >= _author_catalog[0]:
+                try:
+                    command = author_catalog_command()
+                except (OSError, subprocess.SubprocessError):
+                    command = []
+                _author_catalog = _model_catalog(command, _author_catalog)
+            return [dict(item) for item in _author_catalog[1]]
+        executable = shutil.which("codex")
+        _catalog = _model_catalog([executable] if executable else [], _catalog)
+        return [dict(item) for item in _catalog[1]]
+
+
+def _selected_model(selection, *, author=False):
+    models = list_models(author=True) if author else list_models()
+    choice = next((m for m in models if m["id"] == selection and m["available"]), None)
     if not choice:
         raise ValueError("選択したモデルを利用できません。モデル一覧を確認してください。")
     return choice["modelId"], choice["effort"]
