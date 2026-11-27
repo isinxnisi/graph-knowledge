@@ -170,11 +170,29 @@ class YouTubePublication(ChannelAccounts):
                 "SELECT * FROM youtube_jobs WHERE case_id=? ORDER BY updated DESC,rowid DESC", (case_id,))]}
 
     def summary(self):
-        columns = """id,case_id,run_id,lang,source,variant,status,channel_id,video_id,privacy,embeddable,
-                     checked_at,updated,action_kind,error,final_attempt"""
         with self.ledger.db() as db:
-            return {"items": [public_job(r, False) for r in db.execute(
-                f"SELECT {columns} FROM youtube_jobs ORDER BY updated DESC,rowid DESC")]}
+            rows = db.execute("""SELECT j.*,
+                coalesce(nullif(trim(json_extract(j.metadata,'$.title')),''),
+                         nullif(trim(json_extract(r.plan,'$.titles.'||j.lang)),''),c.title) AS work_title,
+                json_extract(c.snapshot,'$.themeId') AS theme_id,
+                json_extract(c.snapshot,'$.title') AS theme_title,
+                json_extract(c.snapshot,'$.shortSource') IS NOT NULL AS is_short,
+                (SELECT count(*) FROM runs older WHERE older.case_id=j.case_id AND
+                    (older.created<r.created OR (older.created=r.created AND older.rowid<=r.rowid))) AS attempt
+                FROM youtube_jobs j LEFT JOIN cases c ON c.id=j.case_id
+                LEFT JOIN runs r ON r.id=j.run_id AND r.case_id=j.case_id
+                ORDER BY j.updated DESC,j.rowid DESC""").fetchall()
+        items = []
+        for row in rows:
+            item = public_job(row, False)
+            case, run, lang = row["case_id"], row["run_id"], row["lang"]
+            local_edition = self.ledger.folder / "cases" / case / run / lang / "video.mp4"
+            item.update(title=row["work_title"], themeId=row["theme_id"], themeTitle=row["theme_title"],
+                        format="short" if row["is_short"] else "landscape", attempt=row["attempt"] or None,
+                        thumbnail=f"/api/cases/{case}/runs/{run}/{lang}/thumbnail"
+                        if row["video_id"] and row["attempt"] and local_edition.is_file() else None)
+            items.append(item)
+        return {"items": items}
 
     def _medium(self, case_id, run, lang, name):
         path = self.ledger.media(case_id, run, language(lang), name)

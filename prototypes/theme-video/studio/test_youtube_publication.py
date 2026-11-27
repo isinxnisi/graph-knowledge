@@ -262,6 +262,17 @@ class PublicationTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             checked_session("https://unrelated.example.org/upload/youtube/v3/videos?upload_id=opaque")
 
+    def test_placement_list_labels_registered_video_and_exact_edition(self):
+        self.yt.register(self.case_id, self.run, "ja", {
+            "videoId": "abcDEF-1234", "channelId": self.google.channel_id, "confirmLanguage": True,
+        })
+        item, = self.yt.summary()["items"]
+        self.assertEqual((item["title"], item["themeTitle"], item["format"], item["attempt"]),
+                         ("観察", "題材", "landscape", 1))
+        self.assertEqual(item["thumbnail"], f"/api/cases/{self.case_id}/runs/{self.run}/ja/thumbnail")
+        self.assertTrue(item["canEmbed"])
+        self.assertNotIn("metadata", item)
+
     def test_selected_captioned_variant_resumes_same_file_across_restart(self):
         original_media = self.ledger.media
         source = original_media(self.case_id,self.run,"ja","video.mp4").with_name("captioned.mp4")

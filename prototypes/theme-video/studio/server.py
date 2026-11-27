@@ -12,7 +12,7 @@ from urllib.parse import parse_qs, urlsplit
 
 from access import CloudflareAccess
 from ledger import Ledger, ROOT, required
-from theme_media_bridge import ThemePlacement
+from theme_media_bridge import PlacementProblem, ThemePlacement
 from publication_captions import PublicationCaptions
 
 
@@ -229,6 +229,10 @@ class Handler(BaseHTTPRequestHandler):
             if match:
                 movie = ledger.case_preview(match[1])
                 return self.respond(200, movie) if movie else self.respond(404, {"error": "試写できる完成映像がありません。"})
+            match = re.fullmatch(r"/api/cases/([a-f0-9]{32})/runs/([a-f0-9]{32})/(ja|en)/thumbnail", path)
+            if match:
+                thumbnail = ledger.edition_thumbnail(*match.groups())
+                return self.file(thumbnail) if thumbnail else self.respond(404, {"error": "試写画像はありません。"})
             match = re.fullmatch(r"/api/cases/([\w-]+)/thumbnail", path)
             if match:
                 thumbnail = ledger.case_thumbnail(match[1])
@@ -341,6 +345,8 @@ class Handler(BaseHTTPRequestHandler):
             pass
         except (KeyError, FileNotFoundError):
             self.respond(404, {"error": "指定した案件またはファイルが見つかりません。"})
+        except PlacementProblem as error:
+            self.respond(503, {"error": str(error), "code": error.code})
         except (ValueError, UnicodeError) as error:
             self.respond(400, {"error": str(error)[:600]})
         except (RuntimeError, OSError) as error:

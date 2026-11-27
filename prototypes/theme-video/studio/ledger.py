@@ -924,6 +924,11 @@ class Ledger:
                 return case_library.poster(self.folder, self.folder, movie)
             return case_library.poster(self.folder, movie.parent, movie, movie.parent / "contact-sheet.png")
 
+    def edition_thumbnail(self, case_id, run, lang):
+        with self.library_file_lock:
+            movie = plain_path(self.folder, self.media(case_id, run, lang, "video.mp4"))
+            return case_library.poster(self.folder, movie.parent, movie, movie.parent / "contact-sheet.png")
+
     def case_preview(self, case_id):
         with self.library_file_lock:
             edition = self._preview_edition(case_id)

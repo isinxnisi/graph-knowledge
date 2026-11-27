@@ -395,28 +395,175 @@ function placementId() {
 function placementKey(position) {
   return position.kind === "theme" ? "theme" : JSON.stringify([position.kind, position.id, position.revision]);
 }
+function placementVideoName(entry) {
+  return trim(entry?.title || entry?.metadata?.title || entry?.caseTitle);
+}
+function placementVideoEdition(placement, entries, lang, videoId) {
+  const entry = entries.find((item) => item.lang === lang && item.videoId === videoId);
+  const observed = placement.videoStatus?.[lang + ":" + videoId]?.edition;
+  return {...observed, ...entry, videoId, lang, title: placementVideoName(entry) || placementVideoName(observed),
+    thumbnail: entry?.thumbnail || observed?.thumbnail};
+}
 function placementSlotTitle(slot, placement, entries) {
   if (slot.kind === "image") {
     const image = placement.imageCandidates.find((item) => item.id === slot.imageId);
     return image?.images.ja?.alt || image?.images.en?.alt || "テーマ画像";
   }
-  const selected = slot.editions.ja || slot.editions.en;
-  return entries.find((entry) => entry.videoId === selected?.videoId)?.metadata?.title || selected?.videoId || "新しい作品";
+  const titles = ["ja", "en"].flatMap((lang) => {
+    const edition = slot.editions[lang];
+    const title = edition && placementVideoName(placementVideoEdition(placement, entries, lang, edition.videoId));
+    return title ? [title] : [];
+  });
+  return titles[0] || (Object.keys(slot.editions).length ? "登録済みの作品" : "新しい作品");
 }
-function placementVideoSelect(parent, lang, slot, entries, changed) {
-  const current = slot.editions[lang]?.videoId || "";
-  const options = entries.filter((item) => item.lang === lang && item.canEmbed && item.videoId)
-    .map((item) => [item.videoId, (item.metadata?.title || item.videoId) + " ・ " + (youtubeLabels[item.privacy] || "")]);
-  if (current && !options.some(([id]) => id === current)) options.unshift([current, current + " ・ 現在の関連付け"]);
-  const control = publishSelect(parent, languageName[lang], lang, [["", "掲載しない"], ...new Map(options)], current);
-  control.onchange = () => {
-    if (control.value) slot.editions[lang] = {videoId: control.value};
-    else delete slot.editions[lang];
-    changed();
+function placementVideoInfo(item) {
+  const card = node("span", null, "placement-video-info");
+  const thumb = node("span", null, "placement-video-thumb");
+  const address = safeUrl(item.thumbnail);
+  if (address) {
+    const url = new URL(address);
+    if (url.origin === location.origin || url.origin === "https://i.ytimg.com") {
+      const image = node("img");
+      image.src = url.href; image.alt = ""; image.loading = "lazy"; image.decoding = "async";
+      image.referrerPolicy = "no-referrer";
+      image.addEventListener("error", () => image.remove(), {once:true});
+      thumb.append(image);
+    }
+  }
+  const title = placementVideoName(item);
+  const context = [...new Set([item.themeTitle, item.caseTitle].filter((value) => value && value !== title))];
+  const note = [item.format === "short" ? "ショート" : item.format === "landscape" ? "横長" : "",
+    item.attempt ? "試行 " + item.attempt : "", youtubeLabels[libraryVideoState(item)] || youtubeLabels[item.privacy],
+    item.source === "existing" ? "YouTubeから登録" : ""].filter(Boolean);
+  const copy = node("span", null, "placement-video-copy");
+  copy.append(node("strong", title || "登録済みの動画"));
+  if (context.length) copy.append(node("small", context.join(" ・ ")));
+  if (note.length) copy.append(node("small", note.join(" ・ ")));
+  if (!title) copy.append(node("small", item.videoId));
+  card.append(thumb, copy);
+  return card;
+}
+function openPlacementPicker(trigger, placement, lang, currentVideo, entries, choose) {
+  const title = languageName[lang] + "の掲載作品を選ぶ";
+  const dialog = node("dialog", null, "placement-picker");
+  dialog.setAttribute("aria-label", title);
+  const body = node("div", null, "placement-picker-body");
+  const header = node("header", null, "inline");
+  header.append(node("h3", title), publishingButton("閉じる", () => dialog.close(), "quiet small"));
+  const field = node("div", null, "placement-picker-search");
+  const query = publishInput(field, "作品名・テーマ名で検索", "work", "", "search");
+  const results = node("div", null, "placement-picker-results");
+  const status = node("small", null, "subtle");
+  status.setAttribute("role", "status");
+  body.append(header, field, status, results);
+  dialog.append(body);
+
+  const candidates = entries.filter((entry) => entry.lang === lang && entry.canEmbed && entry.videoId)
+    .sort((left, right) => Number(right.themeId === placement.themeId) - Number(left.themeId === placement.themeId));
+  const fold = (value) => trim(value).normalize("NFKC").toLocaleLowerCase();
+  const draw = () => {
+    const terms = fold(query.value).split(/\s+/).filter(Boolean);
+    const visible = candidates.filter((entry) => {
+      const searchText = fold([placementVideoName(entry), entry.caseTitle, entry.themeTitle, entry.videoId].join(" "));
+      return terms.every((term) => searchText.includes(term));
+    });
+    status.textContent = visible.length + "件";
+    results.replaceChildren();
+    for (const entry of visible) {
+      const button = publishingButton(null, () => {
+        choose(entry);
+        dialog.close();
+      }, "placement-picker-option");
+      button.setAttribute("aria-pressed", String(entry.videoId === currentVideo));
+      button.append(placementVideoInfo(entry));
+      results.append(button);
+    }
+    if (!visible.length) results.append(node("p", candidates.length ? "検索に一致する作品はありません。" :
+      "この言語で掲載できる作品はありません。YouTubeの公開範囲と埋め込みの許可を投稿履歴で確認できます。", "subtle"));
   };
+  query.addEventListener("input", draw);
+
+  let backdropDown = false;
+  dialog.addEventListener("pointerdown", (event) => { backdropDown = event.target === dialog; });
+  dialog.addEventListener("click", (event) => {
+    if (backdropDown && event.target === dialog) dialog.close();
+  });
+  dialog.addEventListener("close", () => {
+    dialog.remove();
+    if (trigger.isConnected) trigger.focus({preventScroll:true});
+  }, {once:true});
+  document.body.append(dialog);
+  draw();
+  dialog.showModal();
+  query.focus();
 }
-function describePlacementPreview(preview, result, environment) {
-  preview.replaceChildren(node("h2", "サイトに表示されるアイキャッチ"));
+function placementVideoField(parent, placement, lang, slot, entries, editable, changed) {
+  const box = node("section", null, "placement-video-field");
+  const header = node("div", null, "inline");
+  const selected = node("div", null, "placement-video-selected");
+  const select = publishingButton("作品を選ぶ", () => {
+    openPlacementPicker(select, placement, lang, slot.editions[lang]?.videoId, entries, (item) => {
+      if (slot.editions[lang]?.videoId === item.videoId) return;
+      if (!Object.keys(slot.editions).length && ["landscape", "short"].includes(item.format)) slot.format = item.format;
+      slot.editions[lang] = {videoId:item.videoId};
+      render();
+      changed();
+    });
+  }, "quiet small");
+  select.setAttribute("aria-haspopup", "dialog");
+  const remove = publishingButton("外す", () => {
+    delete slot.editions[lang];
+    render();
+    changed();
+  }, "quiet small danger-link");
+  remove.setAttribute("aria-label", languageName[lang] + "版を外す");
+  header.append(node("h4", languageName[lang]), select, remove);
+  box.append(header, selected);
+  parent.append(box);
+
+  function render() {
+    const current = slot.editions[lang]?.videoId;
+    select.textContent = current ? "差し替え" : "作品を選ぶ";
+    select.setAttribute("aria-label", languageName[lang] + (current ? "版を差し替え" : "の作品を選ぶ"));
+    select.hidden = !editable;
+    remove.hidden = !current;
+    if (!current) {
+      selected.replaceChildren(node("p", "掲載しない", "subtle"));
+      return;
+    }
+    const item = placementVideoEdition(placement, entries, lang, current);
+    selected.replaceChildren(placementVideoInfo(item));
+    if (/^[A-Za-z0-9_-]{11}$/.test(current)) {
+      const link = externalLink("https://www.youtube.com/watch?v=" + current, "YouTubeで確認 ↗");
+      link.className = "text-link";
+      selected.append(link);
+    }
+  }
+  render();
+}
+function localPlacementPreview(placement, slots, entries) {
+  const slides = {};
+  for (const lang of ["ja", "en"]) {
+    slides[lang] = slots.flatMap((slot) => {
+      if (slot.kind === "image") {
+        const image = placement.imageCandidates.find((item) => item.id === slot.imageId && item.eligible)?.images[lang];
+        return image ? [{...slot, image}] : [];
+      }
+      const editions = {};
+      for (const language of ["ja", "en"]) {
+        const videoId = slot.editions[language]?.videoId;
+        if (!videoId) continue;
+        const entry = placementVideoEdition(placement, entries, language, videoId);
+        editions[language] = {...entry, thumbnail: safeUrl(entry.thumbnail, true)};
+      }
+      return [{...slot, editions}];
+    });
+  }
+  return {slides};
+}
+function describePlacementPreview(preview, result, environment, local = false) {
+  preview.replaceChildren(node("h2", local ? "制作室での下書きプレビュー" : "テーマ画面での掲載プレビュー"));
+  if (local) preview.append(node("p", "掲載先でYouTubeの確認ができないため、制作室の記録から選んだ作品と並びを表示しています。サイト上での再生や掲載可否は未確認です。", "subtle"));
   let playing = null;
   for (const lang of ["ja", "en"]) {
     preview.append(node("h3", languageName[lang]));
@@ -433,21 +580,27 @@ function describePlacementPreview(preview, result, environment) {
         }
         box.append(node("p", slide.image.caption || slide.image.credit));
       } else {
-        const edition = slide.editions[lang] || slide.editions[lang === "ja" ? "en" : "ja"];
+        const actualLang = slide.editions[lang] ? lang : lang === "ja" ? "en" : "ja";
+        const edition = slide.editions[actualLang];
         if (!edition) continue;
-        box.append(node("p", edition.title), node("small", slide.format === "short" ? "縦型" : "横長"));
-        const play = publishingButton("プレイヤーを開く", () => {
-          playing?.remove();
-          const player = node("iframe");
-          player.className = slide.format === "short" ? "placement-player vertical" : "placement-player";
-          player.title = edition.title;
-          player.referrerPolicy = "strict-origin-when-cross-origin";
-          player.allowFullscreen = true;
-          player.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(edition.videoId);
-          playing = player;
-          box.append(player);
-        });
-        box.append(play,externalLink("https://www.youtube.com/watch?v=" + edition.videoId, "YouTubeで観る ↗"));
+        if (local) box.append(placementVideoInfo({...edition, format: slide.format}));
+        else {
+          box.append(node("p", edition.title), node("small", slide.format === "short" ? "ショート" : "横長", "placement-preview-meta"));
+          const play = publishingButton("プレイヤーを開く", () => {
+            playing?.remove();
+            const player = node("iframe");
+            player.className = slide.format === "short" ? "placement-player vertical" : "placement-player";
+            player.title = edition.title;
+            player.referrerPolicy = "strict-origin-when-cross-origin";
+            player.allowFullscreen = true;
+            player.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(edition.videoId);
+            playing = player;
+            box.append(player);
+          });
+          box.append(play);
+        }
+        if (actualLang !== lang) box.append(node("small", languageName[actualLang] + "版を表示", "placement-preview-meta"));
+        box.append(externalLink("https://www.youtube.com/watch?v=" + edition.videoId, "YouTubeで観る ↗"));
       }
       row.append(box);
     }
@@ -506,7 +659,9 @@ function buildPlacementEditor(editor, placement, environment, entries) {
       throw new Error("すべての掲載枠に表示場所と画像または動画を選んでください。");
     }
   };
+  let draftVersion = 0;
   const refresh = () => {
+    draftVersion++;
     preview.replaceChildren();
     saveButton.disabled = JSON.stringify(slots) === original;
   };
@@ -515,7 +670,10 @@ function buildPlacementEditor(editor, placement, environment, entries) {
     slots.forEach((slot, index) => {
       const article = node("article", null, "placement-slot");
       const head = node("div", null, "inline");
-      head.append(node("h3", (index + 1) + "　" + placementSlotTitle(slot, placement, entries)));
+      const heading = node("h3");
+      const updateTitle = () => { heading.textContent = (index + 1) + "　" + placementSlotTitle(slot, placement, entries); };
+      updateTitle();
+      head.append(heading);
       for (const [delta, label] of [[-1,"上へ"], [1,"下へ"]]) {
         const to = index + delta;
         const button = publishingButton(label, () => {
@@ -529,16 +687,13 @@ function buildPlacementEditor(editor, placement, environment, entries) {
       }, "quiet small danger-link"));
       article.append(head);
       if (slot.kind === "video") {
-        const profile = node("div", null, "model-settings");
-        placementVideoSelect(profile, "ja", slot, entries, refresh);
-        placementVideoSelect(profile, "en", slot, entries, refresh);
-        if (!current) for (const control of profile.querySelectorAll("select")) {
-          for (const item of control.options) if (item.value && item.value !== control.value) item.disabled = true;
-        }
+        const profile = node("div", null, "placement-video-fields");
         article.append(profile);
         const format = publishSelect(article, "画面の向き", "format", [["landscape", "横長"], ["short", "ショート"]], slot.format);
         format.disabled = !current;
         format.onchange = () => { slot.format = format.value; refresh(); };
+        const changed = () => { format.value = slot.format; updateTitle(); refresh(); };
+        for (const lang of ["ja", "en"]) placementVideoField(profile, placement, lang, slot, entries, current, changed);
       } else {
         const current = placement.imageCandidates.find((item) => item.id === slot.imageId);
         const image = current?.images.ja || current?.images.en;
@@ -548,7 +703,7 @@ function buildPlacementEditor(editor, placement, environment, entries) {
       positions.append(node("summary", "表示場所　" + slot.positions.length + "か所"));
       for (const {label, ...position} of placement.targets) {
         const key = placementKey(position);
-        const checkbox = publishCheck(positions, position.kind === "theme" ? "テーマTOP" : label, "position",
+        const checkbox = publishCheck(positions, position.kind === "theme" ? "テーマ画面の冒頭" : label, "position",
           slot.positions.some((value) => placementKey(value) === key));
         checkbox.disabled = !current && !checkbox.checked;
         checkbox.onchange = () => {
@@ -562,7 +717,7 @@ function buildPlacementEditor(editor, placement, environment, entries) {
     });
     if (!slots.length) changes.append(node("p", "この公開版に掲載された素材はありません。", "subtle"));
   }
-  const selector = publishSelect(forms, "このテーマの画像", "image", [["", "画像を選ぶ"],
+  const selector = publishSelect(forms, "スライドに追加する画像（任意）", "image", [["", "画像を選ぶ"],
     ...[...placement.imageCandidates].sort((left,right) => Number(right.origin === "licensed") - Number(left.origin === "licensed")).map((item) => [item.id, (item.images.ja?.alt || item.images.en?.alt || item.id) +
       (item.eligible ? "" : "（表示条件の確認が必要）")])]);
   for (const item of placement.imageCandidates.filter((entry) => !entry.eligible)) {
@@ -581,8 +736,16 @@ function buildPlacementEditor(editor, placement, environment, entries) {
   editor.insertBefore(footer, preview);
   footer.append(publishingButton("掲載プレビュー", async () => {
     check();
-    const result = await api("/api/placement/theme", changePayload("preview", placementId()));
-    describePlacementPreview(preview, result, environment);
+    const version = draftVersion;
+    try {
+      const result = await api("/api/placement/theme", changePayload("preview", placementId()));
+      if (version === draftVersion && preview.isConnected) describePlacementPreview(preview, result, environment);
+    } catch (error) {
+      if (error.code !== "VIDEO_VERIFICATION_UNAVAILABLE") throw error;
+      if (version === draftVersion && preview.isConnected) {
+        describePlacementPreview(preview, localPlacementPreview(placement, slots, entries), environment, true);
+      }
+    }
   }));
   let lastRequest = {};
   const saveButton = publishingButton("この公開版に掲載を反映", async () => {

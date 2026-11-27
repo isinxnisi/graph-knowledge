@@ -7,6 +7,12 @@ ORIGINS = {"beta": "https://graph-beta.isinxnisi.com", "production": "https://pl
 API = "/api/site-operations/theme-media"
 
 
+class PlacementProblem(RuntimeError):
+    def __init__(self, code, message):
+        super().__init__(message)
+        self.code = code
+
+
 class ThemePlacement:
     def __init__(self, ledger):
         self.ledger = ledger
@@ -38,6 +44,9 @@ class ThemePlacement:
             raise ValueError("掲載先の接続設定が必要です。制作室の管理手順を確認してください。")
         import requests
 
+        saving = command is not None and command["action"] == "save"
+        unavailable = ("掲載先が応答できません。掲載設定を読み直して保存結果を確認してください。" if saving else
+                       "掲載先の応答を確認できません。少し時間を置いて再試行してください。")
         headers = {"Authorization": "Bearer " + token, "X-Plunode-Media-Environment": env,
                    "Accept": "application/json"}
         try:
@@ -53,7 +62,7 @@ class ThemePlacement:
                     if len(body) > 2_000_000:
                         break
         except (requests.RequestException, OSError) as exc:
-            raise RuntimeError("掲載先と通信できません。もう一度表示して現在の状態を確認してください。") from exc
+            raise RuntimeError(unavailable) from exc
         try:
             if len(body) > 2_000_000:
                 raise ValueError("oversized response")
@@ -61,13 +70,20 @@ class ThemePlacement:
             if not isinstance(value, dict):
                 raise ValueError("unexpected response")
         except (ValueError, UnicodeError):
-            raise RuntimeError("掲載先の応答を読み取れません。もう一度表示して現在の状態を確認してください。") from None
+            raise RuntimeError(unavailable) from None
         if code == 409:
             raise ValueError(value.get("error") or "掲載内容が更新されました。読み直してから保存してください。")
         if 400 <= code < 500:
             raise ValueError(value.get("error") or "掲載先の公開版と動画の状態を確認してください。")
         if code >= 500:
-            raise RuntimeError("掲載先が応答できません。保存結果は再表示して確認してください。")
+            if value.get("code") == "VIDEO_VERIFICATION_UNAVAILABLE":
+                missing = value.get("error") == "サイトのYouTube照合設定を確認してください。"
+                reason = ("掲載先にYouTubeの照合設定が必要です。" if missing else
+                          "掲載先からYouTubeの状態を確認できません。")
+                if saving:
+                    reason += "掲載は反映されていません。"
+                raise PlacementProblem("VIDEO_VERIFICATION_UNAVAILABLE", reason)
+            raise RuntimeError(unavailable)
         return value
 
     def remember(self, env, theme, revision, slots):
@@ -94,7 +110,10 @@ class ThemePlacement:
             raise ValueError("掲載操作を選んでください。")
         result = self.call(env, command=command)
         if command["action"] == "save":
-            return self.read(env, command["themeId"], command["revision"])
+            try:
+                return self.read(env, command["themeId"], command["revision"])
+            except (RuntimeError, ValueError, OSError) as exc:
+                raise RuntimeError("掲載先は保存を受け付けました。掲載設定を読み直して現在の表示を確認してください。") from exc
         return result
 
     def summary(self):

@@ -55,7 +55,11 @@ async function api(path, data) {
   }
   const response = await fetch(path, options);
   const value = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(typeof value.error === "string" ? value.error : "通信に失敗しました（" + response.status + "）");
+  if (!response.ok) {
+    const error = new Error(typeof value.error === "string" ? value.error : "通信に失敗しました（" + response.status + "）");
+    if (typeof value.code === "string") error.code = value.code;
+    throw error;
+  }
   return value;
 }
 
