@@ -203,9 +203,12 @@ class Handler(BaseHTTPRequestHandler):
             if match:
                 ledger.set_idea_status(match[1], required(data, "status", 20))
                 return self.respond(200, {"ok": True})
-            match = re.fullmatch(r"/api/cases/([\w-]+)/(runs|adopt|rework|resume|pause|alternative)", path)
+            match = re.fullmatch(r"/api/cases/([\w-]+)/(runs|shorts|adopt|rework|resume|pause|alternative)", path)
             if match:
                 cid, action = match.groups()
+                if action == "shorts":
+                    from editor import list_models
+                    return self.respond(201, ledger.submit_short(cid, data, lambda: list_models(author=True)))
                 if action == "runs":
                     from editor import get_snapshot, list_models
                     return self.respond(201, ledger.submit(path, data, get_snapshot, list_models, cid,

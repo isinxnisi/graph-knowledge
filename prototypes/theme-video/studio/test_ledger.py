@@ -36,6 +36,25 @@ class LedgerTest(unittest.TestCase):
         (out / "subtitles.srt").write_text(plan["scenes"][0][lang]["narration"], encoding="utf-8")
         (out / "timings.json").write_text(json.dumps([{"id": "s1", "start": 0, "end": 1}]))
 
+    def test_derived_short_keeps_the_original_case_selection_and_can_start_with_a_draft(self):
+        source = self.create()
+        self.desk.process_next(Mock(return_value=self.plan), self.render)
+        review = {"runId": source["runId"], "lang": "ja", "reason": "元の横長を採用"}
+        self.desk.review(source["id"], review, "adopted")
+        data = {"requestId": "short-draft", "model": "test", "language": "ja",
+                "parent": source["runId"], "scriptFirst": True}
+        job = self.desk.submit_short(source["id"], data, self.models)
+        def draft(snap, brief, model, folder, lang, **kw):
+            self.assertTrue(kw["draft"])
+            self.assertEqual(kw["original_material"][0].read_bytes(), b"ja")
+            return {**self.plan, "authorDraft": {"ja": "縦型の草稿"}}
+        self.desk.process_next(None, None, produce=draft)
+        child = self.desk.case(job["id"])
+        self.assertEqual(child["runs"][0]["status"], "script_ready")
+        self.assertEqual(child["shortSource"]["runId"], source["runId"])
+        self.assertEqual(self.desk.case(source["id"])["accepted"]["ja"], source["runId"])
+        self.assertEqual(child["accepted"], {})
+
     def test_retry_and_adaptation_keep_their_own_model_and_effort(self):
         high, ultra = "gpt-6-astra", "gpt-6-astra@ultra"
         self.models = lambda: [{"id": key, "available": True} for key in (high, ultra)]

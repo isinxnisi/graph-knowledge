@@ -35,6 +35,35 @@ class DirectProductionTest(unittest.TestCase):
             with wave.open(str(self.root / report["wav"]), "rb") as wav:
                 self.assertEqual(wav.getframerate(), 24000)
 
+    @unittest.skipUnless(shutil.which("ffmpeg") and shutil.which("ffprobe"), "FFmpeg is required")
+    def test_short_from_selected_english_movie_has_its_own_case_and_delivery(self):
+        desk = Ledger(self.root)
+        catalog = lambda: [{"id": "fixture", "available": True}]
+        source = desk.reference
+        origin = source["runs"][0]
+        request = {"parent": origin["id"], "language": "en", "requestId": "short-one", "model": "fixture"}
+        job = desk.submit_short(source["id"], request, catalog)
+        self.assertEqual(desk.submit_short(source["id"], request, catalog), job)
+        self.assertNotEqual(job["id"], source["id"])
+        movie = desk.media(source["id"], origin["id"], "en", "video.mp4")
+        with self.assertRaisesRegex(ValueError, "縦9:16"):
+            production.movie_duration(movie, short=True)
+        def author(work, *_):
+            self.assertEqual((work / "original/video.mp4").read_bytes(), movie.read_bytes())
+            self.assertTrue((work / "original/subtitles.srt").is_file())
+            self.assertIn("180秒以内", (work / "BRIEF.md").read_text(encoding="utf-8"))
+            out = work / "output"
+            subprocess.run(["ffmpeg", "-v", "error", "-f", "lavfi", "-i", "color=s=90x160:d=0.5",
+                            "-c:v", "libx264", str(out / "video.mp4")], check=True)
+            (out / "subtitles.srt").write_bytes(b"")
+            return {}
+        with patch("direct_runtime.run_author", side_effect=author):
+            self.assertTrue(desk.process_next(None, None, produce=production.produce))
+        child = desk.case(job["id"])
+        self.assertEqual(child["shortSource"]["language"], "en")
+        self.assertEqual(child["runs"][0]["status"], "done", child["runs"][0]["error"])
+        self.assertTrue(desk.media(job["id"], job["runId"], "en", "video.mp4").is_file())
+
     def test_direct_job_checks_its_own_cli_catalog(self):
         desk = Ledger(self.root)
         model = "gpt-6.2-sol@ultra"

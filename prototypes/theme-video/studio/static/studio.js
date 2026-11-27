@@ -4,7 +4,7 @@ const $ = (id) => document.getElementById(id);
 const languageName = { ja: "日本語", en: "English" };
 const productionLanguage = { ja: "日本語", en: "英語", both: "日英" };
 const effortName = { low: "低", medium: "中", high: "高", xhigh: "XHigh", max: "Max", ultra: "Ultra" };
-const modelForms = ["new", "rerun", "adapt"];
+const modelForms = ["new", "rerun", "adapt", "short"];
 const authorMode = "codex-film-v1";
 const jobName = { queued: "待機中", running: "生成中", done: "完了", failed: "失敗", interrupted: "中断", needs_revision: "要改稿", needs_material: "資料待ち", script_ready: "台本確認" };
 const pending = (run) => ["queued", "running"].includes(run.status);
@@ -108,7 +108,7 @@ function renderNav() {
       if (state.detail?.id === data.id && !$("case-view").hidden) a.setAttribute("aria-current", "page");
       a.append(node("strong", data.title || data.brief));
       const status = sample ? "日英の試作映像" : "日 " + (data.states?.ja || "—") + "　/　英 " + (data.states?.en || "—");
-      a.append(node("small", [productionNumber(data), status].filter(Boolean).join("　·　")));
+      a.append(node("small", [data.shortSourceTitle && "ショート", productionNumber(data), status].filter(Boolean).join("　·　")));
       nodes.push(a);
     }
   }
@@ -125,7 +125,7 @@ function modelLabel(run) {
   return [name || "記録なし", effortName[effort] || effort].filter(Boolean).join(" ／ ");
 }
 function modelCatalog(name) {
-  return $(name + "-mode").value === authorMode ? state.authorModels : state.models;
+  return name === "short" || $(name + "-mode").value === authorMode ? state.authorModels : state.models;
 }
 function formProfiles(name) {
   return modelCatalog(name).filter((m) => m.modelId === $(name + "-model").value && m.available);
@@ -195,6 +195,8 @@ function refreshGenerationButtons() {
     if (ideas && !supportsIdeaModel(selectedProfile(name))) ideas.disabled = true;
   }
   const adapt = $("adapt-form");
+  const short = $("short-form");
+  disableSubmitButtons(short, !selectedProfile("short") || short.dataset.busy === "1");
   disableSubmitButtons(adapt, !state.adaptTarget || !selectedProfile("adapt") || adapt.dataset.busy === "1");
 }
 
@@ -282,7 +284,8 @@ async function route() {
       if (!state.chosenIdea && !state.results.length) searchThemes();
       return;
     }
-    let id = hash.startsWith("#case/") ? decodeURIComponent(hash.slice(6)) : "";
+    const [casePart, sourceRun, sourceLang] = hash.startsWith("#case/") ? hash.slice(6).split("/") : [];
+    let id = casePart ? decodeURIComponent(casePart) : "";
     if (!id) {
       await refreshCases();
       if (version !== state.routeVersion) return;
@@ -294,10 +297,15 @@ async function route() {
     if (version !== state.routeVersion) return;
     state.detail = data;
     const latest = orderedRuns()[0];
+    if (data.shortSource) state.lang = data.shortSource.language;
     if (latest?.plan?.japaneseMasterRunId && hasEdition(latest, "en")) {
       state.selected.ja = latest.plan.japaneseMasterRunId;
       state.selected.en = latest.id;
       state.lang = "en";
+    }
+    if (languageName[sourceLang] && data.runs.some((r) => r.id === sourceRun && r.editions?.[sourceLang]?.video)) {
+      state.selected[sourceLang] = sourceRun;
+      state.lang = sourceLang;
     }
     view("case"); drawCase(); schedule();
     if (chosenRun()?.status === "script_ready") openDraft(chosenRun());
@@ -352,10 +360,28 @@ function editionLabel(run, lang) {
 }
 function drawCase() {
   const data = state.detail;
-  $("case-channel").textContent = [data.reference ? "品質の見本" : "制作案件", productionNumber(data),
+  $("case-channel").textContent = [data.shortSource ? "ショート" : data.reference ? "品質の見本" : "制作案件", productionNumber(data),
     "公開第" + data.revision + "版"].filter(Boolean).join("　/　");
   $("case-title").textContent = data.title || data.brief;
   $("case-brief").textContent = data.brief === data.title ? "" : data.brief || "";
+  if (data.shortSource) {
+    const link = node("a", "元の作品「" + data.shortSource.title + "」");
+    link.href = caseHash(data.shortSource.caseId) + "/" + data.shortSource.runId + "/" + data.shortSource.language;
+    $("case-brief").append(link);
+  }
+  const mode = $("rerun-mode");
+  if (data.shortSource && mode.value !== authorMode) {
+    mode.value = authorMode;
+    renderModelForm("rerun");
+  }
+  mode.disabled = Boolean(data.shortSource);
+  const rerunLanguage = $("rerun-language");
+  let english = rerunLanguage.querySelector('option[value="en"]');
+  if (data.shortSource?.language === "en" && !english) {
+    rerunLanguage.append(option("en", "英語を制作"));
+    rerunLanguage.value = "en";
+  } else if (data.shortSource?.language !== "en" && english) english.remove();
+  $("case-view").classList.toggle("short-case", Boolean(data.shortSource));
   document.title = (data.title || "制作案件") + " | Plunode 映像制作室";
   const url = safeUrl(data.themeUrl);
   $("theme-link").hidden = !url;
@@ -407,6 +433,10 @@ function drawWatch() {
   const approved = state.detail.accepted?.[lang] === run?.id || ed?.accepted;
   $("approval-row").hidden = !ed?.video || state.detail.reference;
   $("adapt-open").hidden = $("approval-row").hidden || lang !== "ja";
+  $("short-open").hidden = !ed?.video || Boolean(state.detail.shortSource);
+  const target = $("short-form").dataset;
+  if ($("short-open").hidden || target.parent !== run?.id || target.language !== lang ||
+      target.caseId !== state.detail.id) $("short-form").hidden = true;
   if ($("adapt-open").hidden || state.adaptTarget?.parent !== run?.id) closeAdapt();
   $("adopt-toggle").hidden = Boolean(approved);
   $("rework-toggle").hidden = ed?.reviewStatus === "rework";
@@ -1189,7 +1219,7 @@ function formAction(formId, handler) {
     catch (err) { if (state.routeVersion === version) notify(err.message, true); }
     finally {
       delete form.dataset.busy;
-      if (["new-form", "rerun-form", "adapt-form"].includes(formId)) refreshGenerationButtons();
+      if (["new-form", "rerun-form", "adapt-form", "short-form"].includes(formId)) refreshGenerationButtons();
       else disableSubmitButtons(form, false);
     }
   });
@@ -1207,7 +1237,7 @@ $("theme-query").onkeydown = (e) => {
   if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); searchThemes(); }
 };
 for (const name of modelForms) {
-  $(name + "-mode").onchange = () => { renderModelForm(name); refreshGenerationButtons(); };
+  if (name !== "short") $(name + "-mode").onchange = () => { renderModelForm(name); refreshGenerationButtons(); };
   $(name + "-model").onchange = () => { renderEfforts(name); refreshGenerationButtons(); };
   $(name + "-effort").onchange = () => { renderEfforts(name); refreshGenerationButtons(); };
 }
@@ -1424,6 +1454,31 @@ formAction("rerun-form", async (version, action) => {
   if (state.routeVersion !== version) return;
   state.resumeAfter = result.runId; setRerunParent(null); $("rerun-reason").value = ""; $("rerun-panel").open = false;
   await reloadDetail(); notify(productionLanguage[payload.language] + (payload.scriptFirst ? "の台本" : "の動画") + "の生成を受け付けました。");
+});
+$("short-open").onclick = () => {
+  const run = chosenRun(), lang = state.lang;
+  const form = $("short-form");
+  Object.assign(form.dataset, {caseId: state.detail.id, parent: run.id, language: lang});
+  $("short-target").textContent = languageName[lang] + "「" + run.plan.titles[lang] + "」から別案件として制作";
+  const profile = modelCatalog("short").find((m) => m.id === run.model && m.available);
+  if (profile) {
+    $("short-model").value = profile.modelId;
+    renderEfforts("short", profile.effort);
+  }
+  form.hidden = false;
+  refreshGenerationButtons();
+  $("short-model").focus();
+};
+$("short-cancel").onclick = () => { $("short-form").hidden = true; };
+formAction("short-form", async (version, action) => {
+  const {caseId, parent, language} = $("short-form").dataset;
+  const model = selectedProfile("short");
+  if (!model || caseId !== state.detail?.id || parent !== chosenRun()?.id || language !== state.lang) return;
+  const result = await submitRun("short." + caseId, detailPath("/shorts"), {
+    parent, language, model: model.id, scriptFirst: action === "script"
+  });
+  await refreshCases();
+  if (version === state.routeVersion) location.hash = caseHash(result.id);
 });
 $("adapt-open").onclick = () => {
   const run = chosenRun();

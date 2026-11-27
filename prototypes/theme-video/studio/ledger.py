@@ -343,7 +343,32 @@ class Ledger:
                 raise ValueError("制作に使った案です。紐づいた案件を開いてください。")
             db.execute("UPDATE ideas SET status=? WHERE id=?", (status, idea_id))
 
-    def submit(self, route, data, snapshot_fn, models_fn, case_id=None, *, author_models_fn=None):
+    def submit_short(self, case_id, data, models_fn):
+        lang = required(data, "language", 8)
+        run = required(data, "parent", 100)
+        movie = self.media(case_id, run, lang, "video.mp4")
+        if not movie.is_file() or not movie.stat().st_size:
+            raise ValueError("ショートの元にする完成映像を選んでください。")
+        if case_id == REFERENCE:
+            case = self.reference
+            plan = case["runs"][0]["plan"]
+            snapshot = {"themeId": case["themeId"], "revision": case["revision"], "title": case["themeTitle"],
+                        "url": case["themeUrl"], "sources": plan["sources"], "records": []}
+        else:
+            with self.db() as db:
+                row = db.execute("""SELECT r.plan,c.snapshot FROM runs r JOIN cases c ON c.id=r.case_id
+                                    WHERE r.id=? AND c.id=?""", (run, case_id)).fetchone()
+            snapshot, plan = json.loads(row["snapshot"]), json.loads(row["plan"])
+            if snapshot.get("shortSource"):
+                raise ValueError("元の横長作品を選んでください。")
+            snapshot["sources"] = list({s["id"]: s for s in [*snapshot.get("sources", []), *plan.get("sources", [])]}.values())
+        snapshot["shortSource"] = {"caseId": case_id, "runId": run, "language": lang,
+                                   "title": plan["titles"][lang]}
+        request = {k: data[k] for k in ("requestId", "model", "scriptFirst") if k in data}
+        request.update(themeId=snapshot["themeId"], revision=snapshot["revision"], language=lang)
+        return self.submit(f"/shorts/{case_id}/{run}", request, lambda *_: snapshot, models_fn, from_video=True)
+
+    def submit(self, route, data, snapshot_fn, models_fn, case_id=None, *, author_models_fn=None, from_video=False):
         if case_id == REFERENCE:
             raise ValueError("品質見本は閲覧専用です。")
         key = required(data, "requestId", 128)
@@ -367,7 +392,7 @@ class Ledger:
             raise ValueError("制作する言語と場面の修正を分けて指定してください。")
         if parent is not None and not isinstance(parent, str):
             raise ValueError("元の試行を選んでください。")
-        if language == "en" and not (case_id and parent):
+        if language == "en" and not (from_video or (case_id and parent)):
             raise ValueError("英語版の元にする日本語の映像を選んでください。")
         script_first = data.get("scriptFirst", False)
         if type(script_first) is not bool:
@@ -408,6 +433,7 @@ class Ledger:
             if not case_id:
                 if idea_id:
                     snapshot, brief, initial_case = idea_store.production_input(db, idea_id)
+                    snapshot.pop("shortSource", None)
                     if (snapshot["themeId"], snapshot["revision"]) != (theme, revision):
                         raise ValueError("動画案を保存したテーマと公開版を選んでください。")
                     if initial_case and not new_idea_case:
@@ -421,8 +447,13 @@ class Ledger:
                            (case_id, snapshot["title"], brief.strip(), packed(snapshot), now))
                 if idea_id:
                     idea_store.link_case(db, idea_id, case_id)
-            elif not db.execute("SELECT 1 FROM cases WHERE id=?", (case_id,)).fetchone():
-                raise KeyError(case_id)
+            else:
+                case = db.execute("SELECT json_extract(snapshot,'$.shortSource.language') FROM cases WHERE id=?",
+                                  (case_id,)).fetchone()
+                if not case:
+                    raise KeyError(case_id)
+                if case[0] and production_mode != CODEX_FILM:
+                    raise ValueError("ショートはCodexへの直接依頼で制作します。")
             plan = None
             previous_japanese = None
             editorial_origin = None
@@ -453,7 +484,7 @@ class Ledger:
                         previous_japanese["direction"] = [{k: s[k] for k in (
                             "id", "picture", "medium", "sourceIds", "leadSeconds", "tailSeconds", "silentSeconds", "labels") if k in s}
                             for s in original["scenes"]]
-                if language == "en":
+                if language == "en" and not (case[0] == "en" and "en" in json.loads(row["langs"])):
                     video = self.folder / "cases" / case_id / parent / "ja" / "video.mp4"
                     if not row["plan"] or "ja" not in editions or not video.is_file() or not video.stat().st_size:
                         raise ValueError("英語版の元にする、再生できる日本語の映像を選んでください。")
@@ -716,9 +747,13 @@ class Ledger:
         title = next((r["plan"]["titles"]["ja"] for r in reversed(history)
                       if (r["plan"] or {}).get("titles", {}).get("ja") and not r["chosenAlternative"]),
                      row["idea_title"] or row["title"])
+        if snap.get("shortSource"):
+            audio = snap["shortSource"]["language"]
+            title = next((r["plan"]["titles"][audio] for r in reversed(history)
+                          if (r["plan"] or {}).get("titles", {}).get(audio)), snap["shortSource"]["title"])
         for lang in LANGS:
             states.setdefault(lang, "未生成")
-        return dict(id=case_id, title=title, themeTitle=snap["title"], brief=row["brief"], themeId=snap["themeId"],
+        return dict(id=case_id, title=title, shortSource=snap.get("shortSource"), themeTitle=snap["title"], brief=row["brief"], themeId=snap["themeId"],
                     revision=snap["revision"], ideaId=row["idea_id"], ideaCaseNumber=row["number"], ideaCaseCount=row["total"],
                     themeUrl=theme_url(snap["themeId"], snap["revision"]), updated=row["updated"], reference=False,
                     states=states, accepted=accepted, reviews=[dict(s) for s in reviews], runs=history)
@@ -727,10 +762,12 @@ class Ledger:
         with self.db() as db:
             db.execute("BEGIN")
             rows = db.execute("""SELECT c.id,c.brief,c.updated,
+                json_extract(c.snapshot,'$.shortSource.title') shortSourceTitle,
                 json_extract(c.snapshot,'$.themeId') themeId,json_extract(c.snapshot,'$.revision') revision,
-                c.title themeTitle,coalesce((SELECT json_extract(r.plan,'$.titles.ja') FROM runs r
+                c.title themeTitle,coalesce((SELECT json_extract(r.plan,'$.titles.' || coalesce(
+                    json_extract(c.snapshot,'$.shortSource.language'),'ja')) FROM runs r
                 WHERE r.case_id=c.id AND r.plan IS NOT NULL AND r.editorial_origin IS NULL
-                ORDER BY r.created,r.rowid LIMIT 1),m.idea_title,c.title) title,
+                ORDER BY r.created,r.rowid LIMIT 1),json_extract(c.snapshot,'$.shortSource.title'),m.idea_title,c.title) title,
                 m.idea_id ideaId,m.number ideaCaseNumber,m.total ideaCaseCount FROM cases c
                 LEFT JOIN idea_case_members m ON m.case_id=c.id ORDER BY c.updated DESC,c.rowid DESC""").fetchall()
             items = {r["id"]: {**dict(r), "reference": False, "states": {}, "accepted": {}} for r in rows}
@@ -800,9 +837,24 @@ class Ledger:
             source_folder, source_plan = parent_folder, parent_plan
             if lang == "en" and "ja" in langs:
                 source_folder, source_plan = folder, plan
+            extra = {}
+            original = snap.get("shortSource")
+            if original:
+                cid, rid, audio = original["caseId"], original["runId"], original["language"]
+                movie = self.media(cid, rid, audio, "video.mp4")
+                subtitles = self.media(cid, rid, audio, "subtitles.srt")
+                if cid == REFERENCE:
+                    source_script = self.reference["runs"][0]["plan"]
+                    project = PILOT / "figures"
+                else:
+                    with self.db() as db:
+                        source_script = json.loads(db.execute("SELECT plan FROM runs WHERE id=? AND case_id=?",
+                                                              (rid, cid)).fetchone()[0])
+                    project = movie.parent.parent / "author" / audio / "project"
+                extra["original_material"] = (movie, subtitles, source_script, project)
             plan = produce(snap, brief, row["model"], folder, lang, draft=draft, plan=plan,
-                           parent_folder=source_folder, parent_plan=source_plan, progress=progress)
-            if langs == ["en"] and not plan.get("japaneseMasterRunId"):
+                           parent_folder=source_folder, parent_plan=source_plan, progress=progress, **extra)
+            if langs == ["en"] and not plan.get("japaneseMasterRunId") and not (original and original["language"] == "en"):
                 plan["japaneseMasterRunId"] = (parent_plan or {}).get("japaneseMasterRunId") or row["parent"]
             if draft:
                 if not (plan or {}).get("authorDraft", {}).get(lang):

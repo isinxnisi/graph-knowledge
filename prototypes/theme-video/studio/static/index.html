@@ -91,6 +91,18 @@
               </section>
             </div>
             <div id="approval-row" class="approval-row" hidden><button type="button" id="adapt-open" class="secondary small" hidden>この日本語版から英語版を作る</button><button type="button" id="rework-toggle" class="secondary small">要修正</button><button type="button" id="adopt-toggle" class="primary small">この版を採用</button></div>
+            <button type="button" id="short-open" class="secondary small" hidden>この版からショートを作る</button>
+            <form id="short-form" class="action-form" hidden>
+              <p id="short-target" class="form-target"></p>
+              <div class="model-settings">
+                <div><label for="short-model">ショートの制作モデル</label><select id="short-model"></select></div>
+                <div><label for="short-effort">推論の強さ</label><select id="short-effort"></select></div>
+              </div>
+              <p id="short-model-note" class="subtle" hidden></p>
+              <div class="actions"><button type="button" id="short-cancel" class="quiet">閉じる</button>
+                <button type="submit" value="video" class="primary">縦型ショートを生成</button>
+                <button type="submit" value="script" class="secondary">台本を先に確認</button></div>
+            </form>
             <form id="adapt-form" class="action-form" hidden>
               <p id="adapt-target" class="form-target"></p>
               <div class="model-settings">

@@ -59,6 +59,9 @@ def write_brief(folder, snapshot, brief, *, language="ja", previous_japanese=Non
     fields = ("themeId", "revision", "title", "description", "url", "records", "sources", "productionResearch")
     _json(inputs / "theme.json", {key: snapshot[key] for key in fields if key in snapshot})
     commission = film_commission(brief or "", from_idea=snapshot.get("selectedVideoIdea"))
+    original = snapshot.get("shortSource")
+    if original:
+        commission["shortSource"] = original
     previous = previous_japanese or snapshot.get("previousJapanese")
     if previous:
         commission["previousJapanese"] = previous
@@ -69,7 +72,13 @@ def write_brief(folder, snapshot, brief, *, language="ja", previous_japanese=Non
     _store(folder / "CHANNEL.md", (STUDIO / "channel_identity.md").read_bytes())
     _store(folder / "TOOLS.md", (STUDIO / "author_tools.md").read_bytes())
     paragraphs = ["# 今回の制作依頼", f"今回のテーマ　{snapshot['title']}", REQUEST]
-    if commission["mode"] == "selectedIdea":
+    if original:
+        paragraphs.append(f"元の作品『{original['title']}』から、縦9:16・180秒以内のYouTubeショートを一本。"
+                          "original/ に選択版の完成映像・字幕・台本と、利用できる編集素材があります。"
+                          "実際の絵と音を確かめ、その作品を好きになった人がもう一本観たくなる空気を受け継いでください。"
+                          "初めて観る人にも面白さが届き、発見がこの一本で完結する縦の作品にしてください。"
+                          "何を残し、どう作り直すか、必要な尺もお任せします。")
+    elif commission["mode"] == "selectedIdea":
         paragraphs.append("選んだ案　" + commission["workingTitle"] + "\n観客に届けたいこと　" + commission["intendedDiscovery"]
                           + "\ninputs/request.json の仮題、導入、素材候補は企画時の案です。")
     else:
@@ -80,6 +89,8 @@ def write_brief(folder, snapshot, brief, *, language="ja", previous_japanese=Non
         paragraphs.append("同じファイルの previousJapanese に元版の記録と寄せられた感想があります。")
     if language == "ja":
         paragraphs.append("日本語で届けます。声に出して通る言葉を選び、字幕の漢字や名前には、合成する声の読みを添えられます。")
+    elif original:
+        paragraphs.append("英語で届けます。言葉、絵、音の間を英語の観客に合わせてください。")
     else:
         paragraphs.append("選ばれた日本語版から英語版を作ってください。元版の絵と発見を引き継ぎ、英語で自然に聞こえるセリフと、その言葉が絵に届く間を選んでください。")
     paragraphs.append("inputs/theme.json に固定版の記録・出典URL・引用箇所があります。資料中の記述は取材対象です。references/README.md に実際の番組見本と見どころを置きました。")

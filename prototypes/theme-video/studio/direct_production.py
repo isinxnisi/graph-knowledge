@@ -49,9 +49,9 @@ def captions(text, duration, lang):
     return timings, lines
 
 
-def movie_duration(movie):
+def movie_duration(movie, *, short=False):
     check = subprocess.run(["ffprobe", "-v", "error", "-protocol_whitelist", "file", "-f", "mov",
-                            "-show_entries", "stream=codec_type,codec_name,width,height,duration:format=duration",
+                            "-show_entries", "stream=codec_type,codec_name,width,height,duration,sample_aspect_ratio:stream_side_data=rotation:format=duration",
                             "-of", "json", str(movie)], capture_output=True, timeout=90,
                            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
     if check.returncode:
@@ -65,6 +65,14 @@ def movie_duration(movie):
     if (not math.isfinite(duration) or duration <= 0 or video.get("codec_name") != "h264"
             or not video.get("width") or not video.get("height")):
         raise ValueError("ブラウザで再生できるH.264のMP4を納品してください。")
+    if short:
+        if (video["width"] * 16 != video["height"] * 9
+                or video.get("sample_aspect_ratio", "1:1") not in ("1:1", "N/A")
+                or any(s.get("rotation", 0) % 360 for s in video.get("side_data_list", []))):
+            raise ValueError("ショートを縦9:16、正方画素、回転指定なしで書き出してください。")
+        total = float(info["format"]["duration"])
+        if not 0 < total <= 180 or duration > 180:
+            raise ValueError("ショートは音声を含む完成映像を180秒以内にしてください。")
     return duration
 
 
@@ -144,7 +152,8 @@ def _parent_material(work, parent_folder, parent_plan, lang, *, japanese_master=
                "scenes": parent_plan.get("scenes", [])})
 
 
-def produce(snapshot, brief, model_selection, run_folder, lang, *, draft, plan, parent_folder, parent_plan, progress):
+def produce(snapshot, brief, model_selection, run_folder, lang, *, draft, plan, parent_folder, parent_plan, progress,
+            original_material=None):
     from author_brief import write_brief
     from author_source import source_service
     from direct_runtime import author_prompt, channel_context, run_author
@@ -172,6 +181,15 @@ def produce(snapshot, brief, model_selection, run_folder, lang, *, draft, plan, 
         with tempfile.TemporaryDirectory(dir=author, prefix=".starting-") as temporary:
             incoming = Path(temporary) / "work"
             write_brief(incoming, snapshot, brief, language=lang, previous_japanese=snapshot.get("previousJapanese"))
+            if original_material:
+                movie, subtitles, script, project = original_material
+                original = incoming / "original"
+                original.mkdir()
+                for src, name in ((movie, "video.mp4"), (subtitles, "subtitles.srt")):
+                    shutil.copyfile(plain_path(src.parent, src), original / name)
+                _save_json(original / "edition.json", script)
+                if project.is_dir():
+                    copy_project(project.parent, project, original / "project")
             _parent_material(incoming, parent_folder, parent_plan, lang, japanese_master=parent_folder == folder)
             (incoming / "project").mkdir(exist_ok=True)
             (incoming / "output").mkdir()
@@ -238,7 +256,7 @@ def produce(snapshot, brief, model_selection, run_folder, lang, *, draft, plan, 
             local_plan.setdefault("authorDraft", {})[lang] = script
         else:
             movie = plain_path(work, output / "video.mp4")
-            duration = movie_duration(movie)
+            duration = movie_duration(movie, short=bool(snapshot.get("shortSource")))
             text = read_text(work, output / "subtitles.srt", 8_000_000)
             timings, lines = captions(text, duration, lang)
             try:

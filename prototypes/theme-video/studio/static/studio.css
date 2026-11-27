@@ -86,6 +86,7 @@ h1 { font: 650 clamp(26px, 2.5vw, 42px)/1.45 "Yu Mincho", YuMincho, "Hiragino Mi
 .screen { position: relative; background: #1e282b; display: grid; place-items: center; }
 .screen video { display: block; width: 100%; aspect-ratio: 16/9; background: #1e282b; }
 .screen video:not([src]) { visibility: hidden; }
+.short-case .screen video { width: auto; max-width: 100%; height: min(65vh, 640px); aspect-ratio: 9/16; }
 #empty-video { position: absolute; padding: 20px; color: #d5dbd7; text-align: center; }
 .screen.script-preview { min-height: 64px; background: #f0f2eb; }
 .screen.script-preview video { display: none; }
