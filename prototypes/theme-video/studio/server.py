@@ -225,6 +225,10 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/cases":
                 trashed = parse_qs(url.query).get("trash") == ["1"]
                 return self.respond(200, {"items": ledger.list_cases(trashed=trashed)})
+            match = re.fullmatch(r"/api/cases/([\w-]+)/preview", path)
+            if match:
+                movie = ledger.case_preview(match[1])
+                return self.respond(200, movie) if movie else self.respond(404, {"error": "試写できる完成映像がありません。"})
             match = re.fullmatch(r"/api/cases/([\w-]+)/thumbnail", path)
             if match:
                 thumbnail = ledger.case_thumbnail(match[1])

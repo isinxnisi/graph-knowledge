@@ -1,6 +1,8 @@
 "use strict";
 
 const productionLibrary = { cases: [], youtube: [], placements: [], trash: false, scroll: {library: 0, trash: 0} };
+let libraryPreview = null;
+
 const youtubeLabels = {
   queued: "送信待ち", uploading: "送信中", processing: "処理中", unknown: "結果確認待ち", uncertain: "結果確認待ち",
   attention: "要対応", failed: "要対応", rejected: "要対応", missing: "YouTubeで削除", private: "非公開", unlisted: "限定公開", public: "公開",
@@ -23,6 +25,36 @@ function libraryStatuses(caseId, collection, type) {
   }
   return content;
 }
+function generationTimeLabel(timing) {
+  if (!timing || !Number.isFinite(timing.seconds) || timing.seconds <= 0) return "";
+  const minutes = Math.max(1, Math.round(timing.seconds / 60));
+  const duration = timing.seconds < 60
+    ? Math.max(1, Math.round(timing.seconds / 5) * 5) + "秒"
+    : minutes >= 60
+      ? Math.floor(minutes / 60) + "時間" + (minutes % 60 ? minutes % 60 + "分" : "")
+      : minutes + "分";
+  return (timing.estimated ? "受付から完成まで" : "生成に") + " 約" + duration;
+}
+
+function libraryModels(entries) {
+  const content = document.createDocumentFragment();
+  const versions = ["ja", "en"]
+    .filter((language) => entries?.[language]?.model)
+    .map((language) => ({language, label: modelLabel(entries[language]), time: generationTimeLabel(entries[language].timing)}));
+  if (!versions.length) {
+    content.append(node("span", "—"));
+    return content;
+  }
+  const [ja, en] = versions;
+  const same = en && ja.label === en.label && ja.time === en.time;
+  for (const version of same ? [ja] : versions) {
+    const name = node("span", (en && !same ? (version.language === "ja" ? "日 " : "英 ") : "") + version.label, "library-status");
+    if (version.time) name.append(node("small", version.time, "library-time"));
+    content.append(name);
+  }
+  return content;
+}
+
 function libraryCell(row, name) {
   const cell = row.insertCell();
   cell.dataset.label = name;
@@ -46,40 +78,66 @@ function drawProductionLibrary() {
     if (publication === "pending") return posted.some((job) => ["queued", "uploading", "processing", "unknown", "uncertain"].includes(job.status));
     return !publication || posted.some((job) => libraryVideoState(job) === publication);
   }).sort((left, right) => {
-    if (sort === "rating" && left.rating !== right.rating) return (right.rating || 0) - (left.rating || 0);
-    if (sort === "theme") return left.themeTitle.localeCompare(right.themeTitle, "ja");
-    return millis(right.updated) - millis(left.updated);
+    let order = 0;
+    if (sort === "rating") order = (right.rating || 0) - (left.rating || 0);
+    if (sort === "theme") order = left.themeTitle.localeCompare(right.themeTitle, "ja");
+    if (sort === "updated") order = millis(right.updated) - millis(left.updated);
+    return order || millis(right.created) - millis(left.created);
   });
+  const dateLabel = sort === "updated" ? "更新" : "作成";
+  $("library-date-heading").textContent = dateLabel;
   $("library-count").textContent = visible.length + "件 / " + cases.length + "件";
   rows.replaceChildren();
   if (!visible.length) {
     const cell = rows.insertRow().insertCell();
-    cell.colSpan = 5;
+    cell.colSpan = 6;
     cell.className = "library-empty";
     cell.textContent = "該当する案件はありません。";
     return;
   }
   for (const item of visible) {
     const row = rows.insertRow();
-    const preview = node("a", null, "library-work");
-    preview.href = caseHash(item.id);
-    preview.onclick = () => { productionLibrary.scroll[libraryViewName()] = window.scrollY; };
-    const frame = node("span", null, "library-thumb");
+    const work = node("div", null, "library-work");
     const url = safeUrl(item.thumbnail, true);
+    const frame = node(url ? "button" : "span", null, "library-thumb");
+    if (url) {
+      frame.type = "button";
+      frame.setAttribute("aria-label", "「" + item.title + "」を拡大試写");
+      frame.setAttribute("aria-haspopup", "dialog");
+      frame.dataset.previewCase = item.id;
+      frame.onclick = () => openLibraryPreview(item);
+      const mark = node("span", "▶", "library-thumb-play");
+      mark.setAttribute("aria-hidden", "true");
+      frame.append(mark);
+    }
     if (url) {
       const img = node("img");
       img.alt = ""; img.src = url; img.loading = "lazy"; img.decoding = "async";
       img.onerror = () => img.remove();
       frame.append(img);
     }
-    const text = node("span", null, "library-work-text");
-    text.append(node("strong", item.title), node("small", item.themeTitle + (item.shortSourceTitle ? " · ショート" : " · 横長")));
-    preview.append(frame, text);
-    libraryCell(row, "").append(preview);
+    const text = node("div", null, "library-work-text");
+    const titleRow = node("div", null, "library-work-title");
+    const title = node("a", item.title);
+    title.href = caseHash(item.id);
+    title.onclick = () => { productionLibrary.scroll[libraryViewName()] = window.scrollY; };
+    titleRow.append(title);
+    const generating = item.activeRuns?.filter((run) => run.status === "running" && !run.scriptFirst);
+    if (generating?.length) {
+      const badge = node("span", "生成中", "library-generating");
+      badge.title = generating.map((run) => run.progress).filter(Boolean).join(" ／ ") || "動画を生成しています";
+      titleRow.append(badge);
+    }
+    text.append(titleRow, node("small", item.themeTitle + (item.shortSourceTitle ? " · ショート" : " · 横長")));
+    work.append(frame, text);
+    libraryCell(row, "").append(work);
+    const model = libraryCell(row, "モデル・生成時間");
+    model.className = "library-model-cell";
+    model.append(libraryModels(item.models));
     libraryCell(row, "評価").append(node("span", item.rating ? "★ " + item.rating : "—", "library-score"));
     libraryCell(row, "YouTube").append(libraryStatuses(item.id, youtube, "YouTube"));
     libraryCell(row, "テーマ掲載").append(libraryStatuses(item.id, placements, "テーマ掲載"));
-    libraryCell(row, "更新").textContent = when(item.trashedAt || item.updated);
+    libraryCell(row, dateLabel).textContent = when(sort === "updated" ? item.updated : item.created);
   }
 }
 async function openProductionLibrary(trash, version) {
@@ -127,16 +185,7 @@ function drawCaseOrganization(data) {
   const trashed = Boolean(data.trashedAt), stars = $("case-rating");
   $("case-library-back").href = trashed ? "#trash" : "#library";
   $("case-library-back").textContent = trashed ? "ゴミ箱へ戻る" : "制作一覧へ";
-  stars.replaceChildren();
-  for (let value = 1; value <= 5; value++) {
-    const star = node("button", value <= data.rating ? "★" : "☆", "rating-star");
-    star.type = "button";
-    star.setAttribute("aria-label", value + "つ星");
-    star.setAttribute("aria-pressed", String(value === data.rating));
-    star.disabled = trashed;
-    star.onclick = () => editLibraryItem(data, {rating: value === data.rating ? null : value});
-    stars.append(star);
-  }
+  drawProductionStars(stars, data.rating, trashed, (rating) => editLibraryItem(data, {rating}));
   $("case-trash-action").textContent = trashed ? "復元する" : "ゴミ箱へ";
   $("case-trash-action").hidden = data.purgeState === "purging";
   $("case-trash-action").onclick = () => editLibraryItem(data, {action: trashed ? "restore" : "trash"});
@@ -154,3 +203,107 @@ function drawCaseOrganization(data) {
 }
 document.getElementById("library-filter").addEventListener("input", drawProductionLibrary);
 document.getElementById("library-filter").addEventListener("submit", (event) => event.preventDefault());
+
+
+function drawProductionStars(container, rating, disabled, save) {
+  container.replaceChildren();
+  for (let value = 1; value <= 7; value++) {
+    const star = node("button", value <= rating ? "★" : "☆", "rating-star");
+    star.type = "button";
+    star.setAttribute("aria-label", value + "つ星");
+    star.setAttribute("aria-pressed", String(value === rating));
+    star.dataset.rating = String(value);
+    star.disabled = Boolean(disabled);
+    star.onclick = () => save(value === rating ? null : value, value);
+    container.append(star);
+  }
+}
+
+function closeLibraryPreview() {
+  if ($("library-preview").open) $("library-preview").close();
+}
+
+function previewStars(open, disabled = false) {
+  drawProductionStars($("library-preview-rating"), open.item.rating, disabled || open.item.trashedAt, async (rating, key) => {
+    if (open.saving || libraryPreview !== open) return;
+    open.saving = true;
+    const feedback = $("library-preview-feedback");
+    previewStars(open, true);
+    try {
+      const result = await api("/api/cases/" + encodeURIComponent(open.item.id) + "/library", {rating});
+      open.item.rating = result.rating;
+      const listed = productionLibrary.cases.find((item) => item.id === open.item.id);
+      if (listed) listed.rating = result.rating;
+      if (state.routeVersion === open.version && !$("library-view").hidden) drawProductionLibrary();
+      if (libraryPreview === open) feedback.textContent = "評価を保存しました。";
+    } catch (error) {
+      if (libraryPreview === open) feedback.textContent = error.message;
+    } finally {
+      open.saving = false;
+      if (libraryPreview === open) {
+        previewStars(open);
+        $("library-preview-rating").querySelector('[data-rating="' + key + '"]')?.focus();
+      }
+    }
+  });
+}
+
+async function openLibraryPreview(item) {
+  const dialog = $("library-preview"), video = $("library-preview-video"), status = $("library-preview-status");
+  if (dialog.open) return;
+  const open = {item, version: state.routeVersion, saving: false};
+  libraryPreview = open;
+  $("library-preview-title").textContent = item.title;
+  $("library-preview-time").hidden = true;
+  $("library-preview-feedback").textContent = "";
+  $("library-preview-case").href = caseHash(item.id);
+  status.textContent = "読み込み中…";
+  video.hidden = true;
+  dialog.classList.toggle("vertical", Boolean(item.shortSourceTitle));
+  previewStars(open);
+  dialog.showModal();
+  try {
+    const movie = await api("/api/cases/" + encodeURIComponent(item.id) + "/preview");
+    if (libraryPreview !== open || !dialog.open) return;
+    const videoUrl = safeUrl(movie.video, true);
+    if (!videoUrl) throw new Error("試写できる完成映像がありません。");
+    $("library-preview-title").textContent = (movie.title || item.title) + " ・ " + languageName[movie.language];
+    const duration = generationTimeLabel(movie.timing);
+    $("library-preview-time").textContent = duration;
+    $("library-preview-time").hidden = !duration;
+    $("library-preview-case").href = caseHash(item.id) + "/" + encodeURIComponent(movie.runId) + "/" + encodeURIComponent(movie.language);
+    status.textContent = "";
+    video.hidden = false;
+    setPlayer(video, videoUrl);
+    video.play().catch(() => {});
+  } catch (error) {
+    if (libraryPreview === open) status.textContent = error.message;
+  }
+}
+
+const libraryDialog = document.getElementById("library-preview");
+let libraryBackdropDown = false;
+libraryDialog.addEventListener("pointerdown", (event) => { libraryBackdropDown = event.target === libraryDialog; });
+libraryDialog.addEventListener("click", (event) => {
+  if (libraryBackdropDown && event.target === libraryDialog) closeLibraryPreview();
+});
+libraryDialog.addEventListener("close", () => {
+  if (libraryDialog.open) return;
+  const open = libraryPreview;
+  libraryPreview = null;
+  libraryBackdropDown = false;
+  clearPlayer($("library-preview-video"));
+  if (open?.version === state.routeVersion && !$("library-view").hidden) {
+    [...$("library-rows").querySelectorAll("[data-preview-case]")]
+      .find((button) => button.dataset.previewCase === open.item.id)?.focus({preventScroll: true});
+  }
+});
+document.getElementById("library-preview-close").addEventListener("click", closeLibraryPreview);
+document.getElementById("library-preview-case").addEventListener("click", closeLibraryPreview);
+document.getElementById("library-refresh").addEventListener("click", async function () {
+  this.disabled = true;
+  productionLibrary.scroll[libraryViewName()] = window.scrollY;
+  try { await openProductionLibrary(productionLibrary.trash, state.routeVersion); }
+  catch (error) { notify(error.message, true); }
+  finally { this.disabled = false; }
+});

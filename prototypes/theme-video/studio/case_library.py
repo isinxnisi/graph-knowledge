@@ -15,8 +15,21 @@ from author_files import plain_path
 
 def migrate(db):
     columns = {r["name"] for r in db.execute("PRAGMA table_info(cases)")}
-    if "rating" not in columns:
-        db.execute("ALTER TABLE cases ADD COLUMN rating INTEGER CHECK (rating BETWEEN 1 AND 5)")
+    if "created" not in columns:
+        # The five-star schema predates the stored case creation time. Keep case
+        # rowids (also used for pitch numbering) and all foreign keys in place.
+        if "rating" in columns:
+            db.execute("ALTER TABLE cases RENAME COLUMN rating TO five_star_rating")
+        db.execute("ALTER TABLE cases ADD COLUMN rating INTEGER CHECK (rating BETWEEN 1 AND 7)")
+        if "rating" in columns:
+            db.execute("UPDATE cases SET rating=five_star_rating WHERE five_star_rating IS NOT NULL")
+            db.execute("ALTER TABLE cases DROP COLUMN five_star_rating")
+        db.execute("ALTER TABLE cases ADD COLUMN created TEXT")
+        db.execute("""UPDATE cases SET created=coalesce(
+                      (SELECT min(r.created) FROM runs r WHERE r.case_id=cases.id),updated)""")
+        # Legacy imports may still use the original INSERT column list.
+        db.execute("""CREATE TRIGGER cases_created_on_insert AFTER INSERT ON cases WHEN NEW.created IS NULL
+                      BEGIN UPDATE cases SET created=NEW.updated WHERE rowid=NEW.rowid; END""")
     if "trashed_at" not in columns:
         db.execute("ALTER TABLE cases ADD COLUMN trashed_at TEXT")
     if "purge_state" not in columns:
@@ -142,11 +155,11 @@ def update(desk, case_id, data, now):
         item = state(db, case_id)
         if set(data) == {"rating"}:
             rating = data["rating"]
-            if rating is not None and (type(rating) is not int or not 0 <= rating <= 5):
-                raise ValueError("評価は1〜5、または未評価を選んでください。")
+            if rating is not None and (type(rating) is not int or not 0 <= rating <= 7):
+                raise ValueError("評価は1〜7、または未評価を選んでください。")
             require_active(db, case_id)
-            db.execute("UPDATE cases SET rating=?,updated=? WHERE id=? AND rating IS NOT ?",
-                       (rating or None, now, case_id, rating or None))
+            db.execute("UPDATE cases SET rating=? WHERE id=? AND rating IS NOT ?",
+                       (rating or None, case_id, rating or None))
         elif action == "purge" and set(data) == {"action", "confirm"} and data["confirm"] is True:
             if not item["trashedAt"]:
                 raise ValueError("ゴミ箱に移した案件だけ完全削除できます。")

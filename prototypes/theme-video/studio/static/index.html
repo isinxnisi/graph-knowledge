@@ -35,14 +35,14 @@
         <form id="library-filter" role="search" class="library-filters">
           <label>作品・テーマ<input id="library-query" type="search" placeholder="作品名またはテーマ名"></label>
           <label>形式<select id="library-format"><option value="">すべて</option><option value="landscape">横長</option><option value="short">ショート</option></select></label>
-          <label>完成版<select id="library-lang"><option value="">すべて</option><option value="ja">日本語あり</option><option value="en">英語あり</option><option value="both">日英両方</option><option value="none">制作中</option></select></label>
-          <label>評価<select id="library-rating"><option value="">すべて</option><option value="0">未評価</option><option value="5">★5</option><option value="4">★4</option><option value="3">★3</option><option value="2">★2</option><option value="1">★1</option></select></label>
+          <label>完成版<select id="library-lang"><option value="">すべて</option><option value="ja">日本語あり</option><option value="en">英語あり</option><option value="both">日英両方</option><option value="none">完成版なし</option></select></label>
+          <label>評価<select id="library-rating"><option value="">すべて</option><option value="0">未評価</option><option value="7">★7</option><option value="6">★6</option><option value="5">★5</option><option value="4">★4</option><option value="3">★3</option><option value="2">★2</option><option value="1">★1</option></select></label>
           <label>配信・掲載<select id="library-publication"><option value="">すべて</option><option value="unlisted">限定公開</option><option value="public">公開</option><option value="private">非公開</option><option value="pending">送信・処理中</option><option value="published">テーマ掲載あり</option><option value="unpublished">未掲載</option></select></label>
-          <label>並び順<select id="library-sort"><option value="updated">更新が新しい順</option><option value="rating">評価順</option><option value="theme">テーマ名順</option></select></label>
+          <label>並び順<select id="library-sort"><option value="created">作成が新しい順</option><option value="updated">更新が新しい順</option><option value="rating">評価順</option><option value="theme">テーマ名順</option></select></label>
         </form>
-        <p id="library-count" class="library-count" role="status"></p>
+        <div class="library-summary"><p id="library-count" class="library-count" role="status"></p><button id="library-refresh" type="button" class="quiet small">一覧を更新</button></div>
         <table class="library-table">
-          <thead><tr><th scope="col">作品・テーマ</th><th scope="col">評価</th><th scope="col">YouTube</th><th scope="col">テーマ掲載</th><th scope="col">更新</th></tr></thead>
+          <thead><tr><th scope="col">作品・テーマ</th><th scope="col">モデル・生成時間</th><th scope="col">評価</th><th scope="col">YouTube</th><th scope="col">テーマ掲載</th><th id="library-date-heading" scope="col">作成</th></tr></thead>
           <tbody id="library-rows"></tbody>
         </table>
       </section>
@@ -228,5 +228,20 @@
       </section>
     </main>
   </div>
+  <dialog id="library-preview" aria-labelledby="library-preview-title" class="library-preview">
+    <header class="library-preview-header">
+      <div><h2 id="library-preview-title"></h2><p id="library-preview-time" class="library-time" hidden></p></div>
+      <button id="library-preview-close" type="button" class="quiet small" autofocus>閉じる</button>
+    </header>
+    <div class="library-preview-stage">
+      <video id="library-preview-video" controls playsinline preload="metadata" hidden></video>
+      <p id="library-preview-status" role="status"></p>
+    </div>
+    <footer class="library-preview-footer">
+      <div class="inline"><span>作品の評価</span><div id="library-preview-rating" class="rating-buttons" aria-label="作品の評価"></div></div>
+      <p id="library-preview-feedback" role="status"></p>
+      <a id="library-preview-case" class="text-link">案件詳細を開く</a>
+    </footer>
+  </dialog>
 </body>
 </html>

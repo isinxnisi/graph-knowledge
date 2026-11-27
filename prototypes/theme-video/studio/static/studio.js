@@ -119,8 +119,11 @@ function modelLabel(run) {
   // Old runs stored a bare CLI slug; high was the studio's only setting then.
   const recorded = run.plan?.model;
   const [slug, suffix] = String(run.model || recorded?.requested || "").split("@");
-  const name = slug.replace(/^gpt-([0-9.]+)-(sol|astra)$/, (_, version, family) =>
-    "GPT-" + version + "-" + family[0].toUpperCase() + family.slice(1));
+  const titleCase = (family) => family[0].toUpperCase() + family.slice(1);
+  const name = slug
+    .replace(/^gpt-([0-9.]+)-(sol|astra)$/, (_, version, family) => "GPT-" + version + "-" + titleCase(family))
+    .replace(/^claude-(opus|sonnet|haiku|fable)-(\d+)(?:-(\d{1,2}))?(?:-(\d{8}))?$/,
+      (_, family, major, minor, release) => "Claude " + titleCase(family) + " " + major + (minor ? "." + minor : "") + (release ? " (" + release + ")" : ""));
   const effort = suffix || recorded?.effort || (slug.startsWith("gpt-") ? "high" : "");
   return [name || "記録なし", effortName[effort] || effort].filter(Boolean).join(" ／ ");
 }
@@ -251,7 +254,7 @@ function resetCase() {
   state.sceneId = ""; state.compare = false; state.compareKey = ""; state.resumeAfter = null;
   for (const id of ["script-read-panel", "script-review-panel", "scene-panel", "brief-panel", "rerun-panel"]) $(id).open = false;
   $("history-panel").open = window.matchMedia("(min-width: 1160px)").matches;
-  closeEdit(); closeReview(); closeAdapt(); closeYoutubeEdition();
+  closeEdit(); closeReview(); closeAdapt(); closeYoutubeEdition(); closeLibraryPreview();
   setRerunParent(null);
   $("rerun-language").value = "ja";
   refreshGenerationButtons();
@@ -432,6 +435,8 @@ function drawWatch() {
   $("subtitle-link").hidden = !subtitle;
   if (subtitle) $("subtitle-link").href = subtitle;
   $("preview-status").textContent = languageName[lang] + "　/　" + (run?.plan?.titles?.[lang] || state.detail.states?.[lang] || "待機中");
+  const generation = generationTimeLabel(ed?.timing);
+  if (generation) $("preview-status").textContent += "　·　" + generation;
   const selectedJapanese = chosenRun("ja");
   if (lang === "en" && run && selectedJapanese && !sameSceneSequence(selectedJapanese, "ja", run, "en")) {
     $("preview-status").textContent += "　·　日本語の試行 " + runNumber(selectedJapanese.id) + " とは別の制作版";

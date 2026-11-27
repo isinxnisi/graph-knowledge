@@ -1,7 +1,9 @@
 """Exercise trash, durable references and image selection on temporary ledgers."""
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import closing
+from datetime import datetime
 import json
+import os
 from pathlib import Path
 import sqlite3
 import tempfile
@@ -12,7 +14,7 @@ import uuid
 
 from PIL import Image
 
-from ledger import Ledger
+from ledger import Ledger, Paused
 
 
 class CaseLibraryTest(unittest.TestCase):
@@ -28,18 +30,19 @@ class CaseLibraryTest(unittest.TestCase):
                        json.dumps({"themeId": "theme:one", "title": "テーマ", "revision": 1}), "2026-01-01"))
         self.desk = Ledger(self.root)
 
-    def run_record(self, lang="ja", *, status="done", color=None):
+    def run_record(self, lang="ja", *, status="done", color=None, model="test"):
         run_id = uuid.uuid4().hex
         case = self.case_id
         with self.desk.db() as db:
             db.execute("""INSERT INTO runs(id,case_id,model,langs,reason,status,progress,created,plan,editions)
-                          VALUES(?,?, 'test',?,'',?,'','2026-01-01',?,?)""",
-                       (run_id, case, json.dumps([lang]), status,
+                          VALUES(?,?,?,?,'',?,'','2026-01-01',?,?)""",
+                       (run_id, case, model, json.dumps([lang]), status,
                         json.dumps({"titles": {"ja": "映像", "en": "Film"}, "scenes": [], "art": "bulky"}),
                         json.dumps({lang: {}}) if status == "done" else "{}"))
         folder = self.root / "cases" / case / run_id / lang
         folder.mkdir(parents=True)
         if color:
+            (folder / "video.mp4").write_bytes(b"retained edition")
             Image.new("RGB", (960, 180), color).save(folder / "contact-sheet.png")
         return run_id
 
@@ -58,7 +61,7 @@ class CaseLibraryTest(unittest.TestCase):
         with Image.open(desk.case_thumbnail(self.case_id)) as poster:
             self.assertEqual(poster.size, (320, 180))
             self.assertGreater(poster.getpixel((8, 8))[0], 200)
-        for invalid in (True, -1, 6, 1.5, "5"):
+        for invalid in (True, -1, 8, 1.5, "5"):
             with self.subTest(invalid=invalid), self.assertRaises(ValueError):
                 self.update(rating=invalid)
         self.update(rating=4)
@@ -76,6 +79,132 @@ class CaseLibraryTest(unittest.TestCase):
         case = desk.case(self.case_id)
         self.assertEqual((case["accepted"], case["rating"], len(case["runs"])), ({"ja": ja}, 4, 2))
         self.assertIsNone(self.update(rating=0)["rating"])
+
+    def test_five_star_migration_preserves_references_and_sorts_by_immutable_creation(self):
+        root = self.root / "legacy"
+        def five_star_schema(db):
+            db.execute("ALTER TABLE cases ADD COLUMN rating INTEGER CHECK (rating BETWEEN 1 AND 5)")
+            db.execute("ALTER TABLE cases ADD COLUMN trashed_at TEXT")
+            db.execute("ALTER TABLE cases ADD COLUMN purge_state TEXT CHECK (purge_state IN ('purging','purged'))")
+        with patch("case_library.migrate", five_star_schema):
+            old = Ledger(root)
+        ids = [uuid.uuid4().hex for _ in range(6)]
+        snap = json.dumps({"themeId": "theme", "title": "旧テーマ", "revision": 1})
+        with old.db() as db:
+            for index, case in enumerate(ids):
+                db.execute("""INSERT INTO cases(rowid,id,title,brief,snapshot,updated,rating)
+                              VALUES(?,?,'旧テーマ','',?,?,?)""",
+                           (index + 10, case, snap, f"2025-04-{index + 1:02}", index or None))
+            for date in ("2025-03-24", "2025-03-01"):
+                run = uuid.uuid4().hex
+                db.execute("""INSERT INTO runs(id,case_id,model,langs,reason,status,progress,created,editions)
+                              VALUES(?,?,'test','["ja"]','','done','',?,'{"ja":{}}')""", (run, ids[-1], date))
+            db.execute("INSERT INTO selections VALUES(?,'ja',?,'旧版の採用','2025-04-06')", (ids[-1], run))
+        desk = Ledger(root)
+        def ordered():
+            return [c["id"] for c in desk.list_cases() if not c["reference"]]
+        expected = [*reversed(ids[:-1]), ids[-1]]
+        self.assertEqual(ordered(), expected)
+        self.assertEqual([desk.case(case)["rating"] for case in ids], [None, 1, 2, 3, 4, 5])
+        self.assertEqual(desk.case(ids[-1])["created"], "2025-03-01")
+        self.assertEqual(desk.case(ids[1])["created"], "2025-04-02")
+        self.assertEqual(desk.case(ids[-1])["accepted"]["ja"], run)
+        for score in (6, 7, None):
+            desk.update_case_library(ids[-1], {"rating": score})
+            self.assertEqual(desk.case(ids[-1])["updated"], "2025-04-06")
+            self.assertEqual(desk.case(ids[-1])["rating"], score)
+            self.assertEqual(ordered(), expected)
+        desk.review(ids[-1], {"runId": run, "lang": "ja", "reason": "再試写した"}, "adopted")
+        self.assertNotEqual(desk.case(ids[-1])["updated"], "2025-04-06")
+        self.assertEqual(ordered(), expected)
+        desk = Ledger(root)
+        self.assertEqual(ordered(), expected)
+        with desk.db() as db:
+            self.assertEqual([r[0] for r in db.execute("SELECT rowid FROM cases ORDER BY rowid")], list(range(10, 16)))
+            self.assertEqual(db.execute("PRAGMA foreign_key_check").fetchall(), [])
+            with self.assertRaises(sqlite3.IntegrityError):
+                db.execute("UPDATE cases SET rating=8")
+
+    def test_language_models_and_enlarged_preview_follow_the_selected_editions(self):
+        desk = self.desk
+        ja = self.run_record(color="red", model="gpt-6-sol@ultra")
+        newer = self.run_record(color="green", model="gpt-6-astra@high")
+        self.run_record(status="failed", model="latest-attempt")
+        def check_models(japanese, english):
+            wanted = {"ja": {"model": japanese}, "en": {"model": english} if english else None}
+            self.assertEqual(desk.case(self.case_id)["models"], wanted)
+            self.assertEqual(desk.list_cases()[0]["models"], wanted)
+        check_models("gpt-6-astra@high", None)
+        self.run_record("en", status="interrupted", model="gpt-6-sol@high")
+        check_models("gpt-6-astra@high", "gpt-6-sol@high")
+        en = self.run_record("en", color="blue", model="gpt-6-astra@ultra")
+        self.run_record("en", status="failed", model="later-en-attempt")
+        check_models("gpt-6-astra@high", "gpt-6-astra@ultra")
+        self.assertEqual(desk.case_preview(self.case_id), {"video": f"/media/{self.case_id}/{en}/en/video.mp4",
+                         "language": "en", "title": "Film", "runId": en})
+        self.assertEqual(list(self.root.rglob("library-poster.jpg")), [])
+        desk.review(self.case_id, {"runId": ja, "lang": "ja", "reason": "この版を採用"}, "adopted")
+        check_models("gpt-6-sol@ultra", "gpt-6-astra@ultra")
+        queued = self.run_record("en", status="queued")
+        running = self.run_record(status="running")
+        with desk.db() as db:
+            db.execute("UPDATE runs SET script_first=1 WHERE id=?", (queued,))
+        self.assertEqual(desk.list_cases()[0]["activeRuns"], [
+            {"id": running, "status": "running", "langs": ["ja"], "progress": "", "scriptFirst": False},
+            {"id": queued, "status": "queued", "langs": ["en"], "progress": "", "scriptFirst": True}])
+        self.assertEqual(desk.case_preview(self.case_id)["runId"], ja)
+        self.assertEqual(desk.case_thumbnail(self.case_id).parent.parent.name, ja)
+        for run, lang in ((ja, "ja"), (en, "en"), (newer, "ja")):
+            (self.root / "cases" / self.case_id / run / lang / "video.mp4").unlink()
+        self.assertIsNone(desk.case_preview(self.case_id))
+        self.assertIsNone(desk.case_thumbnail(self.case_id))
+
+    def test_generation_clock_excludes_script_review_and_accumulates_resumed_work(self):
+        desk = self.desk
+        job = desk.submit("cases", {"themeId": "theme:clock", "revision": 1, "model": "test", "requestId": "clock",
+                                   "productionMode": "boards-v1", "language": "ja", "scriptFirst": True},
+                          lambda theme, rev: {"themeId": theme, "revision": rev, "title": "時計"},
+                          lambda: [{"id": "test", "available": True}])
+        case, run = job["id"], job["runId"]
+        plan = {"titles": {"ja": "時計"}, "sources": [], "scenes": [{"id": "s1", "ja": {"narration": "時計"}}]}
+        def blocked(*args, **kwargs):
+            raise Paused()
+        def render(plan, lang, output, progress):
+            (output / "video.mp4").write_bytes(b"completed edition")
+            (output / "timings.json").write_text("[]")
+            (output / "subtitles.srt").write_bytes(b"subtitles")
+        with patch("ledger.monotonic", side_effect=AssertionError("draft-only interval")):
+            desk.process_next(lambda *a, **k: plan, None)
+        self.assertEqual(desk.case(case)["runs"][0]["status"], "script_ready")
+        desk.resume(case, run)
+        with patch("ledger.monotonic", side_effect=[100, 106.5, 9000, 9010]):
+            desk.process_next(None, blocked)
+            self.assertEqual(desk.case(case)["runs"][0]["status"], "interrupted")
+            desk = Ledger(self.root)
+            desk.resume(case, run)
+            desk.process_next(None, render)
+        expected = {"seconds": 16.5, "estimated": False}
+        self.assertEqual(desk.case_preview(case)["timing"], expected)
+        self.assertEqual(desk.case(case)["runs"][0]["editions"]["ja"]["timing"], expected)
+        self.assertEqual(desk.list_cases()[0]["models"]["ja"]["timing"], expected)
+
+    def test_legacy_estimate_uses_matching_movie_and_omits_unreliable_timestamps(self):
+        run = self.run_record(color="blue")
+        movie = self.root / "cases" / self.case_id / run / "ja" / "video.mp4"
+        created = "2025-01-01T00:00:00+00:00"
+        start = datetime.fromisoformat(created).timestamp()
+        with self.desk.db() as db:
+            db.execute("UPDATE runs SET created=? WHERE id=?", (created, run))
+            db.execute("UPDATE cases SET updated='2025-01-01T00:10:00+00:00' WHERE id=?", (self.case_id,))
+        os.utime(movie, (start + 90, start + 90))
+        estimated = {"seconds": 90, "estimated": True}
+        self.assertEqual(self.desk.case_preview(self.case_id)["timing"], estimated)
+        self.assertEqual(self.desk.list_cases()[0]["models"]["ja"]["timing"], estimated)
+        for unusable in (start - 1, start + 900):
+            os.utime(movie, (unusable, unusable))
+            self.assertNotIn("timing", self.desk.case_preview(self.case_id))
+        movie.unlink()
+        self.assertNotIn("timing", self.desk.case(self.case_id)["models"]["ja"])
 
     def test_purge_refuses_active_job_and_derivative_then_recovers_from_interrupted_cleanup(self):
         run = self.run_record(status="queued")
