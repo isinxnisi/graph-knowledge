@@ -37,7 +37,9 @@ export async function readKnowledge<T>(mode: string, args: Record<string, unknow
   try {
     return await Promise.race([
       (async () => {
-        const response = await fetch((mode === "theme" && /^\/operations\/themes\//.test(location.pathname) ? "/api/site-operations/theme-preview?" : "/api/knowledge/public?") + params, { cache: "no-store", signal: controller.signal });
+        const preview = mode === "theme" && /^\/operations\/themes\//.test(location.pathname);
+        if (mode === "theme" && !preview) params.set("media", "1");
+        const response = await fetch((preview ? "/api/site-operations/theme-preview?" : "/api/knowledge/public?") + params, { cache: "no-store", signal: controller.signal });
         const data = await response.json();
         if (!response.ok) throw new ReadError(typeof data?.error === "string" ? data.error : typeof data?.error?.message === "string" ? data.error.message : "読めませんでした。再試行できます。", response.status, typeof data?.code==="string"?data.code:undefined);
         return data as T;

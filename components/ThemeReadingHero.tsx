@@ -18,22 +18,28 @@ type HeroProps = {
 export default function ThemeReadingHero({theme,snapshot,locale,onAbout,presentation,media}:HeroProps){
   const en=locale==="en";
   const [brokenSrc,setBrokenSrc]=useState<string|null>(null);
-  const image=media?undefined:presentation?.image;
+  const image=presentation?.image;
   const broken=image?.src===brokenSrc;
   const description=knowledgeDisplayText(snapshot.translations,{kind:"theme",id:theme.id,revision:theme.revision,field:"description"},locale,theme.content.description);
   const hook=presentation?.hook||description;
   const about=en?"About this theme":"このテーマについて";
+  const cover=image&&!broken&&<ThemeImageButton key={image.src} image={image} en={en}
+    className={css.art} onError={()=>setBrokenSrc(image.src)}/>;
+  const lead=presentation?.lead&&<p className={css.lead}>{presentation.lead}</p>;
 
   if(!description&&!presentation&&!media)return <button onClick={onAbout} className={css.about}><Icon name="book"/>{about}</button>;
 
   return <section className={media?`${css.hero} ${css.editorial}`:css.hero}
-    data-art={image&&!broken?image.kind:undefined} data-media-intro={media?"true":undefined}
+    data-art={!media&&image&&!broken?image.kind:undefined} data-media-intro={media?"true":undefined}
     aria-label={en?"Introduction":"このテーマの導入"}>
-    {image&&!broken&&<ThemeImageButton key={image.src} image={image} en={en} className={css.art} onError={()=>setBrokenSrc(image.src)}/>}
+    {!media&&cover}
     <div className={css.copy}>
       <button className={css.about} onClick={onAbout}>{about}<Icon name="arrow"/></button>
       {(hook||!media)&&<p className={media&&!presentation?.hook?css.lead:css.hook}>{hook}</p>}
-      {presentation?.lead&&<p className={css.lead}>{presentation.lead}</p>}
+      {media&&image?<div className={css.editorialLead}>
+        <div className={css.editorialCover}>{cover}</div>
+        {lead}
+      </div>:lead}
     </div>
     {media&&<div className={css.media}>{media}</div>}
   </section>;

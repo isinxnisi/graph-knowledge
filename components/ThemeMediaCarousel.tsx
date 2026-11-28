@@ -1,24 +1,19 @@
 "use client";
-import {useEffect,useId,useRef,useState} from "react";
+import {useEffect,useId,useLayoutEffect,useRef,useState} from "react";
 import Image from "next/image";
+import type {KnowledgeThemeRead} from "../lib/domain/knowledge-theme-reader";
 import {positionKey,slidesAt,type MediaLanguage,type MediaPosition,type MediaSlide,type VideoEdition} from "../lib/domain/theme-media";
+import {useDialogBackdrop} from "../lib/client/use-dialog-backdrop";
+import {useModalViewport} from "../lib/client/use-modal-viewport";
+import DialogCloseButton from "./DialogCloseButton";
 import css from "./ThemeMediaCarousel.module.css";
 
-type ThemePin={id:string;revision:number};
 const none:MediaSlide[]=[];
-export function usePublishedThemeMedia(theme:ThemePin|undefined,language:MediaLanguage){
-  const query=theme?new URLSearchParams({themeId:theme.id,revision:String(theme.revision),language}).toString():"";
-  const [loaded,setLoaded]=useState<{query:string;slides:MediaSlide[]}|null>(null);
-  useEffect(()=>{
-    if(!query)return;
-    const controller=new AbortController();
-    fetch("/api/knowledge/theme-media?"+query,{signal:controller.signal,cache:"no-store"})
-      .then(async r=>{if(!r.ok)throw Error();return r.json();})
-      .then(v=>{if(!controller.signal.aborted)setLoaded({query,slides:Array.isArray(v.slides)?v.slides:[]});})
-      .catch(()=>{if(!controller.signal.aborted)setLoaded({query,slides:[]});});
-    return ()=>controller.abort();
-  },[query]);
-  return {slides:loaded?.query===query?loaded.slides:none,query};
+export function publishedThemeMedia(read:KnowledgeThemeRead|undefined,language:MediaLanguage){
+  if(!read||read.operatorPreview||read.publishedMedia?.language!==language)return {slides:none,query:""};
+  const {id,revision}=read.theme;
+  const query=new URLSearchParams({themeId:id,revision:String(revision),language}).toString();
+  return {slides:read.publishedMedia.slides,query};
 }
 
 type Player={destroy:()=>void};
@@ -44,27 +39,68 @@ function YouTubeView({edition,language,short}:{edition:VideoEdition;language:Med
   const box=useRef<HTMLDivElement>(null),[state,setState]=useState<"loading"|"playing"|"failed">("loading");
   const en=language==="en";
   useEffect(()=>{
-    let stopped=false,player:Player|undefined;
-    const timer=window.setTimeout(()=>{if(!stopped)setState("failed");},15000);
+    const mount=box.current;
+    if(!mount)return;
+    let active=true,player:Player|undefined;
+    const dispose=()=>{
+      if(!active)return;
+      active=false;
+      window.clearTimeout(timer);
+      player?.destroy();
+      mount.replaceChildren();
+    };
+    const fail=()=>{
+      if(!active)return;
+      dispose();
+      setState("failed");
+    };
+    const timer=window.setTimeout(fail,15_000);
     playerLibrary().then(yt=>{
-      if(stopped||!box.current)return;
-      const node=document.createElement("div");box.current.replaceChildren(node);
-      player=new yt.Player(node,{videoId:edition.videoId,host:"https://www.youtube-nocookie.com",width:"100%",height:"100%",
+      if(!active)return;
+      const node=document.createElement("div");
+      mount.replaceChildren(node);
+      const created=new yt.Player(node,{videoId:edition.videoId,host:"https://www.youtube-nocookie.com",width:"100%",height:"100%",
         playerVars:{autoplay:1,playsinline:1,origin:window.location.origin,hl:language},
-        events:{onReady:()=>{window.clearTimeout(timer);if(!stopped){setState("playing");const frame=box.current?.querySelector("iframe");if(frame)frame.title=edition.title;}},
-          onError:()=>{window.clearTimeout(timer);if(!stopped)setState("failed");}}});
-    }).catch(()=>{if(!stopped)setState("failed");});
-    return ()=>{stopped=true;window.clearTimeout(timer);player?.destroy();};
+        events:{onReady:()=>{
+          if(!active)return;
+          window.clearTimeout(timer);
+          const iframe=mount.querySelector("iframe");
+          if(iframe)iframe.title=edition.title;
+          setState("playing");
+        },onError:fail}});
+      if(active)player=created;
+      else created.destroy();
+    }).catch(fail);
+    return dispose;
   },[edition.videoId,edition.title,language]);
-  return <><div className={short?css.vertical:css.player} hidden={state==="failed"} ref={box}/>
-    {state!=="playing"&&<p role="status">{state==="loading"?(en?"Connecting to YouTube…":"YouTubeに接続中…"):(en?"The player is unavailable.":"プレイヤーを開けませんでした。")}</p>}
-    <a href={"https://www.youtube.com/watch?v="+edition.videoId} target="_blank" rel="noopener noreferrer">{en?"Watch on YouTube":"YouTubeで見る"} ↗</a></>;
+
+  return <>
+    <div className={`${css.playerFrame} ${short?css.vertical:css.player}`}>
+      <div className={css.playerMount} ref={box}/>
+      {state!=="playing"&&<p className={css.playbackStatus} role="status">
+        {state==="loading"?(en?"Connecting to YouTube…":"YouTubeに接続中…"):(en?"The player is unavailable.":"プレイヤーを開けませんでした。")}
+      </p>}
+    </div>
+    <a className={css.youtubeLink} href={"https://www.youtube.com/watch?v="+edition.videoId} target="_blank" rel="noopener noreferrer">
+      {en?"Watch on YouTube":"YouTubeで見る"} ↗
+    </a>
+  </>;
 }
+
 function VideoDialog({edition,language,short,close}:{edition:VideoEdition;language:MediaLanguage;short:boolean;close:()=>void}){
   const dialog=useRef<HTMLDialogElement>(null);
-  useEffect(()=>{const d=dialog.current;d?.showModal();return ()=>d?.close();},[]);
-  return <dialog className={short?css.dialog:`${css.dialog} ${css.wideDialog}`} ref={dialog} aria-label={edition.title} onCancel={e=>{e.preventDefault();close();}} onClick={e=>{if(e.target===dialog.current)close();}}>
-    <div><button onClick={close} autoFocus>{language==="en"?"Close":"閉じる"}</button><YouTubeView edition={edition} short={short} language={language}/></div>
+  useModalViewport(dialog);
+  useLayoutEffect(()=>{
+    const element=dialog.current;
+    element?.showModal();
+    return()=>{if(element?.open)element.close();};
+  },[]);
+  const dismiss=()=>{dialog.current?.close();close();};
+  const backdrop=useDialogBackdrop(dismiss);
+  return <dialog className={short?css.dialog:`${css.dialog} ${css.wideDialog}`} ref={dialog} aria-label={edition.title}
+    onCancel={event=>{event.preventDefault();dismiss();}} {...backdrop}>
+    <div className={css.dialogControls}><DialogCloseButton label={language==="en"?"Close":"閉じる"} onClick={dismiss}/></div>
+    <YouTubeView key={edition.videoId} edition={edition} short={short} language={language}/>
   </dialog>;
 }
 function Viewer({slides,initial,query,language,preview,opening}:{slides:MediaSlide[];initial:number;query:string;language:MediaLanguage;preview:boolean;opening:boolean}){
@@ -97,15 +133,14 @@ function Viewer({slides,initial,query,language,preview,opening}:{slides:MediaSli
     const nextPhoto=next?.kind==="image"?next.image:null;
     const nextPoster=next?.kind==="video"?poster(next.editions[language]??next.editions.ja??next.editions.en):undefined;
     const peek=nextPhoto?.src??nextPoster??"";
-    const showPeek=peek&&!broken.has(peek);
     return <section className={css.opening} aria-label={en?"Theme media":"テーマの映像と画像"} aria-roledescription={en?"carousel":"カルーセル"}>
-      <div className={css.openingLayout} data-peek={!!showPeek}>
+      <div className={css.openingLayout} data-peek={!!peek}>
         <div className={css.openingVisual}>
           {photo?<figure className={css.openingFigure}>
             <Image unoptimized src={photo.src} width={photo.width} height={photo.height} alt={photo.alt} style={{objectPosition:photo.focus}}/>
             <figcaption>{imageCredit}</figcaption>
           </figure>:e&&<>
-            <button type="button" className={css.openingPoster} data-short={short} aria-label={`${watchLabel}: ${e.title}`} onClick={start}>
+            <button type="button" className={css.openingPoster} data-short={short} aria-haspopup="dialog" aria-label={`${watchLabel}: ${e.title}`} onClick={start}>
               {thumbnail}<span className={css.openingPlay} aria-hidden="true">▶</span>
             </button>
             <div className={css.openingCaption}><strong lang={l}>{e.title}</strong><small>{short?"Shorts · ":""}{duration}</small></div>
@@ -113,8 +148,8 @@ function Viewer({slides,initial,query,language,preview,opening}:{slides:MediaSli
             {languages}
           </>}
         </div>
-        {showPeek&&<div className={css.openingPeek} aria-hidden="true">
-          <Image unoptimized src={peek} width={nextPhoto?.width??480} height={nextPhoto?.height??360} alt="" style={{objectPosition:nextPhoto?.focus}} onError={()=>markBroken(peek)}/>
+        {peek&&<div className={css.openingPeek} aria-hidden="true">
+          {!broken.has(peek)&&<Image unoptimized src={peek} width={nextPhoto?.width??480} height={nextPhoto?.height??360} alt="" style={{objectPosition:nextPhoto?.focus}} onError={()=>markBroken(peek)}/>}
         </div>}
         {navigation}
       </div>
@@ -126,7 +161,7 @@ function Viewer({slides,initial,query,language,preview,opening}:{slides:MediaSli
       <Image unoptimized src={photo.src} width={photo.width} height={photo.height} alt={photo.alt} style={{objectPosition:photo.focus}}/>
       <figcaption>{imageCredit}</figcaption>
     </figure>:e&&<div>
-      {playing&&!short?<YouTubeView key={e.videoId} edition={e} short={false} language={language}/>:<button type="button" className={css.play} data-short={short} onClick={start}>
+      {playing&&!short?<YouTubeView key={e.videoId} edition={e} short={false} language={language}/>:<button type="button" className={css.play} data-short={short} aria-haspopup={short?"dialog":undefined} onClick={start}>
         {thumbnail}<span className={css.symbol} aria-hidden="true">▶</span><span><small>{short?"YouTube Shorts":"YouTube"} · {duration}</small>
         <strong lang={l}>{e.title}</strong>{watchLabel}</span>
       </button>}

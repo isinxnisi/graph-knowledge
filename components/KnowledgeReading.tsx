@@ -27,7 +27,7 @@ import KnowledgeTimeline from "./KnowledgeTimeline";
 import { themeTimelineRecords } from "../lib/domain/knowledge-timeline";
 import ThemeProducts,{ThemeItemsResult,useThemeItems,ThemeProductLinks,EntityProducts} from "./ThemeProducts";
 import ThemeReadingHero from "./ThemeReadingHero";
-import ThemeMediaCarousel,{usePublishedThemeMedia} from "./ThemeMediaCarousel";
+import ThemeMediaCarousel,{publishedThemeMedia} from "./ThemeMediaCarousel";
 import {readingRecordEditorial,readingRecordTitle,readingExplanations} from "../lib/domain/theme-reading-presentation";
 import type {EvidenceRequest} from "./KnowledgeReadingSources";
 import type {KnowledgeThemeRead} from "../lib/domain/knowledge-theme-reader";
@@ -68,7 +68,7 @@ export default function KnowledgeReading({children,operatorEnabled=true,initialT
  const checkpointTimer=useRef<ReturnType<typeof setTimeout>|null>(null);
  const active=w.activeTheme,retained=w.retainedTheme;
  const mediaLanguage=en?"en":"ja";
- const media=usePublishedThemeMedia(active&&!active.operatorPreview?active.theme:undefined,mediaLanguage);
+ const media=publishedThemeMedia(active&&!active.operatorPreview?active:undefined,mediaLanguage);
  const hasOpeningMedia=Boolean(active&&media.slides.some(slide=>slide.positions.some(position=>position.kind==="theme")));
  const localeEdition=retained?.localeEdition??(initialTheme?.theme.id===retained?.theme.id&&initialTheme?.theme.revision===retained?.theme.revision?initialTheme?.localeEdition:undefined);
  const closeTheme=w.closeTheme;

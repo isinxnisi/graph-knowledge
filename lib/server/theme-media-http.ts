@@ -8,6 +8,7 @@ import {hasThemeLocale} from "../domain/theme-locale";
 import {mediaChange,type MediaLanguage} from "../domain/theme-media";
 import {scopedActor,mediaImages,mediaTargets,mediaReceipt,savePlacement,settings,validatePlacement,projectSlides,placementHistory,removalOnly} from "./theme-media";
 import {checkedVideos,MediaProblem} from "./theme-media-youtube";
+import {readPublishedThemeSlides} from "./published-theme-media";
 
 const headers={"Cache-Control":"private, no-store","Vary":"Cookie, Authorization","X-Content-Type-Options":"nosniff"};
 function json(data:unknown,status=200){return Response.json(data,{status,headers});}
@@ -33,11 +34,8 @@ export async function publicThemeMedia(request:Request,poster=false){
     const q=new URL(request.url).searchParams,language=q.get("language")??"ja";
     if(language!=="ja"&&language!=="en")throw new MediaProblem(400,"LANGUAGE","表示言語を選んでください。");
     const {themeId,revision}=pin(q.get("themeId"),Number(q.get("revision")));
-    const read=await readTheme(themeId,revision,language),{pool}=memberRuntime();
-    const {slots}=await settings(pool,themeId,revision);
-    if(!slots.length)return poster?new Response(null,{status:404}):json({slides:[]});
-    const [images,videos]=await Promise.all([slots.some(s=>s.kind==="image")?mediaImages(pool,read):[],checkedVideos(slots).catch(()=>new Map())]);
-    const slides=projectSlides(slots,language,mediaTargets(read),images,videos);
+    const read=await readTheme(themeId,revision,language);
+    const slides=await readPublishedThemeSlides(read,language);
     if(poster){
       const id=q.get("id"),movie=slides.flatMap(s=>s.kind==="video"?Object.values(s.editions):[]).find(e=>e.videoId===id);
       if(!movie?.thumbnail)return new Response(null,{status:404});

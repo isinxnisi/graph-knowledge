@@ -4,6 +4,7 @@ import { knowledgeThemeHome } from "../../../../lib/server/knowledge-theme-home"
 import { knowledgeReadGuard } from "../../../../lib/server/knowledge-read-runtime";
 import { knowledgePublicationPreview } from "../../../../lib/server/knowledge-publication-preview";
 import { knowledgeDiscoveryScope } from "../../../../lib/server/knowledge-discovery-scope";
+import { withPublishedThemeMedia } from "../../../../lib/server/published-theme-media";
 
 import { publicationCursorGeneration } from "../../../../lib/server/knowledge-publication";
 
@@ -20,7 +21,11 @@ export async function GET(request: Request) {
     if (mode === "theme-home") result = await knowledgeThemeHome(service);
     else if (mode === "status") result = await service.status();
     else if (mode === "themes") result = await service.themes({ ...(params.has("entityId") ? { entityId: params.get("entityId")! } : {}), ...(params.has("q") ? { q: params.get("q")! } : {}), ...(params.has("kind") ? {kind:params.get("kind")!} : {}), ...(params.has("order") ? {order:params.get("order")!} : {}), ...(params.has("language")?{language:params.get("language")!}:{}) }, true);
-    else if (mode === "theme") result = await service.theme({ themeId: params.get("themeId") ?? "", ...(params.has("language")?{language:params.get("language")!}:{}), ...(params.has("revision") ? { revision: Number(params.get("revision")) } : {}) });
+    else if (mode === "theme") {
+      const language = params.get("language");
+      const read = await service.theme({ themeId: params.get("themeId") ?? "", ...(language === null ? {} : { language }), ...(params.has("revision") ? { revision: Number(params.get("revision")) } : {}) });
+      result = params.get("media") === "1" ? await withPublishedThemeMedia(read, language === "en" ? "en" : "ja") : read;
+    }
     else if (mode === "entities") {
       const scope=params.has('collection')?await knowledgeDiscoveryScope(service,params.get('collection')!,generation??publicationCursorGeneration(params.get('cursor'))):null;
       result = await service.entities({ generation:scope?.generation??generation, ...(scope?{scopeIds:scope.ids}:{}), ...(params.has("entityId") ? { entityId: params.get("entityId")! } : {}), ...(params.has("entityIds") ? { entityIds: (params.get("entityIds") ?? "").split(",").filter(Boolean) } : {}), ...(params.has("q") ? { q: params.get("q")! } : {}), ...(params.has("kind") ? { kind: params.get("kind")! } : {}), ...(params.has('predicates')?{predicates:params.get('predicates')!.split(',')}:{}), ...(params.has('roleId')?{roleId:params.get('roleId')!}:{}), ...(params.has('aroundId')?{aroundId:params.get('aroundId')!}:{}), limit: Number(params.get("limit") ?? 20), ...(params.has("cursor") ? { cursor: params.get("cursor")! } : {}) });

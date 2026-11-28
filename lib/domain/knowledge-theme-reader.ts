@@ -2,6 +2,7 @@ import { z } from "zod";
 import type {KnowledgeDisplayTranslation} from "./knowledge-translation";
 import { knowledgeIdSchema, knowledgeRevisionSchema, type KnowledgeThemeVersion, type KnowledgeSnapshot, type KnowledgeEntityVersion } from "./knowledge-foundation";
 import type { KnowledgePublishedRecord } from "./knowledge-publication";
+import type { MediaLanguage, MediaSlide } from "./theme-media";
 import { PREDICATE_KEYS } from "./predicates";
 import { roleIdSchema } from "./contribution";
 
@@ -12,6 +13,7 @@ export type KnowledgeThemePage = { focusIds?: string[]; themes: {
 /** A Theme fixes its own versions. It is not re-resolved against an active generation. */
 export type KnowledgeThemeRead = {
   operatorPreview?:boolean;
+  publishedMedia?:{language:MediaLanguage;slides:MediaSlide[]};
   localeEdition?:{language:string;servedRevision:number;latestRevision:number;state:"translation-pending"};
   theme: KnowledgeThemeVersion; snapshot: KnowledgeSnapshot; records: KnowledgePublishedRecord[];displayTranslations?:KnowledgeDisplayTranslation[];presentation?:import("./theme-reading-presentation").ThemeReadingPresentation|null;
 };

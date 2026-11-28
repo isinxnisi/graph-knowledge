@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import {afterEach,beforeEach,expect,it,vi} from "vitest";
-import {cleanup,fireEvent,render,screen,waitFor} from "@testing-library/react";
+import {act,cleanup,fireEvent,render,screen,waitFor} from "@testing-library/react";
 import ThemeMediaCarousel from "../components/ThemeMediaCarousel";
 import type {MediaSlide} from "../lib/domain/theme-media";
 const top={kind:"theme"} as const;
@@ -42,7 +42,12 @@ it("opens landscape video only on demand in the opening and closes it from the b
  expect(document.querySelector("iframe")).toBeNull();
  fireEvent.click(play);
  await waitFor(()=>expect(screen.getByRole("dialog").querySelector("iframe")).toBeTruthy());
- fireEvent.click(screen.getByRole("dialog"));
+ const dialog=screen.getByRole("dialog");
+ const close=screen.getByRole("button",{name:"閉じる"});
+ expect(close.hasAttribute("data-dialog-close")).toBe(true);
+ expect(close.textContent).toBe("");
+ fireEvent(dialog,new MouseEvent("pointerdown",{bubbles:true,clientX:-1,clientY:-1}));
+ fireEvent.click(dialog,{clientX:-1,clientY:-1});
  expect(destroyed).toHaveBeenCalledOnce();
  expect(screen.queryByRole("dialog")).toBeNull();
  fireEvent.click(play);
@@ -51,9 +56,42 @@ it("opens landscape video only on demand in the opening and closes it from the b
  expect(destroyed).toHaveBeenCalledTimes(2);
  expect(screen.queryByRole("dialog")).toBeNull();
 });
+it("keeps the playback viewport mounted while connecting, playing, and reporting an error",async()=>{
+ let callbacks:{onReady:()=>void;onError:()=>void}|undefined;
+ const destroyed=vi.fn();
+ vi.stubGlobal("YT",{Player:class{
+  destroy=destroyed;
+  constructor(el:HTMLElement,options:{events:NonNullable<typeof callbacks>}){
+   el.append(document.createElement("iframe"));
+   callbacks=options.events;
+  }
+ }});
+ render(<ThemeMediaCarousel query="themeId=theme&revision=1" slides={[film]} language="ja" position={top} variant="opening"/>);
+ fireEvent.click(screen.getByRole("button",{name:"動画を再生: Film"}));
+ const dialog=screen.getByRole("dialog"), frame=screen.getByRole("status").parentElement!;
+ expect(dialog.contains(frame)).toBe(true);
+ const link=screen.getByRole("link",{name:/YouTubeで見る/});
+ await waitFor(()=>expect(frame.querySelector("iframe")).toBeTruthy());
+ act(()=>callbacks!.onReady());
+ expect(screen.queryByRole("status")).toBeNull();
+ expect(dialog.contains(frame)).toBe(true);
+ act(()=>callbacks!.onError());
+ expect(screen.getByRole("status").parentElement).toBe(frame);
+ expect(frame.hidden).toBe(false);
+ expect(frame.querySelector("iframe")).toBeNull();
+ expect(screen.getByRole("link",{name:/YouTubeで見る/})).toBe(link);
+ expect(destroyed).toHaveBeenCalledOnce();
+ fireEvent.click(screen.getByRole("button",{name:"閉じる"}));
+ expect(destroyed).toHaveBeenCalledOnce();
+});
 it("uses the next selected image as the opening peek and shows its credit when selected",()=>{
  const rendered=render(<ThemeMediaCarousel query="themeId=theme&revision=1" slides={[film,image]} language="ja" position={top} variant="opening"/>);
- expect(rendered.container.querySelector('div[aria-hidden="true"] img[alt=""]')?.getAttribute("src")).toContain("/theme-assets/img.png");
+ const peek=rendered.container.querySelector('div[aria-hidden="true"] img[alt=""]')!;
+ const reserved=peek.parentElement!;
+ expect(peek.getAttribute("src")).toContain("/theme-assets/img.png");
+ fireEvent.error(peek);
+ expect(reserved.parentElement?.getAttribute("data-peek")).toBe("true");
+ expect(reserved.querySelector("img")).toBeNull();
  expect(screen.queryByAltText("Artifact")).toBeNull();
  fireEvent.click(screen.getByRole("button",{name:"次のスライド"}));
  expect(screen.getByAltText("Artifact")).toBeTruthy();

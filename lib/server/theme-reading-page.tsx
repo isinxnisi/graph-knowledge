@@ -9,6 +9,7 @@ import {ExplorationPage} from "./exploration-page";
 import {explorationMetadata} from "./publication";
 import {knowledgeDisplayText} from "../domain/knowledge-display";
 import {themeReadingPresentation} from "./theme-reading-presentation";
+import {withPublishedThemeMedia} from "./published-theme-media";
 import {knowledgeIdSchema} from "../domain/knowledge-ids";
 import {PUBLIC_ORIGIN} from "../domain/publication";
 export {hasThemeLocale} from "../domain/theme-locale";
@@ -31,5 +32,6 @@ export async function themeMetadata(id:string,locale:"ja"|"en",revision?:number,
 export async function ThemeReadingPage({id,locale,revision}:{id:string;locale:"ja"|"en";revision?:number}){
  let value;try{value=await publicThemeRead(id,locale,revision);}catch(error){if(error&&typeof error==="object"&&"status" in error&&[403,404,410].includes(Number(error.status)))notFound();throw error;}
  if(!hasThemeLocale(value,locale))notFound();
- return <div style={{display:"contents"}} data-theme-publication-id={value.theme.id} data-theme-publication-revision={value.theme.revision} data-theme-publication-language={locale}><ExplorationPage locale={locale} initialKnowledgeTheme={value}/></div>;
+ const theme=await withPublishedThemeMedia(value,locale);
+ return <div style={{display:"contents"}} data-theme-publication-id={theme.theme.id} data-theme-publication-revision={theme.theme.revision} data-theme-publication-language={locale}><ExplorationPage locale={locale} initialKnowledgeTheme={theme}/></div>;
 }
