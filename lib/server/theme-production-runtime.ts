@@ -45,7 +45,7 @@ export function themeProductionRuntime(pool:Pool,knowledge:Pool,origin:string,re
    try{const value=await translations.status(owner,command.requestId);return {state:value.state==='published'?'applied' as const:['needs-changes','cancelled','published-with-issues'].includes(value.state)?'failed' as const:'pending' as const,result:value};}
    catch(e){if((e instanceof KnowledgeError&&e.status===404)||(e instanceof Error&&'status'in e&&e.status===404))return null;throw e;}
   }
-  if(command.action==='save-product'||command.action==='upload-product-image'){
+  if(command.action==='save-product'||command.action==='upload-product-image'||command.action==='import-theme-source-image'){
    const r=(await pool.query('SELECT result FROM product_editorial_request WHERE request_id=$1 AND owner_id=$2',[command.requestId,owner])).rows[0];return r?{state:'applied' as const,result:r.result}:null;
   }
   const table=command.action==='amend-theme-items'?'theme_item_amendments':'theme_retry_operations';

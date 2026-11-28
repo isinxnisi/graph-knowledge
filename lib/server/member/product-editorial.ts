@@ -1,9 +1,10 @@
 import {assertThemeProductionLease,guardThemeProductionRequest} from '../theme-production-fence';
 import type {Pool,PoolClient} from "pg";
 import {createHash} from "node:crypto";
-import {productAuthoringCommandSchema,type ProductAuthoringCommand} from "../../domain/product-authoring";
+import {productAuthoringCommandSchema,type ProductAuthoringCommand,type ThemeSourceImageImport} from "../../domain/product-authoring";
 import {productSchema,type ProductCatalogue} from "../../domain/product-contract";
 import {processProductImage} from "../product-image-processing";
+import {fetchThemeSourceImage} from "../theme-source-image";
 import {KnowledgeError} from "../knowledge-foundation";
 import {isSiteOperator} from "./site-operations";
 import {memberTransaction} from "./operations";
@@ -29,33 +30,68 @@ export async function dispatchProductAuthoring(pool:Pool,owner:string,raw:Produc
   return {products:rows.slice(0,20).map(v=>({id:v.id,revision:v.revision,...v.content})),nextCursor:rows.length>20?command.cursor+20:null};
  }
  if(command.action==="read-product")return readEditorialProduct(pool,command.id,command.revision);
+ return writeProductEditorial(pool,owner,command);
+}
+
+type SourceImageCommand=ThemeSourceImageImport&{action:'import-theme-source-image'};
+type ProductWrite=Extract<ProductAuthoringCommand,{action:'upload-product-image'|'save-product'}>|SourceImageCommand;
+
+export async function importThemeSourceImage(pool:Pool,owner:string,command:SourceImageCommand){
+ await authorizeProductOperator(pool,owner);
+ await guardThemeProductionRequest(pool,owner,command);
+ return writeProductEditorial(pool,owner,command);
+}
+
+async function editorialReplay(c:Pool|PoolClient,owner:string,command:ProductWrite,digest:string){
+ const previous=(await c.query('SELECT owner_id,digest,result FROM product_editorial_request WHERE request_id=$1',[command.requestId])).rows[0];
+ if(!previous)return;
+ if(previous.owner_id!==owner||previous.digest!==digest)throw fail("同じ受付IDに異なる内容は送れません。","REQUEST_CHANGED");
+ if(command.action==='save-product'||(await c.query('SELECT 1 FROM product_image_asset WHERE id=$1',[previous.result.imageId])).rowCount)
+  return {...previous.result,replayed:true};
+}
+
+async function writeProductEditorial(pool:Pool,owner:string,command:ProductWrite){
  const digest=createHash("sha256").update(JSON.stringify(command)).digest("hex");
+ let sourceImage:Awaited<ReturnType<typeof fetchThemeSourceImage>>['sourceImage']|undefined;
  // Bound and validate binary before obtaining a database transaction; no temporary file is created.
  let processed:Awaited<ReturnType<typeof processProductImage>>|undefined;
  if(command.action==="upload-product-image"){
   if(!/^[A-Za-z0-9+/]+={0,2}$/.test(command.base64)||command.base64.length%4!==0)throw new KnowledgeError("画像データを確認してください。",400,"IMAGE_INVALID");
   processed=await processProductImage(Buffer.from(command.base64,"base64"));
+ }else if(command.action==='import-theme-source-image'){
+  const replay=await editorialReplay(pool,owner,command,digest);
+  if(replay)return replay;
+  const downloaded=await fetchThemeSourceImage(command.imageUrl);
+  if(downloaded.sourceImage.sha256!==command.expectedSha256)
+   throw new KnowledgeError('取得対象が視認時から変わりました。最新画像をプレビューし、採用する場合は新しい受付IDで登録してください。',409,'SOURCE_IMAGE_CHANGED');
+  sourceImage=downloaded.sourceImage;
+  processed=await processProductImage(downloaded.bytes);
  }
  return memberTransaction(pool,async c=>{
   await authorizeProductOperator(c,owner);
   await c.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))",['product-editorial']);
-  const previous=(await c.query('SELECT * FROM product_editorial_request WHERE request_id=$1',[command.requestId])).rows[0];
-  if(previous){if(previous.owner_id!==owner||previous.digest!==digest)throw fail("同じ受付IDに異なる内容は送れません。","REQUEST_CHANGED");if(command.action!=="upload-product-image"||(await c.query('SELECT 1 FROM product_image_asset WHERE id=$1',[previous.result.imageId])).rowCount)return {...previous.result,replayed:true};}
+  const replay=await editorialReplay(c,owner,command,digest);
+  if(replay)return replay;
   if(Number((await c.query("SELECT count(*) AS n FROM product_editorial_request WHERE owner_id=$1 AND created_at>clock_timestamp()-interval '1 day'",[owner])).rows[0].n)>=500)throw new KnowledgeError("本日の素材登録上限です。既存素材は引き続き使えます。",429,"EDITORIAL_DAILY_LIMIT");
   let result:Record<string,unknown>;
-  if(command.action==="upload-product-image"&&processed){
-   const profile=command.provenance,profileId=profile?.id??command.provenanceId!;
+  if(command.action!=='save-product'&&processed){
+   const role=command.action==='upload-product-image'?command.role:'illustration';
+   const profile=command.provenance;
+   const profileId=command.action==='upload-product-image'?(profile?.id??command.provenanceId!):command.provenance.id;
    if(profile){const old=(await c.query('SELECT content FROM product_image_provenance WHERE id=$1',[profileId])).rows[0];if(old&&JSON.stringify(old.content)!==JSON.stringify(JSON.parse(JSON.stringify(profile)))){
      // JSONB property order is not stable.
      if(createHash('sha256').update(JSON.stringify(Object.entries(old.content).sort())).digest('hex')!==createHash('sha256').update(JSON.stringify(Object.entries(profile).sort())).digest('hex'))throw fail("素材の利用条件を変える場合は別のプロフィールIDを使ってください。");
     }await c.query('INSERT INTO product_image_provenance VALUES($1,$2) ON CONFLICT DO NOTHING',[profileId,JSON.stringify(profile)]);}
    if(!(await c.query('SELECT 1 FROM product_image_provenance WHERE id=$1',[profileId])).rowCount)throw fail("素材の由来を先に登録してください。");
    // Content-address includes provenance and role: the same pixels can have different usage rights.
-   const id=createHash('sha256').update(processed.id+profileId+command.role+JSON.stringify(command.alt)).digest('hex');
+   const identity=createHash('sha256').update(processed.id+profileId+role+JSON.stringify(command.alt));
+   if(sourceImage)identity.update(JSON.stringify(sourceImage));
+   const id=identity.digest('hex');
+   const original={...processed.original,...(sourceImage?{sourceImage}:{})};
    const quota=Number((await c.query('SELECT coalesce(sum(octet_length(bytes)+octet_length(thumbnail)),0) AS bytes FROM product_image_asset')).rows[0].bytes);
    if(quota>2_000_000_000)throw new KnowledgeError("画像保存容量の上限です。既存の画像は利用できます。",429,"IMAGE_STORAGE_LIMIT");
-   await c.query('INSERT INTO product_image_asset(id,provenance_id,role,alt,width,height,bytes,thumbnail,original) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) ON CONFLICT DO NOTHING',[id,profileId,command.role,JSON.stringify(command.alt),processed.width,processed.height,processed.bytes,processed.thumbnail,JSON.stringify(processed.original)]);
-   result={imageId:id,url:'/api/knowledge/product-images/'+id,width:processed.width,height:processed.height,bytes:processed.processedBytes,thumbnailBytes:processed.thumbnailBytes,original:processed.original,role:command.role};
+   await c.query('INSERT INTO product_image_asset(id,provenance_id,role,alt,width,height,bytes,thumbnail,original) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) ON CONFLICT DO NOTHING',[id,profileId,role,JSON.stringify(command.alt),processed.width,processed.height,processed.bytes,processed.thumbnail,JSON.stringify(original)]);
+   result={imageId:id,url:'/api/knowledge/product-images/'+id,width:processed.width,height:processed.height,bytes:processed.processedBytes,thumbnailBytes:processed.thumbnailBytes,original,role};
   }else if(command.action==="save-product"){
    const current=Number((await c.query('SELECT coalesce(max(revision),0) AS revision FROM product_editorial_version WHERE id=$1',[command.product.id])).rows[0].revision);
    if(current!==command.expectedRevision)throw fail("商品が更新されました。read_productで最新の版を確認してください。");

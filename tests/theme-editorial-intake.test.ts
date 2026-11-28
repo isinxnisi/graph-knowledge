@@ -27,6 +27,22 @@ it.each(['http://files.oaiusercontent.com/a','https://files.oaiusercontent.com.e
  expect(()=>editorialFileURL(url)).toThrow();await expect(downloadEditorialFile(url)).rejects.toHaveProperty('code','FILE_REFERENCE_INVALID');
 });
 
+it('exposes a separate public URL operation and returns actual MCP image content with its digest',async()=>{
+ const imageUrl='https://example.org/scan.png',metadata={url:imageUrl,sha256:'a'.repeat(64)};
+ const image=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jZ2QAAAAASUVORK5CYII=','base64');
+ const call=vi.fn().mockResolvedValue({image,metadata});
+ const handler=createMissionMcpHandler(vi.fn(),{call});
+ const listed=(await(await handler.fetch(rpc('tools/list',{}))).json()).result.tools;
+ const preview=listed.find((v:{name:string})=>v.name==='preview_theme_source_image');
+ const register=listed.find((v:{name:string})=>v.name==='import_theme_source_image');
+ expect(preview._meta.securitySchemes[0].scopes).toContain('themes:compose');
+ expect(register._meta['openai/fileParams']).toBeUndefined();
+ expect(register.inputSchema.required).toContain('expectedSha256');
+ const output=await(await handler.fetch(rpc('tools/call',{name:preview.name,arguments:{imageUrl}}))).json();
+ expect(output.result.content).toEqual([{type:'text',text:JSON.stringify(metadata)},{type:'image',mimeType:'image/png',data:image.toString('base64')}]);
+ expect(call).toHaveBeenCalledWith({action:'preview-theme-source-image',imageUrl});
+});
+
 it('keeps unrelated reading content when removing a member without making metadata edits mandatory',async()=>{
  const {retainedThemeEditorial,editorialReferenceError}=await import('../lib/server/theme-editorial');
  const {resolvedThemeEditorialSchema}=await import('../lib/domain/theme-editorial');

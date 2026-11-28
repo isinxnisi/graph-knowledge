@@ -4,7 +4,7 @@ import type {ThemeAutomationCommand} from './theme-automation';
 import {knowledgePinSchema} from './knowledge-foundation';
 import {themeRegistrationInputSchema,themeUpdateInputSchema,amendThemeRegistrationSchema,controlThemeRetrySchema,type ThemeRegistrationCommand} from './knowledge-theme-registration';
 import {submitThemeTranslationSchema} from './knowledge-theme-translation';
-import {saveProductSchema,uploadProductImageSchema} from './product-authoring';
+import {saveProductSchema,uploadProductImageSchema,importThemeSourceImageSchema} from './product-authoring';
 
 export const productionWorkflowSchema=z.enum(['scheduled','manual']);
 export const productionPhaseSchema=z.enum(['production','review']);
@@ -59,6 +59,7 @@ export const updateThemeProductionSchema=productionFenceSchema.extend({operation
 export const productionSubmissionCommandSchema=z.discriminatedUnion('action',[
  themeRegistrationInputSchema.safeExtend({action:z.literal('submit-theme')}),themeUpdateInputSchema.safeExtend({action:z.literal('update-theme')}),submitThemeTranslationSchema.safeExtend({action:z.literal('submit-translation')}),
  amendThemeRegistrationSchema.safeExtend({action:z.literal('amend-theme-items')}),controlThemeRetrySchema.safeExtend({action:z.literal('control-theme-retry')}),saveProductSchema.extend({action:z.literal('save-product')}),uploadProductImageSchema.safeExtend({action:z.literal('upload-product-image')}),
+ importThemeSourceImageSchema.extend({action:z.literal('import-theme-source-image')}),
  z.strictObject({action:z.literal('cancel-theme'),requestId:z.uuidv4()}),z.strictObject({action:z.literal('cancel-translation'),requestId:z.uuidv4()}),
 ]);
 export type ProductionSubmissionCommand=z.infer<typeof productionSubmissionCommandSchema>;

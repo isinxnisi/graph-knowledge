@@ -15,8 +15,9 @@ import {guardThemeProductionRequest} from '../theme-production-fence';
 import {createThemeQualityGuides} from './theme-quality-guide';
 import {themeReadingPresentation} from '../theme-reading-presentation';
 import {downloadEditorialFile} from '../editorial-file-download';
+import {previewThemeSourceImage} from '../theme-source-image';
 import {Pool} from 'pg';
-import {dispatchProductAuthoring,readEditorialProduct} from './product-editorial';
+import {dispatchProductAuthoring,importThemeSourceImage,readEditorialProduct} from './product-editorial';
 import {MemberError} from './http';
 import {createThemeTranslationAuthoring} from '../knowledge-theme-translation';
 import {z} from 'zod';
@@ -53,6 +54,8 @@ export async function dispatchThemeRegistration(owner:string,raw:ThemeOperatorCo
   }
   const command=themeRegistrationCommandSchema.parse(raw);
   if(['submit-theme','update-theme','submit-translation','amend-theme-items','control-theme-retry','save-product','upload-product-image','upload-editorial-image','cancel-theme','cancel-translation'].includes(command.action))await guardThemeProductionRequest(memberRuntime().pool,owner,command);
+  if(command.action==='preview-theme-source-image')return previewThemeSourceImage(command.imageUrl);
+  if(command.action==='import-theme-source-image')return importThemeSourceImage(memberRuntime().pool,owner,command);
   if(command.action==='upload-editorial-image'){
    const {file,purpose,action,...metadata}=command;void action;
    const {pool,config}=memberRuntime();

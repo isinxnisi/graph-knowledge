@@ -14,6 +14,7 @@
 
 brief、scope、保存成果、実際の版と根拠から、読者の価値を高める具体的な調査・修正・読戻しを進める。できる関連作業を一緒に進め、API一操作や固定回数で判断しない。同じ外部条件を再確認するだけなら、対応済みの調査結果から判断する。
 
+- 年表に役立つ実資料画像は、出典ページで利用条件と必要なクレジットを確認する。公開の画像URLを \`preview_theme_source_image\` に渡し、返った画像そのものを見て対象を確かめる。採用時はそのSHA-256、来歴、日英altを添えた \`import-theme-source-image\` を prepare → dispatch し、登録された \`imageId\` を別の版指定のテーマ更新で日英の年表項目に関連付ける。画像が見えない、取得に失敗した、権利が未確認の場合は採用しない。見直しでは認証済みプレビューの年表と詳細を確認する。
 - 追加の実資料画像・書影・商品・購入先等がなくても重要な内容と読者体験が成立する場合、その要素は掲載を見送り、後日対応を記録する。権利未確認の素材や未確認の購入先を登録しない。読者への約束が実物と合うよう、必要なら改稿する。実際に載せる素材の権利・来歴・日英説明と、事実・根拠・必要な訳文・版は確認する。
 - `list_theme_production_follow_ups` で該当する記録を検索する。同じ共通課題は同じ key と `scope:"shared"` を使い、今回の impact を関連付ける。新しい根拠や状態変化がなければ record 本文を繰り返さない。初回は `record:{issue,reason,attempt,resumeWhen,observedAt,status:"open"}` と、テーマへの `impact` を保存する。固有課題は `scope:"theme"`。実施内容と結果を attempt に、再試行を具体的に可能にする条件を resumeWhen に書く。観測日時はUTCのISO形式。実際に解決したときだけ resolved とする。
 - `update_theme_production` の `followUps` と更新した `progress` を同じ操作へ渡す。brief・scope・原稿・根拠・登録済み参照を保持する。後日対応へ記録した事項を `unfinished`・`blockers` から外し、`artifacts.workLoop.waitingOn`・`doneWhen`・`nextAction` も現在の必須作業に合わせ、待機先がなければ waitingOn を null にする。必要な調査、作品上の重大な不足、必須証拠、未決受付は実際の状態で扱う。記録した後日対応があるだけで独立見直し・完了を止めない。

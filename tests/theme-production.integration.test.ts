@@ -24,7 +24,8 @@ import {createWebKnowledgeImports,webImportPrincipal} from '../lib/server/knowle
 import {createThemeRegistrations} from '../lib/server/knowledge-theme-registration';
 import {createThemeTranslationAuthoring} from '../lib/server/knowledge-theme-translation';
 import {createThemeQualityGuides} from '../lib/server/member/theme-quality-guide';
-import {dispatchProductAuthoring} from '../lib/server/member/product-editorial';
+import {dispatchProductAuthoring,importThemeSourceImage} from '../lib/server/member/product-editorial';
+import * as sourceVerification from '../lib/server/knowledge-source-verification';
 import {migrateKnowledgeTranslations} from '../lib/server/knowledge-translation-migrate';
 import {migrateKnowledgeIdentities} from '../lib/server/knowledge-identity-migrate';
 import {ensureKnowledgePublicationSchema} from '../lib/server/knowledge-publication';
@@ -66,11 +67,41 @@ async function ordinarySend(who:string,command:ProductionSubmissionCommand){
  if(action==='submit-theme'||action==='update-theme')return registrations.submit(who,raw);
  if(action==='submit-translation')return translations.submit(who,raw as Parameters<typeof translations.submit>[1]);
  if(action==='save-product'||action==='upload-product-image')return dispatchProductAuthoring(pool,who,command);
+ if(action==='import-theme-source-image')return importThemeSourceImage(pool,who,command);
  if(action==='cancel-theme')return registrations.cancel(who,command.requestId);
  if(action==='cancel-translation')return translations.cancel(who,command.requestId);
  if(action==='amend-theme-items')return registrations.amend(who,raw);
  return registrations.controlRetry(who,raw);
 }
+it('binds a downloaded illustration to inspected bytes and its prepared receipt',async()=>{
+ const run=await begin('production',true,'manual');
+ const bytes=await sharp({create:{width:48,height:48,channels:3,background:'#123456'}}).png().toBuffer();
+ const imageUrl='https://example.org/observation.png',download=vi.spyOn(sourceVerification,'publicSourceImage');
+ download.mockResolvedValue({url:imageUrl,body:bytes,type:'image/png'});
+ const command={action:'import-theme-source-image' as const,requestId:randomUUID(),imageUrl,
+  expectedSha256:createHash('sha256').update(bytes).digest('hex'),
+  provenance:{id:'source-image-'+randomUUID(),kind:'licensed' as const,sourceUrl:'https://example.org/catalogue',
+   terms:'Use with attribution',credit:'Archive photograph',creditDisplay:'public' as const},
+  alt:{ja:'資料の写真',en:'Archive photograph'}};
+ try{
+  const prepared=await prepare(run,command);
+  await expect(importThemeSourceImage(pool,owner,command)).rejects.toMatchObject({code:'PRODUCTION_FENCE_REQUIRED'});
+  expect(download).not.toHaveBeenCalled();
+  await send(run,prepared.submissionId!);
+  const receipt=(await pool.query('SELECT result FROM product_editorial_request WHERE request_id=$1',[command.requestId])).rows[0].result;
+  await send(run,prepared.submissionId!);
+  expect(download).toHaveBeenCalledTimes(1);
+  expect(receipt).toMatchObject({role:'illustration',original:{sourceImage:{url:imageUrl,sha256:command.expectedSha256}}});
+  const asset=await pool.query('SELECT alt,original,content AS provenance FROM product_image_asset JOIN product_image_provenance ON provenance_id=product_image_provenance.id WHERE product_image_asset.id=$1',[receipt.imageId]);
+  expect(asset.rows).toMatchObject([{alt:command.alt,provenance:command.provenance}]);
+  const changed={...command,requestId:randomUUID(),expectedSha256:'0'.repeat(64)};
+  await expect(importThemeSourceImage(pool,owner,changed)).rejects.toMatchObject({code:'SOURCE_IMAGE_CHANGED'});
+  const failed={...command,requestId:randomUUID()};
+  download.mockRejectedValue(new sourceVerification.SourceCheckError('Unavailable'));
+  await expect(importThemeSourceImage(pool,owner,failed)).rejects.toMatchObject({code:'SOURCE_IMAGE_UNAVAILABLE'});
+  expect((await pool.query('SELECT request_id FROM product_editorial_request WHERE request_id=ANY($1::uuid[])',[[changed.requestId,failed.requestId]])).rows).toEqual([]);
+ }finally{download.mockRestore();}
+});
 beforeAll(async()=>{
  expect(process.env.MEMBER_TEST_CONTAINER).toMatch(/^gk-member-test-/);expect((await pool.query('SELECT current_database() n')).rows[0].n).toBe('graph_member_test');expect((await knowledge.query('SELECT current_database() n')).rows[0].n).toBe('plunode_knowledge75_test_capsule_share');
  vi.stubEnv('COMMUNITY_ENABLED','1');vi.stubEnv('SITE_OPERATIONS_ENABLED','1');vi.stubEnv('KNOWLEDGE_MISSIONS_ENABLED','1');vi.stubEnv('KNOWLEDGE_SUBMISSIONS_ENABLED','1');vi.stubEnv('KNOWLEDGE_SUBMISSIONS_PUBLISH_ENABLED','1');vi.stubEnv('SITE_OPERATOR_USER_IDS',owner+','+other);
