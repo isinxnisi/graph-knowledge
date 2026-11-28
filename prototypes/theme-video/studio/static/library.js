@@ -159,6 +159,10 @@ function drawProductionLibrary() {
     title.href = caseHash(item.id);
     title.onclick = () => { productionLibrary.scroll[libraryViewName()] = window.scrollY; };
     titleRow.append(title);
+    const adopted = [item.accepted?.ja && "日", item.accepted?.en && "英"].filter(Boolean);
+    if (adopted.length) {
+      titleRow.append(node("span", "採用済み（" + adopted.join("・") + "）", "library-adopted"));
+    }
     const generating = item.activeRuns?.filter((run) => run.status === "running" && !run.scriptFirst);
     if (generating?.length) {
       const badge = node("span", "生成中", "library-generating");

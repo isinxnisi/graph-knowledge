@@ -455,7 +455,8 @@ function openPlacementPicker(trigger, placement, lang, currentVideo, entries, ch
   const results = node("div", null, "placement-picker-results");
   const status = node("small", null, "subtle");
   status.setAttribute("role", "status");
-  body.append(header, field, status, results);
+  const hint = node("p", "YouTubeに投稿・登録済みで、埋め込みできる公開・限定公開の作品が表示されます。", "subtle");
+  body.append(header, hint, field, status, results);
   dialog.append(body);
 
   const candidates = entries.filter((entry) => entry.lang === lang && entry.canEmbed && entry.videoId)
@@ -479,7 +480,7 @@ function openPlacementPicker(trigger, placement, lang, currentVideo, entries, ch
       results.append(button);
     }
     if (!visible.length) results.append(node("p", candidates.length ? "検索に一致する作品はありません。" :
-      "この言語で掲載できる作品はありません。YouTubeの公開範囲と埋め込みの許可を投稿履歴で確認できます。", "subtle"));
+      "この言語で掲載できる作品はありません。案件の「YouTube投稿」で投稿・登録状況を確認できます。", "subtle"));
   };
   query.addEventListener("input", draw);
 

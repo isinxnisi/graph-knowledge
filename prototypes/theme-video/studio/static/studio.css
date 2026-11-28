@@ -406,7 +406,9 @@ textarea { resize: vertical; }
 .library-summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 button.library-thumb { cursor: zoom-in; }
 .library-thumb-play { position: absolute; right: 3px; bottom: 3px; z-index: 1; padding: 0 4px; border-radius: 3px; background: #17292ddd; color: white; font-size: 10px; }
-.library-generating { flex: none; padding: 0 5px; border-radius: 3px; background: #e4efea; color: #21594f; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.library-generating, .library-adopted { flex: none; padding: 0 5px; border-radius: 3px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.library-generating { background: #e4efea; color: #21594f; }
+.library-adopted { background: #e6edf3; color: #2b4a63; }
 .library-preview { box-sizing: border-box; padding: 0; width: min(1000px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); overflow: auto; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: var(--paper); }
 .library-preview.vertical { width: min(490px, calc(100vw - 24px)); }
 .library-preview::backdrop { background: #14262dc7; }
