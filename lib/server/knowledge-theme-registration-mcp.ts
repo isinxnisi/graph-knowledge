@@ -3,7 +3,7 @@ import {themePublicationCheckSchema} from '../domain/theme-publication-check';
 import {createThemeProductionSchema,getThemeProductionSchema,listThemeProductionsSchema,themeProductionListSchema,listThemeProductionFollowUpsSchema,themeProductionFollowUpsSchema,abandonThemeProductionSchema,claimThemeProductionSchema,updateThemeProductionSchema,prepareThemeProductionSubmissionSchema,dispatchThemeProductionSubmissionSchema,themeProductionResponseSchema,type ThemeOperatorCommand} from '../domain/theme-production';
 import {readThemeWorkGuideSchema,updateThemeWorkGuideSchema} from '../domain/theme-work-guide';
 import {readThemeQualityGuideSchema,updateThemeQualityGuideSchema} from '../domain/theme-quality-guide';
-import {uploadProductImageSchema,saveProductSchema,uploadEditorialImageSchema} from "../domain/product-authoring";
+import {uploadProductImageSchema,saveProductSchema,uploadEditorialImageSchema,previewThemeSourceImageSchema,importThemeSourceImageSchema} from "../domain/product-authoring";
 import type {McpServer} from '@modelcontextprotocol/server';
 import {z} from 'zod';
 import {readThemeTranslationSchema,submitThemeTranslationSchema} from '../domain/knowledge-theme-translation';
@@ -13,6 +13,14 @@ import {themeRetryStatusSchema,controlThemeRetrySchema,amendThemeRegistrationSch
  * the separate scope; old collection tokens receive an OAuth step-up challenge. */
 export function registerThemeMcpTools(server:McpServer,call:(command:ThemeOperatorCommand)=>Promise<unknown>,authChallenge?:string,automationEnabled=false){
  const run=async(command:ThemeOperatorCommand)=>{if(authChallenge)return {content:[{type:'text' as const,text:'Reconnect this app to grant theme registration and update permissions.'}],isError:true,_meta:{'mcp/www_authenticate':[authChallenge]}};const value=await call(command);return {content:[{type:'text' as const,text:JSON.stringify(value)}],...(typeof value==='object'&&value!==null&&'ok' in value&&value.ok===false?{isError:true}:{})};};
+ const readImage=async(command:ThemeOperatorCommand)=>{
+  if(authChallenge)return run(command);
+  const value=await call(command);
+  if(value&&typeof value==='object'&&'image' in value&&Buffer.isBuffer(value.image)&&'metadata' in value){
+   return {content:[{type:'text' as const,text:JSON.stringify(value.metadata)},{type:'image' as const,mimeType:'image/png',data:value.image.toString('base64')}]};
+  }
+  return {content:[{type:'text' as const,text:JSON.stringify(value)}],isError:true};
+ };
  const securitySchemes=[{type:'oauth2',scopes:['missions:collect','themes:compose']}];
  const annotations={readOnlyHint:false,destructiveHint:false,openWorldHint:false,idempotentHint:true};
  const handoff=[
@@ -49,15 +57,7 @@ export function registerThemeMcpTools(server:McpServer,call:(command:ThemeOperat
   server.registerTool('capture_theme_review_preview',{description:'Queue authenticated PC and mobile screenshots and navigation evidence for the exact evaluationTarget.digest during independent review. For a bilingual review pass requiredLocales:[ja,en]. Poll read_theme_automation and check target.locales and unavailableLocales. Complete only covers the captured languages. Once this case uses capture, a passing whole-theme assessment requires displayed evidence from the current target in the same review execution.',inputSchema:captureThemePreviewSchema,_meta:{securitySchemes},annotations},input=>run({action:'capture-theme-preview',...input}));
   server.registerTool('read_theme_automation',{description:'Read this case’s material and preview receipts, screenshot names and redacted diagnostic events. No observed events does not establish external rejection.',inputSchema:readThemeAutomationSchema,_meta:{securitySchemes},annotations:{...annotations,readOnlyHint:true}},input=>run({action:'read-theme-automation',...input}));
   server.registerTool('report_theme_external_blocker',{description:'Record a client-observed reference or browser limitation separately from server observations. Use the current lease. Never send URLs, credentials or file IDs.',inputSchema:reportThemeExternalSchema,_meta:{securitySchemes},annotations},input=>run({action:'report-theme-external',...input}));
-  server.registerTool('read_theme_review_evidence',{description:'Read ONE named screenshot as actual image content using your current review lease. Read every named screenshot and inspect it before assessing the whole theme. If the client cannot display it, record the blocker and stop. Include the automationId as assessment.reviewEvidenceId when it passes.',inputSchema:readThemeEvidenceSchema,_meta:{securitySchemes},annotations},async input=>{
-   const command={action:'read-theme-evidence' as const,...input};
-   if(authChallenge)return run(command);
-   const value=await call(command);
-   if(value&&typeof value==='object'&&'image' in value&&Buffer.isBuffer(value.image)&&'metadata' in value){
-    return {content:[{type:'text' as const,text:JSON.stringify(value.metadata)},{type:'image' as const,mimeType:'image/png',data:value.image.toString('base64')}]};
-   }
-   return {content:[{type:'text' as const,text:JSON.stringify(value)}],isError:true};
-  });
+  server.registerTool('read_theme_review_evidence',{description:'Read ONE named screenshot as actual image content using your current review lease. Read every named screenshot and inspect it before assessing the whole theme. If the client cannot display it, record the blocker and stop. Include the automationId as assessment.reviewEvidenceId when it passes.',inputSchema:readThemeEvidenceSchema,_meta:{securitySchemes},annotations},input=>readImage({action:'read-theme-evidence',...input}));
  }
 
  server.registerTool('publish_theme',{
@@ -65,6 +65,15 @@ export function registerThemeMcpTools(server:McpServer,call:(command:ThemeOperat
   inputSchema:publishThemeSchema,_meta:{securitySchemes},annotations,
  },input=>run({action:'publish-theme',...input}));
  server.registerTool('check_theme_publication',{description:'After theme creation/update/translation is published, GET the unversioned canonical URLs for selected languages and check HTTP, visible title/body, language, edition, canonical, robots, hreflang and sitemap. Reports DNS/timeout/HTTP/content/indexing-setting failures distinctly. Read-only, no AI, no registration, no Google Index guarantee. Set view: published to check the approved edition even if an independent working draft exists. Existing English may serve its safe published language edition while additions await translation.',inputSchema:themePublicationCheckSchema,_meta:{securitySchemes},annotations:{...annotations,readOnlyHint:true,openWorldHint:true}},input=>run({action:'check-theme-publication',...input}));
+
+ server.registerTool('preview_theme_source_image',{
+  description:'Fetch a public HTTPS raster image and return the actual PNG preview and SHA-256. Inspect the rendered image, confirm its source page, reuse terms and required credit before importing. No authentication URLs, local paths, PDFs, SVG, or marketplace product images. This tool does not save the image.',
+  inputSchema:previewThemeSourceImageSchema,_meta:{securitySchemes},annotations:{...annotations,readOnlyHint:true,openWorldHint:true},
+ },input=>readImage({action:'preview-theme-source-image',...input}));
+ server.registerTool('import_theme_source_image',{
+  description:'Register a publicly retrievable source image as a theme illustration after inspecting its preview. Pass its imageUrl and preview SHA-256 as expectedSha256, the source page, confirmed reuse terms, credit and ja/en alt text. Returns imageId. Exact retries reuse requestId. For a production/review case, prepare and dispatch the import-theme-source-image command, then use the imageId in a separately prepared theme update. Import does not place the image or publish.',
+  inputSchema:importThemeSourceImageSchema,_meta:{securitySchemes},annotations:{...annotations,openWorldHint:true},
+ },input=>run({action:'import-theme-source-image',...input}));
 
  server.registerTool('upload_editorial_image',{description:'Register an attached ChatGPT image for a theme illustration or product card. Pass the authorized attached file, not base64, a local path, or an arbitrary external URL. purpose distinguishes theme illustration, product illustration and actual product photo. Returns immutable imageId and automatic dimensions/bytes. Reuse provenanceId; use creditDisplay internal for intake notes and public only for a required public attribution. Never relabel an illustration as a product photo.',inputSchema:uploadEditorialImageSchema,_meta:{securitySchemes,'openai/fileParams':['file']},annotations},input=>run({action:'upload-editorial-image',...input}));
  server.registerTool('upload_product_image',{description:'Upload operator-owned raster media as base64, never Amazon-hosted images. Reuse provenanceId after first upload. Generated/original media need no fake source URL. Returns immutable imageId and automatic dimensions/bytes. MCP supports about 1.5MB binary; larger files up to 8MB use authenticated /api/site-operations/products with the same command. No credentials in input.',_meta:{securitySchemes},inputSchema:uploadProductImageSchema,annotations},input=>run({action:'upload-product-image',...input}));

@@ -13,6 +13,20 @@ export const uploadProductImageSchema=z.strictObject({requestId:z.uuidv4(),prove
 export const saveProductSchema=z.strictObject({requestId:z.uuidv4(),expectedRevision:z.number().int().min(0),product:productSchema.omit({image:true}),offers:z.array(offerSchema.omit({image:true})).max(3).default([]),reason:z.object({ja:z.string().trim().min(1).max(300),en:z.string().trim().min(1).max(300)}),appliesTo:z.array(z.strictObject({kind:z.enum(["entity","record"]),id:z.string().min(1).max(200)})).max(100).default([])});
 export const editorialFileSchema=z.strictObject({download_url:z.string().min(1).max(16000),file_id:z.string().min(1).max(500),mime_type:z.string().max(200).optional(),file_name:z.string().max(500).optional()});
 export const uploadEditorialImageSchema=z.strictObject({requestId:uploadProductImageSchema.shape.requestId,provenance:uploadProductImageSchema.shape.provenance,provenanceId:uploadProductImageSchema.shape.provenanceId,alt:uploadProductImageSchema.shape.alt,file:editorialFileSchema,purpose:z.enum(['theme-illustration','product-illustration','product-photo'])}).refine(v=>Boolean(v.provenance)!==Boolean(v.provenanceId),'Specify one reusable provenance profile or its id');
+const sourceImageUrlSchema=z.url().max(3000).refine(raw=>{
+ const url=new URL(raw);
+ return url.protocol==='https:'&&!url.username&&!url.password&&!url.hash&&!url.port;
+},'Specify a public HTTPS URL');
+export const previewThemeSourceImageSchema=z.strictObject({imageUrl:sourceImageUrlSchema});
+export const importThemeSourceImageSchema=previewThemeSourceImageSchema.extend({
+ requestId:uploadProductImageSchema.shape.requestId,
+ expectedSha256:z.string().regex(/^[a-f0-9]{64}$/).describe('SHA-256 from the preview whose actual image you inspected'),
+ provenance:imageProvenanceSchema.extend({
+  kind:z.literal('licensed'),sourceUrl:sourceImageUrlSchema.describe('Public source page that identifies this image'),
+ }),
+ alt:uploadProductImageSchema.shape.alt,
+});
+export type ThemeSourceImageImport=z.infer<typeof importThemeSourceImageSchema>;
 export const productAuthoringCommandSchema=z.discriminatedUnion("action",[
  uploadProductImageSchema.safeExtend({action:z.literal("upload-product-image")}),
  saveProductSchema.extend({action:z.literal("save-product")}),

@@ -4,7 +4,7 @@ import {readThemeWorkGuideSchema,updateThemeWorkGuideSchema} from './theme-work-
 import {readThemeQualityGuideSchema,updateThemeQualityGuideSchema} from './theme-quality-guide';
 import {themeEditorialInputSchema} from './theme-editorial';
 import {z} from 'zod';
-import {productPinSchema,productAuthoringCommandSchema,uploadEditorialImageSchema} from "./product-authoring";
+import {productPinSchema,productAuthoringCommandSchema,uploadEditorialImageSchema,previewThemeSourceImageSchema,importThemeSourceImageSchema} from "./product-authoring";
 import {readThemeTranslationSchema,submitThemeTranslationSchema} from './knowledge-theme-translation';
 import {missionMcpPackageSchema} from './knowledge-mission-mcp';
 import {knowledgeThemeContentSchema,knowledgePinSchema,knowledgeTimelineSchema,knowledgeIdSchema} from './knowledge-foundation';
@@ -128,6 +128,8 @@ export const themeRegistrationCommandSchema=z.discriminatedUnion('action',[
  themeRetryStatusSchema.extend({action:z.literal('theme-retry-status')}),
  controlThemeRetrySchema.safeExtend({action:z.literal('control-theme-retry')}),
  uploadEditorialImageSchema.safeExtend({action:z.literal('upload-editorial-image')}),
+ previewThemeSourceImageSchema.extend({action:z.literal('preview-theme-source-image')}),
+ importThemeSourceImageSchema.extend({action:z.literal('import-theme-source-image')}),
  readThemeTranslationSchema.extend({action:z.literal('read-translation')}),
  submitThemeTranslationSchema.safeExtend({action:z.literal('submit-translation')}),
  z.strictObject({action:z.literal('translation-status'),requestId:z.uuidv4()}),

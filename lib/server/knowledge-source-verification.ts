@@ -1,4 +1,5 @@
 import {lookup} from "node:dns/promises";
+import {editorialAttachmentHost} from "../domain/editorial-file";
 import {windowsBetaHttps,windowsBetaHttpsEnabled} from "./windows-beta-https";
 import {request} from "node:https";
 import {isIP} from "node:net";
@@ -25,19 +26,41 @@ export async function publicSourceDocument(raw:string,options:{allowedHosts?:str
  const accept=options.allowPdf?'text/html, application/pdf, text/plain;q=0.9':'text/html, text/plain;q=0.9';
  const supported=(type:string)=>/^(text\/html|text\/plain|application\/xhtml\+xml)(;|$)/.test(type)||
   (options.allowPdf===true&&/^application\/pdf(;|$)/.test(type));
+ return publicSourceResource(raw,{...options,accept,supported,limit:2_000_000,kind:'source'});
+}
+function publicImageDownloadUrl(url:URL){
+ const storeImage=/(^|\.)(amazon\.[a-z.]+|media-amazon\.com|ssl-images-amazon\.com|images-amazon\.com)$/.test(url.hostname);
+ const authorizationKey=/^(token|access_token|signature|sig|key|x-amz-.*|x-goog-.*)$/i;
+ return !storeImage&&!editorialAttachmentHost(url.hostname)&&![...url.searchParams.keys()].some(key=>authorizationKey.test(key));
+}
+export async function publicSourceImage(raw:string):Promise<SourceDocument>{
+ return publicSourceResource(raw,{
+  accept:'image/png, image/jpeg, image/webp, image/avif, application/octet-stream;q=0.8',
+  supported:type=>/^(image\/(png|jpeg|webp|avif)|application\/octet-stream)(;|$)/.test(type),
+  limit:8*1024*1024,kind:'source-image',
+ });
+}
+async function publicSourceResource(raw:string,options:{
+ allowedHosts?:string[];accept:string;supported:(type:string)=>boolean;limit:number;kind:'source'|'source-image';
+}):Promise<SourceDocument>{
+ const {accept,supported,limit,kind}=options;
+ const formatError=()=>new SourceCheckError(kind==='source-image'?'公開URLから静止画ファイルを取得できません。JPEG・PNG・WebP・AVIFの画像URLを指定してください。':'この資料形式はまだ自動照合できません。本文を読めるHTMLやテキストの別資料を指定してください。');
+ const sizeError=()=>new SourceCheckError(kind==='source-image'?'画像は8MiB以下にしてください。':'資料が大きすぎます。該当箇所のある別ページを指定してください。');
  let url=sourceURL(raw);const deadline=Date.now()+20000;
  for(let redirect=0;redirect<=3;redirect++){
+  if(kind==='source-image'&&!publicImageDownloadUrl(url))
+   throw new SourceCheckError('認証や署名が不要な公開資料の画像URLを指定してください。');
   if(options.allowedHosts&&!options.allowedHosts.includes(url.hostname))throw new SourceCheckError("計画で指定したサイト以外への転送は取得しません。");
   const host=url.hostname.replace(/^\[|\]$/g,"");
   const addresses=await Promise.race([lookup(host,{all:true,verbatim:true,family:isIP(host)||4}).catch(()=>lookup(host,{all:true,verbatim:true,family:6})),new Promise<never>((_,reject)=>{const timer=setTimeout(()=>reject(new SourceCheckError("資料の接続先を確認できません。再試行します。",true)),5000);timer.unref();})]);
   if(!addresses.length||addresses.some(a=>!publicSourceAddress(a.address)))throw new SourceCheckError("内部ネットワークの資料は取得できません。公開資料を指定してください。");
   const address=addresses[0],remaining=deadline-Date.now();if(remaining<=0)throw new SourceCheckError("資料の取得に時間がかかっています。再試行します。",true);
   const result=windowsBetaHttpsEnabled()?await (async()=>{
-   const response=await windowsBetaHttps(url,address.address,'source',AbortSignal.timeout(Math.min(10000,remaining)),'GET',{Accept:accept,'Accept-Encoding':'identity'}).catch(e=>{
-    if(e instanceof Error&&e.message==='BETA_HTTPS_TOO_LARGE')throw new SourceCheckError('資料が大きすぎます。該当箇所のある別ページを指定してください。');throw e;
+   const response=await windowsBetaHttps(url,address.address,kind,AbortSignal.timeout(Math.min(10000,remaining)),'GET',{Accept:accept,'Accept-Encoding':'identity'}).catch(e=>{
+    if(e instanceof Error&&e.message==='BETA_HTTPS_TOO_LARGE')throw sizeError();throw e;
    });
    const status=response.status,type=(response.headers.get('content-type')??'').toLowerCase();
-   if(status===200&&(!supported(type)||response.headers.get('content-encoding')&&response.headers.get('content-encoding')!=='identity'))throw new SourceCheckError('この資料形式はまだ自動照合できません。本文を読めるHTMLやテキストの別資料を指定してください。');
+   if(status===200&&(!supported(type)||response.headers.get('content-encoding')&&response.headers.get('content-encoding')!=='identity'))throw formatError();
    return {status,type,body:status===200?Buffer.from(await response.arrayBuffer()):Buffer.alloc(0),location:response.headers.get('location')??undefined,retryAfter:response.headers.get('retry-after')??undefined,challenge:response.headers.get('cf-mitigated')==='challenge'};
   })():await new Promise<{status:number;location?:string;type:string;body:Buffer;retryAfter?:string;challenge?:boolean}>((resolve,reject)=>{
    const req=request(url,{method:"GET",family:address.family,agent:false,
@@ -47,10 +70,11 @@ export async function publicSourceDocument(raw:string,options:{allowedHosts?:str
     if(status>=300&&status<400){res.destroy();resolve({status,location:res.headers.location,type,body:Buffer.alloc(0)});return;}
     if(status!==200){res.destroy();resolve({status,type,body:Buffer.alloc(0),retryAfter:String(res.headers['retry-after']??''),challenge:res.headers['cf-mitigated']==='challenge'});return;}
     if(!supported(type)||res.headers['content-encoding']&&res.headers['content-encoding']!=='identity'){
-     res.destroy();reject(new SourceCheckError("この資料形式はまだ自動照合できません。本文を読めるHTMLやテキストの別資料を指定してください。"));return;
+     res.destroy();reject(formatError());return;
     }
+    if(kind==='source-image'&&Number(res.headers['content-length']??0)>limit){res.destroy();reject(sizeError());return;}
     const chunks:Buffer[]=[];let bytes=0;
-    res.on('data',(chunk:Buffer)=>{bytes+=chunk.length;if(bytes>2_000_000){res.destroy(new SourceCheckError("資料が大きすぎます。該当箇所のある別ページを指定してください。"));return;}chunks.push(chunk);});
+    res.on('data',(chunk:Buffer)=>{bytes+=chunk.length;if(bytes>limit){res.destroy(sizeError());return;}chunks.push(chunk);});
     res.on('end',()=>resolve({status,type,body:Buffer.concat(chunks)}));res.on('error',reject);
    });req.once('error',reject);req.end();
   });
