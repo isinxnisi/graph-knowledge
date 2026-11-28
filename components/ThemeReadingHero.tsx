@@ -25,6 +25,7 @@ export default function ThemeReadingHero({theme,snapshot,locale,onAbout,presenta
   const about=en?"About this theme":"このテーマについて";
   const cover=image&&!broken&&<ThemeImageButton key={image.src} image={image} en={en}
     className={css.art} onError={()=>setBrokenSrc(image.src)}/>;
+  const heading=(hook||!media)&&<p className={media&&!presentation?.hook?css.lead:css.hook}>{hook}</p>;
   const lead=presentation?.lead&&<p className={css.lead}>{presentation.lead}</p>;
 
   if(!description&&!presentation&&!media)return <button onClick={onAbout} className={css.about}><Icon name="book"/>{about}</button>;
@@ -35,11 +36,11 @@ export default function ThemeReadingHero({theme,snapshot,locale,onAbout,presenta
     {!media&&cover}
     <div className={css.copy}>
       <button className={css.about} onClick={onAbout}>{about}<Icon name="arrow"/></button>
-      {(hook||!media)&&<p className={media&&!presentation?.hook?css.lead:css.hook}>{hook}</p>}
-      {media&&image?<div className={css.editorialLead}>
+      {media&&image?<div className={css.editorialHeadline}>
         <div className={css.editorialCover}>{cover}</div>
-        {lead}
-      </div>:lead}
+        {heading}
+      </div>:heading}
+      {lead}
     </div>
     {media&&<div className={css.media}>{media}</div>}
   </section>;
