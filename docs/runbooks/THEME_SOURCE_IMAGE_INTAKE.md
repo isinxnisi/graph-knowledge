@@ -50,3 +50,17 @@ DARTの既存テーマを読む場合は参照に限り、衝突に関する実�
 > 公開資料の実画像を使うときは、出典ページと利用条件を確認し、公開画像URLを `preview_theme_source_image` に渡して実画像を視認する。採用時は、視認結果のSHA-256・出典・利用条件・必要なクレジット・日英altを添えた `import-theme-source-image` を案件の prepare → dispatch で実行し、返った `imageId` を別のテーマ更新で日英の年表項目に配置する。見直しでは、既存の認証済み画面採取で実際の表示とクレジットを確かめる。画像を取得・視認できない場合は、掲載しない理由を記録し、現行の制作継続基準を適用する。
 
 更新は読み取った現行版を `expectedRevision` に指定し、変更後の全体を現行契約で保存する。画像の確認・再開条件と、採取証拠・完了に関わる基準の変更履歴を照合する。公開画像の受付が使えることを正式で確認してから、既存定期プロンプトの書き換えを適用する。
+
+## 正式配備候補と切替待ち
+
+正式HTTPSの稼働版 `YbHfEJTnvcfoN6kZHAVxx`（source `a9b8a84c`）を監査し、公開資料画像の変更だけを重ねた候補 `25e437f453ae1caaaf3f9e23d4469d7d3177d28c` を作成した。βで実証した取り込み差分を移し、正式稼働版のテキスト資料照合の契約を使った。候補ブランチは `codex/theme-source-image-production`。日常βの受入buildは `e3oCxkwPl690faJmAgffQ`。
+
+候補build `lXyj2xEDxQLznY8NE1xOO` は隔離環境でWebと専用プレビューWorkerの一致、HTTPのbuild読戻し、ChromiumのPNG採取、関連59件と配備計画6件を確認した。正式51／知識13件とβ52／知識12件の共通SQLは全件一致。配備対象はWeb、知識3 Worker、専用プレビューWorkerで、適用SQLは0件。封印 `84d8bf70e6ec70f6ec82d76fd8b52454db980e9f2c0105aa6738c6369e02465c` の資材をVPSに転送し、SHA-256を照合した。
+
+切替はVPSのsudo認証待ち。端末で同じ資材を使う。手動セッションの終了後は、コマンドが共通guardを取得してから切替を実行する。
+
+```powershell
+wsl.exe -d Ubuntu --cd /home/isinxnisi/1.projects/7.graph-knowledge -- python3 .local/theme-source-image-production-20261128/transport.py apply
+```
+
+`activated` と `source-image-code-readback` を確認してから、正式HTTPSの互換性API、既存MCP、品質ガイドとChatGPTの両定期設定を読む。
