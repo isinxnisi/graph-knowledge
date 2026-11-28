@@ -25,7 +25,7 @@
 .opening {
   container-type: inline-size;
   min-width: 0;
-  color: #182b3d;
+  color: var(--color-text, #182b3d);
 }
 .openingLayout {
   --opening-peek-width: clamp(68px, 20cqw, 104px);
@@ -89,7 +89,7 @@
 }
 .openingCaption strong { font-size: clamp(.84rem, 3cqw, 1.02rem); }
 .openingCaption small { white-space: nowrap; font-variant-numeric: tabular-nums; }
-.openingAlternate { display: block; margin: 4px 2px 0; color: #426177; }
+.openingAlternate { display: block; margin: 4px 2px 0; color: var(--color-muted, #426177); }
 .opening .languages { padding: 5px 0 0; }
 .openingFigure { margin: 0; }
 .openingFigure img {
@@ -104,16 +104,16 @@
 .openingFigure figcaption {
   margin: 6px 2px 0;
   font-size: .83rem;
-  color: #425568;
+  color: var(--color-muted, #425568);
   overflow-wrap: anywhere;
 }
-.openingFigure a { color: #246c99; }
+.openingFigure a { color: var(--color-accent, #246c99); }
 .openingPeek { display: none; }
 .opening .nav {
   padding: 4px 0 0;
   gap: 5px;
   justify-self: end;
-  color: #40586d;
+  color: var(--color-muted, #40586d);
 }
 .opening .nav button {
   display: grid;
@@ -131,6 +131,7 @@
   cursor: pointer;
 }
 .opening .nav button:hover { background: #e9f3fa; }
+.opening .dialog { background: var(--color-panel, #f8f5ed); color: var(--color-text, #182b3d); }
 .wideDialog {
   box-sizing: border-box;
   width: min(94vw, 960px, 140dvh);
