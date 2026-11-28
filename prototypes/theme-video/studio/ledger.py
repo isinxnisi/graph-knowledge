@@ -20,6 +20,7 @@ from editor import DIRECTED_FILM, MaterialRequired, _save_json
 from editorial_decision import DIRECTED_DECISION_VERSION
 from research_workflow import _source_id, _supplement
 from stop_report import stop_report
+from token_usage import run_tokens
 from writer_feedback import RevisionNeeded
 
 LANGS = ("ja", "en")
@@ -94,6 +95,17 @@ def collect_edition_model(models, completed, accepted, run, lang, ready):
     if ready and lang not in completed:
         completed.append(lang)
     return selected
+
+
+def saved_tokens(run, folder, langs):
+    def object_at(key):
+        try:
+            return json.loads(run[key])
+        except (TypeError, ValueError):
+            return None
+
+    return run_tokens(folder, run["model"], langs, direct=run["production_mode"] == CODEX_FILM,
+                      usage=object_at("recorded_usage"), parent_usage=object_at("parent_usage"))
 
 
 def previewable_draft(plan):
@@ -741,7 +753,10 @@ class Ledger:
             if not row or row["purge_state"] == "purged":
                 raise KeyError(case_id)
             purge_impact = case_library.impact(self, db, case_id) if row["trashed_at"] else None
-            runs = db.execute("""SELECT r.*,a.source_run,a.proposal FROM runs r
+            runs = db.execute("""SELECT r.*,a.source_run,a.proposal,
+                                 json_extract(r.plan,'$.model.usage') recorded_usage,
+                                 json_extract(p.plan,'$.model.usage') parent_usage FROM runs r
+                                 LEFT JOIN runs p ON p.id=r.parent
                                  LEFT JOIN run_alternatives a ON r.editorial_origin=a.run_id
                                  WHERE r.case_id=? ORDER BY r.created DESC,r.rowid DESC""", (case_id,)).fetchall()
             selections = db.execute("SELECT * FROM selections WHERE case_id=?", (case_id,)).fetchall()
@@ -770,8 +785,14 @@ class Ledger:
                 if (self.folder / "cases" / case_id / run["id"] / lang / "contact-sheet.png").is_file():
                     edition["contactSheet"] = prefix + "contact-sheet.png"
             langs = json.loads(run["langs"])
+            tokens, by_edition = saved_tokens(run, folder, langs)
             for lang in langs:
                 selected = collect_edition_model(models, completed, accepted, run, lang, lang in editions)
+                if lang in by_edition:
+                    if selected:
+                        models[lang].update(tokenUsage=by_edition[lang], runId=run["id"])
+                    if lang in editions:
+                        editions[lang]["tokenUsage"] = by_edition[lang]
                 if lang in editions:
                     timing = generation_timing(run, folder / lang / "video.mp4", row["updated"])
                     if timing:
@@ -797,6 +818,8 @@ class Ledger:
                         savedExcerptCount=len(excerpts),
                         editorialAlternative=proposal, chosenAlternative={**chosen, "sourceRunId": run["source_run"]} if chosen else None,
                         plan=json.loads(run["plan"]) if run["plan"] else None)
+            if tokens:
+                item["tokenUsage"] = tokens
             if run["production_mode"] == CODEX_FILM:
                 item["authorCommissions"] = [
                     {"lang": lang, "stage": stage} for lang in langs for stage in ("draft", "film")
@@ -857,8 +880,12 @@ class Ledger:
             verdicts = {(r["run_id"], r["lang"]): r["kind"]
                         for r in db.execute("SELECT run_id,lang,kind FROM reviews ORDER BY rowid")}
             # Listing cases should not deserialize every plan, timing table and fixed source package.
-            runs = db.execute("""SELECT id,case_id,model,created,active_seconds,status,progress,error,langs,script_first,json_type(editions,'$.ja') ja,
-                                 json_type(editions,'$.en') en FROM runs ORDER BY created DESC,rowid DESC""")
+            runs = db.execute("""SELECT r.id,r.case_id,r.model,r.created,r.active_seconds,r.status,r.progress,r.error,r.langs,
+                                 r.script_first,r.production_mode,json_type(r.editions,'$.ja') ja,
+                                 json_type(r.editions,'$.en') en,
+                                 json_extract(r.plan,'$.model.usage') recorded_usage,
+                                 json_extract(p.plan,'$.model.usage') parent_usage
+                                 FROM runs r LEFT JOIN runs p ON p.id=r.parent ORDER BY r.created DESC,r.rowid DESC""")
             for r in runs:
                 item = items.get(r["case_id"])
                 if item is None:
@@ -867,10 +894,17 @@ class Ledger:
                 if r["status"] in ("queued", "running"):
                     item["activeRuns"].append(dict(id=r["id"], status=r["status"], langs=langs, progress=r["progress"],
                                                    scriptFirst=bool(r["script_first"])))
+                folder = self.folder / "cases" / r["case_id"] / r["id"]
+                by_edition = None
                 for lang in langs:
                     selected = collect_edition_model(item["models"], item["completedLangs"], item["accepted"], r, lang, bool(r[lang]))
+                    if selected:
+                        if by_edition is None:
+                            _, by_edition = saved_tokens(r, folder, langs)
+                        if lang in by_edition:
+                            item["models"][lang].update(tokenUsage=by_edition[lang], runId=r["id"])
                     if selected and r[lang]:
-                        movie = self.folder / "cases" / r["case_id"] / r["id"] / lang / "video.mp4"
+                        movie = folder / lang / "video.mp4"
                         timing = generation_timing(r, movie, item["updated"])
                         if timing:
                             item["models"][lang]["timing"] = timing
@@ -938,6 +972,17 @@ class Ledger:
             result = {"video": f"/media/{case_id}/{run}/{lang}/video.mp4", "runId": run, "language": lang, "title": title}
             if timing:
                 result["timing"] = timing
+            if case_id != REFERENCE:
+                with self.db() as db:
+                    row = db.execute("""SELECT r.model,r.production_mode,r.langs,
+                                       json_extract(r.plan,'$.model.usage') recorded_usage,
+                                       json_extract(p.plan,'$.model.usage') parent_usage
+                                       FROM runs r LEFT JOIN runs p ON p.id=r.parent WHERE r.id=?""", (run,)).fetchone()
+                if row:
+                    folder = self.folder / "cases" / case_id / run
+                    _, by_edition = saved_tokens(row, folder, json.loads(row["langs"]))
+                    if lang in by_edition:
+                        result["tokenUsage"] = by_edition[lang]
             return result
 
     def progress(self, run, message):

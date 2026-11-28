@@ -451,6 +451,8 @@ function drawWatch() {
     $("empty-video").textContent = source + " から作った英語版はまだ試写できません。";
     $("preview-status").textContent = "English　/　" + source;
   }
+  const tokens = tokenUsageDisplay(ed?.tokenUsage);
+  if (tokens) $("preview-status").append("　·　", tokens);
   const approved = state.detail.accepted?.[lang] === run?.id || ed?.accepted;
   $("approval-row").hidden = !ed?.video || state.detail.reference || Boolean(state.detail.trashedAt);
   $("adapt-open").hidden = $("approval-row").hidden || lang !== "ja";
@@ -1100,6 +1102,12 @@ function drawHistory() {
     row.append(node("strong", heading + "　" + (jobName[run.status] || run.status)));
     const langs = (run.langs || []).map((l) => languageName[l] || l).join(" / ");
     row.append(node("p", [when(run.created), langs, state.detail.reference ? null : modelLabel(run)].filter(Boolean).join("　·　"), "subtle"));
+    const tokens = tokenUsageDisplay(run.tokenUsage, { scope: "試行全体" });
+    if (tokens) {
+      const tokenLine = node("p", null, "subtle");
+      tokenLine.append(tokens);
+      row.append(tokenLine);
+    }
     if (run.plan?.japaneseMasterRunId) row.append(node("p", "元の日本語版　試行 " + runNumber(run.plan.japaneseMasterRunId), "subtle"));
     if (run.chosenAlternative) row.append(node("p", "試行 " + runNumber(run.chosenAlternative.sourceRunId) + " の別案　" + run.chosenAlternative.title));
     if (run.reason) row.append(node("p", run.reason));

@@ -43,6 +43,8 @@ Plunodeの対象環境に会員DBの `051-theme-media.sql` を `member:migrate -
 
 このPCの制作室は [外部用の制作室](https://c-movie.isinxnisi.com/) から開ける。Cloudflare Accessで許可したアカウントでサインインする。トンネルの転送先は `http://127.0.0.1:3269` で、元の公開ホスト名を渡す。Windowsで制作室とトンネルが稼働している間に利用できる。
 
+制作一覧のモデル欄、試写、生成履歴に、記録した入力・出力トークンの目安を表示する。入力にはキャッシュを含み、試写と履歴で内訳を確認できる。直接依頼は言語別に保存された台本・動画の使用量を用いる。旧方式で日英を分けられない値は日英共通と表示する。取得できなかった呼び出しや子エージェント分は補計しない。請求額への換算は行わない。
+
 移設時はWindowsの制作室用Pythonに `python -m pip install --user -r prototypes/theme-video/studio/requirements-access.txt` で認証用ライブラリを入れる。案件台帳と同じ保存先の `access.json` に `host`（外部ホスト名）、`team`（Cloudflare Accessのチーム名）、`audience`（対象アプリのAUDタグ）を文字列で保存し、制作室を再起動する。制作室は画面・API・動画の全リクエストで公開ホスト名とAccessの署名・発行元・対象アプリ・期限を検証する。外部の更新操作では同じHTTPS originも確認する。設定ファイルが無い場合はlocalhostから操作できる。
 
 ## 一件を作る

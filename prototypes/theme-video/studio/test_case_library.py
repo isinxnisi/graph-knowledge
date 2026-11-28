@@ -159,6 +159,41 @@ class CaseLibraryTest(unittest.TestCase):
         self.assertIsNone(desk.case_preview(self.case_id))
         self.assertIsNone(desk.case_thumbnail(self.case_id))
 
+    def test_tokens_follow_editions_and_do_not_count_inherited_plans(self):
+        ja = self.run_record(color="red", model="gpt-6.2-sol@max")
+        en = self.run_record("en", color="blue", model="claude-opus-5-5@high")
+        parent = self.run_record(status="interrupted")
+        copy = self.run_record(status="script_ready")
+        legacy = {"model": {"usage": {"input_tokens": 100, "output_tokens": 20}}}
+        with self.desk.db() as db:
+            db.execute("UPDATE runs SET production_mode='codex-film-v1' WHERE id IN (?,?)", (ja, en))
+            db.execute("UPDATE runs SET plan=? WHERE id=?", (json.dumps(legacy), parent))
+            db.execute("UPDATE runs SET parent=?,plan=? WHERE id=?", (parent, json.dumps(legacy), copy))
+        for run, name, counts in (
+            (ja, "ja-delivery.json", {"input_tokens": 100, "cached_input_tokens": 70, "output_tokens": 20,
+                                     "reasoning_output_tokens": 5, "scope": "parent-only"}),
+            (en, "en-draft.json", {"input_tokens": 5, "cache_read_input_tokens": 10,
+                                  "cache_creation_input_tokens": 10, "output_tokens": 5}),
+            (en, "en-delivery.json", {"input_tokens": 10, "cache_read_input_tokens": 60,
+                                     "cache_creation_input_tokens": 20, "output_tokens": 20}),
+        ):
+            author = self.root / "cases" / self.case_id / run / "author"
+            author.mkdir(exist_ok=True)
+            (author / name).write_text(json.dumps({"authorFinished": True, "usage": counts}), encoding="utf-8")
+        detail = self.desk.case(self.case_id)
+        wrapped = self.desk.list_cases()[0]["models"]
+        self.assertEqual(wrapped, detail["models"])
+        self.assertEqual(wrapped["ja"]["tokenUsage"], {"input": 100, "output": 20, "total": 120,
+                         "cachedInput": 70, "reasoningOutput": 5, "partial": True})
+        english = {"input": 115, "output": 25, "total": 140, "cachedInput": 70, "cacheWriteInput": 30}
+        self.assertEqual(wrapped["en"]["tokenUsage"], english)
+        runs = {run["id"]: run for run in detail["runs"]}
+        self.assertEqual(runs[en]["editions"]["en"]["tokenUsage"], english)
+        self.assertEqual(runs[parent]["tokenUsage"]["total"], 120)
+        self.assertNotIn("tokenUsage", runs[copy])
+        self.desk.review(self.case_id, {"runId": en, "lang": "en", "reason": "採用"}, "adopted")
+        self.assertEqual(self.desk.case_preview(self.case_id)["tokenUsage"], english)
+
     def test_generation_clock_excludes_script_review_and_accumulates_resumed_work(self):
         desk = self.desk
         job = desk.submit("cases", {"themeId": "theme:clock", "revision": 1, "model": "test", "requestId": "clock",

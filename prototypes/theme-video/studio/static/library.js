@@ -36,20 +36,57 @@ function generationTimeLabel(timing) {
   return (timing.estimated ? "受付から完成まで" : "生成に") + " 約" + duration;
 }
 
+const compactTokens = new Intl.NumberFormat("ja", { notation: "compact", maximumSignificantDigits: 2 });
+const recordedTokens = new Intl.NumberFormat("ja");
+
+function tokenUsageDisplay(usage, { scope = "選択中の版", compact = false } = {}) {
+  if (!usage) return null;
+  const quantities = [
+    ["input", "入力"], ["output", "出力"], ["total", "合計"],
+    ["cachedInput", "うちキャッシュ読取"], ["cacheWriteInput", "うちキャッシュ書込"],
+    ["reasoningOutput", "うち推論出力"],
+  ].filter(([key]) => Number.isSafeInteger(usage[key]) && usage[key] >= 0);
+  if (!quantities.length) return null;
+
+  const measuredScope = usage.shared ? "日英共通" : scope;
+  const label = "トークン" + (usage.partial ? "（一部記録）" : "");
+  const format = (formatter, fields) => fields.map(([key, name]) => name + " " + formatter.format(usage[key])).join(" · ");
+  const direction = quantities.filter(([key]) => key === "input" || key === "output");
+  const visible = compact && direction.length ? direction : quantities;
+  const displayScope = usage.shared || !compact ? "（" + measuredScope + "）" : "";
+  const display = node("span", label + displayScope + " 約 " + format(compactTokens, visible));
+  display.title = label + "（" + measuredScope + "） " + format(recordedTokens, quantities);
+  return display;
+}
+
 function libraryModels(entries) {
   const content = document.createDocumentFragment();
   const versions = ["ja", "en"]
     .filter((language) => entries?.[language]?.model)
-    .map((language) => ({language, label: modelLabel(entries[language]), time: generationTimeLabel(entries[language].timing)}));
+    .map((language) => {
+      const version = entries[language];
+      return {
+        language, runId: version.runId, shared: version.tokenUsage?.shared,
+        label: modelLabel(version), time: generationTimeLabel(version.timing),
+        tokens: tokenUsageDisplay(version.tokenUsage, { compact: true }),
+      };
+    });
   if (!versions.length) {
     content.append(node("span", "—"));
     return content;
   }
   const [ja, en] = versions;
-  const same = en && ja.label === en.label && ja.time === en.time;
+  const sharedTokens = en && ja.runId && ja.runId === en.runId && ja.shared && en.shared
+    && ja.tokens && ja.tokens.title === en.tokens?.title;
+  const same = en && ja.label === en.label && ja.time === en.time
+    && (sharedTokens || (!ja.tokens && !en.tokens));
   for (const version of same ? [ja] : versions) {
     const name = node("span", (en && !same ? (version.language === "ja" ? "日 " : "英 ") : "") + version.label, "library-status");
     if (version.time) name.append(node("small", version.time, "library-time"));
+    if (version.tokens && (!sharedTokens || version === ja)) {
+      version.tokens.className = "library-time";
+      name.append(version.tokens);
+    }
     content.append(name);
   }
   return content;
@@ -131,7 +168,7 @@ function drawProductionLibrary() {
     text.append(titleRow, node("small", item.themeTitle + (item.shortSourceTitle ? " · ショート" : " · 横長")));
     work.append(frame, text);
     libraryCell(row, "").append(work);
-    const model = libraryCell(row, "モデル・生成時間");
+    const model = libraryCell(row, "モデル・生成時間・トークン");
     model.className = "library-model-cell";
     model.append(libraryModels(item.models));
     libraryCell(row, "評価").append(node("span", item.rating ? "★ " + item.rating : "—", "library-score"));
@@ -269,8 +306,11 @@ async function openLibraryPreview(item) {
     if (!videoUrl) throw new Error("試写できる完成映像がありません。");
     $("library-preview-title").textContent = (movie.title || item.title) + " ・ " + languageName[movie.language];
     const duration = generationTimeLabel(movie.timing);
-    $("library-preview-time").textContent = duration;
-    $("library-preview-time").hidden = !duration;
+    const tokens = tokenUsageDisplay(movie.tokenUsage);
+    const metadata = $("library-preview-time");
+    metadata.textContent = duration;
+    if (tokens) metadata.append(duration ? "　·　" : "", tokens);
+    metadata.hidden = !duration && !tokens;
     $("library-preview-case").href = caseHash(item.id) + "/" + encodeURIComponent(movie.runId) + "/" + encodeURIComponent(movie.language);
     status.textContent = "";
     video.hidden = false;
