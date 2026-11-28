@@ -551,7 +551,8 @@ def render_edition(plan, lang, out_dir, progress=lambda message: None):
                         "-vf",f"fps={FPS},format=yuv420p","-c:v","libx264","-threads","3","-preset","veryfast",
                         "-crf","18","-c:a","aac","-ar","48000","-b:a","128k","-movflags","+faststart",
                         "-metadata","title="+plan["titles"][lang],"-metadata:s:a:0",
-                        "language="+("jpn" if lang=="ja" else "eng"),"video.mp4"],cwd=work,check=True,timeout=900)
+                        "language="+("jpn" if lang=="ja" else "eng"),"video.mp4"],cwd=work,check=True,timeout=900,
+                       creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
         (work/"subtitles.srt").write_text("\n".join(subtitles),encoding="utf-8",newline="\n")
         (work/"timings.json").write_text(json.dumps(timing,ensure_ascii=False,indent=2),encoding="utf-8")
         meta = {"voice":voice, "fps":FPS, "duration":frame/FPS, "themeId":plan.get("themeId"), "visualStyle":STYLE,

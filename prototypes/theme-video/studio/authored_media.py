@@ -300,7 +300,8 @@ def _capture(work, cuts):
     pick = "+".join(f"eq(n\\,{moment})" for moment in moments)
     tile = f"select={pick},scale=320:180,tile=3x{math.ceil(len(moments) / 3)}:color=white"
     subprocess.run(["ffmpeg", "-nostdin", "-hide_banner", "-loglevel", "error", "-y", "-i", "video.mp4",
-                    "-vf", tile, "-frames:v", "1", "contact-sheet.png"], cwd=work, check=True, timeout=180)
+                    "-vf", tile, "-frames:v", "1", "contact-sheet.png"], cwd=work, check=True, timeout=180,
+                   creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
     return moments
 
 

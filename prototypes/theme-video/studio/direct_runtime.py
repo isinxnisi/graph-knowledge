@@ -32,7 +32,8 @@ def linux_path(path):
     if os.name != "nt":
         return str(Path(path).resolve())
     result = subprocess.run([*linux_command(), "wslpath", "-u", str(Path(path).resolve())],
-                            capture_output=True, text=True, encoding="utf-8", check=True)
+                            capture_output=True, text=True, encoding="utf-8", check=True,
+                            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
     return result.stdout.strip()
 
 
@@ -473,7 +474,8 @@ def run_author(workspace, prompt, model_id, effort, progress=None):
             if proc.poll() is None:
                 if job_pid:
                     subprocess.run([*linux_command(), "/usr/bin/python3", "-I", linux_path(__file__), "stop",
-                                    str(job_pid), token], timeout=10, capture_output=True)
+                                    str(job_pid), token], timeout=10, capture_output=True,
+                                   creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
                 proc.kill()
                 proc.wait()
             proc.stdout.close()

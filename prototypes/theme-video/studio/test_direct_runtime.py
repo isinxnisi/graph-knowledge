@@ -14,6 +14,20 @@ from test_author_session import fixture_png
 
 
 class AuthorRuntimeTest(unittest.TestCase):
+    def test_windows_catalog_path_conversion_does_not_open_a_console(self):
+        with (patch.object(runtime, "os") as platform,
+              patch.object(runtime.subprocess, "CREATE_NO_WINDOW", 0x08000000, create=True),
+              patch.object(runtime.subprocess, "run") as convert):
+            platform.name = "nt"
+            expected = "/work/direct_runtime.py"
+            convert.return_value.stdout = expected + "\n"
+            command = runtime.author_catalog_command("claude-models")
+        self.assertEqual(command[-2:], [expected, "claude-models"])
+        convert.assert_called_once()
+        self.assertEqual(convert.call_args.args[0][:1], ["wsl.exe"])
+        self.assertEqual(convert.call_args.args[0][-3:-1], ["wslpath", "-u"])
+        self.assertEqual(convert.call_args.kwargs["creationflags"], 0x08000000)
+
     def test_image_import_accepts_only_bounded_png_data(self):
         invalid = [None, {}, {"image_url": "https://example.test/image.png"}, {"image_url": "data:image/png;base64,###"},
                    {"image_url": "data:image/png;base64,aGVsbG8="}, {"path": "output", "image_url": ""}]
