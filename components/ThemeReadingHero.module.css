@@ -73,6 +73,9 @@
 }
 .editorial .editorialCover {aspect-ratio:3 / 2;}
 .hero.editorial .editorialHeadline .hook {
+  grid-column:2;
+  grid-row:1;
+  align-self:center;
   padding:0;
   margin:0;
   font-size:clamp(1.15rem,2cqw,1.7rem);
