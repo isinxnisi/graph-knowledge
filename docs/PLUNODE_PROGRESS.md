@@ -1,4 +1,4 @@
-2026年11月28日 公開資料画像の正式監査・配備候補の封印とVPS転送まで完了｜残りはsudo認証を伴う正式切替、アプリ・ガイド・両予定の更新｜全体は正式の初回採用確認まで。正式稼働build YbHfEJTnvcfoN6kZHAVxx。画像取り込みだけを正式稼働版に重ねた候補25e437f4／build lXyj2xEDxQLznY8NE1xOO。Web・既存4 Worker、追加SQL 0件。[封印と切替手順](runbooks/THEME_SOURCE_IMAGE_INTAKE.md#正式配備候補と切替待ち)。
+2026年11月28日 公開資料画像の正式配備・ガイド第28版・通常Chatの実画像視認・両予定の更新まで完了｜残りは定期制作で実際に採用された最初の画像の配置確認｜全体は正式での初回採用確認まで。正式Webと既存4 Workerは `25e437f4`／build `lXyj2xEDxQLznY8NE1xOO`、追加SQL 0件。正式アプリの新定義・DARTの観測PNG・制作00分と独立見直し30分の指示を読戻し。[正式配備と確認の記録](runbooks/THEME_SOURCE_IMAGE_INTAKE.md#2026年11月28日の正式配備)。
 
 2026年11月28日 公開資料画像の通常Chat取り込み・日英の年表と詳細のHTTPS β確認まで完了｜残りは正式Web配備と正式アプリ・予定文の更新｜全体は正式の初回採用確認まで。β Web 81e028b2／build e3oCxkwPl690faJmAgffQ。DARTのNASA観測画像を通常Chatで視認し、来歴付き登録・再送・HTML取得失敗・非公開第2版の読戻しと日英表示を確認。[操作・検証・正式の適用順](runbooks/THEME_SOURCE_IMAGE_INTAKE.md)。
 

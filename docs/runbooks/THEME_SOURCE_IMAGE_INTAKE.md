@@ -45,22 +45,22 @@ DARTの既存テーマを読む場合は参照に限り、衝突に関する実�
 
 ### 正式の品質ガイドに適用する画像手順
 
-確認時の正式品質ガイドは第27版。切替時の現行版を読み直す。契約2は `read_theme_work_guide({phase:"production",management:true})` でキーを取得し、本文は同じrevisionの `managementBody` を末尾まで読む。`images` の既存の添付・生成の指示に次の段落を入れて経路を明確にする。契約1の技術経路の表でも、テーマ画像行に同じ公開画像の手順を含める。添付契約と既存の生成素材の手順はそれぞれ対象に応じて記載する。
+本番反映では第27版から第28版へ更新した。次回変更時も現行版を先に読む。契約2は `read_theme_work_guide({phase:"production",management:true})` でキーを取得し、本文は同じrevisionの `managementBody` を末尾まで読む。`images` の既存の添付・生成の指示に次の段落を入れて経路を明確にする。契約1の技術経路の表でも、テーマ画像行に同じ公開画像の手順を含める。添付契約と既存の生成素材の手順はそれぞれ対象に応じて記載する。
 
 > 公開資料の実画像を使うときは、出典ページと利用条件を確認し、公開画像URLを `preview_theme_source_image` に渡して実画像を視認する。採用時は、視認結果のSHA-256・出典・利用条件・必要なクレジット・日英altを添えた `import-theme-source-image` を案件の prepare → dispatch で実行し、返った `imageId` を別のテーマ更新で日英の年表項目に配置する。見直しでは、既存の認証済み画面採取で実際の表示とクレジットを確かめる。画像を取得・視認できない場合は、掲載しない理由を記録し、現行の制作継続基準を適用する。
 
 更新は読み取った現行版を `expectedRevision` に指定し、変更後の全体を現行契約で保存する。画像の確認・再開条件と、採取証拠・完了に関わる基準の変更履歴を照合する。公開画像の受付が使えることを正式で確認してから、既存定期プロンプトの書き換えを適用する。
 
-## 正式配備候補と切替待ち
+## 2026年11月28日の正式配備
 
-正式HTTPSの稼働版 `YbHfEJTnvcfoN6kZHAVxx`（source `a9b8a84c`）を監査し、公開資料画像の変更だけを重ねた候補 `25e437f453ae1caaaf3f9e23d4469d7d3177d28c` を作成した。βで実証した取り込み差分を移し、正式稼働版のテキスト資料照合の契約を使った。候補ブランチは `codex/theme-source-image-production`。日常βの受入buildは `e3oCxkwPl690faJmAgffQ`。
+正式稼働版 `a9b8a84c`／build `YbHfEJTnvcfoN6kZHAVxx` を基準に、公開資料画像の差分を固定した。配備元は `25e437f453ae1caaaf3f9e23d4469d7d3177d28c`（`codex/theme-source-image-production`）。隔離環境でWebと専用プレビューWorkerのbuild一致、HTTPのbuild読戻し、ChromiumのPNG採取、関連59件と配備計画6件を確認した。配備資材の封印は `84d8bf70e6ec70f6ec82d76fd8b52454db980e9f2c0105aa6738c6369e02465c`。
 
-候補build `lXyj2xEDxQLznY8NE1xOO` は隔離環境でWebと専用プレビューWorkerの一致、HTTPのbuild読戻し、ChromiumのPNG採取、関連59件と配備計画6件を確認した。正式51／知識13件とβ52／知識12件の共通SQLは全件一致。配備対象はWeb、知識3 Worker、専用プレビューWorkerで、適用SQLは0件。封印 `84d8bf70e6ec70f6ec82d76fd8b52454db980e9f2c0105aa6738c6369e02465c` の資材をVPSに転送し、SHA-256を照合した。
+初回の切替は、有効な独立見直しleaseがあり事前確認で停止した。再実行では既存の照会で案件と画像・プレビュー処理が落ち着くのを待機し、独立見直しが公開第12版を確定してleaseを返した後、同じ封印済み資材と公開手順の事前確認で切り替えた。
 
-切替はVPSのsudo認証待ち。端末で同じ資材を使う。手動セッションの終了後は、コマンドが共通guardを取得してから切替を実行する。
+- 正式稼働buildは `lXyj2xEDxQLznY8NE1xOO`。Web、`knowledge-publisher`、`knowledge-review`、`knowledge-patrol`、`theme-automation` を読戻した。適用SQLは0件で、台帳は会員51件・知識13件。切替時の世代は `k75-63e39a2009cc5bd60b03db1173d022ee`、復旧用バックアップは `/opt/graph-knowledge/backups/release-25e437f453ae-84d8bf70e6ec70f6`。
+- 正式HTTPSの状態・公開互換性APIを `production_release.py verify-https` で確認した。認証済みMCPは正式案件の環境・originと、技術ガイドの `sourceImages` を返した。品質ガイドは画像節と登録経路表を第28版へ更新し、制作・独立見直しで読戻した。評価基準第27版・画面要件第15版の内容を維持した。
+- 運営者による正式アプリのツール更新後、アプリ詳細で `preview_theme_source_image`、`import_theme_source_image`、案件経由のprepare、既存の認証付き画面採取を確認した。[正式アプリの定義](https://chatgpt.com/plugins/plugin_asdk_app_6aeffba90628819181cfb1d6eb54a8d0)
+- 正式アプリ指定の通常ChatでNASAのDART観測PNGを取得・視認した。985×985 px、SHA-256は `81e28b59570bc6ea70b382e6cff3ad9159dff8fcda12f9237fe02201c843f7d5`。角張った岩の密集と中央付近の岩の影を識別した。無指定の案件取得は定期対象が空で環境フィールドを返さなかったため、正式アプリの接続先と認証済みの指定案件読戻しで環境を照合した。[正式の通常Chat実行記録](https://chatgpt.com/c/6b0adc70-7a1c-83e8-a04b-27b62eec2a6b)
+- 保存済みの定期指示は、独立見直し、制作の順に各一段落を追加した。再度編集画面を開いて、両方の全文と稼働状態（制作は毎時00分・独立見直しは毎時30分）を照合した。[定期タスク](https://chatgpt.com/scheduled)
 
-```powershell
-wsl.exe -d Ubuntu --cd /home/isinxnisi/1.projects/7.graph-knowledge -- python3 .local/theme-source-image-production-20261128/transport.py apply
-```
-
-`activated` と `source-image-code-readback` を確認してから、正式HTTPSの互換性API、既存MCP、品質ガイドとChatGPTの両定期設定を読む。
+正式の接続確認は画像プレビューまで。登録・再送・取得失敗・日英配置と詳細表示はβで確認済み。正式では定期制作・独立見直しで有益な素材が見つかった案件から採用し、その画像の配置と表示を確認して共有後日対応に進展を記録する。
