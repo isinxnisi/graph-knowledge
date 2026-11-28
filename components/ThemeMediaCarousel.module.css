@@ -29,11 +29,14 @@
 }
 .openingLayout {
   --opening-peek-width: clamp(68px, 20cqw, 104px);
+  max-width: 35rem;
+  margin-inline: auto;
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   column-gap: 12px;
 }
+.openingLayout:not([data-peek="true"]) { max-width: 28.5rem; }
 .openingVisual { min-width: 0; }
 .openingPoster {
   position: relative;
