@@ -1079,7 +1079,10 @@ class Ledger:
                             FROM runs r JOIN cases c ON r.case_id=c.id
                             LEFT JOIN idea_cases i ON i.case_id=c.id
                             LEFT JOIN run_alternatives a ON r.editorial_origin=a.run_id
-                            WHERE r.status='queued' AND c.trashed_at IS NULL ORDER BY r.created,r.rowid LIMIT 1""").fetchone()
+                            WHERE r.status='queued' AND c.trashed_at IS NULL
+                              AND NOT EXISTS (SELECT 1 FROM runs active
+                                              WHERE active.case_id=r.case_id AND active.status='running')
+                            ORDER BY r.created,r.rowid LIMIT 1""").fetchone()
             if not row:
                 return False
             run, case_id = row["id"], row["case_id"]

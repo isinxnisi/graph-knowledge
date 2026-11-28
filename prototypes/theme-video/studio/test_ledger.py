@@ -4,6 +4,7 @@ from copy import deepcopy
 import json
 from pathlib import Path
 import tempfile
+from threading import Event
 import unittest
 from unittest.mock import Mock
 
@@ -35,6 +36,89 @@ class LedgerTest(unittest.TestCase):
         (out / "video.mp4").write_bytes(lang.encode())
         (out / "subtitles.srt").write_text(plan["scenes"][0][lang]["narration"], encoding="utf-8")
         (out / "timings.json").write_text(json.dumps([{"id": "s1", "start": 0, "end": 1}]))
+
+    def test_parallel_workers_claim_distinct_cases_and_pause_and_resume_independently(self):
+        self.request.update(language="ja")
+        first = self.create()
+        following = self.desk.submit(
+            "runs", {"requestId": "following", "model": "test", "language": "ja",
+                     "productionMode": "directed-film-v1"}, self.snapshot, self.models, first["id"],
+        )
+        first_started, other_started = Event(), Event()
+        release_first, release_other = Event(), Event()
+        gates = {first["runId"]: (first_started, release_first)}
+        calls = []
+
+        def create_case(key):
+            return self.desk.submit(
+                "/api/cases", {**self.request, "requestId": key}, self.snapshot, self.models,
+            )
+
+        def generate(_snapshot, _brief, _model, folder, *, progress, **_options):
+            calls.append(folder.name)
+            if folder.name in gates:
+                entered, release = gates[folder.name]
+                entered.set()
+                if not release.wait(timeout=12):
+                    raise TimeoutError("The fake generator was not released")
+                progress("保存した工程を確認中")
+            return deepcopy(self.plan)
+
+        def status(job):
+            return next(run["status"] for run in self.desk.case(job["id"])["runs"] if run["id"] == job["runId"])
+
+        with ThreadPoolExecutor(max_workers=2) as workers:
+            def claim():
+                return workers.submit(self.desk.process_next, generate, self.render)
+
+            try:
+                first_work = claim()
+                self.assertTrue(first_started.wait(timeout=5))
+                self.assertFalse(claim().result(timeout=5))
+                self.assertEqual(status(following), "queued")
+
+                other = create_case("other")
+                third = create_case("third")
+                gates[other["runId"]] = (other_started, release_other)
+                other_work = claim()
+                self.assertTrue(other_started.wait(timeout=5))
+                self.assertEqual([status(job) for job in (first, following, other, third)],
+                                 ["running", "queued", "running", "queued"])
+
+                self.desk.pause(first["id"], first["runId"])
+                release_first.set()
+                self.assertTrue(first_work.result(timeout=5))
+                self.assertEqual((status(first), status(other)), ("interrupted", "running"))
+
+                self.desk.resume(first["id"], first["runId"])
+                self.assertTrue(claim().result(timeout=5))
+                self.assertEqual((status(first), status(following)), ("done", "queued"))
+                self.assertTrue(claim().result(timeout=5))
+                self.assertEqual((status(following), status(third)), ("done", "queued"))
+                self.assertTrue(claim().result(timeout=5))
+                self.assertEqual((status(other), status(third)), ("running", "done"))
+                self.assertEqual(calls, [job["runId"] for job in (first, other, first, following, third)])
+            finally:
+                release_first.set()
+                release_other.set()
+            self.assertTrue(other_work.result(timeout=5))
+            self.assertEqual(status(other), "done")
+
+    def test_only_lead_generation_worker_processes_video_ideas(self):
+        from server import run_worker
+
+        class StopWorker(Exception):
+            pass
+
+        for video_only in (False, True):
+            with self.subTest(video_only=video_only):
+                desk = Mock()
+                desk.process_next.side_effect = [True, StopWorker]
+                desk.work_ideas.return_value = False
+                with self.assertRaises(StopWorker):
+                    run_worker(desk, video_only=video_only)
+                self.assertEqual(desk.process_next.call_count, 2)
+                self.assertEqual(desk.work_ideas.call_count, 0 if video_only else 1)
 
     def test_derived_short_keeps_the_original_case_selection_and_can_start_with_a_draft(self):
         source = self.create()

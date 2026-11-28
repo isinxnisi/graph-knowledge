@@ -33,7 +33,7 @@ def exclusive(folder):
         yield
 
 
-def run_worker(ledger):
+def run_worker(ledger, *, video_only=False):
     from editor import generate_ideas, generate_plan
     def render(plan, lang, folder, progress):
         from media import render_edition
@@ -41,7 +41,7 @@ def run_worker(ledger):
 
     while True:
         made_video = ledger.process_next(generate_plan, render)
-        made_ideas = ledger.work_ideas(generate_ideas)
+        made_ideas = not video_only and ledger.work_ideas(generate_ideas)
         if not (made_video or made_ideas):
             ledger.wake.wait(timeout=2)
             ledger.wake.clear()
@@ -382,6 +382,7 @@ def main():
         server.preview_slot = threading.Lock()
         threading.Thread(target=server.youtube.run_worker, daemon=True).start()
         threading.Thread(target=run_worker, args=(server.ledger,), daemon=True).start()
+        threading.Thread(target=run_worker, args=(server.ledger,), kwargs={"video_only": True}, daemon=True).start()
         print(f"http://127.0.0.1:{server.server_port}/", flush=True)
         server.serve_forever()
 
