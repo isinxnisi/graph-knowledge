@@ -31,20 +31,24 @@ export function themeMediaImages(read:KnowledgeThemeRead,provenance:Map<string,P
       if(!img)continue;
       const pin=sources.get(img.src)??img.id;
       sources.set(img.src,pin);
+      const profile=provenance.get(img.id);
+      const internallyProduced=profile?.kind==="original"||profile?.kind==="generated";
+      const legacyGenerated=img.src.startsWith("/theme-assets/")&&img.credit.startsWith("Plunode · AI");
+      const coverOnly=p?.image?.src===img.src&&
+        (profile?.kind==="generated"||legacyGenerated||/^Plunode\s*Original\b/i.test(profile?.credit||img.credit));
       const existing=candidates.get(pin);
       if(existing){
         if(!existing.images[language])existing.images[language]={...img,credit:img.credit||existing.images.ja?.credit||"",sourceUrl:img.sourceUrl||existing.images.ja?.sourceUrl};
+        if(coverOnly)existing.coverOnly=true;
         continue;
       }
-      const profile=provenance.get(img.id);
       const licensed=profile?.kind==="licensed"&&secureUrl(profile.sourceUrl)&&!!profile.terms?.trim()&&
         !!profile.credit?.trim()&&profile.creditDisplay!=="internal";
       const catalogued=img.src.startsWith("/theme-assets/")&&img.kind==="photo"&&secureUrl(img.sourceUrl)&&secureUrl(img.termsUrl)&&!!img.credit;
-      const own=(profile?.kind==="original"||profile?.kind==="generated")&&!!profile.terms?.trim()||
-        (img.src.startsWith("/theme-assets/")&&img.credit.startsWith("Plunode · AI"));
+      const own=internallyProduced&&!!profile.terms?.trim()||legacyGenerated;
       const image:ThemeReadingImage=licensed?{...img,sourceUrl:profile!.sourceUrl,credit:profile!.credit!}:img;
       candidates.set(pin,{id:pin,images:{[language]:image},origin:licensed||catalogued?"licensed":own?"original":"unknown",
-        eligible:Boolean(licensed||catalogued||own),...(profile?.terms?{terms:profile.terms}: {})});
+        eligible:Boolean(licensed||catalogued||own),...(coverOnly?{coverOnly:true}:{}),...(profile?.terms?{terms:profile.terms}: {})});
     }
   }
   return [...candidates.values()];
@@ -71,7 +75,11 @@ export function validatePlacement(slots:MediaSlot[],targets:MediaPosition[],imag
   const valid=new Set(targets.map(positionKey));
   for(const s of slots){
     if(s.positions.some(p=>!valid.has(positionKey(p))))throw new MediaProblem(409,"TARGET_CHANGED","掲載対象のノードがこの公開版に含まれていません。公開版を読み直してください。");
-    if(s.kind==="image"&&!images.some(i=>i.id===s.imageId&&i.eligible))throw new MediaProblem(409,"IMAGE_UNAVAILABLE","画像の由来・出典・表示条件を確認して選び直してください。");
+    if(s.kind==="image"){
+      const image=images.find(i=>i.id===s.imageId);
+      if(!image?.eligible)throw new MediaProblem(409,"IMAGE_UNAVAILABLE","画像の由来・出典・表示条件を確認して選び直してください。");
+      if(image.coverOnly&&!removalOnly([s],previous))throw new MediaProblem(409,"IMAGE_COVER_ONLY","テーマの表紙用に制作した画像は掲載スライドに追加できません。");
+    }
     if(s.kind==="video")for(const l of languages){
       const e=s.editions[l];
       if(!e||videos.has(l+":"+e.videoId))continue;

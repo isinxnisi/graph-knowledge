@@ -25,7 +25,7 @@ export type VideoEdition = {videoId:string;title:string;duration:number;privacy:
 export type MediaSlide = {id:string;positions:MediaPosition[]} & (
   {kind:"image";image:ThemeReadingImage;terms?:string} |
   {kind:"video";format:"landscape"|"short";editions:Partial<Record<MediaLanguage,VideoEdition>>});
-export type ImageCandidate = {id:string;images:Partial<Record<MediaLanguage,ThemeReadingImage>>;origin:"licensed"|"original"|"unknown";eligible:boolean;terms?:string};
+export type ImageCandidate = {id:string;images:Partial<Record<MediaLanguage,ThemeReadingImage>>;origin:"licensed"|"original"|"unknown";eligible:boolean;coverOnly?:boolean;terms?:string};
 
 export function slidesAt(slides:MediaSlide[],position:MediaPosition,language:MediaLanguage){
   const items=slides.filter(s=>s.positions.some(p=>positionKey(p)===positionKey(position)));

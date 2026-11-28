@@ -58,18 +58,33 @@ function Editor({en}:{en:boolean}){
     {state&&<fieldset disabled={busy}><legend>{state.title} · {state.revision}</legend>
       {state.previousPlacements.length>0&&<nav>{state.previousPlacements.map(p=><button key={p.revision} disabled={p.revision===state.revision} onClick={()=>choose(state.themeId,p.revision)}>{t("版","Revision ")}{p.revision} ({p.slotCount})</button>)}</nav>}
       {!isCurrent&&<p>{t("旧版では既存の掲載を解除できます。","You can remove placements from this edition.")}</p>}
-      {slots.map((slot,i)=><div className={css.slot} key={slot.id}>
-        <div><strong>{i+1}. {slot.kind==="image"?(state.imageCandidates.find(c=>c.id===slot.imageId)?.images[en?"en":"ja"]?.alt||slot.imageId):"YouTube"}</strong>
-          <button onClick={()=>move(i,-1)} disabled={i===0} aria-label={t("前へ","Move up")}>↑</button><button onClick={()=>move(i,1)} disabled={i===slots.length-1} aria-label={t("後へ","Move down")}>↓</button>
-          <button onClick={()=>update(slots.filter((_,j)=>j!==i))}>{t("枠を外す","Remove slot")}</button></div>
-        {slot.kind==="video"&&<><label>{t("形式","Format")}<select disabled={!isCurrent} value={slot.format} onChange={e=>replace(i,{...slot,format:e.target.value as "landscape"|"short"})}><option value="landscape">{t("横長","Landscape")}</option><option value="short">Shorts</option></select></label>
-          {(["ja","en"] as const).map(l=>{const status=state.videoStatus[l+":"+slot.editions[l]?.videoId]?.state;return <label key={l}>{l==="ja"?"日本語":"English"} · YouTube ID<input value={slot.editions[l]?.videoId??""} maxLength={11} onChange={e=>{const editions={...slot.editions};if(e.target.value)editions[l]={videoId:e.target.value};else delete editions[l];replace(i,{...slot,editions});}}/>{status&&<small>{status==="ready"?t("再生可","Playable"):status==="unavailable"?t("公開範囲・埋め込みを確認","Check visibility and embedding"):t("YouTubeと照合できません","Unable to contact YouTube")}</small>}</label>;})}</>}
-        <details><summary>{t("掲載位置","Placement")} ({slot.positions.length})</summary>
-          {state.targets.map(({label,...p})=><label key={positionKey(p)}><input type="checkbox" checked={slot.positions.some(v=>positionKey(v)===positionKey(p))} onChange={e=>replace(i,{...slot,positions:e.target.checked?[...slot.positions,p]:slot.positions.filter(v=>positionKey(v)!==positionKey(p))})}/>{p.kind==="theme"?"TOP":label}</label>)}</details>
-      </div>)}
+      {slots.map((slot,i)=>{
+        const image=slot.kind==="image"?state.imageCandidates.find(c=>c.id===slot.imageId):undefined;
+        const savedPositions=image?.coverOnly?state.slots.find(s=>s.id===slot.id)?.positions:undefined;
+        return <div className={css.slot} key={slot.id}>
+          <div><strong>{i+1}. {slot.kind==="image"?(image?.images[en?"en":"ja"]?.alt||slot.imageId):"YouTube"}</strong>
+            <button onClick={()=>move(i,-1)} disabled={i===0} aria-label={t("前へ","Move up")}>↑</button><button onClick={()=>move(i,1)} disabled={i===slots.length-1} aria-label={t("後へ","Move down")}>↓</button>
+            <button onClick={()=>update(slots.filter((_,j)=>j!==i))}>{t("枠を外す","Remove slot")}</button></div>
+          {slot.kind==="video"&&<><label>{t("形式","Format")}<select disabled={!isCurrent} value={slot.format} onChange={e=>replace(i,{...slot,format:e.target.value as "landscape"|"short"})}><option value="landscape">{t("横長","Landscape")}</option><option value="short">Shorts</option></select></label>
+            {(["ja","en"] as const).map(l=>{const status=state.videoStatus[l+":"+slot.editions[l]?.videoId]?.state;return <label key={l}>{l==="ja"?"日本語":"English"} · YouTube ID<input value={slot.editions[l]?.videoId??""} maxLength={11} onChange={e=>{const editions={...slot.editions};if(e.target.value)editions[l]={videoId:e.target.value};else delete editions[l];replace(i,{...slot,editions});}}/>{status&&<small>{status==="ready"?t("再生可","Playable"):status==="unavailable"?t("公開範囲・埋め込みを確認","Check visibility and embedding"):t("YouTubeと照合できません","Unable to contact YouTube")}</small>}</label>;})}</>}
+          <details><summary>{t("掲載位置","Placement")} ({slot.positions.length})</summary>
+            {image?.coverOnly&&<small>{t("テーマ表紙の既存掲載","Existing theme cover placement")}</small>}
+            {state.targets.map(({label,...p})=>{
+              const key=positionKey(p);
+              const checked=slot.positions.some(v=>positionKey(v)===key);
+              const disabled=image?.coverOnly&&!savedPositions?.some(v=>positionKey(v)===key);
+              return <label key={key}>
+                <input type="checkbox" checked={checked} disabled={disabled}
+                  onChange={e=>replace(i,{...slot,positions:e.target.checked?[...slot.positions,p]:slot.positions.filter(v=>positionKey(v)!==key)})}/>
+                {p.kind==="theme"?"TOP":label}
+              </label>;
+            })}
+          </details>
+        </div>;
+      })}
       {isCurrent&&<div className={css.add}><button onClick={()=>update([...slots,{kind:"video",id:crypto.randomUUID(),format:"landscape",editions:{},positions:[{kind:"theme"}]}])}>{t("動画を追加","Add video")}</button>
         <select aria-label={t("画像候補","Image candidates")} value={newImage} onChange={e=>setNewImage(e.target.value)}><option value="">{t("画像を選択","Select an image")}</option>
-          {state.imageCandidates.map(c=><option key={c.id} value={c.id} disabled={!c.eligible}>{c.images[en?"en":"ja"]?.alt||c.id} · {c.origin==="unknown"?t("由来の確認が必要","Origin unconfirmed"):c.origin==="original"?"Plunode":t("外部素材","Licensed source")}</option>)}</select>
+          {state.imageCandidates.filter(c=>!c.coverOnly).map(c=><option key={c.id} value={c.id} disabled={!c.eligible}>{c.images[en?"en":"ja"]?.alt||c.id} · {c.origin==="unknown"?t("由来の確認が必要","Origin unconfirmed"):c.origin==="original"?"Plunode":t("外部素材","Licensed source")}</option>)}</select>
         <button disabled={!newImage} onClick={()=>{update([...slots,{kind:"image",imageId:newImage,id:crypto.randomUUID(),positions:[{kind:"theme"}]}]);setNewImage("");}}>{t("画像を追加","Add image")}</button></div>}
       <div><button onClick={()=>void run(()=>submit("preview"))}>{t("掲載プレビュー","Preview placement")}</button> <button onClick={()=>{if(window.confirm(t("この公開テーマの掲載を更新します。限定公開動画も訪問者が視聴できます。保存しますか？","Update this public theme? Visitors can watch included unlisted videos.")))void run(()=>submit("save"));}}>{t("掲載を保存","Save placements")}</button></div>
       {preview&&<><label>{t("表示言語","Preview language")}<select value={previewLang} onChange={e=>setLang(e.target.value as "ja"|"en")}><option value="ja">日本語</option><option value="en">English</option></select></label>

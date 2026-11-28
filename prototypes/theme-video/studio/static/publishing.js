@@ -638,7 +638,7 @@ function buildPlacementEditor(editor, placement, environment, entries) {
         environment:environment.id, themeId:placement.themeId, revision:last
       }));
       const targets = new Set(placement.targets.map(placementKey));
-      const images = new Set(placement.imageCandidates.filter((image) => image.eligible).map((image) => image.id));
+      const images = new Set(placement.imageCandidates.filter((image) => image.eligible && !image.coverOnly).map((image) => image.id));
       let skipped = 0;
       for (const slot of before.slots) {
         if (slots.some((entry) => entry.id === slot.id)) continue;
@@ -686,6 +686,7 @@ function buildPlacementEditor(editor, placement, environment, entries) {
         slots.splice(index, 1); drawSlots(); refresh();
       }, "quiet small danger-link"));
       article.append(head);
+      const imageCandidate = slot.kind === "image" ? placement.imageCandidates.find((item) => item.id === slot.imageId) : null;
       if (slot.kind === "video") {
         const profile = node("div", null, "placement-video-fields");
         article.append(profile);
@@ -695,17 +696,19 @@ function buildPlacementEditor(editor, placement, environment, entries) {
         const changed = () => { format.value = slot.format; updateTitle(); refresh(); };
         for (const lang of ["ja", "en"]) placementVideoField(profile, placement, lang, slot, entries, current, changed);
       } else {
-        const current = placement.imageCandidates.find((item) => item.id === slot.imageId);
-        const image = current?.images.ja || current?.images.en;
+        const image = imageCandidate?.images.ja || imageCandidate?.images.en;
         if (image?.credit) article.append(node("small", image.credit));
+        if (imageCandidate?.coverOnly) article.append(node("small", "テーマ表紙の既存掲載", "subtle"));
       }
+      const coverOnly = imageCandidate?.coverOnly === true;
+      const savedPositions = coverOnly ? placement.slots.find((saved) => saved.id === slot.id)?.positions : null;
       const positions = node("details", null, "panel");
       positions.append(node("summary", "表示場所　" + slot.positions.length + "か所"));
       for (const {label, ...position} of placement.targets) {
         const key = placementKey(position);
         const checkbox = publishCheck(positions, position.kind === "theme" ? "テーマ画面の冒頭" : label, "position",
           slot.positions.some((value) => placementKey(value) === key));
-        checkbox.disabled = !current && !checkbox.checked;
+        checkbox.disabled = (!current && !checkbox.checked) || (coverOnly && !savedPositions?.some((saved) => placementKey(saved) === key));
         checkbox.onchange = () => {
           slot.positions = slot.positions.filter((entry) => placementKey(entry) !== key);
           if (checkbox.checked) slot.positions.push(position);
@@ -717,10 +720,11 @@ function buildPlacementEditor(editor, placement, environment, entries) {
     });
     if (!slots.length) changes.append(node("p", "この公開版に掲載された素材はありません。", "subtle"));
   }
+  const slideImages = placement.imageCandidates.filter((image) => !image.coverOnly);
   const selector = publishSelect(forms, "スライドに追加する画像（任意）", "image", [["", "画像を選ぶ"],
-    ...[...placement.imageCandidates].sort((left,right) => Number(right.origin === "licensed") - Number(left.origin === "licensed")).map((item) => [item.id, (item.images.ja?.alt || item.images.en?.alt || item.id) +
+    ...slideImages.sort((left,right) => Number(right.origin === "licensed") - Number(left.origin === "licensed")).map((item) => [item.id, (item.images.ja?.alt || item.images.en?.alt || item.id) +
       (item.eligible ? "" : "（表示条件の確認が必要）")])]);
-  for (const item of placement.imageCandidates.filter((entry) => !entry.eligible)) {
+  for (const item of slideImages.filter((entry) => !entry.eligible)) {
     const row = [...selector.options].find((entry) => entry.value === item.id);
     if (row) row.disabled = true;
   }

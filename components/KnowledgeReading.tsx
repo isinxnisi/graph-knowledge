@@ -69,6 +69,7 @@ export default function KnowledgeReading({children,operatorEnabled=true,initialT
  const active=w.activeTheme,retained=w.retainedTheme;
  const mediaLanguage=en?"en":"ja";
  const media=usePublishedThemeMedia(active&&!active.operatorPreview?active.theme:undefined,mediaLanguage);
+ const hasOpeningMedia=Boolean(active&&media.slides.some(slide=>slide.positions.some(position=>position.kind==="theme")));
  const localeEdition=retained?.localeEdition??(initialTheme?.theme.id===retained?.theme.id&&initialTheme?.theme.revision===retained?.theme.revision?initialTheme?.localeEdition:undefined);
  const closeTheme=w.closeTheme;
  const [about,setAbout]=useState<boolean|null>(null);
@@ -176,8 +177,14 @@ export default function KnowledgeReading({children,operatorEnabled=true,initialT
         {retained && <section hidden={!active} className={`${base.panel} ${base.graphPanel} ${css.stage}`} aria-label={en ? "Theme reading" : "テーマを読む"}>
           <header className={css.themeHeader}><button onClick={() => { resetDetailTrail(); checkpoint(); setRequested(false); w.closeTheme(); if(!commonVisible)host.current?.onReturn(); }} className={css.return}><Icon name="back" />{en ? "Back to exploration" : "探索に戻る"}</button><span>{en ? "Saved composition" : "構成版"} {retained.theme.revision}</span><h2 title={retained.theme.content.title}>{knowledgeDisplayText(themeDisplayTranslations,{kind:"theme",id:retained.theme.id,revision:retained.theme.revision,field:"title"},locale,retained.theme.content.title)}</h2><button className={css.themeInfo} aria-label={en?"Create Capsule":"Capsuleを作成"} title={en?"Create Capsule":"Capsuleを作成"} disabled={busy} onClick={()=>{checkpoint();setCreatedCapsule(captureKnowledgeCapsule({snapshot:withTranslations(retained.snapshot,retained.theme),theme:retained.theme,title:retained.theme.content.title,view:w.themeView,graphView:themeCanvas.current?.capture()}));}}><Icon name="capsule"/></button>{submissionButton}<button className={css.themeInfo} aria-label={en ? "About this theme" : "テーマについて"} title={en ? "About this theme" : "テーマについて"} onClick={showAbout}><Icon name="book" /></button></header>
           {localeEdition&&<p className={css.help}>{en?`English edition ${localeEdition.servedRevision}. New material in Japanese edition ${localeEdition.latestRevision} is awaiting translation.`:`表示版 ${localeEdition.servedRevision}。最新版 ${localeEdition.latestRevision} の追加分は翻訳準備中です。`}</p>}
-          {active&&<ThemeMediaCarousel {...media} position={{kind:"theme"}} language={mediaLanguage}/>}
-          <ThemeReadingHero hideImage={!!presentation?.image&&media.slides.some(s=>s.kind==="image"&&s.image.src===presentation.image?.src&&s.positions.some(p=>p.kind==="theme"))} presentation={presentation} theme={retained.theme} snapshot={{...themeSnapshot!,translations:themeDisplayTranslations}} locale={locale} onAbout={showAbout}/>
+          <ThemeReadingHero
+            presentation={presentation} theme={retained.theme}
+            snapshot={{...themeSnapshot!,translations:themeDisplayTranslations}}
+            locale={locale} onAbout={showAbout}
+            media={hasOpeningMedia
+              ? <ThemeMediaCarousel {...media} position={{kind:"theme"}} language={mediaLanguage} variant="opening"/>
+              : undefined}
+          />
 
           {(themeHasTime||themeHasGraph)&&<KnowledgeSplit mode={themeMode}>
             <div className={css.timelinePane} hidden={!themeHasTime || themeMode === "graph"}><KnowledgeTimeline mobileDocumentFlow reading presentation={presentation} key={retained.theme.id + ":" + retained.theme.revision} snapshot={{...themeSnapshot!,translations:themeDisplayTranslations}} headerAction={themeHasTime && themeHasGraph && <button className={css.themeInfo} aria-label={themeMode === "split" ? en ? "Close relation diagram" : "関係図を閉じる" : en ? "Show relation diagram" : "関係図を並べて表示"} title={themeMode === "split" ? en?"Close relation diagram":"関係図を閉じる" : en?"Show relation diagram":"関係図を並べて表示"} aria-pressed={themeMode === "split"} onClick={() => w.setThemeView(themeMode === "split" ? "timeline" : "split")}><Icon name="panel" /></button>} untimedInContext focusedEntityId={w.themeSelection?.kind==='entity'?w.themeSelection.id:undefined} focusedRecordId={w.themeSelection?.kind === "record" ? w.themeSelection.id : null} onFocusRecord={(id,timeId)=>{if(id){readingOrigin.current=document.activeElement as HTMLElement;resetDetailTrail();setAbout(false);w.setThemeSelection({kind:"record",id,...(timeId?{timeId}:{})});setPane("detail");}}} onShowGraph={(id) => graphFromTimeline(id)} /></div>

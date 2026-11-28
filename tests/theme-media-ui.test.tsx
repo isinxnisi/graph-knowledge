@@ -33,3 +33,31 @@ it("starts with a matching landscape or image, offers the other language explici
  const play=screen.getByRole("button",{name:/Watch in Japanese/});expect(screen.queryByRole("dialog")).toBeNull();fireEvent.click(play);
  expect(screen.getByRole("dialog")).toBeTruthy();fireEvent.click(screen.getByRole("button",{name:"Close"}));expect(screen.queryByRole("dialog")).toBeNull();
 });
+it("opens landscape video only on demand in the opening and closes it from the backdrop or Escape",async()=>{
+ const destroyed=vi.fn();
+ vi.stubGlobal("YT",{Player:class{destroy=destroyed;constructor(el:HTMLElement,options:{events:{onReady:()=>void}}){el.append(document.createElement("iframe"));options.events.onReady();}}});
+ render(<ThemeMediaCarousel query="themeId=theme&revision=1" slides={[film]} language="ja" position={top} variant="opening"/>);
+ const play=screen.getByRole("button",{name:"動画を再生: Film"});
+ expect(screen.queryByRole("navigation")).toBeNull();
+ expect(document.querySelector("iframe")).toBeNull();
+ fireEvent.click(play);
+ await waitFor(()=>expect(screen.getByRole("dialog").querySelector("iframe")).toBeTruthy());
+ fireEvent.click(screen.getByRole("dialog"));
+ expect(destroyed).toHaveBeenCalledOnce();
+ expect(screen.queryByRole("dialog")).toBeNull();
+ fireEvent.click(play);
+ await waitFor(()=>expect(screen.getByRole("dialog").querySelector("iframe")).toBeTruthy());
+ fireEvent(screen.getByRole("dialog"),new Event("cancel",{cancelable:true}));
+ expect(destroyed).toHaveBeenCalledTimes(2);
+ expect(screen.queryByRole("dialog")).toBeNull();
+});
+it("uses the next selected image as the opening peek and shows its credit when selected",()=>{
+ const rendered=render(<ThemeMediaCarousel query="themeId=theme&revision=1" slides={[film,image]} language="ja" position={top} variant="opening"/>);
+ expect(rendered.container.querySelector('div[aria-hidden="true"] img[alt=""]')?.getAttribute("src")).toContain("/theme-assets/img.png");
+ expect(screen.queryByAltText("Artifact")).toBeNull();
+ fireEvent.click(screen.getByRole("button",{name:"次のスライド"}));
+ expect(screen.getByAltText("Artifact")).toBeTruthy();
+ expect(screen.getByText(/Museum/)).toBeTruthy();
+ expect(screen.getByRole("link",{name:"出典"}).getAttribute("href")).toBe("https://example.com/source");
+ expect(screen.getByRole("link",{name:"利用条件"}).getAttribute("href")).toBe("https://example.com/terms");
+});

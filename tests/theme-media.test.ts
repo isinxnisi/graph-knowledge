@@ -52,6 +52,26 @@ describe("public media",()=>{
    expect(removalOnly([{...v,positions:[{...rec,revision:9}]}],[v])).toBe(false);
    expect(removalOnly([{...v,editions:{en:{videoId:"newVideo003"}}}],[v])).toBe(false);
  });
+ it("keeps an existing generated cover slide while disallowing fresh placements",()=>{
+   const id="a".repeat(64);
+   const cover={src:"/api/knowledge/product-images/"+id,id,credit:"",kind:"illustration",alt:"A"};
+   const legacy={...cover,id:"legacy",src:"/theme-assets/generated.png",credit:"Plunode · AI-generated illustration"};
+   const pin={id:"game",revision:8};
+   const read={theme:{id:"theme",revision:2,content:{reading:[
+     {locale:"ja",image:legacy,records:[{target:pin,image:cover,explanations:[]}]},
+     {locale:"en",image:{...cover,alt:"Cover"},records:[]},
+   ]}},snapshot:{entities:[],records:[pin]}} as unknown as KnowledgeThemeRead;
+   const images=themeMediaImages(read,new Map([[id,{kind:"generated",terms:"Owned"}]]));
+   expect(images).toMatchObject([{id:"legacy",origin:"original",eligible:true,coverOnly:true},
+     {id,origin:"original",eligible:true,coverOnly:true,images:{en:{alt:"Cover"}}}]);
+
+   const existing:MediaSlot={kind:"image",id:"i",imageId:id,positions:[top]};
+   expect(()=>validatePlacement([existing],[top,rec],images,new Map())).toThrow(/テーマの表紙/);
+   expect(()=>validatePlacement([existing],[top,rec],images,new Map(),[existing])).not.toThrow();
+   expect(()=>validatePlacement([{...existing,positions:[top,rec]}],[top,rec],images,new Map(),[existing])).toThrow(/テーマの表紙/);
+   expect(removalOnly([], [existing])).toBe(true);
+   expect(projectSlides([existing],"en",[top,rec],images,new Map())).toMatchObject([{image:{alt:"Cover"}}]);
+ });
  it("enumerates pinned images in both languages, merges duplicate cover/record art and respects provenance",()=>{
    const img={src:"/api/knowledge/product-images/"+"a".repeat(64),id:"a".repeat(64),credit:"",kind:"illustration",alt:"A"};
    const original={...img,id:"own",src:"/theme-assets/original.png",credit:"Plunode · AI-generated illustration"};
@@ -61,8 +81,13 @@ describe("public media",()=>{
      {target:pin,image:img,explanations:[]},{target:pin,image:original,explanations:[]},{target:pin,image:unknown,explanations:[]},
      {target:{id:"other",revision:1},image:{...unknown,id:"absent",src:"/theme-assets/absent.png"},explanations:[]},
    ]}))}},snapshot:{entities:[],records:[pin]}} as unknown as KnowledgeThemeRead;
-   const images=themeMediaImages(read,new Map([[img.id,{kind:"licensed",terms:"CC BY 4.0",credit:"A",sourceUrl:"https://example.org/photo"}]]));
+   const licensed={kind:"licensed",terms:"CC BY 4.0",credit:"A",sourceUrl:"https://example.org/photo"};
+   const images=themeMediaImages(read,new Map([[img.id,licensed]]));
    expect(images.map(i=>[i.id,i.origin,i.eligible])).toEqual([[img.id,"licensed",true],["own","original",true],["unknown","unknown",false]]);
+   const owned=themeMediaImages(read,new Map([[img.id,{...licensed,kind:"original"}]]))[0];
+   expect(owned).toMatchObject({id:img.id,origin:"original",eligible:true});
+   expect(owned.coverOnly).toBeUndefined();
+   expect(images.every(image=>!image.coverOnly)).toBe(true);
    expect(images[0].images.en).toMatchObject({alt:"en",credit:"A"});
    expect(()=>validatePlacement([{kind:"image",id:"i",imageId:"unknown",positions:[top]}],[top],images,new Map())).toThrow();
    const rows=projectSlides([{kind:"image",id:"i",imageId:img.id,positions:[top]}],"en",[top],images,new Map());
